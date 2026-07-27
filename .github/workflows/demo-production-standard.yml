@@ -1,0 +1,53 @@
+name: Demo production standard
+
+on:
+  pull_request:
+    paths:
+      - demo-production-standard/**
+      - .github/workflows/demo-production-standard.yml
+  push:
+    branches:
+      - main
+      - standard/new-demo-production-system
+    paths:
+      - demo-production-standard/**
+      - .github/workflows/demo-production-standard.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-standard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile production scripts
+        run: |
+          python -m py_compile \
+            demo-production-standard/scripts/validate_demo_package.py \
+            demo-production-standard/scripts/build_demo_release.py
+
+      - name: Validate JSON templates
+        run: |
+          for file in demo-production-standard/templates/*.json; do
+            python -m json.tool "$file" >/dev/null
+          done
+
+      - name: Run validator self-test
+        run: python demo-production-standard/scripts/validate_demo_package.py --self-test
+
+      - name: Check builder command
+        run: python demo-production-standard/scripts/build_demo_release.py --help >/dev/null
+
+      - name: Reject temporary files
+        run: |
+          ! find demo-production-standard -type d -name __pycache__ | grep -q .
+          ! find demo-production-standard -type f \( -name '*.pyc' -o -name '*.log' -o -name '*.tmp' \) | grep -q .
