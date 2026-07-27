@@ -34,6 +34,7 @@ jobs:
           python -m py_compile \
             demo-production-standard/scripts/validate_demo_package.py \
             demo-production-standard/scripts/build_demo_release.py
+          rm -rf demo-production-standard/scripts/__pycache__
 
       - name: Validate JSON templates
         run: |
@@ -42,9 +43,13 @@ jobs:
           done
 
       - name: Run validator self-test
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
         run: python demo-production-standard/scripts/validate_demo_package.py --self-test
 
       - name: Check builder command
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
         run: python demo-production-standard/scripts/build_demo_release.py --help >/dev/null
 
       - name: Reject temporary files
