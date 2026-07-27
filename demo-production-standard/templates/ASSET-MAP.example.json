@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "assets": [
+    {
+      "id": "task-3-condition-diagram",
+      "task_number": 3,
+      "variant": 1,
+      "role": "condition",
+      "path": "assets/task-3-condition.svg",
+      "source": {
+        "file_role": "demo",
+        "pdf_page": 3
+      },
+      "embed_targets": [
+        {
+          "file": "ege-predmet-demoversiya-T123-04.txt",
+          "json_path": "tasks[number=3,variant=1].assetHtml"
+        }
+      ],
+      "content_invariants": [
+        {
+          "id": "axis-position",
+          "type": "coordinate",
+          "description": "Главная ось расположена на y=205.",
+          "expected": {
+            "selector": "#main-axis",
+            "attribute": "y1",
+            "value": 205
+          }
+        },
+        {
+          "id": "object-symmetry",
+          "type": "symmetry",
+          "description": "Центр объекта совпадает с главной осью.",
+          "expected": {
+            "axis_y": 205,
+            "object_selector": "#object"
+          }
+        },
+        {
+          "id": "required-labels",
+          "type": "labels",
+          "description": "Все обязательные подписи присутствуют.",
+          "expected": [
+            "F",
+            "mg"
+          ]
+        },
+        {
+          "id": "force-direction",
+          "type": "arrow-direction",
+          "description": "Сила трения направлена влево.",
+          "expected": {
+            "selector": "#friction-force",
+            "direction": "left"
+          }
+        }
+      ],
+      "technical_invariants": {
+        "standalone_and_embedded_identical": true,
+        "viewbox_required": true,
+        "title_required": true,
+        "external_resources_forbidden": true,
+        "scripts_forbidden": true
+      },
+      "verification": {
+        "automated_geometry_test": "tests/test_assets.py::test_task_3_condition_diagram",
+        "independent_visual_check_required": true,
+        "visual_check_status": "PENDING"
+      }
+    }
+  ]
+}

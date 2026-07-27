@@ -1,0 +1,108 @@
+name: Demo release gate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - fix/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Replace this value once when the subject repository is initialized.
+env:
+  CONTRACT: ege-predmet-demoversiya-PACKAGE-CONTRACT.json
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Compile scripts
+        run: |
+          python -m py_compile \
+            scripts/build_demo_release.py \
+            scripts/validate_demo_package.py
+          rm -rf scripts/__pycache__
+
+      - name: Install browser test dependency
+        run: npm install --no-save --package-lock=false jsdom@26
+
+      - name: Run subject unit tests
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python -m unittest discover tests
+
+      - name: Run subject browser test
+        run: node tests/browser_test.mjs
+
+      - name: Remove local test dependencies
+        run: rm -rf node_modules
+
+      - name: Build deterministic release
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python scripts/build_demo_release.py "$CONTRACT"
+
+      - name: Validate release contract
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python scripts/validate_demo_package.py "$CONTRACT"
+
+      - name: Recheck extracted ZIP
+        run: |
+          rm -rf /tmp/demo-release-check
+          mkdir -p /tmp/demo-release-check
+          python - <<'PY'
+          import json, os, zipfile
+          with open(os.environ['CONTRACT'], encoding='utf-8') as f:
+              contract = json.load(f)
+          with zipfile.ZipFile(contract['package']['release_zip']) as zf:
+              zf.extractall('/tmp/demo-release-check')
+          PY
+          CONTRACT_NAME=$(basename "$CONTRACT")
+          python /tmp/demo-release-check/scripts/validate_demo_package.py \
+            "/tmp/demo-release-check/$CONTRACT_NAME"
+          cd /tmp/demo-release-check
+          python -m unittest discover tests
+          npm install --no-save --package-lock=false jsdom@26
+          node tests/browser_test.mjs
+          rm -rf node_modules
+          ! find . -type d -name __pycache__ | grep -q .
+          ! find . -type f \( -name '*.pyc' -o -name '*.log' -o -name '*.tmp' \) | grep -q .
+
+      - name: Reject working-directory debris
+        run: |
+          rm -rf scripts/__pycache__ tests/__pycache__
+          ! find . -type d \( -name __pycache__ -o -name node_modules \) -not -path './.git/*' | grep -q .
+          ! find . -type f \( -name '*.pyc' -o -name '*.log' -o -name '*.tmp' \) -not -path './.git/*' | grep -q .
+
+      - name: Verify generated release is committed
+        run: git diff --exit-code
+
+      - name: Upload verified ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-demo-package
+          path: |
+            *.zip
+            *-TEST-REPORT.txt
+            *-INDEPENDENT-TEST-EVIDENCE.json
+          if-no-files-found: error
+          retention-days: 30

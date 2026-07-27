@@ -1,0 +1,169 @@
+{
+  "schema_version": "1.0",
+  "cases": [
+    {
+      "id": "task-1-v1-correct",
+      "task_number": 1,
+      "variant": 1,
+      "category": "positive",
+      "input": "123",
+      "expected_score": 1,
+      "basis": "official canonical answer"
+    },
+    {
+      "id": "task-1-v1-trailing-space",
+      "task_number": 1,
+      "variant": 1,
+      "category": "negative-extra-character",
+      "input": "123 ",
+      "expected_score": 0,
+      "basis": "extra symbols are forbidden"
+    },
+    {
+      "id": "task-1-v1-letter-in-digits",
+      "task_number": 1,
+      "variant": 1,
+      "category": "negative-extra-character",
+      "input": "1a23",
+      "expected_score": 0,
+      "basis": "foreign characters must be rejected, not removed"
+    },
+    {
+      "id": "task-1-v1-extra-digit",
+      "task_number": 1,
+      "variant": 1,
+      "category": "negative-length",
+      "input": "1234",
+      "expected_score": 0,
+      "basis": "exact answer length"
+    },
+    {
+      "id": "task-2-v1-full",
+      "task_number": 2,
+      "variant": 1,
+      "category": "positive",
+      "input": "43827",
+      "expected_score": 2,
+      "basis": "exact official answer"
+    },
+    {
+      "id": "task-2-v1-one-wrong",
+      "task_number": 2,
+      "variant": 1,
+      "category": "partial",
+      "input": "93827",
+      "expected_score": 1,
+      "basis": "one wrong position"
+    },
+    {
+      "id": "task-2-v1-two-wrong",
+      "task_number": 2,
+      "variant": 1,
+      "category": "partial",
+      "input": "92827",
+      "expected_score": 1,
+      "basis": "two wrong positions"
+    },
+    {
+      "id": "task-2-v1-three-wrong",
+      "task_number": 2,
+      "variant": 1,
+      "category": "negative-partial-boundary",
+      "input": "92727",
+      "expected_score": 0,
+      "basis": "first case outside the official partial-score branch"
+    },
+    {
+      "id": "task-2-v1-extra-symbol",
+      "task_number": 2,
+      "variant": 1,
+      "category": "negative-extra-character",
+      "input": "43827!",
+      "expected_score": 0,
+      "basis": "extra characters are forbidden even when all canonical symbols are present"
+    },
+    {
+      "id": "task-3-score-3",
+      "task_number": 3,
+      "variant": 1,
+      "category": "criterion-branch",
+      "input": {
+        "selected_branch": "full"
+      },
+      "expected_score": 3,
+      "basis": "official criterion branch"
+    },
+    {
+      "id": "task-3-score-2-a",
+      "task_number": 3,
+      "variant": 1,
+      "category": "criterion-branch",
+      "input": {
+        "selected_branch": "partial-a"
+      },
+      "expected_score": 2,
+      "basis": "first official alternative for 2 points"
+    },
+    {
+      "id": "task-3-score-2-b",
+      "task_number": 3,
+      "variant": 1,
+      "category": "criterion-branch",
+      "input": {
+        "selected_branch": "partial-b"
+      },
+      "expected_score": 2,
+      "basis": "second official alternative for 2 points"
+    },
+    {
+      "id": "task-3-score-1",
+      "task_number": 3,
+      "variant": 1,
+      "category": "criterion-branch",
+      "input": {
+        "selected_branch": "minimal"
+      },
+      "expected_score": 1,
+      "basis": "official criterion branch"
+    },
+    {
+      "id": "task-3-general-zero",
+      "task_number": 3,
+      "variant": 1,
+      "category": "general-zero",
+      "input": {
+        "criterion_score": 3,
+        "zero_reason": "example-zero-ground"
+      },
+      "expected_score": 0,
+      "basis": "general zero overrides criterion selections"
+    },
+    {
+      "id": "task-3-dependency-bypass",
+      "task_number": 3,
+      "variant": 1,
+      "category": "dependency-security",
+      "input": {
+        "criterion_a": 2,
+        "criterion_b": 1
+      },
+      "expected_score": 2,
+      "expected_normalized_state": {
+        "criterion_a": 2,
+        "criterion_b": 0
+      },
+      "basis": "invalid dependent value must be excluded by scorer even if it reaches saved state"
+    }
+  ],
+  "required_negative_categories_per_short_task": [
+    "leading-space",
+    "trailing-space",
+    "internal-space",
+    "punctuation",
+    "foreign-character",
+    "extra-symbol",
+    "missing-symbol",
+    "repeated-symbol",
+    "plausible-unofficial-answer"
+  ]
+}

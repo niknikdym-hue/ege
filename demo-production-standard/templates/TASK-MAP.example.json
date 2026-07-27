@@ -1,0 +1,204 @@
+{
+  "schema_version": "1.0",
+  "prefix": "ege-predmet-demoversiya",
+  "tasks": [
+    {
+      "number": 1,
+      "variant": 1,
+      "kind": "short",
+      "title": "Название задания",
+      "prompt_html": "<p>Полное официальное условие без сокращений.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 1,
+        "answer_pdf_page": 1,
+        "criteria_pdf_pages": []
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "123",
+        "accepted": [
+          {
+            "value": "123",
+            "source_pdf_page": 1,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "required_acceptance_case_ids": [
+        "task-1-v1-correct",
+        "task-1-v1-trailing-space",
+        "task-1-v1-letter-in-digits",
+        "task-1-v1-extra-digit"
+      ]
+    },
+    {
+      "number": 2,
+      "variant": 1,
+      "kind": "short",
+      "title": "Задание с частичным баллом",
+      "prompt_html": "<p>Полное условие.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 2,
+        "answer_pdf_page": 10,
+        "criteria_pdf_pages": [10]
+      },
+      "answer": {
+        "type": "position_partial",
+        "canonical": "43827",
+        "accepted": [
+          {
+            "value": "43827",
+            "source_pdf_page": 10,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 10
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 2,
+            "source_pdf_page": 10
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 10
+          }
+        ]
+      },
+      "dependencies": [],
+      "asset_ids": [],
+      "required_acceptance_case_ids": [
+        "task-2-v1-full",
+        "task-2-v1-one-wrong",
+        "task-2-v1-two-wrong",
+        "task-2-v1-three-wrong",
+        "task-2-v1-extra-symbol"
+      ]
+    },
+    {
+      "number": 3,
+      "variant": 1,
+      "kind": "extended",
+      "title": "Развёрнутое задание",
+      "prompt_html": "<p>Полное условие, которое пользователь видит до начала ответа.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 3,
+        "answer_pdf_page": 11,
+        "criteria_pdf_pages": [11, 12]
+      },
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "max_score": 3,
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "full",
+          "text": "Точный смысловой эквивалент официальной ветви для 3 баллов.",
+          "source_pdf_page": 11
+        },
+        {
+          "score": 2,
+          "branch_id": "partial-a",
+          "text": "Точный смысловой эквивалент первой официальной ветви для 2 баллов.",
+          "source_pdf_page": 11
+        },
+        {
+          "score": 2,
+          "branch_id": "partial-b",
+          "text": "Точный смысловой эквивалент альтернативной официальной ветви для 2 баллов.",
+          "source_pdf_page": 12
+        },
+        {
+          "score": 1,
+          "branch_id": "minimal",
+          "text": "Точный смысловой эквивалент официальной ветви для 1 балла.",
+          "source_pdf_page": 12
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "Официальные основания для 0 баллов.",
+          "source_pdf_page": 12
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "criterion-b-depends-on-a",
+          "target": "criterion_b",
+          "condition": "criterion_a >= 3",
+          "invalid_value": 0,
+          "enforce_in_ui": true,
+          "enforce_in_scorer": true,
+          "source_pdf_page": 12
+        }
+      ],
+      "general_zero_reasons": [
+        {
+          "id": "example-zero-ground",
+          "text": "Официальное общее основание для нуля.",
+          "source_pdf_page": 12,
+          "automatable": false
+        }
+      ],
+      "asset_ids": [
+        "task-3-condition-diagram"
+      ],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false
+      },
+      "required_acceptance_case_ids": [
+        "task-3-score-3",
+        "task-3-score-2-a",
+        "task-3-score-2-b",
+        "task-3-score-1",
+        "task-3-general-zero",
+        "task-3-dependency-bypass"
+      ]
+    }
+  ]
+}
