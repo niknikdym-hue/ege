@@ -39,27 +39,34 @@ jobs:
           python -m py_compile \
             scripts/build_demo_release.py \
             scripts/validate_demo_package.py
+          rm -rf scripts/__pycache__
+
+      - name: Install browser test dependency
+        run: npm install --no-save --package-lock=false jsdom@26
 
       - name: Run subject unit tests
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
         run: python -m unittest discover tests
 
       - name: Run subject browser test
         run: node tests/browser_test.mjs
 
+      - name: Remove local test dependencies
+        run: rm -rf node_modules
+
       - name: Build deterministic release
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
         run: python scripts/build_demo_release.py "$CONTRACT"
 
       - name: Validate release contract
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
         run: python scripts/validate_demo_package.py "$CONTRACT"
 
       - name: Recheck extracted ZIP
         run: |
-          ZIP=$(python - <<'PY'
-          import json, os
-          with open(os.environ['CONTRACT'], encoding='utf-8') as f:
-              print(json.load(f)['package']['release_zip'])
-          PY
-          )
           rm -rf /tmp/demo-release-check
           mkdir -p /tmp/demo-release-check
           python - <<'PY'
@@ -74,10 +81,15 @@ jobs:
             "/tmp/demo-release-check/$CONTRACT_NAME"
           cd /tmp/demo-release-check
           python -m unittest discover tests
+          npm install --no-save --package-lock=false jsdom@26
           node tests/browser_test.mjs
+          rm -rf node_modules
+          ! find . -type d -name __pycache__ | grep -q .
+          ! find . -type f \( -name '*.pyc' -o -name '*.log' -o -name '*.tmp' \) | grep -q .
 
       - name: Reject working-directory debris
         run: |
+          rm -rf scripts/__pycache__ tests/__pycache__
           ! find . -type d \( -name __pycache__ -o -name node_modules \) -not -path './.git/*' | grep -q .
           ! find . -type f \( -name '*.pyc' -o -name '*.log' -o -name '*.tmp' \) -not -path './.git/*' | grep -q .
 
