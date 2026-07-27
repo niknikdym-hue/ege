@@ -10,6 +10,7 @@
     "url": "https://eksamio.ru/ege/predmet/demoversiya/",
     "canonical": "https://eksamio.ru/ege/predmet/demoversiya/",
     "slug": "ege-predmet-demoversiya",
+    "preview_title": "Демоверсия ЕГЭ по предмету",
     "evergreen_public_metadata": true,
     "source_year": 2026
   },
@@ -62,7 +63,15 @@
     "preview": "ege-predmet-demoversiya-PREVIEW.html",
     "manifest": "ege-predmet-demoversiya-MANIFEST.txt",
     "evidence": "ege-predmet-demoversiya-INDEPENDENT-TEST-EVIDENCE.json",
-    "test_report": "ege-predmet-demoversiya-TEST-REPORT.txt"
+    "test_report": "ege-predmet-demoversiya-TEST-REPORT.txt",
+    "release_include": [
+      "00-README-CODEX.txt",
+      "ege-predmet-demoversiya-*",
+      "source/*.pdf",
+      "assets/*.svg",
+      "scripts/*.py",
+      "tests/*"
+    ]
   },
   "storage": {
     "key": "eksamio_ege_predmet_demo_sourceyear_v1",
