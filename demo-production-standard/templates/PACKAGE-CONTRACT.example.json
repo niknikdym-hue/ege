@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "package": {
+    "prefix": "ege-predmet-demoversiya",
+    "version": "1.0.0",
+    "status": "DRAFT",
+    "release_zip": "ege-predmet-demoversiya-v1-fixed.zip"
+  },
+  "page": {
+    "url": "https://eksamio.ru/ege/predmet/demoversiya/",
+    "canonical": "https://eksamio.ru/ege/predmet/demoversiya/",
+    "slug": "ege-predmet-demoversiya",
+    "evergreen_public_metadata": true,
+    "source_year": 2026
+  },
+  "exam": {
+    "name": "ЕГЭ",
+    "subject": "Предмет",
+    "task_positions": 0,
+    "official_examples": 0,
+    "duration_minutes": 0,
+    "primary_max": 0,
+    "short_task_numbers": [],
+    "extended_task_numbers": [],
+    "part_maxima": {}
+  },
+  "sources": [
+    {
+      "role": "demo",
+      "path": "source/ege-2026-predmet-demoversiya.pdf",
+      "status": "final",
+      "sha256": "FILL_AFTER_DOWNLOAD",
+      "pages": 0
+    },
+    {
+      "role": "specification",
+      "path": "source/ege-2026-predmet-specifikatsiya.pdf",
+      "status": "final",
+      "sha256": "FILL_AFTER_DOWNLOAD",
+      "pages": 0
+    },
+    {
+      "role": "codifier",
+      "path": "source/ege-2026-predmet-kodifikator.pdf",
+      "status": "final",
+      "sha256": "FILL_AFTER_DOWNLOAD",
+      "pages": 0
+    }
+  ],
+  "maps": {
+    "exam": "ege-predmet-demoversiya-EXAM-MAP.json",
+    "tasks": "ege-predmet-demoversiya-TASK-MAP.json",
+    "assets": "ege-predmet-demoversiya-ASSET-MAP.json",
+    "acceptance_cases": "ege-predmet-demoversiya-ACCEPTANCE-CASES.json"
+  },
+  "build": {
+    "generated_files_must_not_be_edited": true,
+    "t123_order": [
+      "ege-predmet-demoversiya-T123-01.txt"
+    ],
+    "head": "ege-predmet-demoversiya-HEAD.txt",
+    "preview": "ege-predmet-demoversiya-PREVIEW.html",
+    "manifest": "ege-predmet-demoversiya-MANIFEST.txt",
+    "evidence": "ege-predmet-demoversiya-INDEPENDENT-TEST-EVIDENCE.json",
+    "test_report": "ege-predmet-demoversiya-TEST-REPORT.txt"
+  },
+  "storage": {
+    "key": "eksamio_ege_predmet_demo_sourceyear_v1",
+    "safe_wrapper_required": true,
+    "absolute_end_time_required": true,
+    "variant_choice_persistence_required": true
+  },
+  "scoring": {
+    "default_reject_extra_characters": true,
+    "expert_self_assessment_affects_official_total": false,
+    "all_dependencies_enforced_in_ui_and_scorer": true,
+    "technical_heuristics_are_advisory_only": true
+  },
+  "responsive_widths": [320, 360, 390, 768, 1280],
+  "forbidden_release_patterns": [
+    "ПРОЕКТ",
+    "DRAFT",
+    "Локальный пакет проверен",
+    "После установки на Tilda требуется",
+    "/mnt/data/",
+    "__pycache__",
+    "node_modules"
+  ],
+  "publication": {
+    "local_max_status": "READY_FOR_TILDA_TEST",
+    "production_status": "PUBLISHED_SMOKE_PASS",
+    "production_checked": false
+  }
+}
