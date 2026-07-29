@@ -40,7 +40,7 @@ jobs:
       - name: Install browser and PDF dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y poppler-utils
+          sudo apt-get install -y poppler-utils imagemagick
           npm install --no-save --package-lock=false playwright
           npx playwright install chromium
 
