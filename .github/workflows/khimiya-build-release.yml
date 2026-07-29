@@ -1,6 +1,11 @@
 name: Chemistry demo release
 
 on:
+  pull_request:
+    paths:
+      - khimiya-build/**
+      - khimiya-source/**
+      - .github/workflows/khimiya-build-release.yml
   push:
     branches:
       - feature/khimiya-demo-v1
@@ -86,6 +91,7 @@ jobs:
           ! find . -type f \( -name '*.pyc' -o -name '*.log' -o -name '*.tmp' \) | grep -q .
 
       - name: Commit verified package
+        if: github.event_name != 'pull_request'
         run: |
           rm -rf node_modules khimiya-build/__pycache__ ege-khimiya-demoversiya-v1/tests/__pycache__ ege-khimiya-demoversiya-v1/scripts/__pycache__
           git config user.name github-actions[bot]
