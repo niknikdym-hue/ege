@@ -47,8 +47,20 @@ jobs:
       - name: Decode audited build inputs
         run: |
           set -euo pipefail
-          cat khimiya-build/generator.gz.b64.part* | base64 -d | gzip -d > khimiya-build/generate_package.py
-          cat khimiya-build/source-data.gz.b64.part* | base64 -d | gzip -d > khimiya-build/source-data.json
+          cat \
+            khimiya-build/generator.gz.b64.part01 \
+            khimiya-build/generator.gz.b64.part02 \
+            khimiya-build/generator.tail.part03a \
+            khimiya-build/generator.tail.part03b \
+            khimiya-build/generator.tail.part04a \
+            khimiya-build/generator.tail.part04b \
+            | base64 -d | gzip -d > khimiya-build/generate_package.py
+          cat \
+            khimiya-build/source-data.gz.b64.part01 \
+            khimiya-build/source-data.gz.b64.part02 \
+            khimiya-build/source-data.tail.part03a \
+            khimiya-build/source-data.tail.part03b \
+            | base64 -d | gzip -d > khimiya-build/source-data.json
           base64 -d khimiya-build/apply-fixes.gz.b64 | gzip -d > khimiya-build/apply_fixes.py
           python khimiya-build/apply_fixes.py khimiya-build/generate_package.py khimiya-build/source-data.json
           python -m py_compile khimiya-build/generate_package.py khimiya-build/apply_fixes.py
