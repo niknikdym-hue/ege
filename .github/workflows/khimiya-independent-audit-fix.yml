@@ -1,6 +1,11 @@
 name: Chemistry independent audit fix
 
 on:
+  pull_request:
+    paths:
+      - chem-audit-temp/**
+      - ege-khimiya-demoversiya-v1/**
+      - .github/workflows/khimiya-independent-audit-fix.yml
   push:
     branches:
       - fix/khimiya-independent-audit-v1-0-1
