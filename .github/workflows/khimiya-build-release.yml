@@ -63,7 +63,8 @@ jobs:
             | base64 -d | gzip -d > khimiya-build/source-data.json
           base64 -d khimiya-build/apply-fixes.gz.b64 | gzip -d > khimiya-build/apply_fixes.py
           python khimiya-build/apply_fixes.py khimiya-build/generate_package.py khimiya-build/source-data.json
-          python -m py_compile khimiya-build/generate_package.py khimiya-build/apply_fixes.py
+          python khimiya-build/fix_reference_loading.py khimiya-build/generate_package.py
+          python -m py_compile khimiya-build/generate_package.py khimiya-build/apply_fixes.py khimiya-build/fix_reference_loading.py
           rm -rf khimiya-build/__pycache__
 
       - name: Generate deterministic package
