@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0",
+  "package": {
+    "prefix": "ege-khimiya-demoversiya",
+    "version": "1.0.0",
+    "status": "READY_FOR_TILDA_TEST",
+    "release_zip": "ege-khimiya-demoversiya-v1-fixed.zip"
+  },
+  "page": {
+    "url": "https://eksamio.ru/ege/khimiya/demoversiya/",
+    "canonical": "https://eksamio.ru/ege/khimiya/demoversiya/",
+    "slug": "ege-khimiya-demoversiya",
+    "preview_title": "Демоверсия ЕГЭ по химии",
+    "evergreen_public_metadata": true,
+    "source_year": 2026
+  },
+  "exam": {
+    "name": "ЕГЭ",
+    "subject": "Химия",
+    "task_positions": 34,
+    "official_examples": 40,
+    "duration_minutes": 210,
+    "primary_max": 56,
+    "short_task_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28
+    ],
+    "extended_task_numbers": [
+      29,
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "part_maxima": {
+      "short": 36,
+      "extended": 20
+    }
+  },
+  "sources": [
+    {
+      "role": "demo",
+      "path": "source/ege-2026-khimiya-demoversiya.pdf",
+      "status": "final",
+      "sha256": "bbfac3ac73ef998b77c4db3a85c34eb8e0994326c968d5f17c8f2d6a607d5c59",
+      "pages": 16,
+      "official_origin": "ФГБНУ ФИПИ"
+    },
+    {
+      "role": "specification",
+      "path": "source/ege-2026-khimiya-specifikatsiya.pdf",
+      "status": "final",
+      "sha256": "1855cdb4a510e6acf4857c84b218b94cee18b73238050bae67575c8258618672",
+      "pages": 10,
+      "official_origin": "ФГБНУ ФИПИ"
+    },
+    {
+      "role": "codifier",
+      "path": "source/ege-2026-khimiya-kodifikator.pdf",
+      "status": "final",
+      "sha256": "2b959f7154659d51fdce982ba62d9284c54722c7d47ebf45d624007012e8cd15",
+      "pages": 17,
+      "official_origin": "ФГБНУ ФИПИ"
+    }
+  ],
+  "maps": {
+    "exam": "ege-khimiya-demoversiya-EXAM-MAP.json",
+    "tasks": "ege-khimiya-demoversiya-TASK-MAP.json",
+    "assets": "ege-khimiya-demoversiya-ASSET-MAP.json",
+    "acceptance_cases": "ege-khimiya-demoversiya-ACCEPTANCE-CASES.json"
+  },
+  "build": {
+    "generated_files_must_not_be_edited": true,
+    "t123_order": [
+      "ege-khimiya-demoversiya-T123-01.txt",
+      "ege-khimiya-demoversiya-T123-02.txt",
+      "ege-khimiya-demoversiya-T123-03.txt",
+      "ege-khimiya-demoversiya-T123-04.txt",
+      "ege-khimiya-demoversiya-T123-05.txt",
+      "ege-khimiya-demoversiya-T123-06.txt",
+      "ege-khimiya-demoversiya-T123-07.txt",
+      "ege-khimiya-demoversiya-T123-08.txt"
+    ],
+    "head": "ege-khimiya-demoversiya-HEAD.txt",
+    "preview": "ege-khimiya-demoversiya-PREVIEW.html",
+    "manifest": "ege-khimiya-demoversiya-MANIFEST.txt",
+    "evidence": "ege-khimiya-demoversiya-INDEPENDENT-TEST-EVIDENCE.json",
+    "test_report": "ege-khimiya-demoversiya-TEST-REPORT.txt",
+    "release_include": [
+      "00-README-CODEX.txt",
+      "ege-khimiya-demoversiya-*",
+      "source/*.pdf",
+      "assets/**/*",
+      "scripts/**/*.py",
+      "tests/**/*"
+    ]
+  },
+  "storage": {
+    "key": "eksamio_ege_khimiya_demo_2026_v1",
+    "safe_wrapper_required": true,
+    "absolute_end_time_required": true,
+    "variant_choice_persistence_required": true
+  },
+  "scoring": {
+    "default_reject_extra_characters": true,
+    "expert_self_assessment_affects_official_total": false,
+    "all_dependencies_enforced_in_ui_and_scorer": true,
+    "technical_heuristics_are_advisory_only": true
+  },
+  "responsive_widths": [
+    320,
+    360,
+    390,
+    768,
+    1280
+  ],
+  "forbidden_release_patterns": [
+    "ПРОЕКТ",
+    "Локальный пакет проверен",
+    "После установки на Tilda требуется",
+    "/mnt/data/",
+    "__pycache__",
+    "node_modules"
+  ],
+  "publication": {
+    "local_max_status": "READY_FOR_TILDA_TEST",
+    "production_status": "PUBLISHED_SMOKE_PASS",
+    "production_checked": false
+  }
+}
