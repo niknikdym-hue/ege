@@ -1,0 +1,46 @@
+name: Chemistry source analysis
+
+on:
+  pull_request:
+    paths:
+      - khimiya-source/**
+      - .github/workflows/khimiya-source-analysis.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils imagemagick
+
+      - name: Extract source set
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/khimiya-analysis
+          mkdir -p /tmp/khimiya-analysis/text /tmp/khimiya-analysis/meta /tmp/khimiya-analysis/renders/demo
+          cp khimiya-source/*.pdf /tmp/khimiya-analysis/
+          for pdf in khimiya-source/*.pdf; do
+            base=$(basename "$pdf" .pdf)
+            pdftotext -layout "$pdf" "/tmp/khimiya-analysis/text/${base}.txt"
+            pdfinfo "$pdf" > "/tmp/khimiya-analysis/meta/${base}.pdfinfo.txt"
+            sha256sum "$pdf" >> /tmp/khimiya-analysis/SHA256.txt
+          done
+          pdftoppm -png -r 130 khimiya-source/ege-2026-khimiya-demoversiya.pdf /tmp/khimiya-analysis/renders/demo/page
+          find /tmp/khimiya-analysis -type f | sort > /tmp/khimiya-analysis/FILES.txt
+
+      - name: Upload analysis artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: khimiya-source-analysis
+          path: /tmp/khimiya-analysis
+          if-no-files-found: error
+          retention-days: 30
