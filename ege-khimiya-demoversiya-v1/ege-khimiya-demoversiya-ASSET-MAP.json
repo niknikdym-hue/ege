@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "assets": [
+    {
+      "id": "reference-solubility",
+      "task_number": 0,
+      "variant": 1,
+      "role": "reference",
+      "path": "assets/reference-solubility.webp",
+      "source": {
+        "file_role": "demo",
+        "pdf_page": 2
+      },
+      "embed_targets": [
+        {
+          "file": "ege-khimiya-demoversiya-T123-07.txt",
+          "json_path": "data"
+        }
+      ],
+      "content_invariants": [
+        {
+          "id": "full-table",
+          "type": "visual",
+          "description": "Полная таблица растворимости и электрохимический ряд сохранены без обрезки.",
+          "expected": true
+        }
+      ],
+      "technical_invariants": {
+        "standalone_and_embedded_identical": true,
+        "viewbox_required": false,
+        "title_required": false,
+        "external_resources_forbidden": true,
+        "scripts_forbidden": true
+      },
+      "verification": {
+        "automated_geometry_test": "tests/test_static.py::test_embedded_asset_hashes",
+        "independent_visual_check_required": true,
+        "visual_check_status": "PASS"
+      }
+    },
+    {
+      "id": "reference-periodic",
+      "task_number": 0,
+      "variant": 1,
+      "role": "reference",
+      "path": "assets/reference-periodic.webp",
+      "source": {
+        "file_role": "demo",
+        "pdf_page": 3
+      },
+      "embed_targets": [
+        {
+          "file": "ege-khimiya-demoversiya-T123-08.txt",
+          "json_path": "data"
+        }
+      ],
+      "content_invariants": [
+        {
+          "id": "full-table",
+          "type": "visual",
+          "description": "Периодическая система сохранена полностью, включая лантаноиды и актиноиды.",
+          "expected": true
+        }
+      ],
+      "technical_invariants": {
+        "standalone_and_embedded_identical": true,
+        "viewbox_required": false,
+        "title_required": false,
+        "external_resources_forbidden": true,
+        "scripts_forbidden": true
+      },
+      "verification": {
+        "automated_geometry_test": "tests/test_static.py::test_embedded_asset_hashes",
+        "independent_visual_check_required": true,
+        "visual_check_status": "PASS"
+      }
+    }
+  ]
+}

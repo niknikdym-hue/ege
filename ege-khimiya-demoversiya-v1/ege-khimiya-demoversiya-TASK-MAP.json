@@ -1,0 +1,2630 @@
+{
+  "schema_version": "1.0",
+  "prefix": "ege-khimiya-demoversiya",
+  "tasks": [
+    {
+      "number": 1,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 1",
+      "prompt_html": "<p>Для выполнения заданий 1–3 используйте следующий ряд химических элементов:</p><div class=\"chem-inline-list\">1) F&nbsp;&nbsp; 2) Mg&nbsp;&nbsp; 3) Br&nbsp;&nbsp; 4) Zn&nbsp;&nbsp; 5) H</div><p>Определите два элемента, которым соответствуют ионы, имеющие столько же <i>s</i>-электронов, сколько и атом неона. Запишите номера выбранных элементов.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 4,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_unordered_digits",
+        "canonical": "12",
+        "accepted": [
+          {
+            "value": "12",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 12</p>",
+      "required_acceptance_case_ids": [
+        "task-1-v1-correct",
+        "task-1-v1-reverse",
+        "task-1-v1-leading-space",
+        "task-1-v1-trailing-space",
+        "task-1-v1-internal-space",
+        "task-1-v1-punctuation",
+        "task-1-v1-foreign-character",
+        "task-1-v1-missing-symbol",
+        "task-1-v1-extra-symbol",
+        "task-1-v1-repeated-symbol",
+        "task-1-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 2,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 2",
+      "prompt_html": "<p>Для выполнения заданий 1–3 используйте следующий ряд химических элементов:</p><div class=\"chem-inline-list\">1) F&nbsp;&nbsp; 2) Mg&nbsp;&nbsp; 3) Br&nbsp;&nbsp; 4) Zn&nbsp;&nbsp; 5) H</div><p>Из указанных в ряду химических элементов выберите три элемента-неметалла. Расположите выбранные элементы в порядке уменьшения окислительной способности образуемых ими простых веществ. Запишите номера выбранных элементов в нужной последовательности.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 4,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "135",
+        "accepted": [
+          {
+            "value": "135",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 135</p>",
+      "required_acceptance_case_ids": [
+        "task-2-v1-correct",
+        "task-2-v1-leading-space",
+        "task-2-v1-trailing-space",
+        "task-2-v1-internal-space",
+        "task-2-v1-punctuation",
+        "task-2-v1-foreign-character",
+        "task-2-v1-missing-symbol",
+        "task-2-v1-extra-symbol",
+        "task-2-v1-repeated-symbol",
+        "task-2-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 3,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 3",
+      "prompt_html": "<p>Для выполнения заданий 1–3 используйте следующий ряд химических элементов:</p><div class=\"chem-inline-list\">1) F&nbsp;&nbsp; 2) Mg&nbsp;&nbsp; 3) Br&nbsp;&nbsp; 4) Zn&nbsp;&nbsp; 5) H</div><p>Из числа указанных в ряду элементов выберите два элемента, у которых разность между значениями их высшей и низшей степеней окисления не равна 2. Запишите номера выбранных элементов.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 4,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_unordered_digits",
+        "canonical": "13",
+        "accepted": [
+          {
+            "value": "13",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 13</p>",
+      "required_acceptance_case_ids": [
+        "task-3-v1-correct",
+        "task-3-v1-reverse",
+        "task-3-v1-leading-space",
+        "task-3-v1-trailing-space",
+        "task-3-v1-internal-space",
+        "task-3-v1-punctuation",
+        "task-3-v1-foreign-character",
+        "task-3-v1-missing-symbol",
+        "task-3-v1-extra-symbol",
+        "task-3-v1-repeated-symbol",
+        "task-3-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 4,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 4",
+      "prompt_html": "<p>Из предложенного перечня выберите два вещества молекулярного строения, в которых присутствуют как ковалентная полярная, так и ковалентная неполярная связи.</p><ol class=\"chem-options\"><li>фенолят натрия</li><li>сероводород</li><li>бутадиен-1,3</li><li>ацетилен</li><li>диметиловый эфир</li></ol><p>Запишите номера выбранных ответов.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 5,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_unordered_digits",
+        "canonical": "34",
+        "accepted": [
+          {
+            "value": "34",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 34</p>",
+      "required_acceptance_case_ids": [
+        "task-4-v1-correct",
+        "task-4-v1-reverse",
+        "task-4-v1-leading-space",
+        "task-4-v1-trailing-space",
+        "task-4-v1-internal-space",
+        "task-4-v1-punctuation",
+        "task-4-v1-foreign-character",
+        "task-4-v1-missing-symbol",
+        "task-4-v1-extra-symbol",
+        "task-4-v1-repeated-symbol",
+        "task-4-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 5,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 5",
+      "prompt_html": "<p>Среди предложенных формул и названий веществ, расположенных в пронумерованных ячейках, выберите: А) среднюю соль; Б) основание; В) амфотерный оксид.</p><div class=\"chem-grid9\"><div><b>1</b><span>(NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub></span></div><div><b>2</b><span>гашёная известь</span></div><div><b>3</b><span>HClO</span></div><div><b>4</b><span>CaHPO<sub>4</sub></span></div><div><b>5</b><span>гидроксид хрома(III)</span></div><div><b>6</b><span>BaO<sub>2</sub></span></div><div><b>7</b><span>оксид фосфора(III)</span></div><div><b>8</b><span>оксид железа(III)</span></div><div><b>9</b><span>Zn(OH)<sub>2</sub></span></div></div><p>Запишите номера ячеек в порядке АБВ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 5,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "128",
+        "accepted": [
+          {
+            "value": "128",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 128</p>",
+      "required_acceptance_case_ids": [
+        "task-5-v1-correct",
+        "task-5-v1-leading-space",
+        "task-5-v1-trailing-space",
+        "task-5-v1-internal-space",
+        "task-5-v1-punctuation",
+        "task-5-v1-foreign-character",
+        "task-5-v1-missing-symbol",
+        "task-5-v1-extra-symbol",
+        "task-5-v1-repeated-symbol",
+        "task-5-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 6,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 6",
+      "prompt_html": "<p>В одну пробирку с раствором бромида алюминия добавили избыток раствора вещества X и наблюдали образование белого осадка и выделение газа. В другую пробирку с раствором бромида алюминия добавили по каплям избыток раствора вещества Y и наблюдали сначала образование белого осадка, затем его растворение.</p><ol class=\"chem-options\"><li>NH<sub>4</sub>Cl</li><li>Fe<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub></li><li>CuCl<sub>2</sub></li><li>Na<sub>2</sub>CO<sub>3</sub></li><li>NaOH</li></ol><p>Выберите вещества X и Y и запишите их номера в порядке XY.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 6,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "position_partial",
+        "canonical": "45",
+        "accepted": [
+          {
+            "value": "45",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 1,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 21
+          }
+        ]
+      },
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 45</p>",
+      "required_acceptance_case_ids": [
+        "task-6-v1-correct",
+        "task-6-v1-one-wrong",
+        "task-6-v1-two-wrong",
+        "task-6-v1-leading-space",
+        "task-6-v1-trailing-space",
+        "task-6-v1-internal-space",
+        "task-6-v1-punctuation",
+        "task-6-v1-foreign-character",
+        "task-6-v1-missing-symbol",
+        "task-6-v1-extra-symbol",
+        "task-6-v1-repeated-symbol"
+      ]
+    },
+    {
+      "number": 7,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 7",
+      "prompt_html": "<p>Установите соответствие между веществом и реагентами, с каждым из которых это вещество может взаимодействовать.</p><div class=\"chem-match\"><div><strong>ВЕЩЕСТВО</strong><div><b>А)</b> CO<sub>2</sub></div><div><b>Б)</b> Sr</div><div><b>В)</b> FeSO<sub>4</sub> (р-р)</div><div><b>Г)</b> HClO<sub>3</sub></div></div><div><strong>РЕАГЕНТЫ</strong><div><b>1)</b> NaOH, CuO, SiO<sub>2</sub></div><div><b>2)</b> C, KOH, Mg</div><div><b>3)</b> HNO<sub>3</sub>, S, Br<sub>2</sub></div><div><b>4)</b> NH<sub>3</sub>, Mg, Na<sub>2</sub>SO<sub>4</sub></div><div><b>5)</b> NaOH, NH<sub>3</sub>·H<sub>2</sub>O, Ba(NO<sub>3</sub>)<sub>2</sub></div></div></div><p>Запишите цифры в порядке АБВГ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 6,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "position_partial",
+        "canonical": "2352",
+        "accepted": [
+          {
+            "value": "2352",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 1,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 21
+          }
+        ]
+      },
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 2352</p>",
+      "required_acceptance_case_ids": [
+        "task-7-v1-correct",
+        "task-7-v1-one-wrong",
+        "task-7-v1-two-wrong",
+        "task-7-v1-leading-space",
+        "task-7-v1-trailing-space",
+        "task-7-v1-internal-space",
+        "task-7-v1-punctuation",
+        "task-7-v1-foreign-character",
+        "task-7-v1-missing-symbol",
+        "task-7-v1-extra-symbol",
+        "task-7-v1-repeated-symbol"
+      ]
+    },
+    {
+      "number": 8,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 8",
+      "prompt_html": "<p>Установите соответствие между исходными веществами и продуктами реакции.</p><div class=\"chem-match\"><div><strong>ИСХОДНЫЕ ВЕЩЕСТВА</strong><div><b>А)</b> KOH и Cr<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> (изб.)</div><div><b>Б)</b> Cr<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> и K<sub>2</sub>SO<sub>3</sub> (р-р)</div><div><b>В)</b> KCrO<sub>2</sub> и HBr</div><div><b>Г)</b> K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub> и HBr</div></div><div><strong>ПРОДУКТЫ</strong><div><b>1)</b> CrBr<sub>3</sub>, KBr и H<sub>2</sub>O</div><div><b>2)</b> Cr(OH)<sub>3</sub>, SO<sub>2</sub> и K<sub>2</sub>SO<sub>4</sub></div><div><b>3)</b> Cr(OH)<sub>3</sub>, KBr, Br<sub>2</sub> и H<sub>2</sub>O</div><div><b>4)</b> Cr(OH)<sub>3</sub> и K<sub>2</sub>SO<sub>4</sub></div><div><b>5)</b> CrBr<sub>3</sub>, KBr, Br<sub>2</sub> и H<sub>2</sub>O</div><div><b>6)</b> KCrO<sub>2</sub>, K<sub>2</sub>SO<sub>4</sub> и H<sub>2</sub>O</div></div></div><p>Запишите цифры в порядке АБВГ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 7,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "position_partial",
+        "canonical": "4215",
+        "accepted": [
+          {
+            "value": "4215",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 1,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 21
+          }
+        ]
+      },
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 4215</p>",
+      "required_acceptance_case_ids": [
+        "task-8-v1-correct",
+        "task-8-v1-one-wrong",
+        "task-8-v1-two-wrong",
+        "task-8-v1-leading-space",
+        "task-8-v1-trailing-space",
+        "task-8-v1-internal-space",
+        "task-8-v1-punctuation",
+        "task-8-v1-foreign-character",
+        "task-8-v1-missing-symbol",
+        "task-8-v1-extra-symbol",
+        "task-8-v1-repeated-symbol"
+      ]
+    },
+    {
+      "number": 9,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 9",
+      "prompt_html": "<p>Задана схема превращений:</p><div class=\"chem-formula\">Cu(NO<sub>3</sub>)<sub>2</sub> <span>—t°→</span> X <span>—HCl→</span> Y</div><ol class=\"chem-options\"><li>Cu(NO<sub>2</sub>)<sub>2</sub></li><li>CuCl</li><li>CuO</li><li>CuCl<sub>2</sub></li><li>Cu</li></ol><p>Определите вещества X и Y. Запишите номера в порядке XY.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 7,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "34",
+        "accepted": [
+          {
+            "value": "34",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 34</p>",
+      "required_acceptance_case_ids": [
+        "task-9-v1-correct",
+        "task-9-v1-leading-space",
+        "task-9-v1-trailing-space",
+        "task-9-v1-internal-space",
+        "task-9-v1-punctuation",
+        "task-9-v1-foreign-character",
+        "task-9-v1-missing-symbol",
+        "task-9-v1-extra-symbol",
+        "task-9-v1-repeated-symbol",
+        "task-9-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 10,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 10",
+      "prompt_html": "<p>Установите соответствие между общей формулой класса органических веществ и веществом, принадлежащим к этому классу.</p><div class=\"chem-match\"><div><strong>ОБЩАЯ ФОРМУЛА</strong><div><b>А)</b> C<sub>n</sub>H<sub>2n</sub>O<sub>2</sub></div><div><b>Б)</b> C<sub>n</sub>H<sub>2n</sub>O</div><div><b>В)</b> C<sub>n</sub>H<sub>2n−2</sub>O</div></div><div><strong>ВЕЩЕСТВО</strong><div><b>1)</b> гексановая кислота</div><div><b>2)</b> циклогексанол</div><div><b>3)</b> гексанол-1</div><div><b>4)</b> циклогексанон</div></div></div><p>Запишите цифры в порядке АБВ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 8,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "124",
+        "accepted": [
+          {
+            "value": "124",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 124</p>",
+      "required_acceptance_case_ids": [
+        "task-10-v1-correct",
+        "task-10-v1-leading-space",
+        "task-10-v1-trailing-space",
+        "task-10-v1-internal-space",
+        "task-10-v1-punctuation",
+        "task-10-v1-foreign-character",
+        "task-10-v1-missing-symbol",
+        "task-10-v1-extra-symbol",
+        "task-10-v1-repeated-symbol",
+        "task-10-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 11,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 11",
+      "prompt_html": "<p>Из предложенного перечня выберите два вещества, которые являются гомологами н-гексана.</p><ol class=\"chem-options\"><li>пентен-1</li><li>пропан</li><li>2-метилпентан</li><li>циклогексан</li><li>н-октан</li></ol><p>Запишите номера выбранных ответов.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 8,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_unordered_digits",
+        "canonical": "25",
+        "accepted": [
+          {
+            "value": "25",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 25</p>",
+      "required_acceptance_case_ids": [
+        "task-11-v1-correct",
+        "task-11-v1-reverse",
+        "task-11-v1-leading-space",
+        "task-11-v1-trailing-space",
+        "task-11-v1-internal-space",
+        "task-11-v1-punctuation",
+        "task-11-v1-foreign-character",
+        "task-11-v1-missing-symbol",
+        "task-11-v1-extra-symbol",
+        "task-11-v1-repeated-symbol",
+        "task-11-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 12,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 12",
+      "prompt_html": "<p>Из предложенного перечня выберите все вещества, с которыми вступают в реакцию как пропан, так и глицерин.</p><ol class=\"chem-options\"><li>кислород</li><li>хлороводород</li><li>перманганат калия (р-р)</li><li>бром (водн.)</li><li>азотная кислота</li></ol><p>Запишите номера выбранных ответов.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 8,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_unordered_digits",
+        "canonical": "15",
+        "accepted": [
+          {
+            "value": "15",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 15</p>",
+      "required_acceptance_case_ids": [
+        "task-12-v1-correct",
+        "task-12-v1-reverse",
+        "task-12-v1-leading-space",
+        "task-12-v1-trailing-space",
+        "task-12-v1-internal-space",
+        "task-12-v1-punctuation",
+        "task-12-v1-foreign-character",
+        "task-12-v1-missing-symbol",
+        "task-12-v1-extra-symbol",
+        "task-12-v1-repeated-symbol",
+        "task-12-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 13,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 13",
+      "prompt_html": "<p>Из предложенного перечня выберите два вещества, с которыми взаимодействует глицин, но не взаимодействует фениламин.</p><ol class=\"chem-options\"><li>гидроксид кальция</li><li>кислород</li><li>азотная кислота</li><li>бромоводород</li><li>гидроксид натрия</li></ol><p>Запишите номера выбранных ответов.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 9,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_unordered_digits",
+        "canonical": "15",
+        "accepted": [
+          {
+            "value": "15",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 15</p>",
+      "required_acceptance_case_ids": [
+        "task-13-v1-correct",
+        "task-13-v1-reverse",
+        "task-13-v1-leading-space",
+        "task-13-v1-trailing-space",
+        "task-13-v1-internal-space",
+        "task-13-v1-punctuation",
+        "task-13-v1-foreign-character",
+        "task-13-v1-missing-symbol",
+        "task-13-v1-extra-symbol",
+        "task-13-v1-repeated-symbol",
+        "task-13-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 14,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 14",
+      "prompt_html": "<p>Установите соответствие между веществом и схемой реакции, в результате которой может быть получено это вещество.</p><div class=\"chem-match\"><div><strong>ВЕЩЕСТВО</strong><div><b>А)</b> бензол</div><div><b>Б)</b> ацетилен</div><div><b>В)</b> дивинил</div><div><b>Г)</b> метан</div></div><div><strong>РЕАКЦИЯ ПОЛУЧЕНИЯ</strong><div><b>1)</b> C<sub>2</sub>H<sub>5</sub>Cl + Na →</div><div><b>2)</b> CH<sub>4</sub> —t°→</div><div><b>3)</b> C<sub>2</sub>H<sub>5</sub>OH —t°, кат.→</div><div><b>4)</b> C<sub>2</sub>H<sub>2</sub> —t°, кат.→</div><div><b>5)</b> CH<sub>3</sub>Cl + NaOH →</div><div><b>6)</b> Al<sub>4</sub>C<sub>3</sub> + H<sub>2</sub>O →</div></div></div><p>Запишите цифры в порядке АБВГ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 9,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "position_partial",
+        "canonical": "4236",
+        "accepted": [
+          {
+            "value": "4236",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 1,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 21
+          }
+        ]
+      },
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 4236</p>",
+      "required_acceptance_case_ids": [
+        "task-14-v1-correct",
+        "task-14-v1-one-wrong",
+        "task-14-v1-two-wrong",
+        "task-14-v1-leading-space",
+        "task-14-v1-trailing-space",
+        "task-14-v1-internal-space",
+        "task-14-v1-punctuation",
+        "task-14-v1-foreign-character",
+        "task-14-v1-missing-symbol",
+        "task-14-v1-extra-symbol",
+        "task-14-v1-repeated-symbol"
+      ]
+    },
+    {
+      "number": 15,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 15",
+      "prompt_html": "<p>Установите соответствие между схемой реакции и преимущественно образующимся органическим веществом.</p><div class=\"chem-match\"><div><strong>СХЕМА РЕАКЦИИ</strong><div><b>А)</b> C<sub>6</sub>H<sub>5</sub>CH<sub>2</sub>OH —CuO, t°→</div><div><b>Б)</b> C<sub>6</sub>H<sub>5</sub>CH<sub>2</sub>CH<sub>2</sub>OH —H<sub>2</sub>SO<sub>4</sub>, t°→</div><div><b>В)</b> C<sub>6</sub>H<sub>5</sub>CHO —KMnO<sub>4</sub>(H<sup>+</sup>)→</div><div><b>Г)</b> C<sub>6</sub>H<sub>5</sub>COONa(тв.) + NaOH(тв.) —t°→</div></div><div><strong>ПРОДУКТ</strong><div><b>1)</b> бензол</div><div><b>2)</b> толуол</div><div><b>3)</b> фенол</div><div><b>4)</b> бензальдегид</div><div><b>5)</b> бензойная кислота</div><div><b>6)</b> стирол</div></div></div><p>Запишите цифры в порядке АБВГ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 10,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "position_partial",
+        "canonical": "4651",
+        "accepted": [
+          {
+            "value": "4651",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 1,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 21
+          }
+        ]
+      },
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 4651</p>",
+      "required_acceptance_case_ids": [
+        "task-15-v1-correct",
+        "task-15-v1-one-wrong",
+        "task-15-v1-two-wrong",
+        "task-15-v1-leading-space",
+        "task-15-v1-trailing-space",
+        "task-15-v1-internal-space",
+        "task-15-v1-punctuation",
+        "task-15-v1-foreign-character",
+        "task-15-v1-missing-symbol",
+        "task-15-v1-extra-symbol",
+        "task-15-v1-repeated-symbol"
+      ]
+    },
+    {
+      "number": 16,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 16",
+      "prompt_html": "<p>Задана схема превращений:</p><div class=\"chem-formula\">CH<sub>3</sub>–CH(Cl)–CH<sub>3</sub> → X → CH<sub>3</sub>–CH(OH)–CH<sub>2</sub>OH → Y</div><ol class=\"chem-options\"><li>2-хлорпропан</li><li>пропанол-1</li><li>ацетон</li><li>пропен</li><li>1,2-дихлорпропан</li></ol><p>Определите вещества X и Y. Запишите номера в порядке XY.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 10,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "45",
+        "accepted": [
+          {
+            "value": "45",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 45</p>",
+      "required_acceptance_case_ids": [
+        "task-16-v1-correct",
+        "task-16-v1-leading-space",
+        "task-16-v1-trailing-space",
+        "task-16-v1-internal-space",
+        "task-16-v1-punctuation",
+        "task-16-v1-foreign-character",
+        "task-16-v1-missing-symbol",
+        "task-16-v1-extra-symbol",
+        "task-16-v1-repeated-symbol",
+        "task-16-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 17,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 17",
+      "prompt_html": "<p>Установите соответствие между химической реакцией и типами реакций, к которым она относится.</p><div class=\"chem-match\"><div><strong>ХИМИЧЕСКАЯ РЕАКЦИЯ</strong><div><b>А)</b> дегидрирование этана</div><div><b>Б)</b> гидратация ацетилена</div><div><b>В)</b> взаимодействие уксусной кислоты с раствором гидроксида натрия</div></div><div><strong>ТИПЫ РЕАКЦИЙ</strong><div><b>1)</b> разложения, каталитическая</div><div><b>2)</b> присоединения, каталитическая</div><div><b>3)</b> обмена, гомогенная</div><div><b>4)</b> замещения, гетерогенная</div></div></div><p>Запишите цифры в порядке АБВ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 11,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "123",
+        "accepted": [
+          {
+            "value": "123",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 123</p>",
+      "required_acceptance_case_ids": [
+        "task-17-v1-correct",
+        "task-17-v1-leading-space",
+        "task-17-v1-trailing-space",
+        "task-17-v1-internal-space",
+        "task-17-v1-punctuation",
+        "task-17-v1-foreign-character",
+        "task-17-v1-missing-symbol",
+        "task-17-v1-extra-symbol",
+        "task-17-v1-repeated-symbol",
+        "task-17-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 18,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 18",
+      "prompt_html": "<p>Из предложенного перечня выберите все внешние воздействия, которые приводят к увеличению скорости реакции серы с железом.</p><ol class=\"chem-options\"><li>повышение давления в системе</li><li>добавление индикатора</li><li>измельчение железа</li><li>измельчение серы</li><li>повышение температуры</li></ol><p>Запишите номера выбранных ответов.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 11,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_unordered_digits",
+        "canonical": "345",
+        "accepted": [
+          {
+            "value": "345",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 345</p>",
+      "required_acceptance_case_ids": [
+        "task-18-v1-correct",
+        "task-18-v1-reverse",
+        "task-18-v1-leading-space",
+        "task-18-v1-trailing-space",
+        "task-18-v1-internal-space",
+        "task-18-v1-punctuation",
+        "task-18-v1-foreign-character",
+        "task-18-v1-missing-symbol",
+        "task-18-v1-extra-symbol",
+        "task-18-v1-repeated-symbol",
+        "task-18-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 19,
+      "variant": 1,
+      "variantLabel": "Свойство атома водорода",
+      "kind": "short",
+      "title": "Задание 19",
+      "prompt_html": "<p>Установите соответствие между уравнением реакции и свойством атома водорода в этой реакции.</p><div class=\"chem-match\"><div><strong>УРАВНЕНИЕ</strong><div><b>А)</b> 2NO<sub>2</sub> + 2KOH = KNO<sub>2</sub> + KNO<sub>3</sub> + H<sub>2</sub>O</div><div><b>Б)</b> 2NH<sub>3</sub> + 3Ca = Ca<sub>3</sub>N<sub>2</sub> + 3H<sub>2</sub></div><div><b>В)</b> H<sub>2</sub> + Ca = CaH<sub>2</sub></div></div><div><strong>СВОЙСТВО АТОМА ВОДОРОДА</strong><div><b>1)</b> только восстановитель</div><div><b>2)</b> и окислитель, и восстановитель</div><div><b>3)</b> не проявляет окислительно-восстановительных свойств</div><div><b>4)</b> только окислитель</div></div></div><p>Запишите цифры в порядке АБВ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 12,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "344",
+        "accepted": [
+          {
+            "value": "344",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 344</p>",
+      "required_acceptance_case_ids": [
+        "task-19-v1-correct",
+        "task-19-v1-leading-space",
+        "task-19-v1-trailing-space",
+        "task-19-v1-internal-space",
+        "task-19-v1-punctuation",
+        "task-19-v1-foreign-character",
+        "task-19-v1-missing-symbol",
+        "task-19-v1-extra-symbol",
+        "task-19-v1-repeated-symbol",
+        "task-19-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 19,
+      "variant": 2,
+      "variantLabel": "Степень окисления восстановителя",
+      "kind": "short",
+      "title": "Задание 19",
+      "prompt_html": "<p>Установите соответствие между схемой реакции и изменением степени окисления восстановителя.</p><div class=\"chem-match\"><div><strong>СХЕМА РЕАКЦИИ</strong><div><b>А)</b> Cu<sub>2</sub>O + H<sub>2</sub>SO<sub>4</sub> → CuSO<sub>4</sub> + SO<sub>2</sub> + H<sub>2</sub>O</div><div><b>Б)</b> Cu + HNO<sub>3</sub> → Cu(NO<sub>3</sub>)<sub>2</sub> + NO<sub>2</sub> + H<sub>2</sub>O</div><div><b>В)</b> CuO + H<sub>2</sub> → Cu + H<sub>2</sub>O</div></div><div><strong>ИЗМЕНЕНИЕ СТЕПЕНИ ОКИСЛЕНИЯ</strong><div><b>1)</b> +6 → +4</div><div><b>2)</b> +1 → +2</div><div><b>3)</b> 0 → +2</div><div><b>4)</b> 0 → +1</div></div></div><p>Запишите цифры в порядке АБВ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 12,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "234",
+        "accepted": [
+          {
+            "value": "234",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 234</p>",
+      "required_acceptance_case_ids": [
+        "task-19-v2-correct",
+        "task-19-v2-leading-space",
+        "task-19-v2-trailing-space",
+        "task-19-v2-internal-space",
+        "task-19-v2-punctuation",
+        "task-19-v2-foreign-character",
+        "task-19-v2-missing-symbol",
+        "task-19-v2-extra-symbol",
+        "task-19-v2-repeated-symbol",
+        "task-19-v2-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 20,
+      "variant": 1,
+      "variantLabel": "Электролиз растворов солей",
+      "kind": "short",
+      "title": "Задание 20",
+      "prompt_html": "<p>Установите соответствие между солью и продуктами электролиза водного раствора этой соли, выделяющимися на инертных электродах.</p><div class=\"chem-match\"><div><strong>СОЛЬ</strong><div><b>А)</b> нитрат ртути(II)</div><div><b>Б)</b> нитрат рубидия</div><div><b>В)</b> хлорид алюминия</div></div><div><strong>ПРОДУКТЫ ЭЛЕКТРОЛИЗА</strong><div><b>1)</b> водород, галоген</div><div><b>2)</b> водород, кислород</div><div><b>3)</b> металл, кислород</div><div><b>4)</b> металл, галоген</div></div></div><p>Запишите цифры в порядке АБВ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 13,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "321",
+        "accepted": [
+          {
+            "value": "321",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 321</p>",
+      "required_acceptance_case_ids": [
+        "task-20-v1-correct",
+        "task-20-v1-leading-space",
+        "task-20-v1-trailing-space",
+        "task-20-v1-internal-space",
+        "task-20-v1-punctuation",
+        "task-20-v1-foreign-character",
+        "task-20-v1-missing-symbol",
+        "task-20-v1-extra-symbol",
+        "task-20-v1-repeated-symbol",
+        "task-20-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 20,
+      "variant": 2,
+      "variantLabel": "Получение веществ электролизом",
+      "kind": "short",
+      "title": "Задание 20",
+      "prompt_html": "<p>Установите соответствие между веществом и возможным способом его получения путём электролиза.</p><div class=\"chem-match\"><div><strong>ВЕЩЕСТВО</strong><div><b>А)</b> алюминий</div><div><b>Б)</b> фтор</div><div><b>В)</b> калий</div></div><div><strong>ПОЛУЧЕНИЕ ЭЛЕКТРОЛИЗОМ</strong><div><b>1)</b> раствора Al<sub>2</sub>O<sub>3</sub> в расплавленном криолите</div><div><b>2)</b> водного раствора KF</div><div><b>3)</b> водного раствора AlCl<sub>3</sub></div><div><b>4)</b> расплава KF</div></div></div><p>Запишите цифры в порядке АБВ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 13,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "144",
+        "accepted": [
+          {
+            "value": "144",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 144</p>",
+      "required_acceptance_case_ids": [
+        "task-20-v2-correct",
+        "task-20-v2-leading-space",
+        "task-20-v2-trailing-space",
+        "task-20-v2-internal-space",
+        "task-20-v2-punctuation",
+        "task-20-v2-foreign-character",
+        "task-20-v2-missing-symbol",
+        "task-20-v2-extra-symbol",
+        "task-20-v2-repeated-symbol",
+        "task-20-v2-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 21,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 21",
+      "prompt_html": "<p>Для веществ определите характер среды их водных растворов:</p><ol class=\"chem-options\"><li>NaOH</li><li>Na<sub>2</sub>S</li><li>MgCl<sub>2</sub></li><li>HCl</li></ol><p>Запишите номера веществ в порядке возрастания pH их растворов при одинаковой молярной концентрации.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 14,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "4321",
+        "accepted": [
+          {
+            "value": "4321",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 4321</p>",
+      "required_acceptance_case_ids": [
+        "task-21-v1-correct",
+        "task-21-v1-leading-space",
+        "task-21-v1-trailing-space",
+        "task-21-v1-internal-space",
+        "task-21-v1-punctuation",
+        "task-21-v1-foreign-character",
+        "task-21-v1-missing-symbol",
+        "task-21-v1-extra-symbol",
+        "task-21-v1-repeated-symbol",
+        "task-21-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 22,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 22",
+      "prompt_html": "<p>Установите соответствие между воздействием на равновесную систему</p><div class=\"chem-formula\">SO<sub>2</sub>(г) + H<sub>2</sub>O(ж) ⇄ H<sup>+</sup>(р-р) + HSO<sub>3</sub><sup>−</sup>(р-р) − Q</div><div class=\"chem-match\"><div><strong>ВОЗДЕЙСТВИЕ</strong><div><b>А)</b> повышение давления</div><div><b>Б)</b> понижение температуры</div><div><b>В)</b> добавление твёрдого гидросульфита калия</div><div><b>Г)</b> добавление HCl</div></div><div><strong>СМЕЩЕНИЕ РАВНОВЕСИЯ</strong><div><b>1)</b> в сторону прямой реакции</div><div><b>2)</b> в сторону обратной реакции</div><div><b>3)</b> практически не смещается</div></div></div><p>Запишите цифры в порядке АБВГ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 15,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "position_partial",
+        "canonical": "1222",
+        "accepted": [
+          {
+            "value": "1222",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 1,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 21
+          }
+        ]
+      },
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 1222</p>",
+      "required_acceptance_case_ids": [
+        "task-22-v1-correct",
+        "task-22-v1-one-wrong",
+        "task-22-v1-two-wrong",
+        "task-22-v1-leading-space",
+        "task-22-v1-trailing-space",
+        "task-22-v1-internal-space",
+        "task-22-v1-punctuation",
+        "task-22-v1-foreign-character",
+        "task-22-v1-missing-symbol",
+        "task-22-v1-extra-symbol",
+        "task-22-v1-repeated-symbol"
+      ]
+    },
+    {
+      "number": 23,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 23",
+      "prompt_html": "<p>В реактор постоянного объёма поместили NO и O<sub>2</sub>. Исходная концентрация O<sub>2</sub> — 0,06 моль/л. После установления равновесия в реакции</p><div class=\"chem-formula\">2NO(г) + O<sub>2</sub>(г) ⇄ 2NO<sub>2</sub>(г)</div><p>равновесные концентрации NO и NO<sub>2</sub> стали равны 0,06 моль/л. Определите исходную концентрацию NO (X) и равновесную концентрацию O<sub>2</sub> (Y).</p><ol class=\"chem-options\"><li>0,01 моль/л</li><li>0,02 моль/л</li><li>0,03 моль/л</li><li>0,10 моль/л</li><li>0,12 моль/л</li><li>0,18 моль/л</li></ol><p>Запишите номера в порядке XY.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 15,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "position_partial",
+        "canonical": "53",
+        "accepted": [
+          {
+            "value": "53",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 1,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 21
+          }
+        ]
+      },
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 53</p>",
+      "required_acceptance_case_ids": [
+        "task-23-v1-correct",
+        "task-23-v1-one-wrong",
+        "task-23-v1-two-wrong",
+        "task-23-v1-leading-space",
+        "task-23-v1-trailing-space",
+        "task-23-v1-internal-space",
+        "task-23-v1-punctuation",
+        "task-23-v1-foreign-character",
+        "task-23-v1-missing-symbol",
+        "task-23-v1-extra-symbol",
+        "task-23-v1-repeated-symbol"
+      ]
+    },
+    {
+      "number": 24,
+      "variant": 1,
+      "variantLabel": "Различение веществ",
+      "kind": "short",
+      "title": "Задание 24",
+      "prompt_html": "<p>Установите соответствие между двумя веществами и реактивом, позволяющим их различить.</p><div class=\"chem-match\"><div><strong>ВЕЩЕСТВА</strong><div><b>А)</b> Zn и Fe</div><div><b>Б)</b> BaCl<sub>2</sub> (р-р) и Ba(NO<sub>3</sub>)<sub>2</sub> (р-р)</div><div><b>В)</b> K<sub>2</sub>SO<sub>4</sub> (р-р) и MgSO<sub>4</sub> (р-р)</div><div><b>Г)</b> HBr (р-р) и HNO<sub>3</sub> (р-р)</div></div><div><strong>РЕАКТИВ</strong><div><b>1)</b> KOH (р-р)</div><div><b>2)</b> CH<sub>3</sub>COOK (р-р)</div><div><b>3)</b> Al<sub>2</sub>O<sub>3</sub></div><div><b>4)</b> KNO<sub>3</sub> (р-р)</div><div><b>5)</b> AgNO<sub>3</sub> (р-р)</div></div></div><p>Запишите цифры в порядке АБВГ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 16,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "position_partial",
+        "canonical": "1515",
+        "accepted": [
+          {
+            "value": "1515",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 1,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 21
+          }
+        ]
+      },
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 1515</p>",
+      "required_acceptance_case_ids": [
+        "task-24-v1-correct",
+        "task-24-v1-one-wrong",
+        "task-24-v1-two-wrong",
+        "task-24-v1-leading-space",
+        "task-24-v1-trailing-space",
+        "task-24-v1-internal-space",
+        "task-24-v1-punctuation",
+        "task-24-v1-foreign-character",
+        "task-24-v1-missing-symbol",
+        "task-24-v1-extra-symbol",
+        "task-24-v1-repeated-symbol"
+      ]
+    },
+    {
+      "number": 24,
+      "variant": 2,
+      "variantLabel": "Признаки реакций",
+      "kind": "short",
+      "title": "Задание 24",
+      "prompt_html": "<p>Установите соответствие между реагирующими веществами и признаком реакции.</p><div class=\"chem-match\"><div><strong>РЕАГИРУЮЩИЕ ВЕЩЕСТВА</strong><div><b>А)</b> C<sub>2</sub>H<sub>2</sub> и [Ag(NH<sub>3</sub>)<sub>2</sub>]OH</div><div><b>Б)</b> C<sub>2</sub>H<sub>2</sub> и Br<sub>2</sub> (р-р)</div><div><b>В)</b> HOCH<sub>2</sub>CH<sub>2</sub>OH и Cu(OH)<sub>2</sub></div><div><b>Г)</b> C<sub>6</sub>H<sub>5</sub>OH (р-р) и KOH (р-р)</div></div><div><strong>ПРИЗНАК</strong><div><b>1)</b> образование раствора синего цвета</div><div><b>2)</b> образование осадка</div><div><b>3)</b> обесцвечивание раствора</div><div><b>4)</b> образование металлического серебра</div><div><b>5)</b> видимые признаки отсутствуют</div></div></div><p>Запишите цифры в порядке АБВГ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 16,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "position_partial",
+        "canonical": "2315",
+        "accepted": [
+          {
+            "value": "2315",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 1,
+            "source_pdf_page": 21
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 21
+          }
+        ]
+      },
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 2315</p>",
+      "required_acceptance_case_ids": [
+        "task-24-v2-correct",
+        "task-24-v2-one-wrong",
+        "task-24-v2-two-wrong",
+        "task-24-v2-leading-space",
+        "task-24-v2-trailing-space",
+        "task-24-v2-internal-space",
+        "task-24-v2-punctuation",
+        "task-24-v2-foreign-character",
+        "task-24-v2-missing-symbol",
+        "task-24-v2-extra-symbol",
+        "task-24-v2-repeated-symbol"
+      ]
+    },
+    {
+      "number": 25,
+      "variant": 1,
+      "variantLabel": "Применение веществ",
+      "kind": "short",
+      "title": "Задание 25",
+      "prompt_html": "<p>Установите соответствие между областью применения и веществом.</p><div class=\"chem-match\"><div><strong>ОБЛАСТЬ ПРИМЕНЕНИЯ</strong><div><b>А)</b> в качестве антисептика</div><div><b>Б)</b> в качестве пищевой добавки</div><div><b>В)</b> в качестве растворителя</div></div><div><strong>ВЕЩЕСТВО</strong><div><b>1)</b> сульфат бария</div><div><b>2)</b> толуол</div><div><b>3)</b> пероксид водорода</div><div><b>4)</b> лимонная кислота</div></div></div><p>Запишите цифры в порядке АБВ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 17,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "342",
+        "accepted": [
+          {
+            "value": "342",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 342</p>",
+      "required_acceptance_case_ids": [
+        "task-25-v1-correct",
+        "task-25-v1-leading-space",
+        "task-25-v1-trailing-space",
+        "task-25-v1-internal-space",
+        "task-25-v1-punctuation",
+        "task-25-v1-foreign-character",
+        "task-25-v1-missing-symbol",
+        "task-25-v1-extra-symbol",
+        "task-25-v1-repeated-symbol",
+        "task-25-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 25,
+      "variant": 2,
+      "variantLabel": "Полимеры",
+      "kind": "short",
+      "title": "Задание 25",
+      "prompt_html": "<p>Установите соответствие между мономером и полимером, образующимся при его полимеризации.</p><div class=\"chem-match\"><div><strong>МОНОМЕР</strong><div><b>А)</b> хлорэтен</div><div><b>Б)</b> 2-хлорбутадиен-1,3</div><div><b>В)</b> бутадиен-1,3</div></div><div><strong>ПОЛИМЕР</strong><div><b>1)</b> натуральный каучук</div><div><b>2)</b> поливинилхлорид</div><div><b>3)</b> дивиниловый каучук</div><div><b>4)</b> хлоропреновый каучук</div></div></div><p>Запишите цифры в порядке АБВ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 17,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "243",
+        "accepted": [
+          {
+            "value": "243",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 243</p>",
+      "required_acceptance_case_ids": [
+        "task-25-v2-correct",
+        "task-25-v2-leading-space",
+        "task-25-v2-trailing-space",
+        "task-25-v2-internal-space",
+        "task-25-v2-punctuation",
+        "task-25-v2-foreign-character",
+        "task-25-v2-missing-symbol",
+        "task-25-v2-extra-symbol",
+        "task-25-v2-repeated-symbol",
+        "task-25-v2-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 25,
+      "variant": 3,
+      "variantLabel": "Химическое производство",
+      "kind": "short",
+      "title": "Задание 25",
+      "prompt_html": "<p>Установите соответствие между процессом и аппаратом химического производства.</p><div class=\"chem-match\"><div><strong>ПРОЦЕСС</strong><div><b>А)</b> получение натрия</div><div><b>Б)</b> перегонка нефти</div><div><b>В)</b> получение гидроксида натрия</div></div><div><strong>АППАРАТ</strong><div><b>1)</b> ректификационная колонна</div><div><b>2)</b> доменная печь</div><div><b>3)</b> электролизёр</div><div><b>4)</b> колонна синтеза</div></div></div><p>Запишите цифры в порядке АБВ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 17,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "exact_ordered_digits",
+        "canonical": "313",
+        "accepted": [
+          {
+            "value": "313",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите только цифры без пробелов и знаков.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 313</p>",
+      "required_acceptance_case_ids": [
+        "task-25-v3-correct",
+        "task-25-v3-leading-space",
+        "task-25-v3-trailing-space",
+        "task-25-v3-internal-space",
+        "task-25-v3-punctuation",
+        "task-25-v3-foreign-character",
+        "task-25-v3-missing-symbol",
+        "task-25-v3-extra-symbol",
+        "task-25-v3-repeated-symbol",
+        "task-25-v3-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 26,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 26",
+      "prompt_html": "<p>К 115 г раствора с массовой долей нитрата калия 20 % добавили 58 мл воды и 27 г этой же соли. Вычислите массовую долю соли в полученном растворе. Запишите число с точностью до целых, без знака процента.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 18,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "numeric_exact",
+        "canonical": "25",
+        "accepted": [
+          {
+            "value": "25",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите целое число без знака % и единиц.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 25</p>",
+      "required_acceptance_case_ids": [
+        "task-26-v1-correct",
+        "task-26-v1-leading-space",
+        "task-26-v1-trailing-space",
+        "task-26-v1-internal-space",
+        "task-26-v1-punctuation",
+        "task-26-v1-foreign-character",
+        "task-26-v1-missing-symbol",
+        "task-26-v1-extra-symbol",
+        "task-26-v1-repeated-symbol",
+        "task-26-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 27,
+      "variant": 1,
+      "variantLabel": null,
+      "kind": "short",
+      "title": "Задание 27",
+      "prompt_html": "<p>Определите количество теплоты, которое выделится при сгорании 2,3 г этилового спирта по термохимическому уравнению:</p><div class=\"chem-formula\">C<sub>2</sub>H<sub>5</sub>OH(ж) + 3O<sub>2</sub>(г) = 2CO<sub>2</sub>(г) + 3H<sub>2</sub>O(г) + 1374 кДж</div><p>Запишите число с точностью до десятых, без единиц измерения.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 18,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "numeric_exact",
+        "canonical": "68,7",
+        "accepted": [
+          {
+            "value": "68,7",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": true,
+          "allow_decimal_point": true
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите число с одной цифрой после запятой. Допустимы запятая или точка.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 68,7</p>",
+      "required_acceptance_case_ids": [
+        "task-27-v1-correct",
+        "task-27-v1-decimal-point",
+        "task-27-v1-leading-space",
+        "task-27-v1-trailing-space",
+        "task-27-v1-internal-space",
+        "task-27-v1-punctuation",
+        "task-27-v1-foreign-character",
+        "task-27-v1-missing-symbol",
+        "task-27-v1-extra-symbol",
+        "task-27-v1-repeated-symbol",
+        "task-27-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 28,
+      "variant": 1,
+      "variantLabel": "Сульфит натрия",
+      "kind": "short",
+      "title": "Задание 28",
+      "prompt_html": "<p>Технический сульфит натрия массой 14 г, содержащий 10 % примеси сульфата натрия, растворили в избытке соляной кислоты. Определите объём газа при н.у. Запишите число с точностью до сотых, без единиц.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 18,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "numeric_exact",
+        "canonical": "2,24",
+        "accepted": [
+          {
+            "value": "2,24",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": true,
+          "allow_decimal_point": true
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите число с двумя цифрами после запятой. Допустимы запятая или точка.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 2,24</p>",
+      "required_acceptance_case_ids": [
+        "task-28-v1-correct",
+        "task-28-v1-decimal-point",
+        "task-28-v1-leading-space",
+        "task-28-v1-trailing-space",
+        "task-28-v1-internal-space",
+        "task-28-v1-punctuation",
+        "task-28-v1-foreign-character",
+        "task-28-v1-missing-symbol",
+        "task-28-v1-extra-symbol",
+        "task-28-v1-repeated-symbol",
+        "task-28-v1-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 28,
+      "variant": 2,
+      "variantLabel": "Сульфид меди(II)",
+      "kind": "short",
+      "title": "Задание 28",
+      "prompt_html": "<p>Вычислите объём газа при н.у., полученного с выходом 90 % при сжигании в кислороде 19,2 г сульфида меди(II). Запишите число с точностью до целых, без единиц.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 18,
+        "answer_pdf_page": 21,
+        "criteria_pdf_pages": [
+          21
+        ]
+      },
+      "answer": {
+        "type": "numeric_exact",
+        "canonical": "4",
+        "accepted": [
+          {
+            "value": "4",
+            "source_pdf_page": 21,
+            "basis": "official_answer_table"
+          }
+        ],
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "max_score": 1,
+      "partial_scoring": null,
+      "dependencies": [],
+      "asset_ids": [],
+      "input_hint": "Введите целое число без единиц измерения.",
+      "model_answer_html": "<p><strong>Эталон ФИПИ:</strong> 4</p>",
+      "required_acceptance_case_ids": [
+        "task-28-v2-correct",
+        "task-28-v2-leading-space",
+        "task-28-v2-trailing-space",
+        "task-28-v2-punctuation",
+        "task-28-v2-foreign-character",
+        "task-28-v2-missing-symbol",
+        "task-28-v2-extra-symbol",
+        "task-28-v2-repeated-symbol",
+        "task-28-v2-plausible-unofficial"
+      ]
+    },
+    {
+      "number": 29,
+      "variant": 1,
+      "kind": "extended",
+      "title": "Задание 29",
+      "prompt_html": "<div class=\"chem-source-list\"><strong>Для выполнения заданий 29 и 30 используйте следующий перечень веществ:</strong> хлорид железа(II), хлорид марганца(II), оксид хрома(III), нитрат цинка, гидроксид натрия, перманганат калия. Допустимо использование водных растворов веществ.</div><p>Из предложенного перечня выберите вещество-окислитель и вещество-восстановитель, реакция между которыми в соответствующей среде протекает с образованием оксида, соли и кислоты. В качестве среды для протекания реакции можно использовать ещё одно из веществ, приведённых в перечне, или воду. В ответе запишите уравнение только одной из возможных окислительно-восстановительных реакций с участием выбранных веществ. Запишите уравнения процессов окисления и восстановления, составьте электронный баланс, укажите окислитель и восстановитель.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 19,
+        "answer_pdf_page": 22,
+        "criteria_pdf_pages": [
+          22
+        ]
+      },
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "max_score": 2,
+      "criteria": [
+        {
+          "score": 2,
+          "branch_id": "score-2",
+          "text": "Ответ правильный и полный: выбраны вещества и записано уравнение окислительно-восстановительной реакции; составлен электронный баланс, указаны окислитель и восстановитель.",
+          "source_pdf_page": 22
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1",
+          "text": "Правильно записан один элемент ответа.",
+          "source_pdf_page": 22
+        },
+        {
+          "score": 0,
+          "branch_id": "score-0",
+          "text": "Все элементы ответа записаны неверно.",
+          "source_pdf_page": 22
+        }
+      ],
+      "criterion_elements": [
+        {
+          "id": "equation",
+          "text": "Выбраны вещества и записано уравнение окислительно-восстановительной реакции.",
+          "source_pdf_page": 22
+        },
+        {
+          "id": "balance",
+          "text": "Составлен электронный баланс, указаны окислитель и восстановитель.",
+          "source_pdf_page": 22,
+          "depends_on": "equation"
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "balance-depends-equation",
+          "target": "balance",
+          "condition": "equation == true",
+          "invalid_value": false,
+          "enforce_in_ui": true,
+          "enforce_in_scorer": true,
+          "source_pdf_page": 22
+        }
+      ],
+      "general_zero_reasons": [],
+      "asset_ids": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false
+      },
+      "model_answer_html": "<div class=\"chem-model\"><p>Один из возможных ответов:</p><p>3MnCl<sub>2</sub> + 2KMnO<sub>4</sub> + 2H<sub>2</sub>O = 5MnO<sub>2</sub> + 2KCl + 4HCl</p><p>Mn<sup>+7</sup> + 3e<sup>−</sup> → Mn<sup>+4</sup> (×2)</p><p>Mn<sup>+2</sup> − 2e<sup>−</sup> → Mn<sup>+4</sup> (×3)</p><p>Окислитель — KMnO<sub>4</sub> (Mn<sup>+7</sup>); восстановитель — MnCl<sub>2</sub> (Mn<sup>+2</sup>).</p></div>",
+      "notes_html": "<p><strong>Примечание ФИПИ:</strong> если молекулярное уравнение реакции не соответствует условию задания или в нём неверно определены продукты реакции, то электронный баланс не оценивается (выставляется 0 баллов).</p>",
+      "required_acceptance_case_ids": [
+        "task-29-v1-score-2",
+        "task-29-v1-score-1",
+        "task-29-v1-score-0",
+        "task-29-v1-dependency-bypass"
+      ]
+    },
+    {
+      "number": 30,
+      "variant": 1,
+      "kind": "extended",
+      "title": "Задание 30",
+      "prompt_html": "<div class=\"chem-source-list\"><strong>Для выполнения заданий 29 и 30 используйте следующий перечень веществ:</strong> хлорид железа(II), хлорид марганца(II), оксид хрома(III), нитрат цинка, гидроксид натрия, перманганат калия. Допустимо использование водных растворов веществ.</div><p>Из предложенного перечня выберите два вещества, между которыми возможна реакция ионного обмена, протекающая с образованием амфотерного гидроксида. Запишите молекулярное, полное и сокращённое ионные уравнения только одной возможной реакции.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 19,
+        "answer_pdf_page": 23,
+        "criteria_pdf_pages": [
+          23
+        ]
+      },
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "max_score": 2,
+      "criteria": [
+        {
+          "score": 2,
+          "branch_id": "score-2",
+          "text": "Ответ правильный и полный: выбраны вещества и записано молекулярное уравнение реакции ионного обмена; записаны полное и сокращённое ионные уравнения реакции.",
+          "source_pdf_page": 23
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1",
+          "text": "Правильно записан один элемент ответа.",
+          "source_pdf_page": 23
+        },
+        {
+          "score": 0,
+          "branch_id": "score-0",
+          "text": "Все элементы ответа записаны неверно.",
+          "source_pdf_page": 23
+        }
+      ],
+      "criterion_elements": [
+        {
+          "id": "molecular",
+          "text": "Выбраны вещества и записано молекулярное уравнение реакции ионного обмена.",
+          "source_pdf_page": 23
+        },
+        {
+          "id": "ionic",
+          "text": "Записаны полное и сокращённое ионные уравнения реакции.",
+          "source_pdf_page": 23
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "asset_ids": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false
+      },
+      "model_answer_html": "<div class=\"chem-model\"><p>Zn(NO<sub>3</sub>)<sub>2</sub> + 2NaOH = 2NaNO<sub>3</sub> + Zn(OH)<sub>2</sub>↓</p><p>Zn<sup>2+</sup> + 2NO<sub>3</sub><sup>−</sup> + 2Na<sup>+</sup> + 2OH<sup>−</sup> = Zn(OH)<sub>2</sub>↓ + 2Na<sup>+</sup> + 2NO<sub>3</sub><sup>−</sup></p><p>Zn<sup>2+</sup> + 2OH<sup>−</sup> = Zn(OH)<sub>2</sub>↓</p></div>",
+      "notes_html": "",
+      "required_acceptance_case_ids": [
+        "task-30-v1-score-2",
+        "task-30-v1-score-1",
+        "task-30-v1-score-0"
+      ]
+    },
+    {
+      "number": 31,
+      "variant": 1,
+      "kind": "extended",
+      "title": "Задание 31",
+      "prompt_html": "<p>Алюминат калия растворили в необходимом количестве серной кислоты. К полученному при этом раствору добавили раствор сульфита натрия. Выделившийся газ разделили на две части, одну из которых поглотили раствором дихромата натрия, подкисленным серной кислотой, а другую — бромной водой. Напишите молекулярные уравнения четырёх описанных реакций.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 19,
+        "answer_pdf_page": 23,
+        "criteria_pdf_pages": [
+          23
+        ]
+      },
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "max_score": 4,
+      "criteria": [
+        {
+          "score": 4,
+          "branch_id": "score-4",
+          "text": "Правильно записаны все 4 уравнения реакций.",
+          "source_pdf_page": 23
+        },
+        {
+          "score": 3,
+          "branch_id": "score-3",
+          "text": "Правильно записаны 3 уравнения реакции.",
+          "source_pdf_page": 23
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2",
+          "text": "Правильно записаны 2 уравнения реакции.",
+          "source_pdf_page": 23
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1",
+          "text": "Правильно записано одно уравнение реакции.",
+          "source_pdf_page": 23
+        },
+        {
+          "score": 0,
+          "branch_id": "score-0",
+          "text": "Все уравнения реакций записаны неверно.",
+          "source_pdf_page": 23
+        }
+      ],
+      "criterion_elements": [
+        {
+          "id": "eq1",
+          "text": "Правильно записано уравнение реакции алюмината калия с серной кислотой.",
+          "source_pdf_page": 23
+        },
+        {
+          "id": "eq2",
+          "text": "Правильно записано уравнение реакции полученного раствора с сульфитом натрия.",
+          "source_pdf_page": 23
+        },
+        {
+          "id": "eq3",
+          "text": "Правильно записано уравнение реакции SO₂ с подкисленным дихроматом натрия.",
+          "source_pdf_page": 23
+        },
+        {
+          "id": "eq4",
+          "text": "Правильно записано уравнение реакции SO₂ с бромной водой.",
+          "source_pdf_page": 23
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "asset_ids": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false
+      },
+      "model_answer_html": "<div class=\"chem-model\"><p>1) 2KAlO<sub>2</sub> + 4H<sub>2</sub>SO<sub>4</sub> = Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> + K<sub>2</sub>SO<sub>4</sub> + 4H<sub>2</sub>O</p><p>2) Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> + 3Na<sub>2</sub>SO<sub>3</sub> + 3H<sub>2</sub>O = 2Al(OH)<sub>3</sub>↓ + 3SO<sub>2</sub>↑ + 3Na<sub>2</sub>SO<sub>4</sub></p><p>3) 3SO<sub>2</sub> + Na<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub> + H<sub>2</sub>SO<sub>4</sub> = Cr<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> + Na<sub>2</sub>SO<sub>4</sub> + H<sub>2</sub>O</p><p>4) SO<sub>2</sub> + Br<sub>2</sub> + 2H<sub>2</sub>O = H<sub>2</sub>SO<sub>4</sub> + 2HBr</p></div>",
+      "notes_html": "",
+      "required_acceptance_case_ids": [
+        "task-31-v1-score-4",
+        "task-31-v1-score-3",
+        "task-31-v1-score-2",
+        "task-31-v1-score-1",
+        "task-31-v1-score-0"
+      ]
+    },
+    {
+      "number": 32,
+      "variant": 1,
+      "kind": "extended",
+      "title": "Задание 32",
+      "prompt_html": "<p>Напишите уравнения реакций, с помощью которых можно осуществить следующие превращения:</p><div class=\"chem-formula chem-chain\">н-бутан → X<sub>1</sub> <span>—1 моль Br<sub>2</sub>, 40 °C→</span> X<sub>2</sub> → 1,4-дибромбутан → X<sub>3</sub> <span>—KMnO<sub>4</sub>, H<sub>2</sub>SO<sub>4</sub>, t°→</span> бутандиовая кислота</div><p>При написании уравнений реакций указывайте преимущественно образующиеся продукты, используйте структурные формулы органических веществ.</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 20,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "max_score": 5,
+      "criteria": [
+        {
+          "score": 5,
+          "branch_id": "score-5",
+          "text": "Правильно записаны все 5 уравнения реакций.",
+          "source_pdf_page": 24
+        },
+        {
+          "score": 4,
+          "branch_id": "score-4",
+          "text": "Правильно записаны 4 уравнения реакции.",
+          "source_pdf_page": 24
+        },
+        {
+          "score": 3,
+          "branch_id": "score-3",
+          "text": "Правильно записаны 3 уравнения реакции.",
+          "source_pdf_page": 24
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2",
+          "text": "Правильно записаны 2 уравнения реакции.",
+          "source_pdf_page": 24
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1",
+          "text": "Правильно записано одно уравнение реакции.",
+          "source_pdf_page": 24
+        },
+        {
+          "score": 0,
+          "branch_id": "score-0",
+          "text": "Все уравнения реакций записаны неверно.",
+          "source_pdf_page": 24
+        }
+      ],
+      "criterion_elements": [
+        {
+          "id": "eq1",
+          "text": "Правильно записано дегидрирование н-бутана до бутадиена-1,3.",
+          "source_pdf_page": 24
+        },
+        {
+          "id": "eq2",
+          "text": "Правильно записано 1,4-присоединение Br₂ к бутадиену-1,3.",
+          "source_pdf_page": 24
+        },
+        {
+          "id": "eq3",
+          "text": "Правильно записано гидрирование дибромбутена до 1,4-дибромбутана.",
+          "source_pdf_page": 24
+        },
+        {
+          "id": "eq4",
+          "text": "Правильно записано получение бутан-1,4-диола водным раствором щёлочи.",
+          "source_pdf_page": 24
+        },
+        {
+          "id": "eq5",
+          "text": "Правильно записано окисление бутан-1,4-диола до бутандиовой кислоты.",
+          "source_pdf_page": 24
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "asset_ids": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false
+      },
+      "model_answer_html": "<div class=\"chem-model\"><p>1) CH<sub>3</sub>–CH<sub>2</sub>–CH<sub>2</sub>–CH<sub>3</sub> <span class=\"chem-condition\">—кат., t°→</span> CH<sub>2</sub>=CH–CH=CH<sub>2</sub> + 2H<sub>2</sub></p><p>2) CH<sub>2</sub>=CH–CH=CH<sub>2</sub> + Br<sub>2</sub> → BrCH<sub>2</sub>–CH=CH–CH<sub>2</sub>Br</p><p>3) BrCH<sub>2</sub>–CH=CH–CH<sub>2</sub>Br + H<sub>2</sub> <span class=\"chem-condition\">—Ni, t°→</span> BrCH<sub>2</sub>–CH<sub>2</sub>–CH<sub>2</sub>–CH<sub>2</sub>Br</p><p>4) BrCH<sub>2</sub>–(CH<sub>2</sub>)<sub>2</sub>–CH<sub>2</sub>Br + 2KOH <span class=\"chem-condition\">—H<sub>2</sub>O→</span> HOCH<sub>2</sub>–(CH<sub>2</sub>)<sub>2</sub>–CH<sub>2</sub>OH + 2KBr</p><p>5) 5HOCH<sub>2</sub>(CH<sub>2</sub>)<sub>2</sub>CH<sub>2</sub>OH + 8KMnO<sub>4</sub> + 12H<sub>2</sub>SO<sub>4</sub> <span class=\"chem-condition\">—t°→</span> 5HOOC(CH<sub>2</sub>)<sub>2</sub>COOH + 8MnSO<sub>4</sub> + 4K<sub>2</sub>SO<sub>4</sub> + 22H<sub>2</sub>O</p></div>",
+      "notes_html": "<p>Допустимы структурные формулы разного вида, если они однозначно отражают порядок связей и расположение заместителей и функциональных групп.</p>",
+      "required_acceptance_case_ids": [
+        "task-32-v1-score-5",
+        "task-32-v1-score-4",
+        "task-32-v1-score-3",
+        "task-32-v1-score-2",
+        "task-32-v1-score-1",
+        "task-32-v1-score-0"
+      ]
+    },
+    {
+      "number": 33,
+      "variant": 1,
+      "kind": "extended",
+      "title": "Задание 33",
+      "prompt_html": "<p>Вещество А содержит по массе 19,25 % углерода, 7,49 % азота, 17,11 % серы, 51,34 % кислорода и водород.</p><p>Вещество А образуется при действии избытка разбавленной серной кислоты на натриевую соль Б.</p><p>На основании данных условия задачи:</p><ol><li>проведите необходимые вычисления и установите молекулярную формулу вещества А;</li><li>составьте структурную формулу вещества А, которая однозначно отражает порядок связи атомов в его молекуле;</li><li>напишите уравнение реакции получения вещества А при взаимодействии натриевой соли Б с серной кислотой (используйте структурные формулы органических веществ).</li></ol>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 20,
+        "answer_pdf_page": 25,
+        "criteria_pdf_pages": [
+          25,
+          26
+        ]
+      },
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "max_score": 3,
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3",
+          "text": "Ответ правильный и полный: правильно выполнены все три элемента ответа.",
+          "source_pdf_page": 25
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2",
+          "text": "Правильно записаны два элемента ответа.",
+          "source_pdf_page": 26
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1",
+          "text": "Правильно записан один элемент ответа.",
+          "source_pdf_page": 26
+        },
+        {
+          "score": 0,
+          "branch_id": "score-0",
+          "text": "Все элементы ответа записаны неверно.",
+          "source_pdf_page": 26
+        }
+      ],
+      "criterion_elements": [
+        {
+          "id": "formula",
+          "text": "Правильно произведены вычисления, необходимые для установления молекулярной формулы вещества, и записана молекулярная формула вещества.",
+          "source_pdf_page": 25
+        },
+        {
+          "id": "structure",
+          "text": "Записана структурная формула органического вещества, которая отражает порядок связи и взаимное расположение заместителей и функциональных групп в молекуле в соответствии с условием задания.",
+          "source_pdf_page": 25
+        },
+        {
+          "id": "reaction",
+          "text": "С использованием структурной формулы органического вещества записано уравнение реакции, на которую даётся указание в условии задания.",
+          "source_pdf_page": 25
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "asset_ids": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false
+      },
+      "model_answer_html": "<div class=\"chem-model\"><p>ω(H) = 100 − 19,25 − 7,49 − 17,11 − 51,34 = 4,81 %.</p><p>C : H : N : S : O = 19,25/12 : 4,81/1 : 7,49/14 : 17,11/32 : 51,34/16 = 3 : 9 : 1 : 1 : 6.</p><p><strong>Молекулярная формула:</strong> C<sub>3</sub>H<sub>9</sub>NSO<sub>6</sub>.</p><p><strong>Структура:</strong> [CH<sub>3</sub>–CH(NH<sub>3</sub><sup>+</sup>)–COOH]HSO<sub>4</sub><sup>−</sup>. Возможна соль β-аланина.</p><p><strong>Реакция:</strong> CH<sub>3</sub>–CH(NH<sub>2</sub>)–COONa + 2H<sub>2</sub>SO<sub>4</sub> → [CH<sub>3</sub>–CH(NH<sub>3</sub><sup>+</sup>)–COOH]HSO<sub>4</sub><sup>−</sup> + NaHSO<sub>4</sub>.</p></div>",
+      "notes_html": "",
+      "required_acceptance_case_ids": [
+        "task-33-v1-score-3",
+        "task-33-v1-score-2",
+        "task-33-v1-score-1",
+        "task-33-v1-score-0"
+      ]
+    },
+    {
+      "number": 34,
+      "variant": 1,
+      "kind": "extended",
+      "title": "Задание 34",
+      "prompt_html": "<p>При нагревании образца нитрата магния часть вещества разложилась. В результате образовался твёрдый остаток, который разделили на две части. Первую часть массой 39,6 г обработали 410 г 30%-ного раствора гидроксида натрия. При этом массовая доля щёлочи в растворе уменьшилась до 25 %. Вычислите массовую долю кислоты в растворе, полученном при полном растворении второй части твёрдого остатка массой 158,4 г в 525 г 30%-ного раствора азотной кислоты.</p><p>В ответе запишите уравнения реакций, которые указаны в условии задачи, и приведите все необходимые вычисления (указывайте единицы измерения искомых физических величин).</p>",
+      "source": {
+        "file_role": "demo",
+        "prompt_pdf_page": 20,
+        "answer_pdf_page": 26,
+        "criteria_pdf_pages": [
+          26,
+          27
+        ]
+      },
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "max_score": 4,
+      "criteria": [
+        {
+          "score": 4,
+          "branch_id": "score-4",
+          "text": "Ответ правильный и полный: правильно выполнены все четыре элемента ответа.",
+          "source_pdf_page": 27
+        },
+        {
+          "score": 3,
+          "branch_id": "score-3-elements",
+          "text": "Правильно записаны три элемента ответа.",
+          "source_pdf_page": 27
+        },
+        {
+          "score": 3,
+          "branch_id": "score-3-single-calculation-error",
+          "text": "В ответе содержится одна ошибка в вычислениях, которая привела к неверному ответу; оценка за выполнение задания снижается только на 1 балл.",
+          "source_pdf_page": 27
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2",
+          "text": "Правильно записаны два элемента ответа.",
+          "source_pdf_page": 27
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1",
+          "text": "Правильно записан один элемент ответа.",
+          "source_pdf_page": 27
+        },
+        {
+          "score": 0,
+          "branch_id": "score-0",
+          "text": "Все элементы ответа записаны неверно.",
+          "source_pdf_page": 27
+        }
+      ],
+      "criterion_elements": [
+        {
+          "id": "equations",
+          "text": "Правильно записаны уравнения реакций, соответствующих условию задания.",
+          "source_pdf_page": 27
+        },
+        {
+          "id": "calculations",
+          "text": "Правильно произведены вычисления, в которых используются необходимые физические величины, заданные в условии задания.",
+          "source_pdf_page": 27
+        },
+        {
+          "id": "logic",
+          "text": "Продемонстрирована логически обоснованная взаимосвязь физических величин, на основании которой проводятся расчёты.",
+          "source_pdf_page": 27
+        },
+        {
+          "id": "result",
+          "text": "В соответствии с условием задания определена искомая физическая величина.",
+          "source_pdf_page": 27
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "asset_ids": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false
+      },
+      "model_answer_html": "<div class=\"chem-model\"><p>2Mg(NO<sub>3</sub>)<sub>2</sub> <span class=\"chem-condition\">—t°→</span> 2MgO + 4NO<sub>2</sub> + O<sub>2</sub></p><p>Mg(NO<sub>3</sub>)<sub>2</sub> + 2NaOH = Mg(OH)<sub>2</sub> + 2NaNO<sub>3</sub></p><p>MgO + 2HNO<sub>3</sub> = Mg(NO<sub>3</sub>)<sub>2</sub> + H<sub>2</sub>O</p><p>В первой части: m(NaOH<sub>исх.</sub>) = 123 г. Пусть n(Mg(NO<sub>3</sub>)<sub>2</sub>) = x моль. Тогда (123 − 80x)/(410 + 90x) = 0,25; x = 0,2 моль. m(MgO) = 39,6 − 29,6 = 10 г; n(MgO) = 0,25 моль.</p><p>Во второй части n(MgO) = 1 моль. m(HNO<sub>3</sub><sub>исх.</sub>) = 157,5 г; израсходовано 126 г; осталось 31,5 г. Масса раствора 683,4 г.</p><p><strong>ω(HNO<sub>3</sub>) = 31,5/683,4 = 0,046 = 4,6 %.</strong></p></div>",
+      "notes_html": "<p><strong>Примечание ФИПИ:</strong> в случае, когда в ответе содержится ошибка в вычислениях, которая привела к неверному ответу, оценка за выполнение задания снижается только на 1 балл.</p>",
+      "required_acceptance_case_ids": [
+        "task-34-v1-score-4",
+        "task-34-v1-score-3",
+        "task-34-v1-score-2",
+        "task-34-v1-score-1",
+        "task-34-v1-score-0",
+        "task-34-v1-single-calculation-error"
+      ],
+      "special_assessment_options": [
+        {
+          "id": "single_calc_error",
+          "score": 3,
+          "text": "В решении допущена одна вычислительная ошибка, которая привела к неверному ответу; остальные элементы решения выполнены правильно.",
+          "source_pdf_page": 27
+        }
+      ]
+    }
+  ]
+}
