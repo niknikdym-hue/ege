@@ -37,8 +37,10 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install browser dependency
+      - name: Install browser and PDF dependencies
         run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
           npm install --no-save --package-lock=false playwright
           npx playwright install chromium
 
