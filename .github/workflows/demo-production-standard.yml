@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - demo-production-standard/**
+      - chem-audit-temp/**
+      - ege-khimiya-demoversiya-v1/**
       - .github/workflows/demo-production-standard.yml
   push:
     branches:
@@ -15,7 +17,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate-standard:
@@ -56,3 +58,89 @@ jobs:
         run: |
           ! find demo-production-standard -type d -name __pycache__ | grep -q .
           ! find demo-production-standard -type f \( -name '*.pyc' -o -name '*.log' -o -name '*.tmp' \) | grep -q .
+
+  chemistry-independent-audit:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out chemistry audit branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/khimiya-independent-audit-v1-0-1
+          fetch-depth: 0
+
+      - name: Set up Python and Node
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install audit dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          pip install pillow
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Apply independent audit fixes
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python chem-audit-temp/apply_chemistry_independent_audit.py
+
+      - name: Run tests and build
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          CHEM_SCREENSHOT_DIR: /tmp/chem-audit-screenshots
+        run: |
+          mkdir -p "$CHEM_SCREENSHOT_DIR"
+          cd ege-khimiya-demoversiya-v1
+          python -m unittest discover tests
+          node tests/browser_test.mjs
+          rm -rf tests/__pycache__ scripts/__pycache__
+          python scripts/build_demo_release.py ege-khimiya-demoversiya-PACKAGE-CONTRACT.json
+          python scripts/validate_demo_package.py ege-khimiya-demoversiya-PACKAGE-CONTRACT.json
+          unzip -t ege-khimiya-demoversiya-v1-fixed.zip
+
+      - name: Recheck clean extracted ZIP
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          CHEM_SCREENSHOT_DIR: /tmp/chem-audit-screenshots-extracted
+        run: |
+          rm -rf /tmp/chem-release "$CHEM_SCREENSHOT_DIR"
+          mkdir -p /tmp/chem-release "$CHEM_SCREENSHOT_DIR"
+          unzip -q ege-khimiya-demoversiya-v1/ege-khimiya-demoversiya-v1-fixed.zip -d /tmp/chem-release
+          cd /tmp/chem-release
+          python -m unittest discover tests
+          python scripts/validate_demo_package.py --extracted-release ege-khimiya-demoversiya-PACKAGE-CONTRACT.json
+          cp -a "$GITHUB_WORKSPACE/node_modules" ./node_modules
+          node tests/browser_test.mjs
+          rm -rf node_modules tests/__pycache__ scripts/__pycache__
+          ! find . -type d -name __pycache__ | grep -q .
+
+      - name: Commit corrected package
+        run: |
+          rm -rf node_modules ege-khimiya-demoversiya-v1/tests/__pycache__ ege-khimiya-demoversiya-v1/scripts/__pycache__
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -f ege-khimiya-demoversiya-v1
+          if ! git diff --cached --quiet; then
+            git commit -m "Fix chemistry independent audit findings"
+            git push origin HEAD:fix/khimiya-independent-audit-v1-0-1
+          fi
+
+      - name: Upload corrected release
+        uses: actions/upload-artifact@v4
+        with:
+          name: chemistry-independent-audit-v1-0-1
+          path: |
+            ege-khimiya-demoversiya-v1/ege-khimiya-demoversiya-v1-fixed.zip
+            ege-khimiya-demoversiya-v1/ege-khimiya-demoversiya-INDEPENDENT-AUDIT-2026-07-29.txt
+            ege-khimiya-demoversiya-v1/ege-khimiya-demoversiya-TEST-REPORT.txt
+            /tmp/chem-audit-screenshots/*.png
+            /tmp/chem-audit-screenshots-extracted/*.png
+          if-no-files-found: error
+          retention-days: 30
