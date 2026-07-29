@@ -37,12 +37,10 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install rendering and browser dependencies
+      - name: Install browser dependency
         run: |
-          sudo apt-get update
-          sudo apt-get install -y poppler-utils imagemagick
           npm install --no-save --package-lock=false playwright
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
 
       - name: Decode audited build inputs
         run: |
