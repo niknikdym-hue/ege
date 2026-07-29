@@ -94,12 +94,13 @@ jobs:
           rm -rf /tmp/chem-release "$CHEM_SCREENSHOT_DIR"
           mkdir -p /tmp/chem-release "$CHEM_SCREENSHOT_DIR"
           unzip -q ege-khimiya-demoversiya-v1/ege-khimiya-demoversiya-v1-fixed.zip -d /tmp/chem-release
+          cp ege-khimiya-demoversiya-v1/ege-khimiya-demoversiya-v1-fixed.zip /tmp/chem-release/
           cd /tmp/chem-release
           python -m unittest discover tests
           python scripts/validate_demo_package.py ege-khimiya-demoversiya-PACKAGE-CONTRACT.json
           cp -a "$GITHUB_WORKSPACE/node_modules" ./node_modules
           node tests/browser_test.mjs
-          rm -rf node_modules tests/__pycache__ scripts/__pycache__
+          rm -rf node_modules tests/__pycache__ scripts/__pycache__ ege-khimiya-demoversiya-v1-fixed.zip
           ! find . -type d -name __pycache__ | grep -q .
           ! find . -type f \( -name '*.pyc' -o -name '*.log' -o -name '*.tmp' \) | grep -q .
 
