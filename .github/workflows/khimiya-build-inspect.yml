@@ -1,0 +1,40 @@
+name: Chemistry build inspect
+
+on:
+  pull_request:
+    paths:
+      - khimiya-build/**
+      - .github/workflows/khimiya-build-inspect.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decode build inputs
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/khimiya-build
+          cat khimiya-build/generator.gz.b64.part* | base64 -d | gzip -d > /tmp/khimiya-build/generator.py
+          cat khimiya-build/source-data.gz.b64.part* | base64 -d | gzip -d > /tmp/khimiya-build/source-data.bin
+          file /tmp/khimiya-build/generator.py /tmp/khimiya-build/source-data.bin
+          python -m py_compile /tmp/khimiya-build/generator.py
+          python /tmp/khimiya-build/generator.py --help || true
+          echo '--- GENERATOR HEAD ---'
+          sed -n '1,220p' /tmp/khimiya-build/generator.py
+          echo '--- SOURCE DATA HEAD ---'
+          head -c 1000 /tmp/khimiya-build/source-data.bin || true
+          echo
+
+      - name: Upload decoded inputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: khimiya-decoded-build-inputs
+          path: /tmp/khimiya-build
+          if-no-files-found: error
+          retention-days: 30
