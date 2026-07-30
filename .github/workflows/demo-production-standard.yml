@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - demo-production-standard/**
+      - production-audits/**
       - .github/workflows/demo-production-standard.yml
   push:
     branches:
@@ -11,6 +12,7 @@ on:
       - standard/new-demo-production-system
     paths:
       - demo-production-standard/**
+      - production-audits/**
       - .github/workflows/demo-production-standard.yml
   workflow_dispatch:
 
@@ -56,3 +58,32 @@ jobs:
         run: |
           ! find demo-production-standard -type d -name __pycache__ | grep -q .
           ! find demo-production-standard -type f \( -name '*.pyc' -o -name '*.log' -o -name '*.tmp' \) | grep -q .
+
+  chemistry-live-production-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Audit published chemistry page
+        env:
+          AUDIT_OUT: /tmp/khimiya-live-audit
+        run: node production-audits/khimiya-live-audit.mjs
+
+      - name: Upload audit report and screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: khimiya-live-production-audit
+          path: /tmp/khimiya-live-audit/**
+          if-no-files-found: error
+          retention-days: 30
