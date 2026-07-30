@@ -1,0 +1,60 @@
+name: Apply demo catalog update
+
+on:
+  push:
+    branches:
+      - fix/update-demo-catalog-with-chemistry
+    paths:
+      - .github/scripts/update_demo_catalog.py
+      - .github/workflows/apply-demo-catalog-update.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/update-demo-catalog-with-chemistry
+          fetch-depth: 0
+
+      - name: Apply exact updates
+        run: python .github/scripts/update_demo_catalog.py
+
+      - name: Validate links and HTML fragments
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          footer = Path('site-footer-T123.txt').read_text(encoding='utf-8')
+          catalog = Path('ege-demoversii-T123.txt').read_text(encoding='utf-8')
+          urls = [
+              'https://eksamio.ru/ege/russkiy/demoversiya/',
+              'https://eksamio.ru/ege/fizika/demoversiya/',
+              'https://eksamio.ru/ege/khimiya/demoversiya/',
+              'https://eksamio.ru/ege/matematika-baza/demoversiya/',
+              'https://eksamio.ru/ege/matematika-profil/demoversiya/',
+              'https://eksamio.ru/ege/obshchestvoznaniye/demoversiya/',
+          ]
+          assert all(url in footer for url in urls)
+          assert all(url in catalog for url in urls)
+          assert catalog.count('<article class="ed-subject ') == 6
+          assert 'Для нового предмета скопируйте' not in catalog
+          assert catalog.count('<style>') == catalog.count('</style>')
+          assert catalog.count('<article') == catalog.count('</article>')
+          print('Validation PASS')
+          PY
+
+      - name: Commit updated T123 files
+        run: |
+          if git diff --quiet -- site-footer-T123.txt ege-demoversii-T123.txt; then
+            echo 'No target changes produced'
+            exit 1
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site-footer-T123.txt ege-demoversii-T123.txt
+          git commit -m 'Добавить химию и актуализировать каталог демоверсий'
+          git push origin HEAD:fix/update-demo-catalog-with-chemistry
