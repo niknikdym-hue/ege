@@ -1,0 +1,480 @@
+<div class="ep-root" id="eksamio-ege-demos-v2">
+  <style>
+    #eksamio-ege-demos-v2{
+      --ed-primary:var(--eksamio-primary,#2F80FF);
+      --ed-primary-hover:var(--eksamio-primary-hover,#166AE0);
+      --ed-primary-soft:var(--eksamio-primary-soft,#DDEBFF);
+      --ed-text:var(--eksamio-text,#19324A);
+      --ed-muted:var(--eksamio-text-soft,#5A7691);
+      --ed-light:var(--eksamio-text-light,#7F97AE);
+      --ed-border:var(--eksamio-border,#D9E7F5);
+      --ed-border-strong:var(--eksamio-border-strong,#C5D9EC);
+      --ed-surface:var(--eksamio-surface,#FFFFFF);
+      --ed-violet:var(--eksamio-violet,#8C7BFF);
+      --ed-violet-soft:var(--eksamio-violet-soft,#ECE8FF);
+      --ed-green:#15803D;
+      --ed-green-soft:#F0FDF4;
+      --ed-green-border:#BBF7D0;
+      --ed-warning:#92400E;
+      --ed-warning-soft:#FFFBEB;
+      --ed-warning-border:#FCD34D;
+      color:var(--ed-text);
+      font-family:Arial,sans-serif;
+      padding:28px 0 72px;
+      overflow-x:hidden;
+    }
+    #eksamio-ege-demos-v2,
+    #eksamio-ege-demos-v2 *{box-sizing:border-box}
+    #eksamio-ege-demos-v2 a{color:inherit}
+    #eksamio-ege-demos-v2 .ed-page{
+      width:min(1180px,calc(100% - 40px));
+      margin:0 auto;
+    }
+    #eksamio-ege-demos-v2 .ed-stack{display:grid;gap:24px;min-width:0}
+    #eksamio-ege-demos-v2 .ed-breadcrumbs{
+      display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+      margin:0 0 22px;color:var(--ed-muted);font-size:14px;line-height:1.45;
+    }
+    #eksamio-ege-demos-v2 .ed-breadcrumbs a{text-decoration:none;color:var(--ed-text)}
+    #eksamio-ege-demos-v2 .ed-breadcrumbs a:hover{color:var(--ed-primary)}
+    #eksamio-ege-demos-v2 .ed-hero{
+      display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);
+      gap:24px;align-items:stretch;padding:clamp(26px,5vw,52px);
+      border:1px solid var(--ed-border);border-radius:26px;
+      background:
+        radial-gradient(circle at 88% 8%,rgba(140,123,255,.13),transparent 28%),
+        linear-gradient(135deg,#FFFFFF 0%,#F8FBFF 70%,#F6F4FF 100%);
+      box-shadow:0 18px 48px rgba(58,103,152,.08);
+    }
+    #eksamio-ege-demos-v2 .ed-hero__content{align-self:center;min-width:0}
+    #eksamio-ege-demos-v2 .ed-kicker{
+      display:inline-flex;align-items:center;margin:0 0 14px;padding:7px 11px;
+      border-radius:999px;background:var(--ed-primary-soft);color:var(--ed-primary-hover);
+      font-size:13px;font-weight:900;
+    }
+    #eksamio-ege-demos-v2 h1{
+      max-width:760px;margin:0;font-size:clamp(36px,5.4vw,60px);
+      line-height:1.04;letter-spacing:-.04em;color:var(--ed-text);
+    }
+    #eksamio-ege-demos-v2 .ed-lead{
+      max-width:760px;margin:19px 0 0;color:var(--ed-muted);
+      font-size:clamp(17px,2vw,20px);line-height:1.62;
+    }
+    #eksamio-ege-demos-v2 .ed-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+    #eksamio-ege-demos-v2 .ed-button{
+      position:relative!important;display:inline-flex;align-items:center;justify-content:center;
+      min-height:46px;padding:12px 18px!important;border:1px solid var(--ed-primary)!important;
+      border-radius:12px!important;background:var(--ed-primary)!important;background-image:none!important;
+      color:#fff!important;-webkit-text-fill-color:#fff!important;font:inherit;font-weight:850!important;
+      line-height:1.2!important;text-decoration:none!important;text-shadow:none!important;box-shadow:none!important;
+      transition:background-color .18s ease,border-color .18s ease,transform .16s ease;
+    }
+    #eksamio-ege-demos-v2 .ed-button::before,
+    #eksamio-ege-demos-v2 .ed-button::after{content:none!important;display:none!important}
+    #eksamio-ege-demos-v2 .ed-button:hover{
+      background:var(--ed-primary-hover)!important;border-color:var(--ed-primary-hover)!important;
+      transform:translateY(-1px);
+    }
+    #eksamio-ege-demos-v2 .ed-button--secondary{
+      background:#fff!important;color:var(--ed-text)!important;-webkit-text-fill-color:var(--ed-text)!important;
+      border-color:var(--ed-border-strong)!important;
+    }
+    #eksamio-ege-demos-v2 .ed-button--secondary:hover{
+      background:#F6FAFF!important;border-color:#AAC8E8!important;
+    }
+    #eksamio-ege-demos-v2 .ed-rules{
+      display:grid;gap:10px;align-content:start;padding:20px;
+      border:1px solid rgba(197,217,236,.95);border-radius:20px;
+      background:rgba(255,255,255,.9);box-shadow:0 14px 34px rgba(57,99,144,.08);
+    }
+    #eksamio-ege-demos-v2 .ed-rules h2{
+      margin:0 0 2px;font-size:17px;line-height:1.3;
+    }
+    #eksamio-ege-demos-v2 .ed-rule{
+      display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;
+      padding:12px;border:1px solid var(--ed-border);border-radius:14px;background:#fff;
+    }
+    #eksamio-ege-demos-v2 .ed-rule__mark{
+      display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+      border-radius:11px;background:var(--ed-primary-soft);color:var(--ed-primary-hover);
+      font-size:14px;font-weight:900;
+    }
+    #eksamio-ege-demos-v2 .ed-rule:nth-of-type(3) .ed-rule__mark{
+      background:var(--ed-violet-soft);color:#6456CB;
+    }
+    #eksamio-ege-demos-v2 .ed-rule:nth-of-type(4) .ed-rule__mark{
+      background:var(--ed-green-soft);color:var(--ed-green);
+    }
+    #eksamio-ege-demos-v2 .ed-rule:nth-of-type(5) .ed-rule__mark{
+      background:var(--ed-warning-soft);color:var(--ed-warning);
+    }
+    #eksamio-ege-demos-v2 .ed-rule strong{display:block;font-size:14px;line-height:1.3}
+    #eksamio-ege-demos-v2 .ed-rule p{
+      margin:3px 0 0;color:var(--ed-muted);font-size:12px;line-height:1.43;
+    }
+    #eksamio-ege-demos-v2 .ed-layout{
+      display:grid;grid-template-columns:150px minmax(0,1fr) 150px;gap:20px;align-items:start;
+    }
+    #eksamio-ege-demos-v2 .ed-side{min-width:0}
+    #eksamio-ege-demos-v2 .ed-ad-stack{display:grid;gap:18px}
+    #eksamio-ege-demos-v2 .ed-main{min-width:0}
+    #eksamio-ege-demos-v2 .ed-panel{
+      min-width:0;padding:clamp(22px,4vw,36px);
+      border:1px solid var(--ed-border);border-radius:22px;background:#fff;
+    }
+    #eksamio-ege-demos-v2 .ed-section-head{max-width:800px;margin-bottom:22px}
+    #eksamio-ege-demos-v2 .ed-eyebrow{
+      margin:0 0 8px;color:var(--ed-primary);font-size:13px;font-weight:900;
+      letter-spacing:.055em;text-transform:uppercase;
+    }
+    #eksamio-ege-demos-v2 h2{
+      margin:0;color:var(--ed-text);font-size:clamp(27px,4vw,40px);
+      line-height:1.12;letter-spacing:-.028em;
+    }
+    #eksamio-ege-demos-v2 .ed-intro{
+      max-width:780px;margin:11px 0 0;color:var(--ed-muted);font-size:16px;line-height:1.64;
+    }
+    #eksamio-ege-demos-v2 .ed-catalog{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));
+      gap:16px;
+    }
+    #eksamio-ege-demos-v2 .ed-subject{
+      display:flex;flex-direction:column;min-width:0;padding:22px;
+      border:1px solid var(--ed-border);border-radius:20px;background:#fff;
+      transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;
+    }
+    #eksamio-ege-demos-v2 .ed-subject:hover{
+      transform:translateY(-2px);border-color:#B7D2EF;box-shadow:0 13px 30px rgba(49,95,181,.08);
+    }
+    #eksamio-ege-demos-v2 .ed-subject--russian{
+      background:
+        radial-gradient(circle at 94% 4%,rgba(140,123,255,.13),transparent 26%),
+        linear-gradient(180deg,#FFFFFF,#FAF9FF);
+    }
+    #eksamio-ege-demos-v2 .ed-subject--physics{
+      background:
+        radial-gradient(circle at 94% 4%,rgba(47,128,255,.12),transparent 26%),
+        linear-gradient(180deg,#FFFFFF,#F7FBFF);
+    }
+    #eksamio-ege-demos-v2 .ed-subject__top{
+      display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:16px;
+    }
+    #eksamio-ege-demos-v2 .ed-subject__icon{
+      display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;
+      border-radius:15px;background:var(--ed-violet-soft);color:#6456CB;font-weight:900;font-size:18px;
+    }
+    #eksamio-ege-demos-v2 .ed-subject--physics .ed-subject__icon{
+      background:var(--ed-primary-soft);color:var(--ed-primary-hover);
+    }
+    #eksamio-ege-demos-v2 .ed-status{
+      display:inline-flex;padding:7px 10px;border:1px solid var(--ed-green-border);
+      border-radius:999px;background:var(--ed-green-soft);color:var(--ed-green);
+      font-size:12px;font-weight:900;
+    }
+    #eksamio-ege-demos-v2 .ed-subject h3{
+      margin:0 0 10px;font-size:25px;line-height:1.18;letter-spacing:-.02em;
+    }
+    #eksamio-ege-demos-v2 .ed-subject>p{
+      margin:0;color:var(--ed-muted);font-size:15px;line-height:1.62;
+    }
+    #eksamio-ege-demos-v2 .ed-facts{
+      display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0;
+    }
+    #eksamio-ege-demos-v2 .ed-fact{
+      display:inline-flex;padding:7px 9px;border:1px solid var(--ed-border);
+      border-radius:10px;background:#fff;color:var(--ed-text);
+      font-size:12px;font-weight:850;
+    }
+    #eksamio-ege-demos-v2 .ed-subject .ed-actions{margin-top:auto;padding-top:20px}
+    #eksamio-ege-demos-v2 .ed-principles{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;
+    }
+    #eksamio-ege-demos-v2 .ed-principle{
+      padding:18px;border:1px solid var(--ed-border);border-radius:17px;background:#fff;
+    }
+    #eksamio-ege-demos-v2 .ed-principle__mark{
+      display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;
+      margin-bottom:12px;border-radius:12px;background:var(--ed-primary-soft);
+      color:var(--ed-primary-hover);font-weight:900;
+    }
+    #eksamio-ege-demos-v2 .ed-principle:nth-child(2) .ed-principle__mark{
+      background:var(--ed-violet-soft);color:#6456CB;
+    }
+    #eksamio-ege-demos-v2 .ed-principle:nth-child(3) .ed-principle__mark{
+      background:var(--ed-green-soft);color:var(--ed-green);
+    }
+    #eksamio-ege-demos-v2 .ed-principle h3{
+      margin:0 0 7px;font-size:19px;line-height:1.25;
+    }
+    #eksamio-ege-demos-v2 .ed-principle p{
+      margin:0;color:var(--ed-muted);font-size:14px;line-height:1.55;
+    }
+    #eksamio-ege-demos-v2 .ed-result{
+      display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
+      gap:20px;align-items:start;
+    }
+    #eksamio-ege-demos-v2 .ed-result__intro{
+      padding:20px;border:1px solid #D4E5F7;border-radius:18px;
+      background:linear-gradient(180deg,#F7FAFF,#EEF6FF);
+    }
+    #eksamio-ege-demos-v2 .ed-result__intro strong{
+      display:block;font-size:20px;line-height:1.25;
+    }
+    #eksamio-ege-demos-v2 .ed-result__intro p{
+      margin:9px 0 0;color:var(--ed-muted);font-size:14px;line-height:1.58;
+    }
+    #eksamio-ege-demos-v2 .ed-result__list{display:grid;gap:10px}
+    #eksamio-ege-demos-v2 .ed-result__item{
+      padding:15px;border:1px solid var(--ed-border);border-radius:15px;background:#fff;
+    }
+    #eksamio-ege-demos-v2 .ed-result__item strong{
+      display:block;margin-bottom:5px;font-size:16px;line-height:1.3;
+    }
+    #eksamio-ege-demos-v2 .ed-result__item p{
+      margin:0;color:var(--ed-muted);font-size:13px;line-height:1.5;
+    }
+    #eksamio-ege-demos-v2 .ed-honest{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;
+    }
+    #eksamio-ege-demos-v2 .ed-honest__item{
+      padding:16px;border-top:3px solid var(--ed-primary);background:#fff;
+    }
+    #eksamio-ege-demos-v2 .ed-honest__item span{
+      display:block;margin-bottom:8px;color:var(--ed-primary);font-size:12px;font-weight:900;
+    }
+    #eksamio-ege-demos-v2 .ed-honest__item h3{
+      margin:0 0 7px;font-size:17px;line-height:1.28;
+    }
+    #eksamio-ege-demos-v2 .ed-honest__item p{
+      margin:0;color:var(--ed-muted);font-size:13px;line-height:1.5;
+    }
+    #eksamio-ege-demos-v2 .ed-source{
+      padding:20px;border:1px solid var(--ed-border);border-radius:18px;
+      background:linear-gradient(180deg,#FFFFFF,#F8FBFF);
+      color:var(--ed-muted);font-size:14px;line-height:1.62;
+    }
+    #eksamio-ege-demos-v2 .ed-source p{margin:0 0 9px}
+    #eksamio-ege-demos-v2 .ed-source p:last-child{margin-bottom:0}
+    #eksamio-ege-demos-v2 .ed-source a{color:var(--ed-primary-hover);font-weight:850}
+    #eksamio-ege-demos-v2 .ed-cta{
+      display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;
+      padding:clamp(22px,4vw,34px);border:1px solid #D4DDF7;border-radius:22px;
+      background:
+        radial-gradient(circle at 90% 10%,rgba(140,123,255,.12),transparent 27%),
+        linear-gradient(135deg,#FFFFFF 0%,#F8F7FF 100%);
+    }
+    #eksamio-ege-demos-v2 .ed-cta h2{font-size:clamp(25px,3.6vw,36px)}
+    #eksamio-ege-demos-v2 .ed-cta p{
+      max-width:720px;margin:9px 0 0;color:var(--ed-muted);font-size:15px;line-height:1.6;
+    }
+    #eksamio-ege-demos-v2 .ed-ad{min-height:250px;border-radius:14px}
+    @media(max-width:1050px){
+      #eksamio-ege-demos-v2 .ed-layout{grid-template-columns:minmax(0,1fr)}
+      #eksamio-ege-demos-v2 .ed-side{display:none}
+    }
+    @media(max-width:880px){
+      #eksamio-ege-demos-v2 .ed-hero{grid-template-columns:1fr}
+      #eksamio-ege-demos-v2 .ed-principles{grid-template-columns:1fr}
+      #eksamio-ege-demos-v2 .ed-result{grid-template-columns:1fr}
+      #eksamio-ege-demos-v2 .ed-honest{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:620px){
+      #eksamio-ege-demos-v2{padding-top:18px;padding-bottom:48px}
+      #eksamio-ege-demos-v2 .ed-page{width:calc(100% - 32px)}
+      #eksamio-ege-demos-v2 .ed-hero{padding:22px 18px;border-radius:21px}
+      #eksamio-ege-demos-v2 .ed-panel{padding:20px 17px;border-radius:19px}
+      #eksamio-ege-demos-v2 .ed-actions{display:grid}
+      #eksamio-ege-demos-v2 .ed-button{width:100%}
+      #eksamio-ege-demos-v2 .ed-rules{padding:15px}
+      #eksamio-ege-demos-v2 .ed-honest{grid-template-columns:1fr}
+      #eksamio-ege-demos-v2 .ed-cta{grid-template-columns:1fr;padding:21px 18px}
+    }
+  </style>
+
+  <div class="ed-page">
+    <nav class="ed-breadcrumbs" aria-label="Хлебные крошки">
+      <a href="https://eksamio.ru/">Главная</a>
+      <span aria-hidden="true">→</span>
+      <a href="https://eksamio.ru/ege/">ЕГЭ</a>
+      <span aria-hidden="true">→</span>
+      <span aria-current="page">Демоверсии</span>
+    </nav>
+
+    <div class="ed-stack">
+      <header class="ed-hero">
+        <div class="ed-hero__content">
+          <p class="ed-kicker">Экзаменационный режим</p>
+          <h1>Интерактивные демоверсии ЕГЭ</h1>
+          <p class="ed-lead">Пройдите официальный демонстрационный вариант как единую попытку: с непрерывным таймером, автоматическим сохранением и разбором результата только после завершения.</p>
+          <div class="ed-actions">
+            <a class="ed-button" href="#ege-demo-catalog">Выбрать предмет</a>
+            <a class="ed-button ed-button--secondary" href="#ege-demo-rules">Как проходит попытка</a>
+          </div>
+        </div>
+
+        <aside class="ed-rules" aria-label="Правила интерактивной попытки">
+          <h2>Единый режим для каждого предмета</h2>
+          <div class="ed-rule">
+            <span class="ed-rule__mark" aria-hidden="true">⏱</span>
+            <span><strong>Реальное время</strong><p>Таймер не останавливается после закрытия страницы.</p></span>
+          </div>
+          <div class="ed-rule">
+            <span class="ed-rule__mark" aria-hidden="true">✓</span>
+            <span><strong>Автосохранение</strong><p>Ответы, черновики и текущая позиция сохраняются в браузере.</p></span>
+          </div>
+          <div class="ed-rule">
+            <span class="ed-rule__mark" aria-hidden="true">○</span>
+            <span><strong>Без подсказок по ходу</strong><p>Правильные ответы открываются только после завершения.</p></span>
+          </div>
+          <div class="ed-rule">
+            <span class="ed-rule__mark" aria-hidden="true">≠</span>
+            <span><strong>Честная развёрнутая часть</strong><p>Сочинение и решения задач не выдаются за автоматическую проверку.</p></span>
+          </div>
+        </aside>
+      </header>
+
+      <div class="ed-layout">
+        <aside class="ed-side ep-no-print">
+          <div class="ed-ad-stack">
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side ed-ad" data-ad-place="ege-demos-desktop-left-top" aria-label="Рекламный блок"></div>
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side-compact" data-ad-place="ege-demos-desktop-left-middle" aria-label="Рекламный блок"></div>
+          </div>
+        </aside>
+
+        <main class="ed-main">
+          <div class="ed-stack">
+            <section class="ed-panel" id="ege-demo-catalog">
+              <div class="ed-section-head">
+                <p class="ed-eyebrow">Каталог</p>
+                <h2>Выберите предмет и начните полную попытку</h2>
+                <p class="ed-intro">Каждая демоверсия учитывает официальную структуру конкретного экзамена: продолжительность, типы ответов, частичное оценивание и правила работы с развёрнутой частью.</p>
+              </div>
+
+              <div class="ed-catalog">
+                <article class="ed-subject ed-subject--russian">
+                  <div class="ed-subject__top">
+                    <span class="ed-subject__icon" aria-hidden="true">РЯ</span>
+                    <span class="ed-status">Доступно</span>
+                  </div>
+                  <h3>ЕГЭ по русскому языку</h3>
+                  <p>Задания с кратким ответом проверяются автоматически. Сочинение сохраняется отдельно и после завершения оценивается по официальным критериям.</p>
+                  <div class="ed-facts">
+                    <span class="ed-fact">Полный вариант</span>
+                    <span class="ed-fact">Непрерывный таймер</span>
+                    <span class="ed-fact">Самооценка сочинения</span>
+                  </div>
+                  <div class="ed-actions">
+                    <a class="ed-button" href="https://eksamio.ru/ege/russkiy/demoversiya/">Начать демоверсию</a>
+                  </div>
+                </article>
+
+                <article class="ed-subject ed-subject--physics">
+                  <div class="ed-subject__top">
+                    <span class="ed-subject__icon" aria-hidden="true">Ф</span>
+                    <span class="ed-status">Доступно</span>
+                  </div>
+                  <h3>ЕГЭ по физике</h3>
+                  <p>Краткие ответы проверяются автоматически. Решения задач сохраняются и после завершения сравниваются с официальными решениями и критериями.</p>
+                  <div class="ed-facts">
+                    <span class="ed-fact">Полный вариант</span>
+                    <span class="ed-fact">Справочные данные</span>
+                    <span class="ed-fact">Критерии развёрнутых задач</span>
+                  </div>
+                  <div class="ed-actions">
+                    <a class="ed-button" href="https://eksamio.ru/ege/fizika/demoversiya/">Начать демоверсию</a>
+                  </div>
+                </article>
+
+                <!-- Для нового предмета скопируйте одну карточку .ed-subject.
+                     Сетка автоматически перестроится без изменения CSS и заголовков страницы. -->
+              </div>
+            </section>
+
+            <div class="ad-slot ad-slot-between ep-ad-slot ep-ad-slot--between ep-no-print" data-ad-place="ege-demos-after-catalog" aria-label="Рекламный блок"></div>
+
+            <section class="ed-panel" id="ege-demo-rules">
+              <div class="ed-section-head">
+                <p class="ed-eyebrow">Интерактивный формат</p>
+                <h2>Не электронная копия PDF, а цельная экзаменационная попытка</h2>
+                <p class="ed-intro">Интерфейс не меняет содержание официального варианта. Он помогает сохранить условия, которые влияют на реальный результат.</p>
+              </div>
+
+              <div class="ed-principles">
+                <div class="ed-principle">
+                  <span class="ed-principle__mark" aria-hidden="true">01</span>
+                  <h3>Ответы сохраняются сразу</h3>
+                  <p>После перезагрузки восстанавливаются введённые ответы, черновики, отметки и открытое задание.</p>
+                </div>
+                <div class="ed-principle">
+                  <span class="ed-principle__mark" aria-hidden="true">02</span>
+                  <h3>Проверка не вмешивается в работу</h3>
+                  <p>До завершения попытки интерфейс не сообщает, верен ли ответ, и не показывает объяснение.</p>
+                </div>
+                <div class="ed-principle">
+                  <span class="ed-principle__mark" aria-hidden="true">03</span>
+                  <h3>Результат разделён по типам заданий</h3>
+                  <p>Автоматически проверяется только то, что можно проверить строго по официальному формату ответа.</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="ed-panel">
+              <div class="ed-section-head">
+                <p class="ed-eyebrow">После завершения</p>
+                <h2>Результат нужен не для отметки, а для следующего решения</h2>
+              </div>
+
+              <div class="ed-result">
+                <div class="ed-result__intro">
+                  <strong>Не ограничивайтесь общей суммой</strong>
+                  <p>Смотрите, какие типы ошибок повторяются и на каком этапе работа перестаёт двигаться.</p>
+                </div>
+                <div class="ed-result__list">
+                  <div class="ed-result__item"><strong>Краткие ответы</strong><p>Видно совпадение с эталоном, частичный балл и ошибки формы ответа.</p></div>
+                  <div class="ed-result__item"><strong>Развёрнутая часть</strong><p>Открываются официальные решения и критерии для самостоятельной или экспертной проверки.</p></div>
+                  <div class="ed-result__item"><strong>Следующий шаг</strong><p>После анализа можно перейти к точечной тренировке или разбору конкретной темы.</p></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="ed-panel">
+              <div class="ed-section-head">
+                <p class="ed-eyebrow">Честная диагностика</p>
+                <h2>Как пройти вариант, чтобы результат был полезен</h2>
+              </div>
+
+              <div class="ed-honest">
+                <div class="ed-honest__item"><span>01</span><h3>Выделите полный отрезок времени</h3><p>Не начинайте попытку между другими делами и не планируйте паузу.</p></div>
+                <div class="ed-honest__item"><span>02</span><h3>Используйте только разрешённые средства</h3><p>Не открывайте ответы, конспекты и поисковые системы.</p></div>
+                <div class="ed-honest__item"><span>03</span><h3>Не проверяйте себя по ходу</h3><p>Иначе попытка перестаёт показывать реальную готовность.</p></div>
+                <div class="ed-honest__item"><span>04</span><h3>Разберите причины потерь</h3><p>Отделите незнание, невнимательность, вычисления, запись и нехватку времени.</p></div>
+              </div>
+            </section>
+
+            <section class="ed-source">
+              <p><strong>Источник заданий:</strong> официальные демонстрационные варианты, спецификации и кодификаторы ФГБНУ «ФИПИ».</p>
+              <p>Интерактивная оболочка, сохранение попытки и представление результатов разработаны Эксамио. Эксамио не является официальным ресурсом ФИПИ, Рособрнадзора или организаторов ЕГЭ.</p>
+              <p><a href="https://fipi.ru/ege/demoversii-specifikacii-kodifikatory" target="_blank" rel="noopener noreferrer">Открыть официальный источник ФИПИ ↗</a></p>
+            </section>
+
+            <section class="ed-cta">
+              <div>
+                <h2>После попытки переходите к точной работе</h2>
+                <p>Разберите ошибки, определите причину каждой потери и выберите тренировку или материал, который закрывает именно этот пробел.</p>
+              </div>
+              <a class="ed-button ed-button--secondary" href="https://eksamio.ru/ege/">Вернуться в раздел ЕГЭ</a>
+            </section>
+          </div>
+        </main>
+
+        <aside class="ed-side ep-no-print">
+          <div class="ed-ad-stack">
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side ed-ad" data-ad-place="ege-demos-desktop-right-top" aria-label="Рекламный блок"></div>
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side-compact" data-ad-place="ege-demos-desktop-right-middle" aria-label="Рекламный блок"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,102 @@
+<style>
+  .ep-site-chrome--footer .ep-footer-grid {
+    grid-template-columns:
+      minmax(260px, 1.35fr)
+      repeat(3, minmax(150px, 0.85fr));
+  }
+
+
+  .ep-site-chrome--footer .ep-footer-title {
+    margin-bottom: 10px;
+  }
+
+  .ep-site-chrome--footer .ep-footer-links {
+    gap: 5px;
+    row-gap: 5px;
+  }
+
+  .ep-site-chrome--footer .ep-footer-links a {
+    padding: 1px 0;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 980px) {
+    .ep-site-chrome--footer .ep-footer-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ep-site-chrome--footer .ep-footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="ep-root ep-site-chrome ep-site-chrome--footer ep-no-print">
+  <footer class="ep-site-footer">
+    <div class="ep-footer-grid">
+      <div>
+        <a class="ep-logo" href="https://eksamio.ru/" aria-label="Эксамио — главная">
+          <span class="ep-logo__mark" aria-hidden="true">Э</span>
+          <span class="ep-logo__text">Эксамио</span>
+        </a>
+
+        <p class="ep-footer-note">
+          © 2026 Эксамио. Авторские тексты, задания, объяснения
+          и материалы тренажёров защищены законодательством об авторском праве.
+          Копирование и публикация без письменного разрешения
+          правообладателя запрещены.
+        </p>
+      </div>
+
+      <div>
+        <p class="ep-footer-title">ЕГЭ</p>
+
+        <div class="ep-footer-links">
+          <a href="https://eksamio.ru/ege/">Подготовка к ЕГЭ</a>
+          <a href="https://eksamio.ru/ege/demoversii/">Все демоверсии</a>
+          <a href="https://eksamio.ru/ege/russkiy/demoversiya/">Русский язык</a>
+          <a href="https://eksamio.ru/ege/fizika/demoversiya/">Физика</a>
+          <a href="https://eksamio.ru/ege/matematika-baza/demoversiya/">Базовая математика</a>
+          <a href="https://eksamio.ru/ege/matematika-profil/demoversiya/">Профильная математика</a>
+          <a href="https://eksamio.ru/ege/obshchestvoznaniye/demoversiya/">Обществознание</a>
+        </div>
+      </div>
+
+      <div>
+        <p class="ep-footer-title">Тренажёры</p>
+
+        <div class="ep-footer-links">
+          <a href="https://eksamio.ru/trenazhery/">Все тренажёры</a>
+          <a href="https://eksamio.ru/trenazhery/russkiy/orfoepiya/">Ударения</a>
+          <a href="https://eksamio.ru/trenazhery/russkiy/slovarnye-slova/">Словарные слова</a>
+          <a href="https://eksamio.ru/trenazhery/russkiy/paronimy/">Паронимы</a>
+          <a href="https://eksamio.ru/trenazhery/russkiy/frazeologizmy/">Фразеологизмы</a>
+        </div>
+      </div>
+
+      <div>
+        <p class="ep-footer-title">Материалы по физике</p>
+
+        <div class="ep-footer-links">
+          <a href="https://eksamio.ru/blog/">Блог по физике</a>
+          <a href="https://eksamio.ru/blog/teoriya/">Теория простым языком</a>
+          <a href="https://eksamio.ru/blog/zadachi/">Разбор задач</a>
+          <a href="https://eksamio.ru/blog/oshibki/">Типичные ошибки</a>
+          <a href="https://eksamio.ru/blog/formuly/">Формулы и единицы</a>
+          <a href="https://eksamio.ru/blog/roditelyam/">Родителям</a>
+          <a href="https://eksamio.ru/about/">О проекте</a>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="ad-slot ad-slot-between ep-ad-slot ep-ad-slot--bottom ep-footer-ad"
+      data-ad-place="footer-bottom"
+      aria-label="Рекламный блок"
+    >
+      <div id="yandex_rtb_footer_bottom"></div>
+    </div>
+  </footer>
+</div>
