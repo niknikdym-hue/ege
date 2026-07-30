@@ -44,7 +44,7 @@ async function auditReferences(page, name, result) {
   await page.waitForTimeout(1800);
   result.referencesOpened = true;
   const dialogText = await page.locator('body').innerText();
-  for (const label of ['Таблица растворимости', 'Электрохимический ряд', 'Периодическая система']) {
+  for (const label of ['Растворимость и ряд активности', 'Периодическая система']) {
     if (!dialogText.toLowerCase().includes(label.toLowerCase())) {
       report.failures.push(`[${name}] В справочниках не найден раздел «${label}»`);
     }
@@ -52,20 +52,23 @@ async function auditReferences(page, name, result) {
 
   result.referenceTabs = [];
   result.referenceImages = [];
-  const tabPatterns = [/таблица растворимости/i, /электрохимический ряд/i, /периодическая система/i];
-  for (let i = 0; i < tabPatterns.length; i++) {
-    const tab = page.getByRole('button', { name: tabPatterns[i] }).first();
+  const tabs = [
+    { name: /растворимость и ряд активности/i, minWidth: 1000, minHeight: 700 },
+    { name: /периодическая система/i, minWidth: 1000, minHeight: 700 }
+  ];
+  for (let i = 0; i < tabs.length; i++) {
+    const tab = page.getByRole('button', { name: tabs[i].name }).first();
     if (await tab.isVisible().catch(() => false)) {
       result.referenceTabs.push((await tab.innerText()).trim());
       await tab.click();
       await page.waitForTimeout(1000);
       const images = await visibleImageInfo(page);
-      const largeImages = images.filter(img => img.naturalWidth >= 800 && img.naturalHeight >= 500);
-      result.referenceImages.push({ tab: String(tabPatterns[i]), images });
-      if (!largeImages.length) report.failures.push(`[${name}] Справочник ${tabPatterns[i]} не собран в полноразмерное изображение`);
+      const largeImages = images.filter(img => img.naturalWidth >= tabs[i].minWidth && img.naturalHeight >= tabs[i].minHeight);
+      result.referenceImages.push({ tab: String(tabs[i].name), images });
+      if (!largeImages.length) report.failures.push(`[${name}] Справочник ${tabs[i].name} не собран в полноразмерное изображение`);
       await page.screenshot({ path: path.join(outDir, `${name}-reference-${i + 1}.png`), fullPage: true });
     } else {
-      report.failures.push(`[${name}] Не найдена вкладка справочника ${tabPatterns[i]}`);
+      report.failures.push(`[${name}] Не найдена вкладка справочника ${tabs[i].name}`);
     }
   }
 
