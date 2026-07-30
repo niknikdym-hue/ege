@@ -56,16 +56,18 @@
 #eksamio-home-final .eh-card h3{margin:15px 0 9px;font-size:22px;line-height:1.22;letter-spacing:-.015em}
 #eksamio-home-final .eh-card p{margin:0;color:var(--eh-muted);font-size:15px;line-height:1.6}
 #eksamio-home-final .eh-card__link{margin-top:auto;padding-top:18px;color:var(--eh-primary-hover);font-size:14px;font-weight:900}
-#eksamio-home-final .eh-demo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+#eksamio-home-final .eh-demo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 #eksamio-home-final .eh-demo{display:flex;flex-direction:column;padding:22px;border:1px solid var(--eh-border);border-radius:20px;background:#fff;text-decoration:none;min-width:0;transition:.16s ease}
 #eksamio-home-final .eh-demo:hover{transform:translateY(-2px);border-color:#B7D2EF;box-shadow:0 13px 30px rgba(49,95,181,.08)}
 #eksamio-home-final .eh-demo:nth-child(1){background:radial-gradient(circle at 94% 4%,rgba(47,128,255,.11),transparent 27%),linear-gradient(180deg,#fff,#F7FBFF)}
 #eksamio-home-final .eh-demo:nth-child(2){background:radial-gradient(circle at 94% 4%,rgba(140,123,255,.12),transparent 27%),linear-gradient(180deg,#fff,#FAF9FF)}
 #eksamio-home-final .eh-demo:nth-child(3){background:radial-gradient(circle at 94% 4%,rgba(21,128,95,.11),transparent 27%),linear-gradient(180deg,#fff,#F6FCF9)}
+#eksamio-home-final .eh-demo:nth-child(4){background:radial-gradient(circle at 94% 4%,rgba(184,78,69,.11),transparent 27%),linear-gradient(180deg,#fff,#FFF8F6)}
 #eksamio-home-final .eh-demo__top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 #eksamio-home-final .eh-demo__icon{display:grid;place-items:center;width:46px;height:46px;border-radius:15px;background:var(--eh-primary-soft);color:var(--eh-primary-hover);font-weight:900}
 #eksamio-home-final .eh-demo:nth-child(2) .eh-demo__icon{background:var(--eh-violet-soft);color:#6456CB}
 #eksamio-home-final .eh-demo:nth-child(3) .eh-demo__icon{background:var(--eh-green-soft);color:var(--eh-green)}
+#eksamio-home-final .eh-demo:nth-child(4) .eh-demo__icon{background:var(--eh-coral-soft);color:var(--eh-coral)}
 #eksamio-home-final .eh-status{display:inline-flex;padding:7px 10px;border-radius:999px;background:#F0FDF4;color:#15803D;border:1px solid #BBF7D0;font-size:12px;font-weight:900}
 #eksamio-home-final .eh-demo h3{margin:18px 0 9px;font-size:24px;line-height:1.18;letter-spacing:-.02em}
 #eksamio-home-final .eh-demo p{margin:0;color:var(--eh-muted);font-size:15px;line-height:1.6}
@@ -87,41 +89,42 @@
 <header class="eh-hero">
   <div>
     <p class="eh-kicker">Учебная платформа Эксамио</p>
-    <h1>Подготовка к экзаменам и точная работа над знаниями</h1>
-    <p class="eh-lead">Интерактивные демоверсии ЕГЭ, тренажёры по русскому языку и понятные материалы по физике. Начните с полной попытки, найдите реальные потери и переходите к той практике, которая нужна именно сейчас.</p>
+    <h1>Подготовка к ЕГЭ: демоверсии, тренажёры и разборы</h1>
+    <p class="eh-lead">Пройдите полный вариант ЕГЭ, разберите ошибки и выберите упражнения по темам, которые требуют повторения. На Эксамио есть интерактивные демоверсии, тренажёры по русскому языку и материалы по физике.</p>
     <div class="eh-actions"><a class="eh-button" href="/ege/demoversii/">Выбрать демоверсию</a><a class="eh-button eh-button--secondary" href="/trenazhery/">Открыть тренажёры</a></div>
   </div>
   <aside class="eh-quick" aria-label="Основные разделы">
     <h2>С чего начать</h2>
-    <a href="/ege/demoversii/"><span class="eh-mark">Е</span><span><strong>Пройти вариант ЕГЭ</strong><small>Таймер, сохранение ответов и разбор результата</small></span><span>→</span></a>
-    <a href="/trenazhery/"><span class="eh-mark">Т</span><span><strong>Закрепить навык</strong><small>Короткие тренировки и повторение ошибок</small></span><span>→</span></a>
-    <a href="/blog/"><span class="eh-mark">Ф</span><span><strong>Понять физику</strong><small>Теория, формулы и пошаговые разборы задач</small></span><span>→</span></a>
+    <a href="/ege/demoversii/"><span class="eh-mark">Е</span><span><strong>Пройти демоверсию ЕГЭ</strong><small>Полный вариант с таймером, сохранением ответов и итоговым результатом</small></span><span>→</span></a>
+    <a href="/trenazhery/"><span class="eh-mark">Т</span><span><strong>Потренировать отдельную тему</strong><small>Короткие задания по русскому языку с повторением ошибок</small></span><span>→</span></a>
+    <a href="/blog/"><span class="eh-mark">Ф</span><span><strong>Разобраться в физике</strong><small>Теория, формулы и пошаговые решения задач</small></span><span>→</span></a>
   </aside>
 </header>
 <section class="eh-panel">
-  <div class="eh-head"><p class="eh-eyebrow">Форматы работы</p><h2>Один сайт — три способа готовиться</h2><p class="eh-intro">Полный экзаменационный вариант показывает результат в условиях времени. Тренажёр закрепляет отдельный навык. Разбор помогает восстановить смысл и порядок решения.</p></div>
+  <div class="eh-head"><p class="eh-eyebrow">Как готовиться</p><h2>Выберите формат под свою задачу</h2><p class="eh-intro">Демоверсия помогает оценить готовность к экзамену. Тренажёр даёт практику по конкретной теме. Разбор объясняет, как рассуждать и оформлять решение.</p></div>
   <div class="eh-format-grid">
-    <a class="eh-card eh-card--demo" href="/ege/demoversii/"><span class="eh-pill">Полный формат</span><h3>Интерактивные демоверсии ЕГЭ</h3><p>Официальные задания в единой попытке: таймер, навигация, сохранение ответов и первичный балл после завершения.</p><span class="eh-card__link">Перейти к демоверсиям →</span></a>
-    <a class="eh-card eh-card--train" href="/trenazhery/"><span class="eh-pill">Точная практика</span><h3>Тренажёры по русскому языку</h3><p>Диагностика, работа над ошибками и персональное повторение ударений, словарных слов, паронимов и фразеологизмов.</p><span class="eh-card__link">Открыть тренажёры →</span></a>
-    <a class="eh-card eh-card--blog" href="/blog/"><span class="eh-pill">Понимание</span><h3>Авторский блог по физике</h3><p>Понятная теория, формулы, единицы измерения и задачи с пошаговым объяснением хода решения.</p><span class="eh-card__link">Перейти в блог →</span></a>
+    <a class="eh-card eh-card--demo" href="/ege/demoversii/"><span class="eh-pill">Полный вариант</span><h3>Интерактивные демоверсии ЕГЭ</h3><p>Полный вариант ЕГЭ с таймером, навигацией по заданиям, сохранением ответов и итоговым первичным баллом.</p><span class="eh-card__link">Перейти к демоверсиям →</span></a>
+    <a class="eh-card eh-card--train" href="/trenazhery/"><span class="eh-pill">Практика по теме</span><h3>Тренажёры по русскому языку</h3><p>Диагностика ошибок и повторение ударений, словарных слов, паронимов и фразеологизмов.</p><span class="eh-card__link">Открыть тренажёры →</span></a>
+    <a class="eh-card eh-card--blog" href="/blog/"><span class="eh-pill">Объяснения</span><h3>Авторский блог по физике</h3><p>Теория, формулы, единицы измерения и задачи с подробным объяснением каждого шага.</p><span class="eh-card__link">Перейти в блог →</span></a>
   </div>
 </section>
 <section class="eh-panel">
-  <div class="eh-head"><p class="eh-eyebrow">Новые демоверсии</p><h2>Проверьте себя в полном формате ЕГЭ</h2><p class="eh-intro">На Эксамио доступны интерактивные варианты по математике базового и профильного уровней, обществознанию, русскому языку и физике.</p></div>
+  <div class="eh-head"><p class="eh-eyebrow">Новые демоверсии</p><h2>Пройдите полный вариант ЕГЭ</h2><p class="eh-intro">На Эксамио доступны интерактивные демоверсии по математике базового и профильного уровней, обществознанию, русскому языку, физике и химии.</p></div>
   <div class="eh-demo-grid">
     <a class="eh-demo" href="/ege/matematika-baza/demoversiya/"><div class="eh-demo__top"><span class="eh-demo__icon">МБ</span><span class="eh-status">Доступно</span></div><h3>Базовая математика</h3><p>Все 21 задание с автоматической проверкой и результатом после завершения.</p><div class="eh-facts"><span class="eh-fact">21 задание</span><span class="eh-fact">180 минут</span></div><span class="eh-demo__link">Начать демоверсию →</span></a>
-    <a class="eh-demo" href="/ege/matematika-profil/demoversiya/"><div class="eh-demo__top"><span class="eh-demo__icon">МП</span><span class="eh-status">Доступно</span></div><h3>Профильная математика</h3><p>Краткая часть проверяется автоматически, решения второй части оцениваются по критериям.</p><div class="eh-facts"><span class="eh-fact">19 заданий</span><span class="eh-fact">235 минут</span></div><span class="eh-demo__link">Начать демоверсию →</span></a>
-    <a class="eh-demo" href="/ege/obshchestvoznaniye/demoversiya/"><div class="eh-demo__top"><span class="eh-demo__icon">ОБ</span><span class="eh-status">Доступно</span></div><h3>Обществознание</h3><p>Автоматическая проверка первой части и отдельная самооценка развёрнутых ответов.</p><div class="eh-facts"><span class="eh-fact">25 заданий</span><span class="eh-fact">210 минут</span></div><span class="eh-demo__link">Начать демоверсию →</span></a>
+    <a class="eh-demo" href="/ege/matematika-profil/demoversiya/"><div class="eh-demo__top"><span class="eh-demo__icon">МП</span><span class="eh-status">Доступно</span></div><h3>Профильная математика</h3><p>Краткая часть проверяется автоматически, а решения второй части можно оценить по критериям.</p><div class="eh-facts"><span class="eh-fact">19 заданий</span><span class="eh-fact">235 минут</span></div><span class="eh-demo__link">Начать демоверсию →</span></a>
+    <a class="eh-demo" href="/ege/obshchestvoznaniye/demoversiya/"><div class="eh-demo__top"><span class="eh-demo__icon">ОБ</span><span class="eh-status">Доступно</span></div><h3>Обществознание</h3><p>Первая часть проверяется автоматически, для развёрнутых ответов доступны критерии самопроверки.</p><div class="eh-facts"><span class="eh-fact">25 заданий</span><span class="eh-fact">210 минут</span></div><span class="eh-demo__link">Начать демоверсию →</span></a>
+    <a class="eh-demo" href="/ege/khimiya/demoversiya/"><div class="eh-demo__top"><span class="eh-demo__icon">ХИ</span><span class="eh-status">Доступно</span></div><h3>Химия</h3><p>Автоматическая проверка первой части, критерии для развёрнутых заданий и справочные таблицы ФИПИ.</p><div class="eh-facts"><span class="eh-fact">34 задания</span><span class="eh-fact">210 минут</span></div><span class="eh-demo__link">Начать демоверсию →</span></a>
   </div>
 </section>
 <section class="eh-panel">
-  <div class="eh-head"><p class="eh-eyebrow">Русский язык</p><h2>Короткая практика с сохранением прогресса</h2><p class="eh-intro">Выберите один навык, пройдите диагностику и возвращайтесь к тем словам и выражениям, которые действительно вызывают ошибки.</p></div>
+  <div class="eh-head"><p class="eh-eyebrow">Русский язык</p><h2>Тренируйте конкретные темы</h2><p class="eh-intro">Начните с диагностики, затем повторяйте слова и выражения, в которых допускаете ошибки.</p></div>
   <div class="eh-trainer-grid">
-    <a class="eh-mini" href="/trenazhery/russkiy/orfoepiya/"><strong>Ударения</strong><span>Орфоэпические нормы и личный список сложных слов.</span><small>Открыть →</small></a>
-    <a class="eh-mini" href="/trenazhery/russkiy/slovarnye-slova/"><strong>Словарные слова</strong><span>Пропущенные буквы, близкие написания и самостоятельная запись.</span><small>Открыть →</small></a>
-    <a class="eh-mini" href="/trenazhery/russkiy/paronimy/"><strong>Паронимы</strong><span>Значение, сочетаемость и исправление лексических ошибок.</span><small>Открыть →</small></a>
-    <a class="eh-mini" href="/trenazhery/russkiy/frazeologizmy/"><strong>Фразеологизмы</strong><span>Значение, состав выражения и точные границы в тексте.</span><small>Открыть →</small></a>
+    <a class="eh-mini" href="/trenazhery/russkiy/orfoepiya/"><strong>Ударения</strong><span>Постановка ударения и личный список сложных слов.</span><small>Открыть →</small></a>
+    <a class="eh-mini" href="/trenazhery/russkiy/slovarnye-slova/"><strong>Словарные слова</strong><span>Пропущенные буквы, похожие написания и запись слова целиком.</span><small>Открыть →</small></a>
+    <a class="eh-mini" href="/trenazhery/russkiy/paronimy/"><strong>Паронимы</strong><span>Значения паронимов, сочетаемость и исправление лексических ошибок.</span><small>Открыть →</small></a>
+    <a class="eh-mini" href="/trenazhery/russkiy/frazeologizmy/"><strong>Фразеологизмы</strong><span>Значение выражения, его состав и границы фразеологизма в предложении.</span><small>Открыть →</small></a>
   </div>
 </section>
-<section class="eh-final"><div><h2>Начните с задачи, которая стоит перед вами сейчас</h2><p>Нужен честный результат — откройте демоверсию. Нужно закрепить правило — выберите тренажёр. Неясен ход решения — переходите к материалам по физике.</p></div><a class="eh-button" href="/ege/">Перейти в раздел ЕГЭ</a></section>
+<section class="eh-final"><div><h2>Выберите, что нужно сделать сейчас</h2><p>Хотите проверить готовность к экзамену — пройдите демоверсию. Нужно отработать тему по русскому языку — откройте тренажёр. Возникли трудности с физикой — найдите объяснение или разбор задачи в блоге.</p></div><a class="eh-button" href="/ege/">Перейти в раздел ЕГЭ</a></section>
 </div></div></div>
