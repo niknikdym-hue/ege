@@ -1,25 +1,22 @@
 name: Apply demo catalog update
 
 on:
-  push:
-    branches:
-      - fix/update-demo-catalog-with-chemistry
+  pull_request:
     paths:
       - .github/scripts/update_demo_catalog.py
       - .github/workflows/apply-demo-catalog-update.yml
+      - site-footer-T123.txt
+      - ege-demoversii-T123.txt
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   apply:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out branch
+      - name: Check out pull request
         uses: actions/checkout@v4
-        with:
-          ref: fix/update-demo-catalog-with-chemistry
-          fetch-depth: 0
 
       - name: Apply exact updates
         run: python .github/scripts/update_demo_catalog.py
@@ -47,14 +44,12 @@ jobs:
           print('Validation PASS')
           PY
 
-      - name: Commit updated T123 files
-        run: |
-          if git diff --quiet -- site-footer-T123.txt ege-demoversii-T123.txt; then
-            echo 'No target changes produced'
-            exit 1
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add site-footer-T123.txt ege-demoversii-T123.txt
-          git commit -m 'Добавить химию и актуализировать каталог демоверсий'
-          git push origin HEAD:fix/update-demo-catalog-with-chemistry
+      - name: Upload updated T123 files
+        uses: actions/upload-artifact@v4
+        with:
+          name: updated-demo-navigation-t123
+          path: |
+            site-footer-T123.txt
+            ege-demoversii-T123.txt
+          if-no-files-found: error
+          retention-days: 7
