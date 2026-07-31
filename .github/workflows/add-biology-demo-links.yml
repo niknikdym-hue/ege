@@ -51,3 +51,5 @@ jobs:
           git add ege-demoversii-T123.txt home-T123.txt site-footer-T123.txt production-audits/add-biology-demo-links.py .github/workflows/add-biology-demo-links.yml
           git commit -m "Add biology demo across site navigation"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
+
+# Trigger the pull-request update job.
