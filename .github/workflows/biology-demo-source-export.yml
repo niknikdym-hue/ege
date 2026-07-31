@@ -1,6 +1,11 @@
 name: Biology demo source export
 
 on:
+  pull_request:
+    paths:
+      - biologiya/biologiya-source-2026/**
+      - biologiya/.biology-export-trigger
+      - .github/workflows/biology-demo-source-export.yml
   push:
     branches:
       - main
