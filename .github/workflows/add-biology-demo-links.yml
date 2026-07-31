@@ -1,7 +1,7 @@
 name: Add biology demo links
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
@@ -12,12 +12,13 @@ permissions:
 
 jobs:
   update-biology-links:
+    if: github.head_ref == 'edit/add-biology-demo-links'
     runs-on: ubuntu-latest
     steps:
-      - name: Check out main
+      - name: Check out pull request branch
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - name: Apply biology updates
@@ -49,4 +50,4 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add ege-demoversii-T123.txt home-T123.txt site-footer-T123.txt production-audits/add-biology-demo-links.py .github/workflows/add-biology-demo-links.yml
           git commit -m "Add biology demo across site navigation"
-          git push origin HEAD:main
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
