@@ -31,15 +31,21 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y poppler-utils
 
-      - name: Export official source package
+      - name: Export official source package and production references
         shell: bash
         run: |
           set -euo pipefail
           SRC="biologiya/biologiya-source-2026"
           OUT="/tmp/biology-source-export"
           test -d "$SRC"
-          mkdir -p "$OUT/original" "$OUT/text" "$OUT/renders" "$OUT/meta"
+          mkdir -p "$OUT/original" "$OUT/text" "$OUT/renders" "$OUT/meta" "$OUT/reference"
           cp -a "$SRC"/. "$OUT/original/"
+          if [ -d demo-production-standard ]; then cp -a demo-production-standard "$OUT/reference/"; fi
+          if [ -f .github/workflows/demo-production-standard.yml ]; then mkdir -p "$OUT/reference/.github/workflows"; cp .github/workflows/demo-production-standard.yml "$OUT/reference/.github/workflows/"; fi
+          find . -maxdepth 2 -type d \( -iname '*khimiya*' -o -iname '*fizika*demoversiya*' \) -print0 | while IFS= read -r -d '' dir; do
+            safe="${dir#./}"; safe="${safe//\//__}"
+            cp -a "$dir" "$OUT/reference/$safe"
+          done
           find "$SRC" -type f -printf '%P\t%s bytes\n' | sort > "$OUT/meta/file-list.txt"
           find "$SRC" -type f -iname '*.pdf' -print0 | while IFS= read -r -d '' pdf; do
             rel="${pdf#$SRC/}"
