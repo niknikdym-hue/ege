@@ -33,12 +33,12 @@ jobs:
         run: |
           python production-audits/patch-biologiya-live-audit-v2.py \
             production-audits/biologiya-live-audit-v2.mjs \
-            /tmp/biologiya-live-audit-v3.mjs
+            production-audits/biologiya-live-audit-v3.generated.mjs
 
       - name: Audit published biology page
         env:
           AUDIT_OUT: /tmp/biologiya-live-audit
-        run: node /tmp/biologiya-live-audit-v3.mjs
+        run: node production-audits/biologiya-live-audit-v3.generated.mjs
 
       - name: Upload audit report and screenshots
         if: always()
