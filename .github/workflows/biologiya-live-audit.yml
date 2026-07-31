@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - production-audits/biologiya-live-audit*.mjs
+      - production-audits/patch-biologiya-live-audit-v2.py
       - .github/workflows/biologiya-live-audit.yml
   workflow_dispatch:
 
@@ -28,10 +29,16 @@ jobs:
           npm install --no-save --package-lock=false playwright
           npx playwright install --with-deps chromium
 
+      - name: Prepare final audit assertions
+        run: |
+          python production-audits/patch-biologiya-live-audit-v2.py \
+            production-audits/biologiya-live-audit-v2.mjs \
+            /tmp/biologiya-live-audit-v3.mjs
+
       - name: Audit published biology page
         env:
           AUDIT_OUT: /tmp/biologiya-live-audit
-        run: node production-audits/biologiya-live-audit-v2.mjs
+        run: node /tmp/biologiya-live-audit-v3.mjs
 
       - name: Upload audit report and screenshots
         if: always()
