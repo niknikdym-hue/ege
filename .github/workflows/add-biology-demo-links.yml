@@ -1,0 +1,52 @@
+name: Add biology demo links
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/add-biology-demo-links.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-biology-links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply biology updates
+        run: python production-audits/add-biology-demo-links.py
+
+      - name: Validate updated files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          targets = {
+              "ege-demoversii-T123.txt": "https://eksamio.ru/ege/biologiya/demoversiya/",
+              "home-T123.txt": "/ege/biologiya/demoversiya/",
+              "site-footer-T123.txt": "https://eksamio.ru/ege/biologiya/demoversiya/",
+          }
+          for filename, marker in targets.items():
+              text = Path(filename).read_text(encoding="utf-8")
+              if text.count(marker) != 1:
+                  raise SystemExit(f"{filename}: expected one biology link, found {text.count(marker)}")
+              if "Биология" not in text:
+                  raise SystemExit(f"{filename}: biology label is missing")
+          PY
+
+      - name: Commit production files and remove temporary updater
+        run: |
+          rm -f production-audits/add-biology-demo-links.py
+          rm -f .github/workflows/add-biology-demo-links.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add ege-demoversii-T123.txt home-T123.txt site-footer-T123.txt production-audits/add-biology-demo-links.py .github/workflows/add-biology-demo-links.yml
+          git commit -m "Add biology demo across site navigation"
+          git push origin HEAD:main
