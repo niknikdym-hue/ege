@@ -5,6 +5,8 @@ from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
 HTML=(ROOT/'ege-istoriya-demoversiya-PREVIEW.html').read_text(encoding='utf-8')
+assert 'eksamio_ege_istoriya_demo_2026_v1_0_1' in HTML
+assert 'eksamio_ege_istoriya_demo_2026_v1_0_0' not in HTML
 EVIDENCE=ROOT/'tests'/'evidence'
 EVIDENCE.mkdir(parents=True,exist_ok=True)
 WIDTHS=[1440,768,390,360,320]
@@ -69,10 +71,23 @@ with sync_playwright() as p:
         assert '4 / 20' in txt
         assert '— / 42' in txt
         assert 'не является официальным результатом' in txt
-        details=page.locator('.eh-result-task').nth(12);details.locator('summary').click();details.locator('input[value="2"]').check()
+        assert page.locator('.eh-result-task').count()==21
+        partial=page.locator('.eh-result-task').nth(5).locator('summary span').nth(1)
+        assert 'eh-result-partial' in (partial.get_attribute('class') or '')
+        checks=[
+          (12,'отсутствия неверных позиций'),
+          (13,'переписанный целиком объёмный отрывок'),
+          (18,'содержится в определении'),
+          (19,'оцениваются только первый тезис'),
+          (20,'указанный первым')
+        ]
+        for idx,snippet in checks:
+            item=page.locator('.eh-result-task').nth(idx);item.locator('summary').click()
+            assert snippet.lower() in item.inner_text().lower(),(idx,snippet)
+        details=page.locator('.eh-result-task').nth(12);details.locator('input[value="2"]').check()
         assert '2 / 22' in page.locator('#eh-self-total').inner_text()
         # Empty task 14 cannot receive a score.
-        d14=page.locator('.eh-result-task').nth(13);d14.locator('summary').click();assert 'is-disabled' in d14.locator('.eh-rubric').get_attribute('class')
+        d14=page.locator('.eh-result-task').nth(13);assert 'is-disabled' in d14.locator('.eh-rubric').get_attribute('class')
         assert not js_errors,js_errors
         assert not failed,failed
         page.screenshot(path=str(EVIDENCE/f'results-{w}.png'),full_page=True)
