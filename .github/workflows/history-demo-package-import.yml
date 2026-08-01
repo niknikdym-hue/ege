@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - history-build/bootstrap.py
+      - 'history-build/bootstrap.part-*'
       - .github/workflows/history-demo-package-import.yml
 
 permissions:
@@ -84,8 +84,11 @@ jobs:
 
       - name: Generate package
         if: steps.gate.outputs.build == 'true'
+        shell: bash
         run: |
-          python history-build/bootstrap.py build
+          set -euo pipefail
+          cat history-build/bootstrap.part-* > /tmp/history-bootstrap.py
+          python /tmp/history-bootstrap.py build
           rm -rf ege-istoriya-demoversiya-v1
           cp -a /mnt/data/ege-istoriya-demoversiya-v1 ./ege-istoriya-demoversiya-v1
           python ege-istoriya-demoversiya-v1/tests/test_static.py
@@ -98,7 +101,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python history-build/bootstrap.py finalize-pending
+          python /tmp/history-bootstrap.py finalize-pending
           python ege-istoriya-demoversiya-v1/scripts/build_demo_release.py
           rm -rf /tmp/history-clean
           mkdir -p /tmp/history-clean
@@ -106,7 +109,7 @@ jobs:
           python /tmp/history-clean/ege-istoriya-demoversiya-v1/tests/test_static.py
           python /tmp/history-clean/ege-istoriya-demoversiya-v1/tests/test_browser.py
 
-          python history-build/bootstrap.py finalize-pass
+          python /tmp/history-bootstrap.py finalize-pass
           python ege-istoriya-demoversiya-v1/scripts/build_demo_release.py
           rm -rf /tmp/history-final-clean
           mkdir -p /tmp/history-final-clean
