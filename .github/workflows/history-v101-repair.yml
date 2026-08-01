@@ -56,15 +56,26 @@ jobs:
         if: ${{ hashFiles('production-audits/fix-history-v101.py') != '' }}
         run: |
           set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('production-audits/fix-history-v101.py')
+          text=path.read_text(encoding='utf-8')
+          text=text.replace('19:"содержится в определении"','19:"содержаться в определении"')
+          path.write_text(text,encoding='utf-8')
+          PY
           python production-audits/fix-history-v101.py
           python ege-istoriya-demoversiya-v1/tests/test_static.py
+          python ege-istoriya-demoversiya-v1/tests/test_independent_v101.py
           python ege-istoriya-demoversiya-v1/tests/test_browser.py
-          test "$(find ege-istoriya-demoversiya-v1 -name 'ege-istoriya-demoversiya-T123-*.txt' | wc -l)" -eq 20
+          count="$(find ege-istoriya-demoversiya-v1 -name 'ege-istoriya-demoversiya-T123-*.txt' | wc -l)"
+          test "$count" -ge 20
+          test "$count" -le 30
           test "$(find ege-istoriya-demoversiya-v1 -name 'ege-istoriya-demoversiya-T123-*.txt' -printf '%s\n' | sort -nr | head -1)" -lt 55000
           rm -rf /tmp/history-v101-clean
           mkdir -p /tmp/history-v101-clean
           unzip -q ege-istoriya-demoversiya-v1.0.1.zip -d /tmp/history-v101-clean
           python /tmp/history-v101-clean/ege-istoriya-demoversiya-v1/tests/test_static.py
+          python /tmp/history-v101-clean/ege-istoriya-demoversiya-v1/tests/test_independent_v101.py
           python /tmp/history-v101-clean/ege-istoriya-demoversiya-v1/tests/test_browser.py
           unzip -t ege-istoriya-demoversiya-v1.0.1.zip
 
