@@ -1,0 +1,26 @@
+
+<div id="eksamio-history-demo">
+  <div class="eh-wrap">
+    <section id="eh-start" class="eh-card eh-start">
+      <p class="eh-kicker">Интерактивная демоверсия ФИПИ 2026</p>
+      <h1>ЕГЭ по истории</h1>
+      <p class="eh-lead">Полный демонстрационный вариант: задания первой и второй частей, таймер, автосохранение и проверка после завершения.</p>
+      <div class="eh-facts"><span class="eh-fact">21 задание</span><span class="eh-fact">210 минут</span><span class="eh-fact">42 первичных балла</span><span class="eh-fact">12 кратких + 9 развёрнутых</span></div>
+      <div class="eh-notice"><strong>Как считается результат.</strong> Задания 1–12 проверяются автоматически по официальной системе оценивания. Задания 13–21 проверяет эксперт; после завершения можно выполнить учебную самооценку по критериям ФИПИ. Она не включается в официальный результат.</div>
+      <div class="eh-actions"><button class="eh-btn eh-btn-primary" id="eh-start-btn">Начать демоверсию</button><button class="eh-btn" id="eh-resume-btn">Продолжить сохранённую попытку</button></div>
+    </section>
+    <section id="eh-exam" class="eh-exam eh-hidden">
+      <aside class="eh-card eh-sidebar">
+        <div class="eh-topline"><div><div class="eh-timer" id="eh-timer">03:30:00</div><div class="eh-save" id="eh-save">Ответы сохраняются</div></div><button class="eh-btn eh-btn-small" id="eh-finish-side">Завершить</button></div>
+        <div class="eh-nav" id="eh-nav"></div>
+        <div class="eh-legend"><span><i class="eh-dot a"></i> ответ сохранён</span><span><i class="eh-dot f"></i> отмечено для возврата</span><span><i class="eh-dot"></i> ответа нет</span></div>
+      </aside>
+      <main class="eh-main">
+        <div class="eh-card eh-toolbar"><div><div class="eh-progress" id="eh-progress"></div><div class="eh-part" id="eh-part"></div></div><button class="eh-btn eh-btn-danger eh-btn-small" id="eh-reset">Начать заново</button></div>
+        <article class="eh-card eh-question" id="eh-question"></article>
+      </main>
+    </section>
+    <section id="eh-results" class="eh-card eh-results eh-hidden"></section>
+  </div>
+  <div id="eh-modal" class="eh-modal eh-hidden" role="dialog" aria-modal="true"><div class="eh-modal-box"><h3 id="eh-modal-title">Завершить попытку?</h3><p id="eh-modal-text">После завершения изменить ответы нельзя.</p><div class="eh-actions"><button class="eh-btn" id="eh-modal-cancel">Продолжить работу</button><button class="eh-btn eh-btn-primary" id="eh-modal-confirm">Завершить</button></div></div></div>
+</div>
