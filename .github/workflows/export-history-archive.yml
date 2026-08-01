@@ -1,0 +1,24 @@
+name: Export history archive
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/export-history-archive.yml'
+      - '.export-history-archive'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ege-istoriya-demoversiya-v1.0.1
+          path: ege-istoriya-demoversiya-v1.0.1.zip
+          if-no-files-found: error
+          compression-level: 0
