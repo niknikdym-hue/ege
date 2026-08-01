@@ -1,0 +1,50 @@
+name: Import history demo package
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .history-import/**
+      - .github/workflows/history-demo-package-import.yml
+
+permissions:
+  contents: write
+
+jobs:
+  import-package:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Reconstruct and unpack release
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .history-import/history-demo.part-* > /tmp/history-demo.b64
+          base64 --decode /tmp/history-demo.b64 > ege-istoriya-demoversiya-v1.0.0.zip
+          unzip -t ege-istoriya-demoversiya-v1.0.0.zip
+          rm -rf ege-istoriya-demoversiya-v1
+          unzip -q ege-istoriya-demoversiya-v1.0.0.zip
+          rm -rf .history-import
+
+      - name: Validate package
+        run: |
+          python ege-istoriya-demoversiya-v1/tests/test_static.py
+          test "$(find ege-istoriya-demoversiya-v1 -name 'ege-istoriya-demoversiya-T123-*.txt' | wc -l)" -eq 22
+
+      - name: Commit imported package
+        shell: bash
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A .history-import ege-istoriya-demoversiya-v1 ege-istoriya-demoversiya-v1.0.0.zip
+          if ! git diff --cached --quiet; then
+            git commit -m "Add history interactive demo package"
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
