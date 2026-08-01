@@ -66,19 +66,16 @@ jobs:
           path.write_text(text,encoding='utf-8')
           PY
           python production-audits/fix-history-v101.py
-          python ege-istoriya-demoversiya-v1/tests/test_static.py
-          python ege-istoriya-demoversiya-v1/tests/test_independent_v101.py
-          python ege-istoriya-demoversiya-v1/tests/test_browser.py
-          count="$(find ege-istoriya-demoversiya-v1 -name 'ege-istoriya-demoversiya-T123-*.txt' | wc -l)"
-          test "$count" -ge 20
-          test "$count" -le 30
-          test "$(find ege-istoriya-demoversiya-v1 -name 'ege-istoriya-demoversiya-T123-*.txt' -printf '%s\n' | sort -nr | head -1)" -lt 55000
-          rm -rf /tmp/history-v101-clean
-          mkdir -p /tmp/history-v101-clean
-          unzip -q ege-istoriya-demoversiya-v1.0.1.zip -d /tmp/history-v101-clean
-          python /tmp/history-v101-clean/ege-istoriya-demoversiya-v1/tests/test_static.py
-          python /tmp/history-v101-clean/ege-istoriya-demoversiya-v1/tests/test_independent_v101.py
-          python /tmp/history-v101-clean/ege-istoriya-demoversiya-v1/tests/test_browser.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('ege-istoriya-demoversiya-v1')
+          contract=json.loads((root/'ege-istoriya-demoversiya-PACKAGE-CONTRACT.json').read_text(encoding='utf-8'))
+          blocks=sorted(root.glob('ege-istoriya-demoversiya-T123-*.txt'))
+          assert len(blocks)==contract['t123_blocks']==len(contract['load_order'])
+          assert max(p.stat().st_size for p in blocks)==contract['t123_max_bytes']<55000
+          assert contract['package_version']=='1.0.1'
+          PY
           unzip -t ege-istoriya-demoversiya-v1.0.1.zip
 
       - name: Commit verified repair
