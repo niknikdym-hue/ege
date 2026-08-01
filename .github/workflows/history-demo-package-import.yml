@@ -48,6 +48,8 @@ jobs:
           set -euo pipefail
           DEMO="istoriya-source-2026/ege-2026-istoriya-demoversiya.pdf"
           test -f "$DEMO"
+          sudo mkdir -p /mnt/data
+          sudo chown -R "$USER":"$(id -gn)" /mnt/data
           rm -rf /tmp/history-source /tmp/history-images /tmp/history-pages /mnt/data/ege-istoriya-demoversiya-v1
           mkdir -p /tmp/history-source/original /tmp/history-images /tmp/history-pages
           mkdir -p /mnt/data/ege-istoriya-demoversiya-v1/{assets,scripts,tests,source}
@@ -123,7 +125,7 @@ jobs:
         shell: bash
         run: |
           git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git config user.email 41898258+github-actions[bot]@users.noreply.github.com
           git add ege-istoriya-demoversiya-v1 ege-istoriya-demoversiya-v1.0.0.zip
           git commit -m "Add history interactive demo package"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
