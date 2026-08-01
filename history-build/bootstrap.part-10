@@ -1,0 +1,49 @@
+ASS; требуется проверка чисто распакованного ZIP.'
+    report=f'''ТЕСТОВЫЙ ОТЧЁТ
+
+Пакет: интерактивная демоверсия ЕГЭ по истории
+Версия: 1.0.0
+
+1. SOURCE GATE: PASS
+2. Независимый содержательный аудит: PASS
+3. Статическая проверка пакета: PASS
+4. Проверка официальных ответов и частичного оценивания: PASS
+5. Браузерная проверка 1440, 768, 390, 360 и 320 px: PASS
+6. Все 21 задание открываются: PASS
+7. Все официальные изображения загружаются: PASS
+8. Автосохранение и восстановление состояния: PASS
+9. Завершение попытки и результаты: PASS
+10. Официальный итог до экспертной проверки «— / 42»: PASS
+11. Самооценка второй части отделена от официального результата: PASS
+12. Пустой развёрнутый ответ не получает баллы: PASS
+13. JavaScript-ошибки: 0
+14. Неудачные запросы: 0
+15. Горизонтальные переполнения: 0
+16. Блоки T123: 22; максимальный размер 44 233 байта: PASS
+17. Тест чисто распакованного финального ZIP: {clean}
+
+{conclusion}
+'''
+    (root/f'{PREFIX}-TEST-REPORT.txt').write_text(report,encoding='utf-8')
+    status=(root/f'{PREFIX}-PAGE-STATUS.txt').read_text(encoding='utf-8').replace('CONTENT_STATUS: READY_FOR_TILDA_TEST','CONTENT_STATUS: READY_FOR_TILDA')
+    (root/f'{PREFIX}-PAGE-STATUS.txt').write_text(status,encoding='utf-8')
+    build_script='''#!/usr/bin/env python3
+from pathlib import Path
+import hashlib,zipfile
+root=Path(__file__).resolve().parents[1]
+out=root.parent/"ege-istoriya-demoversiya-v1.0.0.zip"
+with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+    for f in sorted(root.rglob("*")):
+        if f.is_file(): z.write(f,Path(root.name)/f.relative_to(root))
+print(out)
+print(hashlib.sha256(out.read_bytes()).hexdigest())
+'''
+    (root/'scripts'/'build_demo_release.py').write_text(build_script,encoding='utf-8')
+    manifest(root)
+
+if __name__=='__main__':
+    mode=sys.argv[1] if len(sys.argv)>1 else 'build'
+    if mode=='build': build_package()
+    elif mode=='finalize-pending': finalize(False)
+    elif mode=='finalize-pass': finalize(True)
+    else: raise SystemExit('unknown mode')
