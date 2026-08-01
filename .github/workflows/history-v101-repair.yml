@@ -62,6 +62,7 @@ jobs:
           text=path.read_text(encoding='utf-8')
           text=text.replace('19:"содержится в определении"','19:"содержаться в определении"')
           text=text.replace('assert "— / 42" in preview','assert "Официальный итог до экспертной проверки" in preview')
+          text=text.replace("assert 'Официальные критерии ФИПИ' in txt","assert page.locator('.eh-result-task').count()==21")
           path.write_text(text,encoding='utf-8')
           PY
           python production-audits/fix-history-v101.py
