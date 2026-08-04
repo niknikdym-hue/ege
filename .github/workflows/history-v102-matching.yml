@@ -1,0 +1,101 @@
+name: Fix history matching 1.0.2
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'production-audits/history-v102.b64.*'
+      - '.github/workflows/history-v102-matching.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair-and-verify:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Install browser dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Decode and apply repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat production-audits/history-v102.b64.* | base64 --decode > /tmp/fix-history-v102.py
+          python /tmp/fix-history-v102.py
+
+      - name: Run package tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python ege-istoriya-demoversiya-v1/tests/test_static.py
+          python ege-istoriya-demoversiya-v1/tests/test_independent_v102.py
+          python ege-istoriya-demoversiya-v1/tests/test_browser.py
+
+      - name: Finalize reports and archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, hashlib, re
+          root=Path('ege-istoriya-demoversiya-v1')
+          prefix='ege-istoriya-demoversiya'
+          blocks=sorted(root.glob(f'{prefix}-T123-*.txt'))
+          maximum=max(f.stat().st_size for f in blocks)
+          contract_path=root/f'{prefix}-PACKAGE-CONTRACT.json'
+          contract=json.loads(contract_path.read_text(encoding='utf-8'))
+          contract['t123_blocks']=len(blocks)
+          contract['t123_max_bytes']=maximum
+          contract['load_order']=[f.name for f in blocks]
+          contract_path.write_text(json.dumps(contract,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          report_path=root/f'{prefix}-TEST-REPORT.txt'
+          report=report_path.read_text(encoding='utf-8')
+          report=re.sub(r'Блоки T123: \d+; максимальный размер \d+ байт',f'Блоки T123: {len(blocks)}; максимальный размер {maximum} байт',report)
+          report_path.write_text(report,encoding='utf-8')
+          manifest=root/f'{prefix}-MANIFEST-SHA256.txt'
+          lines=[]
+          for f in sorted(root.rglob('*')):
+              if f.is_file() and f != manifest and 'tests/evidence' not in f.as_posix():
+                  lines.append(f'{hashlib.sha256(f.read_bytes()).hexdigest()}  {f.relative_to(root).as_posix()}')
+          manifest.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print(f'T123 blocks: {len(blocks)}; max bytes: {maximum}')
+          PY
+          rm -f ege-istoriya-demoversiya-v1.0.1.zip ege-istoriya-demoversiya-v1.0.2.zip
+          python ege-istoriya-demoversiya-v1/scripts/build_demo_release.py
+          unzip -t ege-istoriya-demoversiya-v1.0.2.zip
+          sha256sum ege-istoriya-demoversiya-v1.0.2.zip
+
+      - name: Test clean extracted ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/history-v102-clean
+          mkdir -p /tmp/history-v102-clean
+          unzip -q ege-istoriya-demoversiya-v1.0.2.zip -d /tmp/history-v102-clean
+          python /tmp/history-v102-clean/ege-istoriya-demoversiya-v1/tests/test_static.py
+          python /tmp/history-v102-clean/ege-istoriya-demoversiya-v1/tests/test_independent_v102.py
+          python /tmp/history-v102-clean/ege-istoriya-demoversiya-v1/tests/test_browser.py
+
+      - name: Commit verified release
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f production-audits/history-v102.b64.*
+          rm -f .github/workflows/history-v102-matching.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Fix history matching interactions 1.0.2"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
