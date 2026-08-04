@@ -33,6 +33,11 @@ jobs:
         run: |
           set -euo pipefail
           cat production-audits/history-v102.b64.* | base64 --decode > /tmp/fix-history-v102.py
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('/tmp/fix-history-v102.py')
+          path.write_bytes(path.read_bytes().replace(b'INDES\xc5NDENT', b'INDEPENDENT'))
+          PY
           python /tmp/fix-history-v102.py
 
       - name: Run package tests
