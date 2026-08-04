@@ -1,0 +1,109 @@
+name: Biology 1.0.2 verified rebuild
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'production-audits/biology-v102-tools/**'
+      - '.github/workflows/biology-v102-release.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  build-test-release:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out rebuild branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Download frozen biology source export
+        uses: actions/download-artifact@v4
+        with:
+          name: biology-v102-source
+          path: /tmp/biology-v102-source
+          github-token: ${{ github.token }}
+          run-id: 30949477845
+
+      - name: Restore and verify rebuild resources
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOL=production-audits/biology-v102-tools
+          cat "$TOOL"/resources.b64.* > /tmp/biology-v102-resources.b64
+          test "$(sha256sum /tmp/biology-v102-resources.b64 | cut -d' ' -f1)" = "abd7d43625245700433c990198472f6288b4d9c58f4fe48e486a0aa49bb088a2"
+          base64 --decode /tmp/biology-v102-resources.b64 > /tmp/biology-v102-resources.zip
+          test "$(sha256sum /tmp/biology-v102-resources.zip | cut -d' ' -f1)" = "d26700410789a38633d517c574a3e093ba7cc2341783a68e7542e09cf3795e90"
+          unzip -oq /tmp/biology-v102-resources.zip -d "$TOOL"
+          python -m py_compile "$TOOL/build_release.py" "$TOOL"/tests/*.py
+
+      - name: Install validation dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install --upgrade pip
+          python -m pip install beautifulsoup4 playwright
+          google-chrome --version
+          pdftotext -v
+
+      - name: Rebuild package from frozen sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          python production-audits/biology-v102-tools/build_release.py \
+            --source /tmp/biology-v102-source \
+            --repo .
+          test "$(find ege-biologiya-demoversiya-v1 -maxdepth 1 -name 'ege-biologiya-demoversiya-T123-*.txt' | wc -l)" -eq 19
+          test "$(find ege-biologiya-demoversiya-v1 -maxdepth 1 -name 'ege-biologiya-demoversiya-T123-*.txt' -printf '%s\n' | sort -nr | head -1)" -lt 55000
+
+      - name: Validate working package
+        shell: bash
+        run: |
+          set -euo pipefail
+          python ege-biologiya-demoversiya-v1/tests/test_static.py
+          python ege-biologiya-demoversiya-v1/tests/test_source_fidelity.py
+          python ege-biologiya-demoversiya-v1/tests/test_browser.py
+
+      - name: Build and verify final ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f ege-biologiya-demoversiya-v1.0.2.zip
+          python ege-biologiya-demoversiya-v1/scripts/build_demo_release.py
+          unzip -t ege-biologiya-demoversiya-v1.0.2.zip
+          sha256sum ege-biologiya-demoversiya-v1.0.2.zip | tee /tmp/biology-v102-zip.sha256
+          rm -rf /tmp/biology-v102-clean
+          mkdir -p /tmp/biology-v102-clean
+          unzip -q ege-biologiya-demoversiya-v1.0.2.zip -d /tmp/biology-v102-clean
+          python /tmp/biology-v102-clean/ege-biologiya-demoversiya-v1/tests/test_static.py
+          python /tmp/biology-v102-clean/ege-biologiya-demoversiya-v1/tests/test_source_fidelity.py
+          python /tmp/biology-v102-clean/ege-biologiya-demoversiya-v1/tests/test_browser.py
+
+      - name: Upload verified release ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-biologiya-demoversiya-v1.0.2
+          path: ege-biologiya-demoversiya-v1.0.2.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Remove temporary build tooling and commit release
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .biology-v102-export-trigger
+          rm -f .github/workflows/biology-v102-source-export.yml
+          rm -f .github/workflows/biology-v102-release.yml
+          rm -rf production-audits/biology-v102-tools
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Rebuild biology demo interactions 1.0.2"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
