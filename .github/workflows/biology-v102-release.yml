@@ -35,10 +35,17 @@ jobs:
         run: |
           set -euo pipefail
           TOOL=production-audits/biology-v102-tools
+          wc -c "$TOOL"/resources.b64.*
+          sha256sum "$TOOL"/resources.b64.*
           cat "$TOOL"/resources.b64.* > /tmp/biology-v102-resources.b64
-          test "$(sha256sum /tmp/biology-v102-resources.b64 | cut -d' ' -f1)" = "abd7d43625245700433c990198472f6288b4d9c58f4fe48e486a0aa49bb088a2"
+          wc -c /tmp/biology-v102-resources.b64
+          ACTUAL_B64="$(sha256sum /tmp/biology-v102-resources.b64 | cut -d' ' -f1)"
+          echo "combined base64 sha256: $ACTUAL_B64"
+          test "$ACTUAL_B64" = "abd7d43625245700433c990198472f6288b4d9c58f4fe48e486a0aa49bb088a2"
           base64 --decode /tmp/biology-v102-resources.b64 > /tmp/biology-v102-resources.zip
-          test "$(sha256sum /tmp/biology-v102-resources.zip | cut -d' ' -f1)" = "d26700410789a38633d517c574a3e093ba7cc2341783a68e7542e09cf3795e90"
+          ACTUAL_ZIP="$(sha256sum /tmp/biology-v102-resources.zip | cut -d' ' -f1)"
+          echo "resource zip sha256: $ACTUAL_ZIP"
+          test "$ACTUAL_ZIP" = "d26700410789a38633d517c574a3e093ba7cc2341783a68e7542e09cf3795e90"
           unzip -oq /tmp/biology-v102-resources.zip -d "$TOOL"
           python -m py_compile "$TOOL/build_release.py" "$TOOL"/tests/*.py
 
