@@ -1,0 +1,3652 @@
+{
+  "schema_version": "1.1",
+  "prefix": "ege-biologiya-demoversiya",
+  "tasks": [
+    {
+      "number": 1,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 1,
+      "prompt_html": "<p>Рассмотрите таблицу «Уровни организации живой природы». Запишите в ответе пропущенный термин, обозначенный вопросительным знаком.</p><div class=\"bio-table-scroll\"><table class=\"bio-table\"><thead><tr><th>Уровень организации</th><th>Пример</th></tr></thead><tbody><tr><td>Клеточный</td><td>Кислородный этап энергетического обмена</td></tr><tr><td>?</td><td>Поддержание постоянства газового состава атмосферы живым веществом Земли</td></tr></tbody></table></div>",
+      "input_hint": "Запишите одно слово. Регистр букв не учитывается.",
+      "answer": {
+        "canonical": "биосферный",
+        "accepted": [
+          {
+            "value": "биосферный",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "биосферный"
+        ],
+        "type": "exact_text",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": true,
+          "yo_to_e": true,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "exact_word",
+      "source": {
+        "prompt_printed_page": 4,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 4,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": []
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "required_acceptance_case_ids": [
+        "task-1-v1-correct-1",
+        "task-1-v1-empty",
+        "task-1-v1-leading-space",
+        "task-1-v1-trailing-space",
+        "task-1-v1-extra-symbol",
+        "task-1-v1-case-fold"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "text_input"
+      }
+    },
+    {
+      "number": 2,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<p>Экспериментатор нанёс каплю дистиллированной воды на предметное стекло с микропрепаратом кожицы лука, живые клетки которого находятся в состоянии плазмолиза. Как после этого изменились количество рибосом и объём цитоплазмы в клетках кожицы лука?</p><p>Для каждой величины определите характер изменения:</p><ol class=\"bio-options\"><li>увеличилась</li><li>уменьшилась</li><li>не изменилась</li></ol><div class=\"bio-table-scroll\"><table class=\"bio-table\"><thead><tr><th>Количество рибосом</th><th>Объём цитоплазмы</th></tr></thead><tbody><tr><td>?</td><td>?</td></tr></tbody></table></div>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "31",
+        "accepted": [
+          {
+            "value": "31",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "31"
+        ],
+        "type": "position_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "positional_one_error",
+      "source": {
+        "prompt_printed_page": 4,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 4,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "wrong_positions": 1,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-2-v1-correct-1",
+        "task-2-v1-empty",
+        "task-2-v1-leading-space",
+        "task-2-v1-trailing-space",
+        "task-2-v1-extra-symbol",
+        "task-2-v1-one-position-error",
+        "task-2-v1-extra-length"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "table_selects",
+        "rows": [
+          {
+            "key": "А",
+            "text": "Количество рибосом"
+          },
+          {
+            "key": "Б",
+            "text": "Объём цитоплазмы"
+          }
+        ],
+        "choices": [
+          {
+            "value": "1",
+            "text": "увеличилась"
+          },
+          {
+            "value": "2",
+            "text": "уменьшилась"
+          },
+          {
+            "value": "3",
+            "text": "не изменилась"
+          }
+        ],
+        "allow_repeat": true,
+        "answer_length": 2
+      }
+    },
+    {
+      "number": 3,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 1,
+      "prompt_html": "<p>На основании правила 10 % рассчитайте массу травы (в кг), которая может обеспечить в лесу существование одной лисицы массой 8 кг, при условии, что пищевая цепь состоит из трёх звеньев. В ответе запишите только число.</p>",
+      "input_hint": "Запишите только число, без единицы измерения.",
+      "answer": {
+        "canonical": "800",
+        "accepted": [
+          {
+            "value": "800",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "800"
+        ],
+        "type": "exact_ordered_digits",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "exact_digits",
+      "source": {
+        "prompt_printed_page": 5,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 5,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": []
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "required_acceptance_case_ids": [
+        "task-3-v1-correct-1",
+        "task-3-v1-empty",
+        "task-3-v1-leading-space",
+        "task-3-v1-trailing-space",
+        "task-3-v1-extra-symbol",
+        "task-3-v1-extra-digit"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "text_input"
+      }
+    },
+    {
+      "number": 4,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "Официальный пример 1 из 2",
+      "max_score": 1,
+      "prompt_html": "<p>Какое соотношение фенотипов получится у потомков при скрещивании гетерозиготных высоких растений гороха между собой в случае полного доминирования признака? Ответ запишите в виде последовательности цифр.</p>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "31",
+        "accepted": [
+          {
+            "value": "31",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          },
+          {
+            "value": "13",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "31",
+          "13"
+        ],
+        "type": "numeric_exact",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "accepted_exact",
+      "source": {
+        "prompt_printed_page": 5,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 5,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": []
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "required_acceptance_case_ids": [
+        "task-4-v1-correct-1",
+        "task-4-v1-correct-2",
+        "task-4-v1-empty",
+        "task-4-v1-leading-space",
+        "task-4-v1-trailing-space",
+        "task-4-v1-extra-symbol",
+        "task-4-v1-extra-digit"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "text_input"
+      }
+    },
+    {
+      "number": 4,
+      "kind": "short",
+      "variant_id": "2",
+      "variant_label": "Официальный пример 2 из 2",
+      "max_score": 1,
+      "prompt_html": "<p>Какова вероятность получения гомозиготного по рецессивному аллелю потомства в скрещивании моногетерозиготных особей между собой? Ответ запишите в виде числа.</p>",
+      "input_hint": "ФИПИ принимает ответы 0,25 или 25. Десятичная дробь записывается через запятую.",
+      "answer": {
+        "canonical": "0,25",
+        "accepted": [
+          {
+            "value": "0,25",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          },
+          {
+            "value": "25",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "0,25",
+          "25"
+        ],
+        "type": "numeric_exact",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": true,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "accepted_exact",
+      "source": {
+        "prompt_printed_page": 5,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 5,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": []
+      },
+      "asset_ids": [],
+      "variant": 2,
+      "required_acceptance_case_ids": [
+        "task-4-v2-correct-1",
+        "task-4-v2-correct-2",
+        "task-4-v2-empty",
+        "task-4-v2-leading-space",
+        "task-4-v2-trailing-space",
+        "task-4-v2-extra-symbol",
+        "task-4-v2-extra-digit",
+        "task-4-v2-decimal-point"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "text_input"
+      }
+    },
+    {
+      "number": 5,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "Официальный комплект рисунков 1 из 2",
+      "max_score": 1,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure\" data-bio-asset=\"asset-01\" alt=\"Схема животной клетки с цифровыми обозначениями\"></div><p>Какой цифрой на рисунке обозначен аппарат Гольджи?</p>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "5",
+        "accepted": [
+          {
+            "value": "5",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "5"
+        ],
+        "type": "exact_ordered_digits",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "exact_digits",
+      "source": {
+        "prompt_printed_page": 6,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 6,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": []
+      },
+      "asset_ids": [
+        "asset-01"
+      ],
+      "variant": 1,
+      "required_acceptance_case_ids": [
+        "task-5-v1-correct-1",
+        "task-5-v1-empty",
+        "task-5-v1-leading-space",
+        "task-5-v1-trailing-space",
+        "task-5-v1-extra-symbol",
+        "task-5-v1-extra-digit"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "text_input"
+      }
+    },
+    {
+      "number": 5,
+      "kind": "short",
+      "variant_id": "2",
+      "variant_label": "Официальный комплект рисунков 2 из 2",
+      "max_score": 1,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure bio-figure-wide\" data-bio-asset=\"asset-02\" alt=\"Формулы шести органических веществ с цифровыми обозначениями\"></div><p>Какой цифрой на рисунке обозначена формула азотистого основания?</p>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "6",
+        "accepted": [
+          {
+            "value": "6",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "6"
+        ],
+        "type": "exact_ordered_digits",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "exact_digits",
+      "source": {
+        "prompt_printed_page": 7,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 7,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": []
+      },
+      "asset_ids": [
+        "asset-02"
+      ],
+      "variant": 2,
+      "required_acceptance_case_ids": [
+        "task-5-v2-correct-1",
+        "task-5-v2-empty",
+        "task-5-v2-leading-space",
+        "task-5-v2-trailing-space",
+        "task-5-v2-extra-symbol",
+        "task-5-v2-extra-digit"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "text_input"
+      }
+    },
+    {
+      "number": 6,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "Официальный комплект рисунков 1 из 2",
+      "max_score": 2,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure\" data-bio-asset=\"asset-01\" alt=\"Схема животной клетки с цифровыми обозначениями\"></div><p>Установите соответствие между характеристиками и структурами, обозначенными на рисунке цифрами 1, 2.</p><div class=\"bio-match\"><div><strong>Характеристики</strong><div><b>А)</b> содержит молекулы РНК</div><div><b>Б)</b> образована белком тубулином</div><div><b>В)</b> состоит из микротрубочек и центросферы</div><div><b>Г)</b> синтезирует полипептиды</div><div><b>Д)</b> формирует веретено деления</div><div><b>Е)</b> организует цитоскелет</div></div><div><strong>Структуры</strong><div><b>1)</b> 1</div><div><b>2)</b> 2</div></div></div>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "122122",
+        "accepted": [
+          {
+            "value": "122122",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "122122"
+        ],
+        "type": "position_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "positional_one_error",
+      "source": {
+        "prompt_printed_page": 6,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 6,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [
+        "asset-01"
+      ],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "wrong_positions": 1,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-6-v1-correct-1",
+        "task-6-v1-empty",
+        "task-6-v1-leading-space",
+        "task-6-v1-trailing-space",
+        "task-6-v1-extra-symbol",
+        "task-6-v1-one-position-error",
+        "task-6-v1-extra-length"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "matching_selects",
+        "rows": [
+          {
+            "key": "А",
+            "text": "содержит молекулы РНК"
+          },
+          {
+            "key": "Б",
+            "text": "образована белком тубулином"
+          },
+          {
+            "key": "В",
+            "text": "состоит из микротрубочек и центросферы"
+          },
+          {
+            "key": "Г",
+            "text": "синтезирует полипептиды"
+          },
+          {
+            "key": "Д",
+            "text": "формирует веретено деления"
+          },
+          {
+            "key": "Е",
+            "text": "организует цитоскелет"
+          }
+        ],
+        "choices": [
+          {
+            "value": "1",
+            "text": "1"
+          },
+          {
+            "value": "2",
+            "text": "2"
+          }
+        ],
+        "allow_repeat": true,
+        "answer_length": 6
+      }
+    },
+    {
+      "number": 6,
+      "kind": "short",
+      "variant_id": "2",
+      "variant_label": "Официальный комплект рисунков 2 из 2",
+      "max_score": 2,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure bio-figure-wide\" data-bio-asset=\"asset-02\" alt=\"Формулы шести органических веществ с цифровыми обозначениями\"></div><p>Установите соответствие между характеристиками и веществами, обозначенными на рисунке цифрами 1, 2, 3.</p><div class=\"bio-match\"><div><strong>Характеристики</strong><div><b>А)</b> входит в состав молекул жиров</div><div><b>Б)</b> образует пептидные связи</div><div><b>В)</b> входит в состав крахмала</div><div><b>Г)</b> является моносахаридом</div><div><b>Д)</b> нерастворима в воде</div><div><b>Е)</b> входит в состав белков</div></div><div><strong>Вещества</strong><div><b>1)</b> 1</div><div><b>2)</b> 2</div><div><b>3)</b> 3</div></div></div>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "312231",
+        "accepted": [
+          {
+            "value": "312231",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "312231"
+        ],
+        "type": "position_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "positional_one_error",
+      "source": {
+        "prompt_printed_page": 7,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 7,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [
+        "asset-02"
+      ],
+      "variant": 2,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "wrong_positions": 1,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-6-v2-correct-1",
+        "task-6-v2-empty",
+        "task-6-v2-leading-space",
+        "task-6-v2-trailing-space",
+        "task-6-v2-extra-symbol",
+        "task-6-v2-one-position-error",
+        "task-6-v2-extra-length"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "matching_selects",
+        "rows": [
+          {
+            "key": "А",
+            "text": "входит в состав молекул жиров"
+          },
+          {
+            "key": "Б",
+            "text": "образует пептидные связи"
+          },
+          {
+            "key": "В",
+            "text": "входит в состав крахмала"
+          },
+          {
+            "key": "Г",
+            "text": "является моносахаридом"
+          },
+          {
+            "key": "Д",
+            "text": "нерастворима в воде"
+          },
+          {
+            "key": "Е",
+            "text": "входит в состав белков"
+          }
+        ],
+        "choices": [
+          {
+            "value": "1",
+            "text": "1"
+          },
+          {
+            "value": "2",
+            "text": "2"
+          },
+          {
+            "value": "3",
+            "text": "3"
+          }
+        ],
+        "allow_repeat": true,
+        "answer_length": 6
+      }
+    },
+    {
+      "number": 7,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<p>Выберите три верных ответа. Какие процессы являются причиной комбинативной изменчивости?</p><ol class=\"bio-options\"><li>рекомбинация генов в результате кроссинговера</li><li>изменение последовательности нуклеотидов в пределах гена</li><li>случайное сочетание гамет при оплодотворении</li><li>независимое расхождение гомологичных хромосом в мейозе</li><li>перенос участка хромосомы на негомологичную хромосому</li><li>потеря участка хромосомы</li></ol>",
+      "input_hint": "Запишите три цифры в любом порядке, без разделителей.",
+      "answer": {
+        "canonical": "134",
+        "accepted": [
+          {
+            "value": "134",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "134"
+        ],
+        "type": "set_difference_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "unordered_one_error",
+      "source": {
+        "prompt_printed_page": 8,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 8,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "set_difference",
+        "exact_length_required": false,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "symmetric_difference": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "symmetric_difference_min": 1,
+            "symmetric_difference_max": 2,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-7-v1-correct-1",
+        "task-7-v1-empty",
+        "task-7-v1-leading-space",
+        "task-7-v1-trailing-space",
+        "task-7-v1-extra-symbol",
+        "task-7-v1-reverse-order",
+        "task-7-v1-one-missing",
+        "task-7-v1-one-extra"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "multiple_choice",
+        "options": [
+          {
+            "value": "1",
+            "text": "рекомбинация генов в результате кроссинговера"
+          },
+          {
+            "value": "2",
+            "text": "изменение последовательности нуклеотидов в пределах гена"
+          },
+          {
+            "value": "3",
+            "text": "случайное сочетание гамет при оплодотворении"
+          },
+          {
+            "value": "4",
+            "text": "независимое расхождение гомологичных хромосом в мейозе"
+          },
+          {
+            "value": "5",
+            "text": "перенос участка хромосомы на негомологичную хромосому"
+          },
+          {
+            "value": "6",
+            "text": "потеря участка хромосомы"
+          }
+        ],
+        "max_select": 3,
+        "hide_prompt_options": true,
+        "source_sentences": false
+      }
+    },
+    {
+      "number": 8,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<p>Установите последовательность этапов получения штамма бактерий, несущих ген животного, с использованием методов генной инженерии.</p><ol class=\"bio-options\"><li>встраивание фрагмента ДНК в плазмиду</li><li>образование колоний бактерий с целевым геном</li><li>введение гибридной плазмиды в прокариотическую клетку</li><li>выделение нужного фрагмента ДНК из клетки животного</li><li>отбор животного, содержащего необходимый аллель</li></ol>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "54132",
+        "accepted": [
+          {
+            "value": "54132",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "54132"
+        ],
+        "type": "position_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "sequence_two_errors",
+      "source": {
+        "prompt_printed_page": 8,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 8,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "wrong_positions_with_extra_penalty",
+        "exact_length_required": false,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 2,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-8-v1-correct-1",
+        "task-8-v1-empty",
+        "task-8-v1-leading-space",
+        "task-8-v1-trailing-space",
+        "task-8-v1-extra-symbol",
+        "task-8-v1-one-position-error",
+        "task-8-v1-extra-reduces"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "sequence_builder",
+        "options": [
+          {
+            "value": "1",
+            "text": "встраивание фрагмента ДНК в плазмиду"
+          },
+          {
+            "value": "2",
+            "text": "образование колоний бактерий с целевым геном"
+          },
+          {
+            "value": "3",
+            "text": "введение гибридной плазмиды в прокариотическую клетку"
+          },
+          {
+            "value": "4",
+            "text": "выделение нужного фрагмента ДНК из клетки животного"
+          },
+          {
+            "value": "5",
+            "text": "отбор животного, содержащего необходимый аллель"
+          }
+        ],
+        "answer_length": 5,
+        "hide_prompt_options": true
+      }
+    },
+    {
+      "number": 9,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 1,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure bio-figure-wide\" data-bio-asset=\"asset-03\" alt=\"Шесть изображений позвоночных животных с цифровыми обозначениями\"></div><p>Под каким номером изображено позвоночное животное с полностью хрящевым скелетом, обитающее в морях?</p>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "4",
+        "accepted": [
+          {
+            "value": "4",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "4"
+        ],
+        "type": "exact_ordered_digits",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "exact_digits",
+      "source": {
+        "prompt_printed_page": 9,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 9,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": []
+      },
+      "asset_ids": [
+        "asset-03"
+      ],
+      "variant": 1,
+      "required_acceptance_case_ids": [
+        "task-9-v1-correct-1",
+        "task-9-v1-empty",
+        "task-9-v1-leading-space",
+        "task-9-v1-trailing-space",
+        "task-9-v1-extra-symbol",
+        "task-9-v1-extra-digit"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "text_input"
+      }
+    },
+    {
+      "number": 10,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure bio-figure-wide\" data-bio-asset=\"asset-03\" alt=\"Шесть изображений позвоночных животных с цифровыми обозначениями\"></div><p>Установите соответствие между характеристиками и животными, изображёнными на рисунках 1, 2, 3.</p><div class=\"bio-match\"><div><strong>Характеристики</strong><div><b>А)</b> только венозная кровь в сердце</div><div><b>Б)</b> хвостатое земноводное</div><div><b>В)</b> наличие грудной клетки</div><div><b>Г)</b> наличие зародышевой оболочки — амниона</div><div><b>Д)</b> наличие в позвоночнике только двух отделов: туловищного и хвостового</div><div><b>Е)</b> размножение на суше</div></div><div><strong>Животные</strong><div><b>1)</b> 1</div><div><b>2)</b> 2</div><div><b>3)</b> 3</div></div></div>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "123313",
+        "accepted": [
+          {
+            "value": "123313",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "123313"
+        ],
+        "type": "position_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "positional_one_error",
+      "source": {
+        "prompt_printed_page": 9,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 9,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [
+        "asset-03"
+      ],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "wrong_positions": 1,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-10-v1-correct-1",
+        "task-10-v1-empty",
+        "task-10-v1-leading-space",
+        "task-10-v1-trailing-space",
+        "task-10-v1-extra-symbol",
+        "task-10-v1-one-position-error",
+        "task-10-v1-extra-length"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "matching_selects",
+        "rows": [
+          {
+            "key": "А",
+            "text": "только венозная кровь в сердце"
+          },
+          {
+            "key": "Б",
+            "text": "хвостатое земноводное"
+          },
+          {
+            "key": "В",
+            "text": "наличие грудной клетки"
+          },
+          {
+            "key": "Г",
+            "text": "наличие зародышевой оболочки — амниона"
+          },
+          {
+            "key": "Д",
+            "text": "наличие в позвоночнике только двух отделов: туловищного и хвостового"
+          },
+          {
+            "key": "Е",
+            "text": "размножение на суше"
+          }
+        ],
+        "choices": [
+          {
+            "value": "1",
+            "text": "1"
+          },
+          {
+            "value": "2",
+            "text": "2"
+          },
+          {
+            "value": "3",
+            "text": "3"
+          }
+        ],
+        "allow_repeat": true,
+        "answer_length": 6
+      }
+    },
+    {
+      "number": 11,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<p>Выберите три верных ответа. Какие признаки характерны для хвойных растений?</p><ol class=\"bio-options\"><li>Оплодотворение происходит без участия воды.</li><li>Семязачатки расположены на чешуйках шишек.</li><li>Распространение осуществляется с помощью спор.</li><li>Жизненные формы — деревья, кустарники, травы.</li><li>Взрослое растение — гаметофит.</li><li>У многих представителей листья преобразуются в иголки.</li></ol>",
+      "input_hint": "Запишите три цифры в любом порядке, без разделителей.",
+      "answer": {
+        "canonical": "126",
+        "accepted": [
+          {
+            "value": "126",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "126"
+        ],
+        "type": "set_difference_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "unordered_one_error",
+      "source": {
+        "prompt_printed_page": 10,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 10,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "set_difference",
+        "exact_length_required": false,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "symmetric_difference": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "symmetric_difference_min": 1,
+            "symmetric_difference_max": 2,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-11-v1-correct-1",
+        "task-11-v1-empty",
+        "task-11-v1-leading-space",
+        "task-11-v1-trailing-space",
+        "task-11-v1-extra-symbol",
+        "task-11-v1-reverse-order",
+        "task-11-v1-one-missing",
+        "task-11-v1-one-extra"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "multiple_choice",
+        "options": [
+          {
+            "value": "1",
+            "text": "Оплодотворение происходит без участия воды."
+          },
+          {
+            "value": "2",
+            "text": "Семязачатки расположены на чешуйках шишек."
+          },
+          {
+            "value": "3",
+            "text": "Распространение осуществляется с помощью спор."
+          },
+          {
+            "value": "4",
+            "text": "Жизненные формы — деревья, кустарники, травы."
+          },
+          {
+            "value": "5",
+            "text": "Взрослое растение — гаметофит."
+          },
+          {
+            "value": "6",
+            "text": "У многих представителей листья преобразуются в иголки."
+          }
+        ],
+        "max_select": 3,
+        "hide_prompt_options": true,
+        "source_sentences": false
+      }
+    },
+    {
+      "number": 12,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<p>Установите последовательность систематических групп организмов, начиная с самого высокого ранга.</p><ol class=\"bio-options\"><li>Двудольные</li><li>Покрытосеменные, или Цветковые</li><li>Дудник лесной</li><li>Эукариоты</li><li>Зонтичные, или Сельдереевые</li><li>Дудник</li></ol>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "421563",
+        "accepted": [
+          {
+            "value": "421563",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "421563"
+        ],
+        "type": "position_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "sequence_two_errors",
+      "source": {
+        "prompt_printed_page": 10,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 10,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "wrong_positions_with_extra_penalty",
+        "exact_length_required": false,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 2,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-12-v1-correct-1",
+        "task-12-v1-empty",
+        "task-12-v1-leading-space",
+        "task-12-v1-trailing-space",
+        "task-12-v1-extra-symbol",
+        "task-12-v1-one-position-error",
+        "task-12-v1-extra-reduces"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "sequence_builder",
+        "options": [
+          {
+            "value": "1",
+            "text": "Двудольные"
+          },
+          {
+            "value": "2",
+            "text": "Покрытосеменные, или Цветковые"
+          },
+          {
+            "value": "3",
+            "text": "Дудник лесной"
+          },
+          {
+            "value": "4",
+            "text": "Эукариоты"
+          },
+          {
+            "value": "5",
+            "text": "Зонтичные, или Сельдереевые"
+          },
+          {
+            "value": "6",
+            "text": "Дудник"
+          }
+        ],
+        "answer_length": 6,
+        "hide_prompt_options": true
+      }
+    },
+    {
+      "number": 13,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 1,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure\" data-bio-asset=\"asset-04\" alt=\"Схема строения органа слуха с цифровыми обозначениями\"></div><p>Какой цифрой обозначен проводниковый отдел слуховой сенсорной системы?</p>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "4",
+        "accepted": [
+          {
+            "value": "4",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "4"
+        ],
+        "type": "exact_ordered_digits",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "exact_digits",
+      "source": {
+        "prompt_printed_page": 11,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 11,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": []
+      },
+      "asset_ids": [
+        "asset-04"
+      ],
+      "variant": 1,
+      "required_acceptance_case_ids": [
+        "task-13-v1-correct-1",
+        "task-13-v1-empty",
+        "task-13-v1-leading-space",
+        "task-13-v1-trailing-space",
+        "task-13-v1-extra-symbol",
+        "task-13-v1-extra-digit"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "text_input"
+      }
+    },
+    {
+      "number": 14,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure\" data-bio-asset=\"asset-04\" alt=\"Схема строения органа слуха с цифровыми обозначениями\"></div><p>Установите соответствие между характеристиками и структурами анализаторов, обозначенными на рисунке цифрами 1, 2, 3.</p><div class=\"bio-match\"><div><strong>Характеристики</strong><div><b>А)</b> компонент среднего уха</div><div><b>Б)</b> содержит кортиев орган</div><div><b>В)</b> усиливает и передаёт звуковые колебания</div><div><b>Г)</b> воспринимает изменения положения головы в пространстве</div><div><b>Д)</b> содержит круглое окно</div><div><b>Е)</b> преобразует звуковые колебания в нервные импульсы</div></div><div><strong>Структуры</strong><div><b>1)</b> 1</div><div><b>2)</b> 2</div><div><b>3)</b> 3</div></div></div>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "131233",
+        "accepted": [
+          {
+            "value": "131233",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "131233"
+        ],
+        "type": "position_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "positional_one_error",
+      "source": {
+        "prompt_printed_page": 11,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 11,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [
+        "asset-04"
+      ],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "wrong_positions": 1,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-14-v1-correct-1",
+        "task-14-v1-empty",
+        "task-14-v1-leading-space",
+        "task-14-v1-trailing-space",
+        "task-14-v1-extra-symbol",
+        "task-14-v1-one-position-error",
+        "task-14-v1-extra-length"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "matching_selects",
+        "rows": [
+          {
+            "key": "А",
+            "text": "компонент среднего уха"
+          },
+          {
+            "key": "Б",
+            "text": "содержит кортиев орган"
+          },
+          {
+            "key": "В",
+            "text": "усиливает и передаёт звуковые колебания"
+          },
+          {
+            "key": "Г",
+            "text": "воспринимает изменения положения головы в пространстве"
+          },
+          {
+            "key": "Д",
+            "text": "содержит круглое окно"
+          },
+          {
+            "key": "Е",
+            "text": "преобразует звуковые колебания в нервные импульсы"
+          }
+        ],
+        "choices": [
+          {
+            "value": "1",
+            "text": "1"
+          },
+          {
+            "value": "2",
+            "text": "2"
+          },
+          {
+            "value": "3",
+            "text": "3"
+          }
+        ],
+        "allow_repeat": true,
+        "answer_length": 6
+      }
+    },
+    {
+      "number": 15,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure\" data-bio-asset=\"asset-05\" alt=\"Схема участка спинного мозга с цифровыми обозначениями\"></div><p>Выберите три верно обозначенные подписи к рисунку.</p><ol class=\"bio-options\"><li>серое вещество</li><li>кровеносный сосуд</li><li>белое вещество</li><li>задний корешок</li><li>нервный узел</li><li>передний корешок</li></ol>",
+      "input_hint": "Запишите три цифры в любом порядке, без разделителей.",
+      "answer": {
+        "canonical": "456",
+        "accepted": [
+          {
+            "value": "456",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "456"
+        ],
+        "type": "set_difference_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "unordered_one_error",
+      "source": {
+        "prompt_printed_page": 12,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 12,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [
+        "asset-05"
+      ],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "set_difference",
+        "exact_length_required": false,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "symmetric_difference": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "symmetric_difference_min": 1,
+            "symmetric_difference_max": 2,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-15-v1-correct-1",
+        "task-15-v1-empty",
+        "task-15-v1-leading-space",
+        "task-15-v1-trailing-space",
+        "task-15-v1-extra-symbol",
+        "task-15-v1-reverse-order",
+        "task-15-v1-one-missing",
+        "task-15-v1-one-extra"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "multiple_choice",
+        "options": [
+          {
+            "value": "1",
+            "text": "серое вещество"
+          },
+          {
+            "value": "2",
+            "text": "кровеносный сосуд"
+          },
+          {
+            "value": "3",
+            "text": "белое вещество"
+          },
+          {
+            "value": "4",
+            "text": "задний корешок"
+          },
+          {
+            "value": "5",
+            "text": "нервный узел"
+          },
+          {
+            "value": "6",
+            "text": "передний корешок"
+          }
+        ],
+        "max_select": 3,
+        "hide_prompt_options": true,
+        "source_sentences": false
+      }
+    },
+    {
+      "number": 16,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<p>Установите последовательность этапов процесса дыхания в организме человека.</p><ol class=\"bio-options\"><li>транспорт воздуха через носовую полость</li><li>поступление кислорода в цитоплазму нейрона</li><li>взаимодействие кислорода с гемоглобином</li><li>транспорт кислорода из альвеолы в кровь</li><li>участие кислорода в окислительном фосфорилировании</li><li>поступление воздуха в правый главный бронх</li></ol>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "164325",
+        "accepted": [
+          {
+            "value": "164325",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "164325"
+        ],
+        "type": "position_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "sequence_two_errors",
+      "source": {
+        "prompt_printed_page": 12,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 12,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "wrong_positions_with_extra_penalty",
+        "exact_length_required": false,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "wrong_positions_min": 1,
+            "wrong_positions_max": 2,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-16-v1-correct-1",
+        "task-16-v1-empty",
+        "task-16-v1-leading-space",
+        "task-16-v1-trailing-space",
+        "task-16-v1-extra-symbol",
+        "task-16-v1-one-position-error",
+        "task-16-v1-extra-reduces"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "sequence_builder",
+        "options": [
+          {
+            "value": "1",
+            "text": "транспорт воздуха через носовую полость"
+          },
+          {
+            "value": "2",
+            "text": "поступление кислорода в цитоплазму нейрона"
+          },
+          {
+            "value": "3",
+            "text": "взаимодействие кислорода с гемоглобином"
+          },
+          {
+            "value": "4",
+            "text": "транспорт кислорода из альвеолы в кровь"
+          },
+          {
+            "value": "5",
+            "text": "участие кислорода в окислительном фосфорилировании"
+          },
+          {
+            "value": "6",
+            "text": "поступление воздуха в правый главный бронх"
+          }
+        ],
+        "answer_length": 6,
+        "hide_prompt_options": true
+      }
+    },
+    {
+      "number": 17,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<p>Прочитайте текст. Выберите три предложения, в которых даны описания <strong>социальных факторов антропогенеза</strong>.</p><div class=\"bio-source-text\">(1) Конкуренция за добычу с другими хищниками и падальщиками способствовала отбору самых ловких и сильных особей у ископаемых видов людей. (2) Одним из способов выживания стало формирование устойчивых групп, что способствовало снижению внутригрупповой агрессии и росту кооперации. (3) Использование продуктов материальной культуры — каменных орудий — стимулировало рост объёма головного мозга, что, в свою очередь, привело к постепенному совершенствованию орудий труда. (4) Наиболее слабые, восприимчивые к заболеваниям и инфекциям предки людей вскоре после рождения погибали, не оставляя потомков. (5) Однако во многих пещерах находят множество скелетов людей, достигших зрелого возраста, с многочисленными зажившими переломами и без зубов. (6) Многие молодые австралопитеки, которые отбивались от группы из-за слабости, гибли от когтей хищных птиц, например орлов.</div>",
+      "input_hint": "Запишите три цифры в любом порядке, без разделителей.",
+      "answer": {
+        "canonical": "235",
+        "accepted": [
+          {
+            "value": "235",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "235"
+        ],
+        "type": "set_difference_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "unordered_one_error",
+      "source": {
+        "prompt_printed_page": 12,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 12,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "set_difference",
+        "exact_length_required": false,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "symmetric_difference": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "symmetric_difference_min": 1,
+            "symmetric_difference_max": 2,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-17-v1-correct-1",
+        "task-17-v1-empty",
+        "task-17-v1-leading-space",
+        "task-17-v1-trailing-space",
+        "task-17-v1-extra-symbol",
+        "task-17-v1-reverse-order",
+        "task-17-v1-one-missing",
+        "task-17-v1-one-extra"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "multiple_choice",
+        "options": [
+          {
+            "value": "1",
+            "text": "Конкуренция за добычу с другими хищниками и падальщиками способствовала отбору самых ловких и сильных особей у ископаемых видов людей."
+          },
+          {
+            "value": "2",
+            "text": "Одним из способов выживания стало формирование устойчивых групп, что способствовало снижению внутригрупповой агрессии и росту кооперации."
+          },
+          {
+            "value": "3",
+            "text": "Использование продуктов материальной культуры — каменных орудий — стимулировало рост объёма головного мозга, что, в свою очередь, привело к постепенному совершенствованию орудий труда."
+          },
+          {
+            "value": "4",
+            "text": "Наиболее слабые, восприимчивые к заболеваниям и инфекциям предки людей вскоре после рождения погибали, не оставляя потомков."
+          },
+          {
+            "value": "5",
+            "text": "Однако во многих пещерах находят множество скелетов людей, достигших зрелого возраста, с многочисленными зажившими переломами и без зубов."
+          },
+          {
+            "value": "6",
+            "text": "Многие молодые австралопитеки, которые отбивались от группы из-за слабости, гибли от когтей хищных птиц, например орлов."
+          }
+        ],
+        "max_select": 3,
+        "hide_prompt_options": false,
+        "source_sentences": true
+      }
+    },
+    {
+      "number": 18,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<p>Выберите три верных ответа. Для сохранения биоразнообразия необходимо:</p><ol class=\"bio-options\"><li>проводить селекцию высокоурожайных сортов растений</li><li>проводить распашку целинных земель</li><li>уничтожать хищных животных</li><li>создавать заповедники</li><li>организовывать национальные парки</li><li>сохранять природные ландшафты</li></ol>",
+      "input_hint": "Запишите три цифры в любом порядке, без разделителей.",
+      "answer": {
+        "canonical": "456",
+        "accepted": [
+          {
+            "value": "456",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "456"
+        ],
+        "type": "set_difference_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "unordered_one_error",
+      "source": {
+        "prompt_printed_page": 13,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 13,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "set_difference",
+        "exact_length_required": false,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "symmetric_difference": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "symmetric_difference_min": 1,
+            "symmetric_difference_max": 2,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-18-v1-correct-1",
+        "task-18-v1-empty",
+        "task-18-v1-leading-space",
+        "task-18-v1-trailing-space",
+        "task-18-v1-extra-symbol",
+        "task-18-v1-reverse-order",
+        "task-18-v1-one-missing",
+        "task-18-v1-one-extra"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "multiple_choice",
+        "options": [
+          {
+            "value": "1",
+            "text": "проводить селекцию высокоурожайных сортов растений"
+          },
+          {
+            "value": "2",
+            "text": "проводить распашку целинных земель"
+          },
+          {
+            "value": "3",
+            "text": "уничтожать хищных животных"
+          },
+          {
+            "value": "4",
+            "text": "создавать заповедники"
+          },
+          {
+            "value": "5",
+            "text": "организовывать национальные парки"
+          },
+          {
+            "value": "6",
+            "text": "сохранять природные ландшафты"
+          }
+        ],
+        "max_select": 3,
+        "hide_prompt_options": true,
+        "source_sentences": false
+      }
+    },
+    {
+      "number": 19,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<p>Установите соответствие между процессами круговорота и элементами, в круговороте которых эти процессы происходят.</p><div class=\"bio-match\"><div><strong>Процессы круговорота</strong><div><b>А)</b> выделение аммиака при распаде белков</div><div><b>Б)</b> фотосинтез</div><div><b>В)</b> денитрификация</div><div><b>Г)</b> дыхание в митохондриях</div><div><b>Д)</b> сжигание метана</div><div><b>Е)</b> фиксация атмосферного газа клубеньковыми бактериями</div></div><div><strong>Элементы</strong><div><b>1)</b> углерод</div><div><b>2)</b> азот</div></div></div>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "212112",
+        "accepted": [
+          {
+            "value": "212112",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "212112"
+        ],
+        "type": "position_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "positional_one_error",
+      "source": {
+        "prompt_printed_page": 13,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 13,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "wrong_positions": 1,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-19-v1-correct-1",
+        "task-19-v1-empty",
+        "task-19-v1-leading-space",
+        "task-19-v1-trailing-space",
+        "task-19-v1-extra-symbol",
+        "task-19-v1-one-position-error",
+        "task-19-v1-extra-length"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "matching_selects",
+        "rows": [
+          {
+            "key": "А",
+            "text": "выделение аммиака при распаде белков"
+          },
+          {
+            "key": "Б",
+            "text": "фотосинтез"
+          },
+          {
+            "key": "В",
+            "text": "денитрификация"
+          },
+          {
+            "key": "Г",
+            "text": "дыхание в митохондриях"
+          },
+          {
+            "key": "Д",
+            "text": "сжигание метана"
+          },
+          {
+            "key": "Е",
+            "text": "фиксация атмосферного газа клубеньковыми бактериями"
+          }
+        ],
+        "choices": [
+          {
+            "value": "1",
+            "text": "углерод"
+          },
+          {
+            "value": "2",
+            "text": "азот"
+          }
+        ],
+        "allow_repeat": true,
+        "answer_length": 6
+      }
+    },
+    {
+      "number": 20,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure\" data-bio-asset=\"asset-06\" alt=\"Сравнение строения конечностей млекопитающих\"></div><p>Рассмотрите рисунок «Конечности разных отрядов млекопитающих». Заполните пустые ячейки таблицы, используя элементы списка.</p><div class=\"bio-table-scroll\"><table class=\"bio-table\"><thead><tr><th>Тип приспособленности</th><th>Уровень эволюционных изменений</th><th>Путь достижения биологического прогресса</th></tr></thead><tbody><tr><td>(А)</td><td>(Б)</td><td>(В)</td></tr></tbody></table></div><ol class=\"bio-options\"><li>физиологическая</li><li>микроэволюция</li><li>идиоадаптация</li><li>этологическая</li><li>общая дегенерация</li><li>макроэволюция</li><li>морфологическая</li><li>конвергенция</li></ol>",
+      "input_hint": "Запишите ответ без пробелов и дополнительных символов.",
+      "answer": {
+        "canonical": "763",
+        "accepted": [
+          {
+            "value": "763",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "763"
+        ],
+        "type": "position_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "positional_one_error",
+      "source": {
+        "prompt_printed_page": 14,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 14,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [
+        "asset-06"
+      ],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "wrong_positions",
+        "exact_length_required": true,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "wrong_positions": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "wrong_positions": 1,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-20-v1-correct-1",
+        "task-20-v1-empty",
+        "task-20-v1-leading-space",
+        "task-20-v1-trailing-space",
+        "task-20-v1-extra-symbol",
+        "task-20-v1-one-position-error",
+        "task-20-v1-extra-length"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "table_selects",
+        "rows": [
+          {
+            "key": "А",
+            "text": "Тип приспособленности"
+          },
+          {
+            "key": "Б",
+            "text": "Уровень эволюционных изменений"
+          },
+          {
+            "key": "В",
+            "text": "Путь достижения биологического прогресса"
+          }
+        ],
+        "choices": [
+          {
+            "value": "1",
+            "text": "физиологическая"
+          },
+          {
+            "value": "2",
+            "text": "микроэволюция"
+          },
+          {
+            "value": "3",
+            "text": "идиоадаптация"
+          },
+          {
+            "value": "4",
+            "text": "этологическая"
+          },
+          {
+            "value": "5",
+            "text": "общая дегенерация"
+          },
+          {
+            "value": "6",
+            "text": "макроэволюция"
+          },
+          {
+            "value": "7",
+            "text": "морфологическая"
+          },
+          {
+            "value": "8",
+            "text": "конвергенция"
+          }
+        ],
+        "allow_repeat": false,
+        "answer_length": 3
+      }
+    },
+    {
+      "number": 21,
+      "kind": "short",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 2,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure\" data-bio-asset=\"asset-07\" alt=\"График выживаемости насекомого в зависимости от температуры и влажности\"></div><p>Выберите утверждения, которые можно сформулировать на основании представленных данных.</p><ol class=\"bio-options\"><li>При температуре 10 °C и влажности 30 % выживаемость соснового коконопряда равна 25 %.</li><li>Сосновый коконопряд способен выживать при любых значениях влажности и температуры.</li><li>При температурных значениях от 8 °C до 23 °C выживаемость соснового коконопряда меняется в зависимости от влажности воздуха.</li><li>При влажности воздуха выше 60 % выживают все коконопряды.</li><li>Наиболее благоприятная среда — при влажности 60 % и температуре 10 °C.</li></ol>",
+      "input_hint": "Запишите цифры выбранных утверждений в любом порядке, без разделителей.",
+      "answer": {
+        "canonical": "13",
+        "accepted": [
+          {
+            "value": "13",
+            "source_pdf_page": 24,
+            "basis": "official_answer_table"
+          }
+        ],
+        "accepted_values": [
+          "13"
+        ],
+        "type": "set_difference_partial",
+        "normalization": {
+          "trim": false,
+          "remove_internal_spaces": false,
+          "remove_punctuation": false,
+          "remove_non_digits": false,
+          "case_fold": false,
+          "yo_to_e": false,
+          "allow_decimal_comma": false,
+          "allow_decimal_point": false
+        }
+      },
+      "scoring": "unordered_one_error",
+      "source": {
+        "prompt_printed_page": 15,
+        "answer_printed_page": 24,
+        "file_role": "demo",
+        "prompt_pdf_page": 15,
+        "answer_pdf_page": 24,
+        "criteria_pdf_pages": [
+          24
+        ]
+      },
+      "asset_ids": [
+        "asset-07"
+      ],
+      "variant": 1,
+      "partial_scoring": {
+        "method": "set_difference",
+        "exact_length_required": false,
+        "extra_characters_forbidden": true,
+        "branches": [
+          {
+            "score": 2,
+            "symmetric_difference": 0,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 1,
+            "symmetric_difference_min": 1,
+            "symmetric_difference_max": 2,
+            "source_pdf_page": 24
+          },
+          {
+            "score": 0,
+            "otherwise": true,
+            "source_pdf_page": 24
+          }
+        ]
+      },
+      "required_acceptance_case_ids": [
+        "task-21-v1-correct-1",
+        "task-21-v1-empty",
+        "task-21-v1-leading-space",
+        "task-21-v1-trailing-space",
+        "task-21-v1-extra-symbol",
+        "task-21-v1-reverse-order",
+        "task-21-v1-one-missing",
+        "task-21-v1-one-extra"
+      ],
+      "notes_html": "",
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "multiple_choice",
+        "options": [
+          {
+            "value": "1",
+            "text": "При температуре 10 °C и влажности 30 % выживаемость соснового коконопряда равна 25 %."
+          },
+          {
+            "value": "2",
+            "text": "Сосновый коконопряд способен выживать при любых значениях влажности и температуры."
+          },
+          {
+            "value": "3",
+            "text": "При температурных значениях от 8 °C до 23 °C выживаемость соснового коконопряда меняется в зависимости от влажности воздуха."
+          },
+          {
+            "value": "4",
+            "text": "При влажности воздуха выше 60 % выживают все коконопряды."
+          },
+          {
+            "value": "5",
+            "text": "Наиболее благоприятная среда — при влажности 60 % и температуре 10 °C."
+          }
+        ],
+        "max_select": null,
+        "hide_prompt_options": true,
+        "source_sentences": false
+      }
+    },
+    {
+      "number": 22,
+      "kind": "extended",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 3,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure bio-figure-wide\" data-bio-asset=\"asset-08\" alt=\"График среднего уровня глюкозы в крови в течение суток для двух режимов питания\"></div><div class=\"bio-source-text\"><strong>Описание эксперимента.</strong> Группа добровольцев участвовала в эксперименте по изучению физиологии питания. Вначале у добровольцев оценивали колебания уровня глюкозы в крови в течение дня, а затем они переходили на диету, подразумевающую дробное питание. Результаты приведены на графике.</div><p>Сформулируйте две нулевые гипотезы* для данного эксперимента. Объясните, почему в эксперименте до и после перехода на диету участвовала одна и та же группа добровольцев. Почему результаты эксперимента могут быть недостоверны, если до перехода на диету в день взятия образцов для анализа каждый из добровольцев принимал пищу, различающуюся по составу и количеству?</p><p class=\"bio-footnote\">* <strong>Нулевая гипотеза</strong> — принимаемое по умолчанию предположение, что не существует связи между двумя наблюдаемыми событиями, феноменами.</p>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "Нулевая гипотеза 1: средний уровень глюкозы в крови не зависит от типа питания (диеты)."
+        },
+        {
+          "id": "e2",
+          "text": "Нулевая гипотеза 2: средний уровень глюкозы в крови не зависит от времени взятия крови."
+        },
+        {
+          "id": "e3",
+          "text": "У разных людей уровень глюкозы может по-разному изменяться в зависимости от питания, приёма пищи и времени суток; поэтому сравнивают одну и ту же группу."
+        },
+        {
+          "id": "e4",
+          "text": "Пища разного состава и количества может вызывать разные изменения уровня глюкозы."
+        },
+        {
+          "id": "e5",
+          "text": "Из-за различий в пище зависимость между уровнем глюкозы и типом питания или временем нельзя будет установить в явном виде."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "all"
+        },
+        {
+          "score": 2,
+          "type": "count",
+          "min": 4
+        },
+        {
+          "score": 1,
+          "type": "count_or_required",
+          "min": 3,
+          "required_sets": [
+            [
+              "e1",
+              "e2"
+            ]
+          ]
+        }
+      ],
+      "model_answer_html": "<h4>Содержание верного ответа</h4><ul class=\"bio-list\"><li>Нулевая гипотеза 1: средний уровень глюкозы в крови не зависит от типа питания (диеты).</li><li>Нулевая гипотеза 2: средний уровень глюкозы в крови не зависит от времени взятия крови.</li><li>У разных людей уровень глюкозы может по-разному изменяться в зависимости от питания, приёма пищи и времени суток; поэтому сравнивают одну и ту же группу.</li><li>Пища разного состава и количества может вызывать разные изменения уровня глюкозы.</li><li>Из-за различий в пище зависимость между уровнем глюкозы и типом питания или временем нельзя будет установить в явном виде.</li></ul><p class=\"bio-rubric\">3 балла — все 5 элементов; 2 балла — 4 элемента; 1 балл — 3 элемента или верно указаны обе нулевые гипотезы.</p>",
+      "notes_html": "<div class=\"bio-criterion-note\"><strong>Правило ФИПИ:</strong> за дополнительную информацию, не относящуюся к вопросу, баллы не начисляются. Если в ней есть биологическая ошибка, из оценки за задание вычитается 1 балл.</div>",
+      "source": {
+        "prompt_printed_page": 16,
+        "criteria_printed_pages": [
+          25,
+          26
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 16,
+        "answer_pdf_page": 25,
+        "criteria_pdf_pages": [
+          25,
+          26
+        ]
+      },
+      "asset_ids": [
+        "asset-08"
+      ],
+      "variant": 1,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствуют все 5 элементов содержания, указанные в официальном решении.",
+          "source_pdf_page": 25
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 4 элементов содержания из официального решения.",
+          "source_pdf_page": 26
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: выполнено условие по количеству элементов либо полностью приведён обязательный набор элементов официального ответа.",
+          "source_pdf_page": 26
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 26
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false,
+        "irrelevant_error_penalty": 1
+      },
+      "required_acceptance_case_ids": [
+        "task-22-v1-score-3",
+        "task-22-v1-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    },
+    {
+      "number": 23,
+      "kind": "extended",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 3,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure bio-figure-wide\" data-bio-asset=\"asset-08\" alt=\"График среднего уровня глюкозы в крови в течение суток для двух режимов питания\"></div><div class=\"bio-source-text\"><strong>Описание эксперимента.</strong> Группа добровольцев участвовала в эксперименте по изучению физиологии питания. Вначале у добровольцев оценивали колебания уровня глюкозы в крови в течение дня, а затем они переходили на диету, подразумевающую дробное питание. Результаты приведены на графике.</div><p>Предположите, кривая под каким номером соответствует результатам добровольцев до перехода на дробное питание. Ответ поясните. Как происходит метаболизм глюкозы в мышцах млекопитающих при нормальном количестве и недостатке кислорода? Какое количество АТФ при этом выделяется из расчёта на одну молекулу глюкозы?</p>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "Кривая 1."
+        },
+        {
+          "id": "e2",
+          "text": "На кривой 1 видны три пика уровня глюкозы, соответствующие трёхразовому питанию."
+        },
+        {
+          "id": "e3",
+          "text": "При нормальном количестве кислорода глюкоза окисляется до углекислого газа и воды."
+        },
+        {
+          "id": "e4",
+          "text": "При нормальном количестве кислорода образуется около 30 молекул АТФ; принимается значение от 30 до 38."
+        },
+        {
+          "id": "e5",
+          "text": "При недостатке кислорода глюкоза превращается в молочную кислоту (лактат; допускаются ПВК или пировиноградная кислота по критериям ФИПИ)."
+        },
+        {
+          "id": "e6",
+          "text": "При недостатке кислорода образуются 2 молекулы АТФ."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "all"
+        },
+        {
+          "score": 2,
+          "type": "count",
+          "min": 4
+        },
+        {
+          "score": 1,
+          "type": "count",
+          "min": 3
+        }
+      ],
+      "model_answer_html": "<h4>Содержание верного ответа</h4><ul class=\"bio-list\"><li>Кривая 1.</li><li>На кривой 1 видны три пика уровня глюкозы, соответствующие трёхразовому питанию.</li><li>При нормальном количестве кислорода глюкоза окисляется до углекислого газа и воды.</li><li>При нормальном количестве кислорода образуется около 30 молекул АТФ; принимается значение от 30 до 38.</li><li>При недостатке кислорода глюкоза превращается в молочную кислоту (лактат; допускаются ПВК или пировиноградная кислота по критериям ФИПИ).</li><li>При недостатке кислорода образуются 2 молекулы АТФ.</li></ul><p class=\"bio-rubric\">3 балла — 6 элементов; 2 балла — 4–5; 1 балл — 3.</p>",
+      "notes_html": "<div class=\"bio-criterion-note\"><strong>Правило ФИПИ:</strong> за дополнительную информацию, не относящуюся к вопросу, баллы не начисляются. Если в ней есть биологическая ошибка, из оценки за задание вычитается 1 балл.</div>",
+      "source": {
+        "prompt_printed_page": 17,
+        "criteria_printed_pages": [
+          27
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 17,
+        "answer_pdf_page": 27,
+        "criteria_pdf_pages": [
+          27
+        ]
+      },
+      "asset_ids": [
+        "asset-08"
+      ],
+      "variant": 1,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствуют все 6 элементов содержания, указанные в официальном решении.",
+          "source_pdf_page": 27
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 4 элементов содержания из официального решения.",
+          "source_pdf_page": 27
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: в ответе присутствует не менее 3 элементов содержания из официального решения.",
+          "source_pdf_page": 27
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 27
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false,
+        "irrelevant_error_penalty": 1
+      },
+      "required_acceptance_case_ids": [
+        "task-23-v1-score-3",
+        "task-23-v1-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    },
+    {
+      "number": 24,
+      "kind": "extended",
+      "variant_id": "1",
+      "variant_label": "Официальный пример 1 из 2",
+      "max_score": 3,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure bio-figure-wide\" data-bio-asset=\"asset-09\" alt=\"Схема цепи питания из растительных остатков, дождевого червя, крота и хищной птицы\"></div><p>Как называется цепь питания, изображённая на рисунке? Ответ поясните. К какой функциональной группе в экосистеме относится крот и какой трофический уровень он занимает? Укажите две причины улучшения свойств почвы в результате жизнедеятельности дождевых червей.</p>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "Цепь детритная (цепь разложения)."
+        },
+        {
+          "id": "e2",
+          "text": "Цепь начинается с мёртвой органики; продуценты отсутствуют."
+        },
+        {
+          "id": "e3",
+          "text": "Крот — консумент, консумент II порядка."
+        },
+        {
+          "id": "e4",
+          "text": "Крот занимает третий трофический уровень."
+        },
+        {
+          "id": "e5",
+          "text": "Улучшается структура почвы; достаточно одного пояснения: улучшается аэрация или сохраняется влага."
+        },
+        {
+          "id": "e6",
+          "text": "Уменьшается кислотность почвы."
+        },
+        {
+          "id": "e7",
+          "text": "Органические вещества перемещаются в глубокие слои почвы; повышается плодородие."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "count_required",
+          "min": 6,
+          "required": [
+            "e1"
+          ]
+        },
+        {
+          "score": 2,
+          "type": "count_required",
+          "min": 4,
+          "required": [
+            "e1"
+          ]
+        },
+        {
+          "score": 1,
+          "type": "count_required_or_set",
+          "min": 3,
+          "required": [
+            "e1"
+          ],
+          "required_sets": [
+            [
+              "e2",
+              "e3",
+              "e4",
+              "e5",
+              "e6",
+              "e7"
+            ]
+          ]
+        }
+      ],
+      "model_answer_html": "<h4>Содержание верного ответа</h4><ul class=\"bio-list\"><li>Цепь детритная (цепь разложения).</li><li>Цепь начинается с мёртвой органики; продуценты отсутствуют.</li><li>Крот — консумент, консумент II порядка.</li><li>Крот занимает третий трофический уровень.</li><li>Улучшается структура почвы; в качестве пояснения достаточно указать улучшение аэрации или сохранение влаги.</li><li>Уменьшается кислотность почвы.</li><li>Органические вещества перемещаются в глубокие слои почвы; повышается плодородие.</li></ul><p class=\"bio-rubric\">Для 3, 2 и основной ветви 1 балла должен быть указан тип цепи. Отдельная ветвь 1 балла — верные элементы 2–7.</p>",
+      "notes_html": "<div class=\"bio-criterion-note\"><strong>Правило ФИПИ:</strong> за дополнительную информацию, не относящуюся к вопросу, баллы не начисляются. Если в ней есть биологическая ошибка, из оценки за задание вычитается 1 балл.</div>",
+      "source": {
+        "prompt_printed_page": 17,
+        "criteria_printed_pages": [
+          28
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 17,
+        "answer_pdf_page": 28,
+        "criteria_pdf_pages": [
+          28
+        ]
+      },
+      "asset_ids": [
+        "asset-09"
+      ],
+      "variant": 1,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствует не менее 6 элементов, включая обязательные элементы, указанные в этой ветви критерия.",
+          "source_pdf_page": 28
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 4 элементов, включая обязательные элементы, указанные в этой ветви критерия.",
+          "source_pdf_page": 28
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: выполнено условие по количеству с обязательным элементом либо полностью приведён альтернативный официальный набор.",
+          "source_pdf_page": 28
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 28
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false,
+        "irrelevant_error_penalty": 1
+      },
+      "required_acceptance_case_ids": [
+        "task-24-v1-score-3",
+        "task-24-v1-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    },
+    {
+      "number": 24,
+      "kind": "extended",
+      "variant_id": "2",
+      "variant_label": "Официальный пример 2 из 2",
+      "max_score": 3,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure bio-figure-wide\" data-bio-asset=\"asset-10\" alt=\"Скелет с отпечатком перьев, череп и реконструкция ископаемого животного\"></div><p>На рисунках изображены скелет с отпечатком перьев и реконструкция археоптерикса, обитавшего 150–147 млн лет назад. Используя фрагмент геохронологической таблицы, определите эру и период. Перечислите не менее трёх видимых признаков, не свойственных современным птицам. Для организмов какого современного класса характерны эти признаки?</p><div class=\"bio-table-scroll\"><table class=\"bio-table\"><thead><tr><th>Эра: название и продолжительность, млн лет</th><th>Начало эры, млн лет</th><th>Периоды и продолжительность, млн лет</th></tr></thead><tbody><tr><td>Кайнозойская, 66</td><td>66</td><td>Четвертичный, 2,58; Неоген, 20,45; Палеоген, 43</td></tr><tr><td>Мезозойская, 186</td><td>252</td><td>Меловой, 79; Юрский, 56; Триасовый, 51</td></tr><tr><td>Палеозойская, 289</td><td>541</td><td>Пермский, 47; Каменноугольный, 60; Девонский, 60; Силурийский, 25; Ордовикский, 41; Кембрийский, 56</td></tr></tbody></table></div>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "Мезозойская эра и юрский период — должны быть указаны оба."
+        },
+        {
+          "id": "e2",
+          "text": "Челюсти с зубами."
+        },
+        {
+          "id": "e3",
+          "text": "Длинный хвост из несросшихся позвонков."
+        },
+        {
+          "id": "e4",
+          "text": "Развитые пальцы с когтями на передних конечностях."
+        },
+        {
+          "id": "e5",
+          "text": "Признаки характерны для Пресмыкающихся (Рептилий) или, по официальному критерию, для Млекопитающих (Зверей)."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "all"
+        },
+        {
+          "score": 2,
+          "type": "count_required",
+          "min": 4,
+          "required": [
+            "e1"
+          ]
+        },
+        {
+          "score": 1,
+          "type": "count_required_or_set",
+          "min": 3,
+          "required": [
+            "e1"
+          ],
+          "required_sets": [
+            [
+              "e2",
+              "e3",
+              "e4",
+              "e5"
+            ]
+          ]
+        }
+      ],
+      "model_answer_html": "<h4>Содержание верного ответа</h4><ul class=\"bio-list\"><li>Мезозойская эра и юрский период — должны быть указаны оба.</li><li>Челюсти с зубами.</li><li>Длинный хвост из несросшихся позвонков.</li><li>Развитые пальцы с когтями на передних конечностях.</li><li>Признаки характерны для Пресмыкающихся (Рептилий) или, по официальному критерию, для Млекопитающих (Зверей).</li></ul><p class=\"bio-rubric\">3 балла — все 5 элементов; 2 — 4, включая эру и период; 1 — 3, включая эру и период, либо элементы 2–5.</p>",
+      "notes_html": "<div class=\"bio-criterion-note\"><strong>Правило ФИПИ:</strong> за дополнительную информацию, не относящуюся к вопросу, баллы не начисляются. Если в ней есть биологическая ошибка, из оценки за задание вычитается 1 балл.</div>",
+      "source": {
+        "prompt_printed_page": 18,
+        "criteria_printed_pages": [
+          29,
+          30
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 18,
+        "answer_pdf_page": 29,
+        "criteria_pdf_pages": [
+          29,
+          30
+        ]
+      },
+      "asset_ids": [
+        "asset-10"
+      ],
+      "variant": 2,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствуют все 5 элементов содержания, указанные в официальном решении.",
+          "source_pdf_page": 29
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 4 элементов, включая обязательные элементы, указанные в этой ветви критерия.",
+          "source_pdf_page": 30
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: выполнено условие по количеству с обязательным элементом либо полностью приведён альтернативный официальный набор.",
+          "source_pdf_page": 30
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 30
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false,
+        "irrelevant_error_penalty": 1
+      },
+      "required_acceptance_case_ids": [
+        "task-24-v2-score-3",
+        "task-24-v2-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    },
+    {
+      "number": 25,
+      "kind": "extended",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 3,
+      "prompt_html": "<p>Если сравнить сердца китообразных и наземных млекопитающих, то окажется, что у многих китов правый желудочек развит существенно лучше левого, тогда как у наземных млекопитающих левый желудочек заметно толще правого. Как можно объяснить эту закономерность? При погружении у китообразных снижается общее потребление кислорода за счёт уменьшения кровоснабжения скелетных мышц. Как при этом изменяется частота сердечных сокращений? За счёт каких адаптаций и процессов в скелетной мускулатуре продолжает вырабатываться АТФ во время погружения?</p>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "Достаточно одного из официальных объяснений: капиллярная сеть лёгких развита сильнее (или лёгкие крупнее); разветвлённая сеть капилляров создаёт высокое сопротивление току крови; вода сжимает лёгкие сильнее воздуха."
+        },
+        {
+          "id": "e2",
+          "text": "Толстая стенка правого желудочка создаёт достаточное давление в сосудах лёгких для газообмена."
+        },
+        {
+          "id": "e3",
+          "text": "При погружении частота сердечных сокращений снижается."
+        },
+        {
+          "id": "e4",
+          "text": "В мышцах имеется запас кислорода, связанный с миоглобином."
+        },
+        {
+          "id": "e5",
+          "text": "АТФ вырабатывается за счёт аэробных процессов с использованием запаса кислорода."
+        },
+        {
+          "id": "e6",
+          "text": "АТФ вырабатывается также за счёт молочнокислого брожения — анаэробного гликолиза."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "count",
+          "min": 5
+        },
+        {
+          "score": 2,
+          "type": "count",
+          "min": 3
+        },
+        {
+          "score": 1,
+          "type": "count",
+          "min": 2
+        }
+      ],
+      "model_answer_html": "<h4>Содержание верного ответа</h4><ul class=\"bio-list\"><li>Достаточно одного объяснения: капиллярная сеть лёгких развита сильнее (или лёгкие крупнее); разветвлённая сеть капилляров создаёт высокое сопротивление току крови; вода сжимает лёгкие сильнее воздуха.</li><li>Толстая стенка правого желудочка создаёт достаточное давление в сосудах лёгких для газообмена.</li><li>При погружении частота сердечных сокращений снижается.</li><li>В мышцах имеется запас кислорода, связанный с миоглобином.</li><li>АТФ вырабатывается за счёт аэробных процессов с использованием запаса кислорода.</li><li>АТФ вырабатывается также за счёт молочнокислого брожения — анаэробного гликолиза.</li></ul><p class=\"bio-rubric\">3 балла — 5–6 элементов; 2 — 3–4; 1 — 2.</p>",
+      "notes_html": "<div class=\"bio-criterion-note\"><strong>Правило ФИПИ:</strong> за дополнительную информацию, не относящуюся к вопросу, баллы не начисляются. Если в ней есть биологическая ошибка, из оценки за задание вычитается 1 балл.</div>",
+      "source": {
+        "prompt_printed_page": 19,
+        "criteria_printed_pages": [
+          31
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 19,
+        "answer_pdf_page": 31,
+        "criteria_pdf_pages": [
+          31
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствует не менее 5 элементов содержания из официального решения.",
+          "source_pdf_page": 31
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 3 элементов содержания из официального решения.",
+          "source_pdf_page": 31
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: в ответе присутствует не менее 2 элементов содержания из официального решения.",
+          "source_pdf_page": 31
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 31
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false,
+        "irrelevant_error_penalty": 1
+      },
+      "required_acceptance_case_ids": [
+        "task-25-v1-score-3",
+        "task-25-v1-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    },
+    {
+      "number": 26,
+      "kind": "extended",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 3,
+      "prompt_html": "<div class=\"bio-figure-frame\"><img class=\"bio-figure bio-figure-wide\" data-bio-asset=\"asset-11\" alt=\"Филогенетическое дерево группы птиц, современные ареалы и места ископаемых находок\"></div><p>На схеме представлены филогенетическое дерево птиц из группы Древненёбных (Paleognathae), а также информация об их современных ареалах и местах ископаемых находок (для вымерших птиц). На основании представленных данных укажите название суперконтинента, где возникла группа древненёбных, и порядок, в котором от этого суперконтинента отделялись участки суши. Какая геологическая теория лежит в основе данных процессов? К какой группе доказательств эволюции можно отнести данный пример? Описанная закономерность в распространении наблюдается далеко не для всех групп животных. Какие причины могут приводить к нарушению этой закономерности?</p>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "Группа возникла на суперконтиненте Гондвана."
+        },
+        {
+          "id": "e2",
+          "text": "Сначала отделились Африка и Мадагаскар."
+        },
+        {
+          "id": "e3",
+          "text": "После отделилась Новая Зеландия (Океания) или Новая Зеландия отдалилась от Австралии."
+        },
+        {
+          "id": "e4",
+          "text": "Затем отделились (распались) Австралия и Южная Америка."
+        },
+        {
+          "id": "e5",
+          "text": "Теория дрейфа континентов — движения литосферных плит."
+        },
+        {
+          "id": "e6",
+          "text": "Биогеографические доказательства эволюции."
+        },
+        {
+          "id": "e7",
+          "text": "Закономерность может нарушаться по одной из причин: животные перемещаются на большие расстояния и выходят за пределы исходного ареала; территория заселяется повторно; вид полностью вымирает на этой территории."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "count",
+          "min": 5
+        },
+        {
+          "score": 2,
+          "type": "count",
+          "min": 3
+        },
+        {
+          "score": 1,
+          "type": "count",
+          "min": 2
+        }
+      ],
+      "model_answer_html": "<h4>Содержание верного ответа</h4><ul class=\"bio-list\"><li>Группа возникла на суперконтиненте Гондвана.</li><li>Сначала отделились Африка и Мадагаскар.</li><li>После отделилась Новая Зеландия (Океания) или Новая Зеландия отдалилась от Австралии.</li><li>Затем отделились (распались) Австралия и Южная Америка.</li><li>Теория дрейфа континентов — движения литосферных плит.</li><li>Биогеографические доказательства эволюции.</li><li>Закономерность может нарушаться из-за дальних перемещений за пределы исходного ареала, повторного заселения территории или полного вымирания вида на этой территории.</li></ul><p class=\"bio-rubric\">3 балла — 5–7 элементов; 2 — 3–4; 1 — 2.</p>",
+      "notes_html": "<div class=\"bio-criterion-note\"><strong>Правило ФИПИ:</strong> за дополнительную информацию, не относящуюся к вопросу, баллы не начисляются. Если в ней есть биологическая ошибка, из оценки за задание вычитается 1 балл.</div>",
+      "source": {
+        "prompt_printed_page": 19,
+        "criteria_printed_pages": [
+          32,
+          33
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 19,
+        "answer_pdf_page": 32,
+        "criteria_pdf_pages": [
+          32,
+          33
+        ]
+      },
+      "asset_ids": [
+        "asset-11"
+      ],
+      "variant": 1,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствует не менее 5 элементов содержания из официального решения.",
+          "source_pdf_page": 32
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 3 элементов содержания из официального решения.",
+          "source_pdf_page": 33
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: в ответе присутствует не менее 2 элементов содержания из официального решения.",
+          "source_pdf_page": 33
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 33
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false,
+        "irrelevant_error_penalty": 1
+      },
+      "required_acceptance_case_ids": [
+        "task-26-v1-score-3",
+        "task-26-v1-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    },
+    {
+      "number": 27,
+      "kind": "extended",
+      "variant_id": "1",
+      "variant_label": "Официальный пример 1 из 4",
+      "max_score": 3,
+      "prompt_html": "<p>Известно, что синтез нуклеиновых кислот начинается с 5ʹ конца, рибосома движется по иРНК в направлении от 5ʹ к 3ʹ концу, а все виды РНК синтезируются на ДНК-матрице. Фрагмент молекулы ДНК, на которой синтезируется участок центральной петли тРНК, имеет следующую последовательность нуклеотидов (нижняя цепь матричная):</p><div class=\"bio-sequence\">5ʹ-ЦГААГГТГАЦААТГТ-3ʹ<br>3ʹ-ГЦТТЦЦАЦТГТТАЦА-5ʹ</div><p>Установите нуклеотидную последовательность участка тРНК, который синтезируется на данном фрагменте, и определите аминокислоту, которую будет переносить эта тРНК в процессе биосинтеза белка, если третий триплет с 5ʹ конца соответствует антикодону тРНК. Ответ поясните. Для решения задания используйте таблицу генетического кода. При написании нуклеиновых кислот указывайте направление цепи.</p><div class=\"bio-code\"><div class=\"bio-code-title\">Генетический код (иРНК от 5ʹ к 3ʹ концу)</div><div class=\"bio-table-scroll\"><table class=\"bio-table bio-code-table\"><thead><tr><th>Первое основание</th><th>У</th><th>Ц</th><th>А</th><th>Г</th><th>Третье основание</th></tr></thead><tbody><tr><td>У</td><td>Фен<br>Фен<br>Лей<br>Лей</td><td>Сер<br>Сер<br>Сер<br>Сер</td><td>Тир<br>Тир<br>—<br>—</td><td>Цис<br>Цис<br>—<br>Трп</td><td>У<br>Ц<br>А<br>Г</td></tr><tr><td>Ц</td><td>Лей<br>Лей<br>Лей<br>Лей</td><td>Про<br>Про<br>Про<br>Про</td><td>Гис<br>Гис<br>Глн<br>Глн</td><td>Арг<br>Арг<br>Арг<br>Арг</td><td>У<br>Ц<br>А<br>Г</td></tr><tr><td>А</td><td>Иле<br>Иле<br>Иле<br>Мет</td><td>Тре<br>Тре<br>Тре<br>Тре</td><td>Асн<br>Асн<br>Лиз<br>Лиз</td><td>Сер<br>Сер<br>Арг<br>Арг</td><td>У<br>Ц<br>А<br>Г</td></tr><tr><td>Г</td><td>Вал<br>Вал<br>Вал<br>Вал</td><td>Ала<br>Ала<br>Ала<br>Ала</td><td>Асп<br>Асп<br>Глу<br>Глу</td><td>Гли<br>Гли<br>Гли<br>Гли</td><td>У<br>Ц<br>А<br>Г</td></tr></tbody></table></div></div>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "Последовательность тРНК: 5ʹ-ЦГААГГУГАЦААУГУ-3ʹ."
+        },
+        {
+          "id": "e2",
+          "text": "Антикодон 5ʹ-УГА-3ʹ соответствует кодону иРНК 5ʹ-УЦА-3ʹ."
+        },
+        {
+          "id": "e3",
+          "text": "Кодону УЦА соответствует серин; эту аминокислоту переносит тРНК."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "all"
+        },
+        {
+          "score": 2,
+          "type": "count",
+          "min": 2
+        },
+        {
+          "score": 1,
+          "type": "count",
+          "min": 1
+        }
+      ],
+      "model_answer_html": "<h4>Схема решения</h4><ul class=\"bio-list\"><li>Последовательность тРНК: 5ʹ-ЦГААГГУГАЦААУГУ-3ʹ.</li><li>Антикодон 5ʹ-УГА-3ʹ соответствует кодону иРНК 5ʹ-УЦА-3ʹ.</li><li>Кодону УЦА соответствует серин; эту аминокислоту переносит тРНК.</li></ul>",
+      "notes_html": "",
+      "source": {
+        "prompt_printed_page": 20,
+        "criteria_printed_pages": [
+          34,
+          35
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 20,
+        "answer_pdf_page": 34,
+        "criteria_pdf_pages": [
+          34,
+          35
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствуют все 3 элемента содержания, указанные в официальном решении.",
+          "source_pdf_page": 34
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 2 элементов содержания из официального решения.",
+          "source_pdf_page": 35
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: в ответе присутствует не менее 1 элемента содержания из официального решения.",
+          "source_pdf_page": 35
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 35
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false
+      },
+      "required_acceptance_case_ids": [
+        "task-27-v1-score-3",
+        "task-27-v1-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    },
+    {
+      "number": 27,
+      "kind": "extended",
+      "variant_id": "2",
+      "variant_label": "Официальный пример 2 из 4",
+      "max_score": 3,
+      "prompt_html": "<p>У бактерий имеется специфический тип РНК, образующий шпилечную структуру благодаря комплементарным участкам. Шпилечная структура позволяет этой РНК попадать в рибосому. После шпильки через несколько нуклеотидов располагается открытая рамка считывания, которая начинается с аланинового кодона. Фрагмент молекулы ДНК, на которой синтезируется участок РНК, имеет следующую последовательность нуклеотидов (нижняя цепь — матричная):</p><div class=\"bio-sequence\">5ʹ-АЦГЦЦТАЦТГЦАТАГГЦААГЦАЦЦТГАТАГГЦ-3ʹ<br>3ʹ-ТГЦГГАТГАЦГТАТЦЦГТТЦГТГГАЦТАТЦЦГ-5ʹ</div><p>Установите нуклеотидную последовательность участка РНК, который синтезируется на данном фрагменте. Установите вторичную структуру участка РНК. Установите последовательность начала открытой рамки считывания на данном участке РНК. Определите последовательность фрагмента полипептида, который кодируется данным фрагментом РНК. Для решения задания используйте таблицу генетического кода. При написании нуклеиновых кислот указывайте направление цепи.</p><div class=\"bio-code\"><div class=\"bio-code-title\">Генетический код (иРНК от 5ʹ к 3ʹ концу)</div><div class=\"bio-table-scroll\"><table class=\"bio-table bio-code-table\"><thead><tr><th>Первое основание</th><th>У</th><th>Ц</th><th>А</th><th>Г</th><th>Третье основание</th></tr></thead><tbody><tr><td>У</td><td>Фен<br>Фен<br>Лей<br>Лей</td><td>Сер<br>Сер<br>Сер<br>Сер</td><td>Тир<br>Тир<br>—<br>—</td><td>Цис<br>Цис<br>—<br>Трп</td><td>У<br>Ц<br>А<br>Г</td></tr><tr><td>Ц</td><td>Лей<br>Лей<br>Лей<br>Лей</td><td>Про<br>Про<br>Про<br>Про</td><td>Гис<br>Гис<br>Глн<br>Глн</td><td>Арг<br>Арг<br>Арг<br>Арг</td><td>У<br>Ц<br>А<br>Г</td></tr><tr><td>А</td><td>Иле<br>Иле<br>Иле<br>Мет</td><td>Тре<br>Тре<br>Тре<br>Тре</td><td>Асн<br>Асн<br>Лиз<br>Лиз</td><td>Сер<br>Сер<br>Арг<br>Арг</td><td>У<br>Ц<br>А<br>Г</td></tr><tr><td>Г</td><td>Вал<br>Вал<br>Вал<br>Вал</td><td>Ала<br>Ала<br>Ала<br>Ала</td><td>Асп<br>Асп<br>Глу<br>Глу</td><td>Гли<br>Гли<br>Гли<br>Гли</td><td>У<br>Ц<br>А<br>Г</td></tr></tbody></table></div></div>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "Последовательность РНК: 5ʹ-АЦГЦЦУАЦУГЦАУАГГЦААГЦАЦЦУГАУАГГЦ-3ʹ."
+        },
+        {
+          "id": "e2",
+          "text": "Верно показана шпилечная вторичная структура с комплементарными участками."
+        },
+        {
+          "id": "e3",
+          "text": "Открытая рамка считывания: 5ʹ-ГЦАЦЦУГАУАГГ-3ʹ."
+        },
+        {
+          "id": "e4",
+          "text": "Фрагмент полипептида: ала–про–асп–арг."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "all"
+        },
+        {
+          "score": 2,
+          "type": "count",
+          "min": 3
+        },
+        {
+          "score": 1,
+          "type": "count",
+          "min": 2
+        }
+      ],
+      "model_answer_html": "<h4>Схема решения</h4><ul class=\"bio-list\"><li>Последовательность РНК: 5ʹ-АЦГЦЦУАЦУГЦАУАГГЦААГЦАЦЦУГАУАГГЦ-3ʹ.</li><li>Верно показана шпилечная вторичная структура с комплементарными участками.</li><li>Открытая рамка считывания: 5ʹ-ГЦАЦЦУГАУАГГ-3ʹ.</li><li>Фрагмент полипептида: ала–про–асп–арг.</li></ul><pre class=\"bio-hairpin\">5ʹ-А        ААГЦАЦЦУГАУАГГЦ-3ʹ\n   Ц      А\n    Г—Ц\n    Ц—Г\n    Ц—Г\n    У—А\n    А—У\n   Ц      А\n   У      Ц\n     Г</pre>",
+      "notes_html": "",
+      "source": {
+        "prompt_printed_page": 21,
+        "criteria_printed_pages": [
+          35,
+          36,
+          37
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 21,
+        "answer_pdf_page": 35,
+        "criteria_pdf_pages": [
+          35,
+          36,
+          37
+        ]
+      },
+      "asset_ids": [],
+      "variant": 2,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствуют все 4 элемента содержания, указанные в официальном решении.",
+          "source_pdf_page": 35
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 3 элементов содержания из официального решения.",
+          "source_pdf_page": 36
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: в ответе присутствует не менее 2 элементов содержания из официального решения.",
+          "source_pdf_page": 37
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 37
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false
+      },
+      "required_acceptance_case_ids": [
+        "task-27-v2-score-3",
+        "task-27-v2-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    },
+    {
+      "number": 27,
+      "kind": "extended",
+      "variant_id": "3",
+      "variant_label": "Официальный пример 3 из 4",
+      "max_score": 3,
+      "prompt_html": "<p>Для соматической клетки животного характерен диплоидный набор хромосом. Определите хромосомный набор (n) и число молекул ДНК (с) в клетке при гаметогенезе в метафазе II мейоза и анафазе II мейоза. Объясните полученные результаты.</p>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "В метафазе II набор хромосом — n."
+        },
+        {
+          "id": "e2",
+          "text": "В метафазе II число молекул ДНК — 2с."
+        },
+        {
+          "id": "e3",
+          "text": "В анафазе II набор хромосом — 2n."
+        },
+        {
+          "id": "e4",
+          "text": "В анафазе II число молекул ДНК — 2с."
+        },
+        {
+          "id": "e5",
+          "text": "После мейоза I клетки гаплоидные, а хромосомы двухроматидные."
+        },
+        {
+          "id": "e6",
+          "text": "В анафазе II расходятся сестринские хроматиды, поэтому число хромосом равно числу молекул ДНК."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "all"
+        },
+        {
+          "score": 2,
+          "type": "count",
+          "min": 5
+        },
+        {
+          "score": 1,
+          "type": "count",
+          "min": 3
+        }
+      ],
+      "model_answer_html": "<h4>Схема решения</h4><ul class=\"bio-list\"><li>В метафазе II набор хромосом — n.</li><li>В метафазе II число молекул ДНК — 2с.</li><li>В анафазе II набор хромосом — 2n.</li><li>В анафазе II число молекул ДНК — 2с.</li><li>После мейоза I клетки гаплоидные, а хромосомы двухроматидные.</li><li>В анафазе II расходятся сестринские хроматиды, поэтому число хромосом равно числу молекул ДНК.</li></ul><p class=\"bio-rubric\">3 балла — 6 элементов; 2 — 5; 1 — 3–4.</p>",
+      "notes_html": "<div class=\"bio-criterion-note\"><strong>Правило ФИПИ:</strong> за дополнительную информацию, не относящуюся к вопросу, баллы не начисляются. Если в ней есть биологическая ошибка, из оценки за задание вычитается 1 балл.</div>",
+      "source": {
+        "prompt_printed_page": 22,
+        "criteria_printed_pages": [
+          37
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 22,
+        "answer_pdf_page": 37,
+        "criteria_pdf_pages": [
+          37
+        ]
+      },
+      "asset_ids": [],
+      "variant": 3,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствуют все 6 элементов содержания, указанные в официальном решении.",
+          "source_pdf_page": 37
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 5 элементов содержания из официального решения.",
+          "source_pdf_page": 37
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: в ответе присутствует не менее 3 элементов содержания из официального решения.",
+          "source_pdf_page": 37
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 37
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false,
+        "irrelevant_error_penalty": 1
+      },
+      "required_acceptance_case_ids": [
+        "task-27-v3-score-3",
+        "task-27-v3-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    },
+    {
+      "number": 27,
+      "kind": "extended",
+      "variant_id": "4",
+      "variant_label": "Официальный пример 4 из 4",
+      "max_score": 3,
+      "prompt_html": "<p>Окраска у скалистых прыгунов (Chaetodipus intermedius) контролируется одним геном. Доминантные гомозиготы имеют чёрный цвет; рецессивные гомозиготы — песочный. Гетерозиготы имеют промежуточную окраску. В равновесной популяции скалистых прыгунов на 1000 особей приходится 70 песочных. Популяция попала в новые условия, в которых в результате интенсивного отлова хищниками погибло 25 % чёрных особей. Рассчитайте частоту особей с чёрной окраской и частоты аллелей в изначальной популяции, а также частоты всех фенотипов в популяции после отлова хищниками. Поясните ход решения. При расчётах округляйте значения до четвёртого знака после запятой.</p>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "Частота aa в исходной популяции: 70/1000 = 0,07."
+        },
+        {
+          "id": "e2",
+          "text": "Частота аллеля a: q = √0,07 = 0,2646."
+        },
+        {
+          "id": "e3",
+          "text": "Частота аллеля A: p = 1 − 0,2646 = 0,7354."
+        },
+        {
+          "id": "e4",
+          "text": "Частота AA (чёрных): p² = 0,5408."
+        },
+        {
+          "id": "e5",
+          "text": "После гибели 25 % чёрных осталось 0,8648 исходной численности."
+        },
+        {
+          "id": "e6",
+          "text": "Частота чёрных после отбора: 0,4056/0,8648 = 0,4690."
+        },
+        {
+          "id": "e7",
+          "text": "Частота промежуточных после отбора: 0,3892/0,8648 = 0,4500."
+        },
+        {
+          "id": "e8",
+          "text": "Частота песочных после отбора: 0,07/0,8648 = 0,0809 (допускается 0,081)."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "count",
+          "min": 7
+        },
+        {
+          "score": 2,
+          "type": "count",
+          "min": 5
+        },
+        {
+          "score": 1,
+          "type": "count",
+          "min": 3
+        }
+      ],
+      "model_answer_html": "<h4>Схема решения</h4><ul class=\"bio-list\"><li>Частота aa в исходной популяции: 70/1000 = 0,07.</li><li>Частота аллеля a: q = √0,07 = 0,2646.</li><li>Частота аллеля A: p = 1 − 0,2646 = 0,7354.</li><li>Частота AA (чёрных): p² = 0,5408.</li><li>После гибели 25 % чёрных осталось 0,8648 исходной численности.</li><li>Частота чёрных после отбора: 0,4056/0,8648 = 0,4690.</li><li>Частота промежуточных после отбора: 0,3892/0,8648 = 0,4500.</li><li>Частота песочных после отбора: 0,07/0,8648 = 0,0809 (допускается 0,081).</li></ul><p class=\"bio-rubric\">При вычислениях допускается погрешность 0,01. 3 балла — 7–8 элементов; 2 — 5–6; 1 — 3–4.</p>",
+      "notes_html": "<div class=\"bio-criterion-note\"><strong>Правило ФИПИ:</strong> за дополнительную информацию, не относящуюся к вопросу, баллы не начисляются. Если в ней есть биологическая ошибка, из оценки за задание вычитается 1 балл.</div>",
+      "source": {
+        "prompt_printed_page": 22,
+        "criteria_printed_pages": [
+          38,
+          39
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 22,
+        "answer_pdf_page": 38,
+        "criteria_pdf_pages": [
+          38,
+          39
+        ]
+      },
+      "asset_ids": [],
+      "variant": 4,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствует не менее 7 элементов содержания из официального решения.",
+          "source_pdf_page": 38
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 5 элементов содержания из официального решения.",
+          "source_pdf_page": 39
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: в ответе присутствует не менее 3 элементов содержания из официального решения.",
+          "source_pdf_page": 39
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 39
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false,
+        "irrelevant_error_penalty": 1
+      },
+      "required_acceptance_case_ids": [
+        "task-27-v4-score-3",
+        "task-27-v4-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    },
+    {
+      "number": 28,
+      "kind": "extended",
+      "variant_id": "1",
+      "variant_label": "",
+      "max_score": 3,
+      "prompt_html": "<p>На X- и Y-хромосомах человека существуют псевдоаутосомные участки, которые содержат аллели одного гена, и между ними может происходить кроссинговер. Один из таких генов вызывает аномалии в развитии кисти. Аллель гена образования перепонок между пальцами (перепончатые пальцы) наследуется голандрически (наследование по гетерогаметному полу).</p><p>Женщина с нормальным развитием кисти и нормальными пальцами вышла замуж за мужчину с аномалией развития кисти и перепончатыми пальцами, гомозиготная мать которого не имела аномалии в развитии кисти. Родившаяся в этом браке дочь с аномалией развития кисти вышла замуж за мужчину без названных аномалий. Определите генотипы родителей и генотипы, фенотипы, пол возможного потомства. Возможно ли рождение в первом браке ребёнка с нормальным развитием кисти и перепонками между пальцами? Ответ поясните.</p>",
+      "criterion_elements": [
+        {
+          "id": "e1",
+          "text": "Для первого брака верно записаны генотипы родителей, гаметы, а также генотипы, фенотипы и пол всех возможных дочерей и сыновей."
+        },
+        {
+          "id": "e2",
+          "text": "Для второго брака верно записаны генотипы родителей, гаметы, а также генотипы, фенотипы и пол всех возможных дочерей и сыновей."
+        },
+        {
+          "id": "e3",
+          "text": "Показано, что в первом браке возможен сын с нормальным развитием кисти и перепончатыми пальцами вследствие кроссинговера в псевдоаутосомном участке отцовской Y-хромосомы."
+        }
+      ],
+      "score_rules": [
+        {
+          "score": 3,
+          "type": "all"
+        },
+        {
+          "score": 2,
+          "type": "count",
+          "min": 2
+        },
+        {
+          "score": 1,
+          "type": "count",
+          "min": 1
+        }
+      ],
+      "model_answer_html": "<h4>Схема решения</h4><div class=\"bio-sequence bio-left\">1) P: ♀ XᵃXᵃ × ♂ XᵃYᴬᵇ<br>G: Xᵃ × Xᵃ, Xᴬ, Yᴬᵇ, Yᵃᵇ<br>F₁, дочери: XᵃXᵃ — норма; XᴬXᵃ — аномалия кисти.<br>F₁, сыновья: XᵃYᴬᵇ — аномалия кисти, перепончатые пальцы; XᵃYᵃᵇ — нормальная кисть, перепончатые пальцы.<br><br>2) P: ♀ XᴬXᵃ × ♂ XᵃYᵃ<br>G: Xᴬ, Xᵃ × Xᵃ, Yᵃ<br>F₂, дочери: XᴬXᵃ — аномалия кисти; XᵃXᵃ — норма.<br>F₂, сыновья: XᴬYᵃ — аномалия кисти; XᵃYᵃ — норма; пальцы нормальные.<br><br>3) Да. Возможен сын XᵃYᵃᵇ: материнская Xᵃ и кроссоверная отцовская Yᵃᵇ.</div><p class=\"bio-rubric\">Допускается другая корректная генетическая символика. Каждый из первых двух элементов засчитывается только при наличии генотипов, фенотипов и пола всех возможных потомков.</p>",
+      "notes_html": "",
+      "source": {
+        "prompt_printed_page": 22,
+        "criteria_printed_pages": [
+          39,
+          40
+        ],
+        "file_role": "demo",
+        "prompt_pdf_page": 22,
+        "answer_pdf_page": 39,
+        "criteria_pdf_pages": [
+          39,
+          40
+        ]
+      },
+      "asset_ids": [],
+      "variant": 1,
+      "answer": {
+        "type": "expert_only",
+        "canonical": null,
+        "accepted": [],
+        "normalization": null
+      },
+      "criteria": [
+        {
+          "score": 3,
+          "branch_id": "score-3-1",
+          "text": "3 балла: в ответе присутствуют все 3 элемента содержания, указанные в официальном решении.",
+          "source_pdf_page": 39
+        },
+        {
+          "score": 2,
+          "branch_id": "score-2-2",
+          "text": "2 балла: в ответе присутствует не менее 2 элементов содержания из официального решения.",
+          "source_pdf_page": 40
+        },
+        {
+          "score": 1,
+          "branch_id": "score-1-3",
+          "text": "1 балл: в ответе присутствует не менее 1 элемента содержания из официального решения.",
+          "source_pdf_page": 40
+        },
+        {
+          "score": 0,
+          "branch_id": "zero",
+          "text": "0 баллов: ответ отсутствует, не соответствует условию задания или не содержит элементов, предусмотренных критериями оценивания.",
+          "source_pdf_page": 40
+        }
+      ],
+      "dependencies": [],
+      "general_zero_reasons": [],
+      "self_assessment": {
+        "allowed": true,
+        "official": false,
+        "affects_official_total": false
+      },
+      "required_acceptance_case_ids": [
+        "task-28-v1-score-3",
+        "task-28-v1-score-0"
+      ],
+      "package_version": "1.0.2",
+      "interaction": {
+        "type": "extended_text"
+      }
+    }
+  ],
+  "package_version": "1.0.2",
+  "storage_key": "eksamio_ege_biologiya_demo_2026_v1_0_2"
+}
