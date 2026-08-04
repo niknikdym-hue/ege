@@ -22,7 +22,7 @@ jobs:
           npm init -y >/dev/null 2>&1
           npm install playwright >/dev/null
           google-chrome --version
-      - name: Export repository and published page inputs
+      - name: Export repository inputs
         shell: bash
         run: |
           set -euo pipefail
@@ -41,7 +41,11 @@ jobs:
           done < "$OUT/repo/build-branch-files.txt"
           if [ -d biologiya ]; then cp -a biologiya "$OUT/repo/"; fi
           if [ -d demo-production-standard ]; then cp -a demo-production-standard "$OUT/repo/"; fi
-          cat > /tmp/export-page.mjs <<'JS'
+      - name: Export published page through Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > export-page.mjs <<'JS'
           import { chromium } from 'playwright';
           import fs from 'node:fs';
           const out='/tmp/biology-v102-source/live';
@@ -51,7 +55,7 @@ jobs:
           page.on('response',async r=>{
             const u=r.url();
             if (/eksamio\.ru/.test(u) && /\.(?:js|css)(?:\?|$)/.test(u)) {
-              try { const b=await r.body(); responses.push({u,b}); } catch {}
+              try { responses.push({u,b:await r.body()}); } catch {}
             }
           });
           await page.goto('https://eksamio.ru/ege/biologiya/demoversiya/',{waitUntil:'networkidle',timeout:120000});
@@ -61,17 +65,16 @@ jobs:
           fs.writeFileSync(out+'/globals.json',JSON.stringify(await page.evaluate(()=>({
             taskApi:Boolean(window.BiologyDemoTestApi),
             scripts:[...document.scripts].map(s=>({src:s.src,text:s.src?'':s.textContent})),
-            localStorage:Object.keys(localStorage),
-            title:document.title,
-            url:location.href
+            localStorage:Object.keys(localStorage),title:document.title,url:location.href
           })),null,2));
           let i=0;
           for(const x of responses){i++; const ext=x.u.includes('.css')?'.css':'.js'; fs.writeFileSync(`${out}/network-${String(i).padStart(2,'0')}${ext}`,x.b);}
           await page.screenshot({path:out+'/published-page.png',fullPage:true});
           await browser.close();
           JS
-          node /tmp/export-page.mjs
+          node export-page.mjs
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: biology-v102-source
           path: /tmp/biology-v102-source/**
