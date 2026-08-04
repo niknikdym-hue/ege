@@ -1,0 +1,68 @@
+name: Biology 1.0.2 source export
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/biology-v102-source-export.yml'
+      - '.biology-v102-export-trigger'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Export repository and published page inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT=/tmp/biology-v102-source
+          mkdir -p "$OUT/repo" "$OUT/live"
+          find . -maxdepth 4 -type f | sort > "$OUT/repo/all-files.txt"
+          find . -maxdepth 5 -type f \( -iname '*biolog*' -o -path '*biologiya*' \) -print | sort > "$OUT/repo/biology-files.txt"
+          git ls-tree -r --name-only origin/build/biology-demo-2026 | sort > "$OUT/repo/build-branch-files.txt" || true
+          while IFS= read -r f; do
+            case "$f" in
+              *.txt|*.json|*.js|*.mjs|*.html|*.css|*.py|*.yml|*.yaml)
+                mkdir -p "$OUT/build/$(dirname "$f")"
+                git show "origin/build/biology-demo-2026:$f" > "$OUT/build/$f" 2>/dev/null || true
+                ;;
+            esac
+          done < "$OUT/repo/build-branch-files.txt"
+          curl -L --fail --retry 3 --connect-timeout 20 --max-time 120 \
+            -A 'Mozilla/5.0 Eksamio Biology Audit' \
+            'https://eksamio.ru/ege/biologiya/demoversiya/' \
+            -o "$OUT/live/page.html"
+          python - <<'PY'
+          from pathlib import Path
+          import re, urllib.parse, urllib.request
+          out=Path('/tmp/biology-v102-source/live')
+          html=(out/'page.html').read_text(encoding='utf-8',errors='replace')
+          urls=[]
+          for u in re.findall(r'(?:src|href)=["\']([^"\']+)["\']',html):
+              if u.startswith('//'): u='https:'+u
+              elif u.startswith('/'): u='https://eksamio.ru'+u
+              elif not u.startswith(('http://','https://')): continue
+              if any(x in u for x in ('.js','.css')): urls.append(u)
+          (out/'asset-urls.txt').write_text('\n'.join(dict.fromkeys(urls))+'\n',encoding='utf-8')
+          for i,u in enumerate(dict.fromkeys(urls),1):
+              try:
+                  data=urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=40).read()
+                  ext='.js' if '.js' in urllib.parse.urlparse(u).path else '.css'
+                  (out/f'asset-{i:02d}{ext}').write_bytes(data)
+              except Exception as e:
+                  (out/f'asset-{i:02d}.error.txt').write_text(f'{u}\n{e}\n',encoding='utf-8')
+          PY
+          if [ -d biologiya ]; then cp -a biologiya "$OUT/repo/"; fi
+          if [ -d demo-production-standard ]; then cp -a demo-production-standard "$OUT/repo/"; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: biology-v102-source
+          path: /tmp/biology-v102-source/**
+          if-no-files-found: error
+          retention-days: 30
