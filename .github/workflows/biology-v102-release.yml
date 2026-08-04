@@ -35,10 +35,19 @@ jobs:
         run: |
           set -euo pipefail
           TOOL=production-audits/biology-v102-tools
-          wc -c "$TOOL"/resources.b64.*
-          sha256sum "$TOOL"/resources.b64.*
-          cat "$TOOL"/resources.b64.* > /tmp/biology-v102-resources.b64
-          wc -c /tmp/biology-v102-resources.b64
+          test "$(sha256sum "$TOOL/resources.b64.00" | cut -d' ' -f1)" = "032edc6d25349cf7e2dda6a8720a80b37bb63cfc1cefa1e2f1de4002efe3235c"
+          test "$(sha256sum "$TOOL/resources.b64.01" | cut -d' ' -f1)" = "2a6b34e045f26bbc5ed10695b2a92bf5a565c490c5a59fa466d6e4844e59a769"
+          test "$(sha256sum "$TOOL/resources.corrected.02a" | cut -d' ' -f1)" = "af410258de1c41b271726da930b02ba3241c1a4ab3bdb4a1e65bd377c2205336"
+          test "$(sha256sum "$TOOL/resources.corrected.02b" | cut -d' ' -f1)" = "c12badc11825f91d506da973d8872d3c2ac275fa3ed7bd0d6a02e67d4962d8e5"
+          test "$(sha256sum "$TOOL/resources.b64.03" | cut -d' ' -f1)" = "0e4a246be1a2122153d85f17e97b17540d4ffbb422afa36c723a685aabd0388a"
+          cat \
+            "$TOOL/resources.b64.00" \
+            "$TOOL/resources.b64.01" \
+            "$TOOL/resources.corrected.02a" \
+            "$TOOL/resources.corrected.02b" \
+            "$TOOL/resources.b64.03" \
+            > /tmp/biology-v102-resources.b64
+          test "$(wc -c < /tmp/biology-v102-resources.b64)" -eq 45036
           ACTUAL_B64="$(sha256sum /tmp/biology-v102-resources.b64 | cut -d' ' -f1)"
           echo "combined base64 sha256: $ACTUAL_B64"
           test "$ACTUAL_B64" = "abd7d43625245700433c990198472f6288b4d9c58f4fe48e486a0aa49bb088a2"
@@ -46,6 +55,7 @@ jobs:
           ACTUAL_ZIP="$(sha256sum /tmp/biology-v102-resources.zip | cut -d' ' -f1)"
           echo "resource zip sha256: $ACTUAL_ZIP"
           test "$ACTUAL_ZIP" = "d26700410789a38633d517c574a3e093ba7cc2341783a68e7542e09cf3795e90"
+          unzip -t /tmp/biology-v102-resources.zip
           unzip -oq /tmp/biology-v102-resources.zip -d "$TOOL"
           python -m py_compile "$TOOL/build_release.py" "$TOOL"/tests/*.py
 
