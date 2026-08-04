@@ -1,0 +1,36 @@
+name: Biology interaction audit 2026-08-04
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'production-audits/biologiya-interaction-audit-2026-08-04.mjs'
+      - '.github/workflows/biologiya-interaction-audit-2026-08-04.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit-live-page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright package
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright
+          google-chrome --version
+      - name: Audit task interactions
+        run: |
+          mkdir -p /tmp/biologiya-interaction-audit
+          node production-audits/biologiya-interaction-audit-2026-08-04.mjs || true
+          test -s /tmp/biologiya-interaction-audit/report.json
+          cat /tmp/biologiya-interaction-audit/summary.txt
+      - name: Upload interaction audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: biologiya-interaction-audit-2026-08-04
+          path: /tmp/biologiya-interaction-audit/**
+          if-no-files-found: error
+          retention-days: 30
