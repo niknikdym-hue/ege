@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "package_prefix": "subject-prefix",
+  "rules": {
+    "answer_code_assembled_automatically": true,
+    "browser_test_uses_real_controls": true,
+    "incomplete_structured_answer_is_not_ready": true,
+    "do_not_reveal_unstated_answer_count": true
+  },
+  "tasks": [
+    {
+      "number": 1,
+      "variant_id": "1",
+      "official_action": "single_text",
+      "control_type": "text_input",
+      "completion_rule": "non_empty"
+    },
+    {
+      "number": 2,
+      "variant_id": "1",
+      "official_action": "fill_table",
+      "control_type": "select_per_cell",
+      "positions": [
+        "А",
+        "Б"
+      ],
+      "completion_rule": "all_positions_selected",
+      "allow_repeat": true
+    },
+    {
+      "number": 3,
+      "variant_id": "1",
+      "official_action": "matching",
+      "control_type": "select_per_position",
+      "positions": [
+        "А",
+        "Б",
+        "В",
+        "Г"
+      ],
+      "completion_rule": "all_positions_selected",
+      "allow_repeat": true
+    },
+    {
+      "number": 4,
+      "variant_id": "1",
+      "official_action": "sequence",
+      "control_type": "sequence_builder",
+      "completion_rule": "all_unique_items_ordered"
+    },
+    {
+      "number": 5,
+      "variant_id": "1",
+      "official_action": "multiple_selection",
+      "control_type": "checkboxes",
+      "max_select": null,
+      "answer_count_disclosed_by_prompt": false
+    }
+  ]
+}
