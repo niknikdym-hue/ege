@@ -17,14 +17,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Install browser package
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright >/dev/null
+          google-chrome --version
       - name: Export repository and published page inputs
         shell: bash
         run: |
           set -euo pipefail
           OUT=/tmp/biology-v102-source
-          mkdir -p "$OUT/repo" "$OUT/live"
+          mkdir -p "$OUT/repo" "$OUT/live" "$OUT/build"
           find . -maxdepth 4 -type f | sort > "$OUT/repo/all-files.txt"
-          find . -maxdepth 5 -type f \( -iname '*biolog*' -o -path '*biologiya*' \) -print | sort > "$OUT/repo/biology-files.txt"
+          find . -maxdepth 6 -type f \( -iname '*biolog*' -o -path '*biologiya*' \) -print | sort > "$OUT/repo/biology-files.txt"
           git ls-tree -r --name-only origin/build/biology-demo-2026 | sort > "$OUT/repo/build-branch-files.txt" || true
           while IFS= read -r f; do
             case "$f" in
@@ -34,32 +39,38 @@ jobs:
                 ;;
             esac
           done < "$OUT/repo/build-branch-files.txt"
-          curl -L --fail --retry 3 --connect-timeout 20 --max-time 120 \
-            -A 'Mozilla/5.0 Eksamio Biology Audit' \
-            'https://eksamio.ru/ege/biologiya/demoversiya/' \
-            -o "$OUT/live/page.html"
-          python - <<'PY'
-          from pathlib import Path
-          import re, urllib.parse, urllib.request
-          out=Path('/tmp/biology-v102-source/live')
-          html=(out/'page.html').read_text(encoding='utf-8',errors='replace')
-          urls=[]
-          for u in re.findall(r'(?:src|href)=["\']([^"\']+)["\']',html):
-              if u.startswith('//'): u='https:'+u
-              elif u.startswith('/'): u='https://eksamio.ru'+u
-              elif not u.startswith(('http://','https://')): continue
-              if any(x in u for x in ('.js','.css')): urls.append(u)
-          (out/'asset-urls.txt').write_text('\n'.join(dict.fromkeys(urls))+'\n',encoding='utf-8')
-          for i,u in enumerate(dict.fromkeys(urls),1):
-              try:
-                  data=urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=40).read()
-                  ext='.js' if '.js' in urllib.parse.urlparse(u).path else '.css'
-                  (out/f'asset-{i:02d}{ext}').write_bytes(data)
-              except Exception as e:
-                  (out/f'asset-{i:02d}.error.txt').write_text(f'{u}\n{e}\n',encoding='utf-8')
-          PY
           if [ -d biologiya ]; then cp -a biologiya "$OUT/repo/"; fi
           if [ -d demo-production-standard ]; then cp -a demo-production-standard "$OUT/repo/"; fi
+          cat > /tmp/export-page.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const out='/tmp/biology-v102-source/live';
+          const browser=await chromium.launch({headless:true,channel:'chrome'});
+          const page=await browser.newPage({viewport:{width:1440,height:1200}});
+          const responses=[];
+          page.on('response',async r=>{
+            const u=r.url();
+            if (/eksamio\.ru/.test(u) && /\.(?:js|css)(?:\?|$)/.test(u)) {
+              try { const b=await r.body(); responses.push({u,b}); } catch {}
+            }
+          });
+          await page.goto('https://eksamio.ru/ege/biologiya/demoversiya/',{waitUntil:'networkidle',timeout:120000});
+          await page.waitForSelector('#eksamio-bio-demo',{timeout:60000});
+          fs.writeFileSync(out+'/page-content.html',await page.content());
+          fs.writeFileSync(out+'/body-inner.html',await page.locator('body').innerHTML());
+          fs.writeFileSync(out+'/globals.json',JSON.stringify(await page.evaluate(()=>({
+            taskApi:Boolean(window.BiologyDemoTestApi),
+            scripts:[...document.scripts].map(s=>({src:s.src,text:s.src?'':s.textContent})),
+            localStorage:Object.keys(localStorage),
+            title:document.title,
+            url:location.href
+          })),null,2));
+          let i=0;
+          for(const x of responses){i++; const ext=x.u.includes('.css')?'.css':'.js'; fs.writeFileSync(`${out}/network-${String(i).padStart(2,'0')}${ext}`,x.b);}
+          await page.screenshot({path:out+'/published-page.png',fullPage:true});
+          await browser.close();
+          JS
+          node /tmp/export-page.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: biology-v102-source
