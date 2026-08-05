@@ -1,0 +1,131 @@
+name: Social studies live interaction audit 2026-08-05
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/obshchestvoznaniye-live-audit-2026-08-05.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit-live-page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install browser package
+        shell: bash
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright >/dev/null
+          google-chrome --version
+
+      - name: Inventory repository and published page
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT=/tmp/obsh-audit
+          mkdir -p "$OUT/screens"
+          git ls-tree -r --name-only origin/main > "$OUT/repo-all-files.txt"
+          grep -Ei 'obsh|society|social|demovers' "$OUT/repo-all-files.txt" > "$OUT/repo-relevant-files.txt" || true
+          cat > audit-obsh.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const URL='https://eksamio.ru/ege/obshchestvoznaniye/demoversiya/';
+          const OUT='/tmp/obsh-audit';
+          const browser=await chromium.launch({headless:true,channel:'chrome'});
+          const page=await browser.newPage({viewport:{width:1440,height:1100}});
+          const report={url:URL,checkedAt:new Date().toISOString(),consoleErrors:[],pageErrors:[],failedRequests:[],initial:{},tasks:[],persistence:{},results:{},mobile:{}};
+          page.on('console',m=>{if(m.type()==='error'&&!/yandex|metrika|favicon|ResizeObserver|ERR_BLOCKED_BY_CLIENT/i.test(m.text())) report.consoleErrors.push(m.text())});
+          page.on('pageerror',e=>report.pageErrors.push(e.message));
+          page.on('requestfailed',r=>{if(!/yandex|metrika|google-analytics|doubleclick|adfox/i.test(r.url())) report.failedRequests.push(`${r.method()} ${r.url()} — ${r.failure()?.errorText||'failed'}`)});
+          page.on('dialog',d=>d.accept());
+          const visible=el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0};
+          const controls=()=>[...document.querySelectorAll('input,select,textarea,button,[role="checkbox"],[role="radio"],[contenteditable="true"]')].filter(visible).map(el=>({tag:el.tagName.toLowerCase(),id:el.id||'',name:el.getAttribute('name')||'',type:el.getAttribute('type')||'',role:el.getAttribute('role')||'',text:(el.innerText||el.getAttribute('aria-label')||el.getAttribute('placeholder')||'').trim().replace(/\s+/g,' ').slice(0,240),value:'value'in el?String(el.value).slice(0,120):'',checked:'checked'in el?Boolean(el.checked):null,disabled:'disabled'in el?Boolean(el.disabled):null,className:typeof el.className==='string'?el.className.slice(0,160):''}));
+          const snapshot=()=>({
+            title:document.title,
+            url:location.href,
+            ids:[...document.querySelectorAll('[id]')].map(x=>x.id).filter(x=>/soc|obsh|demo|exam|task|question|answer|result|score/i.test(x)).slice(0,300),
+            globals:Object.keys(window).filter(x=>/soc|obsh|demo|exam|test/i.test(x)).slice(0,100),
+            storage:Object.keys(localStorage),
+            controls:controls(),
+            bodyText:document.body.innerText.replace(/\s+/g,' ').slice(0,12000)
+          });
+          const overflow=()=>({clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,overflowPx:Math.max(0,document.documentElement.scrollWidth-document.documentElement.clientWidth)});
+          await page.goto(URL,{waitUntil:'networkidle',timeout:120000});
+          await page.waitForTimeout(1000);
+          report.initial=await page.evaluate(snapshot);
+          fs.writeFileSync(`${OUT}/initial-page.html`,await page.content());
+          fs.writeFileSync(`${OUT}/inline-scripts.json`,JSON.stringify(await page.evaluate(()=>[...document.scripts].map((s,i)=>({index:i,src:s.src||'',text:s.src?'':s.textContent}))),null,2));
+          await page.screenshot({path:`${OUT}/screens/initial.png`,fullPage:true});
+          await page.evaluate(()=>localStorage.clear());
+          await page.reload({waitUntil:'networkidle',timeout:120000});
+          const start=page.getByRole('button',{name:/^Начать экзамен$/}).first();
+          await start.waitFor({state:'visible',timeout:30000});
+          await start.click();
+          await page.waitForTimeout(700);
+          const getTask=async n=>{
+            const btn=page.getByRole('button',{name:new RegExp(`^${n}$`)}).last();
+            if(await btn.count()) {await btn.click();await page.waitForTimeout(180);} else return {number:n,error:'nav button not found'};
+            return await page.evaluate((n,{controls,overflow})=>{
+              const text=document.body.innerText.replace(/\s+/g,' ');
+              const headings=[...document.querySelectorAll('h1,h2,h3,h4,.question-number,.task-number')].filter(el=>el.offsetParent!==null).map(el=>el.innerText.trim()).filter(Boolean);
+              const tables=[...document.querySelectorAll('table')].filter(el=>el.offsetParent!==null).map(t=>t.innerText.replace(/\s+/g,' ').slice(0,1800));
+              const lists=[...document.querySelectorAll('ol,ul')].filter(el=>el.offsetParent!==null).map(t=>t.innerText.replace(/\s+/g,' ').slice(0,1800));
+              return {number:n,headings,controls:controls(),tables,lists,overflow:overflow(),bodyText:text.slice(0,9000)};
+            },n,{controls,overflow});
+          };
+          for(let n=1;n<=25;n++){
+            const task=await getTask(n); report.tasks.push(task);
+            if(n<=16||[21,23,24,25].includes(n)) await page.screenshot({path:`${OUT}/screens/task-${String(n).padStart(2,'0')}.png`,fullPage:true});
+          }
+          // Persistence smoke test through actual controls.
+          const one=page.getByRole('button',{name:/^1$/}).last();
+          if(await one.count()) await one.click();
+          await page.waitForTimeout(150);
+          const editable=page.locator('input:not([type=hidden]):not([type=checkbox]):not([type=radio]),textarea').filter({visible:true}).first();
+          if(await editable.count()) {await editable.fill('123');report.persistence.entered=true;}
+          const flag=page.getByRole('button',{name:/отмет|вернуться/i}).first();
+          if(await flag.count()) {await flag.click();report.persistence.flagged=true;}
+          const two=page.getByRole('button',{name:/^2$/}).last(); if(await two.count()) await two.click();
+          await page.reload({waitUntil:'networkidle',timeout:120000});
+          await page.waitForTimeout(700);
+          report.persistence.afterReload=await page.evaluate(snapshot);
+          const cont=page.getByRole('button',{name:/^Продолжить попытку$/}).first();
+          report.persistence.continueVisible=await cont.isVisible().catch(()=>false);
+          if(report.persistence.continueVisible){await cont.click();await page.waitForTimeout(500);report.persistence.afterContinue=await page.evaluate(snapshot);}
+          // Finish and inspect all result controls/criteria.
+          const finish=page.getByRole('button',{name:/^Завершить$/}).first();
+          if(await finish.count()) {await finish.click();await page.waitForTimeout(1000);}
+          report.results=await page.evaluate(snapshot);
+          report.results.overflow=await page.evaluate(overflow);
+          await page.screenshot({path:`${OUT}/screens/results-desktop.png`,fullPage:true});
+          // Mobile pass over every task.
+          await page.setViewportSize({width:320,height:900});
+          const retry=page.getByRole('button',{name:/Пройти заново|Начать заново/}).first();
+          if(await retry.count()) {await retry.click();await page.waitForTimeout(500);}
+          const start2=page.getByRole('button',{name:/^Начать экзамен$/}).first(); if(await start2.isVisible().catch(()=>false)){await start2.click();await page.waitForTimeout(500);}
+          const mobileTasks=[];
+          for(let n=1;n<=25;n++){
+            const btn=page.getByRole('button',{name:new RegExp(`^${n}$`)}).last();
+            if(await btn.count()){await btn.click();await page.waitForTimeout(80);mobileTasks.push({number:n,overflow:await page.evaluate(overflow)});}
+          }
+          report.mobile={tasks:mobileTasks,finalOverflow:await page.evaluate(overflow)};
+          await page.screenshot({path:`${OUT}/screens/mobile-task-25.png`,fullPage:true});
+          fs.writeFileSync(`${OUT}/report.json`,JSON.stringify(report,null,2));
+          await browser.close();
+          JS
+          node audit-obsh.mjs
+
+      - name: Upload audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: obshchestvoznaniye-live-audit-2026-08-05
+          path: /tmp/obsh-audit/**
+          if-no-files-found: error
+          retention-days: 30
