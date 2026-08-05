@@ -1,0 +1,120 @@
+name: Social studies 1.0.2 verified rebuild
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'production-audits/obsh-v102-tools/**'
+      - '.github/workflows/obshchestvoznaniye-v102-release.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  build-test-release:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out rebuild branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Download frozen social studies source export
+        uses: actions/download-artifact@v4
+        with:
+          name: obshchestvoznaniye-v102-source
+          path: /tmp/obsh-v102-source
+          github-token: ${{ github.token }}
+          run-id: 30987419417
+
+      - name: Restore and verify rebuild resources
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOL=production-audits/obsh-v102-tools
+          test "$(sha256sum "$TOOL/resources.b64.00" | cut -d' ' -f1)" = "97c32148aa363568d6316f26c7f398eb6ffb45be393b3d889d42e9734a2a78c7"
+          test "$(sha256sum "$TOOL/resources.b64.01" | cut -d' ' -f1)" = "18d26fab8db9a6d9d19b2c088b9254600548f900965082ccb3f885b09a8a66cc"
+          test "$(sha256sum "$TOOL/resources.b64.02" | cut -d' ' -f1)" = "2fbf63837f43ea744c851fadb8c63dd7c3fd5848ee0d711419119aeea091b229"
+          test "$(sha256sum "$TOOL/resources.b64.03" | cut -d' ' -f1)" = "ff2e930b0df57eef035720b8af7bb5abaf904554bf55a6795e3fde5d12847a4e"
+          test "$(sha256sum "$TOOL/resources.b64.04" | cut -d' ' -f1)" = "b33f6b3e0cc052a61f86890097eeb25dfc4702bd1a836c4e0bbc21998bd6fef0"
+          test "$(sha256sum "$TOOL/resources.b64.05" | cut -d' ' -f1)" = "672e2e3bda2387f041f6a6bd307a3810f6fb44ede0fc3d5f03d35558a8792946"
+          test "$(sha256sum "$TOOL/resources.b64.06" | cut -d' ' -f1)" = "97428ca014163d3019a2f94790c0d6d631590b38d55c5eb5bea399be3c1ab74f"
+          test "$(sha256sum "$TOOL/resources.b64.07" | cut -d' ' -f1)" = "e7b5ffdd1c03fcb476cb9b7b58b6954ca4a1e8f49589fefc94ede459fbff35a7"
+          cat "$TOOL"/resources.b64.* > /tmp/obsh-v102-resources.b64
+          test "$(wc -c < /tmp/obsh-v102-resources.b64)" -eq 92232
+          test "$(sha256sum /tmp/obsh-v102-resources.b64 | cut -d' ' -f1)" = "793925b4ec673e0feaca9c2e09923c90bf94f9cf4c23e2d720dbb471ff48f7e0"
+          base64 --decode /tmp/obsh-v102-resources.b64 > /tmp/obsh-v102-resources.zip
+          test "$(sha256sum /tmp/obsh-v102-resources.zip | cut -d' ' -f1)" = "eb0e3fa8f6156e1d0f9aba8a33f5fc6b6b43d946c9693351b1d40bc900c753d1"
+          unzip -oq /tmp/obsh-v102-resources.zip -d "$TOOL"
+          python -m py_compile "$TOOL/build_release.py" "$TOOL"/template/ege-obshchestvoznaniye-demoversiya-v1/tests/*.py "$TOOL"/template/ege-obshchestvoznaniye-demoversiya-v1/scripts/*.py
+
+      - name: Install validation dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install playwright
+          google-chrome --version
+
+      - name: Rebuild package from frozen sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          python production-audits/obsh-v102-tools/build_release.py \
+            --source /tmp/obsh-v102-source \
+            --repo .
+          test "$(find ege-obshchestvoznaniye-demoversiya-v1 -maxdepth 1 -name 'ege-obshchestvoznaniye-demoversiya-T123-*.txt' | wc -l)" -eq 6
+          test "$(find ege-obshchestvoznaniye-demoversiya-v1 -maxdepth 1 -name 'ege-obshchestvoznaniye-demoversiya-T123-*.txt' -printf '%s\n' | sort -nr | head -1)" -lt 55000
+
+      - name: Validate working package
+        shell: bash
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+          EVIDENCE_DIR: ${{ github.workspace }}/ege-obshchestvoznaniye-demoversiya-v1/tests/evidence
+        run: |
+          set -euo pipefail
+          python ege-obshchestvoznaniye-demoversiya-v1/tests/test_static.py
+          python ege-obshchestvoznaniye-demoversiya-v1/tests/test_source_fidelity.py
+          python ege-obshchestvoznaniye-demoversiya-v1/tests/test_browser.py
+
+      - name: Build and verify final ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f ege-obshchestvoznaniye-demoversiya-v1.0.2.zip
+          python ege-obshchestvoznaniye-demoversiya-v1/scripts/build_demo_release.py
+          unzip -t ege-obshchestvoznaniye-demoversiya-v1.0.2.zip
+          sha256sum ege-obshchestvoznaniye-demoversiya-v1.0.2.zip | tee /tmp/obsh-v102-zip.sha256
+          rm -rf /tmp/obsh-v102-clean /tmp/obsh-v102-clean-evidence
+          mkdir -p /tmp/obsh-v102-clean /tmp/obsh-v102-clean-evidence
+          unzip -q ege-obshchestvoznaniye-demoversiya-v1.0.2.zip -d /tmp/obsh-v102-clean
+          CHROME_PATH=/usr/bin/google-chrome EVIDENCE_DIR=/tmp/obsh-v102-clean-evidence python /tmp/obsh-v102-clean/ege-obshchestvoznaniye-demoversiya-v1/tests/test_static.py
+          CHROME_PATH=/usr/bin/google-chrome EVIDENCE_DIR=/tmp/obsh-v102-clean-evidence python /tmp/obsh-v102-clean/ege-obshchestvoznaniye-demoversiya-v1/tests/test_source_fidelity.py
+          CHROME_PATH=/usr/bin/google-chrome EVIDENCE_DIR=/tmp/obsh-v102-clean-evidence python /tmp/obsh-v102-clean/ege-obshchestvoznaniye-demoversiya-v1/tests/test_browser.py
+
+      - name: Upload verified release ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-obshchestvoznaniye-demoversiya-v1.0.2
+          path: ege-obshchestvoznaniye-demoversiya-v1.0.2.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Remove temporary tooling and commit verified release
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .rebuild-obsh-trigger
+          rm -f .github/workflows/obshchestvoznaniye-v102-source-export.yml
+          rm -f .github/workflows/obshchestvoznaniye-v102-release.yml
+          rm -rf production-audits/obsh-v102-tools
+          rm -f __never__
+          rm -f ege-obshchestvoznaniye-demoversiya.zip
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Rebuild social studies demo interactions 1.0.2"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
