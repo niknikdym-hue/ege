@@ -1,0 +1,102 @@
+name: Social studies deep audit 2026-08-05
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/obshchestvoznaniye-deep-audit-2026-08-05.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deep-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install browser package
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright >/dev/null
+      - name: Audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT=/tmp/obsh-deep
+          mkdir -p "$OUT/screens"
+          cp ege-obshchestvoznaniye-demoversiya.zip "$OUT/repository-package.zip"
+          unzip -l "$OUT/repository-package.zip" > "$OUT/repository-package-list.txt"
+          cat > obsh-deep.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const OUT='/tmp/obsh-deep', URL='https://eksamio.ru/ege/obshchestvoznaniye/demoversiya/';
+          const browser=await chromium.launch({headless:true,channel:'chrome'});
+          const page=await browser.newPage({viewport:{width:1440,height:1000}});
+          const report={checkedAt:new Date().toISOString(),url:URL,consoleErrors:[],pageErrors:[],failedRequests:[],tasks:[],scoring:{},persistence:{},rubricDependency:{},results:{},mobile:[]};
+          page.on('console',m=>{if(m.type()==='error'&&!/yandex|metrika|favicon|ResizeObserver|ERR_BLOCKED_BY_CLIENT/i.test(m.text()))report.consoleErrors.push(m.text())});
+          page.on('pageerror',e=>report.pageErrors.push(e.message));
+          page.on('requestfailed',r=>{if(!/yandex|metrika|google-analytics|doubleclick|adfox/i.test(r.url()))report.failedRequests.push(`${r.method()} ${r.url()} — ${r.failure()?.errorText||'failed'}`)});
+          page.on('dialog',d=>d.accept());
+          const overflow=()=>page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-document.documentElement.clientWidth));
+          await page.goto(URL,{waitUntil:'networkidle',timeout:120000});
+          await page.evaluate(()=>localStorage.clear());
+          await page.reload({waitUntil:'networkidle',timeout:120000});
+          await page.getByRole('button',{name:'Начать экзамен',exact:true}).click();
+          await page.waitForTimeout(400);
+          const definitions=await page.evaluate(()=>window.EKSAMIO_SOC_TEST.tasks.map(t=>({n:t.n,part:t.part,title:t.title,body:t.body,answer:t.answer||'',scheme:t.scheme||'',max:t.max,fields:t.fields||[],rubrics:t.rubrics||[]})));
+          report.definitions=definitions;
+          for(const d of definitions){
+            await page.locator(`[aria-label="Задание ${d.n}"]`).click();
+            await page.waitForTimeout(80);
+            const ui=await page.evaluate(()=>{
+              const vis=e=>e.offsetParent!==null;
+              return {inputs:[...document.querySelectorAll('#soc-task input')].filter(vis).map(x=>({id:x.id,type:x.type,inputmode:x.inputMode,maxlength:x.maxLength,aria:x.getAttribute('aria-label')})),selects:[...document.querySelectorAll('#soc-task select')].filter(vis).map(x=>({id:x.id,aria:x.getAttribute('aria-label')})),checkboxes:[...document.querySelectorAll('#soc-task input[type=checkbox],[role=checkbox]')].filter(vis).length,textareas:[...document.querySelectorAll('#soc-task textarea')].filter(vis).map(x=>({id:x.id,field:x.dataset.field||''})),body:document.querySelector('#soc-task')?.innerText.replace(/\s+/g,' ').slice(0,5000)||''};
+            });
+            report.tasks.push({...d,ui,overflow:await overflow()});
+            if([1,3,6,9,13,15,16,24,25].includes(d.n))await page.screenshot({path:`${OUT}/screens/task-${d.n}.png`,fullPage:true});
+          }
+          // Scoring: full official answers and scheme boundaries.
+          await page.evaluate(()=>{const api=window.EKSAMIO_SOC_TEST;api.resetStorage();api.startNew();for(const t of api.tasks.filter(x=>x.part===1))api.setAnswer(t.n,t.answer)});
+          report.scoring.fullPart1=await page.evaluate(()=>window.EKSAMIO_SOC_TEST.shortTotal());
+          report.scoring.perTask=await page.evaluate(()=>window.EKSAMIO_SOC_TEST.tasks.filter(t=>t.part===1).map(t=>({n:t.n,scheme:t.scheme,max:t.max,correct:window.EKSAMIO_SOC_TEST.scoreShort(t,t.answer),extra:window.EKSAMIO_SOC_TEST.scoreShort(t,t.answer+'9'),missing:window.EKSAMIO_SOC_TEST.scoreShort(t,t.answer.slice(0,-1)),reversed:window.EKSAMIO_SOC_TEST.scoreShort(t,[...t.answer].reverse().join(''))})));
+          // Persistence through a real input.
+          await page.evaluate(()=>{const api=window.EKSAMIO_SOC_TEST;api.resetStorage();api.startNew()});
+          await page.locator('[aria-label="Задание 1"]').click();
+          await page.locator('#soc-short').fill('46');
+          await page.locator('#soc-mark').click();
+          await page.locator('[aria-label="Задание 2"]').click();
+          await page.reload({waitUntil:'networkidle',timeout:120000});
+          report.persistence.continueVisible=await page.getByRole('button',{name:'Продолжить попытку',exact:true}).isVisible();
+          if(report.persistence.continueVisible){await page.getByRole('button',{name:'Продолжить попытку',exact:true}).click();await page.waitForTimeout(200);}
+          report.persistence.state=await page.evaluate(()=>window.EKSAMIO_SOC_TEST.state());
+          // Rubric dependency enforced in scorer, including hostile API state.
+          await page.evaluate(()=>{const a=window.EKSAMIO_SOC_TEST;a.setRubric(24,'24.1',2);a.setRubric(24,'24.2',1)});
+          report.rubricDependency.ineligibleTotal=await page.evaluate(()=>window.EKSAMIO_SOC_TEST.part2Total());
+          report.rubricDependency.ineligibleState=await page.evaluate(()=>window.EKSAMIO_SOC_TEST.state().rubricScores[24]);
+          await page.evaluate(()=>{const a=window.EKSAMIO_SOC_TEST;a.setRubric(24,'24.1',3);a.setRubric(24,'24.2',1)});
+          report.rubricDependency.eligibleTotal=await page.evaluate(()=>window.EKSAMIO_SOC_TEST.part2Total());
+          report.rubricDependency.eligibleState=await page.evaluate(()=>window.EKSAMIO_SOC_TEST.state().rubricScores[24]);
+          // Results with correct short answers.
+          await page.evaluate(()=>{const a=window.EKSAMIO_SOC_TEST;for(const t of a.tasks.filter(x=>x.part===1))a.setAnswer(t.n,t.answer);a.finish()});
+          await page.waitForTimeout(400);
+          report.results={text:await page.locator('#soc-finish-card').innerText(),part1:await page.locator('#soc-part1-score').innerText(),part2:await page.locator('#soc-part2-score').innerText(),total:await page.locator('#soc-total-score').innerText(),selectCount:await page.locator('#soc-review select').count(),overflow:await overflow()};
+          await page.screenshot({path:`${OUT}/screens/results.png`,fullPage:true});
+          // Mobile overflow all tasks.
+          await page.setViewportSize({width:320,height:900});
+          await page.evaluate(()=>{const a=window.EKSAMIO_SOC_TEST;a.resetStorage();a.startNew()});
+          for(const d of definitions){await page.locator(`[aria-label="Задание ${d.n}"]`).click();await page.waitForTimeout(40);report.mobile.push({n:d.n,overflow:await overflow()});}
+          await page.screenshot({path:`${OUT}/screens/mobile-25.png`,fullPage:true});
+          fs.writeFileSync(`${OUT}/report.json`,JSON.stringify(report,null,2));
+          await browser.close();
+          JS
+          node obsh-deep.mjs
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: obshchestvoznaniye-deep-audit-2026-08-05
+          path: /tmp/obsh-deep/**
+          if-no-files-found: error
+          retention-days: 30
