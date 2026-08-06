@@ -134,3 +134,5 @@ for f in sorted(root.rglob('*')):
     if f.is_file() and f!=manifest:
         lines.append(f'{hashlib.sha256(f.read_bytes()).hexdigest()}  {f.relative_to(root).as_posix()}')
 manifest.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+
+# trigger after workflow registration
