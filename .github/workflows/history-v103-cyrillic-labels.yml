@@ -14,7 +14,7 @@ permissions:
 jobs:
   fix-test-release:
     if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,36 +23,36 @@ jobs:
 
       - name: Install validation dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install playwright beautifulsoup4
-          google-chrome --version
+          python3 -m pip install --upgrade pip
+          python3 -m pip install playwright beautifulsoup4
+          python3 -m playwright install chromium
 
       - name: Apply verified fix
-        run: python production-audits/history-v103-builder.py
+        run: python3 production-audits/history-v103-builder.py
 
       - name: Validate working package
         run: |
-          python ege-istoriya-demoversiya-v1/tests/test_static.py
-          python ege-istoriya-demoversiya-v1/tests/test_independent_v103.py
-          python ege-istoriya-demoversiya-v1/tests/test_browser.py
-          python ege-istoriya-demoversiya-v1/tests/test_cyrillic_labels.py
+          python3 ege-istoriya-demoversiya-v1/tests/test_static.py
+          python3 ege-istoriya-demoversiya-v1/tests/test_independent_v103.py
+          python3 ege-istoriya-demoversiya-v1/tests/test_browser.py
+          python3 ege-istoriya-demoversiya-v1/tests/test_cyrillic_labels.py
 
       - name: Build release ZIP
         run: |
           rm -f ege-istoriya-demoversiya-v1.0.2.zip ege-istoriya-demoversiya-v1.0.3.zip
-          python ege-istoriya-demoversiya-v1/scripts/build_demo_release.py
+          python3 ege-istoriya-demoversiya-v1/scripts/build_demo_release.py
           unzip -t ege-istoriya-demoversiya-v1.0.3.zip
-          sha256sum ege-istoriya-demoversiya-v1.0.3.zip
+          shasum -a 256 ege-istoriya-demoversiya-v1.0.3.zip
 
       - name: Verify clean extracted ZIP
         run: |
           rm -rf /tmp/history-v103-clean
           mkdir -p /tmp/history-v103-clean
           unzip -q ege-istoriya-demoversiya-v1.0.3.zip -d /tmp/history-v103-clean
-          python /tmp/history-v103-clean/ege-istoriya-demoversiya-v1/tests/test_static.py
-          python /tmp/history-v103-clean/ege-istoriya-demoversiya-v1/tests/test_independent_v103.py
-          python /tmp/history-v103-clean/ege-istoriya-demoversiya-v1/tests/test_browser.py
-          python /tmp/history-v103-clean/ege-istoriya-demoversiya-v1/tests/test_cyrillic_labels.py
+          python3 /tmp/history-v103-clean/ege-istoriya-demoversiya-v1/tests/test_static.py
+          python3 /tmp/history-v103-clean/ege-istoriya-demoversiya-v1/tests/test_independent_v103.py
+          python3 /tmp/history-v103-clean/ege-istoriya-demoversiya-v1/tests/test_browser.py
+          python3 /tmp/history-v103-clean/ege-istoriya-demoversiya-v1/tests/test_cyrillic_labels.py
 
       - uses: actions/upload-artifact@v4
         with:
