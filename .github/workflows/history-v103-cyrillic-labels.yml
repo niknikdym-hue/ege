@@ -12,170 +12,36 @@ jobs:
   fix-test-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out fix branch
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: agent/fix-history-cyrillic-labels-v103
           fetch-depth: 0
 
       - name: Install validation dependencies
-        shell: bash
         run: |
-          set -euo pipefail
           python -m pip install --upgrade pip
           python -m pip install playwright beautifulsoup4
           google-chrome --version
 
-      - name: Apply systemic Cyrillic-label fix
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          import json, re
-
-          root=Path('ege-istoriya-demoversiya-v1')
-          assert root.exists()
-          text_suffixes={'.txt','.json','.html','.css','.py'}
-
-          old_css='.eh-alpha{list-style-type:upper-alpha}'
-          new_css='''.eh-alpha{list-style:none!important;padding-left:31px!important}.eh-alpha>li{position:relative}.eh-alpha>li::before{position:absolute;left:-31px;width:25px;text-align:right;font-weight:700}.eh-alpha>li:nth-child(1)::before{content:"а)"}.eh-alpha>li:nth-child(2)::before{content:"б)"}.eh-alpha>li:nth-child(3)::before{content:"в)"}.eh-alpha>li:nth-child(4)::before{content:"г)"}.eh-alpha>li:nth-child(5)::before{content:"д)"}.eh-alpha>li:nth-child(6)::before{content:"е)"}.eh-two-col .eh-alpha>li:nth-child(1)::before{content:"А)"}.eh-two-col .eh-alpha>li:nth-child(2)::before{content:"Б)"}.eh-two-col .eh-alpha>li:nth-child(3)::before{content:"В)"}.eh-two-col .eh-alpha>li:nth-child(4)::before{content:"Г)"}.eh-two-col .eh-alpha>li:nth-child(5)::before{content:"Д)"}.eh-two-col .eh-alpha>li:nth-child(6)::before{content:"Е)"}'''
-
-          css_hits=0
-          for p in root.rglob('*'):
-              if not p.is_file() or p.suffix.lower() not in text_suffixes:
-                  continue
-              text=p.read_text(encoding='utf-8')
-              if old_css in text:
-                  css_hits += text.count(old_css)
-                  text=text.replace(old_css,new_css)
-              text=text.replace('v1_0_2','v1_0_3').replace('1.0.2','1.0.3')
-              p.write_text(text,encoding='utf-8')
-          assert css_hits>=3,css_hits
-
-          old_test=root/'tests/test_independent_v102.py'
-          new_test=root/'tests/test_independent_v103.py'
-          if old_test.exists(): old_test.rename(new_test)
-
-          pfx='ege-istoriya-demoversiya'
-          exam_path=root/f'{pfx}-EXAM-DATA.json'
-          exam=json.loads(exam_path.read_text(encoding='utf-8'))
-          assert exam['version']=='1.0.3'
-          assert exam['storage_key']=='eksamio_ege_istoriya_demo_2026_v1_0_3'
-          expected={1:list('АБВГ'),3:list('АБВГ'),4:list('АБВГДЕ'),5:list('АБВГ'),7:list('АБВГ')}
-          for n,labels in expected.items():
-              assert exam['tasks'][n-1]['interaction']['labels']==labels
-          for t in exam['tasks']:
-              assert not re.search(r'>\s*[A-F]\s*(?:<|\))',t['prompt_html']),t['number']
-
-          contract_path=root/f'{pfx}-PACKAGE-CONTRACT.json'
-          contract=json.loads(contract_path.read_text(encoding='utf-8'))
-          contract['package_version']='1.0.3'
-          contract.setdefault('interaction_contract',{})['lettered_positions_match_fipi_alphabet_and_case']=True
-          blocks=sorted(root.glob(f'{pfx}-T123-*.txt'))
-          contract['t123_max_bytes']=max(p.stat().st_size for p in blocks)
-          contract_path.write_text(json.dumps(contract,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-
-          static_path=root/'tests/test_static.py'
-          static=static_path.read_text(encoding='utf-8')
-          insert='''\ncss=(ROOT/"assets.css").read_text(encoding="utf-8")\nassert "upper-alpha" not in css and "lower-alpha" not in css\nfor marker in ["А)","Б)","В)","Г)","Д)","Е)","а)","б)","в)"]:\n    assert f'content:"{marker}"' in css,marker\nfor n in [1,3,5,7]:\n    assert 'class="eh-alpha"' in exam["tasks"][n-1]["prompt_html"]\nassert 'class="eh-alpha"' in exam["tasks"][17]["prompt_html"]\nassert contract["interaction_contract"]["lettered_positions_match_fipi_alphabet_and_case"] is True\n'''
-          assert 'print("STATIC PASS")' in static
-          static=static.replace('print("STATIC PASS")',insert+'\nprint("STATIC PASS")')
-          static_path.write_text(static,encoding='utf-8')
-
-          browser_test=root/'tests/test_cyrillic_labels.py'
-          browser_test.write_text(r'''from pathlib import Path
-import shutil
-from playwright.sync_api import sync_playwright
-ROOT=Path(__file__).resolve().parents[1]
-HTML=(ROOT/'ege-istoriya-demoversiya-PREVIEW.html').read_text(encoding='utf-8')
-POLYFILL="window.__EH_STORAGE=window.__EH_STORAGE||(()=>{const m={};return {getItem:k=>Object.prototype.hasOwnProperty.call(m,k)?m[k]:null,setItem:(k,v)=>m[k]=String(v),removeItem:k=>delete m[k],clear:()=>Object.keys(m).forEach(k=>delete m[k])}})();"
-def marker_text(locator):
-    return locator.evaluate_all("els=>els.map(e=>getComputedStyle(e,'::before').content.replace(/^['\\\"]|['\\\"]$/g,''))")
-with sync_playwright() as p:
-    launch={'headless':True};exe=shutil.which('chromium') or shutil.which('chromium-browser') or shutil.which('google-chrome')
-    if exe: launch['executable_path']=exe
-    browser=p.chromium.launch(**launch)
-    page=browser.new_page(viewport={'width':390,'height':1000})
-    page.evaluate(POLYFILL);page.set_content(HTML,wait_until='load');page.click('#eh-start-btn')
-    for n in [1,3,5,7]:
-        page.click(f'.eh-nav-btn:nth-child({n})')
-        expected=['А)','Б)','В)','Г)']
-        assert marker_text(page.locator('.eh-two-col .eh-alpha>li'))==expected,(n,marker_text(page.locator('.eh-two-col .eh-alpha>li')))
-        assert [page.locator('.eh-match-letter').nth(i).inner_text() for i in range(4)]==list('АБВГ')
-    page.click('.eh-nav-btn:nth-child(4)')
-    table_texts=[x.strip() for x in page.locator('.eh-table td').all_inner_texts()]
-    for label in list('АБВГДЕ'): assert label in table_texts,label
-    assert not any(x in list('ABCDEF') for x in table_texts)
-    page.click('.eh-nav-btn:nth-child(17)')
-    source=page.locator('.eh-source').inner_text()
-    assert 'А)' in source and 'Б)' in source and 'A)' not in source and 'B)' not in source
-    page.click('.eh-nav-btn:nth-child(18)')
-    assert marker_text(page.locator('.eh-prompt>.eh-alpha>li'))==['а)','б)','в)']
-    assert not page.evaluate('document.documentElement.scrollWidth > document.documentElement.clientWidth')
-    browser.close()
-print('CYRILLIC LABELS PASS')
-''',encoding='utf-8')
-
-          report_path=root/f'{pfx}-TEST-REPORT.txt'
-          report=report_path.read_text(encoding='utf-8').rstrip()+'''\n23. Кириллические метки А–Е во всех заданиях на соответствие и таблицах: PASS\n24. Кириллические метки а–в в задании 18 и критериях: PASS\n25. Браузерная проверка вычисленных маркеров без латинских A–F: PASS\n'''
-          report_path.write_text(report+'\n',encoding='utf-8')
-
-          audit_path=root/f'{pfx}-INDEPENDENT-AUDIT.txt'
-          audit=audit_path.read_text(encoding='utf-8').rstrip()+'''\n\nДОПОЛНИТЕЛЬНАЯ ПРОВЕРКА ВЕРСИИ 1.0.3\nPASS — во всех заданиях проверены буквенные обозначения. Позиции соответствий и пропуски таблицы используют кириллические А–Е, как в материалах ФИПИ. В задании 18 пункты ответа используют строчные кириллические а–в. Латинская нумерация CSS upper-alpha удалена.\n'''
-          audit_path.write_text(audit+'\n',encoding='utf-8')
-
-          rules_path=root/f'{pfx}-IMPLEMENTATION-RULES.txt'
-          rules=rules_path.read_text(encoding='utf-8').rstrip()+'''\n10. Буквенные обозначения должны совпадать с ФИПИ по алфавиту и регистру. Для кириллицы запрещено использовать CSS upper-alpha/lower-alpha; фактические маркеры проверяются в браузере.\n'''
-          rules_path.write_text(rules+'\n',encoding='utf-8')
-
-          standard=Path('demo-production-standard/FINAL-RELEASE-GATE.md')
-          if standard.exists():
-              text=standard.read_text(encoding='utf-8')
-              section='''\n\n## Alphabet and label fidelity gate\n\n- Lettered positions must use the same alphabet and case as the official source.\n- Russian-language Cyrillic positions must not be rendered with CSS `upper-alpha` or `lower-alpha`, because those produce Latin letters.\n- A browser test must inspect the computed marker content for every lettered task family.\n'''
-              if '## Alphabet and label fidelity gate' not in text:
-                  standard.write_text(text.rstrip()+section+'\n',encoding='utf-8')
-
-          build=root/'scripts/build_demo_release.py'
-          b=build.read_text(encoding='utf-8').replace('v1.0.2.zip','v1.0.3.zip')
-          build.write_text(b,encoding='utf-8')
-          PY
+      - name: Apply verified fix
+        run: python production-audits/history-v103-builder.py
 
       - name: Validate working package
-        shell: bash
         run: |
-          set -euo pipefail
           python ege-istoriya-demoversiya-v1/tests/test_static.py
           python ege-istoriya-demoversiya-v1/tests/test_independent_v103.py
           python ege-istoriya-demoversiya-v1/tests/test_browser.py
           python ege-istoriya-demoversiya-v1/tests/test_cyrillic_labels.py
 
-      - name: Refresh manifest and build release ZIP
-        shell: bash
+      - name: Build release ZIP
         run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          import hashlib,shutil
-          root=Path('ege-istoriya-demoversiya-v1')
-          for p in root.rglob('__pycache__'):
-              if p.is_dir(): shutil.rmtree(p)
-          manifest=root/'ege-istoriya-demoversiya-MANIFEST-SHA256.txt'
-          lines=[]
-          for f in sorted(root.rglob('*')):
-              if f.is_file() and f!=manifest:
-                  lines.append(f'{hashlib.sha256(f.read_bytes()).hexdigest()}  {f.relative_to(root).as_posix()}')
-          manifest.write_text('\n'.join(lines)+'\n',encoding='utf-8')
-          PY
           rm -f ege-istoriya-demoversiya-v1.0.2.zip ege-istoriya-demoversiya-v1.0.3.zip
           python ege-istoriya-demoversiya-v1/scripts/build_demo_release.py
           unzip -t ege-istoriya-demoversiya-v1.0.3.zip
-          sha256sum ege-istoriya-demoversiya-v1.0.3.zip | tee /tmp/history-v103.sha256
+          sha256sum ege-istoriya-demoversiya-v1.0.3.zip
 
       - name: Verify clean extracted ZIP
-        shell: bash
         run: |
-          set -euo pipefail
           rm -rf /tmp/history-v103-clean
           mkdir -p /tmp/history-v103-clean
           unzip -q ege-istoriya-demoversiya-v1.0.3.zip -d /tmp/history-v103-clean
@@ -184,8 +50,7 @@ print('CYRILLIC LABELS PASS')
           python /tmp/history-v103-clean/ege-istoriya-demoversiya-v1/tests/test_browser.py
           python /tmp/history-v103-clean/ege-istoriya-demoversiya-v1/tests/test_cyrillic_labels.py
 
-      - name: Upload verified release
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: ege-istoriya-demoversiya-v1.0.3
           path: ege-istoriya-demoversiya-v1.0.3.zip
@@ -193,10 +58,9 @@ print('CYRILLIC LABELS PASS')
           retention-days: 30
 
       - name: Commit verified release
-        shell: bash
         run: |
-          set -euo pipefail
           rm -f .github/workflows/history-v103-cyrillic-labels.yml
+          rm -f production-audits/history-v103-builder.py
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
