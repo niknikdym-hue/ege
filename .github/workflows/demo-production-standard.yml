@@ -87,3 +87,33 @@ jobs:
           path: /tmp/khimiya-live-audit/**
           if-no-files-found: error
           retention-days: 30
+
+  biology-social-live-production-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Audit published biology and social studies pages
+        env:
+          AUDIT_OUT: /tmp/bio-soc-live-audit
+        run: node production-audits/biologiya-obshchestvoznaniye-live-2026-08-06.mjs
+
+      - name: Upload audit report and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: biology-social-live-production-audit
+          path: /tmp/bio-soc-live-audit/**
+          if-no-files-found: warn
+          retention-days: 30
