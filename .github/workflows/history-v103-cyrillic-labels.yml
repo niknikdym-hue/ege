@@ -1,10 +1,9 @@
 name: History 1.0.3 Cyrillic labels
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/history-v103-cyrillic-labels.yml'
+  push:
+    branches:
+      - 'agent/fix-history-cyrillic-labels-v103'
 
 permissions:
   contents: write
@@ -16,7 +15,7 @@ jobs:
       - name: Check out fix branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: agent/fix-history-cyrillic-labels-v103
           fetch-depth: 0
 
       - name: Install validation dependencies
@@ -202,6 +201,4 @@ print('CYRILLIC LABELS PASS')
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
           git commit -m "Fix history Cyrillic labels 1.0.3"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
-
-# synchronized trigger
+          git push origin HEAD:agent/fix-history-cyrillic-labels-v103
