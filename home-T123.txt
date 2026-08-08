@@ -76,6 +76,13 @@
 #eksamio-home-final .eh-facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
 #eksamio-home-final .eh-fact{display:inline-flex;padding:7px 9px;border:1px solid var(--eh-border);border-radius:10px;background:#fff;font-size:12px;font-weight:850}
 #eksamio-home-final .eh-demo__link{margin-top:auto;padding-top:20px;color:var(--eh-primary-hover);font-size:14px;font-weight:900}
+#eksamio-home-final .eh-trainer-feature{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(220px,.85fr);gap:18px;margin-bottom:16px;padding:24px;border:1px solid #CFC8FF;border-radius:20px;background:radial-gradient(circle at 90% 8%,rgba(140,123,255,.16),transparent 28%),linear-gradient(135deg,#fff,#FAF9FF)}
+#eksamio-home-final .eh-trainer-feature__meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+#eksamio-home-final .eh-trainer-feature h3{margin:0;font-size:26px;line-height:1.18;letter-spacing:-.02em}
+#eksamio-home-final .eh-trainer-feature p{margin:10px 0 0;color:var(--eh-muted);font-size:15px;line-height:1.6}
+#eksamio-home-final .eh-trainer-feature__side{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:18px;border:1px solid var(--eh-border);border-radius:16px;background:#fff}
+#eksamio-home-final .eh-trainer-feature__side strong{font-size:17px;line-height:1.3}
+#eksamio-home-final .eh-trainer-feature__side p{margin-top:7px;font-size:14px}
 #eksamio-home-final .eh-trainer-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 #eksamio-home-final .eh-mini{display:flex;flex-direction:column;padding:18px;border:1px solid var(--eh-border);border-radius:17px;background:#fff;text-decoration:none;min-width:0}
 #eksamio-home-final .eh-mini strong{font-size:18px;line-height:1.22}
@@ -84,7 +91,7 @@
 #eksamio-home-final .eh-final{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:center;padding:clamp(24px,4vw,38px);border:1px solid var(--eh-border);border-radius:22px;background:linear-gradient(135deg,#F5F9FF,#fff)}
 #eksamio-home-final .eh-final h2{font-size:clamp(26px,4vw,38px)}
 #eksamio-home-final .eh-final p{margin:10px 0 0;color:var(--eh-muted);font-size:16px;line-height:1.62}
-@media(max-width:920px){#eksamio-home-final .eh-hero{grid-template-columns:1fr}#eksamio-home-final .eh-format-grid,#eksamio-home-final .eh-demo-grid{grid-template-columns:1fr}#eksamio-home-final .eh-trainer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:920px){#eksamio-home-final .eh-hero{grid-template-columns:1fr}#eksamio-home-final .eh-format-grid,#eksamio-home-final .eh-demo-grid,#eksamio-home-final .eh-trainer-feature{grid-template-columns:1fr}#eksamio-home-final .eh-trainer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){#eksamio-home-final{padding-top:18px;padding-bottom:48px}#eksamio-home-final .eh-page{width:calc(100% - 32px)}#eksamio-home-final .eh-hero,#eksamio-home-final .eh-panel{padding:22px 18px;border-radius:20px}#eksamio-home-final .eh-actions{display:grid}#eksamio-home-final .eh-button{width:100%}#eksamio-home-final .eh-trainer-grid{grid-template-columns:1fr}#eksamio-home-final .eh-final{grid-template-columns:1fr;padding:22px 18px}}
 </style>
 <div class="eh-page"><div class="eh-stack">
@@ -92,22 +99,22 @@
   <div>
     <p class="eh-kicker">Учебная платформа Эксамио</p>
     <h1>Подготовка к ЕГЭ: демоверсии, тренажёры и разборы</h1>
-    <p class="eh-lead">На Эксамио можно пройти полный вариант ЕГЭ, потренироваться по отдельным темам русского языка и разобрать теорию и задачи по физике.</p>
-    <div class="eh-actions"><a class="eh-button" href="/ege/demoversii/">Выбрать демоверсию</a><a class="eh-button eh-button--secondary" href="/trenazhery/">Открыть тренажёры</a></div>
+    <p class="eh-lead">Пройдите полный вариант ЕГЭ, потренируйтесь по отдельным темам или используйте тренажёр ЕГЭ по русскому языку, чтобы отработать задания экзамена в одном маршруте.</p>
+    <div class="eh-actions"><a class="eh-button" href="/ege/russkiy/trenazher/">Открыть тренажёр ЕГЭ по русскому</a><a class="eh-button eh-button--secondary" href="/ege/demoversii/">Выбрать демоверсию</a></div>
   </div>
   <aside class="eh-quick" aria-label="Основные разделы">
     <h2>С чего начать</h2>
+    <a href="/ege/russkiy/trenazher/"><span class="eh-mark">РЯ</span><span><strong>Тренажёр ЕГЭ по русскому языку</strong><small>Тренировка экзаменационных заданий в одном маршруте</small></span><span>→</span></a>
     <a href="/ege/demoversii/"><span class="eh-mark">Е</span><span><strong>Пройти демоверсию ЕГЭ</strong><small>Полный вариант с таймером, сохранением ответов и подсчётом баллов</small></span><span>→</span></a>
-    <a href="/trenazhery/"><span class="eh-mark">Т</span><span><strong>Повторить тему по русскому языку</strong><small>Задания на ударения, словарные слова, паронимы и фразеологизмы</small></span><span>→</span></a>
-    <a href="/blog/"><span class="eh-mark">Ф</span><span><strong>Разобрать тему по физике</strong><small>Теория, формулы и подробные решения задач</small></span><span>→</span></a>
+    <a href="/trenazhery/"><span class="eh-mark">Т</span><span><strong>Повторить отдельную тему</strong><small>Ударения, словарные слова, паронимы и фразеологизмы</small></span><span>→</span></a>
   </aside>
 </header>
 <section class="eh-panel">
-  <div class="eh-head"><p class="eh-eyebrow">Форматы подготовки</p><h2>Выберите подходящий формат занятий</h2><p class="eh-intro">Демоверсия воспроизводит полную экзаменационную работу. Тренажёры помогают повторить отдельные темы. В блоге собраны объяснения по теории и разборы задач.</p></div>
+  <div class="eh-head"><p class="eh-eyebrow">Форматы подготовки</p><h2>Выберите подходящий формат занятий</h2><p class="eh-intro">Демоверсия помогает проверить себя на полном варианте. Тренажёр ЕГЭ по русскому языку подходит для системной практики экзаменационных заданий, а тематические тренажёры — для точечной работы над отдельными темами.</p></div>
   <div class="eh-format-grid">
+    <a class="eh-card eh-card--train" href="/ege/russkiy/trenazher/"><span class="eh-pill">Системная практика</span><h3>Тренажёр ЕГЭ по русскому языку</h3><p>Отрабатывайте задания экзамена по русскому языку в одном маршруте и возвращайтесь к тем типам заданий, где возникают ошибки.</p><span class="eh-card__link">Открыть тренажёр →</span></a>
     <a class="eh-card eh-card--demo" href="/ege/demoversii/"><span class="eh-pill">Полный вариант</span><h3>Интерактивные демоверсии ЕГЭ</h3><p>Задания в формате экзамена, таймер, переходы между заданиями, сохранение ответов и итоговый первичный балл.</p><span class="eh-card__link">Перейти к демоверсиям →</span></a>
-    <a class="eh-card eh-card--train" href="/trenazhery/"><span class="eh-pill">Отдельные темы</span><h3>Тренажёры по русскому языку</h3><p>Упражнения на ударения, словарные слова, паронимы и фразеологизмы с возможностью повторить ошибки.</p><span class="eh-card__link">Открыть тренажёры →</span></a>
-    <a class="eh-card eh-card--blog" href="/blog/"><span class="eh-pill">Теория и задачи</span><h3>Авторский блог по физике</h3><p>Понятные объяснения теории, работа с формулами и подробные разборы задач.</p><span class="eh-card__link">Перейти в блог →</span></a>
+    <a class="eh-card eh-card--blog" href="/trenazhery/"><span class="eh-pill">Отдельные темы</span><h3>Тематические тренажёры по русскому языку</h3><p>Ударения, словарные слова, паронимы и фразеологизмы с возможностью повторить материал, в котором были ошибки.</p><span class="eh-card__link">Выбрать тему →</span></a>
   </div>
 </section>
 <section class="eh-panel">
@@ -121,7 +128,11 @@
   </div>
 </section>
 <section class="eh-panel">
-  <div class="eh-head"><p class="eh-eyebrow">Русский язык</p><h2>Выберите тему для тренировки</h2><p class="eh-intro">В каждом тренажёре можно проверить знания по одной теме, выполнить задания и повторить слова или выражения, в которых были ошибки.</p></div>
+  <div class="eh-head"><p class="eh-eyebrow">Русский язык</p><h2>Системная практика и работа по темам</h2><p class="eh-intro">Если нужна подготовка именно к экзамену, начните с тренажёра ЕГЭ по русскому языку. Тематические тренажёры пригодятся, когда нужно отдельно закрепить конкретную тему.</p></div>
+  <div class="eh-trainer-feature">
+    <div><div class="eh-trainer-feature__meta"><span class="eh-pill">Главный тренажёр</span><span class="eh-status">ЕГЭ · русский язык</span></div><h3>Тренажёр ЕГЭ по русскому языку</h3><p>Практикуйтесь в формате экзаменационных заданий, отслеживайте ошибки и возвращайтесь к тем типам заданий, которые требуют дополнительной работы.</p><div class="eh-actions"><a class="eh-button" href="/ege/russkiy/trenazher/">Начать тренировку</a></div></div>
+    <div class="eh-trainer-feature__side"><strong>Когда выбрать этот формат</strong><p>Когда нужна системная подготовка к ЕГЭ по русскому, а не повторение одной отдельной темы.</p></div>
+  </div>
   <div class="eh-trainer-grid">
     <a class="eh-mini" href="/trenazhery/russkiy/orfoepiya/"><strong>Ударения</strong><span>Постановка ударения и личный список слов для повторения.</span><small>Открыть →</small></a>
     <a class="eh-mini" href="/trenazhery/russkiy/slovarnye-slova/"><strong>Словарные слова</strong><span>Пропущенные буквы, похожие написания и запись слова целиком.</span><small>Открыть →</small></a>
@@ -129,5 +140,5 @@
     <a class="eh-mini" href="/trenazhery/russkiy/frazeologizmy/"><strong>Фразеологизмы</strong><span>Значение выражения, состав фразеологизма и его границы в предложении.</span><small>Открыть →</small></a>
   </div>
 </section>
-<section class="eh-final"><div><h2>С чего удобнее начать</h2><p>Для полной проверки выберите демоверсию. Чтобы повторить отдельную тему по русскому языку, откройте тренажёр. Теорию и разборы задач по физике можно найти в блоге.</p></div><a class="eh-button" href="/ege/">Перейти в раздел ЕГЭ</a></section>
+<section class="eh-final"><div><h2>С чего удобнее начать</h2><p>Для системной подготовки по русскому языку откройте тренажёр ЕГЭ. Для полной проверки знаний выберите демоверсию, а для точечной работы — тематический тренажёр.</p></div><a class="eh-button" href="/ege/russkiy/trenazher/">Открыть тренажёр ЕГЭ</a></section>
 </div></div></div>
