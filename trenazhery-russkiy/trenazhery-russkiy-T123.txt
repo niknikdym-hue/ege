@@ -1,0 +1,110 @@
+<div class="ep-root ep-russian-index ep-russian-trainers">
+  <div class="ep-page">
+    <div class="ep-stack">
+      <section class="ep-hero ep-hero--compact">
+        <div class="ep-hero__inner">
+          <h1 class="ep-title">Тренажёры по русскому языку</h1>
+          <p class="ep-lead">Четыре самостоятельных тренажёра по орфоэпии, орфографии и лексике. Каждый запоминает ошибки и собирает личный маршрут повторения.</p>
+          <div class="ep-actions">
+            <a class="ep-button" href="/trenazhery/russkiy/orfoepiya/" data-role="continue-button">Начать диагностику</a>
+            <a class="ep-button ep-button--secondary" href="#russian-trainers">Выбрать тему</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="ep-layout ep-layout--ads">
+        <aside class="ep-layout__side ep-no-print">
+          <div class="ep-ad-stack">
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side" data-ad-place="trainers-russian-desktop-left-top" aria-label="Рекламный блок"></div>
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side-compact" data-ad-place="trainers-russian-desktop-left-middle" aria-label="Рекламный блок"></div>
+          </div>
+        </aside>
+
+        <div class="ep-layout__main">
+          <div class="ep-stack">
+            <section class="ep-panel ep-section" id="russian-trainers">
+              <div class="ep-meta">
+                <span class="ep-pill ep-pill--blue">4 тренажёра</span>
+                <span class="ep-pill">Личный маршрут</span>
+                <span class="ep-pill">Прогресс сохраняется</span>
+              </div>
+              <h2 class="ep-section-title">Выберите тему</h2>
+              <div class="ep-card-grid">
+                <a class="ep-card" href="/trenazhery/russkiy/orfoepiya/">
+                  <span class="ep-pill ep-pill--blue">Орфоэпия</span>
+                  <h3 class="ep-card__title">Ударения</h3>
+                  <p class="ep-card__text">Официальный список ФИПИ, выбор ударной гласной, личная карта сложных слов и интервальное повторение.</p>
+                </a>
+                <a class="ep-card" href="/trenazhery/russkiy/slovarnye-slova/">
+                  <span class="ep-pill ep-pill--blue">Орфография</span>
+                  <h3 class="ep-card__title">Словарные слова</h3>
+                  <p class="ep-card__text">Непроверяемые гласные в корне: от выбора буквы и различения близких написаний до записи слова целиком.</p>
+                </a>
+                <a class="ep-card" href="/trenazhery/russkiy/paronimy/">
+                  <span class="ep-pill ep-pill--violet">Лексика</span>
+                  <h3 class="ep-card__title">Паронимы</h3>
+                  <p class="ep-card__text">Паронимические пары и группы: значение, сочетаемость, грамматическая форма и исправление ошибки в контексте.</p>
+                </a>
+                <a class="ep-card" href="/trenazhery/russkiy/frazeologizmy/">
+                  <span class="ep-pill ep-pill--violet">Лексика</span>
+                  <h3 class="ep-card__title">Фразеологизмы</h3>
+                  <p class="ep-card__text">Значение устойчивых выражений, варианты состава, буквальное и переносное употребление, точный поиск в тексте.</p>
+                </a>
+              </div>
+            </section>
+
+            <div class="ad-slot ad-slot-between ep-ad-slot ep-ad-slot--between ep-no-print" data-ad-place="trainers-russian-after-list" aria-label="Рекламный блок"></div>
+
+            <section class="ep-panel ep-section">
+              <h2 class="ep-section-title">Как работает личный маршрут</h2>
+              <div class="ep-card-grid">
+                <div class="ep-card">
+                  <span class="ep-pill ep-pill--blue">Диагностика</span>
+                  <h3 class="ep-card__title">Определяет реальный уровень</h3>
+                  <p class="ep-card__text">Первый короткий блок не выставляет оценку, а отделяет освоенный материал от слов и выражений, которые требуют работы.</p>
+                </div>
+                <div class="ep-card">
+                  <span class="ep-pill ep-pill--violet">Закрепление</span>
+                  <h3 class="ep-card__title">Меняет формат задания</h3>
+                  <p class="ep-card__text">Трудный материал возвращается не тем же вопросом: сначала узнавание, затем контекст и самостоятельный ответ.</p>
+                </div>
+                <div class="ep-card">
+                  <span class="ep-pill ep-pill--green">Контроль</span>
+                  <h3 class="ep-card__title">Проверяет устойчивость знания</h3>
+                  <p class="ep-card__text">После серии верных ответов материал получает статус «Освоено», но позже возвращается для контрольного повторения.</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <aside class="ep-layout__side ep-no-print">
+          <div class="ep-ad-stack">
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side" data-ad-place="trainers-russian-desktop-right-top" aria-label="Рекламный блок"></div>
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side-compact" data-ad-place="trainers-russian-desktop-right-middle" aria-label="Рекламный блок"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var root = document.querySelector('.ep-russian-trainers');
+  if (!root) return;
+  var button = root.querySelector('[data-role="continue-button"]');
+  if (!button) return;
+  try {
+    var platform = JSON.parse(localStorage.getItem('eksamio:platform-progress:v1') || 'null');
+    if (!platform || !platform.trainers) return;
+    var allowed = ['russian-orthoepy', 'russian-dictionary-words', 'russian-paronyms', 'russian-phraseology'];
+    var recent = allowed.map(function (id) { return platform.trainers[id]; })
+      .filter(function (item) { return item && item.url && item.updatedAt; })
+      .sort(function (a, b) { return b.updatedAt - a.updatedAt; })[0];
+    if (recent) {
+      button.href = recent.url;
+      button.textContent = 'Продолжить тренировку';
+    }
+  } catch (e) {}
+})();
+</script>
