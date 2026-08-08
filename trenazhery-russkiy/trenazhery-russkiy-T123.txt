@@ -4,9 +4,9 @@
       <section class="ep-hero ep-hero--compact">
         <div class="ep-hero__inner">
           <h1 class="ep-title">Тренажёры по русскому языку</h1>
-          <p class="ep-lead">Четыре самостоятельных тренажёра по орфоэпии, орфографии и лексике. Каждый запоминает ошибки и собирает личный маршрут повторения.</p>
+          <p class="ep-lead">Тренировки по русскому языку: от полноценной подготовки к ЕГЭ до точечной работы с отдельными темами и личным повторением ошибок.</p>
           <div class="ep-actions">
-            <a class="ep-button" href="/trenazhery/russkiy/orfoepiya/" data-role="continue-button">Начать диагностику</a>
+            <a class="ep-button" href="/ege/russkiy/trenazher/">Открыть тренажёр ЕГЭ</a>
             <a class="ep-button ep-button--secondary" href="#russian-trainers">Выбрать тему</a>
           </div>
         </div>
@@ -24,12 +24,17 @@
           <div class="ep-stack">
             <section class="ep-panel ep-section" id="russian-trainers">
               <div class="ep-meta">
-                <span class="ep-pill ep-pill--blue">4 тренажёра</span>
+                <span class="ep-pill ep-pill--blue">Русский язык</span>
                 <span class="ep-pill">Личный маршрут</span>
                 <span class="ep-pill">Прогресс сохраняется</span>
               </div>
-              <h2 class="ep-section-title">Выберите тему</h2>
+              <h2 class="ep-section-title">Выберите формат тренировки</h2>
               <div class="ep-card-grid">
+                <a class="ep-card ep-card--featured" href="/ege/russkiy/trenazher/">
+                  <span class="ep-pill ep-pill--green">Подготовка к ЕГЭ</span>
+                  <h3 class="ep-card__title">Тренажёр ЕГЭ по русскому языку</h3>
+                  <p class="ep-card__text">Комплексная тренировка по экзаменационным заданиям: выявляет слабые места, сохраняет прогресс и помогает выстроить персональный маршрут подготовки.</p>
+                </a>
                 <a class="ep-card" href="/trenazhery/russkiy/orfoepiya/">
                   <span class="ep-pill ep-pill--blue">Орфоэпия</span>
                   <h3 class="ep-card__title">Ударения</h3>
@@ -56,22 +61,22 @@
             <div class="ad-slot ad-slot-between ep-ad-slot ep-ad-slot--between ep-no-print" data-ad-place="trainers-russian-after-list" aria-label="Рекламный блок"></div>
 
             <section class="ep-panel ep-section">
-              <h2 class="ep-section-title">Как работает личный маршрут</h2>
+              <h2 class="ep-section-title">Как выбрать тренировку</h2>
               <div class="ep-card-grid">
                 <div class="ep-card">
-                  <span class="ep-pill ep-pill--blue">Диагностика</span>
-                  <h3 class="ep-card__title">Определяет реальный уровень</h3>
-                  <p class="ep-card__text">Первый короткий блок не выставляет оценку, а отделяет освоенный материал от слов и выражений, которые требуют работы.</p>
+                  <span class="ep-pill ep-pill--green">Комплексная подготовка</span>
+                  <h3 class="ep-card__title">Начните с тренажёра ЕГЭ</h3>
+                  <p class="ep-card__text">Если нужна системная подготовка к экзамену, используйте тренажёр ЕГЭ: он объединяет задания и помогает определить, что стоит отработать дальше.</p>
                 </div>
                 <div class="ep-card">
-                  <span class="ep-pill ep-pill--violet">Закрепление</span>
-                  <h3 class="ep-card__title">Меняет формат задания</h3>
-                  <p class="ep-card__text">Трудный материал возвращается не тем же вопросом: сначала узнавание, затем контекст и самостоятельный ответ.</p>
+                  <span class="ep-pill ep-pill--blue">Точная тема</span>
+                  <h3 class="ep-card__title">Отработайте конкретный навык</h3>
+                  <p class="ep-card__text">Если слабое место уже известно, откройте отдельный тренажёр по нужной теме и работайте только с проблемным материалом.</p>
                 </div>
                 <div class="ep-card">
-                  <span class="ep-pill ep-pill--green">Контроль</span>
-                  <h3 class="ep-card__title">Проверяет устойчивость знания</h3>
-                  <p class="ep-card__text">После серии верных ответов материал получает статус «Освоено», но позже возвращается для контрольного повторения.</p>
+                  <span class="ep-pill ep-pill--violet">Повторение</span>
+                  <h3 class="ep-card__title">Возвращайтесь к ошибкам</h3>
+                  <p class="ep-card__text">Прогресс сохраняется, поэтому сложные слова, выражения и задания можно повторять до устойчивого результата.</p>
                 </div>
               </div>
             </section>
@@ -88,23 +93,3 @@
     </div>
   </div>
 </div>
-<script>
-(function () {
-  var root = document.querySelector('.ep-russian-trainers');
-  if (!root) return;
-  var button = root.querySelector('[data-role="continue-button"]');
-  if (!button) return;
-  try {
-    var platform = JSON.parse(localStorage.getItem('eksamio:platform-progress:v1') || 'null');
-    if (!platform || !platform.trainers) return;
-    var allowed = ['russian-orthoepy', 'russian-dictionary-words', 'russian-paronyms', 'russian-phraseology'];
-    var recent = allowed.map(function (id) { return platform.trainers[id]; })
-      .filter(function (item) { return item && item.url && item.updatedAt; })
-      .sort(function (a, b) { return b.updatedAt - a.updatedAt; })[0];
-    if (recent) {
-      button.href = recent.url;
-      button.textContent = 'Продолжить тренировку';
-    }
-  } catch (e) {}
-})();
-</script>
