@@ -4,10 +4,10 @@
       <section class="ep-hero ep-hero--compact">
         <div class="ep-hero__inner">
           <h1 class="ep-title">Тренажёры</h1>
-          <p class="ep-lead">Короткие занятия по русскому языку: диагностика определяет пробелы, а персональное повторение закрепляет трудный материал.</p>
+          <p class="ep-lead">Тренировки по русскому языку: от полноценной практики в формате ЕГЭ до точечной отработки отдельных тем и навыков.</p>
           <div class="ep-actions">
-            <a class="ep-button" href="/trenazhery/russkiy/">Открыть тренажёры</a>
-            <a class="ep-button ep-button--secondary" href="/trenazhery/russkiy/orfoepiya/" data-role="continue-button">Начать диагностику</a>
+            <a class="ep-button" href="/ege/russkiy/trenazher/">Открыть тренажёр ЕГЭ</a>
+            <a class="ep-button ep-button--secondary" href="/trenazhery/russkiy/">Выбрать тему</a>
           </div>
         </div>
       </section>
@@ -24,12 +24,17 @@
           <div class="ep-stack">
             <section class="ep-panel ep-section">
               <div class="ep-meta">
-                <span class="ep-pill ep-pill--blue">4 тренажёра</span>
-                <span class="ep-pill">Русский язык</span>
+                <span class="ep-pill ep-pill--blue">Русский язык</span>
+                <span class="ep-pill">Практика ЕГЭ</span>
                 <span class="ep-pill">Без регистрации</span>
               </div>
               <h2 class="ep-section-title">Тренажёры по русскому языку</h2>
               <div class="ep-card-grid">
+                <a class="ep-card" href="/ege/russkiy/trenazher/">
+                  <span class="ep-pill ep-pill--green">Главный тренажёр</span>
+                  <h3 class="ep-card__title">Тренажёр ЕГЭ по русскому языку</h3>
+                  <p class="ep-card__text">Комплексная тренировка по экзаменационным заданиям: отработка формата, проверка ответов и разбор ошибок в одном месте.</p>
+                </a>
                 <a class="ep-card" href="/trenazhery/russkiy/orfoepiya/">
                   <span class="ep-pill ep-pill--blue">Орфоэпия</span>
                   <h3 class="ep-card__title">Ударения</h3>
@@ -59,9 +64,9 @@
               <h2 class="ep-section-title">Как выбрать тренировку</h2>
               <div class="ep-card-grid">
                 <div class="ep-card">
-                  <span class="ep-pill ep-pill--blue">Диагностика</span>
-                  <h3 class="ep-card__title">Начните с короткой проверки</h3>
-                  <p class="ep-card__text">Если слабые места неясны, стартовые задания отделят знакомый материал от того, что действительно нужно повторить.</p>
+                  <span class="ep-pill ep-pill--blue">Комплексная практика</span>
+                  <h3 class="ep-card__title">Начните с тренажёра ЕГЭ</h3>
+                  <p class="ep-card__text">Если нужна системная подготовка, работайте с экзаменационными заданиями и сразу смотрите, где возникают ошибки.</p>
                 </div>
                 <div class="ep-card">
                   <span class="ep-pill ep-pill--violet">Точная тема</span>
@@ -88,23 +93,3 @@
     </div>
   </div>
 </div>
-<script>
-(function () {
-  var root = document.querySelector('.ep-trainers-index');
-  if (!root) return;
-  var button = root.querySelector('[data-role="continue-button"]');
-  if (!button) return;
-  try {
-    var platform = JSON.parse(localStorage.getItem('eksamio:platform-progress:v1') || 'null');
-    if (!platform || !platform.trainers) return;
-    var allowed = ['russian-orthoepy', 'russian-dictionary-words', 'russian-paronyms', 'russian-phraseology'];
-    var recent = allowed.map(function (id) { return platform.trainers[id]; })
-      .filter(function (item) { return item && item.url && item.updatedAt; })
-      .sort(function (a, b) { return b.updatedAt - a.updatedAt; })[0];
-    if (recent) {
-      button.href = recent.url;
-      button.textContent = 'Продолжить тренировку';
-    }
-  } catch (e) {}
-})();
-</script>
