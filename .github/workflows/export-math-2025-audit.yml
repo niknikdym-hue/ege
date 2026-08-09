@@ -1,0 +1,30 @@
+name: Export math 2025 audit inputs
+
+on:
+  push:
+    branches:
+      - audit/export-math-2025
+    paths:
+      - '.github/workflows/export-math-2025-audit.yml'
+      - 'audit-export-math-2025.trigger'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stage audit inputs
+        run: |
+          mkdir -p audit-export
+          cp -R matematika-source-2025 audit-export/
+          cp ege-matematika-baza-demoversiya-v2.zip audit-export/
+          cp ege-matematika-profil-demoversiya-VERIFIED-PACKAGE-v2.zip audit-export/
+      - name: Upload audit inputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: math-2025-audit-inputs
+          path: audit-export
+          if-no-files-found: error
