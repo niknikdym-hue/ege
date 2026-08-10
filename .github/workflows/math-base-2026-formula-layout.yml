@@ -1,0 +1,57 @@
+name: Build compact base mathematics formula layout diagnostics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/math-base-2026-formula-layout.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  layout:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build compact diagnostic from committed coordinate files
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          src=Path('ege-matematika-baza-demoversiya-2026/source-diagnostics')
+          out=[]
+          for page in [11,12,14,16,23,24,25,26]:
+              p=src/f'page-{page:02d}-coords.json'
+              data=json.loads(p.read_text(encoding='utf-8'))
+              words=data['words']
+              out.append(f'===== PRINTED PAGE {page} =====')
+              # Group by visual baseline within 2.0 pt, preserving all x positions.
+              groups=[]
+              for w in sorted(words,key=lambda z:(z['y0'],z['x0'])):
+                  y=w['y0']
+                  if not groups or abs(y-groups[-1]['y'])>2.0:
+                      groups.append({'y':y,'items':[w]})
+                  else:
+                      groups[-1]['items'].append(w)
+                      groups[-1]['y']=(groups[-1]['y']*3+y)/4
+              for g in groups:
+                  items=sorted(g['items'],key=lambda z:z['x0'])
+                  # Skip headers/footers only when obvious.
+                  text=' '.join(f"{w['x0']:.1f}:{w['text']}" for w in items)
+                  out.append(f"y={g['y']:.1f} | {text}")
+              out.append('')
+          dest=src/'FORMULA-LAYOUT.txt'
+          dest.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          PY
+      - name: Commit diagnostic
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-matematika-baza-demoversiya-2026/source-diagnostics/FORMULA-LAYOUT.txt
+          git diff --cached --quiet || { git commit -m 'Add compact base mathematics formula layout diagnostic'; git push origin HEAD:main; }
