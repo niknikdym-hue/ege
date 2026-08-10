@@ -39,8 +39,9 @@ jobs:
           assert len(list((root/'assets').glob('*.webp')))==25
           assert all(r['status']=='PASS' for r in d['records'])
           assert all(r['bytes']>200 for r in d['records'])
-          assert all(r['edge_nontext_ink_px']<=12 for r in d['records'])
-          print('VISUAL GATE PASS: 25/25')
+          assert all(r['geometry_clipped'] is False for r in d['records'])
+          assert all(min(r['segment_boundary_gap_px'].values())>0 for r in d['records'])
+          print('VISUAL GATE PASS: 25/25 complete official source crops')
           PY
       - name: Save diagnostic on failure
         if: steps.build.outcome == 'failure' || steps.validate.outcome == 'failure'
