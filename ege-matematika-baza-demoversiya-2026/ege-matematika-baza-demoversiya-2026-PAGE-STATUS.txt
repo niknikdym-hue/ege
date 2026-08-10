@@ -1,0 +1,25 @@
+PAGE_URL: /ege/matematika-baza/demoversiya/
+PAGE_SLUG: ege-matematika-baza-demoversiya
+EXAM: ЕГЭ
+SUBJECT: математика
+LEVEL: базовый
+SOURCE_YEAR_INTERNAL: 2026
+PACKAGE_VERSION: 1.0
+CONTENT_STATUS: SOURCE_GATE_IN_PROGRESS
+BUILD_STATUS: NOT_STARTED
+AUDIT_STATUS: NOT_STARTED
+RELEASE_STATUS: NOT_READY
+
+SOURCE_ROOT: ../matematika-source-2026/
+SOURCE_POLICY: только утверждённый комплект ФИПИ 2026; старые математические ZIP и старые реализации не являются источником содержания.
+LEGACY_POLICY: ege-matematika-baza-demoversiya-2026-v2.6-literal-audited.zip удалён и не используется для новой сборки.
+
+WORK_ORDER:
+1. SOURCE GATE.
+2. CONTENT LOCK: EXAM-MAP / TASK-MAP / ASSET-MAP / ACCEPTANCE-CASES.
+3. Сборка T123/preview/runtime только из зафиксированных карт.
+4. Независимый source/literal/formula/visual/interaction/scorer/state/Tilda-size аудит.
+5. READY_FOR_TILDA_TEST только при полном доказательном PASS.
+6. После публикации — отдельный PUBLISHED_SMOKE_PASS.
+
+IMPORTANT: существующая опубликованная страница не считается доказательством корректности нового пакета и будет заменяться только после полной локальной приёмки новой версии.
