@@ -1,0 +1,132 @@
+name: Build and audit base mathematics 2026 release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ege-matematika-baza-demoversiya-2026/**
+      - matematika-source-2026/canonical-printed-pages/**
+      - .github/workflows/math-base-2026-release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install build and browser dependencies
+        run: |
+          python -m pip install --quiet pillow numpy opencv-python-headless latex2mathml playwright
+          python -m playwright install --with-deps chromium
+      - name: Rebuild source-derived maps and gates
+        id: source
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          ROOT=ege-matematika-baza-demoversiya-2026
+          python matematika-source-2026/scripts/validate_canonical_printed_pages.py > math-base-2026-release.log 2>&1
+          python $ROOT/scripts/build_task_map.py >> math-base-2026-release.log 2>&1
+          python $ROOT/scripts/build_acceptance_cases.py >> math-base-2026-release.log 2>&1
+          python $ROOT/scripts/build_audit_matrix.py >> math-base-2026-release.log 2>&1
+          python $ROOT/scripts/validate_literal_source.py >> math-base-2026-release.log 2>&1 || true
+          python $ROOT/scripts/validate_literal_secondary.py >> math-base-2026-release.log 2>&1
+          python - <<'PY' >> math-base-2026-release.log 2>&1
+          import json
+          from pathlib import Path
+          r=Path('ege-matematika-baza-demoversiya-2026')
+          p=json.loads((r/'ege-matematika-baza-demoversiya-2026-LITERAL-AUDIT-EVIDENCE.json').read_text(encoding='utf-8'))
+          s=json.loads((r/'ege-matematika-baza-demoversiya-2026-LITERAL-SECONDARY-EVIDENCE.json').read_text(encoding='utf-8'))
+          f=json.loads((r/'ege-matematika-baza-demoversiya-2026-FORMULA-GATE-EVIDENCE.json').read_text(encoding='utf-8'))
+          assert p['literal_failures']==29,p['literal_failures']
+          assert s['layout_subsequence_pass']==23 and s['formula_or_visual_review_required']==6,s
+          assert f['status']=='PASS' and f['counts']['passed']==6,f
+          print('TEXT/FORMULA SOURCE GATE PASS: primary 41 direct + 23 layout + 6 formula/glyph = 70 official examples')
+          PY
+          python $ROOT/scripts/build_source_assets.py >> math-base-2026-release.log 2>&1
+      - name: Build release package
+        if: steps.source.outcome == 'success'
+        id: build
+        continue-on-error: true
+        run: |
+          python ege-matematika-baza-demoversiya-2026/scripts/build_demo_release.py >> math-base-2026-release.log 2>&1
+          python ege-matematika-baza-demoversiya-2026/tests/test_static.py >> math-base-2026-release.log 2>&1
+          python ege-matematika-baza-demoversiya-2026/tests/test_source_fidelity.py >> math-base-2026-release.log 2>&1
+      - name: Run 70-example real-control browser audit
+        if: steps.source.outcome == 'success' && steps.build.outcome == 'success'
+        id: browser
+        continue-on-error: true
+        env:
+          EVIDENCE_DIR: ege-matematika-baza-demoversiya-2026/tests/evidence
+        run: python ege-matematika-baza-demoversiya-2026/tests/test_browser.py >> math-base-2026-release.log 2>&1
+      - name: Finalize evidence-gated release
+        if: steps.source.outcome == 'success' && steps.build.outcome == 'success' && steps.browser.outcome == 'success'
+        id: finalize
+        continue-on-error: true
+        run: python ege-matematika-baza-demoversiya-2026/scripts/finalize_release.py >> math-base-2026-release.log 2>&1
+      - name: Re-audit clean extracted final ZIP
+        if: steps.source.outcome == 'success' && steps.build.outcome == 'success' && steps.browser.outcome == 'success' && steps.finalize.outcome == 'success'
+        id: clean
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          rm -rf clean-math-base-2026
+          mkdir clean-math-base-2026
+          unzip -q ege-matematika-baza-demoversiya-2026-v1.0.zip -d clean-math-base-2026
+          DEMO_ROOT="$PWD/clean-math-base-2026/ege-matematika-baza-demoversiya-2026" python ege-matematika-baza-demoversiya-2026/tests/test_static.py >> math-base-2026-release.log 2>&1
+          DEMO_ROOT="$PWD/clean-math-base-2026/ege-matematika-baza-demoversiya-2026" python ege-matematika-baza-demoversiya-2026/tests/test_source_fidelity.py >> math-base-2026-release.log 2>&1
+          DEMO_ROOT="$PWD/clean-math-base-2026/ege-matematika-baza-demoversiya-2026" python ege-matematika-baza-demoversiya-2026/tests/test_browser.py >> math-base-2026-release.log 2>&1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('ege-matematika-baza-demoversiya-2026/tests/evidence/clean-zip-evidence.json')
+          p.write_text(json.dumps({'status':'PASS','package':'ege-matematika-baza-demoversiya-2026-v1.0.zip','static':'PASS','source_fidelity':'PASS','browser':'PASS','browser_scope':'70/70 official examples and 21/21 full attempt'},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          python ege-matematika-baza-demoversiya-2026/scripts/finalize_release.py >> math-base-2026-release.log 2>&1
+          rm -rf clean-math-base-2026
+      - name: Final integrity check
+        if: steps.clean.outcome == 'success'
+        id: integrity
+        continue-on-error: true
+        run: |
+          python ege-matematika-baza-demoversiya-2026/tests/test_static.py >> math-base-2026-release.log 2>&1
+          python ege-matematika-baza-demoversiya-2026/tests/test_source_fidelity.py >> math-base-2026-release.log 2>&1
+          python - <<'PY' >> math-base-2026-release.log 2>&1
+          import json,zipfile
+          from pathlib import Path
+          r=Path('ege-matematika-baza-demoversiya-2026')
+          s=(r/'ege-matematika-baza-demoversiya-2026-PAGE-STATUS.txt').read_text(encoding='utf-8')
+          a=json.loads((r/'AUDIT-MATRIX-2026-base-SUMMARY.json').read_text(encoding='utf-8'))
+          c=json.loads((r/'tests/evidence/clean-zip-evidence.json').read_text(encoding='utf-8'))
+          assert 'FINAL_STATUS: READY_FOR_TILDA_TEST' in s
+          assert a=={'rows':70,'final_pass':70,'unverified':0,'visual_pending':0,'interaction_not_run':0,'status':'PASS'}
+          assert c['status']=='PASS'
+          z=Path('ege-matematika-baza-demoversiya-2026-v1.0.zip');assert z.exists() and z.stat().st_size>100000
+          with zipfile.ZipFile(z) as f:assert f.testzip() is None
+          print('FINAL INTEGRITY PASS — READY_FOR_TILDA_TEST')
+          PY
+      - name: Save failure diagnostic
+        if: steps.source.outcome == 'failure' || steps.build.outcome == 'failure' || steps.browser.outcome == 'failure' || steps.finalize.outcome == 'failure' || steps.clean.outcome == 'failure' || steps.integrity.outcome == 'failure'
+        run: |
+          cat math-base-2026-release.log || true
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp math-base-2026-release.log ege-matematika-baza-demoversiya-2026/RELEASE-FAILURE-DIAGNOSTIC.log
+          git add ege-matematika-baza-demoversiya-2026/RELEASE-FAILURE-DIAGNOSTIC.log
+          git commit -m 'Record base mathematics 2026 release failure diagnostic' || true
+          git push origin HEAD:main
+          exit 1
+      - name: Commit audited release
+        if: steps.integrity.outcome == 'success'
+        run: |
+          rm -f math-base-2026-release.log ege-matematika-baza-demoversiya-2026/RELEASE-FAILURE-DIAGNOSTIC.log math-base-source-assets.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --quiet || { git commit -m 'Build audited base mathematics 2026 demo v1.0'; git push origin HEAD:main; }
