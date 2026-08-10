@@ -1,0 +1,32 @@
+TEST REPORT — ЕГЭ 2026, математика, базовый уровень
+PACKAGE_VERSION: 1.0
+STATUS: PASS — READY_FOR_TILDA_TEST
+
+SOURCE / CONTENT
+- TASK-MAP: 21 заданий, 70 официальных примеров, PASS.
+- Literal audit: 23 случаев межколоночной/графической раскладки подтверждены вторичной проверкой.
+- Formula/glyph gate: 6/6 случаев подтверждены официальными рендерами ФИПИ.
+- Visual gate: 25/25 lossless source assets, PASS.
+
+INTERACTION / SCORER
+- Все 70 официальных примеров пройдены browser-тестом через реальные input/select/checkbox controls.
+- Полная правильная попытка: 21/21.
+- Matching: 4 отдельных select, неполный ответ не считается завершённым, дубли блокируются.
+- Numeric input: invalid content не очищается scorer-ом; keyboard dot канонизируется в comma до сохранения.
+- Checkbox/row selection: код собирается системой.
+- Правильные ответы не раскрываются до завершения.
+
+STATE / UI
+- Вариант «ИЛИ» сохраняется после reload.
+- Ответ и отметка возврата сохраняются после reload.
+- Deadline timer: 180 минут.
+- Проверены ширины: 1280, 768, 390, 360, 320 px.
+- JavaScript errors: 0.
+- Справочные материалы ФИПИ: страницы 4–7 доступны в интерфейсе.
+
+PACKAGE
+- T123 blocks: 47.
+- Largest T123: 39342 bytes (< 45000).
+- Повторная статическая, source-fidelity и browser-проверка из чисто распакованного ZIP: PASS (workflow gate).
+
+PUBLISHED_SMOKE_PASS не выставлен: он возможен только после публикации в Tilda.
