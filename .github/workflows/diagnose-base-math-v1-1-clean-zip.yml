@@ -1,0 +1,103 @@
+name: Diagnose Base Math v1.1 Clean ZIP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/diagnose-base-math-v1-1-clean-zip.yml
+
+permissions:
+  contents: write
+
+jobs:
+  clean-zip:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencies
+        id: deps
+        continue-on-error: true
+        run: pip install selenium
+      - name: Extract clean ZIP
+        id: extract
+        continue-on-error: true
+        shell: bash
+        run: |
+          rm -rf /tmp/base-v11-clean
+          mkdir -p /tmp/base-v11-clean
+          unzip -q ege-matematika-baza-demoversiya-2026-v1.1.zip -d /tmp/base-v11-clean
+          test -f /tmp/base-v11-clean/ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-PREVIEW.html
+      - name: Static gate from clean ZIP
+        id: static
+        continue-on-error: true
+        shell: bash
+        run: |
+          CLEAN=/tmp/base-v11-clean/ege-matematika-baza-demoversiya-2026
+          DEMO_ROOT="$CLEAN" python ege-matematika-baza-demoversiya-2026/tests/test_static.py 2>&1 | tee /tmp/clean-static.log
+      - name: Source fidelity from clean ZIP
+        id: fidelity
+        continue-on-error: true
+        shell: bash
+        run: |
+          CLEAN=/tmp/base-v11-clean/ege-matematika-baza-demoversiya-2026
+          DEMO_ROOT="$CLEAN" python ege-matematika-baza-demoversiya-2026/tests/test_source_fidelity.py 2>&1 | tee /tmp/clean-fidelity.log
+      - name: Serve clean ZIP
+        id: server
+        continue-on-error: true
+        shell: bash
+        run: |
+          cd /tmp/base-v11-clean/ege-matematika-baza-demoversiya-2026
+          python -m http.server 8766 --bind 127.0.0.1 >/tmp/clean-server.log 2>&1 &
+          echo $! >/tmp/clean-server.pid
+          sleep 2
+          curl -fsS http://127.0.0.1:8766/ege-matematika-baza-demoversiya-2026-PREVIEW.html >/dev/null
+      - name: Browser gate from clean ZIP
+        id: browser
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          cd ege-matematika-baza-demoversiya-2026
+          EKSAMIO_PREVIEW_URL=http://127.0.0.1:8766/ege-matematika-baza-demoversiya-2026-PREVIEW.html EKSAMIO_EVIDENCE_OUT=tests/evidence/v1.1-clean-zip-selenium-evidence.json python tests/test_v1_1_selenium.py 2>&1 | tee /tmp/clean-browser.log
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f /tmp/clean-server.pid ]; then kill $(cat /tmp/clean-server.pid) || true; fi
+      - name: Commit clean-ZIP diagnostic
+        if: always()
+        shell: bash
+        env:
+          DEPS: ${{ steps.deps.outcome }}
+          EXTRACT: ${{ steps.extract.outcome }}
+          STATIC: ${{ steps.static.outcome }}
+          FIDELITY: ${{ steps.fidelity.outcome }}
+          SERVER: ${{ steps.server.outcome }}
+          BROWSER: ${{ steps.browser.outcome }}
+        run: |
+          OUT=ege-matematika-baza-demoversiya-2026/BASE-V1.1-CLEAN-ZIP-DIAGNOSTIC.txt
+          {
+            echo "DEPS=$DEPS"
+            echo "EXTRACT=$EXTRACT"
+            echo "STATIC=$STATIC"
+            echo "FIDELITY=$FIDELITY"
+            echo "SERVER=$SERVER"
+            echo "BROWSER=$BROWSER"
+            echo
+            echo '=== static ==='; tail -n 100 /tmp/clean-static.log 2>/dev/null || true
+            echo
+            echo '=== fidelity ==='; tail -n 100 /tmp/clean-fidelity.log 2>/dev/null || true
+            echo
+            echo '=== browser ==='; tail -n 180 /tmp/clean-browser.log 2>/dev/null || true
+          } > "$OUT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUT" ege-matematika-baza-demoversiya-2026/tests/evidence/v1.1-clean-zip-selenium-evidence.json 2>/dev/null || git add "$OUT"
+          git commit -m 'Record base mathematics v1.1 clean ZIP diagnostic' || true
+          git pull --rebase origin main
+          git push origin main
