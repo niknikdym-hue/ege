@@ -1,0 +1,146 @@
+name: Diagnose Base Math 2026 v1.1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/diagnose-base-math-v1-1.yml
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        id: deps
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m pip install --upgrade pip 2>&1 | tee /tmp/v11-deps.log
+          pip install latex2mathml playwright 2>&1 | tee -a /tmp/v11-deps.log
+          python -m playwright install --with-deps chromium 2>&1 | tee -a /tmp/v11-deps.log
+
+      - name: Apply accepted source corrections
+        id: patch
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          python - <<'PY' 2>&1 | tee /tmp/v11-patch.log
+          import json,re
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026');prefix='ege-matematika-baza-demoversiya-2026'
+          task=root/f'{prefix}-TASK-MAP.json'
+          text=task.read_text(encoding='utf-8').replace('ꞏ','·')
+          task.write_text(text,encoding='utf-8')
+          assert 'ꞏ' not in text
+          shell=root/'templates'/'T123-shell.html'
+          text=shell.read_text(encoding='utf-8')
+          text=re.sub(r'packageVersion:"[^"]+"','packageVersion:"1.1"',text)
+          text=re.sub(r'contentVersion:"[^"]+"','contentVersion:"2026.2"',text)
+          text=re.sub(r'storageKey:"[^"]+"','storageKey:"eksamio_ege_math_base_demo_2026_v1_1"',text)
+          shell.write_text(text,encoding='utf-8')
+          exam=root/f'{prefix}-EXAM-MAP.json'
+          data=json.loads(exam.read_text(encoding='utf-8'))
+          data['package_version']='1.1';data['storage_key']='eksamio_ege_math_base_demo_2026_v1_1'
+          exam.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('PATCH PASS')
+          PY
+
+      - name: Build
+        id: build
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          python ege-matematika-baza-demoversiya-2026/scripts/build_demo_release.py 2>&1 | tee /tmp/v11-build.log
+
+      - name: Static gate
+        id: static
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          cd ege-matematika-baza-demoversiya-2026
+          python tests/test_static.py 2>&1 | tee /tmp/v11-static.log
+
+      - name: Source fidelity gate
+        id: fidelity
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          cd ege-matematika-baza-demoversiya-2026
+          python tests/test_source_fidelity.py 2>&1 | tee /tmp/v11-fidelity.log
+
+      - name: Start preview server
+        id: server
+        continue-on-error: true
+        shell: bash
+        run: |
+          cd ege-matematika-baza-demoversiya-2026
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/v11-server.log 2>&1 &
+          echo $! >/tmp/v11-server.pid
+          sleep 2
+          curl -fsS http://127.0.0.1:8765/ege-matematika-baza-demoversiya-2026-PREVIEW.html >/dev/null
+
+      - name: Browser regression gate
+        id: browser
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          cd ege-matematika-baza-demoversiya-2026
+          python tests/test_v1_1_browser.py 2>&1 | tee /tmp/v11-browser.log
+
+      - name: Stop preview server
+        if: always()
+        shell: bash
+        run: |
+          if [ -f /tmp/v11-server.pid ]; then kill $(cat /tmp/v11-server.pid) || true; fi
+
+      - name: Record diagnostic outcomes
+        if: always()
+        shell: bash
+        env:
+          DEPS: ${{ steps.deps.outcome }}
+          PATCH: ${{ steps.patch.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          STATIC: ${{ steps.static.outcome }}
+          FIDELITY: ${{ steps.fidelity.outcome }}
+          SERVER: ${{ steps.server.outcome }}
+          BROWSER: ${{ steps.browser.outcome }}
+        run: |
+          OUT=ege-matematika-baza-demoversiya-2026/BASE-V1.1-DIAGNOSTIC.txt
+          {
+            echo "DEPS=$DEPS"
+            echo "PATCH=$PATCH"
+            echo "BUILD=$BUILD"
+            echo "STATIC=$STATIC"
+            echo "FIDELITY=$FIDELITY"
+            echo "SERVER=$SERVER"
+            echo "BROWSER=$BROWSER"
+            for f in /tmp/v11-deps.log /tmp/v11-patch.log /tmp/v11-build.log /tmp/v11-static.log /tmp/v11-fidelity.log /tmp/v11-server.log /tmp/v11-browser.log; do
+              echo
+              echo "===== $f ====="
+              if [ -f "$f" ]; then tail -n 160 "$f"; else echo "NO LOG"; fi
+            done
+          } > "$OUT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUT"
+          git commit -m 'Record base mathematics v1.1 diagnostic outcomes' || true
+          git pull --rebase origin main
+          git push origin main
