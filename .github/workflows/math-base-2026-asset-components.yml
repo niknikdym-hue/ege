@@ -1,0 +1,39 @@
+name: Diagnose base mathematics 2026 source visual components
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ege-matematika-baza-demoversiya-2026/scripts/diagnose_asset_components.py
+      - .github/workflows/math-base-2026-asset-components.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: pip install --quiet pillow numpy opencv-python-headless
+      - name: Diagnose components
+        id: run
+        continue-on-error: true
+        run: python ege-matematika-baza-demoversiya-2026/scripts/diagnose_asset_components.py > math-base-asset-components.log 2>&1
+      - name: Save diagnostic result
+        run: |
+          cat math-base-asset-components.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [ "${{ steps.run.outcome }}" = "success" ]; then
+            git add ege-matematika-baza-demoversiya-2026/source-diagnostics/ASSET-COMPONENTS.json \
+                    ege-matematika-baza-demoversiya-2026/source-diagnostics/ASSET-COMPONENTS.txt
+          else
+            git add math-base-asset-components.log
+          fi
+          git diff --cached --quiet || { git commit -m 'Record base mathematics source visual component diagnostics'; git push origin HEAD:main; }
+          test "${{ steps.run.outcome }}" = "success"
