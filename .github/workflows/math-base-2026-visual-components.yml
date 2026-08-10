@@ -1,0 +1,117 @@
+name: Detect base mathematics 2026 source visual components
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/math-base-2026-visual-components.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  detect:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: pip install --quiet pymupdf pillow opencv-python-headless numpy
+      - name: Detect non-text visual components
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import fitz, cv2, numpy as np
+          from PIL import Image
+
+          pdf=Path('matematika-source-2026/original/МА-11 ЕГЭ 2026 ДЕМО_базовый.pdf')
+          doc=fitz.open(pdf)
+          pages=[10,11,14,15,16,18,19,20,21,22,25,26,28]
+          SCALE=2
+          result={}
+
+          def merge_boxes(boxes,gap=24):
+              boxes=[list(b) for b in boxes]
+              changed=True
+              while changed:
+                  changed=False
+                  out=[]
+                  used=[False]*len(boxes)
+                  for i,a in enumerate(boxes):
+                      if used[i]: continue
+                      x0,y0,x1,y1,area=a
+                      for j in range(i+1,len(boxes)):
+                          if used[j]: continue
+                          b=boxes[j]
+                          # distance between rectangles
+                          dx=max(0,max(x0,b[0])-min(x1,b[2]))
+                          dy=max(0,max(y0,b[1])-min(y1,b[3]))
+                          overlap_x=min(x1,b[2])-max(x0,b[0])
+                          overlap_y=min(y1,b[3])-max(y0,b[1])
+                          if (overlap_x>0 and dy<=gap) or (overlap_y>0 and dx<=gap) or (dx<=gap and dy<=gap):
+                              x0=min(x0,b[0]);y0=min(y0,b[1]);x1=max(x1,b[2]);y1=max(y1,b[3]);area+=b[4]
+                              used[j]=True;changed=True
+                      used[i]=True
+                      out.append([x0,y0,x1,y1,area])
+                  boxes=out
+              return boxes
+
+          for printed in pages:
+              physical=(printed+1)//2
+              half='left' if printed%2==1 else 'right'
+              page=doc[physical-1]
+              pix=page.get_pixmap(matrix=fitz.Matrix(SCALE,SCALE),alpha=False)
+              arr=np.frombuffer(pix.samples,dtype=np.uint8).reshape(pix.height,pix.width,pix.n)[:,:,:3]
+              # split same way as committed source-page evidence
+              mid=arr.shape[1]//2
+              offset=0 if half=='left' else mid
+              img=arr[:, :mid].copy() if half=='left' else arr[:, mid:].copy()
+
+              # Mask text using visual coordinates transformed by page rotation.
+              for w in page.get_text('words',sort=False):
+                  rr=fitz.Rect(w[0],w[1],w[2],w[3]) * page.rotation_matrix
+                  cx=(rr.x0+rr.x1)/2
+                  visual_mid=(page.rect * page.rotation_matrix).width/2
+                  belongs=(cx<visual_mid) if half=='left' else (cx>=visual_mid)
+                  if not belongs: continue
+                  x0=int(max(0,(rr.x0-(0 if half=='left' else visual_mid))*SCALE-3))
+                  x1=int(min(img.shape[1],(rr.x1-(0 if half=='left' else visual_mid))*SCALE+3))
+                  y0=int(max(0,rr.y0*SCALE-3)); y1=int(min(img.shape[0],rr.y1*SCALE+3))
+                  if x1>x0 and y1>y0: img[y0:y1,x0:x1]=255
+
+              gray=cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
+              ink=(gray<210).astype(np.uint8)*255
+              # Remove page edges/furniture and tiny specks; connect nearby drawing strokes.
+              ink[:20,:]=0;ink[-30:,:]=0;ink[:,:12]=0;ink[:,-12:]=0
+              kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
+              ink=cv2.morphologyEx(ink,cv2.MORPH_CLOSE,kernel,iterations=1)
+              n,labels,stats,cent=cv2.connectedComponentsWithStats(ink,8)
+              comps=[]
+              for i in range(1,n):
+                  x,y,w,h,area=map(int,stats[i])
+                  if area<35 or (w<8 and h<8): continue
+                  # Ignore long page separators but keep axes/grid lines inside larger clusters.
+                  if w>img.shape[1]*.92 and h<8: continue
+                  if h>img.shape[0]*.85 and w<8: continue
+                  comps.append([x,y,x+w,y+h,area])
+              merged=merge_boxes(comps,24)
+              rows=[]
+              for x0,y0,x1,y1,area in merged:
+                  w=x1-x0;h=y1-y0
+                  if area<80 or (w<25 and h<25): continue
+                  rows.append({'x0':x0,'y0':y0,'x1':x1,'y1':y1,'w':w,'h':h,'ink_area':area})
+              rows.sort(key=lambda z:(z['y0'],z['x0']))
+              result[str(printed)]={'physical_pdf_page':physical,'half':half,'width_px':img.shape[1],'height_px':img.shape[0],'components':rows}
+
+          out=Path('ege-matematika-baza-demoversiya-2026/source-diagnostics/VISUAL-COMPONENTS.json')
+          out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Commit component map
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-matematika-baza-demoversiya-2026/source-diagnostics/VISUAL-COMPONENTS.json
+          git diff --cached --quiet || { git commit -m 'Add base mathematics source visual component map'; git push origin HEAD:main; }
