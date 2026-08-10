@@ -1,0 +1,28 @@
+name: Apply one-shot base mathematics mobile overflow fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/math-base-mobile-overflow-fix.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python ege-matematika-baza-demoversiya-2026/scripts/fix_mobile_grid_overflow.py
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm ege-matematika-baza-demoversiya-2026/scripts/fix_mobile_grid_overflow.py .github/workflows/math-base-mobile-overflow-fix.yml
+          git add ege-matematika-baza-demoversiya-2026/templates/T123-shell.html
+          git commit -m 'Fix mobile table overflow in base mathematics 2026'
+          git push origin HEAD:main
