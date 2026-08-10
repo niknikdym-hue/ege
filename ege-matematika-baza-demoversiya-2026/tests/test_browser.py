@@ -83,7 +83,6 @@ with sync_playwright() as pw:
     set_variant(page,2,1);v=js_variant(page,2);code=str(v['canonical_forms'][0]);sels=page.locator('.mb-select[data-pos]')
     sels.nth(0).select_option(code[0])
     assert not page.evaluate('window.EKSAMIO_MATH_BASE_TEST.isAnswered(2)')
-    # One-to-one UI disables a choice already used in another position.
     assert sels.nth(1).locator(f'option[value="{code[0]}"]').is_disabled()
     saved=page.evaluate(f"localStorage.getItem('{KEY}')")
     page.set_content(document(saved),wait_until='load')
@@ -121,7 +120,8 @@ with sync_playwright() as pw:
     assert page.locator('#mb-score').inner_text()=='21/21'
     assert page.locator('#mb-answered').inner_text()=='21/21'
     assert page.locator('.mb-review-item').count()==21
-    assert 'Официально принимаемый ответ' in page.locator('#mb-review').inner_text()
+    # Details are intentionally collapsed; text_content() verifies the answer disclosure exists in the DOM after finish.
+    assert 'Официально принимаемый ответ' in (page.locator('#mb-review').text_content() or '')
     if EVIDENCE:page.screenshot(path=EVIDENCE/'results-1280.png',full_page=True)
 
     # Official reference material is actually available as four rendered FIPI pages.
