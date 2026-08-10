@@ -12,7 +12,9 @@ from latex2mathml.converter import convert as latex_to_mathml
 ROOT=Path(__file__).resolve().parents[1]
 REPO=ROOT.parent
 PREFIX='ege-matematika-baza-demoversiya-2026'
-PACKAGE_VERSION='1.0'
+PACKAGE_VERSION='1.1'
+CONTENT_VERSION='2026.2'
+STORAGE_KEY='eksamio_ege_math_base_demo_2026_v1_1'
 ZIP_NAME=f'{PREFIX}-v{PACKAGE_VERSION}.zip'
 MAX_T123=45000
 TARGET_BLOCK=41000
@@ -21,11 +23,14 @@ PART_CHARS=26000
 
 def load_json(name):
     return json.loads((ROOT/name).read_text(encoding='utf-8'))
-
 def dump_json(path,data):
     Path(path).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-
 def bsize(text): return len(text.encode('utf-8'))
+def fix_typography(value):
+    if isinstance(value,str):return value.replace('ꞏ','·')
+    if isinstance(value,list):return [fix_typography(x) for x in value]
+    if isinstance(value,dict):return {k:fix_typography(v) for k,v in value.items()}
+    return value
 
 def mathml(latex):
     if not latex:return None
@@ -53,7 +58,7 @@ def check_gates():
     return {'task_map':'PASS','literal_layout':23,'formula_glyph':6,'visual_assets':25}
 
 def enhance_task_map():
-    tm=load_json(f'{PREFIX}-TASK-MAP.json')
+    tm=fix_typography(load_json(f'{PREFIX}-TASK-MAP.json'))
     tasks=[]
     for task in tm['tasks']:
         out={'number':task['number'],'variants':[]}
@@ -70,6 +75,8 @@ def enhance_task_map():
                 v['right_html']=[]
             out['variants'].append(v)
         tasks.append(out)
+    encoded=json.dumps(tasks,ensure_ascii=False)
+    if 'ꞏ' in encoded:raise RuntimeError('Typography regression: malformed middle-dot remains in enhanced task map')
     return tasks
 
 def chunk_items(items,prefix,suffix):
@@ -95,7 +102,7 @@ def write_metadata(tasks,gate_summary):
     exam=load_json(f'{PREFIX}-EXAM-MAP.json')
     exam_data={
         'exam':'ЕГЭ','subject':'математика','level':'базовый','sourceYear':2026,'packageVersion':PACKAGE_VERSION,
-        'durationMinutes':180,'maxPrimaryScore':21,'storageKey':exam['storage_key'],'permanentUrl':exam['permanent_url'],
+        'durationMinutes':180,'maxPrimaryScore':21,'storageKey':STORAGE_KEY,'permanentUrl':exam['permanent_url'],
         'officialExampleCount':70,'tasks':tasks
     }
     dump_json(ROOT/f'{PREFIX}-EXAM-DATA.json',exam_data)
@@ -104,7 +111,7 @@ def write_metadata(tasks,gate_summary):
         'header_footer_included':False,'canonical_year_free':True,
         'result_contract':{'automatic_scoring':True,'primary_score':'0–21','test_score_conversion':False},
         'variant_contract':{'one_official_example_per_position':True,'student_selects_variant':False,'variant_persists_after_reload':True,'official_examples_total':70},
-        'interaction_contract':{'numeric_input':'strict canonical input','matching_selects_4':'four real selects; system assembles code','checkboxes':'real checkboxes; system assembles set','row_checkboxes':'real row selection; system assembles set','browser_test_uses_real_controls':True},
+        'interaction_contract':{'numeric_input':'numeric syntax is validated independently from answer correctness; dot normalizes to comma; raw invalid input is preserved','matching_selects_4':'four real selects; system assembles code','checkboxes':'real checkboxes; system assembles set','row_checkboxes':'real row selection; system assembles set','browser_test_uses_real_controls':True},
         'release_gate_summary':gate_summary
     }
     dump_json(ROOT/f'{PREFIX}-PACKAGE-CONTRACT.json',contract)
@@ -129,20 +136,20 @@ def write_metadata(tasks,gate_summary):
 
 def build_blocks(tasks):
     shell=(ROOT/'templates'/'T123-shell.html').read_text(encoding='utf-8')
+    shell=re.sub(r'packageVersion:"[^"]+"',f'packageVersion:"{PACKAGE_VERSION}"',shell)
+    shell=re.sub(r'contentVersion:"[^"]+"',f'contentVersion:"{CONTENT_VERSION}"',shell)
+    shell=re.sub(r'storageKey:"[^"]+"',f'storageKey:"{STORAGE_KEY}"',shell)
     runtime=(ROOT/'templates'/'runtime.js').read_text(encoding='utf-8')
     blocks=[shell]
     blocks.extend(chunk_items(tasks,'<script>window.EKSAMIO_MATH_BASE.tasks.push(...',' );</script>\n'.replace(' ','')))
-    # Official task visuals, lossless source crops.
     for path in sorted((ROOT/'assets').glob('*.webp')):
         append_parts(blocks,'assetParts',path.stem,base64.b64encode(path.read_bytes()).decode('ascii'))
-    # Official reference pages supplied with the examination: printed pages 4–7.
     for n in range(4,8):
         path=ROOT/'source-evidence'/'printed-pages'/f'page-{n:02d}.webp'
         append_parts(blocks,'refParts',n,base64.b64encode(path.read_bytes()).decode('ascii'))
     blocks.append('<script>\n'+runtime+'\n</script>\n')
     for i,text in enumerate(blocks,1):
         if bsize(text)>=MAX_T123:raise RuntimeError(f'T123 block {i} is {bsize(text)} bytes (limit {MAX_T123})')
-    # Clear previous generated T123s, then write stable order.
     for old in ROOT.glob(f'{PREFIX}-T123-*.txt'):old.unlink()
     names=[]
     for i,text in enumerate(blocks,1):
@@ -151,6 +158,7 @@ def build_blocks(tasks):
 
 def update_exam_map(t123):
     path=ROOT/f'{PREFIX}-EXAM-MAP.json';data=json.loads(path.read_text(encoding='utf-8'))
+    data['package_version']=PACKAGE_VERSION;data['storage_key']=STORAGE_KEY
     data['t123_order']=t123;data['build_status']='BUILT';data['source_gate_status']='PASS';data['content_lock_status']='LOCKED';data['release_status']='BUILT_PENDING_TESTS'
     dump_json(path,data)
 
@@ -178,6 +186,6 @@ def manifest_and_zip():
 
 if __name__=='__main__':
     gates=check_gates();tasks=enhance_task_map();write_metadata(tasks,gates);t123=build_blocks(tasks);write_installation(t123);update_exam_map(t123);build_preview(t123);out=manifest_and_zip()
-    evidence={'status':'BUILT_PENDING_TESTS','package':out.name,'t123_blocks':len(t123),'t123_max_bytes':max((ROOT/n).stat().st_size for n in t123),'official_examples':sum(len(t['variants']) for t in tasks),'assets':len(list((ROOT/'assets').glob('*.webp'))),'reference_pages':[4,5,6,7]}
+    evidence={'status':'BUILT_PENDING_TESTS','package':out.name,'package_version':PACKAGE_VERSION,'content_version':CONTENT_VERSION,'storage_key':STORAGE_KEY,'t123_blocks':len(t123),'t123_max_bytes':max((ROOT/n).stat().st_size for n in t123),'official_examples':sum(len(t['variants']) for t in tasks),'assets':len(list((ROOT/'assets').glob('*.webp'))),'reference_pages':[4,5,6,7],'acceptance_fixes':['numeric input syntax decoupled from answer correctness','raw invalid numeric input persists without stale-value fallback','task 1 integer-answer hint','Нꞏм normalized to Н·м']}
     dump_json(ROOT/f'{PREFIX}-BUILD-EVIDENCE.json',evidence)
     print(json.dumps(evidence,ensure_ascii=False,indent=2))
