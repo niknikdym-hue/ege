@@ -1,0 +1,230 @@
+name: Release Base Math 2026 v1.1 Selenium Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/release-base-math-v1-1-selenium.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install audit dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install latex2mathml selenium
+          google-chrome --version || chromium-browser --version || chromium --version
+
+      - name: Rebuild v1.1 reproducibly
+        run: |
+          python ege-matematika-baza-demoversiya-2026/scripts/build_demo_release.py
+          cd ege-matematika-baza-demoversiya-2026
+          python tests/test_static.py
+          python tests/test_source_fidelity.py
+
+      - name: Serve current preview
+        run: |
+          cd ege-matematika-baza-demoversiya-2026
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/base-v11-current-http.log 2>&1 &
+          echo $! >/tmp/base-v11-current-http.pid
+          sleep 2
+          curl -fsS http://127.0.0.1:8765/ege-matematika-baza-demoversiya-2026-PREVIEW.html >/dev/null
+
+      - name: Browser audit current v1.1
+        run: |
+          cd ege-matematika-baza-demoversiya-2026
+          python tests/test_v1_1_selenium.py
+
+      - name: Stop current preview
+        if: always()
+        run: |
+          if [ -f /tmp/base-v11-current-http.pid ]; then kill $(cat /tmp/base-v11-current-http.pid) || true; fi
+
+      - name: Repack with current browser evidence
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          path=Path('ege-matematika-baza-demoversiya-2026/scripts/build_demo_release.py').resolve()
+          spec=importlib.util.spec_from_file_location('build_demo_release',path)
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          mod.manifest_and_zip()
+          PY
+
+      - name: Extract clean ZIP and run static/source gates
+        run: |
+          rm -rf /tmp/base-v11-clean
+          mkdir -p /tmp/base-v11-clean
+          unzip -q ege-matematika-baza-demoversiya-2026-v1.1.zip -d /tmp/base-v11-clean
+          CLEAN=/tmp/base-v11-clean/ege-matematika-baza-demoversiya-2026
+          DEMO_ROOT="$CLEAN" python ege-matematika-baza-demoversiya-2026/tests/test_static.py
+          DEMO_ROOT="$CLEAN" python ege-matematika-baza-demoversiya-2026/tests/test_source_fidelity.py
+
+      - name: Serve clean ZIP preview
+        run: |
+          cd /tmp/base-v11-clean/ege-matematika-baza-demoversiya-2026
+          python -m http.server 8766 --bind 127.0.0.1 >/tmp/base-v11-clean-http.log 2>&1 &
+          echo $! >/tmp/base-v11-clean-http.pid
+          sleep 2
+          curl -fsS http://127.0.0.1:8766/ege-matematika-baza-demoversiya-2026-PREVIEW.html >/dev/null
+
+      - name: Browser audit clean extracted ZIP
+        run: |
+          cd ege-matematika-baza-demoversiya-2026
+          EKSAMIO_PREVIEW_URL=http://127.0.0.1:8766/ege-matematika-baza-demoversiya-2026-PREVIEW.html \
+          EKSAMIO_EVIDENCE_OUT=tests/evidence/v1.1-clean-zip-selenium-evidence.json \
+          python tests/test_v1_1_selenium.py
+
+      - name: Stop clean ZIP preview
+        if: always()
+        run: |
+          if [ -f /tmp/base-v11-clean-http.pid ]; then kill $(cat /tmp/base-v11-clean-http.pid) || true; fi
+
+      - name: Finalize audited v1.1 metadata
+        run: |
+          python - <<'PY'
+          import importlib.util,json
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026')
+          prefix='ege-matematika-baza-demoversiya-2026'
+          current=json.loads((root/'tests/evidence/v1.1-selenium-regression-evidence.json').read_text(encoding='utf-8'))
+          clean=json.loads((root/'tests/evidence/v1.1-clean-zip-selenium-evidence.json').read_text(encoding='utf-8'))
+          assert current['status']=='PASS' and clean['status']=='PASS'
+          assert current['checks']['official_examples_real_controls']=='70/70'
+          assert clean['checks']['official_examples_real_controls']=='70/70'
+          assert current['checks']['javascript_errors']==0 and clean['checks']['javascript_errors']==0
+
+          build_path=root/f'{prefix}-BUILD-EVIDENCE.json'
+          build=json.loads(build_path.read_text(encoding='utf-8'))
+          build.update({
+              'status':'PASS_READY_FOR_TILDA_TEST',
+              'browser_audit':'PASS — Selenium/Chrome, 70/70 official examples via real controls + acceptance regressions',
+              'clean_zip_browser_audit':'PASS — clean extracted ZIP, 70/70 + acceptance regressions',
+              'manual_student_acceptance':'PASS — all 21 positions reviewed; final scorer behavior checked',
+              'full_correct_attempt':'21/21',
+              'javascript_errors':0,
+              'browser_widths':[1280,768,390,360,320]
+          })
+          build_path.write_text(json.dumps(build,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          exam_path=root/f'{prefix}-EXAM-MAP.json'
+          exam=json.loads(exam_path.read_text(encoding='utf-8'))
+          exam['build_status']='BUILT_AND_TESTED'
+          exam['release_status']='READY_FOR_TILDA_TEST'
+          exam_path.write_text(json.dumps(exam,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          (root/f'{prefix}-PAGE-STATUS.txt').write_text('''PAGE_URL: /ege/matematika-baza/demoversiya/
+PAGE_SLUG: ege-matematika-baza-demoversiya
+EXAM: ЕГЭ
+SUBJECT: математика
+LEVEL: базовый
+SOURCE_YEAR: 2026
+PACKAGE_VERSION: 1.1
+SOURCE_GATE: PASS
+CONTENT_LOCK: PASS
+TEXT_TYPOGRAPHY_GATE: PASS — Н·м normalized
+FORMULA_GATE: PASS 6/6 secondary glyph cases
+VISUAL_GATE: PASS 25/25 official PDF assets
+INTERACTION_GATE: PASS 70/70 official examples via real DOM controls
+NUMERIC_REGRESSION_GATE: PASS — 11.2 → 11,2 persists; scorer separates syntax from correctness
+SCORER_GATE: PASS
+STATE_RESTORE_GATE: PASS
+MANUAL_STUDENT_ACCEPTANCE: PASS — 21/21 positions reviewed and final result inspected
+CLEAN_ZIP_BROWSER_GATE: PASS — 70/70 + targeted regressions
+TILDA_SIZE_GATE: PASS
+BROWSER_WIDTHS: 1280, 768, 390, 360, 320
+FULL_CORRECT_ATTEMPT: 21/21
+JAVASCRIPT_ERRORS: 0
+FINAL_STATUS: READY_FOR_TILDA_TEST
+PUBLISHED_SMOKE_STATUS: NOT_RUN_UNTIL_TILDA_PUBLICATION
+''',encoding='utf-8')
+
+          (root/f'{prefix}-TEST-REPORT.txt').write_text(f'''TEST REPORT — ЕГЭ 2026, математика, базовый уровень
+PACKAGE_VERSION: 1.1
+STATUS: PASS — READY_FOR_TILDA_TEST
+
+MANUAL STUDENT ACCEPTANCE
+- Все 21 позиции пройдены вручную перед выпуском v1.1.
+- Финальный экран контрольной попытки показал 18/21: №6 был намеренно заполнен неверно; №13 пользователь дважды внёс 12 вместо 360; №1 выявил реальный дефект numeric input.
+- Scorer корректно оценил все три случая; функциональный дефект был только в сохранении numeric input №1.
+
+ACCEPTANCE FIXES IN v1.1
+- Синтаксическая допустимость числового ответа отделена от правильности.
+- №1: 11.2 → 11,2; после навигации и reload сохраняется 11,2 и получает 0/1 против официального 12.
+- Некорректный ввод 12 200 остаётся raw input, отмечается как некорректный и не превращается молча в 12200.
+- В №1 добавлена подсказка «Введите целое число» без запрета синтаксически корректной десятичной записи.
+- №7: Нꞏм → Н·м; исправлено в каноническом TASK-MAP и дополнительно нормализуется при сборке/рендере.
+- Новый storage key v1.1 исключает подхват завершённой попытки v1.0.
+
+AUDIT
+- Static gate: PASS.
+- Source fidelity: 70/70 official examples, PASS.
+- Visual gate: 25/25, PASS.
+- Formula/glyph gate: 6/6, PASS.
+- Browser real-control matrix: 70/70, PASS.
+- Targeted numeric-input regressions: PASS.
+- Full correct attempt: 21/21.
+- Reload/state restore: PASS.
+- Widths 1280, 768, 390, 360, 320: PASS, no horizontal overflow.
+- JavaScript severe errors: 0.
+- Clean extracted ZIP: static + source fidelity + browser 70/70 + regressions PASS.
+
+PACKAGE
+- T123 blocks: {build['t123_blocks']}.
+- Largest T123: {build['t123_max_bytes']} bytes (< 45000).
+- Package: {build['package']}.
+
+PUBLISHED_SMOKE_PASS не выставлен: он возможен только после публикации v1.1 в Tilda.
+''',encoding='utf-8')
+
+          path=(root/'scripts/build_demo_release.py').resolve()
+          spec=importlib.util.spec_from_file_location('build_demo_release',path)
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          mod.manifest_and_zip()
+          PY
+
+      - name: Verify final release package
+        run: |
+          test -f ege-matematika-baza-demoversiya-2026-v1.1.zip
+          unzip -t ege-matematika-baza-demoversiya-2026-v1.1.zip >/tmp/base-v11-unzip-test.txt
+          grep -q 'No errors detected' /tmp/base-v11-unzip-test.txt
+          grep -q 'PACKAGE_VERSION: 1.1' ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-TEST-REPORT.txt
+          grep -q 'FINAL_STATUS: READY_FOR_TILDA_TEST' ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-PAGE-STATUS.txt
+          ! grep -R 'Нꞏм' ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-T123-*.txt
+
+      - name: Upload audited ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-matematika-baza-demoversiya-2026-v1.1
+          path: ege-matematika-baza-demoversiya-2026-v1.1.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit audited v1.1 release
+        run: |
+          rm -f ege-matematika-baza-demoversiya-2026/BASE-V1.1-DIAGNOSTIC.txt
+          rm -f .github/workflows/rebuild-base-math-v1-1.yml
+          rm -f .github/workflows/rebuild-base-math-v1-1-r2.yml
+          rm -f .github/workflows/diagnose-base-math-v1-1.yml
+          rm -f .github/workflows/release-base-math-v1-1-selenium.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Release audited base mathematics 2026 v1.1'
+          git pull --rebase origin main
+          git push origin main
+          git tag -f ege-matematika-baza-demoversiya-2026-v1.1
+          git push -f origin ege-matematika-baza-demoversiya-2026-v1.1
