@@ -1,0 +1,75 @@
+name: Canonical mathematics 2026 source preprocessing
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - matematika-source-2026/scripts/build_canonical_printed_pages.py
+      - .github/workflows/math-2026-canonical-preprocessing.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preprocess:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: pip install --quiet pymupdf pillow
+      - name: Run canonical preprocessor
+        id: preprocess
+        continue-on-error: true
+        run: python matematika-source-2026/scripts/build_canonical_printed_pages.py > math-2026-canonical-preprocessing.log 2>&1
+      - name: Save diagnostic on failure
+        if: steps.preprocess.outcome == 'failure'
+        run: |
+          cat math-2026-canonical-preprocessing.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add math-2026-canonical-preprocessing.log
+          git commit -m 'Record mathematics 2026 canonical preprocessing diagnostic' || true
+          git push origin HEAD:main
+          exit 1
+      - name: Validate canonical geometry and known source pages
+        if: steps.preprocess.outcome == 'success'
+        run: |
+          set -euo pipefail
+          test "$(find matematika-source-2026/canonical-printed-pages/base-demo -name 'page-*.txt' | wc -l)" -eq 29
+          test "$(find matematika-source-2026/canonical-printed-pages/base-spec -name 'page-*.txt' | wc -l)" -eq 12
+          grep -q 'Шоколадка стоит 25 рублей' matematika-source-2026/canonical-printed-pages/base-demo/page-08.txt
+          grep -q '365 суток' matematika-source-2026/canonical-printed-pages/base-demo/page-09.txt
+          grep -q '15,8 секунды' matematika-source-2026/canonical-printed-pages/base-demo/page-09.txt
+          ! grep -q '365 суток' matematika-source-2026/canonical-printed-pages/base-demo/page-10.txt
+          grep -q 'В бак, имеющий форму' matematika-source-2026/canonical-printed-pages/base-demo/page-20.txt
+          grep -q 'Список заданий викторины' matematika-source-2026/canonical-printed-pages/base-demo/page-28.txt
+          grep -q 'Система оценивания выполнения отдельных заданий' matematika-source-2026/canonical-printed-pages/base-demo/page-29.txt
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base=Path('matematika-source-2026/canonical-printed-pages/base-demo/PAGE-MAP.json')
+          d=json.loads(base.read_text(encoding='utf-8'))
+          assert d['generated_printed_pages']==29
+          widths={round(p['visual_width_pt'],1) for p in d['pages']}
+          heights={round(p['visual_height_pt'],1) for p in d['pages']}
+          assert widths == {420.9}, widths
+          assert heights == {595.3}, heights
+          c=json.loads(Path('ege-matematika-baza-demoversiya-2026/source-diagnostics/canonical-coordinates/page-20.json').read_text(encoding='utf-8'))
+          assert all(-2 <= w['x0'] <= 423 for w in c['words'])
+          assert all(-2 <= w['x1'] <= 423 for w in c['words'])
+          print('Canonical geometry: PASS')
+          PY
+          test "$(find ege-matematika-baza-demoversiya-2026/source-evidence/printed-pages -name 'page-*.webp' | wc -l)" -eq 29
+      - name: Commit canonical preprocessing outputs
+        if: steps.preprocess.outcome == 'success'
+        run: |
+          rm -f math-2026-canonical-preprocessing.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add matematika-source-2026/canonical-printed-pages \
+                  ege-matematika-baza-demoversiya-2026/source-diagnostics/canonical-coordinates \
+                  ege-matematika-baza-demoversiya-2026/source-evidence/printed-pages
+          git diff --cached --quiet || { git commit -m 'Rebuild mathematics 2026 canonical printed-page sources'; git push origin HEAD:main; }
