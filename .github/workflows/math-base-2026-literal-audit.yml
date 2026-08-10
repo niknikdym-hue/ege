@@ -1,0 +1,39 @@
+name: Literal audit base mathematics 2026
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ege-matematika-baza-demoversiya-2026/content/**
+      - ege-matematika-baza-demoversiya-2026/scripts/validate_literal_source.py
+      - .github/workflows/math-base-2026-literal-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run literal source audit
+        id: audit
+        continue-on-error: true
+        run: python ege-matematika-baza-demoversiya-2026/scripts/validate_literal_source.py > math-base-literal-audit.log 2>&1
+      - name: Commit evidence and diagnostic
+        run: |
+          cat math-base-literal-audit.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-LITERAL-AUDIT-EVIDENCE.json
+          if [ "${{ steps.audit.outcome }}" = "failure" ]; then
+            git add math-base-literal-audit.log
+          else
+            git rm -f --ignore-unmatch math-base-literal-audit.log || true
+          fi
+          git diff --cached --quiet || { git commit -m 'Record base mathematics 2026 literal audit evidence'; git push origin HEAD:main; }
+          test "${{ steps.audit.outcome }}" = "success"
