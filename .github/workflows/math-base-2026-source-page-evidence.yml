@@ -1,0 +1,75 @@
+name: Render base mathematics 2026 printed-page source evidence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/math-base-2026-source-page-evidence.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: pip install --quiet pymupdf pillow
+      - name: Render printed pages 4-29 from official PDF
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, hashlib
+          import fitz
+          from PIL import Image
+
+          pdf=Path('matematika-source-2026/original/МА-11 ЕГЭ 2026 ДЕМО_базовый.pdf')
+          out=Path('ege-matematika-baza-demoversiya-2026/source-evidence/printed-pages')
+          out.mkdir(parents=True,exist_ok=True)
+          doc=fitz.open(pdf)
+          manifest=[]
+          for printed in range(4,30):
+              physical=(printed+1)//2
+              half='left' if printed%2==1 else 'right'
+              page=doc[physical-1]
+              pix=page.get_pixmap(matrix=fitz.Matrix(2,2), alpha=False)
+              img=Image.frombytes('RGB',[pix.width,pix.height],pix.samples)
+              # Rendered page is in display orientation. Official imposed printed pages
+              # are the two equal vertical halves used by the source coordinate map.
+              mid=img.width//2
+              crop=img.crop((0,0,mid,img.height) if half=='left' else (mid,0,img.width,img.height))
+              path=out/f'page-{printed:02d}.webp'
+              crop.save(path,'WEBP',quality=92,method=6)
+              data=path.read_bytes()
+              manifest.append({
+                  'printed_page':printed,'physical_pdf_page':physical,'half':half,
+                  'width_px':crop.width,'height_px':crop.height,'bytes':len(data),
+                  'sha256':hashlib.sha256(data).hexdigest(),'file':str(path)
+              })
+          (out/'SOURCE-PAGE-EVIDENCE.json').write_text(json.dumps({
+              'source_pdf':str(pdf),'render_scale':2,'format':'webp','quality':92,
+              'pages':manifest
+          },ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Validate evidence set
+        run: |
+          test "$(find ege-matematika-baza-demoversiya-2026/source-evidence/printed-pages -name 'page-*.webp' | wc -l)" -eq 26
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('ege-matematika-baza-demoversiya-2026/source-evidence/printed-pages/SOURCE-PAGE-EVIDENCE.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          assert [x['printed_page'] for x in d['pages']] == list(range(4,30))
+          assert all(x['bytes']>1000 for x in d['pages'])
+          print('Source-page evidence: PASS')
+          PY
+      - name: Commit evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-matematika-baza-demoversiya-2026/source-evidence/printed-pages
+          git diff --cached --quiet || { git commit -m 'Add base mathematics 2026 printed-page source evidence'; git push origin HEAD:main; }
