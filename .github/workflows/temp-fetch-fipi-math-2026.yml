@@ -1,0 +1,36 @@
+name: Temporary FIPI math 2026 source export
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/temp-fetch-fipi-math-2026.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch-official-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download official FIPI mathematics 2026 bundle
+        run: |
+          set -euxo pipefail
+          mkdir -p /tmp/fipi-math-2026/out
+          curl -L --fail --retry 3 --connect-timeout 20 \
+            'https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2026/ma_11_2026.zip' \
+            -o /tmp/fipi-math-2026/ma_11_2026.zip
+          unzip -l /tmp/fipi-math-2026/ma_11_2026.zip
+          unzip -q /tmp/fipi-math-2026/ma_11_2026.zip -d /tmp/fipi-math-2026/out
+          find /tmp/fipi-math-2026/out -type f -maxdepth 3 -print
+          sha256sum /tmp/fipi-math-2026/out/* > /tmp/fipi-math-2026/SHA256SUMS.txt || true
+
+      - name: Upload official source bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: fipi-matematika-2026-official
+          path: |
+            /tmp/fipi-math-2026/out/**
+            /tmp/fipi-math-2026/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 7
