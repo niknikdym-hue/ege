@@ -1,0 +1,30 @@
+name: Diagnose base mathematics 2026 literal failures
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ege-matematika-baza-demoversiya-2026/scripts/diagnose_literal_failures.py
+      - .github/workflows/math-base-2026-literal-diff.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build literal diff diagnostics
+        run: python ege-matematika-baza-demoversiya-2026/scripts/diagnose_literal_failures.py
+      - name: Commit diagnostics
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-matematika-baza-demoversiya-2026/source-diagnostics/LITERAL-FAILURE-DIFF.json \
+                  ege-matematika-baza-demoversiya-2026/source-diagnostics/LITERAL-FAILURE-DIFF.txt
+          git diff --cached --quiet || { git commit -m 'Add base mathematics literal failure diagnostics'; git push origin HEAD:main; }
