@@ -1,0 +1,50 @@
+name: Apply base mathematics 2026 literal corrections
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ege-matematika-baza-demoversiya-2026/scripts/apply_literal_corrections_round1.py
+      - .github/workflows/math-base-2026-literal-corrections.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply corrections and rebuild content maps
+        id: run
+        continue-on-error: true
+        run: |
+          python ege-matematika-baza-demoversiya-2026/scripts/apply_literal_corrections_round1.py > math-base-literal-corrections.log 2>&1
+          python ege-matematika-baza-demoversiya-2026/scripts/build_task_map.py >> math-base-literal-corrections.log 2>&1
+          python ege-matematika-baza-demoversiya-2026/scripts/build_acceptance_cases.py >> math-base-literal-corrections.log 2>&1
+          python ege-matematika-baza-demoversiya-2026/scripts/build_audit_matrix.py >> math-base-literal-corrections.log 2>&1
+          python ege-matematika-baza-demoversiya-2026/scripts/validate_literal_source.py >> math-base-literal-corrections.log 2>&1 || true
+          python ege-matematika-baza-demoversiya-2026/scripts/diagnose_literal_failures.py >> math-base-literal-corrections.log 2>&1 || true
+      - name: Save correction diagnostic on failure
+        if: steps.run.outcome == 'failure'
+        run: |
+          cat math-base-literal-corrections.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add math-base-literal-corrections.log
+          git commit -m 'Record base mathematics literal correction diagnostic' || true
+          git push origin HEAD:main
+          exit 1
+      - name: Commit corrected source content and evidence
+        if: steps.run.outcome == 'success'
+        run: |
+          cat math-base-literal-corrections.log
+          rm -f math-base-literal-corrections.log math-base-literal-audit.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --quiet || { git commit -m 'Correct base mathematics 2026 literal source content'; git push origin HEAD:main; }
