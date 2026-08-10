@@ -96,8 +96,9 @@ TEXT/FORMULA SOURCE GATE PASS: primary 41 direct + 23 layout + 6 formula/glyph =
     "Нꞏм normalized to Н·м"
   ]
 }
+STATIC PASS: 47 T123, max=39340 bytes, package=1.1
 Traceback (most recent call last):
-  File "/home/runner/work/ege/ege/ege-matematika-baza-demoversiya-2026/tests/test_static.py", line 18, in <module>
-    assert exam['packageVersion']=='1.0'
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError
+  File "/home/runner/work/ege/ege/ege-matematika-baza-demoversiya-2026/tests/test_source_fidelity.py", line 14, in <module>
+    g=generated[key];assert g['source_page']==s['source_page'],key;assert g['control']==s['control'],key;assert g['canonical_forms']==s['canonical_forms'],key;assert g.get('prompt_html')==s.get('prompt_html'),key;assert g.get('continuation_html')==s.get('continuation_html'),key
+                                                                                                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (7, 2)
