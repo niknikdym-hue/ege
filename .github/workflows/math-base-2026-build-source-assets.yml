@@ -1,0 +1,64 @@
+name: Build base mathematics 2026 official source assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ege-matematika-baza-demoversiya-2026/scripts/build_source_assets.py
+      - .github/workflows/math-base-2026-build-source-assets.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: pip install --quiet pillow numpy
+      - name: Build source crops
+        id: build
+        continue-on-error: true
+        run: python ege-matematika-baza-demoversiya-2026/scripts/build_source_assets.py > math-base-source-assets.log 2>&1
+      - name: Validate candidate set
+        if: steps.build.outcome == 'success'
+        id: validate
+        continue-on-error: true
+        run: |
+          python - <<'PY' >> math-base-source-assets.log 2>&1
+          import json
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026')
+          d=json.loads((root/'source-evidence/ASSET-CROP-EVIDENCE.json').read_text(encoding='utf-8'))
+          assert d['asset_count']==25
+          assert len(list((root/'assets').glob('*.webp')))==25
+          assert all(r['bytes']>200 for r in d['records'])
+          bad=[(r['id'],r['edge_nontext_ink_px']) for r in d['records'] if r['edge_nontext_ink_px']>20]
+          print('candidate assets=',d['asset_count'])
+          print('edge-review candidates=',bad)
+          print('Candidate source asset build: PASS (independent visual review still required)')
+          PY
+      - name: Save diagnostic on failure
+        if: steps.build.outcome == 'failure' || steps.validate.outcome == 'failure'
+        run: |
+          cat math-base-source-assets.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add math-base-source-assets.log
+          git commit -m 'Record base mathematics source asset diagnostic' || true
+          git push origin HEAD:main
+          exit 1
+      - name: Commit candidate source assets and evidence
+        if: steps.build.outcome == 'success' && steps.validate.outcome == 'success'
+        run: |
+          rm -f math-base-source-assets.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-matematika-baza-demoversiya-2026/assets \
+                  ege-matematika-baza-demoversiya-2026/source-evidence/ASSET-CROP-EVIDENCE.json \
+                  ege-matematika-baza-demoversiya-2026/source-diagnostics/ASSET-CROP-PREVIEWS.txt
+          git diff --cached --quiet || { git commit -m 'Build base mathematics 2026 official source crop candidates'; git push origin HEAD:main; }
