@@ -1,0 +1,28 @@
+name: Apply one-shot base mathematics runtime fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/math-base-runtime-fix.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python ege-matematika-baza-demoversiya-2026/scripts/fix_runtime_latex_matching.py
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm ege-matematika-baza-demoversiya-2026/scripts/fix_runtime_latex_matching.py .github/workflows/math-base-runtime-fix.yml
+          git add ege-matematika-baza-demoversiya-2026/templates/runtime.js
+          git commit -m 'Fix formula-only matching controls in base mathematics 2026'
+          git push origin HEAD:main
