@@ -23,5 +23,7 @@ for r in formula['records']:
  p=ROOT/r['source_page_file'];assert p.exists(),r['example'];assert hashlib.sha256(p.read_bytes()).hexdigest()==r['source_page_sha256'],r['example']
 for n in range(4,8):
  p=ROOT/'source-evidence'/'printed-pages'/f'page-{n:02d}.webp';assert p.exists() and p.stat().st_size>10000
-all_text='\n'.join(p.read_text(encoding='utf-8',errors='ignore') for p in ROOT.rglob('*') if p.is_file() and p.suffix.lower() in {'.txt','.json','.py','.js','.html','.yml','.md'});assert 'v2.6-literal-audited' not in all_text
+# The guard must inspect the package, not fail because the test source itself spells the old package marker.
+old_marker='v2.6-'+'literal-'+'audited'
+all_text='\n'.join(p.read_text(encoding='utf-8',errors='ignore') for p in ROOT.rglob('*') if p.is_file() and p.suffix.lower() in {'.txt','.json','.py','.js','.html','.yml','.md'});assert old_marker not in all_text
 print('SOURCE FIDELITY PASS: 70 examples, 25 complete source visuals, 6 formula/glyph cases')
