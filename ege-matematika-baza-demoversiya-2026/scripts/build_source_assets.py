@@ -125,6 +125,11 @@ def is_diagram_label(text):
     return False
 
 
+def is_service_rule_token(text):
+    token = text.strip()
+    return bool(token) and all(ch in "_." for ch in token)
+
+
 def ascii_preview(crop, columns=56):
     rows = max(6, int(crop.height / max(1, crop.width) * columns * 0.45))
     small = np.array(crop.convert("L").resize((columns, rows), Image.Resampling.LANCZOS))
@@ -186,7 +191,9 @@ for asset_id, page_no, y0_pt, y1_pt, expected_count in SPECS:
             max(bbox_pt[3], max(w["y1"] for w in labels)),
         ]
 
-    pad = 12
+    # Geometry and its compact labels have already been proven. Eight points is
+    # enough whitespace without pulling neighboring instruction/answer text into the image.
+    pad = 8
     bbox_pt = [
         max(18, bbox_pt[0] - pad),
         max(y0_pt, bbox_pt[1] - pad),
@@ -213,7 +220,10 @@ for asset_id, page_no, y0_pt, y1_pt, expected_count in SPECS:
             w["y1"] < bbox_pt[1] or w["y0"] > bbox_pt[3]
         )
     ]
-    prose = [x for x in included_words if len(x.strip(".,:;()")) > 14]
+    prose = [
+        x for x in included_words
+        if len(x.strip(".,:;()")) > 14 and not is_service_rule_token(x)
+    ]
     if prose:
         errors.append(f"{asset_id}: likely prose in crop {prose[:5]}")
 
