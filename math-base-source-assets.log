@@ -1,15 +1,4 @@
-{
-  "status": "FAIL",
-  "assets": 25,
-  "errors": [
-    "base-09-v2-grid-plan: detected geometry intersects official segment boundary {'top': 40, 'bottom': -1, 'left': 511, 'right': 63}",
-    "base-10-v2-wheel: detected geometry intersects official segment boundary {'top': 39, 'bottom': -2, 'left': 593, 'right': 50}",
-    "base-10-v3-fence-plan: detected geometry intersects official segment boundary {'top': 58, 'bottom': -2, 'left': 512, 'right': 88}",
-    "base-11-v1-tank: detected geometry intersects official segment boundary {'top': 3, 'bottom': 0, 'left': 613, 'right': 53}",
-    "base-11-v2-cut-prism: detected geometry intersects official segment boundary {'top': 41, 'bottom': -2, 'left': 614, 'right': 52}",
-    "base-12-v1-triangle-median: detected geometry intersects official segment boundary {'top': 27, 'bottom': -2, 'left': 567, 'right': 64}",
-    "base-13-v1-cone: detected geometry intersects official segment boundary {'top': 0, 'bottom': 4, 'left': 564, 'right': 67}",
-    "base-13-v2-pyramid: detected geometry intersects official segment boundary {'top': 41, 'bottom': -2, 'left': 566, 'right': 71}",
-    "base-13-v4-spheres: detected geometry intersects official segment boundary {'top': 45, 'bottom': -2, 'left': 547, 'right': 56}"
-  ]
-}
+  File "/home/runner/work/ege/ege/ege-matematika-baza-demoversiya-2026/scripts/build_source_assets.py", line 35
+    pad=12;bbox=[max(18,bbox[0]-pad),max(y0,bbox[1]-pad),min(coord['visual_width_pt']-18,bbox[2]+pad),min(y1,bbox[3]+pad)];cp=[int(bbox[0]*sx),int(bbox[1]*sy),int(np.ceil(bbox[2]*sx)),int(np.ceil(bbox[3]*sy))];crop=img.crop(tuple(cp));local=raw[cp[1]:cp[3],cp[0]:cp[2]]>0;e=min(5,max(1,min(local.shape)//4));edge=int(local[:e,:].sum()+local[-e:,:].sum()+local[:,:e].sum()+local[:,-e:].sum())if local.size else999999;path=ASSETS/f'{aid}.webp';crop.save(path,'WEBP',lossless=True,method=6);blob=path.read_bytes();included=[w['text']for w in coord['words']if not(w['x1']<bbox[0]or w['x0']>bbox[2]or w['y1']<bbox[1]or w['y0']>bbox[3])];prose=[x for x in included if len(x.strip('.,:;()'))>14]
+                                                                                                                                                                                                                                                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: expected 'else' after 'if' expression
