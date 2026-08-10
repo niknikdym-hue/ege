@@ -47,10 +47,9 @@ for key,v in content_by.items():
     require(v['control']==idx['control'], f'{key}: control {v["control"]} != index {idx["control"]}')
     require(bool(v.get('prompt_html')), f'{key}: prompt_html missing')
     if idx.get('visual'):
-        # Some official examples have a visual embedded in a matching/table structure.
-        # Every substantial standalone visual must either have an asset_id or be explicitly formula/table-only.
-        if idx.get('visual_type') not in {'four_function_graphs'} or key != (7,3):
-            require(bool(v.get('asset_id')), f'{key}: visual example has no asset_id')
+        # A source visual must have a dedicated asset, except for a purely symbolic
+        # visual (for example □ + □□ + □□□) that is captured literally as formula_latex.
+        require(bool(v.get('asset_id') or v.get('formula_latex')), f'{key}: visual example has neither asset_id nor literal formula')
     if v['control']=='matching_selects_4':
         left=v.get('left') or v.get('left_latex')
         right=v.get('right') or v.get('right_latex')
