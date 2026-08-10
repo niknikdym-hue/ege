@@ -69,20 +69,27 @@ FAIL ('21.2', 'prompt_html', 'Прямоугольник разбит на че�
 }
 TEXT/FORMULA SOURCE GATE PASS: primary 41 direct + 23 layout + 6 formula/glyph = 70 official examples
 {
-  "status": "FAIL",
+  "status": "PASS",
   "assets": 25,
-  "errors": [
-    "base-09-v2-grid-plan: non-text geometry touches crop edge (979)",
-    "base-10-v2-wheel: non-text geometry touches crop edge (204)",
-    "base-10-v3-fence-plan: non-text geometry touches crop edge (60)",
-    "base-11-v1-tank: non-text geometry touches crop edge (484)",
-    "base-11-v2-cut-prism: non-text geometry touches crop edge (145)",
-    "base-12-v1-triangle-median: non-text geometry touches crop edge (100)",
-    "base-12-v2-circle-chord: non-text geometry touches crop edge (75)",
-    "base-12-v3-right-triangle: non-text geometry touches crop edge (270)",
-    "base-13-v1-cone: non-text geometry touches crop edge (43)",
-    "base-13-v2-pyramid: non-text geometry touches crop edge (95)",
-    "base-13-v4-spheres: non-text geometry touches crop edge (208)",
-    "base-18-v3-number-line: non-text geometry touches crop edge (27)"
+  "errors": []
+}
+{
+  "status": "BUILT_PENDING_TESTS",
+  "package": "ege-matematika-baza-demoversiya-2026-v1.0.zip",
+  "t123_blocks": 47,
+  "t123_max_bytes": 39342,
+  "official_examples": 70,
+  "assets": 25,
+  "reference_pages": [
+    4,
+    5,
+    6,
+    7
   ]
 }
+STATIC PASS: 47 T123, max=39342 bytes
+Traceback (most recent call last):
+  File "/home/runner/work/ege/ege/ege-matematika-baza-demoversiya-2026/tests/test_source_fidelity.py", line 26, in <module>
+    all_text='\n'.join(p.read_text(encoding='utf-8',errors='ignore') for p in ROOT.rglob('*') if p.is_file() and p.suffix.lower() in {'.txt','.json','.py','.js','.html','.yml','.md'});assert 'v2.6-literal-audited' not in all_text
+                                                                                                                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
