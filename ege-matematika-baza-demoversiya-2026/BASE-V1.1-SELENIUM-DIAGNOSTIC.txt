@@ -1,6 +1,6 @@
 DEPS=success
 SERVER=success
-BROWSER=failure
+BROWSER=success
 
 === dependencies ===
 Collecting selenium
@@ -34,7 +34,7 @@ Collecting pysocks!=1.5.7,<2.0,>=1.5.6 (from urllib3[socks]<3.0,>=2.6.3->seleniu
 Collecting h11<1,>=0.16.0 (from wsproto>=0.14->trio-websocket<1.0,>=0.12.2->selenium)
   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
 Downloading selenium-4.47.0-py3-none-any.whl (9.5 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.5/9.5 MB 126.8 MB/s  0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.5/9.5 MB 142.7 MB/s  0:00:00
 Downloading trio-0.33.0-py3-none-any.whl (510 kB)
 Downloading trio_websocket-0.12.2-py3-none-any.whl (21 kB)
 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
@@ -59,21 +59,41 @@ Google Chrome 150.0.7871.128
 ChromeDriver 150.0.7871.124 (9261fd0a595ac4964ea84e6bd4a025c1173a2ffa-refs/branch-heads/7871@{#3359})
 
 === server ===
-127.0.0.1 - - [10/Aug/2026 21:08:48] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 200 -
-127.0.0.1 - - [10/Aug/2026 21:08:55] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 200 -
-127.0.0.1 - - [10/Aug/2026 21:08:55] code 404, message File not found
-127.0.0.1 - - [10/Aug/2026 21:08:55] "GET /favicon.ico HTTP/1.1" 404 -
-127.0.0.1 - - [10/Aug/2026 21:08:55] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 304 -
-127.0.0.1 - - [10/Aug/2026 21:09:02] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 304 -
-127.0.0.1 - - [10/Aug/2026 21:09:03] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 304 -
-127.0.0.1 - - [10/Aug/2026 21:09:03] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 304 -
-127.0.0.1 - - [10/Aug/2026 21:09:03] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 304 -
+127.0.0.1 - - [10/Aug/2026 21:12:43] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 21:12:51] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 21:12:52] code 404, message File not found
+127.0.0.1 - - [10/Aug/2026 21:12:52] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [10/Aug/2026 21:12:52] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 304 -
+127.0.0.1 - - [10/Aug/2026 21:13:00] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 304 -
+127.0.0.1 - - [10/Aug/2026 21:13:00] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 304 -
+127.0.0.1 - - [10/Aug/2026 21:13:00] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 304 -
+127.0.0.1 - - [10/Aug/2026 21:13:00] "GET /ege-matematika-baza-demoversiya-2026-PREVIEW.html HTTP/1.1" 304 -
 
 === browser ===
-Traceback (most recent call last):
-  File "/home/runner/work/ege/ege/ege-matematika-baza-demoversiya-2026/tests/test_v1_1_selenium.py", line 173, in <module>
-    main()
-  File "/home/runner/work/ege/ege/ege-matematika-baza-demoversiya-2026/tests/test_v1_1_selenium.py", line 164, in main
-    assert not severe,severe
-           ^^^^^^^^^^
-AssertionError: [{'level': 'SEVERE', 'message': 'http://127.0.0.1:8765/favicon.ico - Failed to load resource: the server responded with a status of 404 (File not found)', 'source': 'network', 'timestamp': 1786396135348}]
+{
+  "status": "PASS",
+  "package_version": "1.1",
+  "checks": {
+    "official_examples_real_controls": "70/70",
+    "task1_decimal_wrong_persists": "PASS: 11.2 → 11,2 → navigation/reload 11,2; scorer 0/1",
+    "task1_correct_integer": "PASS: 12 scores 1/1",
+    "decimal_dot_normalization": "PASS: 0.25 → 0,25 → reload 0,25",
+    "invalid_space_preserved": "PASS: 12 200 remains raw invalid input and never becomes 12200",
+    "task7_unit_typography": "PASS: Н·м",
+    "widths": "PASS: 1280, 768, 390, 360, 320",
+    "full_correct_attempt": "21/21",
+    "state_restore": "PASS",
+    "javascript_errors": 0
+  },
+  "details": {
+    "overflow_delta_px": {
+      "1280": -15,
+      "768": -15,
+      "390": -15,
+      "360": -15,
+      "320": -12
+    },
+    "browser_severe_logs": [],
+    "ignored_favicon_404": 1
+  }
+}
