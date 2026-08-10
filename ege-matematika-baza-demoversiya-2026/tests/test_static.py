@@ -15,7 +15,8 @@ formula=j(f'{PREFIX}-FORMULA-GATE-EVIDENCE.json')
 visual=j('source-evidence/ASSET-CROP-EVIDENCE.json')
 build=j(f'{PREFIX}-BUILD-EVIDENCE.json')
 
-assert exam['packageVersion']=='1.0'
+assert exam['packageVersion']==contract['package_version']==build['package_version']
+assert exam['storageKey']==build['storage_key']
 assert exam['durationMinutes']==180 and exam['maxPrimaryScore']==21
 assert len(exam['tasks'])==21 and sum(len(t['variants']) for t in exam['tasks'])==70
 assert contract['variant_contract']['official_examples_total']==70
@@ -33,7 +34,8 @@ for p in blocks:assert p.name in installation
 assert (ROOT/f'{PREFIX}-PREVIEW.html').exists()
 preview=(ROOT/f'{PREFIX}-PREVIEW.html').read_text(encoding='utf-8')
 assert 'window.EKSAMIO_MATH_BASE_TEST' in preview
-assert 'eksamio_ege_math_base_demo_2026_v1_0' in preview
+assert exam['storageKey'] in preview
+assert f'packageVersion:"{exam["packageVersion"]}"' in preview
 assert '03:00:00' in preview
 assert 'Справочные материалы ФИПИ' in preview
 for token in ['numeric_input','matching_selects_4','checkboxes','row_checkboxes']:
@@ -48,11 +50,10 @@ assert not list(ROOT.rglob('.DS_Store'))
 assert '__MACOSX' not in '\n'.join(str(p) for p in ROOT.rglob('*'))
 assert not list(ROOT.rglob('*.pyc'))
 
-# If this is the repository copy, the release ZIP must exist and contain the same root folder.
-repo_zip=ROOT.parent/f'{PREFIX}-v1.0.zip'
+repo_zip=ROOT.parent/build['package']
 if repo_zip.exists():
     with zipfile.ZipFile(repo_zip) as z:
         names=z.namelist()
         assert any(n.endswith(f'{PREFIX}-PREVIEW.html') for n in names)
         assert not any('__MACOSX' in n or n.endswith('.DS_Store') or n.endswith('.pyc') for n in names)
-print(f'STATIC PASS: {len(blocks)} T123, max={max(p.stat().st_size for p in blocks)} bytes')
+print(f'STATIC PASS: {len(blocks)} T123, max={max(p.stat().st_size for p in blocks)} bytes, package={exam["packageVersion"]}')
