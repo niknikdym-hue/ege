@@ -158,9 +158,12 @@ def main():
         ev['checks']['full_correct_attempt']='21/21'
         ev['checks']['state_restore']='PASS'
 
-        severe=[x for x in driver.get_log('browser') if x.get('level')=='SEVERE']
+        raw_severe=[x for x in driver.get_log('browser') if x.get('level')=='SEVERE']
+        ignored=[x for x in raw_severe if '/favicon.ico' in x.get('message','') and '404' in x.get('message','')]
+        severe=[x for x in raw_severe if x not in ignored]
         ev['checks']['javascript_errors']=len(severe)
         ev['details']['browser_severe_logs']=severe
+        ev['details']['ignored_favicon_404']=len(ignored)
         assert not severe,severe
     finally:
         driver.quit()
