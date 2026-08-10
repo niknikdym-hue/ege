@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "source": "official FIPI 2026 base mathematics PDF canonical printed-page evidence",
+  "purpose": "Close the six literal-audit cases whose mathematical glyphs are not faithfully represented by the PDF linear text layer.",
+  "rules": {
+    "linear_text_is_not_sufficient_for_math_glyphs": true,
+    "official_render_is_retained_as_visual_evidence": true,
+    "demo_formula_must_match_semantics_and_visual_structure": true,
+    "mathematical_equivalence_alone_is_not_accepted": true
+  },
+  "records": [
+    {
+      "example": "4.1",
+      "source_page": 11,
+      "source_page_file": "source-evidence/printed-pages/page-11.webp",
+      "source_page_sha256": "8808e50ca8641bbb42184b347f0b719ae7140c519455b61319938890eba6323d",
+      "demo_formula_latex": "A=\\frac{U^2t}{R}",
+      "verified_features": ["fraction bar", "U squared", "multiplication by t in numerator", "R in denominator", "variables U R t in continuation"],
+      "status": "PASS"
+    },
+    {
+      "example": "4.2",
+      "source_page": 11,
+      "source_page_file": "source-evidence/printed-pages/page-11.webp",
+      "source_page_sha256": "8808e50ca8641bbb42184b347f0b719ae7140c519455b61319938890eba6323d",
+      "demo_formula_latex": "S=\\frac{1}{2}d_1d_2\\sin\\alpha",
+      "verified_features": ["one-half factor", "d1 and d2 subscripts", "sin alpha", "continuation uses d1 d2 alpha", "one-third value for sin alpha in source"],
+      "status": "PASS"
+    },
+    {
+      "example": "4.3",
+      "source_page": 12,
+      "source_page_file": "source-evidence/printed-pages/page-12.webp",
+      "source_page_sha256": "760e55472dcbf51f53dd68c2fc202dfb7f516a53f2699e7900977aefa253106e",
+      "demo_formula_latex": "t_F=1{,}8t_C+32",
+      "verified_features": ["F and C subscripts", "decimal comma 1,8", "plus 32", "continuation preserves Celsius and Fahrenheit variables"],
+      "status": "PASS"
+    },
+    {
+      "example": "12.2",
+      "source_page": 21,
+      "source_page_file": "source-evidence/printed-pages/page-21.webp",
+      "source_page_sha256": "570f82fb628a1b9bdf53964e5c8789be02fcdb1e6ffd91e8ab79c58092dda97a",
+      "demo_glyph": "AC = 2√5",
+      "verified_features": ["radical sign is visible in official render", "coefficient 2", "radicand 5"],
+      "status": "PASS"
+    },
+    {
+      "example": "12.3",
+      "source_page": 21,
+      "source_page_file": "source-evidence/printed-pages/page-21.webp",
+      "source_page_sha256": "570f82fb628a1b9bdf53964e5c8789be02fcdb1e6ffd91e8ab79c58092dda97a",
+      "demo_glyph": "2√5",
+      "verified_features": ["radical sign is visible in official render", "coefficient 2", "radicand 5"],
+      "status": "PASS"
+    },
+    {
+      "example": "18.3",
+      "source_page": 26,
+      "source_page_file": "source-evidence/printed-pages/page-26.webp",
+      "source_page_sha256": "47af58fb39bec58129748b8ea1f09391c755e826aae8a3adb30d36dc31a55cc5",
+      "demo_glyph": "√0,15",
+      "verified_features": ["radical sign is visible in official render", "decimal comma", "m is defined by the radical expression"],
+      "status": "PASS"
+    }
+  ],
+  "counts": {
+    "secondary_literal_cases": 6,
+    "passed": 6,
+    "failed": 0
+  }
+}
