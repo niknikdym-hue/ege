@@ -1,0 +1,29 @@
+name: Validate base mathematics 2026 source index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ege-matematika-baza-demoversiya-2026/**
+      - .github/workflows/math-base-2026-source-index-test.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate source index
+        run: python ege-matematika-baza-demoversiya-2026/scripts/validate_source_index.py
+      - name: Commit evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-SOURCE-INDEX-TEST-EVIDENCE.json
+          git diff --cached --quiet || { git commit -m 'Record base mathematics 2026 source-index evidence'; git push origin HEAD:main; }
