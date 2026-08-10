@@ -5,18 +5,18 @@ SUBJECT: математика
 LEVEL: базовый
 SOURCE_YEAR_INTERNAL: 2026
 PACKAGE_VERSION: 1.0
-CONTENT_STATUS: SOURCE_GATE_IN_PROGRESS
-BUILD_STATUS: NOT_STARTED
-AUDIT_STATUS: NOT_STARTED
+CONTENT_STATUS: CONTENT_LOCKED
+BUILD_STATUS: RELEASE_BUILD_PENDING_FULL_TEST
+AUDIT_STATUS: SOURCE_TEXT_FORMULA_VISUAL_GATES_PASS_BROWSER_PENDING
 RELEASE_STATUS: NOT_READY
 
 SOURCE_ROOT: ../matematika-source-2026/
 SOURCE_POLICY: только утверждённый комплект ФИПИ 2026; старые математические ZIP и старые реализации не являются источником содержания.
-LEGACY_POLICY: ege-matematika-baza-demoversiya-2026-v2.6-literal-audited.zip удалён и не используется для новой сборки.
+LEGACY_POLICY: прежние математические ZIP удалены и не используются для новой сборки.
 
 WORK_ORDER:
-1. SOURCE GATE.
-2. CONTENT LOCK: EXAM-MAP / TASK-MAP / ASSET-MAP / ACCEPTANCE-CASES.
+1. SOURCE GATE — PASS.
+2. CONTENT LOCK: EXAM-MAP / TASK-MAP / ASSET-MAP / ACCEPTANCE-CASES — PASS.
 3. Сборка T123/preview/runtime только из зафиксированных карт.
 4. Независимый source/literal/formula/visual/interaction/scorer/state/Tilda-size аудит.
 5. READY_FOR_TILDA_TEST только при полном доказательном PASS.
