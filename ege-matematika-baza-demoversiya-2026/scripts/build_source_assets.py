@@ -17,12 +17,14 @@ ASSETS.mkdir(parents=True, exist_ok=True)
 # Full official-example regions. A figure can continue below the printed Ответ:
 # line when the answer line is on the left and the figure is on the right, so the
 # correct lower boundary is the next ИЛИ / next task marker, not Ответ:.
+# For 7.3 the four graphs have an independently proven tighter region ending at 389 pt;
+# this avoids the lower characteristics/instruction block competing in component ranking.
 SPECS = [
     ("base-03-v1-temperature-chart", 10, 59, 292, 1),
     ("base-03-v3-nickel-chart", 11, 56, 353, 1),
     ("base-07-v1-derivative-graph", 14, 262, 540, 1),
     ("base-07-v2-torque-chart", 15, 57, 540, 1),
-    ("base-07-v3-function-graphs", 16, 56, 540, 8),
+    ("base-07-v3-function-graphs", 16, 56, 389, 8),
     ("base-09-v1-lake-plan", 18, 63, 323, 1),
     ("base-09-v2-grid-plan", 18, 322, 540, 1),
     ("base-10-v1-dacha-plan", 19, 59, 171, 1),
@@ -191,8 +193,8 @@ for asset_id, page_no, y0_pt, y1_pt, expected_count in SPECS:
             max(bbox_pt[3], max(w["y1"] for w in labels)),
         ]
 
-    # Geometry and its compact labels have already been proven. Eight points is
-    # enough whitespace without pulling neighboring instruction/answer text into the image.
+    # Geometry and compact labels are already proven. Eight points gives clean white
+    # space without pulling neighboring instruction/answer text into the image.
     pad = 8
     bbox_pt = [
         max(18, bbox_pt[0] - pad),
@@ -265,7 +267,7 @@ status = "PASS" if not errors and len(records) == 25 else "FAIL"
 evidence = {
     "status": status,
     "source": "official FIPI 2026 base mathematics PDF via canonical printed-page render",
-    "method": "full official variant region between variant markers; morphology locates diagram components; final clipping proof uses only undilated source pixels inside selected component boxes",
+    "method": "official variant regions with a proven tighter graph-only region for 7.3; morphology locates diagram components; final clipping proof uses only undilated source pixels inside selected component boxes",
     "asset_count": len(records),
     "errors": errors,
     "records": records,
