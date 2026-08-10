@@ -1,10 +1,4 @@
-{
-  "status": "FAIL",
-  "assets": 25,
-  "errors": [
-    "base-10-v2-wheel: selected real source geometry reaches official segment boundary gaps={'top': 41, 'bottom': 0, 'left': 595, 'right': 52}, boundaryInk=20",
-    "base-10-v3-fence-plan: selected real source geometry reaches official segment boundary gaps={'top': 60, 'bottom': 0, 'left': 514, 'right': 90}, boundaryInk=4",
-    "base-12-v1-triangle-median: selected real source geometry reaches official segment boundary gaps={'top': 29, 'bottom': 0, 'left': 567, 'right': 64}, boundaryInk=5",
-    "base-13-v4-spheres: selected real source geometry reaches official segment boundary gaps={'top': 47, 'bottom': 0, 'left': 549, 'right': 58}, boundaryInk=5"
-  ]
-}
+Traceback (most recent call last):
+  File "/home/runner/work/ege/ege/ege-matematika-baza-demoversiya-2026/scripts/build_source_assets.py", line 149, in <module>
+    raise RuntimeError(f"{asset_id}: need {expected_count} components, found {len(components)}")
+RuntimeError: base-10-v3-fence-plan: need 3 components, found 2
