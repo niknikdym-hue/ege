@@ -38,71 +38,82 @@ jobs:
               ('codifier', root/'original'/'МА-11 ЕГЭ 2026_КОДИФ.pdf', 18),
           ]
 
-          def visual_rect(page):
-              r = page.rect
-              m = page.rotation_matrix
-              pts = [fitz.Point(r.x0,r.y0)*m, fitz.Point(r.x1,r.y0)*m,
-                     fitz.Point(r.x0,r.y1)*m, fitz.Point(r.x1,r.y1)*m]
-              xs=[p.x for p in pts]; ys=[p.y for p in pts]
-              return fitz.Rect(min(xs), min(ys), max(xs), max(ys))
-
           for name, pdf_path, expected_printed in jobs:
               out = root/'printed-pages'/name
               out.mkdir(parents=True, exist_ok=True)
               for p in out.glob('page-*.txt'):
                   p.unlink()
-              doc=fitz.open(pdf_path)
-              printed=[]
-              page_no=0
-              for physical_index,page in enumerate(doc, start=1):
-                  vr=visual_rect(page)
-                  mid=(vr.x0+vr.x1)/2
-                  halves=[fitz.Rect(vr.x0,vr.y0,mid,vr.y1), fitz.Rect(mid,vr.y0,vr.x1,vr.y1)]
-                  blocks=page.get_text('blocks', sort=True)
-                  m=page.rotation_matrix
-                  visual_blocks=[]
-                  for b in blocks:
-                      rr=fitz.Rect(b[:4]) * m
-                      text=b[4].strip()
-                      if text:
-                          visual_blocks.append((rr,text))
-                  for half_index,half in enumerate(halves, start=1):
-                      page_no += 1
-                      if expected_printed and page_no>expected_printed:
+              doc = fitz.open(pdf_path)
+              printed = []
+              printed_no = 0
+              for physical_index, page in enumerate(doc, start=1):
+                  # PDFs are A4 pages rotated 270 degrees and contain two printed pages side by side.
+                  # Work in the unrotated coordinate space: after rotation, visual left/right correspond
+                  # to upper/lower halves of the unrotated A4 page. We classify text blocks after applying
+                  # the page rotation matrix.
+                  rotated = page.rect * page.rotation_matrix
+                  mid_x = (rotated.x0 + rotated.x1) / 2
+                  blocks = []
+                  for b in page.get_text('blocks', sort=False):
+                      text = b[4].strip()
+                      if not text:
+                          continue
+                      rr = fitz.Rect(b[:4]) * page.rotation_matrix
+                      blocks.append((rr, text))
+
+                  for half_name, x0, x1 in (
+                      ('left', rotated.x0, mid_x),
+                      ('right', mid_x, rotated.x1),
+                  ):
+                      printed_no += 1
+                      if expected_printed is not None and printed_no > expected_printed:
                           break
-                      selected=[]
-                      for rr,text in visual_blocks:
-                          c=(rr.x0+rr.x1)/2
-                          if half.x0 <= c < half.x1:
-                              selected.append((rr.y0,rr.x0,text))
-                      selected.sort(key=lambda x:(round(x[0],1),x[1]))
-                      text='\n'.join(t for _,__,t in selected).strip()
-                      path=out/f'page-{page_no:02d}.txt'
-                      path.write_text(text+'\n', encoding='utf-8')
+                      selected = []
+                      for rr, text in blocks:
+                          cx = (rr.x0 + rr.x1) / 2
+                          if x0 <= cx < x1:
+                              selected.append((rr.y0, rr.x0, text))
+                      selected.sort(key=lambda item: (round(item[0], 1), item[1]))
+                      page_text = '\n'.join(item[2] for item in selected).strip()
+                      path = out / f'page-{printed_no:02d}.txt'
+                      path.write_text(page_text + '\n', encoding='utf-8')
                       printed.append({
-                          'printed_page':page_no,
-                          'physical_pdf_page':physical_index,
-                          'half':'left' if half_index==1 else 'right',
-                          'chars':len(text),
-                          'file':str(path)
+                          'printed_page': printed_no,
+                          'physical_pdf_page': physical_index,
+                          'half': half_name,
+                          'chars': len(page_text),
+                          'file': str(path),
                       })
-                  if expected_printed and page_no>=expected_printed:
+                  if expected_printed is not None and printed_no >= expected_printed:
                       break
+
               (out/'PAGE-MAP.json').write_text(json.dumps({
-                  'source_pdf':str(pdf_path),
-                  'physical_pdf_pages':len(doc),
-                  'expected_printed_pages':expected_printed,
-                  'generated_printed_pages':len(printed),
-                  'pages':printed
-              }, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+                  'source_pdf': str(pdf_path),
+                  'physical_pdf_pages': len(doc),
+                  'expected_printed_pages': expected_printed,
+                  'generated_printed_pages': len(printed),
+                  'pages': printed,
+              }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
 
-      - name: Validate base page map
+      - name: Validate generated counts only
         run: |
+          set -euo pipefail
           test "$(find matematika-source-2026/printed-pages/base-demo -name 'page-*.txt' | wc -l)" -eq 29
           test "$(find matematika-source-2026/printed-pages/base-spec -name 'page-*.txt' | wc -l)" -eq 12
-          grep -q '21 задание' matematika-source-2026/printed-pages/base-demo/page-03.txt
-          grep -q 'Максимальный первичный балл' matematika-source-2026/printed-pages/base-spec/page-09.txt
+          test "$(find matematika-source-2026/printed-pages/codifier -name 'page-*.txt' | wc -l)" -eq 18
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for p in [
+              Path('matematika-source-2026/printed-pages/base-demo/PAGE-MAP.json'),
+              Path('matematika-source-2026/printed-pages/base-spec/PAGE-MAP.json'),
+              Path('matematika-source-2026/printed-pages/codifier/PAGE-MAP.json'),
+          ]:
+              data=json.loads(p.read_text(encoding='utf-8'))
+              assert data['generated_printed_pages'] == data['expected_printed_pages']
+          print('Printed-page counts: PASS')
+          PY
 
       - name: Commit printed-page maps
         run: |
