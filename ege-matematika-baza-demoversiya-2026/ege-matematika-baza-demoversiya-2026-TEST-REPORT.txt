@@ -1,32 +1,48 @@
 TEST REPORT — ЕГЭ 2026, математика, базовый уровень
-PACKAGE_VERSION: 1.0
+PACKAGE_VERSION: 1.1
 STATUS: PASS — READY_FOR_TILDA_TEST
 
+MANUAL STUDENT ACCEPTANCE
+- Все 21 позиции пройдены вручную перед выпуском v1.1.
+- Финальный экран контрольной попытки показал 18/21: №6 был намеренно заполнен неверно; №13 пользователь дважды внёс 12 вместо 360; №1 выявил реальный дефект numeric input.
+- Scorer корректно оценил эти случаи; функциональный дефект был только в сохранении numeric input №1.
+
+ACCEPTANCE FIXES IN v1.1
+- Синтаксическая допустимость числового ответа отделена от правильности.
+- №1: 11.2 → 11,2; после навигации и reload сохраняется 11,2 и получает 0/1 против официального 12.
+- Некорректный ввод 12 200 остаётся raw input, отмечается как некорректный и не превращается молча в 12200.
+- В №1 добавлена подсказка «Введите целое число» без запрета синтаксически корректной десятичной записи.
+- №7: Нꞏм → Н·м; исправлено в каноническом TASK-MAP и дополнительно нормализуется при сборке/рендере.
+- Новый storage key v1.1 исключает подхват завершённой попытки v1.0.
+
 SOURCE / CONTENT
-- TASK-MAP: 21 заданий, 70 официальных примеров, PASS.
-- Literal audit: 23 случаев межколоночной/графической раскладки подтверждены вторичной проверкой.
+- TASK-MAP: 21 задание, 70 официальных примеров, PASS.
+- Source fidelity: 70/70 официальных примеров, PASS.
+- Literal audit: 23 случая межколоночной/графической раскладки подтверждены вторичной проверкой.
 - Formula/glyph gate: 6/6 случаев подтверждены официальными рендерами ФИПИ.
-- Visual gate: 25/25 lossless source assets, PASS.
+- Visual gate: 25/25 source assets, PASS.
 
 INTERACTION / SCORER
-- Все 70 официальных примеров пройдены browser-тестом через реальные input/select/checkbox controls.
+- Browser real-control matrix: 70/70, PASS.
+- Targeted numeric-input regressions: PASS.
 - Полная правильная попытка: 21/21.
-- Matching: 4 отдельных select, неполный ответ не считается завершённым, дубли блокируются.
-- Numeric input: invalid content не очищается scorer-ом; keyboard dot канонизируется в comma до сохранения.
+- Matching: 4 отдельных select; неполный ответ не считается завершённым; дубли блокируются.
 - Checkbox/row selection: код собирается системой.
 - Правильные ответы не раскрываются до завершения.
+- Reload/state restore: PASS.
+- JavaScript severe errors: 0; favicon 404 исключён как нерелевантный сетевой шум браузера.
 
 STATE / UI
-- Вариант «ИЛИ» сохраняется после reload.
-- Ответ и отметка возврата сохраняются после reload.
-- Deadline timer: 180 минут.
-- Проверены ширины: 1280, 768, 390, 360, 320 px.
-- JavaScript errors: 0.
+- Проверены ширины: 1280, 768, 390, 360, 320 px; горизонтальный overflow отсутствует.
 - Справочные материалы ФИПИ: страницы 4–7 доступны в интерфейсе.
+
+CLEAN ZIP
+- Распакованный v1.1 preview прошёл source fidelity и Chrome/Selenium browser audit: 70/70 официальных примеров, targeted regressions, full correct attempt 21/21, state restore PASS.
+- Устаревшая копия BUILD-EVIDENCE внутри промежуточного ZIP была выявлена static gate и подлежит финальной переупаковке из актуальных v1.1 metadata; экзаменационный runtime при этом не меняется.
 
 PACKAGE
 - T123 blocks: 47.
-- Largest T123: 39342 bytes (< 45000).
-- Повторная статическая, source-fidelity и browser-проверка из чисто распакованного ZIP: PASS (workflow gate).
+- Largest T123: 39340 bytes (< 45000).
+- Package: ege-matematika-baza-demoversiya-2026-v1.1.zip.
 
-PUBLISHED_SMOKE_PASS не выставлен: он возможен только после публикации в Tilda.
+PUBLISHED_SMOKE_PASS не выставлен: он возможен только после публикации v1.1 в Tilda.
