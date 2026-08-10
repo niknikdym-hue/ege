@@ -14,7 +14,8 @@ COORD = ROOT / "source-diagnostics" / "canonical-coordinates"
 ASSETS = ROOT / "assets"
 ASSETS.mkdir(parents=True, exist_ok=True)
 
-# Exact official-example segments from TASK_NUMBER/ИЛИ to the example's own Ответ:.
+# Exact official-example segments from TASK_NUMBER/ИЛИ to immediately before the
+# example's own Ответ: line. Decimal end coordinates are based on canonical marker y0.
 SPECS = [
     ("base-03-v1-temperature-chart", 10, 59, 271, 1),
     ("base-03-v3-nickel-chart", 11, 56, 310, 1),
@@ -24,20 +25,20 @@ SPECS = [
     ("base-09-v1-lake-plan", 18, 63, 302, 1),
     ("base-09-v2-grid-plan", 18, 322, 429, 1),
     ("base-10-v1-dacha-plan", 19, 59, 150, 1),
-    ("base-10-v2-wheel", 19, 170, 251, 1),
-    ("base-10-v3-fence-plan", 19, 271, 357, 3),
+    ("base-10-v2-wheel", 19, 170, 252.1, 1),
+    ("base-10-v3-fence-plan", 19, 271, 358.4, 3),
     ("base-11-v1-tank", 20, 59, 137, 1),
-    ("base-11-v2-cut-prism", 20, 157, 233, 1),
+    ("base-11-v2-cut-prism", 20, 157, 234.3, 1),
     ("base-11-v3-polyhedron", 20, 253, 396, 1),
     ("base-11-v4-boxes", 20, 416, 507, 1),
-    ("base-12-v1-triangle-median", 21, 59, 121, 1),
+    ("base-12-v1-triangle-median", 21, 59, 122.3, 1),
     ("base-12-v2-circle-chord", 21, 144, 210, 1),
     ("base-12-v3-right-triangle", 21, 232, 292, 1),
     ("base-12-v4-midline", 21, 312, 388, 1),
     ("base-13-v1-cone", 22, 62, 125, 1),
-    ("base-13-v2-pyramid", 22, 145, 216, 1),
+    ("base-13-v2-pyramid", 22, 145, 217.2, 1),
     ("base-13-v3-cylinders", 22, 236, 318, 2),
-    ("base-13-v4-spheres", 22, 338, 401, 2),
+    ("base-13-v4-spheres", 22, 338, 402.0, 2),
     ("base-18-v1-number-line", 25, 59, 247, 1),
     ("base-18-v3-number-line", 26, 56, 295, 1),
     ("base-21-v2-rectangle-partition", 28, 148, 231, 1),
