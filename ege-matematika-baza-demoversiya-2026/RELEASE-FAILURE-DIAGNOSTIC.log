@@ -88,8 +88,9 @@ TEXT/FORMULA SOURCE GATE PASS: primary 41 direct + 23 layout + 6 formula/glyph =
   ]
 }
 STATIC PASS: 47 T123, max=39342 bytes
+SOURCE FIDELITY PASS: 70 examples, 25 complete source visuals, 6 formula/glyph cases
 Traceback (most recent call last):
-  File "/home/runner/work/ege/ege/ege-matematika-baza-demoversiya-2026/tests/test_source_fidelity.py", line 28, in <module>
-    all_text='\n'.join(p.read_text(encoding='utf-8',errors='ignore') for p in ROOT.rglob('*') if p.is_file() and p.suffix.lower() in {'.txt','.json','.py','.js','.html','.yml','.md'});assert old_marker not in all_text
-                                                                                                                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/ege/ege/ege-matematika-baza-demoversiya-2026/tests/test_browser.py", line 124, in <module>
+    assert 'Официально принимаемый ответ' in page.locator('#mb-review').inner_text()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError
