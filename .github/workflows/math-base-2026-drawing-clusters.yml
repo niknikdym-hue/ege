@@ -1,0 +1,97 @@
+name: Map base mathematics 2026 drawing clusters
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/math-base-2026-drawing-clusters.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  map:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: pip install --quiet pymupdf
+      - name: Build drawing cluster map
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import fitz
+
+          pdf=Path('matematika-source-2026/original/МА-11 ЕГЭ 2026 ДЕМО_базовый.pdf')
+          doc=fitz.open(pdf)
+          pages=sorted({10,11,14,15,16,18,19,20,21,22,25,26,28})
+          result={}
+
+          def near(a,b,gap=8):
+              # rectangles in local printed-page visual coordinates
+              x_overlap=min(a.x1,b.x1)-max(a.x0,b.x0)
+              y_overlap=min(a.y1,b.y1)-max(a.y0,b.y0)
+              x_gap=max(0,max(a.x0,b.x0)-min(a.x1,b.x1))
+              y_gap=max(0,max(a.y0,b.y0)-min(a.y1,b.y1))
+              return (x_overlap>0 and y_gap<=gap) or (y_overlap>0 and x_gap<=gap)
+
+          for printed in pages:
+              phys=(printed+1)//2
+              half='left' if printed%2==1 else 'right'
+              page=doc[phys-1]
+              visual=page.rect * page.rotation_matrix
+              mid=(visual.x0+visual.x1)/2
+              hx0,hx1=(visual.x0,mid) if half=='left' else (mid,visual.x1)
+              rects=[]
+              for d in page.get_drawings():
+                  rr=d['rect'] * page.rotation_matrix
+                  if rr.x1<=hx0 or rr.x0>=hx1: continue
+                  rr=fitz.Rect(max(rr.x0,hx0)-hx0,rr.y0,min(rr.x1,hx1)-hx0,rr.y1)
+                  if rr.width<1 or rr.height<1: continue
+                  rects.append(rr)
+              clusters=[]
+              for r in rects:
+                  hits=[i for i,c in enumerate(clusters) if near(c['rect'],r)]
+                  if not hits:
+                      clusters.append({'rect':fitz.Rect(r),'count':1})
+                  else:
+                      base=hits[0]
+                      clusters[base]['rect'] |= r
+                      clusters[base]['count'] += 1
+                      for i in reversed(hits[1:]):
+                          clusters[base]['rect'] |= clusters[i]['rect']
+                          clusters[base]['count'] += clusters[i]['count']
+                          clusters.pop(i)
+                      # absorb newly near clusters until stable
+                      changed=True
+                      while changed:
+                          changed=False
+                          for i in range(len(clusters)-1,-1,-1):
+                              if i==base or base>=len(clusters): continue
+                              if near(clusters[base]['rect'],clusters[i]['rect']):
+                                  clusters[base]['rect'] |= clusters[i]['rect']
+                                  clusters[base]['count'] += clusters[i]['count']
+                                  clusters.pop(i)
+                                  if i<base: base-=1
+                                  changed=True
+                                  break
+              rows=[]
+              for c in clusters:
+                  r=c['rect']
+                  if r.width<15 and r.height<15: continue
+                  rows.append({'x0':round(r.x0,1),'y0':round(r.y0,1),'x1':round(r.x1,1),'y1':round(r.y1,1),'w':round(r.width,1),'h':round(r.height,1),'drawing_count':c['count'],'area':round(r.get_area(),1)})
+              rows.sort(key=lambda z:(z['y0'],z['x0']))
+              result[str(printed)]={'physical_pdf_page':phys,'half':half,'page_width':round(hx1-hx0,1),'page_height':round(visual.height,1),'clusters':rows}
+          out=Path('ege-matematika-baza-demoversiya-2026/source-diagnostics/DRAWING-CLUSTERS.json')
+          out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Commit cluster map
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-matematika-baza-demoversiya-2026/source-diagnostics/DRAWING-CLUSTERS.json
+          git diff --cached --quiet || { git commit -m 'Add base mathematics official drawing cluster map'; git push origin HEAD:main; }
