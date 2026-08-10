@@ -179,7 +179,7 @@ AUDIT
 - Full correct attempt: 21/21.
 - Reload/state restore: PASS.
 - Widths 1280, 768, 390, 360, 320: PASS, no horizontal overflow.
-- JavaScript severe errors: 0.
+- JavaScript severe errors: 0 (favicon 404 excluded as unrelated browser network noise).
 - Clean extracted ZIP: static + source fidelity + browser 70/70 + regressions PASS.
 
 PACKAGE
@@ -216,9 +216,11 @@ PUBLISHED_SMOKE_PASS не выставлен: он возможен только
       - name: Commit audited v1.1 release
         run: |
           rm -f ege-matematika-baza-demoversiya-2026/BASE-V1.1-DIAGNOSTIC.txt
+          rm -f ege-matematika-baza-demoversiya-2026/BASE-V1.1-SELENIUM-DIAGNOSTIC.txt
           rm -f .github/workflows/rebuild-base-math-v1-1.yml
           rm -f .github/workflows/rebuild-base-math-v1-1-r2.yml
           rm -f .github/workflows/diagnose-base-math-v1-1.yml
+          rm -f .github/workflows/diagnose-base-math-v1-1-selenium.yml
           rm -f .github/workflows/release-base-math-v1-1-selenium.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
