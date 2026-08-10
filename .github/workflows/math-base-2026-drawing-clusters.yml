@@ -31,8 +31,7 @@ jobs:
           pages=sorted({10,11,14,15,16,18,19,20,21,22,25,26,28})
           result={}
 
-          def near(a,b,gap=8):
-              # rectangles in local printed-page visual coordinates
+          def near(a,b,gap=6):
               x_overlap=min(a.x1,b.x1)-max(a.x0,b.x0)
               y_overlap=min(a.y1,b.y1)-max(a.y0,b.y0)
               x_gap=max(0,max(a.x0,b.x0)-min(a.x1,b.x1))
@@ -46,12 +45,19 @@ jobs:
               visual=page.rect * page.rotation_matrix
               mid=(visual.x0+visual.x1)/2
               hx0,hx1=(visual.x0,mid) if half=='left' else (mid,visual.x1)
+              local_w=hx1-hx0
+              local_h=visual.height
               rects=[]
+              ignored=[]
               for d in page.get_drawings():
                   rr=d['rect'] * page.rotation_matrix
                   if rr.x1<=hx0 or rr.x0>=hx1: continue
                   rr=fitz.Rect(max(rr.x0,hx0)-hx0,rr.y0,min(rr.x1,hx1)-hx0,rr.y1)
                   if rr.width<1 or rr.height<1: continue
+                  # Ignore page furniture / clipping rectangles / rules that span most of a printed page.
+                  if rr.width>local_w*0.90 or rr.height>local_h*0.80 or rr.get_area()>local_w*local_h*0.45:
+                      ignored.append(rr)
+                      continue
                   rects.append(rr)
               clusters=[]
               for r in rects:
@@ -66,32 +72,53 @@ jobs:
                           clusters[base]['rect'] |= clusters[i]['rect']
                           clusters[base]['count'] += clusters[i]['count']
                           clusters.pop(i)
-                      # absorb newly near clusters until stable
-                      changed=True
-                      while changed:
-                          changed=False
-                          for i in range(len(clusters)-1,-1,-1):
-                              if i==base or base>=len(clusters): continue
-                              if near(clusters[base]['rect'],clusters[i]['rect']):
-                                  clusters[base]['rect'] |= clusters[i]['rect']
-                                  clusters[base]['count'] += clusters[i]['count']
-                                  clusters.pop(i)
-                                  if i<base: base-=1
-                                  changed=True
-                                  break
+              # second merge pass after union growth
+              changed=True
+              while changed:
+                  changed=False
+                  for i in range(len(clusters)):
+                      for j in range(i+1,len(clusters)):
+                          if near(clusters[i]['rect'],clusters[j]['rect']):
+                              clusters[i]['rect'] |= clusters[j]['rect']
+                              clusters[i]['count'] += clusters[j]['count']
+                              clusters.pop(j)
+                              changed=True
+                              break
+                      if changed: break
               rows=[]
               for c in clusters:
                   r=c['rect']
-                  if r.width<15 and r.height<15: continue
+                  if r.width<12 and r.height<12: continue
                   rows.append({'x0':round(r.x0,1),'y0':round(r.y0,1),'x1':round(r.x1,1),'y1':round(r.y1,1),'w':round(r.width,1),'h':round(r.height,1),'drawing_count':c['count'],'area':round(r.get_area(),1)})
               rows.sort(key=lambda z:(z['y0'],z['x0']))
-              result[str(printed)]={'physical_pdf_page':phys,'half':half,'page_width':round(hx1-hx0,1),'page_height':round(visual.height,1),'clusters':rows}
+              result[str(printed)]={
+                  'physical_pdf_page':phys,'half':half,
+                  'page_width':round(local_w,1),'page_height':round(local_h,1),
+                  'ignored_page_furniture_count':len(ignored),'clusters':rows
+              }
           out=Path('ege-matematika-baza-demoversiya-2026/source-diagnostics/DRAWING-CLUSTERS.json')
           out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Validate no full-page clusters remain
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('ege-matematika-baza-demoversiya-2026/source-diagnostics/DRAWING-CLUSTERS.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          bad=[]
+          for page,row in data.items():
+              for c in row['clusters']:
+                  if c['w']>row['page_width']*.9 and c['h']>row['page_height']*.7:
+                      bad.append((page,c))
+          if bad:
+              print('FAIL full-page clusters:',bad)
+              raise SystemExit(1)
+          print('Drawing cluster page-furniture filter: PASS')
           PY
       - name: Commit cluster map
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add ege-matematika-baza-demoversiya-2026/source-diagnostics/DRAWING-CLUSTERS.json
-          git diff --cached --quiet || { git commit -m 'Add base mathematics official drawing cluster map'; git push origin HEAD:main; }
+          git diff --cached --quiet || { git commit -m 'Refine base mathematics official drawing clusters'; git push origin HEAD:main; }
