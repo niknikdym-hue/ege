@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "package_version": "1.1",
+  "checks": {
+    "official_examples_real_controls": "70/70",
+    "task1_decimal_wrong_persists": "PASS: 11.2 → 11,2 → navigation/reload 11,2; scorer 0/1",
+    "task1_correct_integer": "PASS: 12 scores 1/1",
+    "decimal_dot_normalization": "PASS: 0.25 → 0,25 → reload 0,25",
+    "invalid_space_preserved": "PASS: 12 200 remains raw invalid input and never becomes 12200",
+    "task7_unit_typography": "PASS: Н·м",
+    "widths": "PASS: 1280, 768, 390, 360, 320",
+    "full_correct_attempt": "21/21",
+    "state_restore": "PASS",
+    "javascript_errors": 0
+  },
+  "details": {
+    "overflow_delta_px": {
+      "1280": -15,
+      "768": -15,
+      "390": -15,
+      "360": -15,
+      "320": -12
+    },
+    "browser_severe_logs": [],
+    "ignored_favicon_404": 1
+  }
+}
