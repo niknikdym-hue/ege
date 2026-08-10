@@ -1,0 +1,30 @@
+name: Build base mathematics 2026 source marker map
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ege-matematika-baza-demoversiya-2026/scripts/build_source_marker_map.py
+      - .github/workflows/math-base-2026-source-markers.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build marker map
+        run: python ege-matematika-baza-demoversiya-2026/scripts/build_source_marker_map.py
+      - name: Commit marker map
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-matematika-baza-demoversiya-2026/source-diagnostics/CANONICAL-SOURCE-MARKERS.json \
+                  ege-matematika-baza-demoversiya-2026/source-diagnostics/CANONICAL-SOURCE-MARKERS.txt
+          git diff --cached --quiet || { git commit -m 'Add base mathematics canonical source marker map'; git push origin HEAD:main; }
