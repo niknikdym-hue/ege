@@ -27,7 +27,7 @@ SPECS = [
     ("base-09-v2-grid-plan", 18, 322, 540, 1),
     ("base-10-v1-dacha-plan", 19, 59, 171, 1),
     ("base-10-v2-wheel", 19, 170, 272, 1),
-    ("base-10-v3-fence-plan", 19, 271, 540, 3),
+    ("base-10-v3-fence-plan", 19, 271, 540, 2),
     ("base-11-v1-tank", 20, 59, 158, 1),
     ("base-11-v2-cut-prism", 20, 157, 254, 1),
     ("base-11-v3-polyhedron", 20, 253, 417, 1),
