@@ -3,86 +3,264 @@
   "source_pdf": "matematika-source-2026/original/МА-11 ЕГЭ 2026 ДЕМО_базовый.pdf",
   "tasks": [
     {
-      "number":15,
-      "variants":[
-        {"variant":1,"source_page":23,"control":"numeric_input","prompt_html":"<p>Держатели дисконтной карты книжного магазина получают при покупке скидку 10 %. Книга стоит 330 рублей. Сколько рублей заплатит держатель дисконтной карты за эту книгу?</p>"},
-        {"variant":2,"source_page":23,"control":"numeric_input","prompt_html":"<p>Четверть всех отдыхающих в пансионате — дети. Какой процент от всех отдыхающих составляют дети?</p>"},
-        {"variant":3,"source_page":23,"control":"numeric_input","prompt_html":"<p>Площадь земель фермерского хозяйства, отведённых под посадку сельскохозяйственных культур, составляет 36 гектаров и распределена между зерновыми и овощными культурами в отношении 2 : 7 соответственно. Сколько гектаров занимают овощные культуры?</p>"},
-        {"variant":4,"source_page":23,"control":"numeric_input","prompt_html":"<p>Банк начисляет на срочный вклад 14 % годовых. Вкладчик положил на счёт 9000 рублей. Сколько рублей будет на этом счёте через год, если никаких операций, кроме начисления процентов, со счётом проводиться не будет?</p>"}
-      ]
-    },
-    {
-      "number":16,
-      "variants":[
-        {"variant":1,"source_page":24,"control":"numeric_input","prompt_html":"<p>Найдите значение выражения</p>","formula_latex":"\\frac{12^{12}}{2^{14}\\cdot6^{11}}","formula_status":"SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"},
-        {"variant":2,"source_page":24,"control":"numeric_input","prompt_html":"<p>Найдите значение выражения</p>","formula_latex":"26\\sin750^\\circ","formula_status":"SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"},
-        {"variant":3,"source_page":24,"control":"numeric_input","prompt_html":"<p>Найдите значение выражения</p>","formula_latex":"(\\sqrt{63}-\\sqrt7)\\cdot\\sqrt7","formula_status":"SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"},
-        {"variant":4,"source_page":24,"control":"numeric_input","prompt_html":"<p>Найдите значение выражения</p>","formula_latex":"\\log_6 1{,}5+\\log_6 24","formula_status":"SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"}
-      ]
-    },
-    {
-      "number":17,
-      "variants":[
-        {"variant":1,"source_page":24,"control":"numeric_input","prompt_html":"<p>Найдите корень уравнения</p>","formula_latex":"\\left(\\frac14\\right)^{2-x}=64","formula_status":"SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"},
-        {"variant":2,"source_page":24,"control":"numeric_input","prompt_html":"<p>Найдите корень уравнения</p>","formula_latex":"\\log_4(5x+10)-\\log_4 5=\\log_4 3","formula_status":"SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"},
-        {"variant":3,"source_page":24,"control":"numeric_input","prompt_html":"<p>Решите уравнение</p>","formula_latex":"x^2=17x-72","continuation_html":"<p>Если уравнение имеет больше одного корня, в ответе укажите больший из них.</p>","formula_status":"SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"},
-        {"variant":4,"source_page":24,"control":"numeric_input","prompt_html":"<p>Решите уравнение</p>","formula_latex":"\\sqrt{13-x}=3","formula_status":"SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"}
-      ]
-    },
-    {
-      "number":18,
-      "variants":[
+      "number": 15,
+      "variants": [
         {
-          "variant":1,"source_page":25,"control":"matching_selects_4","asset_id":"base-18-v1-number-line",
-          "prompt_html":"<p>На координатной прямой отмечены точки A, B, C и D.</p><p>Каждой точке соответствует одно из чисел в правом столбце. Установите соответствие между указанными точками и числами.</p>",
-          "left":["A","B","C","D"],
-          "right_latex":["1) \\;2\\sqrt7:\\sqrt3","2) \\;\\sqrt7+\\sqrt3","3) \\;\\sqrt7\\cdot2\\sqrt3","4) \\;(\\sqrt3)^3+1"],
-          "instruction":"В таблице для каждой точки укажите номер соответствующего числа.",
-          "formula_status":"SOURCE_COORDINATE_LAYOUT_CONFIRMED_VISUAL_GATE_PENDING"
+          "variant": 1,
+          "source_page": 23,
+          "control": "numeric_input",
+          "prompt_html": "<p>Держатели дисконтной карты книжного магазина получают при покупке скидку 10 %. Книга стоит 330 рублей. Сколько рублей заплатит держатель дисконтной карты за эту книгу?</p>"
         },
         {
-          "variant":2,"source_page":25,"control":"matching_selects_4",
-          "prompt_html":"<p>Каждому из четырёх неравенств в левом столбце соответствует одно из решений в правом столбце. Установите соответствие между неравенствами и их решениями.</p>",
-          "left_latex":["А) \\;2^{-x}<0{,}25","Б) \\;\\log_5x>1","В) \\;\\frac{(x-2)^2}{x-5}<0","Г) \\;(x-5)(x-2)<0"],
-          "right_latex":["1) \\;(5;+\\infty)","2) \\;(2;+\\infty)","3) \\;(2;5)","4) \\;(-\\infty;2)\\cup(2;5)"],
-          "instruction":"Запишите в приведённой в ответе таблице под каждой буквой соответствующий решению номер.",
-          "formula_status":"SOURCE_COORDINATE_LAYOUT_CONFIRMED_VISUAL_GATE_PENDING"
+          "variant": 2,
+          "source_page": 23,
+          "control": "numeric_input",
+          "prompt_html": "<p>Четверть всех отдыхающих в пансионате — дети. Какой процент от всех отдыхающих составляют дети?</p>"
         },
         {
-          "variant":3,"source_page":26,"control":"matching_selects_4","asset_id":"base-18-v3-number-line",
-          "prompt_html":"<p>На координатной прямой отмечены точки A, B, C и D.</p><p>Число m равно √0,15.</p><p>Каждой из четырёх точек в левом столбце соответствует число, которое является её координатой. Установите соответствие между точками и числами из правого столбца.</p>",
-          "left":["A","B","C","D"],
-          "right_latex":["1) \\;4m","2) \\;m^2","3) \\;-\\frac1m","4) \\;m-1"],
-          "instruction":"Запишите в приведённой в ответе таблице под каждой точкой соответствующий числу номер.",
-          "formula_status":"SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"
+          "variant": 3,
+          "source_page": 23,
+          "control": "numeric_input",
+          "prompt_html": "<p>Площадь земель фермерского хозяйства, отведённых под посадку сельскохозяйственных культур, составляет 36 гектаров и распределена между зерновыми и овощными культурами в отношении 2:7 соответственно. Сколько гектаров занимают овощные культуры?</p>"
+        },
+        {
+          "variant": 4,
+          "source_page": 23,
+          "control": "numeric_input",
+          "prompt_html": "<p>Банк начисляет на срочный вклад 14 % годовых. Вкладчик положил на счёт 9000 рублей. Сколько рублей будет на этом счёте через год, если никаких операций, кроме начисления процентов, со счётом проводиться не будет?</p>"
         }
       ]
     },
     {
-      "number":19,
-      "variants":[
-        {"variant":1,"source_page":26,"control":"numeric_input","prompt_html":"<p>Найдите трёхзначное натуральное число, которое при делении и на 4, и на 5, и на 6 даёт в остатке 2 и все цифры в записи которого чётные. В ответе запишите какое-нибудь одно такое число.</p>"},
-        {"variant":2,"source_page":26,"control":"numeric_input","prompt_html":"<p>На шести карточках написаны цифры 2, 3, 5, 6, 7, 7 (по одной цифре на каждой карточке). В выражении</p>","formula_latex":"\\square+\\square\\square+\\square\\square\\square","continuation_html":"<p>вместо каждого квадратика положили карточку из этого набора. Оказалось, что полученная сумма делится на 10, но не делится на 20. В ответе укажите какую-либо одну такую сумму.</p>"},
-        {"variant":3,"source_page":27,"control":"numeric_input","prompt_html":"<p>Найдите четырёхзначное число, кратное 125, все цифры которого различны и нечётны. В ответе запишите какое-нибудь одно такое число.</p>"},
-        {"variant":4,"source_page":27,"control":"numeric_input","prompt_html":"<p>Вычеркните в числе 45341527 три цифры так, чтобы получившееся число делилось на 22. В ответе укажите какое-нибудь одно получившееся число.</p>"}
+      "number": 16,
+      "variants": [
+        {
+          "variant": 1,
+          "source_page": 24,
+          "control": "numeric_input",
+          "prompt_html": "<p>Найдите значение выражения</p>",
+          "formula_latex": "\\frac{12^{12}}{2^{14}\\cdot6^{11}}",
+          "formula_status": "SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"
+        },
+        {
+          "variant": 2,
+          "source_page": 24,
+          "control": "numeric_input",
+          "prompt_html": "<p>Найдите значение выражения</p>",
+          "formula_latex": "26\\sin750^\\circ",
+          "formula_status": "SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"
+        },
+        {
+          "variant": 3,
+          "source_page": 24,
+          "control": "numeric_input",
+          "prompt_html": "<p>Найдите значение выражения</p>",
+          "formula_latex": "(\\sqrt{63}-\\sqrt7)\\cdot\\sqrt7",
+          "formula_status": "SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"
+        },
+        {
+          "variant": 4,
+          "source_page": 24,
+          "control": "numeric_input",
+          "prompt_html": "<p>Найдите значение выражения</p>",
+          "formula_latex": "\\log_6 1{,}5+\\log_6 24",
+          "formula_status": "SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"
+        }
       ]
     },
     {
-      "number":20,
-      "variants":[
-        {"variant":1,"source_page":27,"control":"numeric_input","prompt_html":"<p>Два человека одновременно отправляются из одного дома на прогулку до опушки леса, находящейся в 4,5 км от дома. Один идёт со скоростью 4 км/ч, а другой — со скоростью 5 км/ч. Дойдя до опушки, второй с той же скоростью возвращается обратно. На каком расстоянии от дома произойдёт их встреча? Ответ дайте в километрах.</p>"},
-        {"variant":2,"source_page":27,"control":"numeric_input","prompt_html":"<p>Смешали 8 литров 15-процентного раствора вещества с 12 литрами 40-процентного раствора этого же вещества. Сколько процентов составляет концентрация получившегося раствора?</p>"},
-        {"variant":3,"source_page":27,"control":"numeric_input","prompt_html":"<p>Первую треть пути автомобиль ехал со скоростью 60 км/ч, вторую треть — со скоростью 100 км/ч, а последнюю — со скоростью 30 км/ч. Найдите среднюю скорость автомобиля на протяжении всего пути. Ответ дайте в км/ч.</p>"},
-        {"variant":4,"source_page":27,"control":"numeric_input","prompt_html":"<p>Расстояние между городами A и B равно 610 км. Из города A в город B со скоростью 50 км/ч выехал первый автомобиль, а через час после этого навстречу ему из города B выехал со скоростью 90 км/ч второй автомобиль. На каком расстоянии от города A автомобили встретятся? Ответ дайте в километрах.</p>"}
+      "number": 17,
+      "variants": [
+        {
+          "variant": 1,
+          "source_page": 24,
+          "control": "numeric_input",
+          "prompt_html": "<p>Найдите корень уравнения</p>",
+          "formula_latex": "\\left(\\frac14\\right)^{2-x}=64",
+          "formula_status": "SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"
+        },
+        {
+          "variant": 2,
+          "source_page": 24,
+          "control": "numeric_input",
+          "prompt_html": "<p>Найдите корень уравнения</p>",
+          "formula_latex": "\\log_4(5x+10)-\\log_4 5=\\log_4 3",
+          "formula_status": "SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"
+        },
+        {
+          "variant": 3,
+          "source_page": 24,
+          "control": "numeric_input",
+          "prompt_html": "<p>Решите уравнение</p>",
+          "formula_latex": "x^2=17x-72",
+          "continuation_html": "<p>Если уравнение имеет больше одного корня, в ответе запишите больший из них.</p>",
+          "formula_status": "SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"
+        },
+        {
+          "variant": 4,
+          "source_page": 24,
+          "control": "numeric_input",
+          "prompt_html": "<p>Решите уравнение</p>",
+          "formula_latex": "\\sqrt{13-x}=3",
+          "formula_status": "SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"
+        }
       ]
     },
     {
-      "number":21,
-      "variants":[
-        {"variant":1,"source_page":28,"control":"numeric_input","prompt_html":"<p>Список заданий викторины состоял из 33 вопросов. За каждый правильный ответ ученик получал 7 очков, за неправильный ответ с него списывали 13 очков, а при отсутствии ответа давали 0 очков. Сколько верных ответов дал ученик, набравший 56 очков, если известно, что по крайней мере один раз он ошибся?</p>"},
-        {"variant":2,"source_page":28,"control":"numeric_input","asset_id":"base-21-v2-rectangle-partition","prompt_html":"<p>Прямоугольник разбит на четыре меньших прямоугольника двумя прямолинейными разрезами. Периметры трёх из них, начиная с левого верхнего и далее по часовой стрелке, равны 24, 28 и 16. Найдите периметр четвёртого прямоугольника.</p>"},
-        {"variant":3,"source_page":28,"control":"numeric_input","prompt_html":"<p>В доме всего девятнадцать квартир с номерами от 1 до 19. В каждой квартире живёт не меньше одного и не больше трёх человек. В квартирах с 1-й по 12-ю включительно живёт суммарно 16 человек, а в квартирах с 9-й по 19-ю включительно живёт суммарно 29 человек. Сколько всего человек живёт в этом доме?</p>"},
-        {"variant":4,"source_page":28,"control":"numeric_input","prompt_html":"<p>В таблице три столбца и несколько строк. В каждую клетку таблицы вписали по натуральному числу так, что сумма всех чисел в первом столбце равна 137, во втором — 160, в третьем — 185, а сумма чисел в каждой строке больше 24, но меньше 27. Сколько всего строк в таблице?</p>"}
+      "number": 18,
+      "variants": [
+        {
+          "variant": 1,
+          "source_page": 25,
+          "control": "matching_selects_4",
+          "asset_id": "base-18-v1-number-line",
+          "prompt_html": "<p>На координатной прямой отмечены точки A, B, C и D.</p><p>Каждой точке соответствует одно из чисел в правом столбце. Установите соответствие между указанными точками и числами.</p>",
+          "left": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "right_latex": [
+            "1) \\;2\\sqrt7:\\sqrt3",
+            "2) \\;\\sqrt7+\\sqrt3",
+            "3) \\;\\sqrt7\\cdot2\\sqrt3",
+            "4) \\;(\\sqrt3)^3+1"
+          ],
+          "instruction": "В таблице для каждой точки укажите номер соответствующего числа.",
+          "formula_status": "SOURCE_COORDINATE_LAYOUT_CONFIRMED_VISUAL_GATE_PENDING"
+        },
+        {
+          "variant": 2,
+          "source_page": 25,
+          "control": "matching_selects_4",
+          "prompt_html": "<p>Каждому из четырёх неравенств в левом столбце соответствует одно из решений в правом столбце. Установите соответствие между неравенствами и их решениями.</p>",
+          "left_latex": [
+            "А) \\;2^{-x}<0{,}25",
+            "Б) \\;\\log_5x>1",
+            "В) \\;\\frac{(x-2)^2}{x-5}<0",
+            "Г) \\;(x-5)(x-2)<0"
+          ],
+          "right_latex": [
+            "1) \\;(5;+\\infty)",
+            "2) \\;(2;+\\infty)",
+            "3) \\;(2;5)",
+            "4) \\;(-\\infty;2)\\cup(2;5)"
+          ],
+          "instruction": "Запишите в приведённой в ответе таблице под каждой буквой соответствующий решению номер.",
+          "formula_status": "SOURCE_COORDINATE_LAYOUT_CONFIRMED_VISUAL_GATE_PENDING"
+        },
+        {
+          "variant": 3,
+          "source_page": 26,
+          "control": "matching_selects_4",
+          "asset_id": "base-18-v3-number-line",
+          "prompt_html": "<p>На координатной прямой отмечены точки A, B, C и D.</p><p>Число m равно √0,15.</p><p>Каждой из четырёх точек в левом столбце соответствует число, которое является её координатой. Установите соответствие между точками и числами из правого столбца.</p>",
+          "left": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "right_latex": [
+            "1) \\;4m",
+            "2) \\;m^2",
+            "3) \\;-\\frac1m",
+            "4) \\;m-1"
+          ],
+          "instruction": "Запишите в приведённой в ответе таблице под каждой точкой соответствующий числу номер.",
+          "formula_status": "SOURCE_SEMANTICS_CONFIRMED_VISUAL_GATE_PENDING"
+        }
+      ]
+    },
+    {
+      "number": 19,
+      "variants": [
+        {
+          "variant": 1,
+          "source_page": 26,
+          "control": "numeric_input",
+          "prompt_html": "<p>Найдите трёхзначное натуральное число, которое при делении и на 4, и на 5, и на 6 даёт в остатке 2 и все цифры в записи которого чётные. В ответе запишите какое-нибудь одно такое число.</p>"
+        },
+        {
+          "variant": 2,
+          "source_page": 26,
+          "control": "numeric_input",
+          "prompt_html": "<p>На шести карточках написаны цифры 2, 3, 5, 6, 7, 7 (по одной цифре на каждой карточке). В выражении</p>",
+          "formula_latex": "\\square+\\square\\square+\\square\\square\\square",
+          "continuation_html": "<p>вместо каждого квадратика положили карточку из этого набора. Оказалось, что полученная сумма делится на 10, но не делится на 20. В ответе укажите какую-либо одну такую сумму.</p>"
+        },
+        {
+          "variant": 3,
+          "source_page": 27,
+          "control": "numeric_input",
+          "prompt_html": "<p>Найдите четырёхзначное число, кратное 125, все цифры которого различны и нечётны. В ответе запишите какое-нибудь одно такое число.</p>"
+        },
+        {
+          "variant": 4,
+          "source_page": 27,
+          "control": "numeric_input",
+          "prompt_html": "<p>Вычеркните в числе 45341527 три цифры так, чтобы получившееся число делилось на 22. В ответе укажите какое-нибудь одно получившееся число.</p>"
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "variants": [
+        {
+          "variant": 1,
+          "source_page": 27,
+          "control": "numeric_input",
+          "prompt_html": "<p>Два человека одновременно отправляются из одного дома на прогулку до опушки леса, находящейся в 4,5 км от дома. Один идёт со скоростью 4 км/ч, а другой — со скоростью 5 км/ч. Дойдя до опушки, второй с той же скоростью возвращается обратно. На каком расстоянии от дома произойдёт их встреча? Ответ дайте в километрах.</p>"
+        },
+        {
+          "variant": 2,
+          "source_page": 27,
+          "control": "numeric_input",
+          "prompt_html": "<p>Смешали 8 литров 15-процентного раствора вещества с 12 литрами 40-процентного раствора этого же вещества. Сколько процентов составляет концентрация получившегося раствора?</p>"
+        },
+        {
+          "variant": 3,
+          "source_page": 27,
+          "control": "numeric_input",
+          "prompt_html": "<p>Первую треть пути автомобиль ехал со скоростью 60 км/ч, вторую треть — со скоростью 100 км/ч, а последнюю — со скоростью 30 км/ч. Найдите среднюю скорость автомобиля на протяжении всего пути. Ответ дайте в км/ч.</p>"
+        },
+        {
+          "variant": 4,
+          "source_page": 27,
+          "control": "numeric_input",
+          "prompt_html": "<p>Расстояние между городами A и B равно 610 км. Из города A в город B со скоростью 50 км/ч выехал первый автомобиль, а через час после этого навстречу ему из города B выехал со скоростью 90 км/ч второй автомобиль. На каком расстоянии от города A автомобили встретятся? Ответ дайте в километрах.</p>"
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "variants": [
+        {
+          "variant": 1,
+          "source_page": 28,
+          "control": "numeric_input",
+          "prompt_html": "<p>Список заданий викторины состоял из 33 вопросов. За каждый правильный ответ ученик получал 7 очков, за неправильный ответ с него списывали 13 очков, а при отсутствии ответа давали 0 очков. Сколько верных ответов дал ученик, набравший 56 очков, если известно, что по крайней мере один раз он ошибся?</p>"
+        },
+        {
+          "variant": 2,
+          "source_page": 28,
+          "control": "numeric_input",
+          "asset_id": "base-21-v2-rectangle-partition",
+          "prompt_html": "<p>Прямоугольник разбит на четыре меньших прямоугольника двумя прямолинейными разрезами. Периметры трёх из них, начиная с левого верхнего и далее по часовой стрелке, равны 24, 28 и 16. Найдите периметр четвёртого прямоугольника.</p>"
+        },
+        {
+          "variant": 3,
+          "source_page": 28,
+          "control": "numeric_input",
+          "prompt_html": "<p>В доме всего девятнадцать квартир с номерами от 1 до 19. В каждой квартире живёт не меньше одного и не больше трёх человек. В квартирах с 1-й по 12-ю включительно живёт суммарно 16 человек, а в квартирах с 9-й по 19-ю включительно живёт суммарно 29 человек. Сколько всего человек живёт в этом доме?</p>"
+        },
+        {
+          "variant": 4,
+          "source_page": 28,
+          "control": "numeric_input",
+          "prompt_html": "<p>В таблице три столбца и несколько строк. В каждую клетку таблицы вписали по натуральному числу так, что сумма всех чисел в первом столбце равна 137, во втором — 160, в третьем — 185, а сумма чисел в каждой строке больше 24, но меньше 27. Сколько всего строк в таблице?</p>"
+        }
       ]
     }
   ]
