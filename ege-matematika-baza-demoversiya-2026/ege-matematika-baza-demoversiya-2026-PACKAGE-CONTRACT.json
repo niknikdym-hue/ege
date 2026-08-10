@@ -1,5 +1,5 @@
 {
-  "package_version": "1.0",
+  "package_version": "1.1",
   "source_year": 2026,
   "permanent_url": "https://eksamio.ru/ege/matematika-baza/demoversiya/",
   "header_footer_included": false,
@@ -16,7 +16,7 @@
     "official_examples_total": 70
   },
   "interaction_contract": {
-    "numeric_input": "strict canonical input",
+    "numeric_input": "numeric syntax is validated independently from answer correctness; dot normalizes to comma; raw invalid input is preserved",
     "matching_selects_4": "four real selects; system assembles code",
     "checkboxes": "real checkboxes; system assembles set",
     "row_checkboxes": "real row selection; system assembles set",
@@ -27,8 +27,5 @@
     "literal_layout": 23,
     "formula_glyph": 6,
     "visual_assets": 25
-  },
-  "release_status": "READY_FOR_TILDA_TEST",
-  "audit_matrix_pass": "70/70",
-  "browser_full_attempt": "21/21"
+  }
 }
