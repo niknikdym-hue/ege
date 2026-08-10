@@ -18,7 +18,7 @@ for key,s in source.items():
 answer_keys={(int(n),v['variant']) for n,rows in answers['tasks'].items() for v in rows};assert answer_keys==set(source)
 assert visual['status']=='PASS' and len(visual['records'])==25
 for r in visual['records']:
- p=ROOT/'assets'/f"{r['id']}.webp";assert p.exists(),r['id'];assert hashlib.sha256(p.read_bytes()).hexdigest()==r['sha256'],r['id'];assert r['geometry_clipped'] is False,r['id'];assert min(r['segment_boundary_gap_px'].values())>0,r['id'];assert r['status']=='PASS',r['id']
+ p=ROOT/'assets'/f"{r['id']}.webp";assert p.exists(),r['id'];assert hashlib.sha256(p.read_bytes()).hexdigest()==r['sha256'],r['id'];assert r['geometry_clipped'] is False,r['id'];assert r['source_boundary_ink_px']==0,r['id'];assert r['status']=='PASS',r['id']
 for r in formula['records']:
  p=ROOT/r['source_page_file'];assert p.exists(),r['example'];assert hashlib.sha256(p.read_bytes()).hexdigest()==r['source_page_sha256'],r['example']
 for n in range(4,8):
