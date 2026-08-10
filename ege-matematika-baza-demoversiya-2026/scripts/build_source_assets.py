@@ -14,34 +14,35 @@ COORD = ROOT / "source-diagnostics" / "canonical-coordinates"
 ASSETS = ROOT / "assets"
 ASSETS.mkdir(parents=True, exist_ok=True)
 
-# Exact official-example segments from TASK_NUMBER/ИЛИ to immediately before the
-# example's own Ответ: line. Decimal end coordinates are based on canonical marker y0.
+# Full official-example regions. A figure can continue below the printed Ответ:
+# line when the answer line is on the left and the figure is on the right, so the
+# correct lower boundary is the next ИЛИ / next task marker, not Ответ:.
 SPECS = [
-    ("base-03-v1-temperature-chart", 10, 59, 271, 1),
-    ("base-03-v3-nickel-chart", 11, 56, 310, 1),
-    ("base-07-v1-derivative-graph", 14, 262, 523, 1),
-    ("base-07-v2-torque-chart", 15, 57, 398, 1),
-    ("base-07-v3-function-graphs", 16, 56, 389, 8),
-    ("base-09-v1-lake-plan", 18, 63, 302, 1),
-    ("base-09-v2-grid-plan", 18, 322, 429, 1),
-    ("base-10-v1-dacha-plan", 19, 59, 150, 1),
-    ("base-10-v2-wheel", 19, 170, 252.1, 1),
-    ("base-10-v3-fence-plan", 19, 271, 358.4, 3),
-    ("base-11-v1-tank", 20, 59, 137, 1),
-    ("base-11-v2-cut-prism", 20, 157, 234.3, 1),
-    ("base-11-v3-polyhedron", 20, 253, 396, 1),
-    ("base-11-v4-boxes", 20, 416, 507, 1),
-    ("base-12-v1-triangle-median", 21, 59, 122.3, 1),
-    ("base-12-v2-circle-chord", 21, 144, 210, 1),
-    ("base-12-v3-right-triangle", 21, 232, 292, 1),
-    ("base-12-v4-midline", 21, 312, 388, 1),
-    ("base-13-v1-cone", 22, 62, 125, 1),
-    ("base-13-v2-pyramid", 22, 145, 217.2, 1),
-    ("base-13-v3-cylinders", 22, 236, 318, 2),
-    ("base-13-v4-spheres", 22, 338, 402.0, 2),
-    ("base-18-v1-number-line", 25, 59, 247, 1),
-    ("base-18-v3-number-line", 26, 56, 295, 1),
-    ("base-21-v2-rectangle-partition", 28, 148, 231, 1),
+    ("base-03-v1-temperature-chart", 10, 59, 292, 1),
+    ("base-03-v3-nickel-chart", 11, 56, 353, 1),
+    ("base-07-v1-derivative-graph", 14, 262, 540, 1),
+    ("base-07-v2-torque-chart", 15, 57, 540, 1),
+    ("base-07-v3-function-graphs", 16, 56, 540, 8),
+    ("base-09-v1-lake-plan", 18, 63, 323, 1),
+    ("base-09-v2-grid-plan", 18, 322, 540, 1),
+    ("base-10-v1-dacha-plan", 19, 59, 171, 1),
+    ("base-10-v2-wheel", 19, 170, 272, 1),
+    ("base-10-v3-fence-plan", 19, 271, 540, 3),
+    ("base-11-v1-tank", 20, 59, 158, 1),
+    ("base-11-v2-cut-prism", 20, 157, 254, 1),
+    ("base-11-v3-polyhedron", 20, 253, 417, 1),
+    ("base-11-v4-boxes", 20, 416, 540, 1),
+    ("base-12-v1-triangle-median", 21, 59, 145, 1),
+    ("base-12-v2-circle-chord", 21, 144, 233, 1),
+    ("base-12-v3-right-triangle", 21, 232, 313, 1),
+    ("base-12-v4-midline", 21, 312, 540, 1),
+    ("base-13-v1-cone", 22, 62, 146, 1),
+    ("base-13-v2-pyramid", 22, 145, 237, 1),
+    ("base-13-v3-cylinders", 22, 236, 339, 2),
+    ("base-13-v4-spheres", 22, 338, 540, 2),
+    ("base-18-v1-number-line", 25, 59, 278, 1),
+    ("base-18-v3-number-line", 26, 56, 340, 1),
+    ("base-21-v2-rectangle-partition", 28, 148, 253, 1),
 ]
 
 MONTHS = {"янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"}
@@ -91,7 +92,7 @@ def detect_components(img, words, sx, sy, y0_pt, y1_pt):
 
 
 def selected_raw_geometry(raw, chosen):
-    """Return the undilated source pixels that belong only to selected component boxes."""
+    """Return undilated source pixels located inside selected component boxes."""
     selected = np.zeros_like(raw, dtype=np.uint8)
     for c in chosen:
         x0, y0 = c["x"], c["y"]
@@ -151,7 +152,6 @@ for asset_id, page_no, y0_pt, y1_pt, expected_count in SPECS:
     rx0, ry0, rx1, ry1 = raw_bbox
     band_top, band_bottom, band_left, band_right = band
 
-    # Final clipping proof uses ONLY undilated pixels inside selected diagram components.
     source_gaps = {
         "top": ry0 - band_top,
         "bottom": band_bottom - ry1,
@@ -167,7 +167,7 @@ for asset_id, page_no, y0_pt, y1_pt, expected_count in SPECS:
     )
     if geometry_clipped or source_boundary_ink_px:
         errors.append(
-            f"{asset_id}: selected real source geometry reaches official segment boundary "
+            f"{asset_id}: selected real source geometry reaches official variant boundary "
             f"gaps={source_gaps}, boundaryInk={source_boundary_ink_px}"
         )
 
@@ -224,7 +224,7 @@ for asset_id, page_no, y0_pt, y1_pt, expected_count in SPECS:
     rec = {
         "id": asset_id,
         "source_page": page_no,
-        "official_segment_pt": [y0_pt, y1_pt],
+        "official_variant_region_pt": [y0_pt, y1_pt],
         "expected_components": expected_count,
         "selected_components": chosen,
         "selected_source_bbox_px": [rx0, ry0, rx1, ry1],
@@ -255,7 +255,7 @@ status = "PASS" if not errors and len(records) == 25 else "FAIL"
 evidence = {
     "status": status,
     "source": "official FIPI 2026 base mathematics PDF via canonical printed-page render",
-    "method": "marker-to-answer segment; morphology locates diagram components; final clipping proof uses only undilated source pixels inside selected component boxes",
+    "method": "full official variant region between variant markers; morphology locates diagram components; final clipping proof uses only undilated source pixels inside selected component boxes",
     "asset_count": len(records),
     "errors": errors,
     "records": records,
