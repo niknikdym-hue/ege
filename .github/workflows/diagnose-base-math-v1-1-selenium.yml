@@ -1,0 +1,82 @@
+name: Diagnose Base Math v1.1 Selenium
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/diagnose-base-math-v1-1-selenium.yml
+
+permissions:
+  contents: write
+
+jobs:
+  browser-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencies
+        id: deps
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          pip install selenium 2>&1 | tee /tmp/selenium-deps.log
+          (google-chrome --version || chromium-browser --version || chromium --version) 2>&1 | tee -a /tmp/selenium-deps.log
+          (chromedriver --version || true) 2>&1 | tee -a /tmp/selenium-deps.log
+      - name: Serve preview
+        id: server
+        continue-on-error: true
+        shell: bash
+        run: |
+          cd ege-matematika-baza-demoversiya-2026
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/selenium-server.log 2>&1 &
+          echo $! >/tmp/selenium-server.pid
+          sleep 2
+          curl -fsS http://127.0.0.1:8765/ege-matematika-baza-demoversiya-2026-PREVIEW.html >/dev/null
+      - name: Browser regression
+        id: browser
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          cd ege-matematika-baza-demoversiya-2026
+          python tests/test_v1_1_selenium.py 2>&1 | tee /tmp/selenium-browser.log
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f /tmp/selenium-server.pid ]; then kill $(cat /tmp/selenium-server.pid) || true; fi
+      - name: Commit diagnostic
+        if: always()
+        shell: bash
+        env:
+          DEPS: ${{ steps.deps.outcome }}
+          SERVER: ${{ steps.server.outcome }}
+          BROWSER: ${{ steps.browser.outcome }}
+        run: |
+          OUT=ege-matematika-baza-demoversiya-2026/BASE-V1.1-SELENIUM-DIAGNOSTIC.txt
+          {
+            echo "DEPS=$DEPS"
+            echo "SERVER=$SERVER"
+            echo "BROWSER=$BROWSER"
+            echo
+            echo '=== dependencies ==='
+            tail -n 80 /tmp/selenium-deps.log 2>/dev/null || true
+            echo
+            echo '=== server ==='
+            tail -n 80 /tmp/selenium-server.log 2>/dev/null || true
+            echo
+            echo '=== browser ==='
+            tail -n 180 /tmp/selenium-browser.log 2>/dev/null || true
+          } > "$OUT"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUT"
+          git commit -m 'Record base mathematics v1.1 Selenium diagnostic' || true
+          git pull --rebase origin main
+          git push origin main
