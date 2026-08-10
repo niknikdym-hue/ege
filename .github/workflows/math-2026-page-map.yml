@@ -1,0 +1,117 @@
+name: Build mathematics 2026 printed-page source map
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/math-2026-page-map.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-page-map:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install PyMuPDF
+        run: pip install --quiet pymupdf
+
+      - name: Split rotated two-up PDFs into printed-page text maps
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import fitz
+
+          root = Path('matematika-source-2026')
+          jobs = [
+              ('base-demo', root/'original'/'МА-11 ЕГЭ 2026 ДЕМО_базовый.pdf', 29),
+              ('base-spec', root/'original'/'МА-11 ЕГЭ 2026 СПЕЦ_базовый.pdf', 12),
+              ('profile-demo', root/'original'/'МА-11 ЕГЭ 2026 ДЕМО_профильный.pdf', None),
+              ('profile-spec', root/'original'/'МА-11 ЕГЭ 2026 СПЕЦ_профильный.pdf', None),
+              ('codifier', root/'original'/'МА-11 ЕГЭ 2026_КОДИФ.pdf', 18),
+          ]
+
+          def visual_rect(page):
+              r = page.rect
+              m = page.rotation_matrix
+              pts = [fitz.Point(r.x0,r.y0)*m, fitz.Point(r.x1,r.y0)*m,
+                     fitz.Point(r.x0,r.y1)*m, fitz.Point(r.x1,r.y1)*m]
+              xs=[p.x for p in pts]; ys=[p.y for p in pts]
+              return fitz.Rect(min(xs), min(ys), max(xs), max(ys))
+
+          for name, pdf_path, expected_printed in jobs:
+              out = root/'printed-pages'/name
+              out.mkdir(parents=True, exist_ok=True)
+              for p in out.glob('page-*.txt'):
+                  p.unlink()
+              doc=fitz.open(pdf_path)
+              printed=[]
+              page_no=0
+              for physical_index,page in enumerate(doc, start=1):
+                  vr=visual_rect(page)
+                  mid=(vr.x0+vr.x1)/2
+                  halves=[fitz.Rect(vr.x0,vr.y0,mid,vr.y1), fitz.Rect(mid,vr.y0,vr.x1,vr.y1)]
+                  blocks=page.get_text('blocks', sort=True)
+                  m=page.rotation_matrix
+                  visual_blocks=[]
+                  for b in blocks:
+                      rr=fitz.Rect(b[:4]) * m
+                      text=b[4].strip()
+                      if text:
+                          visual_blocks.append((rr,text))
+                  for half_index,half in enumerate(halves, start=1):
+                      page_no += 1
+                      if expected_printed and page_no>expected_printed:
+                          break
+                      selected=[]
+                      for rr,text in visual_blocks:
+                          c=(rr.x0+rr.x1)/2
+                          if half.x0 <= c < half.x1:
+                              selected.append((rr.y0,rr.x0,text))
+                      selected.sort(key=lambda x:(round(x[0],1),x[1]))
+                      text='\n'.join(t for _,__,t in selected).strip()
+                      path=out/f'page-{page_no:02d}.txt'
+                      path.write_text(text+'\n', encoding='utf-8')
+                      printed.append({
+                          'printed_page':page_no,
+                          'physical_pdf_page':physical_index,
+                          'half':'left' if half_index==1 else 'right',
+                          'chars':len(text),
+                          'file':str(path)
+                      })
+                  if expected_printed and page_no>=expected_printed:
+                      break
+              (out/'PAGE-MAP.json').write_text(json.dumps({
+                  'source_pdf':str(pdf_path),
+                  'physical_pdf_pages':len(doc),
+                  'expected_printed_pages':expected_printed,
+                  'generated_printed_pages':len(printed),
+                  'pages':printed
+              }, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          PY
+
+      - name: Validate base page map
+        run: |
+          test "$(find matematika-source-2026/printed-pages/base-demo -name 'page-*.txt' | wc -l)" -eq 29
+          test "$(find matematika-source-2026/printed-pages/base-spec -name 'page-*.txt' | wc -l)" -eq 12
+          grep -q '21 задание' matematika-source-2026/printed-pages/base-demo/page-03.txt
+          grep -q 'Максимальный первичный балл' matematika-source-2026/printed-pages/base-spec/page-09.txt
+
+      - name: Commit printed-page maps
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add matematika-source-2026/printed-pages
+          if git diff --cached --quiet; then
+            echo 'Page maps unchanged.'
+          else
+            git commit -m 'Add mathematics 2026 printed-page source maps'
+            git push origin HEAD:main
+          fi
