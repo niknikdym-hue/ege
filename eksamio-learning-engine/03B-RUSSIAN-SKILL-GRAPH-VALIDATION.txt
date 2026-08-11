@@ -1,0 +1,222 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN SKILL GRAPH VALIDATION
+
+TASK_ID: TASK-001
+STATUS: PASS
+MODE: ADD-ONLY / AUDIT-ONLY
+VALIDATED_FILE: 03-RUSSIAN-SKILL-GRAPH.json
+VALIDATION_DATE: 2026-08-11
+SOURCE_COMMIT: a160220b084b3764bfb7726dc6e834f5301dafdd
+
+A. NO-DESTRUCTIVE-CHANGE CHECK
+
+RESULT: PASS / CONFIRMED
+
+Before TASK-001, the audited Russian production/source scope contained 266
+files with aggregate ordered SHA-256 digest:
+
+17aa936b6a42ae5fd8f0e60c9e8ba02f19093fb92527c46b1c22d4cf9d7d59f5
+
+After graph/provenance creation, the same scope contained 266 files with the
+same aggregate ordered SHA-256 digest:
+
+17aa936b6a42ae5fd8f0e60c9e8ba02f19093fb92527c46b1c22d4cf9d7d59f5
+
+Audited scope:
+- exam-platform-tilda/tilda-ready/pages/ege-russkiy*
+- exam-platform-tilda/spravochniki/ege-source-russkiy-2019-2026
+- exam-platform-tilda/scripts/build_ege_russian_trainer.py
+
+Git tracked diff before creation of the ADD-ONLY artifacts: empty.
+Git tracked diff after creation of the ADD-ONLY artifacts: empty.
+Only new Learning Engine artifacts/results are untracked before commit.
+
+NO-DESTRUCTIVE-CHANGE CHECK: CONFIRMED.
+
+Existing demo, trainer, source, answer, criteria, HTML, CSS, JS, T123, URL and
+localStorage files were not modified, rebuilt, moved, renamed or deleted.
+
+B. JSON VALIDATION
+
+RESULT: PASS
+
+- UTF-8 JSON parsed without errors.
+- Required top-level keys are present:
+  schema_version, subject, exam, source_status, generated_from, skills,
+  task_links, trainer_links, review_queue.
+- schema_version: 1.0.0.
+- subject: russian.
+- exam: ege.
+- Top-level contract validator: PASS.
+
+C. SKILL/SUBSKILL VALIDATION
+
+RESULT: PASS
+
+- top-level skills: 12;
+- child subskills: 89;
+- total skill nodes: 101;
+- evidence_status confirmed: 87;
+- evidence_status partial: 13;
+- evidence_status needs_review: 1;
+- duplicate skill_id: 0;
+- missing parent_skill_id target: 0;
+- unconfirmed prerequisite edges: 0;
+- every prerequisites array is present and currently empty.
+
+The one needs_review skill is contextual_synonym_selection because its only
+trainer evidence is the historical task-25 card mixed into the current
+phraseologism pool.
+
+D. TASK COVERAGE
+
+RESULT: PASS / 27 OF 27 CURRENT TASKS LINKED
+
+Task | Items | Link status | Future handoff readiness
+1    | 5     | confirmed   | exact
+2    | 5     | partial     | task_level_only
+3    | 5     | partial     | diagnostic_required
+4    | 40    | confirmed   | diagnostic_required
+5    | 5     | confirmed   | exact
+6    | 5     | confirmed   | exact
+7    | 4     | partial     | diagnostic_required
+8    | 3     | confirmed   | exact
+9    | 5     | partial     | diagnostic_required
+10   | 5     | partial     | diagnostic_required
+11   | 4     | partial     | diagnostic_required
+12   | 4     | partial     | diagnostic_required
+13   | 8     | partial     | diagnostic_required
+14   | 10    | partial     | diagnostic_required
+15   | 6     | partial     | diagnostic_required
+16   | 4     | partial     | diagnostic_required
+17   | 4     | confirmed   | exact
+18   | 4     | partial     | diagnostic_required
+19   | 4     | confirmed   | task_level_only
+20   | 4     | confirmed   | task_level_only
+21   | 7     | partial     | diagnostic_required
+22   | 5     | confirmed   | exact
+23   | 8     | confirmed   | task_level_only
+24   | 8     | partial     | diagnostic_required
+25   | 5     | needs_review| exact with phraseologism subpool filter
+26   | 5     | confirmed   | exact
+27   | 2     | partial     | unavailable
+
+Task status totals:
+- confirmed: 11;
+- partial: 15;
+- needs_review: 1.
+
+No current task is missing a skill link.
+
+E. TRAINER COVERAGE
+
+RESULT: PASS / 174 OF 174 TRAINER ITEMS LINKED
+
+- manifest cards: 174;
+- graph trainer links: 174;
+- unique trainer_item_id: 174;
+- source paths found on disk: 174;
+- items with at least one skill_id: 174;
+- items with at least one subskill_id: 174;
+- confirmed: 95;
+- partial: 78;
+- needs_review: 1;
+- difficulty=null: 174;
+- non-null difficulty: 0.
+
+Cards-per-task in the graph exactly match BANK-MANIFEST.json for all 27 tasks.
+
+The single needs_review item is ege-ru-25-2022-24-01. It is preserved, not
+edited or removed.
+
+F. ORPHAN CHECK
+
+RESULT: PASS
+
+- skill/subskill without any task or trainer link: 0;
+- current exam task without skill link: 0;
+- trainer item without skill link: 0;
+- trainer item without subskill link: 0;
+- duplicate trainer_item_id: 0.
+
+G. ID STABILITY CHECK
+
+RESULT: PASS
+
+- all 101 skill_id values match [a-z][a-z0-9_]*;
+- skill_id containing 2026 or another four-digit year: 0;
+- skill_id containing archive/version markers: 0;
+- skill_id tied to a demo package version: 0;
+- task_id values use stable current task numbers, not source years;
+- existing trainer_item_id values are retained as product provenance and were
+  not renamed. The no-year rule applies to skill_id, as required by TASK-001.
+
+H. SOURCE CONFLICT CHECK
+
+RESULT: PASS WITH 12 EXPLICIT NEEDS_REVIEW ITEMS
+
+Nothing was silently corrected.
+
+Material conflicts/gaps recorded in graph.review_queue and provenance:
+1. SOURCE-AUDIT grouped card counts sum to 135 while the text states 138.
+2. Standalone Russian TASK-MAP/ANSWER-MAP/CRITERIA/SOURCE-GATE are absent.
+3. Task 25 mixes current phraseologism and historical synonym content.
+4. Task 2 includes a historical one-sense interaction unlike the current format.
+5. Orthoepic bank lacks explicit part-of-speech metadata.
+6. Mixed tasks lack option-level subskill links.
+7. Task 8 lacks stable future position IDs in the handoff contract.
+8. Task 22 lacks stable future position IDs in the handoff contract.
+9. Task 27 has no verified criterion-level automatic diagnosis.
+10. Two current-looking local demo directories coexist; equivalence unconfirmed.
+11. GitHub demo ZIP equivalence to the local current package is unconfirmed.
+12. The current 174-card trainer/builder are not yet tracked in GitHub.
+
+NEEDS_REVIEW_COUNT: 12 unique review_queue issues.
+
+Additional object-level flags (overlapping with those 12 issues):
+- skill nodes with needs_review: 1;
+- task links with needs_review: 1;
+- trainer links with needs_review: 1.
+
+I. FUTURE HANDOFF READINESS
+
+RESULT: COMPLETE CLASSIFICATION FOR 27 OF 27 TASKS
+
+exact (8):
+- 1, 5, 6, 8, 17, 22, 25, 26.
+
+task_level_only (4):
+- 2, 19, 20, 23.
+
+diagnostic_required (14):
+- 3, 4, 7, 9, 10, 11, 12, 13, 14, 15, 16, 18, 21, 24.
+
+unavailable (1):
+- 27.
+
+Conditions:
+- task 8 and 22 exact routing requires position-level correctness in future
+  Attempt data;
+- task 25 exact routing requires the phraseologism subpool and must not include
+  the historical contextual-synonym item;
+- task 27 remains unavailable until a separately reviewed expert/criterion
+  diagnostic contract exists.
+
+J. SOURCE/LAYOUT INSPECTION
+
+RESULT: PASS
+
+- current demo PDF: 15/15 pages rendered and visually inspected;
+- current codifier PDF: 10/10 pages rendered and visually inspected;
+- meaningful bold/capital/italic formatting was treated as content evidence;
+- graph links point to preserved HTML/T123 data rather than retyping or
+  normalizing official wording.
+
+K. STOP CONDITION
+
+RESULT: SATISFIED
+
+Created only the TASK-001 Skill Graph artifacts and required result record.
+No handoff runtime, mastery, spaced repetition, recommendation engine, storage
+migration, UX integration or AI implementation was started.
+
