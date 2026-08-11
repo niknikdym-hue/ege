@@ -1,0 +1,30 @@
+name: Patch Profile Math 2026 Builder Root
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/patch-profile-math-2026-builder-root.yml
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make builder relocatable
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('profile-math-2026-build/build_profile_2026.py')
+          s=p.read_text(encoding='utf-8')
+          old="REPO=Path(__file__).resolve().parents[1]\nROOT=REPO/'ege-matematika-profil-demoversiya-2026'\nSRC=REPO/'matematika-source-2026'/'original'/'МА-11 ЕГЭ 2026 ДЕМО_профильный.pdf'\nPREFIX='ege-matematika-profil-demoversiya-2026'"
+          new="PREFIX='ege-matematika-profil-demoversiya-2026'\nHERE=Path(__file__).resolve()\nif HERE.parent.name=='scripts' and HERE.parent.parent.name==PREFIX:\n    ROOT=HERE.parent.parent\n    REPO=ROOT.parent\nelse:\n    REPO=HERE.parents[1]\n    ROOT=REPO/PREFIX\nSRC=REPO/'matematika-source-2026'/'original'/'МА-11 ЕГЭ 2026 ДЕМО_профильный.pdf'"
+          assert old in s,'root preamble not found'
+          p.write_text(s.replace(old,new),encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add profile-math-2026-build/build_profile_2026.py
+          git commit -m 'Make profile math 2026 builder relocatable'
+          git pull --rebase origin main
+          git push origin main
