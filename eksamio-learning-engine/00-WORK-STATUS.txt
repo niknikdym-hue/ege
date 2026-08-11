@@ -1,0 +1,31 @@
+EKSAMIO LEARNING ENGINE
+WORK STATUS
+
+STATUS: CONCEPT / ARCHITECTURE
+PILOT_SUBJECT: ЕГЭ — русский язык
+REPOSITORY: niknikdym-hue/ege
+DIRECTION_PATH: /eksamio-learning-engine/
+
+CURRENT PILOT PRODUCTS:
+- Демоверсия ЕГЭ по русскому языку: https://eksamio.ru/ege/russkiy/demoversiya/
+- Тренажёр ЕГЭ по русскому языку: https://eksamio.ru/ege/russkiy/trenazher/
+
+CORE PRODUCT RULE:
+Базовая модель подготовки остаётся бесплатной.
+Бесплатны демоверсии, тренажёры, базовая проверка, работа над ошибками, базовый персональный маршрут, накопление прогресса, next-item correctness, spaced repetition и базовая карта слабых мест.
+Платная часть не должна искусственно урезать бесплатную. Платными могут быть вычислительно дорогие и глубоко персональные функции: AI-разбор, AI-репетитор, проверка сочинений, расширенный прогноз результата, глубокая диагностика и долгосрочная оптимизация маршрута.
+
+ARCHITECTURE PRINCIPLE:
+Демоверсия не адаптируется и не меняет официальный экзаменационный порядок. Персонализация начинается после завершения экзамена и в тренировочном контуре.
+
+TARGET LEARNING LOOP:
+DIAGNOSE -> SELECT -> PRACTICE -> HELP -> VERIFY -> RETAIN -> REASSESS
+
+CURRENT DECISION:
+Русский язык используется как первый пилот для общей архитектуры Learning Engine. После верификации архитектура должна масштабироваться на другие предметы без повторного изобретения ядра.
+
+NEXT REQUIRED ARTIFACTS:
+См. 02-CODEX-BUILD-INDEX.txt
+
+IMPORTANT:
+Не начинать реализацию AI до создания единого Skill Graph, схемы данных, формата Attempt, StudentSkillState, Recommendation Log и demo->trainer handoff.
