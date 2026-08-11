@@ -1,0 +1,106 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"verified_routing_tags_tasks_15_16_21",
+  "integration_status":"not_connected_to_production",
+  "schema_ref":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
+  "items":[
+    {
+      "trainer_item_id":"ege-ru-15-2026-15-01",
+      "task_number":15,
+      "routing_precision":"position",
+      "candidate_subskill_ids":["n_nn_spelling"],
+      "position_tags":[
+        {"position_id":"pos_1","source_locator":"стари(1)ых -> старинных","subskill_ids":["n_nn_spelling"],"explanation_id":"n_nn_spelling","diagnostic_confidence":"exact"},
+        {"position_id":"pos_2","source_locator":"глиня(2)ой -> глиняной","subskill_ids":["n_nn_spelling"],"explanation_id":"n_nn_spelling","diagnostic_confidence":"exact"},
+        {"position_id":"pos_3","source_locator":"берестя(3)ых -> берестяных","subskill_ids":["n_nn_spelling"],"explanation_id":"n_nn_spelling","diagnostic_confidence":"exact"},
+        {"position_id":"pos_4","source_locator":"распространё(4)ых -> распространённых","subskill_ids":["n_nn_spelling"],"explanation_id":"n_nn_spelling","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Exact position routing is valid because the answer is a set of numbered N/NN positions. More specific derivational rule-family tags can be added later without changing this base tag."
+    },
+    {
+      "trainer_item_id":"ege-ru-15-2026-15-02",
+      "task_number":15,
+      "routing_precision":"position",
+      "candidate_subskill_ids":["n_nn_spelling"],
+      "position_tags":[
+        {"position_id":"pos_1","source_locator":"деревя(1)ая -> деревянная","subskill_ids":["n_nn_spelling"],"explanation_id":"n_nn_spelling","exception_ids":["n_nn_wooden"],"diagnostic_confidence":"exact"},
+        {"position_id":"pos_2","source_locator":"письме(2)ый -> письменный","subskill_ids":["n_nn_spelling"],"explanation_id":"n_nn_spelling","diagnostic_confidence":"exact"},
+        {"position_id":"pos_3","source_locator":"кожа(3)ый -> кожаный","subskill_ids":["n_nn_spelling"],"explanation_id":"n_nn_spelling","diagnostic_confidence":"exact"},
+        {"position_id":"pos_4","source_locator":"кова(4)ым -> кованым","subskill_ids":["n_nn_spelling"],"explanation_id":"n_nn_spelling","exception_ids":["n_nn_forged"],"diagnostic_confidence":"exact"},
+        {"position_id":"pos_5","source_locator":"оклее(5)ый -> оклеенный","subskill_ids":["n_nn_spelling"],"explanation_id":"n_nn_spelling","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified"
+    },
+
+    {
+      "trainer_item_id":"ege-ru-16-2026-16-01",
+      "task_number":16,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["homogeneous_members_punctuation","clause_boundary_vs_homogeneous"],
+      "option_tags":[
+        {"position_id":"option_1","source_locator":"Происшествия последних дней были так неожиданны так внезапны.","subskill_ids":["homogeneous_members_punctuation"],"explanation_id":"homogeneous_members_punctuation","diagnostic_confidence":"exact"},
+        {"position_id":"option_2","source_locator":"Мне это было непривычно и я не сумел оценить вас.","subskill_ids":["clause_boundary_vs_homogeneous"],"explanation_id":"clause_boundary_vs_homogeneous","diagnostic_confidence":"exact"},
+        {"position_id":"option_3","source_locator":"Мы поднимались по узкой украшенной резьбой лестнице.","subskill_ids":["homogeneous_members_punctuation"],"explanation_id":"homogeneous_members_punctuation","diagnostic_confidence":"partial"},
+        {"position_id":"option_4","source_locator":"Наталья опустила письмо к себе на колени и долго сидела неподвижно.","subskill_ids":["clause_boundary_vs_homogeneous"],"explanation_id":"clause_boundary_vs_homogeneous","diagnostic_confidence":"exact"},
+        {"position_id":"option_5","source_locator":"Я не хочу ни оправдываться ни обвинять кого бы то ни было.","subskill_ids":["homogeneous_members_punctuation"],"explanation_id":"homogeneous_members_punctuation","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Option 3 is deliberately marked partial: the accepted Skill Graph has no dedicated homogeneous/nonhomogeneous definitions node, so the broader homogeneous-members explanation is educationally useful but should not be treated as a narrow mastery diagnosis."
+    },
+
+    {
+      "trainer_item_id":"ege-ru-21-2026-21-01",
+      "task_number":21,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["dash_rule_analysis"],
+      "option_tags":[
+        {"position_id":"option_1","source_locator":"Юрий Александрович Бычков — спецкор...","subskill_ids":["dash_rule_analysis"],"explanation_id":"task21_dash_subject_predicate","diagnostic_confidence":"exact"},
+        {"position_id":"option_3","source_locator":"Цель командировки — подготовить материал...","subskill_ids":["dash_rule_analysis"],"explanation_id":"task21_dash_subject_predicate","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Only the verified same-rule answer pair is promoted to the exact internal explanation split in this pass. Other dash-bearing sentences remain on the broad dash_rule_analysis fallback until separately classified."
+    },
+    {
+      "trainer_item_id":"ege-ru-21-2026-21-02",
+      "task_number":21,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["colon_rule_analysis"],
+      "option_tags":[
+        {"position_id":"option_2","source_locator":"На флаге ... герб ...: щит рассечён...","subskill_ids":["colon_rule_analysis"],"explanation_id":"task21_colon_explanatory_bsp","diagnostic_confidence":"exact"},
+        {"position_id":"option_3","source_locator":"Цвета флага ... располагаются ...: на синем фоне...","subskill_ids":["colon_rule_analysis"],"explanation_id":"task21_colon_explanatory_bsp","diagnostic_confidence":"exact"},
+        {"position_id":"option_5","source_locator":"В этом много символического: в гербовых фигурах читается...","subskill_ids":["colon_rule_analysis"],"explanation_id":"task21_colon_explanatory_bsp","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Current trainer explanation explicitly identifies 2,3,5 as the same explanatory-colon rule family."
+    },
+    {
+      "trainer_item_id":"ege-ru-21-2026-21-03",
+      "task_number":21,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["comma_rule_analysis"],
+      "option_tags":[
+        {"position_id":"option_2","source_locator":"Чтобы найти ответ, учёные используют...","subskill_ids":["comma_rule_analysis"],"explanation_id":"task21_comma_subordinate_boundary","diagnostic_confidence":"exact"},
+        {"position_id":"option_5","source_locator":"...исследованию Мирового океана, которое...","subskill_ids":["comma_rule_analysis"],"explanation_id":"task21_comma_subordinate_boundary","diagnostic_confidence":"exact"},
+        {"position_id":"option_9","source_locator":"Когда мы приступали к работе, то думали...","subskill_ids":["comma_rule_analysis"],"explanation_id":"task21_comma_subordinate_boundary","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"The three correct sentences use commas at a main/subordinate clause boundary. The subtype of subordinate clause differs, but the punctuation rule family is shared."
+    }
+  ],
+  "validation_notes":[
+    "All trainer_item_id values and current answers are present in the repository-visible trainer T123-07 snapshot.",
+    "Exception IDs used for task 15 exist in 33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json.",
+    "Task-21 exact explanation IDs exist in 67-RUSSIAN-EXPLANATION-TASK21-RULE-SPLITS-v0.1.json.",
+    "No trainer card or answer was changed."
+  ],
+  "status":"source_verified"
+}
