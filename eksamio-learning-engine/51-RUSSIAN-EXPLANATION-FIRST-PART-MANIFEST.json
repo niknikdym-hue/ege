@@ -1,0 +1,25 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "scope":"first_part_tasks_1_26",
+  "production_integration":false,
+  "status":"source_content_complete_review_and_integration_pending",
+  "source_policy":{"primary_rule_source":"eksamio-learning-engine/russkiy-knigi/rozental.doc","exam_truth":"verified FIPI/current source corpus","current_trainer":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/"},
+  "wave_1":{"manifest":"43-RUSSIAN-EXPLANATION-WAVE-1-MANIFEST.json","tasks":[9,10,11,12,13,14,15,16,17,18,19,20,21],"review":"44-RUSSIAN-EXPLANATION-WAVE-1-REVIEW.txt"},
+  "wave_2":{"manifest":"49-RUSSIAN-EXPLANATION-WAVE-2-MANIFEST.json","tasks":[1,2,3,4,5,6,7,8,22,23,24,25,26],"review":"50-RUSSIAN-EXPLANATION-WAVE-2-REVIEW.txt"},
+  "coverage":{"expected_tasks":26,"covered_tasks":26,"missing_tasks":[]},
+  "learner_behavior":{"warmup":"optional rule before answer only in future warmup UX","practice":"explanation after answer","work_on_errors":"detailed explanation then independent new item","control":"no explanations until completion","demo":"no explanations until completion"},
+  "core_content_contract":["short_rule","rule","algorithm","common_traps","examples_or_contrasts","source_refs","skill_subskill_links"],
+  "exceptions_layer":{"spec":"28-RUSSIAN-EXCEPTIONS-TRAINER-SPEC.txt","schema":"29-RUSSIAN-EXCEPTIONS-BANK-SCHEMA.json","banks":["33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json","35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json","37-RUSSIAN-EXCEPTIONS-SUFFIXES-CONJUGATION-v0.1.json","39-RUSSIAN-EXCEPTIONS-NE-NI-SOLID-v0.1.json","42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json","48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json"]},
+  "known_routing_constraints":[
+    {"task":8,"constraint":"exact post-error explanation requires position-level result; otherwise use safe task-level rule menu/feedback"},
+    {"task":22,"constraint":"exact device diagnosis requires position-level result; verified device table can still be shown after completion"},
+    {"task":25,"constraint":"current phraseologism items must be separated from historical contextual-synonym item"},
+    {"task":26,"constraint":"exact means-of-cohesion diagnosis may require item/option-level tagging where multiple means are tested"}
+  ],
+  "pre_integration_required":["machine JSON/schema validation","final learner wording review","item-to-subskill routing map","fallback to current feedback","regression tests","rollback plan"],
+  "task_27":"separate_contour_required",
+  "current_trainer_unchanged":true,
+  "codex_required_now":false
+}
