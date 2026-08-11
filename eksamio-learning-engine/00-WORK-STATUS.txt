@@ -1,7 +1,7 @@
 EKSAMIO LEARNING ENGINE
 WORK STATUS
 
-STATUS: CONCEPT / ARCHITECTURE + RUSSIAN CONTENT AND ROUTING BUILD ACTIVE
+STATUS: CONCEPT / ARCHITECTURE + RUSSIAN CONTENT, ROUTING AND EXCEPTIONS BUILD ACTIVE
 PILOT_SUBJECT: ЕГЭ — русский язык
 REPOSITORY: niknikdym-hue/ege
 DIRECTION_PATH: /eksamio-learning-engine/
@@ -22,9 +22,7 @@ TARGET LEARNING LOOP:
 DIAGNOSE -> SELECT -> PRACTICE -> HELP -> VERIFY -> RETAIN -> REASSESS
 
 CURRENT DECISION:
-Русский язык используется как первый пилот для общей архитектуры Learning Engine. После верификации архитектура должна масштабироваться на другие предметы без повторного изобретения ядра.
-
-RUSSIAN EXPLANATION LAYER — CURRENT STATUS
+Русский язык используется как первый пилот общей архитектуры Learning Engine. После верификации архитектура должна масштабироваться на другие предметы без повторного изобретения ядра.
 
 SOURCE POLICY:
 - ФИПИ / verified exam corpus: формат ЕГЭ, номера заданий, критерии, официальные списки и ограничения.
@@ -86,7 +84,7 @@ EXPLANATION CONTENT NORMALIZATION:
 - task 21 has current rule-specific dash/colon/comma explanation splits;
 - large source-reviewed files use additive examples overlay rather than risky wholesale rewrites.
 
-CANONICAL BUILD:
+CANONICAL EXPLANATION BUILD:
 - design: `64-RUSSIAN-EXPLANATION-CANONICAL-BUILD-SPEC.txt`;
 - builder/validator: `build/build_russian_explanation_bank.py`;
 - intended outputs:
@@ -103,31 +101,103 @@ Builder validates:
 - task coverage 1–27;
 - unresolved partial/needs_followup counts.
 
-Machine execution is still pending because the current execution container cannot clone/reach GitHub. Do NOT spend Codex quota solely to run this validation.
+EXCEPTIONS TRAINER — SOURCE LAYER:
 
-EXCEPTIONS TRAINER:
-Запланирован отдельный бесплатный контур «Исключения и особые случаи».
-Будущий URL: /trenazhery/russkiy/isklyucheniya/
-Режимы: «Все исключения» и в будущем «Мои исключения».
-Банк исключений связан со Skill Graph и Explanation Bank, но не подключён к production.
-Source banks include orthography, morphology, orthoepy, paronym contrasts, punctuation contrasts and difficult normative cases.
+Public product concept:
+- future URL: `/trenazhery/russkiy/isklyucheniya/`;
+- catalog label: «Исключения и особые случаи»;
+- internal title: «Тренажёр исключений»;
+- modes: «Все исключения» and future «Мои исключения».
+
+Master source manifest:
+- `83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json`.
+
+Current source banks cover high-value material from:
+- Н/НН;
+- roots/prefixes/PRE-/PRI-;
+- suffixes/conjugation/participles;
+- НЕ/НИ and solid/separate writing;
+- punctuation contrasts;
+- orthoepy difficult forms;
+- morphology;
+- syntax;
+- selected paronyms;
+- false introductory words and context-dependent introductory/non-introductory functions.
+
+Recent normalized/expanded banks:
+- 39-RUSSIAN-EXCEPTIONS-NE-NI-SOLID-v0.1.json
+- 42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json
+- 48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json
+- 84-RUSSIAN-EXCEPTIONS-INTRODUCTORY-WORDS-v0.1.json
+- 85-RUSSIAN-EXCEPTIONS-NE-NI-HIGH-RISK-v0.1.json
+- 86-RUSSIAN-EXCEPTIONS-SOLID-SEPARATE-HIGH-RISK-v0.1.json
+- 87-RUSSIAN-EXCEPTIONS-MORPHOLOGY-TASK7-v0.1.json
+- 88-RUSSIAN-EXCEPTIONS-SYNTAX-TASK8-v0.1.json
+- 89-RUSSIAN-EXCEPTIONS-PARONYMS-HIGH-VALUE-v0.1.json
+
+Graph-gap handling:
+- `87A-RUSSIAN-MORPHOLOGY-GRAPH-GAP-CANDIDATES.txt` records verified degree-of-comparison material without attaching it to unrelated Skill Graph nodes.
+
+Canonical exceptions builder:
+- `build/build_russian_exceptions_bank.py`;
+- source banks are read dynamically from manifest 83;
+- no Python edit is required just to register another source bank.
+
+Intended outputs:
+- `build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json`
+- `audits/RUSSIAN-EXCEPTIONS-CANONICAL-VALIDATION.txt`
+
+EXCEPTIONS TRAINER — PRACTICE LAYER:
+
+Practice design:
+- `90-RUSSIAN-EXCEPTIONS-PRACTICE-GENERATION-SPEC.txt`
+- `91-RUSSIAN-EXCEPTIONS-PRACTICE-SCHEMA.json`
+
+First real pilot:
+- `92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json`
+- 24 original Eksamio cards;
+- domains: orthography, punctuation, morphology, syntax, lexical norms, orthoepy;
+- modes include recall, context choice, contrast, classification and normative variant.
+
+Practice manifest/build:
+- `93-RUSSIAN-EXCEPTIONS-PRACTICE-MANIFEST.json`
+- `build/build_russian_exceptions_practice.py`
+- future canonical output: `build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json`
+- future audit: `audits/RUSSIAN-EXCEPTIONS-PRACTICE-VALIDATION.txt`
+
+Pilot review:
+- `94-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-REVIEW.txt`
+- source/editorial review: PASS;
+- machine validation: PENDING local file access;
+- public integration: HOLD.
+
+IMPORTANT EXCEPTIONS PRODUCT RULE:
+The full standalone orthoepic/paronym trainers are NOT duplicated into Exceptions Trainer.
+Exceptions Trainer receives high-value difficult forms, contrasts, special cases and later the learner's own failed exception_ids.
+
+MACHINE EXECUTION LIMIT:
+The current execution container cannot clone/reach GitHub directly.
+Do NOT spend Codex quota solely to run data validators.
+When the project folder is locally available, run canonical explanation, exceptions and practice builders together.
 
 VALIDATION STATUS:
 - source explanation coverage: 27/27 COMPLETE;
 - first-part routing first pass: 26/26 COMPLETE;
 - task-27 expert/self-check source contour: COMPLETE;
 - task-27 current word-count safety audit: PASS;
-- source/content architecture: SOURCE-GO;
-- independent machine JSON/schema/canonical build: PENDING LOCAL FILE ACCESS;
+- exceptions source architecture: ACTIVE / SUBSTANTIAL BANK CREATED;
+- exceptions practice pilot: 24 CARDS / EDITORIAL PASS;
+- independent machine JSON/schema/canonical builds: PENDING LOCAL FILE ACCESS;
 - production integration: HOLD.
 
 NEXT STEPS:
-1. Continue source/provenance cleanup and final learner wording review while machine build is unavailable.
-2. Continue extracting high-value Rozental exceptions into the Exceptions Bank.
-3. Prepare canonical build tests/fixtures and run them when local project files are available.
+1. Continue extracting high-value Rozental exceptions/special cases without duplicating standalone trainers.
+2. Expand practice bank by source exception clusters, always with original Eksamio contexts.
+3. Add practice priority/session policy based on exam relevance and learner history, not guessed difficulty.
 4. Resolve remaining task-9 `needs_followup` classifications only with verified lexical/source evidence.
-5. After canonical PASS: design explanation integration, fallback, regression tests and rollback.
-6. Only after data/content gate: connect explanation layer to the frozen trainer in a separately reviewed implementation step.
+5. Run all canonical builders when local project files are available.
+6. After canonical PASS: design explanation integration, Exceptions Trainer page/UI, fallback, regression tests and rollback.
+7. Only after data/content gate: connect explanation layer to the frozen trainer in a separately reviewed implementation step.
 
 CODEX POLICY:
 Codex не использовать для обычного контента, аудита, схем, routing-data и GitHub-файлов. Подключать только к действительно сложной локальной массовой реализации/сборке/тестированию, где расход квоты оправдан.
