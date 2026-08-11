@@ -1,0 +1,165 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — ROLLBACK PLAN
+
+STATUS: DESIGN READY / NO PRODUCTION RELEASE EXISTS YET
+FUTURE_PRODUCT: /trenazhery/russkiy/isklyucheniya/
+CURRENT_EGE_TRAINER: UNCHANGED
+
+PURPOSE
+
+Обеспечить обратимый выпуск отдельного тренажёра исключений и будущего handoff из основного тренажёра.
+
+ROLLBACK PRINCIPLE
+
+Standalone Exceptions Trainer must be deployable/disableable independently from:
+- `/ege/russkiy/trenazher/`;
+- `/ege/russkiy/demoversiya/`;
+- standalone orthoepy/paronym trainers;
+- header/footer.
+
+A failure in Exceptions Trainer must never require changing current EGE answer/scoring code to recover.
+
+RELEASE ARTIFACTS — FUTURE
+
+Every public release package should retain:
+- previous published T123 blocks;
+- previous runtime payload;
+- content/runtime version identifier;
+- install order file;
+- storage schema version;
+- test report;
+- catalog card previous/current versions if catalog changes.
+
+ROLLBACK LEVELS
+
+LEVEL 0 — CONTENT PAYLOAD ROLLBACK
+Use when:
+- wrong practice answer/content found;
+- runtime application works;
+- storage/UI not broken.
+
+Action:
+- restore previous validated runtime payload/content_version;
+- do not reset learner state;
+- retained exception_id/practice_item_id history remains valid if IDs unchanged.
+
+LEVEL 1 — PAGE CODE ROLLBACK
+Use when:
+- UI/session engine bug;
+- page fails to load;
+- storage writes incorrectly but other Eksamio products unaffected.
+
+Action:
+- restore previous page T123 package;
+- restore previous runtime payload if needed;
+- preserve learner-state raw bytes unless known corrupting build requires isolated migration rollback.
+
+LEVEL 2 — DISABLE STANDALONE PAGE ENTRY
+Use when:
+- public trainer cannot be safely restored immediately;
+- `/trenazhery/` catalog link is live.
+
+Action:
+- remove/disable catalog entry or route to a neutral unavailable page state;
+- do not redirect users into main EGE trainer as a hidden replacement;
+- current main trainer remains unchanged.
+
+LEVEL 3 — HANDOFF ROLLBACK (FUTURE OPTIONAL)
+Use when:
+- main EGE trainer handoff CTA/state causes regressions;
+- standalone page itself remains fine.
+
+Action:
+- disable only handoff feature flag/link/contract;
+- restore previous main-trainer T123 package byte-for-byte;
+- keep standalone Exceptions Trainer available independently.
+
+This level must be possible because handoff is a separate later phase.
+
+STORAGE ROLLBACK
+
+Rules:
+- never delete learner state as first rollback action;
+- retain schema_version with stored state;
+- keep migrations one-way only when a reverse/fallback read plan exists;
+- if new code cannot read old/new state, fail to anonymous/general session without overwriting raw state;
+- a rollback build must ignore unknown fields safely;
+- event ids must remain idempotent so reload/rollback cannot double-count attempts.
+
+CONTENT ID STABILITY
+
+After public release:
+- do not recycle exception_id for another concept;
+- do not recycle practice_item_id for another answer/context;
+- if a practice item is wrong, disable/replace it with a new ID or correct under an explicitly versioned content release according to release policy;
+- keep migration map only if an old personal-state reference needs to point to a replacement item.
+
+WRONG NORMATIVE ANSWER EMERGENCY
+
+If a public card has an incorrect normative answer:
+1. disable affected practice_item_id from runtime payload;
+2. identify exception_id/source;
+3. audit all cards sharing same rule_ref/exception_id;
+4. correct source bank only after source verification;
+5. generate new validated runtime build;
+6. do NOT alter learner mastery as if wrong historical answers were valid evidence;
+7. mark affected attempt window for future analytics/data repair if server sync exists later.
+
+If local-only state in first release:
+- avoid silently rewriting historical counts without a defined repair mechanism;
+- stabilization decisions involving the bad item should be reconsidered in future state migration if material.
+
+FEATURE FLAGS — FUTURE RECOMMENDATION
+
+Keep independent switches for:
+- standalone page enabled;
+- My Exceptions enabled;
+- due repetition enabled;
+- main-trainer handoff enabled;
+- experimental selector variants.
+
+Do not use a feature flag to change normative content/answers per user cohort.
+
+CATALOG ROLLBACK
+
+`/trenazhery/` catalog update is a separate artifact.
+Store its previous package before adding Exceptions card.
+
+If page rollback occurs:
+- catalog card can be removed independently;
+- existing cards/order remain unchanged.
+
+REGRESSION CHECK AFTER ROLLBACK
+
+Mandatory:
+- main EGE trainer loads;
+- its bank size/answers/scoring unchanged;
+- its localStorage behavior unchanged;
+- standalone orthoepy/paronym pages load;
+- `/trenazhery/` has no broken link;
+- browser console free of shared-global collision introduced by the reverted package.
+
+ROLLBACK TEST BEFORE FIRST GO
+
+Simulate:
+A. runtime payload bad -> restore previous payload;
+B. T123 JS syntax failure -> restore previous T123;
+C. state schema migration failure -> old data survives and anonymous session works;
+D. handoff regression -> disable handoff only;
+E. bad content card -> disable single practice item without disabling product.
+
+FIRST RELEASE SPECIAL CASE
+
+Before first public release there is no previous public Exceptions Trainer package.
+Rollback target is:
+- no public Exceptions page/catalog entry;
+- all existing Eksamio pages unchanged.
+
+Therefore first release package must capture a clear PRE-EXCEPTIONS baseline for `/trenazhery/` and any shared header/footer touched by implementation.
+
+CURRENT DECISION
+
+ROLLBACK DESIGN: READY
+PUBLIC RELEASE: NOT STARTED
+CURRENT TRAINER: UNCHANGED
+PRODUCTION: HOLD
