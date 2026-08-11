@@ -1,0 +1,381 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN SKILL GRAPH PROVENANCE
+
+TASK_ID: TASK-001
+STATUS: REPOSITORY_AND_LOCAL_WORKSPACE_AUDITED
+MODE: ADD-ONLY / AUDIT-ONLY
+GRAPH: 03-RUSSIAN-SKILL-GRAPH.json
+AUDIT_DATE: 2026-08-11
+
+1. SOURCE PRECEDENCE USED
+
+The graph describes the existing product. It does not replace, normalize or
+repair the product.
+
+Priority 1 - current trainer as the factual product synthesis
+
+Project-relative source paths:
+- tilda-ready/pages/ege-russkiy-trenazher/BANK-MANIFEST.json
+- tilda-ready/pages/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-01.txt
+- tilda-ready/pages/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-02.txt
+  through ege-russkiy-trenazher-T123-08.txt
+- tilda-ready/pages/ege-russkiy-trenazher/ege-russkiy-trenazher-SOURCE-AUDIT.txt
+- tilda-ready/pages/ege-russkiy-trenazher/OFFICIAL-CORRECTIONS.json
+- tilda-ready/pages/ege-russkiy-trenazher/SOURCE-CORRECTIONS.json
+- tilda-ready/pages/ege-russkiy-trenazher/ORTHOEPIC-TRAINER-BANK.json
+- scripts/build_ege_russian_trainer.py
+
+What was taken:
+- the actual 174 trainer_item_id values;
+- current task number, original task number, source year, variant and legacy flag;
+- prompt/content type and the exact T123 data-chunk path containing each item;
+- 27 task titles, existing trainer skill summaries, algorithms and traps;
+- 9 canonical source-text count and cards-per-task counts;
+- deterministic historical-to-current task-number mapping;
+- explicit PDF-backed corrections and the supplemental orthoepic bank.
+
+Source status: CURRENT / AUDITED PRODUCT.
+
+Conflict status: the current trainer is not present in the audited GitHub
+repository commit. It was therefore read from the existing local
+exam-platform-tilda project and recorded as NEEDS_REVIEW for later source
+synchronization; it was not copied into or used to overwrite GitHub production
+paths during this task.
+
+Priority 2 - all structured Russian demo packages used by the builder
+
+Paths:
+- tilda-ready/pages/ege-russkiy-demoversiya-2022-v1.0.0/
+- tilda-ready/pages/ege-russkiy-demoversiya-2023-v1.0.0/
+- tilda-ready/pages/ege-russkiy-demoversiya-2024-v1.0.1/
+- tilda-ready/pages/ege-russkiy-demoversiya-2025-v1.0.2/
+- tilda-ready/pages/ege-russkiy-demoversiya-2026-v4.2/
+
+What was taken:
+- tasks and source texts embedded in T123-02/03/04 application/json blocks;
+- SUBJECT-PROFILE-RUSSIAN.json interaction constraints;
+- YEAR-PASSPORT-* numbering, scoring and interaction metadata;
+- SOURCE-AUDIT and SUBJECT-SPECIFICATION records;
+- source formatting retained in promptHtml/source html, including strong,
+  emphasis, underline, stress capitalization, gaps and sentence numbering.
+
+Source status:
+- 2026 versioned package: CURRENT / AUDITED;
+- 2022-2025 packages: ARCHIVAL / ACTIVE TRAINER BUILD INPUT.
+
+Historical numbering actually used by the current trainer builder:
+- 2022 original task 1 -> current task 3;
+- 2022 original task 2 -> current task 1;
+- 2022 original task 3 -> current task 2;
+- 2022-2024 original tasks 22, 23, 24, 25, 26 -> current tasks 23, 24,
+  25, 26, 22 respectively;
+- 2025-2026 use current numbering directly.
+
+Historical format decisions already present in the product:
+- task 27 trainer content is included only from 2025-2026;
+- task 13 and 14 pre-2024 cards are marked legacyFormat;
+- task 22 pre-2025 cards are marked legacyFormat;
+- task 4 pre-2025 demo cards are marked legacyFormat;
+- full duplicate prompts/answers/source texts are deduplicated by the builder.
+
+No demo package was changed to make these mappings easier.
+
+Priority 3 - current official-format control
+
+Paths:
+- tilda-ready/pages/ege-russkiy-demoversiya-2026-v4.2/YEAR-PASSPORT-2026.json
+- tilda-ready/pages/ege-russkiy-demoversiya-2026-v4.2/SUBJECT-PROFILE-RUSSIAN.json
+- tilda-ready/pages/ege-russkiy-demoversiya-2026-v4.2/
+  ege-russkiy-demoversiya-SUBJECT-SPECIFICATION-2026.txt
+- spravochniki/ege-source-russkiy-2019-2026/source-russkiy-2026/
+  ege-2026-russkiy-demoversiya.pdf
+- spravochniki/ege-source-russkiy-2019-2026/source-russkiy-2026/
+  ege-2026-russkiy-kodifikator.pdf
+- spravochniki/ege-source-russkiy-2019-2026/source-russkiy-2026/
+  ege-2026-russkiy-specifikatsiya.pdf
+
+What was taken:
+- current 27-task order and 1-26/27 division;
+- current interaction types and position-based partial scoring for tasks 8 and 22;
+- current task-27 prompt structure and expert-only status;
+- official broad content taxonomy: text processing, functional stylistics,
+  phonetics/orthoepy, lexicon/phraseology, morphology, syntax, orthography,
+  punctuation and speech/writing.
+
+Visual control:
+- all 15 pages of the current demo PDF and all 10 pages of the current codifier
+  were rendered to PNG for layout/format inspection;
+- the inspection confirmed that bold/capital emphasis and exact task grouping
+  carry content meaning and must not be flattened into plain text;
+- the graph therefore cites the preserved HTML data rather than rewriting task
+  wording from extracted PDF text.
+
+Source status: CURRENT / OFFICIAL-SOURCE CONTROL.
+
+Priority 4 - archive cross-check
+
+Paths:
+- spravochniki/ege-source-russkiy-2019-2026/source-russkiy-2019/
+  through source-russkiy-2025/
+- GitHub ege-source-russkiy/source-russkiy-2022/ through source-russkiy-2026/
+
+What was taken:
+- 2019-2021: format continuity/cross-check only, exactly as declared by
+  BANK-MANIFEST.json and build_ege_russian_trainer.py;
+- 2022-2025: provenance control for structured demo-derived trainer cards;
+- orthoepic and paronym dictionaries where present.
+
+Source status: ARCHIVAL / CROSS-CHECK.
+
+No new exam facts were synthesized from supplementary books. The local
+spravochniki/russkiy-knigi directory remained a fallback inventory source and
+was not needed to invent missing answers, criteria or difficulty.
+
+2. GRAPH CONSTRUCTION METHOD
+
+The graph uses 12 stable top-level skills and 89 child subskills.
+
+Rules applied:
+- skill_id values describe durable subject concepts, not years or package versions;
+- task number is evidence, not the definition of a skill;
+- one task may link to several subskills;
+- one trainer item may link to several subskills when its prompt contains
+  several separately identifiable concepts;
+- exact item links use the existing trainer_item_id without renaming it;
+- all 174 trainer difficulty values are null because no validated difficulty
+  measurements were found;
+- all prerequisites arrays are empty because no prerequisite relation was
+  sufficiently established as a fact by current materials;
+- inference from prompt morphology is marked partial where the source lacks
+  explicit machine metadata;
+- contested relations use needs_review and are also present in review_queue.
+
+3. ACTUAL TRAINER COVERAGE
+
+The trainer presents every current number 1-27.
+
+Cards per current task:
+1=5; 2=5; 3=5; 4=40; 5=5; 6=5; 7=4; 8=3; 9=5; 10=5;
+11=4; 12=4; 13=8; 14=10; 15=6; 16=4; 17=4; 18=4; 19=4; 20=4;
+21=7; 22=5; 23=8; 24=8; 25=5; 26=5; 27=2.
+
+Total: 174 trainer items and 9 canonical source texts.
+
+Trainer link status:
+- confirmed: 95;
+- partial: 78;
+- needs_review: 1.
+
+The one needs_review trainer item is ege-ru-25-2022-24-01: it asks for a
+contextual synonym, while the current task-25 format asks for a phraseologism.
+
+4. WHERE THE TRAINER IS MORE DETAILED THAN ONE TASK NUMBER
+
+Task 1:
+- grammatical fit of the gap;
+- determinative pronouns;
+- demonstrative pronouns in historical/current cards.
+
+Task 2:
+- five definition/context matches in the current format;
+- a single dictionary-sense selection in the 2022 historical item.
+
+Task 3:
+- functional style;
+- genre/communicative purpose;
+- functional-semantic speech type;
+- lexical/morphological/syntactic evidence;
+- expressive means in context.
+
+Task 4:
+- noun stress;
+- adjectival/short/comparative-form stress;
+- verb stress;
+- participle stress;
+- gerund stress;
+- adverb stress.
+The 36 supplemental cards mix five word forms per card and reference all source
+entry IDs. The source bank does not store explicit part-of-speech metadata, so
+POS-level links remain partial even though the forms themselves are factual.
+
+Task 6:
+- exclusion of a redundant word;
+- replacement of a word that violates lexical collocation.
+
+Task 7:
+- noun forms;
+- numeral forms;
+- verb forms.
+
+Task 8:
+- government/case;
+- indirect speech;
+- uncoordinated apposition;
+- gerundial construction;
+- homogeneous-members construction.
+
+Tasks 9-15:
+- task 9 separates checked, unchecked, alternating and special root-vowel rules;
+- task 10 separates prefix spelling, З/С, ПРЕ-/ПРИ-, Ы/И and separators;
+- task 12 contains verb endings and participle suffixes;
+- task 13 contains contextual НЕ and НИ spelling;
+- tasks 14 and 15 remain broader mixed pools because item options combine
+  multiple parts of speech/forms.
+
+Tasks 16-21:
+- task 16 distinguishes homogeneous-member punctuation from a clause boundary;
+- task 17 distinguishes detached attributes, participial and gerundial phrases;
+- task 18 combines introductory words and forms of address;
+- task 19 distinguishes clause boundaries and homogeneous subordinate clauses;
+- task 20 distinguishes mixed connection and junction of conjunctions;
+- task 21 has separate dash, colon and comma rule-analysis items.
+
+Task 22:
+- current cards contain assonance, hyperbole, metonymy, anaphora and parcellation;
+- historical cards additionally contain homogeneous rows, address, epithet,
+  metaphor and comparison.
+
+Task 24:
+- narration;
+- description;
+- reasoning;
+- semantic relations between sentences.
+
+Task 25:
+- current phraseologism identification;
+- one historical contextual-synonym item (NEEDS_REVIEW for pool filtering).
+
+Task 26:
+- demonstrative/possessive pronouns;
+- conjunctions;
+- word forms;
+- cognate words.
+
+Task 27:
+- author position;
+- two textual examples and their explanation;
+- relation between examples;
+- own position/argument;
+- composition/coherence;
+- language norms;
+- source/volume gate.
+The product does not perform verified criterion-level diagnosis, so these links
+describe prompt components, not measured mastery.
+
+5. WHERE ONE DEMO ERROR DOES NOT IDENTIFY A SUBSKILL
+
+HANDOFF readiness by current task:
+
+exact:
+- 1, 5, 6, 8, 17, 22, 25, 26.
+
+task_level_only:
+- 2, 19, 20, 23.
+
+diagnostic_required:
+- 3, 4, 7, 9, 10, 11, 12, 13, 14, 15, 16, 18, 21, 24.
+
+unavailable:
+- 27.
+
+Important conditions:
+- exact for task 8 and task 22 requires future attempt data to preserve
+  correctness by matching position, not only the total score;
+- exact for task 25 means the phraseologism subpool only, excluding the
+  historical synonym card;
+- diagnostic_required means the existing whole-task error is insufficient;
+  it does not mean the task or trainer is defective.
+
+6. SOURCE CONFLICTS AND NEEDS_REVIEW
+
+The graph review_queue contains 12 unresolved audit items. None was silently
+fixed.
+
+1) Trainer audit count arithmetic
+Path: tilda-ready/pages/ege-russkiy-trenazher/
+ege-russkiy-trenazher-SOURCE-AUDIT.txt
+Found: group counts 41 + 50 + 44 sum to 135, while the same paragraph states
+138 base cards. BANK-MANIFEST has 174 total including 36 supplemental cards.
+Why uncertain: the missing three in the summary cannot be reconstructed from
+that paragraph alone.
+
+2) Standalone contracts absent
+Paths: current demo and trainer directories.
+Found: no standalone TASK-MAP, ANSWER-MAP, CRITERIA or SOURCE-GATE; equivalent
+facts are embedded across T123 JSON, profiles, audits and corrections.
+Why uncertain: embedded structures have not yet been approved as permanent
+Learning Engine contracts.
+
+3) Task-25 mixed pool
+Paths: scripts/build_ege_russian_trainer.py; trainer data item
+ege-ru-25-2022-24-01; current demo T123-04.
+Found: current phraseologism format and historical synonym format share current
+task number 25; the synonym item is not legacyFormat.
+Decision: preserve both, flag needs_review, and make exact handoff conditional
+on subskill filtering.
+
+4) Task-2 historical interaction
+Path: trainer item ege-ru-02-2022-03-01 and current demo task 2.
+Found: one dictionary-sense choice versus five definition/context matches.
+Decision: shared broad lexical skill; item link partial.
+
+5) Orthoepic POS metadata
+Path: ORTHOEPIC-TRAINER-BANK.json.
+Found: IDs/forms exist, explicit part-of-speech field does not.
+Decision: POS links partial; no source metadata was invented.
+
+6) Option-level links absent
+Paths: trainer T123-02 through T123-08.
+Found: item-level, not option-level, mapping for mixed tasks.
+Decision: relevant task handoff class diagnostic_required.
+
+7) Task-8 position contract absent
+Path: YEAR-PASSPORT-2026.json and task-8 trainer data.
+Found: partial scoring exists, stable future demo position IDs do not yet exist.
+
+8) Task-22 position contract absent
+Path: YEAR-PASSPORT-2026.json and task-22 trainer data.
+Found: partial scoring exists, stable future demo position IDs do not yet exist.
+
+9) Essay diagnosis unavailable
+Path: trainer T123-08 and YEAR-PASSPORT-2026.json.
+Found: expert/self review only; no verified criterion result.
+
+10) Two current-looking local demo directories
+Paths: tilda-ready/pages/ege-russkiy-demoversiya/ and
+tilda-ready/pages/ege-russkiy-demoversiya-2026-v4.2/.
+Found: builder selects the versioned package; equivalence was not assumed.
+
+11) GitHub demo archive equivalence
+Paths: GitHub ege-russkiy-demoversiya.zip and local versioned package.
+Found: exact equivalence not confirmed; no extraction/overwrite performed.
+
+12) Current trainer absent from GitHub
+Paths: local trainer directory and builder.
+Found: local current product has no matching tracked directory in the audited
+GitHub commit.
+
+7. DIFFICULTY AND PREREQUISITES
+
+Difficulty:
+- no validated response statistics or reviewed algorithm were found;
+- every trainer link has difficulty: null;
+- no easy/medium/hard labels were assigned.
+
+Prerequisites:
+- the source taxonomy suggests conceptual dependencies, but current files do
+  not confirm prerequisite edges as measured facts;
+- all prerequisites arrays are empty;
+- no prerequisite was guessed.
+
+8. ADD-ONLY CONFIRMATION
+
+Created by TASK-001:
+- 03-RUSSIAN-SKILL-GRAPH.json
+- 03A-RUSSIAN-SKILL-GRAPH-PROVENANCE.txt
+- 03B-RUSSIAN-SKILL-GRAPH-VALIDATION.txt
+- results/RESULT-001-russian-skill-graph.md
+
+Existing demo, trainer, source, answer, criteria, HTML, CSS, JS, T123, URL and
+localStorage files were not edited, rebuilt, moved, renamed or deleted.
+
