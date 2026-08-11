@@ -1,0 +1,147 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN PILOT — CURRENT STATUS
+DATE: 2026-08-11
+READ AFTER: 00-WORK-STATUS.txt and 00A-WORK-STATUS-CURRENT-ADDENDUM.txt
+
+CURRENT PRODUCT SAFETY
+
+CURRENT EGE RUSSIAN TRAINER: FROZEN / UNCHANGED
+CURRENT EGE DEMO: UNCHANGED
+T123/JS/CSS/HTML/ANSWERS/SCORING/LOCALSTORAGE: UNCHANGED
+PUBLIC EXCEPTIONS TRAINER: NOT CREATED
+PRODUCTION INTEGRATION: HOLD
+CODEX USED FOR CURRENT WORK: NO
+
+EXPLANATION LAYER
+
+- learner explanation coverage: tasks 1–27 at source layer;
+- Rosenthal is primary language-rule source;
+- FIPI remains authoritative for current exam facts/criteria/lists;
+- canonical Explanation Bank builder exists;
+- minimal Explanation Runtime builder exists;
+- deterministic Explanation Resolver exists;
+- resolver synthetic tests cover exact/partial/fallback/demo/control behavior;
+- external explanation never owns current trainer answer or score.
+
+EXCEPTIONS SOURCE LAYER
+
+Historical master checkpoint:
+- 83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json
+
+CURRENT corrected source manifest:
+- 118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json
+
+Current correction:
+- superseded `introductory_v_kontse_kontsov_dual_function` disabled;
+- replacement `false_introductory_v_kontse_kontsov` added in file 116;
+- earlier source history remains preserved rather than rewritten.
+
+EXCEPTIONS PRACTICE
+
+Historical waves:
+- 92 wave 1: 24 cards
+- 96 wave 2: 24 cards
+- 98 wave 3: 24 cards
+
+CURRENT corrected practice manifest:
+- 119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json
+
+Raw current sources:
+- 73 rows (72 historical-wave rows + 1 correction row)
+
+Disabled superseded practice:
+- `ex-practice-end-finally-001`
+
+Replacement:
+- `ex-practice-v-kontse-kontsov-corrected-001`
+
+EXPECTED ACTIVE PRACTICE BANK:
+- 72 cards
+
+CURRENT hardened builders:
+- build/build_russian_exceptions_bank_current_v2.py
+- build/build_russian_exceptions_practice_current_corrected_v2.py
+
+LEARNING ENGINE — EXCEPTIONS
+
+Ready at design/reference-code layer:
+- public UX spec;
+- learner-state schema + idempotency addendum;
+- deterministic session selection policy;
+- hardened session selector;
+- priority-aware selector;
+- synthetic selector tests;
+- pure learner-state reducer;
+- synthetic state-reducer tests;
+- launch priority builder where priority != difficulty;
+- minimal Exceptions Runtime builder;
+- practice coverage audit;
+- runtime size audit;
+- Tilda implementation plan;
+- rollback plan;
+- release test plan.
+
+ERROR -> EXCEPTION HANDOFF
+
+- architecture spec 113;
+- first exact mapping subset 114;
+- exact source-data validator;
+- no guessed exception from broad task score.
+
+SKILL GRAPH
+
+- independent local validator exists: build/validate_russian_skill_graph_against_trainer.py
+- checks repository-visible trainer snapshot, BANK-MANIFEST task counts, current trainer IDs, difficulty=null, prerequisites and known historical task-25 anomaly;
+- formal closure gate: reviews/REVIEW-001-CLOSURE-GATE.md.
+
+CURRENT LOCAL MACHINE GATE
+
+Current aggregate validator:
+`python3 build/run_russian_learning_engine_validation_current_v10.py`
+
+It includes:
+1. Skill Graph vs current trainer snapshot;
+2. canonical Explanation Bank;
+3. Explanation Runtime;
+4. Explanation Resolver synthetic tests;
+5. corrected canonical Exceptions Bank;
+6. corrected active 72-card Practice Bank;
+7. launch priority;
+8. Exceptions Runtime;
+9. practice coverage audit;
+10. runtime size audit;
+11. session selector tests;
+12. priority selector tests;
+13. learner-state reducer tests;
+14. exact error->exception handoff validation.
+
+Aggregate local output:
+`audits/RUSSIAN-LEARNING-ENGINE-VALIDATION-CURRENT-V10-SUMMARY.txt`
+
+Current validated-package command after PASS:
+`python3 build/package_learning_engine_checkpoint_current_v10.py --require-pass`
+
+IMPORTANT:
+A machine PASS is a SOURCE/DATA/RUNTIME checkpoint only.
+It does NOT authorize Tilda/public integration.
+
+NEXT WORK ORDER
+
+1. Read/fix any machine FAIL from current v10 audit.
+2. Re-run v10 until all checks PASS.
+3. Use practice coverage audit to choose the next practice wave from actual P0/P1 gaps.
+4. Use runtime size audit to choose hosted JSON vs T123 data chunk strategy.
+5. Close formal Skill Graph REVIEW-001 after independent PASS.
+6. Package one checkpoint ZIP + SHA-256 inventory for the user's local `exam-platform-tilda` folder.
+7. Only after data gates: standalone Exceptions Trainer implementation.
+8. Rich explanation integration into current EGE trainer remains a later separate reversible phase.
+
+CURRENT DECISION
+
+CONTENT: ADVANCED
+EXPLANATIONS: 1–27 SOURCE COVERED
+EXCEPTIONS PRACTICE: 72 ACTIVE EXPECTED AFTER CURRENT CORRECTION
+RUNTIME/DATA TOOLING: BUILT
+LOCAL MACHINE GATE: CURRENT V10
+PUBLIC PAGE: HOLD
+CURRENT TRAINER: UNCHANGED
