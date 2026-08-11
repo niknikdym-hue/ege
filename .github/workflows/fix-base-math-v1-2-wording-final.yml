@@ -1,0 +1,66 @@
+name: Fix Base Math 2026 v1.2 Wording Final
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix-base-math-v1-2-wording-final.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install build dependencies
+        run: pip install latex2mathml selenium
+      - name: Fix wording in source runtime
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('ege-matematika-baza-demoversiya-2026/templates/runtime.js')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('Для этого задания нужен целый ответ. Введите число без запятой и дробной части.','Для этого задания нужно ввести целое число. Введите число без запятой и дробной части.')
+          assert 'целый ответ' not in s
+          assert 'нужно ввести целое число' in s
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Rebuild v1.2
+        run: |
+          python ege-matematika-baza-demoversiya-2026/scripts/build_demo_release.py
+          cd ege-matematika-baza-demoversiya-2026
+          python tests/test_static.py
+          python tests/test_source_fidelity.py
+      - name: Verify generated T123 wording
+        run: |
+          ! grep -R 'целый ответ' ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-T123-*.txt
+          grep -q 'нужно ввести целое число' ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-T123-47.txt
+      - name: Repack ZIP
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          p=Path('ege-matematika-baza-demoversiya-2026/scripts/build_demo_release.py').resolve()
+          spec=importlib.util.spec_from_file_location('b',p)
+          b=importlib.util.module_from_spec(spec);spec.loader.exec_module(b)
+          b.manifest_and_zip()
+          PY
+          unzip -t ege-matematika-baza-demoversiya-2026-v1.2.zip >/tmp/v12zip.txt
+          grep -q 'No errors detected' /tmp/v12zip.txt
+      - name: Commit corrected v1.2
+        run: |
+          rm -f .github/workflows/fix-base-math-v1-2-wording-final.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Finalize base mathematics 2026 v1.2 wording'
+          git pull --rebase origin main
+          git push origin main
