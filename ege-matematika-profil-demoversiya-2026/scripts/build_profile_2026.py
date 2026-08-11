@@ -46,11 +46,11 @@ COND={
 
 # Official solution + criteria segments. Multiple segments are stitched vertically.
 SOL={
-'13-1':[(20,95,1100)],'13-2':[(21,95,1100)],'14-1':[(22,95,1100)],'14-2':[(23,95,1100),(24,95,780)],
+'13-1':[(20,95,1100)],'13-2':[(21,95,1100)],'14-1':[(22,95,1100)],'14-2':[(23,95,1100),(24,95,950)],
 '15-1':[(25,95,1100)],'15-2':[(26,95,1100)],'16-1':[(27,95,1100)],'16-2':[(28,95,1100)],
 '17-1':[(29,95,1100)],'17-2':[(30,95,1100),(31,95,475)],
 '18-1':[(31,485,1100),(32,95,930)],'18-2':[(33,95,1100),(34,95,930)],
-'19-1':[(35,95,1100),(36,95,330)],'19-2':[(36,335,1100),(37,95,900)]}
+'19-1':[(35,95,1100),(36,95,380)],'19-2':[(36,385,1100),(37,95,900)]}
 
 def clean_root():
     if ROOT.exists(): shutil.rmtree(ROOT)
@@ -125,7 +125,7 @@ def write_text_files(data):
     (ROOT/f'{PREFIX}-EXAM-MAP.json').write_text(json.dumps(exam,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     contract={'package_version':PACKAGE_VERSION,'source_year':2026,'permanent_url':PERMANENT_URL,'header_footer_included':False,'canonical_year_free':True,'variant_contract':{'one_official_example_per_position':True,'student_selects_variant':False,'variant_persists_after_reload':True,'official_examples_total':55},'scoring_contract':{'tasks_1_12':'automatic 0–12','tasks_13_19':'self-evaluation only after finish, 0–20, using official FIPI criteria','total':'automatic + explicit self-evaluation, max 32','no_hidden_mix':True},'source_contract':{'conditions':'direct crops from official FIPI 2026 PDF','solutions_and_criteria':'direct crops from official FIPI 2026 PDF'}}
     (ROOT/f'{PREFIX}-PACKAGE-CONTRACT.json').write_text(json.dumps(contract,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    (ROOT/f'{PREFIX}-PAGE-STATUS.txt').write_text('PAGE_URL: /ege/matematika-profil/demoversiya/\nPAGE_SLUG: ege-matematika-profil-demoversiya\nEXAM: ЕГЭ\nSUBJECT: математика\nLEVEL: профильный\nSOURCE_YEAR: 2026\nPACKAGE_VERSION: 1.0\nSOURCE_GATE: PASS\nTEXT_TYPOGRAPHY_GATE: PASS — official conditions are direct source crops\nFORMULA_GATE: PASS — formulas rendered directly from official PDF crops\nVISUAL_GATE: PASS — condition/graph/diagram assets are direct official PDF crops\nINTERACTION_GATE: PENDING\nSCORER_GATE: PENDING\nSTATE_RESTORE_GATE: PENDING\nEXTENDED_SELF_EVALUATION_GATE: PENDING\nTILDA_SIZE_GATE: PENDING\nFINAL_STATUS: BUILT_PENDING_TESTS\nPUBLISHED_SMOKE_STATUS: NOT_RUN_UNTIL_TILDA_PUBLICATION\n',encoding='utf-8')
+    (ROOT/f'{PREFIX}-PAGE-STATUS.txt').write_text('PAGE_URL: /ege/matematika-profil/demoversiya/\nPAGE_SLUG: ege-matematika-profil-demoversiya\nEXAM: ЕГЭ\nSUBJECT: математика\nLEVEL: профильный\nSOURCE_YEAR: 2026\nPACKAGE_VERSION: 1.0\nSOURCE_GATE: PASS\nTEXT_TYPOGRAPHY_GATE: PASS — official conditions are direct source crops\nFORMULA_GATE: PASS — formulas rendered directly from official PDF crops\nVISUAL_GATE: PASS — condition/graph/diagram assets are direct official PDF crops\nINTERACTION_GATE: PENDING\nSCORER_GATE: PENDING\nSTATE_RESTORE_GATE: PENDING\nEXTENDED_SELF_EVALUATION_GATE: PENDING\nTILDA_SIZE_GATE: PENDING\nINDEPENDENT_AUDIT_GATE: PENDING\nFINAL_STATUS: BUILT_PENDING_TESTS\nPUBLISHED_SMOKE_STATUS: NOT_RUN_UNTIL_TILDA_PUBLICATION\n',encoding='utf-8')
     rows=[]
     for t in data['tasks']:
         for v in t['variants']:
@@ -135,10 +135,22 @@ def write_text_files(data):
     (ROOT/'AUDIT-REPORT-2026-profile.md').write_text('# Аудит — ЕГЭ профильная математика 2026\n\nСтатус: BUILT_PENDING_TESTS.\n\n- Источник: официальный комплект ФИПИ 2026.\n- 55 официальных примеров представлены отдельными строками audit matrix.\n- Условия, формулы, графики и рисунки используются как прямые фрагменты официального PDF.\n- №1–12: автоматический результат /12.\n- №13–19: самостоятельная оценка /20 только после завершения, по официальным решениям и критериям.\n',encoding='utf-8')
 
 def build_blocks(data):
+    # Tilda-safe packing: shell/runtime stay isolated; sequential asset payloads are combined
+    # without exceeding the conservative 42.5 kB gate.
     blocks=[shell(data)]
+    asset_scripts=[]
     for p in sorted((ROOT/'assets').glob('*.webp')):
         b64=base64.b64encode(p.read_bytes()).decode('ascii'); parts=[b64[i:i+PART_CHARS] for i in range(0,len(b64),PART_CHARS)]
-        for part in parts: blocks.append(f'<script>window.EKSAMIO_MATH_PROFILE.assetParts[{json.dumps(p.name)}]=window.EKSAMIO_MATH_PROFILE.assetParts[{json.dumps(p.name)}]||[];window.EKSAMIO_MATH_PROFILE.assetParts[{json.dumps(p.name)}].push({json.dumps(part)});</script>')
+        for part in parts:
+            asset_scripts.append(f'<script>window.EKSAMIO_MATH_PROFILE.assetParts[{json.dumps(p.name)}]=window.EKSAMIO_MATH_PROFILE.assetParts[{json.dumps(p.name)}]||[];window.EKSAMIO_MATH_PROFILE.assetParts[{json.dumps(p.name)}].push({json.dumps(part)});</script>')
+    packed=''; safe_limit=42500
+    for script in asset_scripts:
+        candidate=packed+script
+        if packed and len(candidate.encode('utf-8'))>=safe_limit:
+            blocks.append(packed); packed=script
+        else:
+            packed=candidate
+    if packed: blocks.append(packed)
     blocks.append('<script>'+runtime()+'</script>')
     for old in ROOT.glob(f'{PREFIX}-T123-*.txt'):old.unlink()
     names=[]
