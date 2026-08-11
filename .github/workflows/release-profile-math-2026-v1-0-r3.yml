@@ -1,0 +1,131 @@
+name: Release Profile Mathematics 2026 v1.0 r3
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/release-profile-math-2026-v1-0-r3.yml
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: browser-actions/setup-chrome@v1
+      - name: Install dependencies
+        run: pip install pymupdf pillow selenium
+      - name: Fresh build from official FIPI 2026 PDF
+        run: |
+          python profile-math-2026-build/build_profile_2026.py
+          cp profile-math-2026-build/build_profile_2026.py ege-matematika-profil-demoversiya-2026/scripts/build_profile_2026.py
+          cp profile-math-2026-build/test_profile_2026.py ege-matematika-profil-demoversiya-2026/tests/test_profile_2026.py
+      - name: Static source gate
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          r=Path('ege-matematika-profil-demoversiya-2026');p=r.name
+          d=json.loads((r/f'{p}-EXAM-DATA.json').read_text(encoding='utf-8'))
+          assert len(d['tasks'])==19 and d['officialExampleCount']==55
+          assert sum(len(x['variants']) for x in d['tasks'][:12])==41
+          assert sum(len(x['variants']) for x in d['tasks'][12:])==14
+          assert len(json.loads((r/f'{p}-INPUT-CONTRACT.json').read_text(encoding='utf-8'))['contracts'])==41
+          v=json.loads((r/'source-evidence/VISUAL-SOURCE-EVIDENCE.json').read_text(encoding='utf-8'));assert v['status']=='PASS' and v['direct_crop_assets']==70
+          rows=list(csv.DictReader((r/'AUDIT-MATRIX-2026-profile.csv').open(encoding='utf-8-sig')));assert len(rows)==55
+          assert max(x.stat().st_size for x in r.glob(f'{p}-T123-*.txt'))<45000
+          e=json.loads((r/f'{p}-EXAM-MAP.json').read_text(encoding='utf-8'));assert e['duration_minutes']==235 and e['max_primary_score']==32 and e['extended_max_scores']=={'13':2,'14':3,'15':2,'16':2,'17':3,'18':4,'19':4}
+          seo=(r/f'{p}-SEO.txt').read_text(encoding='utf-8').splitlines();assert '2026' not in seo[0] and '2026' not in seo[1]
+          print('STATIC PASS 55/55; 41 input contracts; 70 direct FIPI crop assets')
+          PY
+      - name: Serve preview
+        run: |
+          cd ege-matematika-profil-demoversiya-2026
+          python -m http.server 8765 >/tmp/profile-r3-http.log 2>&1 &
+          sleep 2
+      - name: Browser gate — source build
+        env:
+          EKSAMIO_PREVIEW_URL: http://127.0.0.1:8765/ege-matematika-profil-demoversiya-2026-PREVIEW.html
+          EKSAMIO_EVIDENCE_OUT: ege-matematika-profil-demoversiya-2026/tests/evidence/profile-2026-browser-evidence.json
+        run: python profile-math-2026-build/test_profile_2026.py
+      - name: Finalize PASS metadata
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          r=Path('ege-matematika-profil-demoversiya-2026');p=r.name
+          m=r/'AUDIT-MATRIX-2026-profile.csv';rows=list(csv.DictReader(m.open(encoding='utf-8-sig')))
+          for x in rows:x['interaction_gate']='PASS'
+          with m.open('w',encoding='utf-8-sig',newline='') as f:w=csv.DictWriter(f,fieldnames=rows[0].keys());w.writeheader();w.writerows(rows)
+          s=(r/f'{p}-PAGE-STATUS.txt').read_text(encoding='utf-8')
+          for a,b in {
+            'INTERACTION_GATE: PENDING':'INTERACTION_GATE: PASS — 55/55 official examples via real DOM controls',
+            'SCORER_GATE: PENDING':'SCORER_GATE: PASS — 41/41 short examples; full correct short attempt 12/12',
+            'STATE_RESTORE_GATE: PENDING':'STATE_RESTORE_GATE: PASS — variants + short answers + extended solutions',
+            'EXTENDED_SELF_EVALUATION_GATE: PENDING':'EXTENDED_SELF_EVALUATION_GATE: PASS — 7/7 tasks; separate /20; automatic /12 unchanged',
+            'TILDA_SIZE_GATE: PENDING':'TILDA_SIZE_GATE: PASS — every T123 < 45000 bytes',
+            'FINAL_STATUS: BUILT_PENDING_TESTS':'FINAL_STATUS: READY_FOR_TILDA_TEST'}.items():s=s.replace(a,b)
+          s=s.replace('PUBLISHED_SMOKE_STATUS: NOT_RUN_UNTIL_TILDA_PUBLICATION','CLEAN_ZIP_BROWSER_GATE: PENDING\nPUBLISHED_SMOKE_STATUS: NOT_RUN_UNTIL_TILDA_PUBLICATION')
+          (r/f'{p}-PAGE-STATUS.txt').write_text(s,encoding='utf-8')
+          e=r/f'{p}-EXAM-MAP.json';d=json.loads(e.read_text(encoding='utf-8'));d['release_status']='READY_FOR_TILDA_TEST';e.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          b=r/f'{p}-BUILD-EVIDENCE.json';d=json.loads(b.read_text(encoding='utf-8'));d.update({'status':'PASS','interaction_gate':'55/55 PASS','short_scorer_gate':'41/41 PASS','full_correct_short_attempt':'12/12 PASS','extended_self_evaluation_gate':'7/7 PASS; 20/20','state_restore_gate':'PASS','widths':'1280,768,390,360,320 PASS','javascript_errors':0});b.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          (r/'AUDIT-REPORT-2026-profile.md').write_text('''# Аудит — ЕГЭ профильная математика 2026\n\n**Статус: READY_FOR_TILDA_TEST.**\n\n- Официальный источник: комплект ФИПИ 2026.\n- 19 заданий, 235 минут, 32 первичных балла.\n- 55/55 официальных примеров: source + visual + browser PASS.\n- 41/41 примеров №1–12: реальные поля ввода и scorer PASS; контроль 12/12.\n- 14/14 примеров №13–19: textarea + сохранение + официальные решения/критерии ФИПИ.\n- Самооценка №13–19 отделена от автоматической части: 20/20; автоматическая часть остаётся 12/12; контрольный итог 32/32.\n- State restore PASS; JavaScript severe errors 0.\n- Width gate 1280 / 768 / 390 / 360 / 320 PASS.\n- Каждый T123 < 45 000 байт.\n- Production smoke — после публикации в Tilda.\n''',encoding='utf-8')
+          PY
+      - name: Pack audited candidate
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          p=Path('ege-matematika-profil-demoversiya-2026/scripts/build_profile_2026.py');s=importlib.util.spec_from_file_location('b',p);b=importlib.util.module_from_spec(s);s.loader.exec_module(b);print(b.manifest_zip())
+          PY
+      - name: Extract candidate
+        run: |
+          rm -rf /tmp/profile-r3-final && mkdir -p /tmp/profile-r3-final
+          unzip -q ege-matematika-profil-demoversiya-2026-v1.0.zip -d /tmp/profile-r3-final
+          cd /tmp/profile-r3-final/ege-matematika-profil-demoversiya-2026
+          python -m http.server 8766 >/tmp/profile-r3-final-http.log 2>&1 &
+          sleep 2
+      - name: Browser gate — extracted ZIP
+        env:
+          EKSAMIO_PREVIEW_URL: http://127.0.0.1:8766/ege-matematika-profil-demoversiya-2026-PREVIEW.html
+          EKSAMIO_EVIDENCE_OUT: ege-matematika-profil-demoversiya-2026/tests/evidence/profile-2026-final-zip-browser-evidence.json
+        run: python profile-math-2026-build/test_profile_2026.py
+      - name: Mark clean ZIP PASS and repack
+        run: |
+          python - <<'PY'
+          import importlib.util,json,zipfile
+          from pathlib import Path
+          r=Path('ege-matematika-profil-demoversiya-2026');p=r.name
+          st=r/f'{p}-PAGE-STATUS.txt';st.write_text(st.read_text(encoding='utf-8').replace('CLEAN_ZIP_BROWSER_GATE: PENDING','CLEAN_ZIP_BROWSER_GATE: PASS — extracted ZIP repeated full 55/55 browser gate'),encoding='utf-8')
+          be=r/f'{p}-BUILD-EVIDENCE.json';d=json.loads(be.read_text(encoding='utf-8'));d['clean_zip_browser_gate']='55/55 PASS';be.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          script=r/'scripts/build_profile_2026.py';s=importlib.util.spec_from_file_location('b',script);b=importlib.util.module_from_spec(s);s.loader.exec_module(b);out=b.manifest_zip()
+          with zipfile.ZipFile(out) as z:
+              base=r.name+'/';names=set(z.namelist())
+              assert base+'tests/evidence/profile-2026-browser-evidence.json' in names
+              assert base+'tests/evidence/profile-2026-final-zip-browser-evidence.json' in names
+              assert base+'AUDIT-MATRIX-2026-profile.csv' in names and base+'AUDIT-REPORT-2026-profile.md' in names
+          print('FINAL ZIP PASS',out)
+          PY
+      - name: Remove stale legacy profile package and temporary build sources
+        run: |
+          rm -f ege-matematika-profil-demoversiya-VERIFIED-PACKAGE-v2.zip
+          rm -f profile-math-2026-visual-source-run.txt
+          rm -rf profile-math-2026-build
+      - name: Commit fresh audited release
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Release fresh profile mathematics 2026 v1.0'
+          git pull --rebase origin main
+          git push origin main
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ege-matematika-profil-demoversiya-2026-v1.0
+          path: ege-matematika-profil-demoversiya-2026-v1.0.zip
+          retention-days: 7
