@@ -3,7 +3,7 @@
   "package_version": "1.2",
   "checks": {
     "official_examples_real_controls": "70/70",
-    "task1_decimal_wrong_persists": "PASS: 11.2 → 11,2; explicit integer-format error; navigation/reload preserves raw value; scorer 0/1",
+    "task1_decimal_wrong_persists": "PASS: integer-only example preserves 11.2 as raw invalid input; explicit whole-number feedback; navigation/reload preserves raw value; scorer 0/1",
     "task1_correct_integer": "PASS: 12 scores 1/1",
     "decimal_dot_normalization": "PASS: 0.25 → 0,25 → reload 0,25",
     "invalid_space_preserved": "PASS: 12 200 remains raw invalid input and never becomes 12200",

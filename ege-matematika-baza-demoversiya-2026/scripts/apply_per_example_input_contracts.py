@@ -26,7 +26,7 @@ return c.mode==='digits'?'Введите только требуемое кол�
 }
 function numericPanel(v){const c=inputContract(v),a=answerObj(state.current)||{value:'',valid:false},value=String(a.value||''),chk=validateNumeric(v,value),invalid=!chk.empty&&!chk.valid,inputMode=c.mode==='number'?'decimal':'numeric';return `<div class="mb-answerbox"><label class="mb-answer-title" for="mb-short">Ответ</label><div class="mb-answer-hint">${esc(c.hint)}</div><input class="mb-input ${invalid?'is-invalid':''}" id="mb-short" inputmode="${inputMode}" autocomplete="off" value="${esc(value)}" aria-describedby="mb-input-error"><div class="mb-error" id="mb-input-error" aria-live="polite">${invalid?esc(numericError(c,chk.reason)):''}</div></div>`}
 '''
-runtime,n=re.subn(r"function numericError\([^\n]*\nfunction numericPanel\([^\n]*\n",new_numeric,runtime,count=1)
+runtime,n=re.subn(r"function numericError\([^\n]*\nfunction numericPanel\([^\n]*\n",lambda m:new_numeric,runtime,count=1)
 if n!=1: raise SystemExit('numericError/numericPanel patch failed')
 
 new_validate=r'''function validateNumeric(v,value){
@@ -57,12 +57,12 @@ return {empty:false,valid:true,reason:null,normalized};
 return {empty:false,valid:false,reason:'format',normalized:raw};
 }
 '''
-runtime,n=re.subn(r"function validateNumeric\(v,value\)\{.*?\}\nfunction updateCode",new_validate+'function updateCode',runtime,count=1,flags=re.S)
+runtime,n=re.subn(r"function validateNumeric\(v,value\)\{.*?\}\nfunction updateCode",lambda m:new_validate+'function updateCode',runtime,count=1,flags=re.S)
 if n!=1: raise SystemExit('validateNumeric patch failed')
 
 new_bind=r'''function bindNumeric(v){const c=inputContract(v),inp=$('#mb-short'),err=$('#mb-input-error');inp.oninput=()=>{let raw=inp.value;const chk=validateNumeric(v,raw);let stored=raw;if(c.mode==='number'&&chk.normalized!==raw&&(chk.valid||chk.reason==='incomplete_decimal')){stored=chk.normalized;inp.value=stored}const finalChk=validateNumeric(v,stored);inp.classList.toggle('is-invalid',!finalChk.empty&&!finalChk.valid);err.textContent=finalChk.empty||finalChk.valid?'':numericError(c,finalChk.reason);state.answers[state.current]={value:stored,valid:finalChk.valid};save();renderGrid()}}
 '''
-runtime,n=re.subn(r"function bindNumeric\(v\)\{.*?\}\nfunction disableMatchingDuplicates",new_bind+'function disableMatchingDuplicates',runtime,count=1,flags=re.S)
+runtime,n=re.subn(r"function bindNumeric\(v\)\{.*?\}\nfunction disableMatchingDuplicates",lambda m:new_bind+'function disableMatchingDuplicates',runtime,count=1,flags=re.S)
 if n!=1: raise SystemExit('bindNumeric patch failed')
 runtime=runtime.replace('validateNumeric,fixTypography,startNew', 'validateNumeric,inputContract,fixTypography,startNew')
 runtime_path.write_text(runtime,encoding='utf-8')

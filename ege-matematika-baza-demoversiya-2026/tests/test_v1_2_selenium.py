@@ -88,19 +88,19 @@ def main():
         set_variant(driver,1,3)
         inp=driver.find_element(By.ID,'mb-short')
         fill_input(inp,'11.2')
-        assert inp.get_attribute('value')=='11,2',inp.get_attribute('value')
+        assert inp.get_attribute('value')=='11.2',inp.get_attribute('value')
         st=js(driver,'window.EKSAMIO_MATH_BASE_TEST.state().answers[1]')
-        assert st=={'value':'11,2','valid':False},st
+        assert st=={'value':'11.2','valid':False},st
         assert not js(driver,'window.EKSAMIO_MATH_BASE_TEST.isAnswered(1)')
         assert js(driver,'window.EKSAMIO_MATH_BASE_TEST.score(1)')==0
-        assert 'целый ответ' in driver.find_element(By.ID,'mb-input-error').text
-        assert 'Введите целое число.' in driver.find_element(By.CSS_SELECTOR,'.mb-answerbox .mb-answer-hint').text
+        assert 'целое число' in driver.find_element(By.ID,'mb-input-error').text
+        assert 'количество пачек целым числом' in driver.find_element(By.CSS_SELECTOR,'.mb-answerbox .mb-answer-hint').text
         set_current(driver,2);set_current(driver,1)
-        assert driver.find_element(By.ID,'mb-short').get_attribute('value')=='11,2'
+        assert driver.find_element(By.ID,'mb-short').get_attribute('value')=='11.2'
         driver.refresh()
-        assert driver.find_element(By.ID,'mb-short').get_attribute('value')=='11,2'
-        assert js(driver,'window.EKSAMIO_MATH_BASE_TEST.state().answers[1].value')=='11,2'
-        ev['checks']['task1_decimal_wrong_persists']='PASS: 11.2 → 11,2; explicit integer-format error; navigation/reload preserves raw value; scorer 0/1'
+        assert driver.find_element(By.ID,'mb-short').get_attribute('value')=='11.2'
+        assert js(driver,'window.EKSAMIO_MATH_BASE_TEST.state().answers[1].value')=='11.2'
+        ev['checks']['task1_decimal_wrong_persists']='PASS: integer-only example preserves 11.2 as raw invalid input; explicit whole-number feedback; navigation/reload preserves raw value; scorer 0/1'
 
         inp=driver.find_element(By.ID,'mb-short')
         fill_input(inp,'12')

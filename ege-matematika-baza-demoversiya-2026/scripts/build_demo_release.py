@@ -13,7 +13,7 @@ ROOT=Path(__file__).resolve().parents[1]
 REPO=ROOT.parent
 PREFIX='ege-matematika-baza-demoversiya-2026'
 PACKAGE_VERSION='1.2'
-CONTENT_VERSION='2026.3'
+CONTENT_VERSION='2026.4'
 STORAGE_KEY='eksamio_ege_math_base_demo_2026_v1_2'
 ZIP_NAME=f'{PREFIX}-v{PACKAGE_VERSION}.zip'
 MAX_T123=45000
@@ -111,7 +111,7 @@ def write_metadata(tasks,gate_summary):
         'header_footer_included':False,'canonical_year_free':True,
         'result_contract':{'automatic_scoring':True,'primary_score':'0–21','test_score_conversion':False},
         'variant_contract':{'one_official_example_per_position':True,'student_selects_variant':False,'variant_persists_after_reload':True,'official_examples_total':70},
-        'interaction_contract':{'numeric_input':'numeric syntax is validated independently from answer correctness; dot normalizes to comma; raw invalid input is preserved','matching_selects_4':'four real selects; system assembles code','checkboxes':'real checkboxes; system assembles set','row_checkboxes':'real row selection; system assembles set','browser_test_uses_real_controls':True},
+        'interaction_contract':{'numeric_input':'each free-input official example has an explicit input contract; format validation never infers correctness from canonical answers; decimal-dot normalization is used only where decimal input is permitted; raw invalid input is preserved','matching_selects_4':'four real selects; system assembles code','checkboxes':'real checkboxes; system assembles set','row_checkboxes':'real row selection; system assembles set','browser_test_uses_real_controls':True},
         'release_gate_summary':gate_summary
     }
     dump_json(ROOT/f'{PREFIX}-PACKAGE-CONTRACT.json',contract)
@@ -140,6 +140,9 @@ def build_blocks(tasks):
     shell=re.sub(r'contentVersion:"[^"]+"',f'contentVersion:"{CONTENT_VERSION}"',shell)
     shell=re.sub(r'storageKey:"[^"]+"',f'storageKey:"{STORAGE_KEY}"',shell)
     runtime=(ROOT/'templates'/'runtime.js').read_text(encoding='utf-8')
+    input_contracts=load_json(f'{PREFIX}-INPUT-CONTRACT.json')['contracts']
+    runtime=runtime.replace('__INPUT_CONTRACTS__',json.dumps(input_contracts,ensure_ascii=False,separators=(',',':')))
+    if '__INPUT_CONTRACTS__' in runtime:raise RuntimeError('Input-contract injection failed')
     blocks=[shell]
     blocks.extend(chunk_items(tasks,'<script>window.EKSAMIO_MATH_BASE.tasks.push(...',' );</script>\n'.replace(' ','')))
     for path in sorted((ROOT/'assets').glob('*.webp')):
@@ -186,6 +189,6 @@ def manifest_and_zip():
 
 if __name__=='__main__':
     gates=check_gates();tasks=enhance_task_map();write_metadata(tasks,gates);t123=build_blocks(tasks);write_installation(t123);update_exam_map(t123);build_preview(t123);out=manifest_and_zip()
-    evidence={'status':'BUILT_PENDING_TESTS','package':out.name,'package_version':PACKAGE_VERSION,'content_version':CONTENT_VERSION,'storage_key':STORAGE_KEY,'t123_blocks':len(t123),'t123_max_bytes':max((ROOT/n).stat().st_size for n in t123),'official_examples':sum(len(t['variants']) for t in tasks),'assets':len(list((ROOT/'assets').glob('*.webp'))),'reference_pages':[4,5,6,7],'acceptance_fixes':['numeric input syntax decoupled from answer correctness','raw invalid numeric input persists without stale-value fallback','task 1 integer-answer hint','task 1 rejects non-integer numeric format with explicit student feedback','Нꞏм normalized to Н·м']}
+    evidence={'status':'BUILT_PENDING_TESTS','package':out.name,'package_version':PACKAGE_VERSION,'content_version':CONTENT_VERSION,'storage_key':STORAGE_KEY,'t123_blocks':len(t123),'t123_max_bytes':max((ROOT/n).stat().st_size for n in t123),'official_examples':sum(len(t['variants']) for t in tasks),'assets':len(list((ROOT/'assets').glob('*.webp'))),'reference_pages':[4,5,6,7],'acceptance_fixes':['numeric input syntax decoupled from answer correctness','raw invalid numeric input persists without stale-value fallback','58 per-example free-input contracts','format-specific student feedback without answer-correctness inference','Нꞏм normalized to Н·м']}
     dump_json(ROOT/f'{PREFIX}-BUILD-EVIDENCE.json',evidence)
     print(json.dumps(evidence,ensure_ascii=False,indent=2))
