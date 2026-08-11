@@ -1,0 +1,20 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "scope":"tasks_1_27",
+  "status":"source_content_complete_all_tasks_integration_pending",
+  "production_integration":false,
+  "coverage":{"tasks_total":27,"first_part_tasks":26,"essay_tasks":1,"covered_tasks":27,"missing_tasks":[]},
+  "first_part":{"manifest":"51-RUSSIAN-EXPLANATION-FIRST-PART-MANIFEST.json","tasks":"1-26","status":"source_content_complete_review_and_machine_validation_pending"},
+  "essay":{"task":27,"source_gate":"52-RUSSIAN-ESSAY-27-SOURCE-GATE-2026.txt","criteria_map":"53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json","self_check_spec":"54-RUSSIAN-ESSAY-27-LEARNER-SELF-CHECK-SPEC.txt","explanation_components":"55-RUSSIAN-ESSAY-27-EXPLANATION-COMPONENTS-v0.1.json","status":"official_source_verified_content_created"},
+  "source_policy":{"current_exam_truth":"FIPI verified current sources","language_rule_primary":"eksamio-learning-engine/russkiy-knigi/rozental.doc","current_product_bank":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/"},
+  "explanation_availability":{"warmup":"optional rule before answer in future warmup flow","practice":"after answer","work_on_errors":"detailed explanation then independent check item","control":"after completion only","demo":"after completion only","essay_demo_control":"after completion only; no real-time content hints"},
+  "assessment_boundary":{"tasks_1_26":"existing automatic checking remains authoritative only within its already verified implementation","task_27":"expert-evaluated; learner self-evaluation must remain visibly separate","ai":"future non-official layer only"},
+  "exceptions_trainer":{"planned":true,"public_slug":"/trenazhery/russkiy/isklyucheniya/","spec":"28-RUSSIAN-EXCEPTIONS-TRAINER-SPEC.txt","schema":"29-RUSSIAN-EXCEPTIONS-BANK-SCHEMA.json","status":"knowledge_banks_in_progress_not_integrated"},
+  "pre_integration_gate":["machine JSON/schema validation for all new data files","final learner wording/content review","item/position-to-subskill routing map","safe fallback to current trainer feedback","no-hint regression checks for control/demo","essay expert-vs-self-evaluation separation tests","rollback plan","full regression of current trainer"],
+  "known_constraints":["task 8 exact diagnosis needs position-level result","task 22 exact device diagnosis needs position-level result","task 25 current phraseologism must exclude historical synonym routing","task 26 may need option/item-level means-of-cohesion tags","task 27 has official hard gates including K1 dependency and minimum volume; no automatic expert score"],
+  "current_trainer_unchanged":true,
+  "codex_used_for_content_build":false,
+  "next_stage":"content review + exception-bank expansion + integration design only after validation gate"
+}
