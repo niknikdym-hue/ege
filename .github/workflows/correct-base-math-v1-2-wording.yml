@@ -1,0 +1,92 @@
+name: Correct Base Math 2026 v1.2 Wording
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/correct-base-math-v1-2-wording.yml
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install latex2mathml selenium
+      - name: Correct wording in source and tests
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026')
+          runtime=root/'templates'/'runtime.js'
+          s=runtime.read_text(encoding='utf-8')
+          old='Для этого задания нужен целый ответ. Введите число без запятой и дробной части.'
+          new='Для этого задания нужно ввести целое число. Введите число без запятой и дробной части.'
+          assert old in s
+          runtime.write_text(s.replace(old,new),encoding='utf-8')
+          test=root/'tests'/'test_v1_2_selenium.py'
+          t=test.read_text(encoding='utf-8').replace("'целый ответ'", "'целое число'")
+          test.write_text(t,encoding='utf-8')
+          report=root/'ege-matematika-baza-demoversiya-2026-TEST-REPORT.txt'
+          if report.exists():
+              r=report.read_text(encoding='utf-8').replace(old,new)
+              report.write_text(r,encoding='utf-8')
+          PY
+      - name: Rebuild v1.2
+        run: |
+          python ege-matematika-baza-demoversiya-2026/scripts/build_demo_release.py
+          cd ege-matematika-baza-demoversiya-2026
+          python tests/test_static.py
+          python tests/test_source_fidelity.py
+      - name: Browser audit rebuilt v1.2
+        run: |
+          cd ege-matematika-baza-demoversiya-2026
+          python -m http.server 8774 --bind 127.0.0.1 >/tmp/base-v12-wording-http.log 2>&1 &
+          echo $! >/tmp/base-v12-wording-http.pid
+          sleep 2
+          EKSAMIO_PREVIEW_URL=http://127.0.0.1:8774/ege-matematika-baza-demoversiya-2026-PREVIEW.html EKSAMIO_EVIDENCE_OUT=tests/evidence/v1.2-wording-selenium-evidence.json python tests/test_v1_2_selenium.py
+          kill $(cat /tmp/base-v12-wording-http.pid) || true
+      - name: Extract and audit clean ZIP
+        run: |
+          rm -rf /tmp/base-v12-wording-clean && mkdir -p /tmp/base-v12-wording-clean
+          unzip -q ege-matematika-baza-demoversiya-2026-v1.2.zip -d /tmp/base-v12-wording-clean
+          CLEAN=/tmp/base-v12-wording-clean/ege-matematika-baza-demoversiya-2026
+          DEMO_ROOT="$CLEAN" python ege-matematika-baza-demoversiya-2026/tests/test_static.py
+          DEMO_ROOT="$CLEAN" python ege-matematika-baza-demoversiya-2026/tests/test_source_fidelity.py
+          cd "$CLEAN"
+          python -m http.server 8775 --bind 127.0.0.1 >/tmp/base-v12-wording-clean-http.log 2>&1 &
+          echo $! >/tmp/base-v12-wording-clean-http.pid
+          sleep 2
+          cd "$GITHUB_WORKSPACE/ege-matematika-baza-demoversiya-2026"
+          EKSAMIO_PREVIEW_URL=http://127.0.0.1:8775/ege-matematika-baza-demoversiya-2026-PREVIEW.html EKSAMIO_EVIDENCE_OUT=tests/evidence/v1.2-wording-clean-zip-selenium-evidence.json python tests/test_v1_2_selenium.py
+          kill $(cat /tmp/base-v12-wording-clean-http.pid) || true
+      - name: Repack evidence and commit corrected v1.2
+        run: |
+          python - <<'PY'
+          import importlib.util,json
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026')
+          for name in ['tests/evidence/v1.2-wording-selenium-evidence.json','tests/evidence/v1.2-wording-clean-zip-selenium-evidence.json']:
+              ev=json.loads((root/name).read_text(encoding='utf-8'))
+              assert ev['status']=='PASS'
+              assert ev['checks']['official_examples_real_controls']=='70/70'
+              assert ev['checks']['full_correct_attempt']=='21/21'
+              assert ev['checks']['javascript_errors']==0
+          p=(root/'scripts'/'build_demo_release.py').resolve();s=importlib.util.spec_from_file_location('build',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);m.manifest_and_zip()
+          PY
+          rm -f .github/workflows/correct-base-math-v1-2-wording.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Correct base mathematics v1.2 integer wording'
+          git pull --rebase origin main
+          git push origin main
