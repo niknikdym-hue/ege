@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Build and validate the canonical Russian exceptions/special-cases bank.
 
-Data-only build. This script MUST NOT modify the current trainer, answers,
-scoring, storage, URLs, or Tilda production files.
+Data-only build. Source banks are read from the master manifest so new verified
+banks can be registered without editing Python each time. This script MUST NOT
+modify the current trainer, answers, scoring, storage, URLs, or Tilda files.
 """
 
 from __future__ import annotations
@@ -13,18 +14,6 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
-
-SOURCE_BANKS = [
-    "33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json",
-    "35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json",
-    "37-RUSSIAN-EXCEPTIONS-SUFFIXES-CONJUGATION-v0.1.json",
-    "39-RUSSIAN-EXCEPTIONS-NE-NI-SOLID-v0.1.json",
-    "42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json",
-    "48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json",
-    "84-RUSSIAN-EXCEPTIONS-INTRODUCTORY-WORDS-v0.1.json",
-    "85-RUSSIAN-EXCEPTIONS-NE-NI-HIGH-RISK-v0.1.json",
-    "86-RUSSIAN-EXCEPTIONS-SOLID-SEPARATE-HIGH-RISK-v0.1.json",
-]
 
 SKILL_GRAPH_FILE = "03-RUSSIAN-SKILL-GRAPH.json"
 SCHEMA_FILE = "29-RUSSIAN-EXCEPTIONS-BANK-SCHEMA.json"
@@ -55,6 +44,8 @@ CANONICAL_SOURCE_TYPES = {
     "internal_verified_source",
 }
 
+ALLOWED_VERIFICATION_STATUSES = {"verified", "partial", "needs_review"}
+
 
 class BuildError(RuntimeError):
     pass
@@ -80,6 +71,28 @@ def walk(obj: Any) -> Iterable[Any]:
     elif isinstance(obj, list):
         for value in obj:
             yield from walk(value)
+
+
+def source_banks_from_manifest(manifest: Any) -> list[str]:
+    if not isinstance(manifest, dict):
+        raise BuildError(f"Top-level {MANIFEST_FILE} must be an object")
+    rows = manifest.get("source_banks")
+    if not isinstance(rows, list) or not rows:
+        raise BuildError(f"Missing/non-empty source_banks[] in {MANIFEST_FILE}")
+
+    result: list[str] = []
+    seen: set[str] = set()
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict) or not isinstance(row.get("path"), str):
+            raise BuildError(f"Invalid source_banks[{index}] in {MANIFEST_FILE}")
+        path = row["path"].strip()
+        if not path:
+            raise BuildError(f"Empty source bank path at index {index}")
+        if path in seen:
+            raise BuildError(f"Duplicate source bank path in manifest: {path}")
+        seen.add(path)
+        result.append(path)
+    return result
 
 
 def collect_graph_ids(graph: Any) -> tuple[set[str], set[str]]:
@@ -231,15 +244,13 @@ def validate_items(
                     continue
                 source_type = ref.get("source_type")
                 if source_type not in CANONICAL_SOURCE_TYPES:
-                    errors.append(
-                        f"{exception_id}: noncanonical source_type {source_type!r}"
-                    )
+                    errors.append(f"{exception_id}: noncanonical source_type {source_type!r}")
                 source_path = ref.get("source_path")
                 if not isinstance(source_path, str) or not source_path.strip():
                     errors.append(f"{exception_id}: source_refs[{idx}] missing source_path")
                 elif source_path.strip().lower() in {"verified corpus", "verified source"}:
                     warnings.append(f"{exception_id}: vague source_path {source_path!r}")
-                if ref.get("verification_status") not in {"verified", "partial", "needs_review"}:
+                if ref.get("verification_status") not in ALLOWED_VERIFICATION_STATUSES:
                     errors.append(
                         f"{exception_id}: source_refs[{idx}] invalid verification_status"
                     )
@@ -257,6 +268,7 @@ def write_audit(
     path: Path,
     *,
     total: int,
+    source_banks: list[str],
     errors: list[str],
     warnings: list[str],
     coverage: dict[int, int],
@@ -268,12 +280,14 @@ def write_audit(
         f"STATUS: {'PASS' if not errors else 'FAIL'}",
         f"GENERATED_AT_UTC: {datetime.now(timezone.utc).isoformat()}",
         f"ITEMS_TOTAL: {total}",
-        f"SOURCE_BANKS: {len(SOURCE_BANKS)}",
+        f"SOURCE_BANKS: {len(source_banks)}",
         f"ERRORS: {len(errors)}",
         f"WARNINGS: {len(warnings)}",
         "",
-        "TASK COVERAGE (NUMBER OF EXCEPTION/SPECIAL-CASE ITEMS; ZERO IS ALLOWED)",
+        "SOURCE BANKS",
     ]
+    lines.extend(f"- {rel}" for rel in source_banks)
+    lines.extend(["", "TASK COVERAGE (NUMBER OF EXCEPTION/SPECIAL-CASE ITEMS; ZERO IS ALLOWED)"])
     for task in range(1, 28):
         lines.append(f"- {task}: {coverage[task]}")
     lines.extend(["", "ERRORS"])
@@ -286,6 +300,7 @@ def write_audit(
             "NOTE",
             "- Zero exception coverage for a task is not a build failure: not every task has an exception-type learning need.",
             "- Full orthoepic source bank is intentionally not duplicated here.",
+            "- Review-only sources from the manifest are not merged into the canonical bank.",
             "- Current trainer is not modified by this build.",
             "",
         ]
@@ -299,6 +314,7 @@ def build(root: Path, output: Path, audit: Path) -> int:
     schema = load_json(root / SCHEMA_FILE)
     manifest = load_json(root / MANIFEST_FILE)
     graph = load_json(root / SKILL_GRAPH_FILE)
+    source_banks = source_banks_from_manifest(manifest)
 
     contract = schema.get("exception_contract") if isinstance(schema, dict) else None
     if not isinstance(contract, dict) or not isinstance(contract.get("required"), list):
@@ -313,17 +329,8 @@ def build(root: Path, output: Path, audit: Path) -> int:
     graph_ids, graph_child_ids = collect_graph_ids(graph)
     explanation_ids = collect_explanation_ids(root)
 
-    source_rows = manifest.get("source_banks") if isinstance(manifest, dict) else None
-    if not isinstance(source_rows, list):
-        raise BuildError(f"Missing source_banks[] in {MANIFEST_FILE}")
-    manifest_paths = [row.get("path") for row in source_rows if isinstance(row, dict)]
-    if manifest_paths != SOURCE_BANKS:
-        raise BuildError(
-            "Builder SOURCE_BANKS and master manifest source_banks are out of sync"
-        )
-
     items: list[dict[str, Any]] = []
-    for rel in SOURCE_BANKS:
+    for rel in source_banks:
         items.extend(flatten_bank(load_json(root / rel), rel))
 
     errors, warnings, coverage = validate_items(
@@ -341,12 +348,13 @@ def build(root: Path, output: Path, audit: Path) -> int:
         "subject":"russian",
         "exam":"ege",
         "purpose":"canonical_exceptions_and_special_cases_bank",
-        "build_version":"0.1.0",
+        "build_version":"0.2.0",
         "generated_at_utc":datetime.now(timezone.utc).isoformat(),
-        "generated_from":SOURCE_BANKS,
+        "generated_from":source_banks,
         "items":items,
         "coverage":{str(task):coverage[task] for task in range(1,28)},
         "validation":{
+            "source_banks":len(source_banks),
             "items_total":len(items),
             "exception_ids_unique":not any("duplicate exception_id" in e for e in errors),
             "skill_links_valid":not any("unknown skill_id" in e for e in errors),
@@ -361,12 +369,22 @@ def build(root: Path, output: Path, audit: Path) -> int:
 
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
-    write_audit(audit, total=len(items), errors=errors, warnings=warnings, coverage=coverage)
+    write_audit(
+        audit,
+        total=len(items),
+        source_banks=source_banks,
+        errors=errors,
+        warnings=warnings,
+        coverage=coverage,
+    )
 
     if errors:
         print(f"FAIL: {len(errors)} validation error(s); see {audit}")
         return 1
-    print(f"PASS: {len(items)} exception/special-case items; {len(warnings)} warning(s).")
+    print(
+        f"PASS: {len(items)} exception/special-case items from {len(source_banks)} banks; "
+        f"{len(warnings)} warning(s)."
+    )
     print(f"Canonical bank: {output}")
     print(f"Audit: {audit}")
     return 0
