@@ -1,0 +1,45 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN INTRODUCTORY WORDS — NUANCE REVIEW NOTE
+
+STATUS: REVIEW NOTE / APPLY IN CANONICAL EDITORIAL PASS
+RELATED_SOURCE: 84-RUSSIAN-EXCEPTIONS-INTRODUCTORY-WORDS-v0.1.json
+PRODUCTION: UNCHANGED
+
+ISSUE
+
+`false_introductory_probability_like_words` groups words such as:
+- вряд ли;
+- едва ли;
+- небось;
+- авось;
+- примерно;
+- приблизительно.
+
+The learner-facing rule must remain FUNCTION-BASED, not an absolute blacklist.
+
+IMPORTANT ROSENTHAL NUANCE
+
+`примерно` in its ordinary approximate-quantity/degree meaning is not automatically introductory:
+- «До станции примерно два километра».
+
+However Rosenthal notes a special use where `примерно` can function in the meaning close to `например`, which changes its punctuation/function analysis.
+
+Therefore DO NOT teach:
+`ПРИМЕРНО никогда не бывает вводным`.
+
+Safe learner wording:
+`Слова вроде «примерно» не обособляются только потому, что выражают приблизительность. Сначала определите их функцию и значение в конкретном предложении.`
+
+CANONICAL EDITORIAL ACTION
+
+Before public runtime build:
+1. Review the `false_introductory_probability_like_words` item in file 84.
+2. Preserve ordinary non-introductory examples.
+3. Add a short caveat that context/function controls punctuation.
+4. If a separate practice card is created for special `примерно = например`, source-verify that exact example before publishing.
+
+CURRENT IMPACT
+
+- Current source bank remains safe because its wording says these forms are not AUTOMATICALLY introductory in ordinary function.
+- No current practice card tests the special `примерно` use.
+- No production change needed now.
