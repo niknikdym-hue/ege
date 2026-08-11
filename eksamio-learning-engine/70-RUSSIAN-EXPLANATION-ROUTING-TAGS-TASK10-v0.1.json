@@ -1,0 +1,62 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"verified_routing_tags_current_task_10",
+  "integration_status":"not_connected_to_production",
+  "schema_ref":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
+  "items":[
+    {
+      "trainer_item_id":"ege-ru-10-2026-10-01",
+      "task_number":10,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["prefix_spelling","prefix_z_s","prefix_pre_pri","vowels_y_i_after_prefix","separating_hard_soft_signs"],
+      "option_tags":[
+        {
+          "position_id":"option_2",
+          "source_locator":"спорт..нвентарь, сверх..зысканно, меж..нститутский -> И",
+          "subskill_ids":["vowels_y_i_after_prefix"],
+          "explanation_id":"vowels_y_i_after_prefix",
+          "diagnostic_confidence":"exact"
+        },
+        {
+          "position_id":"option_3",
+          "source_locator":"ра..мешать, бе..граничный, и..рисованный -> З",
+          "subskill_ids":["prefix_z_s"],
+          "explanation_id":"prefix_z_s",
+          "diagnostic_confidence":"exact"
+        },
+        {
+          "position_id":"option_4",
+          "source_locator":"пр..землиться, пр..обретение, пр..открывшийся -> И",
+          "subskill_ids":["prefix_pre_pri"],
+          "explanation_id":"prefix_pre_pri",
+          "diagnostic_confidence":"exact"
+        },
+        {
+          "position_id":"option_1",
+          "source_locator":"п..переменно, пр..студа, р..зровнять",
+          "subskill_ids":["prefix_spelling"],
+          "explanation_id":"prefix_spelling",
+          "diagnostic_confidence":"partial"
+        },
+        {
+          "position_id":"option_5",
+          "source_locator":"пр..двзятый, н..зводить, н..сходящий",
+          "subskill_ids":["prefix_spelling"],
+          "explanation_id":"prefix_spelling",
+          "diagnostic_confidence":"partial"
+        }
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Correct rows 2,3,4 each isolate one accepted Skill Graph prefix rule family. Incorrect rows 1 and 5 remain on the broad prefix fallback because the row itself mixes lexical/morphemic cases and must not be used for a narrow mastery update without word-level classification."
+    }
+  ],
+  "validation_notes":[
+    "Current trainer answer for ege-ru-10-2026-10-01 is 234.",
+    "Rows 2,3,4 are structurally aligned with vowels_y_i_after_prefix, prefix_z_s and prefix_pre_pri respectively.",
+    "No trainer source data was changed."
+  ],
+  "status":"source_verified"
+}
