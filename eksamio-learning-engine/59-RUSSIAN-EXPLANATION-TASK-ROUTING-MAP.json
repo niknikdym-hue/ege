@@ -1,5 +1,5 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.0.1",
   "subject":"russian",
   "exam":"ege",
   "scope":"tasks_1_27",
@@ -32,7 +32,7 @@
     {"task":24,"routing":["diagnostic_followup"],"precision":"option_needed_for_exact","candidate_subskills":["narration_identification","description_identification","reasoning_identification","semantic_relation_between_sentences"],"fallback":"speech_type_analysis"},
     {"task":25,"routing":["exact_item","legacy_split"],"precision":"item","candidate_subskills":["phraseologism_identification","contextual_synonym_selection"],"fallback":"phraseologism_identification","legacy_rule":"Historical contextual-synonym item must never enter current phraseologism route without explicit legacy flag."},
     {"task":26,"routing":["exact_item","task_level"],"precision":"prompt_declared_means","candidate_subskills":["cohesion_demonstrative_pronoun","cohesion_possessive_pronoun","cohesion_conjunction","cohesion_word_forms","cohesion_cognate_words"],"fallback":"interphrase_cohesion_identification"},
-    {"task":27,"routing":["expert_self_check"],"precision":"criterion_component","candidate_subskills":["essay_author_position","essay_example_and_explanation","essay_semantic_link","essay_own_attitude_and_argument","essay_fact_logic_review","essay_literacy_self_review"],"fallback":"official_K1_K10_self_check","automatic_official_scoring":false}
+    {"task":27,"routing":["expert_self_check"],"precision":"criterion_component","candidate_subskills":["author_position_formulation","textual_comment_examples","example_relation_explanation","own_position_argumentation","essay_composition_coherence","essay_language_norms","essay_source_and_volume_gate"],"candidate_explanation_ids":["essay_author_position","essay_example_and_explanation","essay_semantic_link","essay_own_attitude_and_argument","essay_fact_logic_review","essay_literacy_self_review"],"fallback":"official_K1_K10_self_check","automatic_official_scoring":false}
   ],
   "routing_safety":{"precision_must_not_exceed_evidence":true,"safe_general_route_does_not_prove_specific_weakness":true,"diagnostic_followup_required_before_specific_mastery_update_when_ambiguous":true,"existing_feedback_fallback_required":true,"production_trainer_unchanged":true}
 }
