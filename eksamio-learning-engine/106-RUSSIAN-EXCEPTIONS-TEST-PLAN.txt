@@ -1,0 +1,255 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — TEST PLAN
+
+STATUS: DESIGN READY / EXECUTION PENDING IMPLEMENTATION
+PRODUCT: /trenazhery/russkiy/isklyucheniya/
+PRODUCTION: HOLD
+
+TEST LAYERS
+
+1. SOURCE BANK VALIDATION
+2. PRACTICE BANK VALIDATION
+3. RUNTIME PAYLOAD VALIDATION
+4. ANSWER EVALUATOR TESTS
+5. SESSION SELECTOR TESTS
+6. LEARNER STATE / STORAGE TESTS
+7. UI / ACCESSIBILITY TESTS
+8. MOBILE / TILDA TESTS
+9. REGRESSION TESTS
+10. HANDOFF TESTS — later optional phase
+
+A. SOURCE BANK
+
+Run:
+- canonical Explanation Bank builder;
+- canonical Exceptions Bank builder;
+- canonical Practice Bank builder.
+
+Must PASS:
+- JSON parse;
+- unique IDs;
+- required fields;
+- Skill Graph links;
+- source types;
+- 1–27 explanation coverage;
+- practice -> exception links;
+- no needs_review item promoted to public runtime.
+
+B. PRACTICE ANSWER FIXTURES
+
+For every response_kind create positive and negative fixtures.
+
+single_choice
+- correct option accepted;
+- each wrong option rejected;
+- out-of-range rejected safely.
+
+multi_choice
+- exact set accepted independent of visual click order where appropriate;
+- missing one option rejected/partial only if contract explicitly allows partial;
+- extra option rejected.
+
+short_text / normalize_form
+Test:
+- surrounding whitespace;
+- case handling if case-insensitive by contract;
+- Ё/Е handling only if that exact item declares equivalence;
+- hyphen vs dash normalization only where typographic normalization is allowed;
+- internal spaces meaningful for `на встречу`, `в течение`, etc.;
+- do not normalize away orthographic distinctions being tested.
+
+classification
+- expected class only;
+- display wording does not alter internal answer code.
+
+punctuation_positions
+- set comparison;
+- duplicate entered positions normalized/rejected predictably;
+- no accidental partial acceptance from substring matching.
+
+C. HIGH-RISK CONTENT FIXTURES
+
+Must have explicit tests:
+- деревянный / кованый / раненый vs раненный;
+- пребывать / прибывать;
+- не кто иной, как / никто иной не;
+- несмотря на / не смотря;
+- в течение / в течении;
+- навстречу / на встречу;
+- вовремя / во время;
+- однако / наконец / вообще / конечно dual functions;
+- по приезде;
+- согласно приказу;
+- title apposition;
+- homogeneous verbs with different government;
+- праздничный / праздный;
+- ледовый / ледяной;
+- compound sentence with common element;
+- conjunction junction ЧТО ЕСЛИ..., ТО...;
+- colon/dash rule classification.
+
+D. SESSION SELECTOR FIXTURES
+
+D1 empty learner
+Input: no state, >=20 new cards.
+Expected:
+- target session size;
+- no duplicate practice_item_id;
+- no duplicate context signature;
+- deterministic result for same input/build/time bucket;
+- domain mixing when alternatives exist.
+
+D2 due items
+Input: 4 due + new items.
+Expected: all due items prioritized unless filtered out explicitly.
+
+D3 active errors
+Input: recent wrong exception + unseen cards.
+Expected: active error prioritized over low-priority new reference item.
+
+D4 recognition passed
+Expected: recall/context preferred for same exception next time.
+
+D5 immediate retry prevention
+Wrong current card, same exception has another context.
+Expected: different cards in between; no immediate same-context replay.
+
+D6 short bank
+Only 5 eligible cards for requested 10.
+Expected: 5 cards, no duplicate padding.
+
+D7 exact handoff
+Input two exact exception_ids.
+Expected: both represented first/high priority.
+
+D8 broad handoff
+Input only broad skill, no exception_id.
+Expected: no guessed exception route.
+
+E. LEARNER STATE
+
+E1 first attempt
+Creates one event and one exception state.
+
+E2 reload/idempotency
+Same event replayed after reload.
+Expected: no double increment.
+
+E3 wrong -> active
+wrong_count +1, active_error_count +1, status active.
+
+E4 correct recognition
+correct_count +1; must NOT mark stabilized.
+
+E5 transfer success
+May mark transfer_passed under mastery policy; still not retention_passed same moment.
+
+E6 due review
+next_due_at reached -> due priority.
+
+E7 retention pass
+Moves according to mastery policy; history retained.
+
+E8 corrupt JSON/state
+Expected:
+- old bytes preserved for recovery/logging;
+- general session still possible;
+- no silent reset to fake zero progress.
+
+E9 schema migration
+Old supported version -> deterministic migration fixture.
+Unknown future version -> fail safe; do not overwrite.
+
+F. UI
+
+- start session from hero;
+- choose answer;
+- keyboard-only path;
+- focus after check;
+- correct/wrong feedback screen-reader-announced;
+- expand/collapse rule drawer;
+- long feedback scrolls without covering CTA;
+- My Exceptions empty state;
+- no due state;
+- session result;
+- resume/reload behavior.
+
+G. MOBILE
+
+Test representative widths:
+- 320/360/390 px;
+- common tablet width;
+- desktop.
+
+Check:
+- no horizontal overflow;
+- full prompt visible;
+- keyboard does not hide answer/check button;
+- touch targets usable;
+- rule tables stack;
+- sticky action does not cover feedback.
+
+H. TILDA
+
+- every T123 block under accepted size margin;
+- load order deterministic;
+- no duplicate global IDs/functions;
+- no dependency on page editor preview timing only;
+- publish + cache refresh smoke test;
+- header/footer unaffected;
+- canonical/SEO stable and year-free for persistent page.
+
+I. REGRESSION
+
+Mandatory before publication:
+- compare current EGE trainer production source before/after standalone page work;
+- expected change: NONE unless a separate handoff task is explicitly authorized;
+- current answer bank count unchanged;
+- current scoring unchanged;
+- current localStorage keys unchanged;
+- orthoepy/paronym standalone trainer behavior unchanged;
+- `/trenazhery/` catalog changes only in separately reviewed page update.
+
+J. CONTENT RANDOM SAMPLE
+
+After machine validation, manually sample at least:
+- 10% of practice cards;
+- all context-dependent dual-function cards;
+- all newly added source exceptions;
+- every response_kind;
+- every learner-facing topic.
+
+For first release, preferable to manually review ALL initial public cards because the source bank is still manageable.
+
+K. FAILURE TESTS
+
+- missing runtime file;
+- malformed JSON;
+- unknown practice_item_id in saved session;
+- exception removed/disabled in new content version;
+- source exception has no eligible practice card;
+- stale learner state points to retired practice context;
+- duplicated event id;
+- browser storage unavailable/quota error.
+
+Expected: fail closed on content, preserve state when possible, no invented fallback question.
+
+L. RELEASE GATE REPORT
+
+Before public GO, produce one report containing:
+- content build PASS;
+- exceptions build PASS;
+- practice build PASS;
+- runtime build PASS;
+- state tests PASS;
+- selector tests PASS;
+- UI/mobile PASS;
+- Tilda install PASS;
+- regression PASS;
+- rollback artifact identified.
+
+CURRENT DECISION
+
+TEST PLAN: READY
+EXECUTION: PENDING DATA MACHINE BUILD + IMPLEMENTATION
+PRODUCTION: HOLD
