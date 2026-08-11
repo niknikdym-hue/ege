@@ -1,0 +1,90 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — PUBLIC PLACEMENT
+
+STATUS: DESIGN / ADD-ONLY
+PUBLIC_HUB: https://eksamio.ru/trenazhery/
+PRODUCTION_CHANGE: NO
+
+CURRENT PUBLIC STRUCTURE
+
+The public trainers hub currently presents:
+- a main EGE Russian trainer for comprehensive exam practice;
+- topic trainers for stress/orthoepy;
+- dictionary words;
+- paronyms;
+- phraseologisms;
+- guidance that users should switch to a focused topic trainer when a specific weakness is already known.
+
+PLACEMENT DECISION
+
+Future exceptions training belongs in `/trenazhery/` as another focused Russian-language trainer, not as a replacement for the main EGE trainer and not as a hidden internal mode only.
+
+Recommended evergreen URL:
+`/trenazhery/russkiy/isklyucheniya/`
+
+Recommended catalogue role:
+- category/eyebrow: `Правила русского языка` or `Правила и нормы`;
+- title: `Исключения и особые случаи`;
+- short product label may remain `Тренажёр исключений` inside the page/interface.
+
+Why not classify it only as orthography:
+- the future bank may include spelling exceptions, morphological exceptions, orthoepic forms, homonym/confusion cases and other verified special cases;
+- therefore the product should stay cross-topic and skill-linked.
+
+CATALOGUE POSITION
+
+Recommended visual order on `/trenazhery/`:
+1. Main EGE trainer;
+2. Exceptions and special cases;
+3. Stress / orthoepy;
+4. Dictionary words;
+5. Paronyms;
+6. Phraseologisms;
+
+Rationale:
+The exceptions trainer is a cross-topic targeted product and a natural bridge between comprehensive EGE practice and narrow single-topic trainers.
+
+DRAFT CARD COPY — INTERNAL ONLY
+
+Eyebrow:
+`Правила и нормы`
+
+Title:
+`Исключения и особые случаи`
+
+Description concept:
+Targeted practice for words, forms and constructions where a simple general rule is insufficient. The learner recognizes the exception, contrasts it with the normal rule and returns difficult cases for spaced review.
+
+Do not publish this exact wording without content review.
+
+PRODUCT LOGIC
+
+The public trainer should support:
+- diagnostic entry point;
+- `Продолжить тренировку`;
+- `Мои исключения`;
+- thematic groups;
+- mixed practice;
+- personal review queue;
+- mastery only after repeated independent answers and retention.
+
+It should reuse the successful interaction principles already visible in current topic trainers, but should not duplicate their content banks.
+
+RELATION TO EXISTING TRAINERS
+
+- Stress items already owned by the orthoepy trainer remain there as the primary specialist product; exception bank may reference verified normative forms without duplicating the full stress trainer bank unnecessarily.
+- Dictionary words remain in the dictionary-words trainer; exceptions trainer should include only cases that are genuinely part of an exception/special-case learning unit or a cross-rule confusion set.
+- Paronyms and phraseologisms remain separate specialist products.
+
+CROSS-LINKING
+
+Future safe UX may link:
+- from a main EGE trainer error -> relevant explanation -> exceptions practice when the error is an exception/special case;
+- from the exceptions trainer -> full topic trainer when a broader skill needs practice;
+- from `/trenazhery/` -> exceptions trainer as a focused choice.
+
+No implementation or public hub change is authorized by this file.
+
+STOP CONDITION
+
+Do not modify `/trenazhery/`, its T123, any published specialist trainer, current URLs, localStorage or scoring until the exceptions bank has passed source/content review and a separate implementation gate is approved.
