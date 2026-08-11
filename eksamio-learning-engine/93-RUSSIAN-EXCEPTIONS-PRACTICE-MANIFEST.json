@@ -1,0 +1,29 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"exceptions_practice_bank_manifest",
+  "integration_status":"not_connected_to_production",
+  "schema":"91-RUSSIAN-EXCEPTIONS-PRACTICE-SCHEMA.json",
+  "source_exceptions_manifest":"83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json",
+  "practice_banks":[
+    {"path":"92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json","scope":"first original cross-domain pilot","expected_items":24,"status":"source_verified_pilot"}
+  ],
+  "builder":"build/build_russian_exceptions_practice.py",
+  "canonical_output":"build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json",
+  "validation_output":"audits/RUSSIAN-EXCEPTIONS-PRACTICE-VALIDATION.txt",
+  "validation_rules":[
+    "all source exception banks parse",
+    "all practice banks parse",
+    "practice_item_id unique",
+    "exception_id resolves to a source exception item",
+    "source exception status must be source_verified or reviewed",
+    "practice mode is permitted by source exception practice_modes",
+    "response_kind and transfer_level belong to schema enums",
+    "answer and required feedback fields are present",
+    "context_signature unique for exception_id + mode",
+    "no production trainer mutation"
+  ],
+  "current_status":"pilot_ready_for_machine_validation",
+  "production_integration":"HOLD"
+}
