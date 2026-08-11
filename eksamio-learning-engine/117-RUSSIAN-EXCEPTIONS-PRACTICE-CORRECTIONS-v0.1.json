@@ -1,0 +1,25 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"exceptions_trainer_practice_corrections",
+  "integration_status":"not_connected_to_production",
+  "content_version":"0.1.0",
+  "schema_ref":"91-RUSSIAN-EXCEPTIONS-PRACTICE-SCHEMA.json",
+  "items":[
+    {
+      "practice_item_id":"ex-practice-v-kontse-kontsov-corrected-001",
+      "exception_id":"false_introductory_v_kontse_kontsov",
+      "mode":"choose_rule_class",
+      "response_kind":"single_choice",
+      "prompt":{"text":"Нужно ли обособлять сочетание В КОНЦЕ КОНЦОВ только потому, что оно выражает итог? После долгих поисков мы в конце концов нашли нужную страницу.","options":["Да, это вводное сочетание","Нет, само сочетание не вводное"]},
+      "answer":{"option_index":1},
+      "feedback":{"correct_answer":"Нет, само сочетание не вводное","why":"«В конце концов» само по себе не является вводным сочетанием. Запятые рядом возможны только по другим правилам структуры предложения.","rule_ref":"introductory_words_punctuation"},
+      "context_signature":"v_kontse_kontsov_not_introductory_corrected",
+      "transfer_level":"independent_context",
+      "status":"source_verified"
+    }
+  ],
+  "disabled_practice_item_ids":["ex-practice-end-finally-001"],
+  "review_notes":"Current correction layer. The disabled wave-2 practice item incorrectly implied an introductory/non-introductory dual-function model for «в конце концов»."
+}
