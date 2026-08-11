@@ -1,0 +1,215 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — PRACTICE GENERATION SPEC
+
+STATUS: DESIGN READY / ADD-ONLY
+PRODUCTION: NOT CONNECTED
+CURRENT TRAINERS: UNCHANGED
+
+PURPOSE
+
+Превратить проверенный `Exceptions Bank` в реальные учебные карточки без копирования упражнений Розенталя и без ручного дублирования правил.
+
+SOURCE OF TRUTH
+
+1. Нормативное содержание:
+   `83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json` -> source banks -> `exception_id`.
+2. Языковое правило:
+   связанный `rule_ref` / Explanation Bank.
+3. Skill Graph:
+   только принятые `skill_ids` / `subskill_ids` из source exception item.
+4. Текущий ЕГЭ:
+   FIPI/current trainer только для экзаменационного scope; не использовать старый формат как текущий.
+
+Оригинальные тренировочные контексты Эксамио создаются заново. Не копировать длинные упражнения и тексты из книг.
+
+CORE PRACTICE MODES
+
+A. recognize_exception
+Ученик узнаёт исключение/особый случай среди обычных форм.
+Пример механики:
+- «Выберите слово-исключение»;
+- «Где правило работает иначе?»
+
+B. recall_form
+Ученик воспроизводит нормативную форму без подсказки.
+Пример:
+- короткое поле ответа;
+- пропуск буквы/формы;
+- восстановление словосочетания.
+
+C. choose_rule_class
+Ученик определяет, какое правило/разграничение работает.
+Важно: не требовать знания номера параграфа или школьного ярлыка, если он не нужен для решения ЕГЭ.
+
+D. contrast_normal_vs_exception
+Два близких случая рядом:
+- правило / исключение;
+- одна функция / другая функция;
+- омонимичные конструкции.
+Это главный режим для `homonym_confusion` и `punctuation_exception`.
+
+E. context_choice
+Нормативный вариант выбирается только по контексту.
+Критически важен для:
+- ПРЕ-/ПРИ-;
+- НЕ/НИ;
+- вводных/невводных слов;
+- паронимов;
+- слитно/раздельно;
+- раненый/раненный и других смысловых контрастов.
+
+F. normative_variant
+Ученик отличает литературную нормативную форму от ненормативной/ошибочной.
+Подходит для морфологии и орфоэпии.
+
+PRACTICE ITEM PRINCIPLES
+
+1. Одна карточка проверяет одну диагностируемую единицу.
+2. Если source exception item содержит две нормы, карточка может быть контрастной, но результат должен оставаться интерпретируемым.
+3. Не создавать случайные «неправильные» формы, если они не являются реалистичной ошибкой.
+4. При наличии `wrong_forms` использовать их как основу distractor, но не обязательно дословно во всех карточках.
+5. Нельзя превращать mnemonic в правило.
+6. Нельзя строить distractor, который сам спорен или нормативно допустим.
+7. Для пунктуации хранить предложение без знака + точную ожидаемую позицию/роль.
+8. Для омонимичных пар менять контекст, а не только порядок ответов.
+9. Для recall не подсказывать ответ длиной поля/маской, если это обесценивает проверку.
+10. Контрольная карточка по уже изученному exception_id должна использовать новый контекст, а не повторять тренировочный дословно.
+
+SOURCE-TO-PRACTICE RELATION
+
+Каждая practice card обязана иметь:
+- `practice_item_id`;
+- `exception_id`;
+- `mode`;
+- `response_kind`;
+- `prompt`;
+- `answer`;
+- `feedback`;
+- `status`.
+
+Skill/subskill могут наследоваться из exception item во время canonical build и не обязаны дублироваться в каждой practice card.
+
+RESPONSE KINDS
+
+- single_choice
+- multi_choice
+- short_text
+- normalize_form
+- punctuation_positions
+- classification
+
+ANSWER SAFETY
+
+- `answer` хранится структурированно;
+- alt answers допустимы только если источник подтверждает нормативную эквивалентность;
+- регистр/ё-е/пробелы нормализуются отдельно и не меняют норму;
+- нельзя автоматически принимать семантически другой ответ как «почти верный»;
+- partial credit добавлять только для реально многокомпонентной карточки и отдельным контрактом.
+
+FEEDBACK LAYERS
+
+После ошибки:
+1. коротко: нормативный ответ;
+2. `why`: конкретное разграничение;
+3. link -> explanation_id/rule_ref;
+4. при необходимости link -> exception contrast;
+5. следующий независимый practice item того же exception_id.
+
+После правильного ответа:
+- короткое подтверждение;
+- не показывать длинный параграф без запроса;
+- для нестабильного навыка всё равно назначить retention repetition.
+
+SESSION LOGIC — DESIGN DEFAULT
+
+Не production-настройка, а исходная модель:
+- 8–12 карточек за короткую сессию;
+- новые + ошибки + due repetition;
+- не более 2–3 подряд карточек одного exception cluster;
+- чередовать recall и context/contrast;
+- после ошибки по exception_id дать объяснение, затем новый контекст того же правила не мгновенно, а после небольшого интервала внутри сессии.
+
+«ВСЕ ИСКЛЮЧЕНИЯ»
+
+Цель:
+системное прохождение source bank.
+
+Порядок приоритета не равен difficulty.
+Приоритет формируется по:
+1. текущему/недавнему ЕГЭ corpus;
+2. частоте присутствия в trainer/demo sources;
+3. полезности для нескольких заданий;
+4. риску смешения с обычным правилом;
+5. затем редкие справочные случаи.
+
+«МОИ ИСКЛЮЧЕНИЯ»
+
+Будущий персональный режим.
+В него попадает exception_id, если:
+- ученик ошибся на practice card;
+- ошибка в основном тренажёре точно маршрутизирована к этому exception_id;
+- при transfer/retention проверке ошибка повторилась.
+
+Не добавлять exception_id в «Мои исключения» по косвенному общему баллу смешанного задания.
+
+MASTERY / RETENTION
+
+Exception item не имеет отдельной «сложности» из головы.
+Можно хранить learner state:
+- seen_count
+- correct_count
+- consecutive_correct
+- last_seen_at
+- last_wrong_at
+- next_due_at
+- transfer_passed
+- retention_passed
+
+Освоенность исключения не должна устанавливаться после одного узнавания в single-choice.
+Минимальная логика будущего gate:
+- успешный recall/context;
+- затем новый контекст;
+- затем retention check.
+Точные пороги определяются общим mastery spec, не этим файлом.
+
+DEDUPLICATION
+
+Перед генерацией новой карточки проверить:
+- не существует ли уже practice item с тем же `exception_id + mode + context_signature`;
+- не является ли новый контекст почти дословным повтором source example;
+- не дублирует ли standalone trainer (например полный банк ударений/паронимов).
+
+ORTHOEPY / PARONYMS
+
+Полный орфоэпический и полный паронимический тренажёры не копируются сюда.
+Exceptions Trainer получает:
+- контрастные нормативные пары;
+- особые формы;
+- формы, на которых ученик ошибался;
+- high-value cross-topic cases.
+
+PUBLIC UX BOUNDARY
+
+Публичный тренажёр исключений должен оставаться отдельным продуктом `/trenazhery/russkiy/isklyucheniya/`.
+Не превращать основной ЕГЭ-тренажёр в длинный справочник исключений.
+Основной тренажёр может только маршрутизировать ошибку сюда/в персональный маршрут после будущего integration gate.
+
+VALIDATION BEFORE PUBLIC USE
+
+- every practice `exception_id` exists in canonical Exceptions Bank;
+- every answer is normatively verified;
+- no duplicate practice IDs;
+- no duplicate contexts;
+- no unsupported alt answers;
+- source exception status is not `needs_review`;
+- learner wording editorial review passed;
+- mobile/Tilda UI test passed;
+- current main trainer remains regression-clean.
+
+CURRENT DECISION
+
+PRACTICE GENERATION DESIGN: READY
+SOURCE EXCEPTIONS BANK: EXPANDING
+PILOT PRACTICE BANK: NEXT
+PRODUCTION INTEGRATION: HOLD
+CODEX: NOT REQUIRED
