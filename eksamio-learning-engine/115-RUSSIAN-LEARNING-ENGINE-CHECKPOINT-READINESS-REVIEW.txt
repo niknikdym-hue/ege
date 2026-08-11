@@ -1,0 +1,153 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN PILOT — CHECKPOINT READINESS REVIEW
+
+STATUS: CONTENT/DESIGN CHECKPOINT READY / MACHINE PASS PENDING
+DATE: 2026-08-11
+PRODUCTION: HOLD
+CURRENT EGE TRAINER: UNCHANGED
+CODEX: NOT REQUIRED
+
+WHAT IS NOW READY
+
+A. EXPLANATION CONTENT
+- source-layer coverage for tasks 1–27;
+- Rosenthal-first rule/explanation policy;
+- task-specific splits for broad mixed topics;
+- essay task 27 source/criteria/self-check contour;
+- explanation routing first pass across tasks 1–26;
+- canonical explanation builder/validator.
+
+B. EXCEPTIONS SOURCE BANK
+- master manifest 83;
+- source banks across N/NN, roots/prefixes, suffixes/conjugation, NE/NI, solid/separate, punctuation, orthoepy, morphology, syntax, paronyms, introductory-word special cases;
+- review-only graph-gap candidates kept outside canonical bank;
+- canonical Exceptions builder reads source banks dynamically from manifest.
+
+C. EXCEPTIONS PRACTICE
+- 72 original Eksamio source practice cards across three reviewed waves;
+- current manifest 99;
+- common practice schema 91;
+- practice builder with expected-total validation;
+- session policy;
+- public UX design;
+- learner-state schema;
+- deterministic session-selection spec.
+
+D. SESSION ENGINE REFERENCE
+- base selector: `build/select_russian_exceptions_session.py`;
+- hardened current selector: `build/select_russian_exceptions_session_current.py`;
+- synthetic tests: `build/tests/test_russian_exceptions_session_selector.py`.
+
+Hardened edge cases include:
+- exact handoff required;
+- handoff without exception_id fails closed;
+- one-exception work-on-errors session may use multiple DISTINCT contexts after controlled soft-constraint relaxation;
+- due/personal errors prioritized;
+- recognition does not count as mastery;
+- no duplicate padding for short bank.
+
+E. EXPLANATION INTEGRATION DESIGN
+- runtime payload schema 110;
+- non-destructive integration contract 111;
+- integration test plan 112;
+- current trainer answer/scoring remains authority;
+- external explanation has fallback-only behavior if runtime unavailable.
+
+F. ERROR -> EXCEPTION HANDOFF
+- architecture 113;
+- first exact map 114 with 10 mappings;
+- source handoff validator `build/validate_russian_error_exception_handoff.py`.
+
+Exact subset currently includes examples such as:
+- task 7 zapечатлеть / повидлом / полутораста;
+- task 15 wooden/forged exact positions;
+- task 13 нисколько не / далеко не options;
+- task 18 `словно` false-introductory positions.
+
+G. LOCAL VALIDATION / PACKAGE TOOLING
+
+Current one-command validator:
+`python3 build/run_russian_learning_engine_validation_current_v2.py`
+
+It runs:
+1. canonical explanations;
+2. canonical exceptions;
+3. canonical 72-card practice bank;
+4. synthetic session selector tests;
+5. exact error->exception handoff cross-link validator.
+
+Current aggregate summary:
+`audits/RUSSIAN-LEARNING-ENGINE-VALIDATION-CURRENT-V2-SUMMARY.txt`
+
+Validated package command after PASS:
+`python3 build/package_learning_engine_checkpoint_current_v2.py --require-pass`
+
+Package output:
+- ZIP of `eksamio-learning-engine/`;
+- SHA-256 inventory;
+- validation status metadata.
+
+TRUE BLOCKERS BEFORE A VALIDATED ZIP CHECKPOINT
+
+1. LOCAL MACHINE EXECUTION
+The GitHub-connected workspace is not available as local files in the current execution container.
+Therefore the canonical builders/tests have not yet been actually executed together.
+
+This is the main checkpoint blocker.
+
+2. MACHINE ERRORS, IF ANY
+Only after local execution will we know whether any source link/mode/schema mismatch remains.
+Any FAIL must be corrected before `--require-pass` package.
+
+3. EDITORIAL NUANCE FOLLOW-UP
+`84A-RUSSIAN-INTRODUCTORY-WORDS-NUANCE-REVIEW.txt` records context-sensitive `примерно` nuance for canonical editorial pass.
+This is not a production emergency because no public integration exists yet.
+
+4. REMAINING TASK-9 NEEDS_FOLLOWUP TAGS
+These remain intentionally broad rather than guessed.
+They do not block general explanations but may keep some exact routing unresolved.
+
+5. FORMAL TASK-001 SKILL GRAPH REVIEW
+Runtime/integration remains HOLD until the accepted graph/source snapshot relationship is fully closed in durable review status.
+Content design may continue conservatively in the meantime.
+
+NOT BLOCKERS FOR FIRST STANDALONE EXCEPTIONS PRODUCT
+
+- full AI layer;
+- server sync;
+- main EGE trainer handoff;
+- full orthoepy duplication;
+- full paronym duplication;
+- task27 AI scoring;
+- guessed difficulty;
+- every rare Rosenthal exception.
+
+DO NOT DO BEFORE MACHINE PASS
+
+- do not publish Exceptions Trainer page;
+- do not insert external Explanation Runtime into current trainer;
+- do not add new localStorage keys to current trainer;
+- do not change answers/scoring;
+- do not use Codex merely to run validators;
+- do not keep adding low-value rare exception content just to increase count.
+
+WHAT CAN CONTINUE SAFELY BEFORE MACHINE PASS
+
+- source review/correction of existing banks;
+- original practice editorial review;
+- UX/spec/test design;
+- exact handoff mapping when evidence already exists;
+- build/test tooling;
+- formal review closure work;
+- preparation of future Tilda implementation plan without editing production.
+
+CURRENT CHECKPOINT DECISION
+
+CONTENT/DESIGN: READY FOR FIRST LOCAL MACHINE GATE
+PRACTICE SOURCE BANK: 72 CARDS
+CURRENT VALIDATION COMMAND: READY
+CURRENT PACKAGE COMMAND: READY
+MACHINE PASS: PENDING LOCAL FILE ACCESS
+ZIP HANDOFF TO USER: AFTER MACHINE PASS
+PRODUCTION INTEGRATION: HOLD
+CURRENT TRAINER: UNCHANGED
