@@ -1,0 +1,118 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXPLANATION CONTENT REVIEW STATUS
+
+STATUS: ACTIVE REVIEW
+SCOPE: tasks 1-27
+PRODUCTION: HOLD
+
+WHAT IS COMPLETE
+
+1. Source-layer coverage exists for all 27 tasks.
+2. Task 27 official FIPI 2026 criteria have a separate source gate, criteria map, learner self-check and explanation components.
+3. Explanation routing architecture exists for tasks 1-27:
+   - 58-RUSSIAN-EXPLANATION-ROUTING-SPEC.txt
+   - 59-RUSSIAN-EXPLANATION-TASK-ROUTING-MAP.json
+4. Current production trainer remains unchanged.
+5. Codex has not been used for this content build.
+
+REVIEW CORRECTIONS ALREADY MADE
+
+A. Task 27 routing map initially used explanation IDs in a field named `candidate_subskills`.
+FIXED:
+- actual Skill Graph subskills are now used;
+- explanation IDs moved to a separate `candidate_explanation_ids` field.
+
+B. Task 27 explanation components initially did not carry explicit Skill Graph links and the full common explanation-unit contract.
+FIXED:
+- skill_ids/subskill_ids added;
+- exam_task_numbers added;
+- rule/algorithm/common_traps/examples normalized;
+- source/volume hard-gate explanation added;
+- K6 criterion-linked explanation added without inventing a nonexistent ethics subskill.
+
+C. Current Skill Graph has no dedicated factual-accuracy or ethics subskill for task 27.
+DECISION:
+- do not invent these Skill Graph IDs;
+- K4 is criterion-linked and only partly associated with essay composition/coherence for educational grouping;
+- K6 remains criterion-linked with no subskill until an evidence-based graph extension is intentionally approved.
+
+OPEN DATA-NORMALIZATION WORK
+
+1. Explanation unit contract audit across files 32,34,36,38,40,41,45,46,47,55:
+Required baseline fields should be present consistently:
+- explanation_id
+- skill_ids
+- subskill_ids
+- exam_task_numbers
+- short_rule
+- rule
+- algorithm
+- common_traps
+- examples (may be an empty array only when a genuine example is not useful)
+- source_refs
+- status
+
+`contrast_examples` supplements but does not silently replace the `examples` field unless the schema is intentionally changed.
+
+2. Source provenance normalization:
+- repository-generated verified banks should normally use `internal_verified_source` rather than being mislabeled as a raw `official_fipi` file;
+- official FIPI provenance should point to the official source identifier/document in the source chain;
+- vague source paths such as “verified corpus” should be replaced by specific project source references before integration.
+
+3. Task 11 granularity:
+The current Skill Graph node `suffix_spelling_by_part_of_speech` is broader than ideal learner feedback.
+Before precise routing, split the learner explanation into internal branches / stable explanation IDs by relevant suffix family or part of speech, without changing the Skill Graph unless evidence warrants graph changes.
+
+4. Task 14 granularity:
+`solid_separate_hyphenated_spelling` is too broad for precise post-error feedback.
+Split learner content into stable internal explanation units such as:
+- conjunctions;
+- prepositions;
+- adverbs;
+- particles/pronominal combinations;
+- hyphenated models;
+provided each split is supported by Rozental/current trainer coverage.
+
+5. Mixed-task routing tags still needed before implementation:
+- task 3 option feature tags;
+- task 4 word/bankEntryId routing;
+- task 7 target-word morphology tag;
+- task 8 position/error-class result;
+- tasks 9-16 option/word structure tags where exact diagnosis is desired;
+- task 18 position tags;
+- task 21 sentence rule-family tags;
+- task 22 A-E device result;
+- task 24 option feature tags;
+- task 26 multi-means result handling.
+
+6. Task 27 word counter:
+Audit current implementation against official FIPI word-count rules before using the 149/150 boundary as anything more than a technical warning.
+
+CONTENT REVIEW PRINCIPLES
+
+- Rozental is the primary language-rule source.
+- FIPI is authoritative for current exam format, criteria and official lists.
+- Do not add a rule merely to make routing easier.
+- Do not infer a narrow student weakness from a mixed item unless the result identifies the relevant position/word/option.
+- Do not turn a mnemonic into a linguistic rule.
+- Do not overload a correct-answer feedback card with a full textbook chapter.
+- Long reference material may exist in the knowledge bank; learner feedback remains layered and compact.
+
+NEXT REVIEW ORDER
+
+1. Normalize wave 2 files 45-47 first because they are recent and compact.
+2. Normalize wave 1 explanation files.
+3. Split learner explanations for tasks 11 and 14.
+4. Normalize source_refs.
+5. Build item/position tag data without touching source trainer cards.
+6. Machine-validate JSON when local/container file access is available.
+7. Only then consider integration design.
+
+CURRENT DECISION
+
+CONTENT COVERAGE: GO
+SOURCE LAYER: GO
+DATA NORMALIZATION: IN PROGRESS
+PRODUCTION INTEGRATION: HOLD
+CURRENT TRAINER: UNCHANGED
+CODEX: NOT REQUIRED
