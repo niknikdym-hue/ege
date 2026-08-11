@@ -1,5 +1,5 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.0.1",
   "subject":"russian",
   "exam":"ege",
   "purpose":"student_explanation_bank_internal_splits",
@@ -62,7 +62,21 @@
       "examples":[{"prompt":"издавн..","answer":"издавна","why":"Наречие модели с ИЗ- имеет -А."},{"prompt":"накрепк..","answer":"накрепко","why":"Наречие модели с НА- имеет -О."}],
       "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Орфография: О/А на конце наречий","purpose":"rule","verification_status":"verified"}],
       "status":"source_verified"
+    },
+    {
+      "explanation_id":"suffix_yo_after_sibilants_verbal_derivatives",
+      "skill_ids":["orthographic_norms"],
+      "subskill_ids":["suffix_spelling_by_part_of_speech"],
+      "exam_task_numbers":[11],
+      "title":"Ё после шипящих в отглагольных суффиксах",
+      "short_rule":"Под ударением после Ж, Ш, Ч, Щ в суффиксах страдательных причастий и отглагольных прилагательных пишется Ё: напряжённый, тушёный. Ё сохраняется и в производных: тушёнка, напряжённость.",
+      "rule":"У Розенталя отдельно противопоставлены именные суффиксы с ударным О и отглагольные образования с Ё. В суффиксе страдательных причастий -ЁНН-/-ЁН- и отглагольных прилагательных -ЁН- после шипящих пишется Ё. Производные от таких форм также сохраняют Ё: например, тушёнка от тушёный. Поэтому `тушёнка` и `напряжённый` проверяются одной отглагольной моделью, несмотря на разные части речи конечных слов.",
+      "algorithm":["Найдите ударный гласный после Ж/Ш/Ч/Щ.","Определите, связано ли слово с глаголом и суффиксом страдательного причастия/отглагольного прилагательного.","Если это -ЁНН-/-ЁН- или производное от такой формы, пишите Ё.","Не переносите это правило на именные суффиксы, где под ударением может писаться О.","Проверьте словообразовательную цепочку, если конечное слово — существительное типа `тушёнка`."],
+      "common_traps":["Писать О только потому, что гласная стоит под ударением после шипящей.","Не видеть отглагольное происхождение существительного `тушёнка`.","Смешивать суффикс -ЁНН- причастия с именными суффиксами -ОНК-, -ОК- и др."],
+      "examples":[{"prompt":"напряж..нный","answer":"напряжённый","why":"Страдательное/отглагольное образование с ударным суффиксом -ЁНН-."},{"prompt":"туш..нка","answer":"тушёнка","why":"Производное от `тушёный`; Ё сохраняется в производном слове."}],
+      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Орфография: О/Ё после шипящих; отглагольные суффиксы -ЁНН-/-ЁН- и производные слова","purpose":"rule","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-PREVIEW.html","locator":"ege-ru-11-2026-11-01, row 3: туш..нка / напряж..нный","purpose":"exam_scope","verification_status":"verified"}],
+      "status":"source_verified"
     }
   ],
-  "routing_note":"These are internal learner explanation splits under the single accepted Skill Graph subskill `suffix_spelling_by_part_of_speech`. They do not modify the Skill Graph. Exact routing requires identifying the target word/part of speech; otherwise fall back to the broad task-11 explanation."
+  "routing_note":"These are internal learner explanation splits under the single accepted Skill Graph subskill `suffix_spelling_by_part_of_speech`. They do not modify the Skill Graph. Exact routing requires identifying the target word/rule family; otherwise fall back to the broad task-11 explanation."
 }
