@@ -1,0 +1,189 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"routing_tags_tasks_23_26",
+  "integration_status":"not_connected_to_production",
+  "schema_ref":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
+  "items":[
+    {
+      "trainer_item_id":"ege-ru-23-2026-23-01",
+      "task_number":23,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["content_statement_verification","statement_polarity_control"],
+      "exact_subskill_id":"content_statement_verification",
+      "explanation_id":"content_statement_verification",
+      "polarity":"select_statements_that_match_text",
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Content verification is exact at task level; individual false-statement error type is not inferred without option-level learner response evidence."
+    },
+    {
+      "trainer_item_id":"ege-ru-23-2026-23-02",
+      "task_number":23,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["content_statement_verification","statement_polarity_control"],
+      "exact_subskill_id":"content_statement_verification",
+      "explanation_id":"content_statement_verification",
+      "polarity":"select_statements_that_do_not_match_text",
+      "polarity_explanation_id":"content_statement_verification",
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"The inverted instruction makes statement_polarity_control relevant, but a wrong total answer does not prove whether the learner misread polarity or misread the text."
+    },
+
+    {
+      "trainer_item_id":"ege-ru-24-2026-24-01",
+      "task_number":24,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["narration_identification","description_identification","reasoning_identification","semantic_relation_between_sentences"],
+      "option_tags":[
+        {"position_id":"option_1","source_locator":"предложения 1–3: повествование","subskill_ids":["narration_identification"],"explanation_id":"speech_type_analysis","diagnostic_confidence":"exact"},
+        {"position_id":"option_2","source_locator":"предложение 8 противопоставлено предложению 9","subskill_ids":["semantic_relation_between_sentences"],"explanation_id":"speech_type_analysis","relation_type":"opposition","diagnostic_confidence":"exact"},
+        {"position_id":"option_3","source_locator":"предложение 18: элементы описания","subskill_ids":["description_identification"],"explanation_id":"speech_type_analysis","diagnostic_confidence":"exact"},
+        {"position_id":"option_4","source_locator":"предложения 36,37: рассуждение","subskill_ids":["reasoning_identification"],"explanation_id":"speech_type_analysis","diagnostic_confidence":"exact"},
+        {"position_id":"option_5","source_locator":"предложение 43: следствие из предложения 42","subskill_ids":["semantic_relation_between_sentences"],"explanation_id":"speech_type_analysis","relation_type":"consequence","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Verified correct options: 3,4. Tags describe the skill tested by each claim independently of truth value."
+    },
+    {
+      "trainer_item_id":"ege-ru-24-2026-24-02",
+      "task_number":24,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["narration_identification","description_identification","reasoning_identification","semantic_relation_between_sentences"],
+      "option_tags":[
+        {"position_id":"option_1","source_locator":"предложения 1–3: повествование","subskill_ids":["narration_identification"],"explanation_id":"speech_type_analysis","diagnostic_confidence":"exact"},
+        {"position_id":"option_2","source_locator":"предложение 8 противопоставлено предложению 9","subskill_ids":["semantic_relation_between_sentences"],"explanation_id":"speech_type_analysis","relation_type":"opposition","diagnostic_confidence":"exact"},
+        {"position_id":"option_3","source_locator":"предложение 18: элементы описания","subskill_ids":["description_identification"],"explanation_id":"speech_type_analysis","diagnostic_confidence":"exact"},
+        {"position_id":"option_4","source_locator":"предложения 36,37: рассуждение","subskill_ids":["reasoning_identification"],"explanation_id":"speech_type_analysis","diagnostic_confidence":"exact"},
+        {"position_id":"option_5","source_locator":"предложение 43: следствие из предложения 42","subskill_ids":["semantic_relation_between_sentences"],"explanation_id":"speech_type_analysis","relation_type":"consequence","diagnostic_confidence":"exact"}
+      ],
+      "polarity":"select_erroneous_claims",
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Verified erroneous options: 1,2,5. The same option-skill mapping applies; only task polarity changes."
+    },
+
+    {
+      "trainer_item_id":"ege-ru-25-2026-25-01",
+      "task_number":25,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["phraseologism_identification"],
+      "exact_subskill_id":"phraseologism_identification",
+      "explanation_id":"phraseologism_identification",
+      "source_locator":"в свою очередь",
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-25-2025-25-01",
+      "task_number":25,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["phraseologism_identification"],
+      "exact_subskill_id":"phraseologism_identification",
+      "explanation_id":"phraseologism_identification",
+      "accepted_answer_scope":["в конце концов","может быть","оставили в покое","на своём месте"],
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-25-2024-24-01",
+      "task_number":25,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["phraseologism_identification"],
+      "exact_subskill_id":"phraseologism_identification",
+      "explanation_id":"phraseologism_identification",
+      "source_locator":"нет дела",
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-25-2023-24-01",
+      "task_number":25,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["phraseologism_identification"],
+      "exact_subskill_id":"phraseologism_identification",
+      "explanation_id":"phraseologism_identification",
+      "source_locator":"нет дела",
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-25-2022-24-01",
+      "task_number":25,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["contextual_synonym_selection"],
+      "exact_subskill_id":"contextual_synonym_selection",
+      "explanation_id":"contextual_synonym_selection_legacy",
+      "source_locator":"врасплох -> внезапно / неожиданно",
+      "legacy":true,
+      "status":"source_verified",
+      "review_notes":"The trainer card itself currently has legacyFormat=false, but its historical task content is contextual synonym selection, not current phraseologism identification. External routing metadata deliberately forces legacy separation without changing the card."
+    },
+
+    {
+      "trainer_item_id":"ege-ru-26-2026-26-01",
+      "task_number":26,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["cohesion_demonstrative_pronoun","cohesion_word_forms"],
+      "explanation_id":"interphrase_cohesion_identification",
+      "answer_locator":"sentence_21",
+      "means":["demonstrative_pronoun","word_forms"],
+      "do_not_infer_single_failed_subskill_from_wrong_item":true,
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Current source explanation explicitly names demonstrative pronoun `этот`; the prompt additionally requires word forms. A wrong all-or-nothing response cannot identify which of the two means failed."
+    },
+    {
+      "trainer_item_id":"ege-ru-26-2025-26-01",
+      "task_number":26,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["cohesion_conjunction","cohesion_word_forms"],
+      "explanation_id":"interphrase_cohesion_identification",
+      "answer_locator":"sentence_35",
+      "means":["conjunction","word_forms"],
+      "do_not_infer_single_failed_subskill_from_wrong_item":true,
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-26-2024-25-01",
+      "task_number":26,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["cohesion_demonstrative_pronoun","cohesion_cognate_words"],
+      "explanation_id":"interphrase_cohesion_identification",
+      "answer_locator":"sentence_21",
+      "means":["demonstrative_pronoun","cognate_word"],
+      "do_not_infer_single_failed_subskill_from_wrong_item":true,
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-26-2023-25-01",
+      "task_number":26,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["cohesion_demonstrative_pronoun","cohesion_cognate_words"],
+      "explanation_id":"interphrase_cohesion_identification",
+      "answer_locator":"sentence_21",
+      "means":["demonstrative_pronoun","cognate_word"],
+      "do_not_infer_single_failed_subskill_from_wrong_item":true,
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-26-2022-25-01",
+      "task_number":26,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["cohesion_possessive_pronoun"],
+      "exact_subskill_id":"cohesion_possessive_pronoun",
+      "explanation_id":"interphrase_cohesion_identification",
+      "answer_locator":"sentence_12",
+      "means":["possessive_pronoun"],
+      "legacy":false,
+      "status":"source_verified"
+    }
+  ],
+  "status":"source_verified"
+}
