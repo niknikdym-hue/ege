@@ -1,0 +1,265 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — TILDA IMPLEMENTATION PLAN
+
+STATUS: PLAN READY / CODING NOT AUTHORIZED UNTIL IMPLEMENTATION GATE
+FUTURE_URL: /trenazhery/russkiy/isklyucheniya/
+CURRENT EGE TRAINER: OUT OF SCOPE / UNCHANGED
+HEADER/FOOTER: SEPARATE
+STYLE: EKSAMIO LIGHT
+YEAR IN PERSISTENT URL/SEO: NO
+
+PURPOSE
+
+Prepare a standalone, reversible Tilda page package for the Exceptions Trainer after the local source/data/runtime gate passes.
+
+This plan deliberately separates:
+- product UI code;
+- generated runtime data;
+- learner state;
+- catalog link;
+- optional future handoff from the main EGE trainer.
+
+No existing Russian trainer source card needs to be edited for standalone launch.
+
+PAGE ARTIFACT PREFIX
+
+Recommended evergreen prefix:
+`trenazhery-russkiy-isklyucheniya`
+
+Future page package naming:
+- `trenazhery-russkiy-isklyucheniya-SEO.txt`
+- `trenazhery-russkiy-isklyucheniya-HEAD.txt`
+- `trenazhery-russkiy-isklyucheniya-T123-01.txt`
+- `trenazhery-russkiy-isklyucheniya-T123-02.txt`
+- ... as required after measured size split
+- `trenazhery-russkiy-isklyucheniya-INSTALLATION.txt`
+- `trenazhery-russkiy-isklyucheniya-TEST-RESULT.txt`
+
+Do not put a year into these persistent filenames/URL/SEO fields unless a source data asset itself requires version metadata.
+
+PROPOSED PAGE LAYERS
+
+LAYER 1 — STATIC SHELL / CSS
+Contains:
+- page container;
+- hero/start screen;
+- session card shell;
+- My Exceptions shell;
+- session result shell;
+- rule drawer/modal shell;
+- responsive CSS;
+- accessibility/focus styling.
+
+No source answers embedded here.
+
+LAYER 2 — RUNTIME BOOTSTRAP
+Contains only:
+- product ID;
+- runtime content-version expectation;
+- data loader;
+- fail-safe state;
+- optional feature flags local to this product.
+
+LAYER 3 — SESSION ENGINE
+Contains:
+- selector equivalent to reviewed deterministic reference implementation;
+- no AI;
+- no guessed difficulty;
+- no direct dependency on current EGE trainer JS globals.
+
+LAYER 4 — ANSWER EVALUATORS
+Small isolated evaluators by `response_kind`:
+- single_choice;
+- multi_choice;
+- short_text;
+- normalize_form;
+- classification;
+- punctuation_positions if used.
+
+Must not globally over-normalize spaces/hyphens/Ё where the orthographic distinction itself is the target.
+
+LAYER 5 — LEARNER STATE
+Namespaced future state only:
+`eksamio:russian:exceptions`
+
+Requirements:
+- schema version;
+- event-id idempotency;
+- no collision with current EGE trainer storage;
+- fail-safe anonymous session if state cannot load;
+- no silent state wipe.
+
+LAYER 6 — RENDERER
+Contains:
+- prompt rendering;
+- choice/input controls;
+- check/result feedback;
+- rule drawer;
+- session result;
+- My Exceptions list.
+
+Rendering code does not own normative content.
+It reads generated runtime payload.
+
+LAYER 7 — OPTIONAL ANALYTICS HOOKS
+May be added later.
+Product must work if analytics is unavailable.
+
+RUNTIME DATA DELIVERY — DECIDE AFTER SIZE AUDIT
+
+INPUT:
+`audits/RUSSIAN-RUNTIME-SIZE-AUDIT.txt`
+
+OPTION A — HOSTED STATIC JSON
+Prefer if runtime payload is large enough that T123 data chunks become cumbersome.
+
+Advantages:
+- small T123 code;
+- runtime data can be versioned separately;
+- browser caching;
+- cleaner source/data separation.
+
+Requirements:
+- stable HTTPS asset location controlled by project;
+- version/integrity check;
+- CORS/cache behavior verified;
+- previous validated runtime retained for rollback.
+
+OPTION B — T123 JSON CHUNKS
+Use only if measured payload size makes this practical.
+
+Rules:
+- split generated data deterministically;
+- each block below the project safety margin, not merely Tilda hard failure point;
+- chunks have content version + sequence + expected count;
+- loader refuses incomplete/mixed-version chunk set;
+- chunks contain data only, not duplicate UI/engine code.
+
+OPTION C — HYBRID
+- small bootstrap/topic/index inline;
+- larger practice payload hosted.
+
+Do not choose A/B/C before actual size audit.
+
+SUGGESTED T123 ORDER IF INLINE/HYBRID
+
+01 — static shell + scoped CSS
+02 — bootstrap/config/runtime loader
+03 — answer evaluator module
+04 — learner-state module
+05 — selector/session engine
+06 — UI renderer + rule drawer
+07 — initialization + error boundary
+08+ — generated data chunks only if needed
+
+Actual number of blocks determined by measured bytes and code audit.
+
+CSS SCOPE
+
+All selectors under one product root, e.g.:
+`.rex-*` or another unique prefix.
+
+Do not leak generic:
+- `.card`
+- `.button`
+- `.modal`
+- `input {}`
+into other Tilda blocks.
+
+JS SCOPE
+
+Use one product namespace/module closure.
+Do not create generic globals such as:
+- `state`
+- `cards`
+- `checkAnswer`
+that can collide with header/footer or other trainers.
+
+BOOT FAILURE
+
+If runtime payload missing/invalid:
+- show plain product-specific retry/error message;
+- do not invent offline questions;
+- do not erase learner state;
+- header/footer/site navigation remain usable.
+
+CONTENT VERSION MISMATCH
+
+If shell expects one schema/content version but data provides incompatible version:
+- fail closed for trainer body;
+- preserve state;
+- offer reload;
+- do not try to coerce unknown future schema silently.
+
+SEO
+
+Persistent page:
+- no year in canonical/slug/title/description solely because current bank is 2026-derived;
+- page is an evergreen trainer of exceptions/special cases;
+- current normative source version may be shown internally/administratively without changing URL.
+
+Catalog description should focus on function, not card count.
+
+ACCESSIBILITY IMPLEMENTATION CHECKS
+
+- native button/input semantics where possible;
+- keyboard answer flow;
+- focus moved intentionally after feedback/open drawer;
+- aria-live or equivalent for result change;
+- no color-only correctness;
+- modal/drawer focus containment if modal pattern used;
+- Escape close only when it does not lose unsaved answer unexpectedly.
+
+MOBILE
+
+- 320px minimum smoke;
+- no horizontal data table;
+- fixed/sticky button must not be hidden by mobile keyboard;
+- large answer options use full available width;
+- long rule content scrolls independently only when necessary.
+
+CATALOG UPDATE — SEPARATE PACKAGE
+
+Do not bundle `/trenazhery/` catalog rewrite into the first page code commit invisibly.
+
+Separate artifact/change:
+- add card «Исключения и особые случаи»;
+- target `/trenazhery/russkiy/isklyucheniya/`;
+- preserve existing cards and layout;
+- rollback independently.
+
+MAIN EGE TRAINER HANDOFF — SEPARATE LATER PACKAGE
+
+Not required for standalone release.
+
+No changes to `/ege/russkiy/trenazher/` until:
+- standalone page stable;
+- exact handoff map validated;
+- explanation integration regression baseline exists.
+
+TEST ORDER
+
+1. local static prototype against runtime fixture;
+2. canonical runtime payload;
+3. evaluator unit tests;
+4. state/selector tests;
+5. mobile/accessibility;
+6. Tilda preview;
+7. published hidden/test page if project workflow allows;
+8. public URL smoke;
+9. catalog link separately;
+10. handoff later.
+
+ROLLBACK
+
+Follow `108-RUSSIAN-EXCEPTIONS-ROLLBACK-PLAN.txt`.
+Standalone page must be removable without touching current EGE trainer.
+
+CURRENT DECISION
+
+TILDA PACKAGE ARCHITECTURE: READY
+DATA DELIVERY METHOD: WAIT FOR MEASURED SIZE
+STANDALONE CODING: AFTER MACHINE SOURCE/DATA GATE
+CATALOG CHANGE: SEPARATE
+MAIN TRAINER CHANGE: HOLD
+CODEX: NOT REQUIRED FOR THIS PLAN
