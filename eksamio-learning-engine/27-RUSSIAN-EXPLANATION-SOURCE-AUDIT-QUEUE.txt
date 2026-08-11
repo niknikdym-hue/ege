@@ -5,268 +5,162 @@ STATUS: ACTIVE
 MODE: ADD-ONLY / NO PRODUCTION CHANGES
 SCOPE: first content wave, tasks 9-21
 
-SOURCE CORPUS
+PRIMARY SOURCE POLICY
 
-Primary exam-format control:
-- current verified Russian EGE source/demo materials already used by the Skill Graph;
-- official FIPI materials stored in the project source sets.
+MAIN RULE SOURCE:
+`eksamio-learning-engine/russkiy-knigi/rozental.doc`
 
-Primary rule/method corpus:
-- eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_10_klass_gotovimsya_k_EGE.pdf
-- eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf
-- eksamio-learning-engine/russkiy-knigi/Sycheva_N._Vse_pravila_russkogo_yazyka_v_skhemah_i_tablitsah_5_9_klassy.pdf
-- eksamio-learning-engine/russkiy-knigi/Ushakova_O.D._Kniga_repetitor_Vse_razdely_i_temy_russkogo_jazyka._5_11_klassy.pdf
-- eksamio-learning-engine/russkiy-knigi/rozental.doc
-- other relevant material from russkiy-knigi only when it genuinely covers the target rule.
+Розенталь используется как основной источник №1 для:
+- правил;
+- развёрнутых пояснений;
+- исключений;
+- разграничения сходных случаев;
+- сложных и пограничных случаев;
+- примеров и контрпримеров;
+- классификаций и логики выбора правила.
 
-Do not use OGE literary-text folder as a rule source for EGE orthography/punctuation.
+Остальные книги из `russkiy-knigi/` не используются для механической перепроверки уже подтверждённого у Розенталя правила.
+Они подключаются только если нужны:
+- более наглядная таблица или схема;
+- дополнительный способ объяснения;
+- другой учебный формат;
+- дополнительный набор примеров;
+- материал, которого в нужном виде нет у Розенталя.
 
-AUDIT PRINCIPLE
+Официальные материалы ФИПИ используются отдельно только для:
+- актуального формата ЕГЭ;
+- номера и типа задания;
+- критериев;
+- официальных словников/перечней;
+- экзаменационных ограничений.
 
-Do not write learner-facing rule text before locating a reliable rule source.
-Existing trainer steps/traps are a baseline UX artifact, not sufficient source evidence by themselves.
-If sources differ in formulation, preserve the stable linguistic rule and document the difference internally.
-If an exception/edge case cannot be confirmed, mark NEEDS_REVIEW instead of simplifying it into a false rule.
+COPYRIGHT / REUSE
+
+Разрешено брать у Розенталя всё предметно нужное: структуру правила, классификацию, исключения, разграничения, таблицы/схемы как основу и примеры как материал для анализа.
+
+В публичный продукт не переносить длинные дословные фрагменты или страницы целиком.
+Формулировка и верстка Эксамио должны быть собственными; примеры преимущественно создавать аналогичные или использовать короткие общеязыковые формы, когда это достаточно.
+
+WORKFLOW PER UNIT
+
+1. Найти у Розенталя нужный параграф/пункт.
+2. Извлечь:
+   - правило;
+   - ветви правила;
+   - исключения;
+   - пограничные случаи;
+   - примеры/контрасты;
+   - предупреждения против ложных упрощений.
+3. Сопоставить с фактическим текущим trainer bank и Skill Graph.
+4. Создать learner-facing explanation unit.
+5. Отдельные исключения вынести в Exceptions Bank.
+6. Если правило связано с официальным словником/критерием/актуальным форматом — сверить с ФИПИ.
+7. Не тратить время на повторную сверку с другими учебниками без причины.
 
 QUEUE
 
 TASK 9 — ROOT SPELLING
-
-9.1 root_spelling_selection
-Confirm:
-- how to distinguish checked, unchecked/dictionary and alternating root vowels;
-- order of diagnosis before selecting a rule;
-- cases where apparent cognate words are not valid checking words.
-Deliver:
-- decision algorithm;
-- contrast examples across the three/four root types;
-- common false-check trap.
-
-9.2 checked_unstressed_root_vowels
-Confirm:
-- valid checking form/cognate principle;
-- requirement that target vowel be stressed in checking material;
-- semantic/root-identity restrictions.
-Deliver:
-- short rule;
-- valid/invalid check contrast.
-
-9.3 unchecked_root_vowels
-Confirm:
-- dictionary/lexical status;
-- how learner should act when no productive check applies.
-Deliver:
-- no-fake-check guidance;
-- memorization/dictionary cue without pretending a rule exists.
-
-9.4 alternating_root_vowels
-Confirm:
-- major trigger classes relevant to EGE: suffix, following consonant, stress, meaning;
-- exceptions relevant to current training scope.
-Deliver:
-- rule families rather than one misleading universal rule;
-- trigger-first algorithm.
-
-9.5 special_root_vowel_rules
-Confirm:
-- exact set represented by current Skill Graph/trainer;
-- writing after sibilants/Ц or other special root conditions actually present.
-Deliver:
-- separate compact units if one unit becomes too heterogeneous.
+- checked / unchecked / alternating root vowels;
+- special root rules;
+- false checking words;
+- exceptions and contrasts from Rozental.
 
 TASK 10 — PREFIXES / MORPHEME BOUNDARY
-
-10.1 prefix_spelling
-Confirm:
-- stable prefixes vs variable spelling;
-- distinction between prefix and part of root.
-
-10.2 prefix_z_s
-Confirm:
-- voiced/voiceless trigger;
-- spelling of prefixes ending in -З/-С;
-- lexical/morphemic traps.
-
-10.3 prefix_pre_pri
-Confirm:
-- core semantic groups;
-- lexicalized cases that cannot be safely inferred by simple meaning.
-
-10.4 vowels_y_i_after_prefix
-Confirm:
-- Russian consonant-final prefix rule;
-- major exceptions/boundaries relevant to EGE.
-
-10.5 separating_hard_soft_signs
-Confirm:
-- Ъ after prefix and before Е/Ё/Ю/Я;
-- Ь conditions relevant to trainer;
-- distinction between separating sign and ordinary soft sign.
+- stable prefixes;
+- З/С;
+- ПРЕ-/ПРИ-;
+- Ы/И after prefixes;
+- separating Ъ/Ь;
+- lexicalized cases and exceptions from Rozental.
 
 TASK 11 — SUFFIXES
-
-11.1 suffix_spelling_by_part_of_speech
-Confirm:
-- which part-of-speech suffix families actually occur in current trainer;
-- reliable derivational/base-form tests;
-- places where one broad explanation must be split into smaller units.
-Decision gate:
-- if one unit cannot give a safe learner algorithm, split it before authoring.
+- split by part of speech and actual trainer scope;
+- derivational/base-form tests;
+- exceptions and contrasts from Rozental.
 
 TASK 12 — VERB ENDINGS / PARTICIPLES
-
-12.1 verb_conjugation_endings
-Confirm:
-- conjugation determination;
+- conjugation;
 - exceptions;
-- stressed vs unstressed endings and safe algorithm.
-
-12.2 participle_suffixes
-Confirm:
-- link between verb conjugation/form and participle suffix selection;
-- active/passive forms represented by trainer.
+- personal endings;
+- participle suffixes;
+- relevant verb-form distinctions.
 
 TASK 13 — НЕ / НИ
-
-13.1 ne_contextual_spelling
-Confirm separately by part of speech:
+- rules by part of speech;
 - opposition;
-- dependent words where relevant;
+- dependent words only where they truly matter;
 - intensifiers/negative words;
-- full/short forms where relevant;
-- lexicalized cases.
-Critical trap:
-- never teach «any dependent word means separate НЕ» as a universal rule.
-
-13.2 ni_pronoun_adverb_spelling
-Confirm:
-- НИ/НЕ in pronouns/adverbs;
-- preposition-separated forms;
-- stress/semantic conditions if relevant to represented content.
+- lexicalized cases;
+- НЕ/НИ pronouns/adverbs;
+- exceptions and ambiguous cases.
 
 TASK 14 — SOLID / SEPARATE / HYPHENATED
-
-14.1 solid_separate_hyphenated_spelling
-Confirm:
-- part-of-speech driven branches;
-- adverbs, prepositions, conjunctions, particles, pronoun combinations actually present in trainer;
-- hyphenated patterns relevant to current bank.
-Decision gate:
-- almost certainly requires several learner-facing subunits beneath one Skill Graph node; do not force one giant rule.
+- split broad Skill Graph node into learner-facing branches when needed;
+- adverbs, conjunctions, prepositions, particles, pronoun combinations;
+- relevant hyphenated patterns;
+- lexicalized pairs and homonymous constructions.
 
 TASK 15 — Н / НН
-
-15.1 n_nn_spelling
-Confirm distinctly:
+STATUS: FIRST PROTOTYPE CREATED
 - denominative adjectives;
 - verbal adjectives;
 - participles;
-- full and short forms;
-- suffix and stem conditions;
-- prefixes/dependent words where diagnostically relevant;
-- exceptions.
-Critical trap:
-- do not identify a participle only because a dependent word exists.
-Deliver first as reference-quality prototype for the whole explanation system.
+- full/short forms;
+- suffix/stem conditions;
+- exceptions and lexicalized cases.
+Reference files:
+- `31-RUSSIAN-EXPLANATION-N-NN-SOURCE-AUDIT.txt`
+- `32-RUSSIAN-EXPLANATION-BANK-v0.1.json`
+- `33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json`
 
 TASK 16 — HOMOGENEOUS MEMBERS / CLAUSE BOUNDARY
-
-16.1 homogeneous_members_punctuation
-Confirm:
-- single/repeated/adversative/double conjunction patterns;
-- comma conditions represented in current bank.
-
-16.2 clause_boundary_vs_homogeneous
-Confirm:
-- grammatical-base test;
-- common element/shared subordinate clause cases where comma before И may be absent;
-- contrast with homogeneous predicates.
+- conjunction patterns;
+- one comma / no comma contrasts;
+- grammatical-base distinction;
+- common element/shared-clause cases.
 
 TASK 17 — DETACHED CONSTRUCTIONS
-
-17.1 detached_attributes
-Confirm:
-- agreed attributes/appositions and position/semantic conditions.
-
-17.2 participial_phrase_detachment
-Confirm:
-- defined word;
-- position and additional detachment conditions.
-
-17.3 gerundial_phrase_detachment
-Confirm:
-- ordinary detachment rule;
-- lexicalized/fixed-expression exceptions only if relevant to current scope.
+- agreed attributes/appositions;
+- participial phrases;
+- gerundial phrases;
+- position/semantic conditions and exceptions.
 
 TASK 18 — INTRODUCTORY WORDS / ADDRESS
-
-18.1 introductory_words_punctuation
-Confirm:
-- semantic groups;
-- syntactic non-membership test;
-- common homonyms that are sentence members/particles.
-
-18.2 forms_of_address_punctuation
-Confirm:
-- boundary of address;
-- multiple/expanded address;
-- distinction from subject.
+- semantic groups of introductory constructions;
+- homonymous sentence members/particles;
+- forms of address vs subject;
+- expanded/multiple address.
 
 TASK 19 — COMPLEX SUBORDINATE SENTENCE
-
-19.1 subordinate_clause_boundaries
-Confirm:
-- grammatical bases;
-- conjunction/conjunctive-word detection;
-- embedded subordinate clauses.
-
-19.2 homogeneous_subordinate_clauses
-Confirm:
-- shared relation to same main/member;
-- conjunction patterns;
-- comma behavior analogous to homogeneous members where applicable.
+- clause boundaries;
+- conjunction/conjunctive word;
+- embedded clauses;
+- homogeneous subordinate clauses.
 
 TASK 20 — MIXED CONNECTION / JUNCTION OF CONJUNCTIONS
-
-20.1 mixed_connection_complex_sentence
-Confirm:
-- hierarchical parsing by grammatical bases and relation types;
-- coordinate/subordinate/asyndetic interaction relevant to bank.
-
-20.2 junction_of_conjunctions
-Confirm:
-- removable subordinate-clause test / presence of second part of double conjunction as applicable;
-- exact punctuation conditions.
+- hierarchy of grammatical bases;
+- coordinate/subordinate/asyndetic links;
+- junction-of-conjunction rules;
+- double-conjunction second-part tests.
 
 TASK 21 — PUNCTUATION RULE ANALYSIS
+- dash rule families represented in bank;
+- colon rule families represented in bank;
+- comma rule families represented in bank;
+- teach rule recognition, not visual matching of punctuation marks.
 
-21.1 dash_rule_analysis
-Confirm:
-- dash rule families represented in current task bank.
+OUTPUT PER UNIT
 
-21.2 colon_rule_analysis
-Confirm:
-- colon rule families represented in current task bank.
-
-21.3 comma_rule_analysis
-Confirm:
-- comma rule families represented in current task bank.
-
-Important:
-Task 21 explanations must teach rule identification, not merely say «the same sign is used».
-
-OUTPUT OF SOURCE AUDIT
-
-For each explanation unit, record:
-- source path;
-- locator (section/page when available);
-- rule coverage;
-- exceptions/edge cases;
-- consistency/conflict with another source;
+Record:
+- Rozental locator;
 - safe learner-facing scope;
-- status: VERIFIED / PARTIAL / NEEDS_REVIEW.
+- rule branches;
+- exceptions;
+- examples/contrasts;
+- trainer-bank relevance;
+- status: SOURCE_VERIFIED / NEEDS_REVIEW.
 
-Only VERIFIED units can proceed directly to content_reviewed/ready_for_integration.
+Only SOURCE_VERIFIED units may proceed to content review.
 
 PRODUCTION STOP CONDITION
 
