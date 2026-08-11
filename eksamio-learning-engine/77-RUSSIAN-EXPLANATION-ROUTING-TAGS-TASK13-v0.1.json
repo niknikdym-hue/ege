@@ -1,0 +1,43 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"option_level_routing_tags_current_task_13",
+  "integration_status":"not_connected_to_production",
+  "schema_ref":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
+  "items":[
+    {
+      "trainer_item_id":"ege-ru-13-2026-13-01",
+      "task_number":13,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["ne_contextual_spelling"],
+      "option_tags":[
+        {"position_id":"option_1","source_locator":"нисколько (НЕ)ОБОЗЛЁН -> нисколько не обозлён","subskill_ids":["ne_contextual_spelling"],"explanation_id":"ne_contextual_spelling","reason_code":"intensified_negation_with_negative_word","diagnostic_confidence":"exact"},
+        {"position_id":"option_2","source_locator":"(НЕ)ШИРОКИЙ, но глубокий -> неширокий, но глубокий","subskill_ids":["ne_contextual_spelling"],"explanation_id":"ne_contextual_spelling","reason_code":"new_quality_no_opposition_with_a","diagnostic_confidence":"exact"},
+        {"position_id":"option_3","source_locator":"далеко (НЕ)РОВНОЕ -> далеко не ровное","subskill_ids":["ne_contextual_spelling"],"explanation_id":"ne_contextual_spelling","reason_code":"far_from_not_intensified_negation","diagnostic_confidence":"exact"},
+        {"position_id":"option_4","source_locator":"ничто (НЕ)ПРЕДВЕЩАЛО -> ничто не предвещало","subskill_ids":["ne_contextual_spelling"],"explanation_id":"ne_contextual_spelling","reason_code":"verb_with_ne_separate","diagnostic_confidence":"exact"},
+        {"position_id":"option_5","source_locator":"(НЕ)ЗАДОЛГО -> незадолго","subskill_ids":["ne_contextual_spelling"],"explanation_id":"ne_contextual_spelling","reason_code":"adverb_lexicalized_solid_spelling","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Verified key is 1,3,4 for separate spelling. Option tags explain the rule regardless of whether the option belongs in the requested answer set."
+    },
+    {
+      "trainer_item_id":"ege-ru-13-2026-13-02",
+      "task_number":13,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["ne_contextual_spelling","ni_pronoun_adverb_spelling"],
+      "option_tags":[
+        {"position_id":"option_1","source_locator":"(НИ)(О)КОМ -> ни о ком","subskill_ids":["ni_pronoun_adverb_spelling"],"explanation_id":"ni_pronoun_adverb_spelling","reason_code":"negative_pronoun_with_preposition_three_words","diagnostic_confidence":"exact"},
+        {"position_id":"option_2","source_locator":"(НЕ)ОСОЗНАВАЯ -> не осознавая","subskill_ids":["ne_contextual_spelling"],"explanation_id":"ne_contextual_spelling","reason_code":"gerund_with_ne_separate","diagnostic_confidence":"exact"},
+        {"position_id":"option_3","source_locator":"очень (НЕ)ПРОСТОЕ занятие -> очень непростое","subskill_ids":["ne_contextual_spelling"],"explanation_id":"ne_contextual_spelling","reason_code":"adjective_new_quality_solid","diagnostic_confidence":"exact"},
+        {"position_id":"option_4","source_locator":"так и (НЕ)ДОСМОТРЕЛ до конца -> так и не досмотрел","subskill_ids":["ne_contextual_spelling"],"explanation_id":"ne_contextual_spelling","reason_code":"negated_incomplete_action_not_nedo_lexeme","diagnostic_confidence":"exact"},
+        {"position_id":"option_5","source_locator":"(НЕ)ПОДВИЖНЫЕ воды -> неподвижные воды","subskill_ids":["ne_contextual_spelling"],"explanation_id":"ne_contextual_spelling","reason_code":"adjective_lexicalized_new_quality_solid","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Verified key is 3,5 for solid spelling. The NI + preposition case is routed separately to the accepted NI-pronoun/adverb subskill."
+    }
+  ],
+  "status":"source_verified_current_cards"
+}
