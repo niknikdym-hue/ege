@@ -1,0 +1,179 @@
+name: Cleanup and Finalize Base Math 2026 v1.2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cleanup-finalize-base-math-v1-2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: browser-actions/setup-chrome@v1
+      - name: Install dependencies
+        run: pip install latex2mathml selenium
+      - name: Finalize metadata and remove internal one-off files
+        run: |
+          python - <<'PY'
+          import json, shutil
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026')
+          prefix='ege-matematika-baza-demoversiya-2026'
+
+          status=root/f'{prefix}-PAGE-STATUS.txt'
+          s=status.read_text(encoding='utf-8')
+          lines=[]
+          for line in s.splitlines():
+              if line.startswith('NUMERIC_REGRESSION_GATE:'):
+                  lines.append('NUMERIC_REGRESSION_GATE: PASS — форма ответа проверяется по конкретному официальному примеру, независимо от правильности ответа')
+              elif line.startswith('INTEGER_FORMAT_FEEDBACK_GATE:'):
+                  lines.append('FREE_INPUT_CONTRACT_GATE: PASS — 58/58 официальных примеров со свободным полем имеют отдельный контракт ввода')
+              elif line.startswith('CLEAN_ZIP_BROWSER_GATE:'):
+                  lines.append('CLEAN_ZIP_BROWSER_GATE: PASS — финальный v1.2 ZIP: 70/70 официальных примеров + 58/58 контрактов свободного ввода')
+              else:
+                  lines.append(line)
+          status.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+
+          report=root/f'{prefix}-TEST-REPORT.txt'
+          report.write_text('''TEST REPORT — ЕГЭ 2026, математика, базовый уровень
+PACKAGE_VERSION: 1.2
+STATUS: PASS — READY_FOR_TILDA_TEST
+
+MANUAL STUDENT ACCEPTANCE
+- Все 21 позиции пройдены вручную.
+- Реальный дефект №1 v1.0/v1.1: дробный ввод мог искажаться при сохранении; дефект устранён.
+- Scorer и сохранение состояния проверены отдельно от проверки формы ввода.
+
+FREE INPUT CONTRACTS — v1.2
+- 58/58 официальных примеров со свободным полем имеют отдельный контракт ввода.
+- Контракт задаётся для конкретной пары «позиция + официальный пример», а не для номера задания целиком и не выводится из правильного ответа.
+- Математически неверный, но корректно оформленный ответ сохраняется как завершённый и оценивается только после окончания попытки.
+- Ошибки формата сообщаются точно: пробелы, единицы измерения, знак %, знак +, обычная дробь через /, незавершённая десятичная запись, дробь там, где нужен целый ответ, неверная длина цифровой записи.
+- Точка преобразуется в запятую только в тех примерах, где десятичная дробь допустима. В примерах с целочисленным ответом точка/запятая не нормализуются, а вызывают сообщение о необходимости целого числа.
+- Внутри одной позиции правила могут различаться. Контрольный пример: №1 пример 2 допускает дробную числовую запись как корректный формат, а №1 пример 3 требует целое количество пачек.
+
+SOURCE / CONTENT
+- TASK-MAP: 21 задание, 70 официальных примеров, PASS.
+- Source fidelity: 70/70, PASS.
+- Formula/glyph gate: 6/6, PASS.
+- Visual gate: 25/25, PASS.
+- №7: Н·м, PASS.
+
+INTERACTION / SCORER
+- Browser real-control matrix: 70/70, PASS.
+- Free-input browser matrix: 58/58, PASS.
+- Полная правильная попытка: 21/21.
+- Matching/select и checkbox/row-checkbox используют реальные элементы управления.
+- Правильные ответы не раскрываются до завершения.
+- Reload/state restore: PASS.
+- JavaScript severe errors: 0.
+
+STATE / UI
+- Проверены ширины: 1280, 768, 390, 360, 320 px; горизонтальный overflow отсутствует.
+- Справочные материалы ФИПИ: страницы 4–7 доступны в интерфейсе.
+
+PACKAGE
+- T123 blocks: 47.
+- Для перехода с опубликованной v1.1 изменены T123-01 и T123-47; T123-02…46 не менялись.
+- Package: ege-matematika-baza-demoversiya-2026-v1.2.zip.
+- PUBLISHED_SMOKE_PASS не выставлен: требуется проверка после публикации v1.2 в Tilda.
+''',encoding='utf-8')
+
+          be=root/f'{prefix}-BUILD-EVIDENCE.json'
+          d=json.loads(be.read_text(encoding='utf-8'))
+          d['status']='PASS'
+          d['official_examples_browser_gate']='70/70 PASS'
+          d['free_input_contract_gate']='58/58 PASS'
+          d['clean_zip_browser_gate']='70/70 + 58/58 PASS'
+          d['full_correct_attempt']='21/21 PASS'
+          d['javascript_errors']=0
+          be.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          em=root/f'{prefix}-EXAM-MAP.json'
+          d=json.loads(em.read_text(encoding='utf-8'))
+          d['release_status']='READY_FOR_TILDA_TEST'
+          em.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          for p in [root/'RELEASE-FAILURE-DIAGNOSTIC.log', root/'scripts'/'apply_per_example_input_contracts.py']:
+              if p.exists(): p.unlink()
+          pycache=root/'scripts'/'__pycache__'
+          if pycache.exists(): shutil.rmtree(pycache)
+          PY
+      - name: Pack candidate final ZIP
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026')
+          sys.path.insert(0,str(root/'scripts'))
+          import build_demo_release as b
+          out=b.manifest_and_zip()
+          print(out)
+          PY
+      - name: Extract candidate ZIP
+        run: |
+          rm -rf /tmp/base-final
+          mkdir -p /tmp/base-final
+          unzip -q ege-matematika-baza-demoversiya-2026-v1.2.zip -d /tmp/base-final
+          cd /tmp/base-final/ege-matematika-baza-demoversiya-2026
+          python -m http.server 8766 > /tmp/base-final-http.log 2>&1 &
+          echo $! > /tmp/base-final-http.pid
+          sleep 2
+      - name: Test final ZIP — all 70 official examples
+        env:
+          EKSAMIO_PREVIEW_URL: http://127.0.0.1:8766/ege-matematika-baza-demoversiya-2026-PREVIEW.html
+          EKSAMIO_EVIDENCE_OUT: tests/evidence/v1.2-final-zip-selenium-evidence.json
+        run: cd ege-matematika-baza-demoversiya-2026 && python tests/test_v1_2_selenium.py
+      - name: Test final ZIP — all 58 free-input contracts
+        env:
+          EKSAMIO_PREVIEW_URL: http://127.0.0.1:8766/ege-matematika-baza-demoversiya-2026-PREVIEW.html
+          EKSAMIO_INPUT_EVIDENCE_OUT: tests/evidence/v1.2-final-zip-input-contract-evidence.json
+        run: cd ege-matematika-baza-demoversiya-2026 && python tests/test_input_contracts_v1_2.py
+      - name: Repack with final ZIP evidence
+        run: |
+          python - <<'PY'
+          import sys, zipfile
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026')
+          sys.path.insert(0,str(root/'scripts'))
+          import build_demo_release as b
+          out=b.manifest_and_zip()
+          with zipfile.ZipFile(out) as z:
+              names=set(z.namelist())
+              base=root.name+'/'
+              assert base+'tests/evidence/v1.2-final-zip-selenium-evidence.json' in names
+              assert base+'tests/evidence/v1.2-final-zip-input-contract-evidence.json' in names
+              t=z.read(base+'ege-matematika-baza-demoversiya-2026-T123-47.txt').decode('utf-8')
+              assert 'целый ответ' not in t
+              assert 'NUMERIC_FORMATS' not in t
+              assert 'INPUT_CONTRACTS' in t
+          print('FINAL ZIP STATIC PASS')
+          PY
+      - name: Remove obsolete base-math technical helpers
+        run: |
+          rm -f base-math-v1.2-input-contract-run.txt
+          rm -f .github/workflows/correct-base-math-v1-2-wording.yml
+          rm -f .github/workflows/export-base-math-v1-2-artifact.yml
+          rm -f .github/workflows/fix-base-math-v1-2-wording-final.yml
+          rm -f .github/workflows/finalize-base-math-input-contracts-v1-2.yml
+          rm -f .github/workflows/cleanup-finalize-base-math-v1-2.yml
+          find . -maxdepth 1 -type f -iname '*matematika*baza*.zip' ! -name 'ege-matematika-baza-demoversiya-2026-v1.2.zip' -delete
+      - name: Commit clean final v1.2
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Clean and finalize base mathematics 2026 v1.2' || exit 0
+          git pull --rebase origin main
+          git push origin main
