@@ -10,10 +10,11 @@ TEXT_TYPOGRAPHY_GATE: PASS — official conditions are direct source crops
 FORMULA_GATE: PASS — formulas rendered directly from official PDF crops
 VISUAL_GATE: PASS — condition/graph/diagram assets are direct official PDF crops
 INTERACTION_GATE: PASS — 55/55 official examples via real DOM controls
-SCORER_GATE: PASS — 41/41 short examples; full correct short attempt 12/12
-STATE_RESTORE_GATE: PASS — variants + short answers + extended solutions
+SCORER_GATE: PASS — independent answer audit 41/41; full correct short attempt 12/12
+STATE_RESTORE_GATE: PASS — assigned variants + short answers + extended solutions
 EXTENDED_SELF_EVALUATION_GATE: PASS — 7/7 tasks; separate /20; automatic /12 unchanged
-TILDA_SIZE_GATE: PASS — 82 T123; every block < 42500 bytes
-FINAL_STATUS: READY_FOR_TILDA_TEST
-CLEAN_ZIP_BROWSER_GATE: PASS — optimized extracted ZIP repeated full 55/55 browser gate
+TILDA_SIZE_GATE: PASS — 83 T123; every block < 42500 bytes
+INDEPENDENT_AUDIT_GATE: PASS — 41/41 answers independently recalculated; 41/41 input contracts; 14/14 extended solution/criteria assets visually re-audited
+FINAL_STATUS: READY_FOR_TILDA_TEST_AFTER_INDEPENDENT_AUDIT
+CLEAN_ZIP_BROWSER_GATE: PASS — independent audited extracted ZIP repeated full 55/55 browser/scorer/state/width gate
 PUBLISHED_SMOKE_STATUS: NOT_RUN_UNTIL_TILDA_PUBLICATION
