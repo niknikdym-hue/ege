@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "exam": "ege",
+  "purpose": "exceptions_training_bank",
+  "integration_status": "not_connected_to_production",
+  "allowed_statuses": [
+    "draft",
+    "source_verified",
+    "content_reviewed",
+    "ready_for_integration",
+    "needs_review",
+    "retired"
+  ],
+  "exception_contract": {
+    "required": [
+      "exception_id",
+      "skill_ids",
+      "subskill_ids",
+      "exception_type",
+      "prompt_label",
+      "canonical_form",
+      "rule_ref",
+      "source_refs",
+      "practice_modes",
+      "status"
+    ],
+    "fields": {
+      "exception_id": "stable lowercase snake_case identifier without year/version",
+      "skill_ids": "array of stable Skill Graph skill_id values",
+      "subskill_ids": "array of stable Skill Graph subskill_id values",
+      "exam_task_numbers": "current task-number links; may be empty if exception is useful but not tied to one task",
+      "exception_type": "lexical_exception | morphological_exception | orthographic_exception | punctuation_exception | orthoepic_norm | homonym_confusion | lexicalized_case | other_verified_case",
+      "prompt_label": "compact learner-facing label",
+      "canonical_form": "normative form/spelling/classification to be learned",
+      "wrong_forms": "known useful distractors or common wrong variants, only when source/usage evidence supports them",
+      "rule_ref": "reference to explanation_id or stable rule identifier",
+      "why_exception": "compact explanation of why the general shortcut is unsafe or insufficient",
+      "memory_cue": "optional learner-facing mnemonic/contrast cue that must not contradict the rule",
+      "contrast_with": "array of exception_id or normal-case IDs commonly confused with this item",
+      "examples": "original Eksamio context examples",
+      "practice_modes": "array of supported practice formats",
+      "source_refs": "array of provenance objects",
+      "status": "content lifecycle status",
+      "review_notes": "optional internal notes"
+    }
+  },
+  "practice_mode_enum": [
+    "recognize_exception",
+    "recall_form",
+    "choose_rule_class",
+    "contrast_normal_vs_exception",
+    "context_choice",
+    "normative_variant"
+  ],
+  "source_ref_contract": {
+    "required": [
+      "source_type",
+      "source_path",
+      "purpose",
+      "verification_status"
+    ],
+    "fields": {
+      "source_type": "official_fipi | book | existing_trainer | internal_verified_source",
+      "source_path": "repository-relative path or stable source identifier",
+      "locator": "page/chapter/section/table locator when available",
+      "purpose": "exception | rule_boundary | normative_form | contrast | exam_scope",
+      "verification_status": "verified | partial | needs_review"
+    }
+  },
+  "integration_rules": {
+    "production_trainer_must_remain_unchanged_until_gate": true,
+    "no_change_to_localstorage_before_data_contract_review": true,
+    "no_change_to_trainer_item_id": true,
+    "no_change_to_answers_or_scoring": true,
+    "link_to_skill_graph_required": true,
+    "link_to_explanation_bank_when_rule_exists": true,
+    "all_exceptions_mode": true,
+    "my_exceptions_mode_requires_future_learner_state": true,
+    "retention_required_for_mastery": true
+  },
+  "items": []
+}
