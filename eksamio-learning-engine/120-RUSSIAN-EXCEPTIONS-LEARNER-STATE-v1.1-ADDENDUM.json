@@ -1,0 +1,18 @@
+{
+  "schema_version":"1.1.0-addendum",
+  "extends":"102-RUSSIAN-EXCEPTIONS-LEARNER-STATE-SCHEMA.json",
+  "purpose":"clarify_idempotent_local_state_reducer_contract",
+  "integration_status":"not_connected_to_production",
+  "profile_additions":{
+    "processed_event_ids":{"type":"bounded string array","purpose":"prevent double-counting the same attempt after reload/retry","implementation_note":"May be compacted later with session/event journal; first local version can keep a bounded recent-id list."},
+    "state_revision":{"type":"non-negative integer","purpose":"increment after each newly applied event; useful for debug/migration tests"}
+  },
+  "idempotency_rules":[
+    "If event_id already exists in processed_event_ids, reducer returns state unchanged.",
+    "A replayed browser event must not increment seen/correct/wrong counts.",
+    "processed_event_ids must be updated atomically with the aggregate exception state in the implementation layer.",
+    "Compaction of old event IDs must not occur until an equivalent durable idempotency strategy exists."
+  ],
+  "mastery_boundary":"This addendum does not define mastery thresholds or spaced-repetition intervals. It only defines safe event aggregation and idempotency.",
+  "production_integration":"HOLD"
+}
