@@ -1,0 +1,67 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"non_destructive_item_position_word_tags_for_explanation_routing",
+  "integration_status":"not_connected_to_production",
+  "core_rule":"Routing metadata is additive and external to current trainer cards. It must never require changing trainer_item_id, answers, scoring, prompt text or production storage.",
+  "tag_contract":{
+    "required":["trainer_item_id","task_number","routing_precision","candidate_subskill_ids","status"],
+    "fields":{
+      "trainer_item_id":"existing stable trainer item ID; never generated anew for an existing card",
+      "task_number":"integer 1..27",
+      "routing_precision":"item | option | position | word | match_position | task | expert_self_check",
+      "candidate_subskill_ids":"Skill Graph IDs potentially checked by the item",
+      "exact_subskill_id":"optional; allowed only when the item/result position isolates one accepted Skill Graph subskill",
+      "explanation_id":"optional exact explanation unit selected by the tag",
+      "option_tags":"optional array for independently diagnosable answer options",
+      "position_tags":"optional array for numbered blanks/positions",
+      "word_tags":"optional array for independently tagged words/forms",
+      "match_tags":"optional A/B/C/D/E mapping positions for matching tasks",
+      "legacy":"boolean",
+      "status":"draft | source_verified | reviewed | needs_review",
+      "review_notes":"optional internal notes"
+    }
+  },
+  "position_contract":{
+    "required":["position_id","subskill_ids"],
+    "fields":{
+      "position_id":"stable within trainer_item_id, e.g. pos_1 or match_A; do not depend on visual DOM index alone",
+      "source_locator":"optional human-readable word/fragment/choice locator",
+      "subskill_ids":"accepted Skill Graph IDs checked at this position",
+      "explanation_id":"optional exact learner explanation for this position",
+      "exception_ids":"optional exception-bank IDs",
+      "diagnostic_confidence":"exact | partial | needs_followup"
+    }
+  },
+  "task_specific_rules":{
+    "4":{"preferred_locator":"bankEntryId/word","purpose":"exact normative stress form and POS cluster"},
+    "7":{"preferred_locator":"target word/form","purpose":"noun vs numeral vs verb-form diagnosis"},
+    "8":{"preferred_locator":"matching position/error class","purpose":"exact syntax error explanation; total score is insufficient"},
+    "9":{"preferred_locator":"word or row component","purpose":"root rule family; total set is mixed"},
+    "10":{"preferred_locator":"word or row component","purpose":"prefix rule family; total set is mixed"},
+    "11":{"preferred_locator":"word + part of speech","purpose":"select one of task-11 internal explanation splits"},
+    "12":{"preferred_locator":"word","purpose":"verb ending vs participle suffix"},
+    "13":{"preferred_locator":"word/option","purpose":"НЕ/НИ branch"},
+    "14":{"preferred_locator":"word pair + construction type","purpose":"select one of five task-14 internal explanation splits"},
+    "15":{"preferred_locator":"numbered position/word","purpose":"N/NN derivational branch and exception"},
+    "16":{"preferred_locator":"sentence option","purpose":"homogeneous members vs clause boundary"},
+    "17":{"preferred_locator":"construction/numbered position","purpose":"attribute/participle/gerund detachment"},
+    "18":{"preferred_locator":"numbered position/token","purpose":"introductory word vs address vs non-introductory homonym"},
+    "21":{"preferred_locator":"sentence + punctuation-sign variant","purpose":"exact rule family, not merely sign name"},
+    "22":{"preferred_locator":"match_A..match_E","purpose":"exact expressive-device diagnosis; total matching score is insufficient"},
+    "24":{"preferred_locator":"statement option","purpose":"narration/description/reasoning/relation claim"},
+    "25":{"preferred_locator":"item","purpose":"current phraseologism vs legacy contextual synonym"},
+    "26":{"preferred_locator":"declared means/answer component","purpose":"avoid inferring which cohesion means failed from all-or-nothing result"},
+    "27":{"preferred_locator":"criterion/component","purpose":"expert/self-check only; no normal correct-answer routing"}
+  },
+  "validation_rules":[
+    "trainer_item_id must exist in current repository-visible trainer snapshot or accepted trainer item map",
+    "all skill/subskill links must exist in accepted Skill Graph",
+    "exact_subskill_id requires diagnostic evidence at the declared precision",
+    "legacy task-25 synonym item must remain legacy and separate from current phraseologism route",
+    "no routing tag may modify or override the stored correct answer",
+    "a tag marked reviewed may be used for learner feedback; draft/needs_review may not drive exact production feedback"
+  ],
+  "items":[]
+}
