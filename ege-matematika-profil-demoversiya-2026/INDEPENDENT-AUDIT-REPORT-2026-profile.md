@@ -24,4 +24,4 @@
 - State restore: PASS.
 - Widths 1280 / 768 / 390 / 360 / 320: PASS.
 - Severe JavaScript errors: 0.
-- Clean ZIP browser gate выполняется повторно после упаковки.
+- Clean ZIP browser gate: PASS — полный 55/55 browser/scorer/state/width gate повторён на распакованном финальном ZIP.
