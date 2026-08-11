@@ -43,30 +43,49 @@ EXPLANATION UX:
 - контроль: объяснения только после завершения;
 - демоверсия: объяснения только после завершения попытки.
 
-FIRST PART — TASKS 1–26:
+FULL RUSSIAN TASK COVERAGE — TASKS 1–27:
 STATUS: SOURCE CONTENT COMPLETE / CONTENT REVIEW + MACHINE VALIDATION PENDING / PRODUCTION INTEGRATION HOLD
 
-Wave 1 (9–21):
-- manifest: 43-RUSSIAN-EXPLANATION-WAVE-1-MANIFEST.json
-- review: 44-RUSSIAN-EXPLANATION-WAVE-1-REVIEW.txt
-
-Wave 2 (1–8, 22–26):
-- 45-RUSSIAN-EXPLANATION-WAVE2-TEXT-LEXICAL-1-3-v0.1.json
-- 46-RUSSIAN-EXPLANATION-WAVE2-NORMS-4-8-v0.1.json
-- 47-RUSSIAN-EXPLANATION-WAVE2-TEXT-22-26-v0.1.json
-- 48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json
-- manifest: 49-RUSSIAN-EXPLANATION-WAVE-2-MANIFEST.json
-- review: 50-RUSSIAN-EXPLANATION-WAVE-2-REVIEW.txt
-
-Combined first-part manifest:
+First part tasks 1–26:
 - 51-RUSSIAN-EXPLANATION-FIRST-PART-MANIFEST.json
-- coverage: 26/26 tasks in first part have source-layer explanation content.
+- coverage: 26/26 source-layer explanation content complete.
+
+Task 27 essay:
+- 52-RUSSIAN-ESSAY-27-SOURCE-GATE-2026.txt
+- 53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json
+- 54-RUSSIAN-ESSAY-27-LEARNER-SELF-CHECK-SPEC.txt
+- 55-RUSSIAN-ESSAY-27-EXPLANATION-COMPONENTS-v0.1.json
+- 57-RUSSIAN-ESSAY-27-REVIEW.txt
+
+Combined all-task manifest:
+- 56-RUSSIAN-EXPLANATION-FULL-COVERAGE-MANIFEST.json
+- coverage: 27/27 tasks have source-layer explanation/self-check content appropriate to their assessment type.
+
+TASK 27 OFFICIAL CRITERIA — VERIFIED 2026:
+- expert evaluation K1–K10;
+- maximum 22 points;
+- K1=0 for missing/incorrect author position forces K2=0 and K3=0;
+- 149 words or fewer under official FIPI counting rules => task not completed, K1–K10 = 0;
+- work without support on the source text is not evaluated;
+- fully copied/retold source text without commentary => K1–K10 = 0;
+- K2 maximum requires 2 examples, explanation of each, named semantic relation and explanation of how that relation appears in the examples;
+- K3 maximum requires own attitude, justification and a concrete valid example-argument;
+- K7–K10 have the same numerical error-count scale but cover different error types.
+
+TASK 27 PRODUCT BOUNDARY:
+- no hints during demo/control essay writing;
+- after completion: criterion-based learner self-check is allowed;
+- learner self-evaluation must be visibly separate from expert/official score;
+- browser must not claim an official task-27 score;
+- word counter is technical unless it exactly implements FIPI counting rules;
+- AI essay evaluation is a separate future, explicitly non-official layer.
 
 IMPORTANT ROUTING LIMITS BEFORE INTEGRATION:
-- task 8: exact explanation requires position-level diagnosis; otherwise do not pretend to know the exact grammar error class;
+- task 8: exact explanation requires position-level diagnosis;
 - task 22: exact device diagnosis requires position-level result;
 - task 25: current phraseologism route must be separated from historical contextual-synonym item;
-- task 26: exact means-of-cohesion routing may require item/option-level tagging.
+- task 26: exact means-of-cohesion routing may require item/option-level tagging;
+- task 27: content evaluation is expert/self-check, not normal automatic answer scoring.
 
 EXCEPTIONS TRAINER:
 Запланирован отдельный бесплатный контур «Исключения и особые случаи».
@@ -75,25 +94,21 @@ EXCEPTIONS TRAINER:
 Банк исключений связан со Skill Graph и Explanation Bank, но не подключён к production.
 Source banks now include orthography, morphology, orthoepy, paronym contrasts, punctuation contrasts and difficult normative cases.
 
-TASK 27:
-Отдельный контур.
-Нельзя применять обычную схему автоматического правильного ответа.
-Следующий содержательный этап — отдельная спецификация объяснений по сочинению на основе актуальных критериев ФИПИ: структура работы, позиция автора, комментарий/примеры, смысловая связь, собственное отношение/обоснование, речевые и языковые ошибки, самопроверка.
-AI-оценка не входит в базовый слой и не должна подменять официальные критерии.
-
 VALIDATION STATUS:
-- connector/file existence review: PASS for wave 2;
-- Skill Graph cross-link review: PASS for IDs used in wave 2;
-- source/content architecture review: SOURCE-GO;
-- independent machine JSON/schema parse: PENDING because current execution container cannot reach raw GitHub; do not spend Codex quota just for this.
+- source coverage: 27/27 COMPLETE;
+- wave-2 Skill Graph connector cross-links: PASS for used IDs;
+- task-27 official source gate: PASS against FIPI 2026 methodological criteria;
+- source/content architecture: SOURCE-GO;
+- independent machine JSON/schema parse: PENDING because current execution container cannot reach raw GitHub; do not spend Codex quota just for this;
 - production integration: HOLD.
 
 NEXT STEPS:
-1. Build task-27 explanation/criteria contour from current verified FIPI criteria.
+1. Final learner wording/content review across tasks 1–27.
 2. Continue extracting high-value Rozental exceptions into the Exceptions Bank.
-3. Prepare final learner wording/content review for tasks 1–26.
+3. Build the item/position-to-subskill routing map needed for precise explanations.
 4. When files are available locally/container-side, run machine JSON/schema validation.
-5. Only after content/data gate: item-to-subskill routing, fallback, regression tests, rollback and integration design.
+5. Audit current word-counter behavior for task 27 against official FIPI counting rules before any essay integration.
+6. Only after content/data gate: fallback, regression tests, rollback and integration design.
 
 CODEX POLICY:
 Codex не использовать для обычного контента, аудита, схем и GitHub-файлов. Подключать только к действительно сложной локальной массовой реализации/сборке/тестированию, где расход квоты оправдан.
