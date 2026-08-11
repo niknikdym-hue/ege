@@ -1,127 +1,155 @@
 EKSAMIO LEARNING ENGINE
 RUSSIAN EXPLANATION CONTENT REVIEW STATUS
 
-STATUS: ACTIVE REVIEW / ROUTING DATA BUILD ADVANCED
+STATUS: ACTIVE REVIEW / FIRST-PART ROUTING PASS COMPLETE
 SCOPE: tasks 1-27
 PRODUCTION: HOLD
 
+CURRENT SUMMARY
+
+CONTENT COVERAGE: GO (27/27)
+SOURCE LAYER: GO
+DATA NORMALIZATION: ADVANCED / NOT YET MACHINE-CANONICAL
+ROUTING ARCHITECTURE: READY
+FIRST-PART ROUTING METADATA: FIRST PASS COMPLETE (1-26)
+TASK 27 ROUTE: EXPERT / LEARNER SELF-CHECK
+CURRENT TRAINER: UNCHANGED
+CODEX: NOT REQUIRED
+
 WHAT IS COMPLETE
 
-1. Source-layer explanation coverage exists for all 27 tasks.
-2. Task 27 official FIPI 2026 criteria have a separate source gate, criteria map, learner self-check and normalized explanation components.
-3. Explanation routing architecture exists for tasks 1-27:
+1. Source-layer explanation/self-check content exists for all 27 tasks.
+2. Task 27 FIPI 2026 criteria have a source gate, criteria map, learner self-check and normalized explanation components.
+3. Routing architecture exists for tasks 1-27:
    - 58-RUSSIAN-EXPLANATION-ROUTING-SPEC.txt
    - 59-RUSSIAN-EXPLANATION-TASK-ROUTING-MAP.json
 4. Routing tag schema exists:
    - 65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json
 5. Canonical local build/merge design exists:
    - 64-RUSSIAN-EXPLANATION-CANONICAL-BUILD-SPEC.txt
-6. Routing tag index exists:
+6. Routing tag index exists and now covers all first-part tasks 1-26 through explicit metadata or deterministic generation:
    - 75-RUSSIAN-EXPLANATION-ROUTING-TAG-INDEX.json
 7. Current production trainer remains unchanged.
-8. Codex has not been used for this content/routing build.
+8. Codex has not been used for this content/routing work.
 
-CONTENT NORMALIZATION
+CONTENT NORMALIZATION COMPLETE TO CURRENT STAGE
 
-- Wave 2 files 45-47 normalized to the common explanation-unit contract.
+- Wave 2 files 45-47 normalized to common explanation-unit contract.
 - Task 27 file 55 normalized and linked to accepted Skill Graph IDs.
 - Wave 1 files 36 and 38 normalized directly.
 - Large source-reviewed files 34/40/41 use safe examples overlay 63 rather than destructive full rewrite.
-- Task 11 internal splits: file 61.
-- Task 14 internal splits: file 62.
-- Task 21 current-rule splits: file 67.
-- Additional task-14 hyphenated-adverb/repeated-word splits: file 72.
+- Task 11 learner splits: file 61.
+- Task 14 learner splits: files 62, 72, 80.
+- Task 21 current rule splits: file 67.
 
-IMPORTANT CONTENT FINDINGS
+TASK 11 — PREVIOUS CONTENT GAP RESOLVED
 
-TASK 11
-The initial four internal branches do NOT fully cover every current card.
-Current `тушёнка / напряжённый` requires a suffix/spelling branch not yet represented by the four precise explanation IDs.
-Decision: do not force exact routing; use broad fallback until the missing rule branch is verified and added.
+Current row:
+`tушёнка / напряжённый`
 
-TASK 14
-The current 2026 card showed two missing precise branches:
-- `по-видимому` -> hyphenated PO- adverb model;
-- `давным-давно` -> repeated-word hyphen model.
-These are now covered by file 72.
-`полдня` remains needs_followup because a dedicated ПОЛ- spelling branch has not yet been added.
+A dedicated Rozental-derived explanation branch now exists:
+`suffix_yo_after_sibilants_verbal_derivatives`
 
-ROUTING TAG DATA BUILT
+It covers stressed Ё after sibilants in relevant verbal derivatives and allows exact word-level routing for the current row without inventing a new Skill Graph node.
 
-Schema:
-- 65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json
+Current task-11 word-level routing:
+- 76-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK11-v0.1.json
 
-Index:
-- 75-RUSSIAN-EXPLANATION-ROUTING-TAG-INDEX.json
+TASK 14 — PREVIOUS CONTENT GAPS RESOLVED
 
-Explicit tag files:
-- 66-RUSSIAN-EXPLANATION-ROUTING-TAGS-PILOT-v0.1.json -> tasks 7, 8, 18, 22
-- 68-RUSSIAN-EXPLANATION-ROUTING-TAGS-ORTHO-PUNCT-v0.1.json -> tasks 15, 16, 21
+Additional exact learner branches now include:
+- `hyphenated_adverbs_po_model` — e.g. по-видимому;
+- `hyphenated_repeated_words` — e.g. давным-давно;
+- `pol_half_spelling` — e.g. полдня / пол-лимона / пол-Москвы.
+
+Current task-14 route no longer keeps `полдня` as needs_followup.
+Some entries may remain broad/partial where exact construction-specific feedback adds little value or a narrower accepted model is not yet represented.
+
+FIRST-PART ROUTING DATA — FIRST PASS COMPLETE
+
+Explicit files:
+- 81-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK1-6-v0.1.json -> tasks 1,2,3,5,6
+- 66-RUSSIAN-EXPLANATION-ROUTING-TAGS-PILOT-v0.1.json -> tasks 7,8,18,22
+- 71-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK9-v0.1.json -> task 9
 - 70-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK10-v0.1.json -> task 10
-- 71-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK9-v0.1.json -> task 9, word-level with unresolved items kept needs_followup
-- 73-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK12-14-v0.1.json -> tasks 12 and current task-14 variant
-- 74-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK17-20-v0.1.json -> tasks 17, 19, 20
+- 76-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK11-v0.1.json -> task 11
+- 73-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK12-14-v0.1.json -> tasks 12,14
+- 77-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK13-v0.1.json -> task 13
+- 68-RUSSIAN-EXPLANATION-ROUTING-TAGS-ORTHO-PUNCT-v0.1.json -> tasks 15,16,21
+- 74-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK17-20-v0.1.json -> tasks 17,19,20
+- 78-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK23-26-v0.1.json -> tasks 23,24,25,26
 
-Task 4:
+Task 4 deterministic generator specification:
 - 69-RUSSIAN-TASK4-ORTHOEPY-ROUTING-AUTOTAG-SPEC.txt
-- manual tagging of all orthoepic cards is unnecessary;
-- word-level routing can be generated deterministically from existing bankEntryIds;
-- narrower POS routing stays HOLD until explicit verified POS metadata exists.
 
-CURRENT TAGGED OR AUTOTAG-READY TASKS
+Task 4 limitation:
+- supplemental orthoepic cards carrying bankEntryIds can be autotagged at word level;
+- the base current 04-01 card has no bankEntryIds and therefore keeps a safe task-level fallback unless separately tagged;
+- no POS subskill is inferred where explicit verified POS metadata is absent.
 
-4, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22
+ROUTING SAFETY — IMPORTANT
 
-This does NOT mean the other tasks lack explanations. Explanation coverage is still 27/27. It only means explicit external item/word/position routing metadata has now been built for these tasks.
+Precision never exceeds evidence.
 
-ROUTING SAFETY FINDINGS
+Examples:
+- task 2/3/13/24: option-level diagnosis only if selected/missed options are preserved;
+- task 8/22: exact only by A-E matching position, never total score;
+- task 9: mixed rows require reviewed word tags; several words deliberately remain needs_followup;
+- task 10: exact rule family only for homogeneous rows; mixed rows stay broad;
+- task 16: one construction remains partial because accepted Skill Graph has no dedicated node;
+- task 20: junction-of-conjunctions can be exact while broader complex-sentence positions remain broader;
+- task 25: 2022 contextual-synonym card is forced into external legacy route although source card says legacyFormat=false; production card is not changed;
+- task 26: multi-means wrong response does not prove which one of the required cohesion means failed.
 
-- Task 8: exact only by A-E matching position, never by total score.
-- Task 9: rows mix root-rule families; narrow mastery updates only from reviewed word tags. Several words deliberately remain needs_followup.
-- Task 10: current correct rows 2/3/4 isolate exact rule families; mixed incorrect rows stay broad.
-- Task 12: exact word-level split between finite verb endings and participle suffixes.
-- Task 14: exact only where the corresponding internal explanation model exists; no invented rule for ПОЛ-.
-- Task 15: numbered N/NN positions allow exact position routing; known exceptions link to exception bank.
-- Task 16: current option 3 is kept partial because the accepted Skill Graph has no dedicated homogeneous/nonhomogeneous-definition node.
-- Task 17: position 2 exact detached-definition boundary; internal coordination positions remain partial.
-- Task 19: exact boundaries plus exact negative evidence for homogeneous subordinate clauses joined by single И.
-- Task 20: conjunction junction is exact; other positions update only the broader mixed-complex-sentence skill.
-- Task 21: current exact rule splits created for dash/colon/comma variants.
-- Task 22: exact only by A-E matching position, not total score.
+TASK 27 WORD-COUNT AUDIT
 
-WHAT REMAINS
+File:
+- 79-RUSSIAN-ESSAY-27-WORD-COUNT-AUDIT.txt
 
-1. Continue routing tags for tasks where they materially improve diagnosis:
-- task 11 after missing suffix branch is added;
-- task 13 if option-level rule family adds value beyond the existing broad НЕ/НИ explanation;
-- tasks 23-24;
-- task 25 legacy/current split metadata;
-- task 26 multiple cohesion means.
+Current trainer findings:
+- no live word counter;
+- no automatic 150-word gate;
+- essay `isFilled` only uses a technical >=20-character minimum before self-check;
+- essay is not auto-scored;
+- no official score claim is made.
 
-2. Source provenance audit of older wave-1/exception-bank source_refs.
+Current safety decision:
+CURRENT WORD-COUNT BEHAVIOR: PASS
 
-3. Task 27 word counter:
-Audit current implementation against official FIPI word-count rules before using the 149/150 boundary as anything more than a technical warning.
+Future FIPI-compatible word counter:
+HOLD until exact machine-testable FIPI counting specification + edge-case fixtures + validation.
 
-4. Canonical local build:
-When project files are available locally/container-side, follow 64-RUSSIAN-EXPLANATION-CANONICAL-BUILD-SPEC.txt:
-- parse all JSON;
-- merge overlays/splits;
-- validate required fields;
-- validate Skill Graph links;
-- validate routing links;
-- validate 1-27 coverage;
-- write canonical bank + audit report.
+WHAT REMAINS BEFORE INTEGRATION
 
-5. Final learner wording/editorial review after canonical build.
+1. Build canonical explanation bank locally/machine-side from source files + overlays + splits.
+2. Machine-parse and schema-validate every JSON source.
+3. Validate unique explanation IDs.
+4. Validate every skill/subskill link against accepted Skill Graph.
+5. Validate every routing explanation link against canonical bank.
+6. Validate task coverage 1-27 after canonical merge.
+7. Resolve remaining `needs_followup` word classifications in task 9 only where source evidence supports a narrower classification.
+8. Audit older source_refs/provenance for vague or derivative source labels.
+9. Final learner wording/editorial review after machine-canonical build.
+10. Only then design production integration, fallback, regression tests and rollback.
+
+PRODUCTION SAFETY
+
+DO NOT modify before a separate integration gate:
+- trainer T123;
+- JS/CSS/HTML;
+- trainer_item_id;
+- answer keys;
+- scoring;
+- localStorage;
+- URLs/SEO;
+- current trainer modes.
 
 CURRENT DECISION
 
-CONTENT COVERAGE: GO (27/27)
-SOURCE LAYER: GO
-DATA NORMALIZATION: ADVANCED / NOT YET MACHINE-CANONICAL
-ROUTING ARCHITECTURE: READY
-ROUTING TAG DATA: ACTIVE / SUBSTANTIAL FIRST PASS COMPLETE
+CONTENT COVERAGE: GO 27/27
+FIRST-PART ROUTING: FIRST PASS COMPLETE 1/26 THROUGH 26/26
+TASK 27: SELF-CHECK / EXPERT CONTOUR READY AT SOURCE LAYER
+MACHINE-CANONICAL BUILD: NEXT
 PRODUCTION INTEGRATION: HOLD
-CURRENT TRAINER: UNCHANGED
+CURRENT TRAINER CHANGED: NO
 CODEX: NOT REQUIRED
