@@ -1,0 +1,301 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EGE TASK 27 — LEARNER SELF-CHECK UX SPEC
+
+STATUS: DESIGN / SOURCE-VERIFIED / ADD-ONLY
+OFFICIAL_CRITERIA_YEAR: 2026
+PRODUCTION_INTEGRATION: HOLD
+
+PURPOSE
+
+Сделать после завершения сочинения понятную ученику самопроверку по официальным критериям К1–К10, не выдавая браузерную или пользовательскую оценку за официальный экспертный балл.
+
+CORE RULE
+
+Во время демоверсии и контрольного режима:
+- не показывать структуру критериев как подсказку по ходу написания;
+- не показывать готовые формулировки позиции автора;
+- не подсказывать примеры из исходного текста;
+- не предлагать смысловую связь;
+- не генерировать аргумент;
+- не исправлять текст в реальном времени.
+
+После завершения попытки:
+- разрешить learner-facing разбор;
+- показать критерии в правильной зависимости;
+- предложить самопроверку;
+- явно отделить технические проверки от содержательной экспертной оценки.
+
+1. RESULT SCREEN ENTRY
+
+После завершения задания 27 показать отдельный блок:
+
+«Самопроверка сочинения по критериям ФИПИ»
+
+Короткое пояснение:
+«Задание 27 проверяет эксперт. Ниже — самопроверка по К1–К10. Она помогает найти слабые места, но не является официальным баллом.»
+
+Primary actions:
+- `Проверить структуру сочинения`
+- `Пройти К1–К10`
+- `Вернуться к своему тексту`
+
+Не показывать кнопку вроде `Узнать официальный балл`.
+
+2. HARD GATE PANEL
+
+До К1 показать три критические проверки.
+
+A. Объём
+- ориентировочное количество слов;
+- предупреждение, если технически насчитано <150;
+- текст: «По правилам ФИПИ работа объёмом 149 слов или меньше оценивается 0 по всем критериям. Автоматический счётчик носит технический характер.»
+
+B. Опора на исходный текст
+Self-check question:
+`Моё сочинение написано по данному исходному тексту?`
+Options:
+- Да
+- Не уверен(а)
+
+C. Не является ли работа пересказом/копированием
+Self-check question:
+`В работе есть мой анализ и комментарий, а не только переписанный или пересказанный исходный текст?`
+
+Если ученик отмечает потенциальный hard-gate failure:
+- не блокировать чтение критериев;
+- показать красное/янтарное предупреждение;
+- не вычислять официальный итог.
+
+3. CONTENT FUNNEL: K1 -> K2 -> K3
+
+Самопроверка должна визуально показывать зависимость:
+
+K1 ПОЗИЦИЯ АВТОРА
+        ↓
+K2 КОММЕНТАРИЙ
+        ↓
+K3 МОЁ ОТНОШЕНИЕ + ОБОСНОВАНИЕ
+
+К1 является gate для К2 и К3.
+Если ученик сам отмечает `позиция автора отсутствует/скорее неверна`:
+- показать: «По критериям ФИПИ при К1=0 критерии К2 и К3 также получают 0.»
+- К2/К3 всё равно можно открыть в учебных целях, но пометить `не засчитывается при K1=0`.
+
+4. K1 LEARNER CARD
+
+Title:
+`К1. Позиция автора`
+
+Questions:
+- `Я сформулировал(а), что считает автор/рассказчик по указанной проблеме?`
+- `Это отвечает именно на проблему из задания?`
+- `Формулировка подтверждается исходным текстом?`
+
+Useful hint AFTER completion only:
+`Позиция автора — это не название темы и не пересказ события, а смысловой ответ автора на поставленную проблему.`
+
+Self-status:
+- `Есть и уверен(а)`
+- `Есть, но нужно проверить`
+- `Нет / сформулировано не по проблеме`
+
+Do not automatically assign K1=1 from a checkbox.
+
+5. K2 LEARNER CARD
+
+Title:
+`К2. Комментарий`
+
+Use a six-part checklist:
+1. `Пример 1 из исходного текста есть.`
+2. `Я пояснил(а), что показывает пример 1.`
+3. `Пример 2 из исходного текста есть.`
+4. `Я пояснил(а), что показывает пример 2.`
+5. `Я указал(а) смысловую связь между примерами.`
+6. `Я пояснил(а) эту связь.`
+
+Important learner note:
+`Пример без пояснения не засчитывается как полноценный пример-иллюстрация.`
+
+Post-completion micro-explanation:
+- «Пояснить пример» = показать, зачем этот фрагмент важен для понимания позиции автора.
+- «Пояснить связь» = не только назвать отношение между примерами, но и объяснить, что это отношение раскрывает в позиции автора.
+
+Do not force a fixed list of relation labels. Possible labels may include cause/consequence, comparison, contrast, complement, explanation etc., but meaning matters more than memorized label.
+
+6. K3 LEARNER CARD
+
+Title:
+`К3. Моё отношение и обоснование`
+
+Checklist:
+- `Я выразил(а) собственное отношение к позиции автора.`
+- `Я объяснил(а), почему так думаю.`
+- `Есть конкретный пример-аргумент.`
+- `Источник аргумента допустим по условию ФИПИ.`
+- `Аргумент не повторяет просто авторские суждения.`
+- `Аргумент действительно обосновывает мою мысль.`
+
+Post-completion hint:
+`Формула «Я согласен с автором» сама по себе не является полноценным обоснованием.`
+
+Do not generate a ready-made argument in the base self-check.
+
+7. K4 FACT CHECK
+
+Title:
+`К4. Фактическая точность`
+
+Checklist groups:
+- исходный текст: имена, события, отношения, последовательность;
+- литература/история/культура в аргументе;
+- авторство произведений и факты биографии, если использованы;
+- отсутствие приписанных тексту мыслей, которых там нет.
+
+Learner status:
+- `Фактических ошибок не вижу`
+- `Есть место, которое нужно проверить`
+
+Do not automatically classify disputed factual statements without verified source support.
+
+8. K5 LOGIC CHECK
+
+Title:
+`К5. Логика`
+
+Checklist:
+- каждый абзац связан с общей проблемой;
+- нет противоречащих друг другу утверждений;
+- причинно-следственные отношения сформулированы корректно;
+- вывод следует из довода;
+- местоимения/ссылки вроде «это», «такой», «поэтому» имеют понятный смысловой опорный элемент;
+- абзацы расположены в понятном порядке.
+
+Learning link:
+Ошибки логики можно связывать с будущей error taxonomy, но official score остаётся экспертным.
+
+9. K6 ETHICS
+
+Title:
+`К6. Этические нормы`
+
+Learner copy should be short:
+`Проверьте, что в сочинении нет оскорбительных, противоправных или иных формулировок, нарушающих официальный критерий К6.`
+
+UI action:
+`Что учитывает К6?` -> раскрыть аккуратное краткое пояснение, основанное на актуальном тексте критерия ФИПИ.
+
+Do not create a broader moral or political filter beyond the official criterion.
+
+10. K7–K10 LITERACY
+
+Present as four separate tabs/cards, not one merged score:
+
+K7 Орфография
+K8 Пунктуация
+K9 Грамматика
+K10 Речь
+
+For each card show the official error-count scale:
+- 0 ошибок -> 3;
+- 1–2 -> 2;
+- 3–4 -> 1;
+- 5+ -> 0.
+
+But label the entered count as:
+`Количество ошибок по вашей самопроверке`
+
+Not:
+`Официальное количество ошибок`.
+
+A learner may optionally enter a self-count after proofreading.
+The UI can calculate a SELF-EVALUATION subtotal from that self-count because it is deterministic arithmetic, but must label it `Самооценка`, not expert score.
+
+11. TWO TYPES OF OUTPUT
+
+A. STRUCTURE CHECK
+Non-score output such as:
+- `Позиция автора: отмечена`
+- `Два примера: отмечены`
+- `Пояснение каждого: отмечено / проверьте`
+- `Связь: отмечена`
+- `Обоснование: отмечено`
+- `Пример-аргумент: отмечен`
+- `Объём: технически ~N слов`
+
+B. SELF-EVALUATION
+Optional only after learner manually reviews criteria.
+Display:
+`Самооценка по К1–К10: X / 22`
+
+Immediately below:
+`Это не официальный результат. На ЕГЭ работу оценивают эксперты.`
+
+Do not mix this X with automatically checked first-part primary score as if both have identical evidentiary status.
+If a whole-demo combined result is shown, split visibly:
+- `Автоматически проверяемая часть`
+- `Самооценка сочинения`
+- optional sum clearly marked as `ориентировочно при вашей самооценке`.
+
+12. WORK-ON-ERRORS ROUTING FOR ESSAY
+
+After self-check, route not to generic task 27 but to components:
+
+- author_position
+- example_selection
+- example_explanation
+- semantic_link
+- own_attitude
+- argumentation
+- factual_accuracy
+- logic
+- orthography
+- punctuation
+- grammar
+- speech_norms
+
+This component map is educational/internal and does not replace official K1–K10.
+
+Example routing:
+- weak K1 -> training on distinguishing problem / author position;
+- missing K2 example explanation -> microtraining «пример vs пояснение»;
+- weak semantic link -> contrast tasks on relation + explanation;
+- K7/K8/K9/K10 -> route to relevant language Skill Graph/trainer pools where reliable mappings exist.
+
+13. FUTURE AI BOUNDARY
+
+Future AI may:
+- identify likely missing components;
+- suggest questions for self-revision;
+- explain a criterion in different words;
+- flag possible grammar/speech issues for learner review;
+- estimate a likely range with uncertainty when separately specified and validated.
+
+Future AI must NOT:
+- call its result an official FIPI/expert score;
+- invent an author position not grounded in verified source materials;
+- silently rewrite the student essay during control/demo;
+- override official criteria;
+- be required to access the free base criterion explanation.
+
+14. IMPLEMENTATION GATE
+
+Before connecting this UX to production:
+- verify current T123 essay workflow;
+- preserve essay text/autosave/session behavior;
+- preserve no-help-during-exam rule;
+- implement official-count-compatible word counter or clearly keep current counter approximate;
+- test K1 dependency;
+- test <150 warning/zero-gate representation;
+- keep expert/self-evaluation split;
+- build rollback/fallback;
+- regression-test tasks 1–26 and session completion.
+
+CURRENT STATUS
+
+SOURCE: VERIFIED
+CRITERIA MAP: CREATED
+LEARNER SELF-CHECK: DESIGNED
+OFFICIAL AUTO-SCORING: NOT IMPLEMENTED / NOT ALLOWED AS BASE CLAIM
+PRODUCTION TRAINER: UNCHANGED
+CODEX: NOT REQUIRED AT THIS STAGE
