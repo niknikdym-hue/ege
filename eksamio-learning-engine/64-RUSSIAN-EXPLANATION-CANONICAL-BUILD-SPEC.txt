@@ -1,20 +1,26 @@
 EKSAMIO LEARNING ENGINE
 RUSSIAN EXPLANATION CANONICAL BUILD SPEC
 
-STATUS: DESIGN / ADD-ONLY
+STATUS: DESIGN READY / BUILDER CREATED / EXECUTION PENDING LOCAL FILE ACCESS
 PRODUCTION_INTEGRATION: HOLD
 CODEX_REQUIRED: NO
 
 PURPOSE
 
-Определить детерминированную локальную сборку единого канонического банка пояснений из уже проверенных source-layer файлов, нормализационных overlays и внутренних learner splits.
+Определить детерминированную локальную сборку единого канонического банка пояснений из проверенных source-layer файлов, нормализационного overlay и внутренних learner splits.
 
-Цель будущей сборки:
+Builder:
+`build/build_russian_explanation_bank.py`
+
+Canonical output:
 `build/RUSSIAN-EXPLANATION-BANK-CANONICAL.json`
 
-Это build-артефакт Learning Engine, НЕ production T123 и НЕ замена текущего тренажёра.
+Validation output:
+`audits/RUSSIAN-EXPLANATION-CANONICAL-VALIDATION.txt`
 
-1. SOURCE SET
+Это build/data-артефакты Learning Engine. Они НЕ являются production T123 и не заменяют текущий тренажёр.
+
+1. BASE SOURCE SET
 
 FIRST PART / WAVE 1
 - 32-RUSSIAN-EXPLANATION-BANK-v0.1.json
@@ -34,44 +40,71 @@ ESSAY
 
 2. NORMALIZATION INPUTS
 
-INTERNAL SPLITS
+INTERNAL LEARNER SPLITS
 - 61-RUSSIAN-EXPLANATION-TASK11-SUFFIX-SPLITS-v0.1.json
+  includes `suffix_yo_after_sibilants_verbal_derivatives` for current `тушёнка / напряжённый`.
 - 62-RUSSIAN-EXPLANATION-TASK14-WRITING-SPLITS-v0.1.json
+- 67-RUSSIAN-EXPLANATION-TASK21-RULE-SPLITS-v0.1.json
+- 72-RUSSIAN-EXPLANATION-TASK14-HYPHEN-ADVERB-SPLITS-v0.1.json
+- 80-RUSSIAN-EXPLANATION-TASK14-POL-SPLIT-v0.1.json
 
 EXAMPLES OVERLAY
 - 63-RUSSIAN-EXPLANATION-WAVE1-EXAMPLES-OVERLAY-v0.1.json
 
-ROUTING
+ROUTING ARCHITECTURE
 - 59-RUSSIAN-EXPLANATION-TASK-ROUTING-MAP.json
+- 65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json
+- 75-RUSSIAN-EXPLANATION-ROUTING-TAG-INDEX.json
 
-SCHEMA/CONTRACT
+ROUTING DATA INDEXED BY FILE 75
+- 81-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK1-6-v0.1.json
+- 66-RUSSIAN-EXPLANATION-ROUTING-TAGS-PILOT-v0.1.json
+- 71-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK9-v0.1.json
+- 70-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK10-v0.1.json
+- 76-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK11-v0.1.json
+- 73-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK12-14-v0.1.json
+- 77-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK13-v0.1.json
+- 68-RUSSIAN-EXPLANATION-ROUTING-TAGS-ORTHO-PUNCT-v0.1.json
+- 74-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK17-20-v0.1.json
+- 78-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK23-26-v0.1.json
+
+TASK 4 GENERATOR SPEC
+- 69-RUSSIAN-TASK4-ORTHOEPY-ROUTING-AUTOTAG-SPEC.txt
+
+TASK 27 SAFETY AUDIT
+- 79-RUSSIAN-ESSAY-27-WORD-COUNT-AUDIT.txt
+
+SKILL GRAPH
+- 03-RUSSIAN-SKILL-GRAPH.json
+
+CONTRACT REFERENCE
 - 24-RUSSIAN-EXPLANATION-BANK-SCHEMA.json
 
 3. MERGE ORDER
 
-A. Parse every source JSON independently.
+A. Parse every base source JSON independently.
 Failure to parse ANY required source = BUILD FAIL.
 
 B. Collect all base `units` by `explanation_id`.
-Base duplicate IDs are forbidden unless explicitly listed as a parent fallback + internal split relation.
-Do not silently keep last-write-wins duplicates.
+Duplicate explanation IDs are forbidden.
+No silent last-write-wins behavior.
 
 C. Apply file 63 overlay by `explanation_id`:
 - target must exist exactly once in the base source set;
-- replace/add only `examples` field;
-- do not replace rule, algorithm, skill IDs, subskill IDs or source refs from overlay;
+- replace/add only `examples`;
+- preserve rule, algorithm, Skill Graph links and source refs;
 - missing target = BUILD FAIL;
 - duplicate overlay target = BUILD FAIL.
 
-D. Append internal split units from files 61 and 62:
-- their IDs must be unique;
-- they intentionally share the parent Skill Graph subskill but have distinct `explanation_id` values;
-- parent broad unit remains in canonical bank as safe fallback;
-- split unit does NOT become a new Skill Graph node.
+D. Append internal split units from files 61, 62, 67, 72 and 80:
+- every split `explanation_id` must be unique;
+- split explanation IDs are presentation/routing units, NOT new Skill Graph nodes;
+- their `subskill_ids` point to accepted Skill Graph nodes;
+- parent broad explanation remains as safe fallback.
 
-E. Append essay units from file 55.
-K6 may have an empty `subskill_ids` array intentionally because the accepted Skill Graph does not contain a dedicated ethics subskill.
-This is an allowed exception and must be explicitly validated by explanation_id `essay_ethics_review` only.
+E. Essay units from file 55 are part of the base source set.
+`essay_ethics_review` may have an empty `subskill_ids` array because the accepted Skill Graph intentionally has no dedicated ethics subskill.
+Do not invent one to satisfy validation.
 
 4. REQUIRED UNIT CONTRACT
 
@@ -89,83 +122,99 @@ Every canonical unit must contain:
 - status
 
 Allowed empty arrays:
-- `subskill_ids`: only when explicitly whitelisted by validation policy (currently `essay_ethics_review`);
-- `examples`: should normally not be empty. Empty examples require explicit review note and should block `content_reviewed` promotion unless justified.
+- `subskill_ids`: only explicitly whitelisted cases, currently `essay_ethics_review`;
+- `examples`: only explicitly reviewed cases; current builder whitelist includes the essay source/volume gate and ethics self-check.
 
 5. ID VALIDATION
 
-- `explanation_id`: unique across canonical bank.
+- `explanation_id` unique across canonical bank.
 - every `skill_id` must exist in 03-RUSSIAN-SKILL-GRAPH.json.
 - every nonempty `subskill_id` must exist in 03-RUSSIAN-SKILL-GRAPH.json.
-- internal split explanation IDs in 61/62 do NOT need to exist in Skill Graph; their `subskill_ids` point to the accepted graph node.
+- split explanation IDs do not need to exist in Skill Graph.
 - exam_task_numbers must be integers 1..27.
 
 6. ROUTING VALIDATION
 
-For each routing-map `candidate_explanation_ids`:
-- ID must exist in canonical explanation bank.
+A. `candidate_explanation_ids` in 59 must resolve to canonical explanation IDs.
 
-For each fallback that names an explanation ID:
-- ID must exist in canonical bank;
-- symbolic fallbacks such as `task_specific_existing_feedback`, `variant_sign_specific_explanation`, `official_K1_K10_self_check`, or parent skill names must be explicitly whitelisted and not mistaken for explanation IDs.
+B. Every `explanation_id` referenced by explicit routing tag files indexed in 75 must resolve to canonical bank.
 
-For exact routing:
-- exact route must have evidence field/position/word/item tag in future routing-tag map;
-- routing precision cannot exceed result precision.
+C. File 75 must mark first-part standard routing first pass complete and list tasks 1..26 as tagged or autotag-ready.
+
+D. Exact routing is allowed only when evidence exists at the same precision:
+- item;
+- option;
+- word;
+- numbered position;
+- A-E matching position.
+
+E. Total all-or-nothing score must never be converted into an exact subskill diagnosis for mixed items.
+
+Special safeguards:
+- task 4: supplemental bankEntryId cards can autotag at word level; base 04-01 without bankEntryIds stays safe task-level unless separately tagged;
+- task 8/22: exact only from A-E position evidence;
+- task 9: unresolved word classifications stay `needs_followup`;
+- task 25: historical contextual-synonym item remains externally legacy-separated from current phraseology;
+- task 26: multi-means wrong response does not identify which single cohesion means failed;
+- task 27: expert/self-check contour, not normal correct-answer routing.
 
 7. SOURCE REF VALIDATION
 
-Allowed source_type values:
+Canonical source types:
 - official_fipi
 - book
 - existing_trainer
 - internal_verified_source
 
-Before `content_reviewed`:
-- source_path must not be a vague placeholder such as `verified corpus` unless resolved through a stable internal source identifier;
-- official_fipi is used only for an actual official source identifier/document, not a generated derivative bank;
-- generated verified banks use `internal_verified_source` and preserve provenance to the official source in their own audit chain.
+Rules:
+- official_fipi only for actual official source documents/identifiers;
+- generated/normalized repository banks use `internal_verified_source` where appropriate;
+- books use `book`;
+- current trainer material used to confirm product scope uses `existing_trainer`;
+- vague source paths should remain warnings until resolved, not silently normalized by guess.
 
 8. STATUS PROMOTION
 
 Canonical build MUST preserve source status.
-Do not mass-promote `source_verified` -> `content_reviewed` merely because JSON parses.
+Parsing successfully does not mean automatic promotion from `source_verified` to `content_reviewed`.
 
 Promotion requires:
 - source valid;
 - learner wording reviewed;
 - examples reviewed;
-- correct Skill Graph links;
-- routing safe for its diagnostic precision.
+- Skill Graph links correct;
+- routing precision safe.
 
 9. EXPECTED COVERAGE
 
-Canonical bank must cover all task numbers 1..27.
-Coverage means at least one applicable explanation/self-check unit exists, not that every mixed item has exact subskill diagnosis.
+Canonical explanation/self-check bank must cover tasks 1..27.
 
-Expected special conditions:
-- task 8: position-level diagnosis needed for exact grammar error routing;
-- task 11: broad fallback + four internal suffix splits;
-- task 14: broad fallback + five internal writing splits;
-- task 22: position-level result required for exact expressive-device diagnosis;
-- task 25: current phraseologism and historical synonym routes separate;
-- task 27: expert/self-check contour, no official auto-score.
+Coverage means at least one appropriate explanation/self-check unit exists.
+It does NOT imply that every mixed item permits exact subskill diagnosis.
+
+Current expected special conditions:
+- task 11: broad fallback + five internal learner branches;
+- task 14: broad fallback + conjunction/preposition/adverb/particle/hyphen/PO-/repeat/POL- internal branches;
+- task 21: broad punctuation analysis + current exact dash/colon/comma rule splits;
+- task 27: expert/self-check components only; no official browser score.
 
 10. BUILD OUTPUT
 
-Suggested top-level shape:
+Canonical JSON shape:
 {
   schema_version,
   subject,
   exam,
   build_version,
+  generated_at_utc,
   generated_from,
   units,
   coverage,
-  validation
+  validation,
+  integration_status
 }
 
-`validation` should record:
+Validation records at least:
 - source_files_parsed
 - units_total
 - explanation_ids_unique
@@ -174,31 +223,45 @@ Suggested top-level shape:
 - required_fields_valid
 - routing_links_valid
 - task_coverage_1_27
-- unresolved_review_items
+- errors
+- warnings
+- routing_needs_followup
+- routing_partial
 
 11. MACHINE VALIDATION
 
-When files are locally available:
-1. parse JSON;
-2. merge deterministically;
-3. validate required fields;
-4. validate Skill Graph links;
-5. validate routing links;
-6. validate coverage;
-7. write canonical build to `eksamio-learning-engine/build/`;
-8. write a human-readable validation report to `audits/`.
+Command from the `eksamio-learning-engine/` directory:
 
-No network access should be required for this build if the project folder is present locally.
+`python3 build/build_russian_explanation_bank.py`
 
-12. SAFETY
+Expected outputs:
+- `build/RUSSIAN-EXPLANATION-BANK-CANONICAL.json`
+- `audits/RUSSIAN-EXPLANATION-CANONICAL-VALIDATION.txt`
 
-The canonical build process must NEVER:
+Exit codes:
+- 0 = validation PASS (warnings may remain);
+- 1 = canonical build completed but validation errors exist;
+- 2 = build/parsing/file error.
+
+No network is required when the project folder is locally available.
+
+12. CURRENT EXECUTION LIMIT
+
+The current ChatGPT execution container cannot clone/reach GitHub directly, so the builder has not yet been executed against a local repository snapshot.
+Do NOT spend Codex quota only to run this script.
+
+This is an environment limitation, not a content/source failure.
+
+13. SAFETY
+
+The build process must NEVER:
 - rewrite trainer T123;
 - modify JS/CSS/HTML;
-- modify current trainer bank cards;
+- modify current trainer cards;
 - change answers/scoring;
 - change trainer_item_id;
 - change localStorage;
+- change URL/SEO;
 - publish to Tilda.
 
 It is a data validation/build step only.
@@ -206,6 +269,9 @@ It is a data validation/build step only.
 CURRENT DECISION
 
 CANONICAL BUILD DESIGN: READY
-CANONICAL BUILD EXECUTION: PENDING LOCAL FILE AVAILABILITY
+BUILDER: CREATED
+FIRST-PART ROUTING FIRST PASS: COMPLETE 1–26
+TASK 27 SELF-CHECK CONTOUR: SOURCE-READY
+CANONICAL BUILD EXECUTION: PENDING LOCAL FILE ACCESS
 PRODUCTION INTEGRATION: HOLD
 CODEX: NOT REQUIRED
