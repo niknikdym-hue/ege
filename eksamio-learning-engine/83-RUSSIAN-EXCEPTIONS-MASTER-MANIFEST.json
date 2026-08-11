@@ -1,0 +1,38 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"exceptions_and_special_cases_master_manifest",
+  "integration_status":"not_connected_to_production",
+  "product":{"future_url":"/trenazhery/russkiy/isklyucheniya/","catalog_label":"Исключения и особые случаи","internal_title":"Тренажёр исключений","modes":["all_exceptions","my_exceptions_future"]},
+  "schema":"29-RUSSIAN-EXCEPTIONS-BANK-SCHEMA.json",
+  "source_banks":[
+    {"path":"33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json","scope":"N/NN exceptions and lexicalized contrasts","tasks":[15],"shape":"items"},
+    {"path":"35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json","scope":"alternating roots, special root vowels, PRE/PRI and prefix boundaries","tasks":[9,10],"shape":"clusters"},
+    {"path":"37-RUSSIAN-EXCEPTIONS-SUFFIXES-CONJUGATION-v0.1.json","scope":"suffix, conjugation and participle exceptions","tasks":[11,12],"shape":"clusters"},
+    {"path":"39-RUSSIAN-EXCEPTIONS-NE-NI-SOLID-v0.1.json","scope":"NE/NI contrasts, conjunction/preposition/adverb homophones and particle boundaries","tasks":[13,14],"shape":"clusters","contract_status":"normalized_2026_08_11"},
+    {"path":"42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json","scope":"high-risk punctuation contrasts and special cases","tasks":[16,17,18,19,20,21],"shape":"items","contract_status":"normalized_2026_08_11"},
+    {"path":"48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json","scope":"orthoepy, morphology, paronym, syntax and historical-format special cases","tasks":[4,5,7,8,25],"shape":"items","contract_status":"provenance_normalized_2026_08_11"}
+  ],
+  "not_duplicated_full_banks":[
+    {"source":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ORTHOEPIC-TRAINER-BANK.json","reason":"The exceptions trainer should reference/highlight difficult normative items without duplicating the full 96-entry orthoepic source bank."}
+  ],
+  "canonical_output":"build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json",
+  "validation_output":"audits/RUSSIAN-EXCEPTIONS-CANONICAL-VALIDATION.txt",
+  "builder":"build/build_russian_exceptions_bank.py",
+  "validation_rules":[
+    "parse every source bank",
+    "flatten top-level items and cluster items",
+    "exception_id must be unique",
+    "all required fields from schema 29 must exist",
+    "skill_ids/subskill_ids must exist in accepted Skill Graph",
+    "exam_task_numbers must be 1..27 when present",
+    "source_refs must use canonical source types",
+    "practice_modes must belong to schema enum",
+    "do not silently invent missing normative forms",
+    "unknown rule_ref is a warning because rule_ref may be a stable rule identifier rather than an explanation_id",
+    "production trainer remains unchanged"
+  ],
+  "current_status":"source_banks_ready_for_canonical_machine_build",
+  "production_integration":"HOLD"
+}
