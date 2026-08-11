@@ -1,0 +1,115 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"verified_pilot_routing_tags",
+  "integration_status":"not_connected_to_production",
+  "schema_ref":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
+  "items":[
+    {
+      "trainer_item_id":"ege-ru-07-2026-07-01",
+      "task_number":7,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["noun_form_norms","numeral_form_norms","verb_form_norms"],
+      "exact_subskill_id":"verb_form_norms",
+      "explanation_id":"verb_form_norms",
+      "word_tags":[{"position_id":"error_target","source_locator":"ЗАПЕЧАТЛИТЬ -> запечатлеть","subskill_ids":["verb_form_norms"],"explanation_id":"verb_form_norms","exception_ids":["verb_zapechatlet_infinitive"],"diagnostic_confidence":"exact"}],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"The card has exactly one incorrect highlighted form and the verified answer is a verb form. Exact item routing is justified."
+    },
+    {
+      "trainer_item_id":"ege-ru-07-2025-07-01",
+      "task_number":7,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["noun_form_norms","numeral_form_norms","verb_form_norms"],
+      "exact_subskill_id":"noun_form_norms",
+      "explanation_id":"noun_form_norms",
+      "word_tags":[{"position_id":"error_target","source_locator":"С ПОВИДЛОЙ -> с повидлом","subskill_ids":["noun_form_norms"],"explanation_id":"noun_form_norms","exception_ids":["morph_povidlo_instrumental"],"diagnostic_confidence":"exact"}],
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-07-2024-07-01",
+      "task_number":7,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["noun_form_norms","numeral_form_norms","verb_form_norms"],
+      "exact_subskill_id":"numeral_form_norms",
+      "explanation_id":"numeral_form_norms",
+      "word_tags":[{"position_id":"error_target","source_locator":"НЕТ ПОЛТОРАСТА РУБЛЕЙ -> нет полутораста рублей","subskill_ids":["numeral_form_norms"],"explanation_id":"numeral_form_norms","exception_ids":["morph_polutorasta_oblique"],"diagnostic_confidence":"exact"}],
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-07-2022-07-01",
+      "task_number":7,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["noun_form_norms","numeral_form_norms","verb_form_norms"],
+      "exact_subskill_id":"numeral_form_norms",
+      "explanation_id":"numeral_form_norms",
+      "word_tags":[{"position_id":"error_target","source_locator":"НЕТ ПОЛТОРАСТА РУБЛЕЙ -> нет полутораста рублей","subskill_ids":["numeral_form_norms"],"explanation_id":"numeral_form_norms","exception_ids":["morph_polutorasta_oblique"],"diagnostic_confidence":"exact"}],
+      "legacy":false,
+      "status":"source_verified"
+    },
+
+    {
+      "trainer_item_id":"ege-ru-08-2026-08-01",
+      "task_number":8,
+      "routing_precision":"match_position",
+      "candidate_subskill_ids":["government_case_norm","indirect_speech_construction","uncoordinated_apposition_construction","gerundial_construction_norm","homogeneous_members_construction"],
+      "match_tags":[
+        {"position_id":"match_A","source_locator":"неправильное употребление падежной (предложно-падежной) формы управляемого слова","subskill_ids":["government_case_norm"],"explanation_id":"syntactic_error_matching","diagnostic_confidence":"exact"},
+        {"position_id":"match_B","source_locator":"неправильное построение предложения с косвенной речью","subskill_ids":["indirect_speech_construction"],"explanation_id":"syntactic_error_matching","diagnostic_confidence":"exact"},
+        {"position_id":"match_C","source_locator":"нарушение в построении предложения с несогласованным приложением","subskill_ids":["uncoordinated_apposition_construction"],"explanation_id":"syntactic_error_matching","diagnostic_confidence":"exact"},
+        {"position_id":"match_D","source_locator":"неправильное построение предложения с деепричастным оборотом","subskill_ids":["gerundial_construction_norm"],"explanation_id":"syntactic_error_matching","diagnostic_confidence":"exact"},
+        {"position_id":"match_E","source_locator":"нарушение в построении предложения с однородными членами","subskill_ids":["homogeneous_members_construction"],"explanation_id":"syntactic_error_matching","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Exact diagnosis is available per A-E position only if runtime preserves which match positions were incorrect. Total score alone remains insufficient."
+    },
+
+    {
+      "trainer_item_id":"ege-ru-18-2026-18-01",
+      "task_number":18,
+      "routing_precision":"position",
+      "candidate_subskill_ids":["introductory_words_punctuation","forms_of_address_punctuation"],
+      "position_tags":[
+        {"position_id":"pos_1","source_locator":"before видимо","subskill_ids":["introductory_words_punctuation"],"explanation_id":"introductory_words_punctuation","diagnostic_confidence":"exact"},
+        {"position_id":"pos_2","source_locator":"after видимо","subskill_ids":["introductory_words_punctuation"],"explanation_id":"introductory_words_punctuation","diagnostic_confidence":"exact"},
+        {"position_id":"pos_3","source_locator":"before словно; no comma in key","subskill_ids":["introductory_words_punctuation"],"explanation_id":"introductory_words_punctuation","diagnostic_confidence":"exact"},
+        {"position_id":"pos_4","source_locator":"after словно; no comma in key","subskill_ids":["introductory_words_punctuation"],"explanation_id":"introductory_words_punctuation","diagnostic_confidence":"exact"},
+        {"position_id":"pos_5","source_locator":"after Впрочем","subskill_ids":["introductory_words_punctuation"],"explanation_id":"introductory_words_punctuation","diagnostic_confidence":"exact"},
+        {"position_id":"pos_6","source_locator":"before Максимка","subskill_ids":["forms_of_address_punctuation"],"explanation_id":"forms_of_address_punctuation","diagnostic_confidence":"exact"},
+        {"position_id":"pos_7","source_locator":"before субстантивированное обращение глупый","subskill_ids":["forms_of_address_punctuation"],"explanation_id":"forms_of_address_punctuation","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Positions 3-4 are negative contrast evidence: `словно` is not introductory in this context. This is still exact routing to the introductory-word distinction explanation."
+    },
+
+    {
+      "trainer_item_id":"ege-ru-22-2026-22-01",
+      "task_number":22,
+      "routing_precision":"match_position",
+      "candidate_subskill_ids":["device_assonance","device_hyperbole","device_metonymy","device_anaphora","device_parcellation"],
+      "match_tags":[
+        {"position_id":"match_A","source_locator":"Думаю думу свою","subskill_ids":["device_assonance"],"explanation_id":"expressive_device_identification","diagnostic_confidence":"exact"},
+        {"position_id":"match_B","source_locator":"В сто сорок солнц закат пылал","subskill_ids":["device_hyperbole"],"explanation_id":"expressive_device_identification","diagnostic_confidence":"exact"},
+        {"position_id":"match_C","source_locator":"Янтарь на трубках Цареграда, Фарфор и бронза на столе","subskill_ids":["device_metonymy"],"explanation_id":"expressive_device_identification","diagnostic_confidence":"exact"},
+        {"position_id":"match_D","source_locator":"Край ты мой заброшенный, Край ты мой, пустырь","subskill_ids":["device_anaphora"],"explanation_id":"expressive_device_identification","diagnostic_confidence":"exact"},
+        {"position_id":"match_E","source_locator":"Остаться мне случится одному. Навеки. В самом деле. Без возврата.","subskill_ids":["device_parcellation"],"explanation_id":"expressive_device_identification","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Expected mapping is read from the verified current card key A-E = 7,5,9,2,4. Exact diagnosis is valid only per matching position, never from total 0/1/2 score alone."
+    }
+  ],
+  "validation_notes":[
+    "All trainer_item_id values are present in the repository-visible current trainer snapshot.",
+    "All subskill IDs are accepted Skill Graph IDs.",
+    "No trainer source card was modified.",
+    "This pilot intentionally begins with items where exact diagnostic evidence is available from the item structure."
+  ],
+  "status":"source_verified_pilot"
+}
