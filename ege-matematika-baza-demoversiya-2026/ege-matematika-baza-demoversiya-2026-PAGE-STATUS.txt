@@ -11,15 +11,15 @@ TEXT_TYPOGRAPHY_GATE: PASS — Н·м normalized
 FORMULA_GATE: PASS 6/6 secondary glyph cases
 VISUAL_GATE: PASS 25/25 official PDF assets
 INTERACTION_GATE: PASS 70/70 official examples via real DOM controls
-NUMERIC_REGRESSION_GATE: PASS — 11.2 → 11,2 persists; scorer separates syntax from correctness
+FREE_INPUT_CONTRACT_GATE: PASS — 58/58 official free-input examples have per-example input contracts
+NUMERIC_REGRESSION_GATE: PASS — input format is validated per official example and independently from answer correctness; invalid raw input is preserved
 SCORER_GATE: PASS
 STATE_RESTORE_GATE: PASS
 MANUAL_STUDENT_ACCEPTANCE: PASS — 21/21 positions reviewed and final result inspected
-CLEAN_ZIP_BROWSER_GATE: PASS — 70/70 + targeted regressions
+CLEAN_ZIP_BROWSER_GATE: PASS — 70/70 official examples + 58/58 free-input contracts
 TILDA_SIZE_GATE: PASS
 BROWSER_WIDTHS: 1280, 768, 390, 360, 320
 FULL_CORRECT_ATTEMPT: 21/21
 JAVASCRIPT_ERRORS: 0
-INTEGER_FORMAT_FEEDBACK_GATE: PASS — task 1 rejects decimal with explicit message
-FINAL_STATUS: READY_FOR_TILDA_TEST
-PUBLISHED_SMOKE_STATUS: NOT_RUN_UNTIL_TILDA_PUBLICATION
+PUBLISHED_SMOKE_STATUS: PASS — v1.2 published on Tilda; user confirmed updated T123-01 and T123-47 work correctly
+FINAL_STATUS: PUBLISHED_AND_VALIDATED
