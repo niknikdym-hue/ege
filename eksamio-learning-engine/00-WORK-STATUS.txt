@@ -1,7 +1,7 @@
 EKSAMIO LEARNING ENGINE
 WORK STATUS
 
-STATUS: CONCEPT / ARCHITECTURE
+STATUS: CONCEPT / ARCHITECTURE + RUSSIAN CONTENT BUILD ACTIVE
 PILOT_SUBJECT: ЕГЭ — русский язык
 REPOSITORY: niknikdym-hue/ege
 DIRECTION_PATH: /eksamio-learning-engine/
@@ -24,8 +24,71 @@ DIAGNOSE -> SELECT -> PRACTICE -> HELP -> VERIFY -> RETAIN -> REASSESS
 CURRENT DECISION:
 Русский язык используется как первый пилот для общей архитектуры Learning Engine. После верификации архитектура должна масштабироваться на другие предметы без повторного изобретения ядра.
 
-NEXT REQUIRED ARTIFACTS:
-См. 02-CODEX-BUILD-INDEX.txt
+RUSSIAN EXPLANATION LAYER — CURRENT STATUS
+
+SOURCE POLICY:
+- ФИПИ / verified exam corpus: формат ЕГЭ, номера заданий, критерии, официальные списки и ограничения.
+- `russkiy-knigi/rozental.doc`: основной рабочий источник №1 для правил русского языка, развёрнутых пояснений, исключений, разграничений и сложных случаев.
+- остальные книги `russkiy-knigi/`: дополнительные таблицы/схемы/способы подачи только при необходимости.
+
+PRODUCTION SAFETY:
+Текущий `russkiy-knigi/ege-russkiy-trenazher/` считается замороженным рабочим продуктом до отдельного integration gate.
+На стадии контента НЕ менять T123, JS, CSS, HTML, localStorage, trainer_item_id, ответы, scoring, URL/SEO и режимы.
+
+EXPLANATION UX:
+- глобального переключателя «показывать пояснения» нет;
+- разогрев: добровольное правило до ответа;
+- учебная тренировка: пояснение после ответа;
+- работа над ошибками: подробный разбор + новый независимый пример;
+- контроль: объяснения только после завершения;
+- демоверсия: объяснения только после завершения попытки.
+
+WAVE 1 — TASKS 9–21:
+STATUS: SOURCE LAYER COMPLETE / CONTENT REVIEW PENDING / PRODUCTION INTEGRATION HOLD
+
+Созданы source-verified отдельные explanation units для:
+- 9: корни;
+- 10: приставки, Ы/И, Ъ/Ь;
+- 11: суффиксы;
+- 12: спряжение и причастия;
+- 13: НЕ/НИ;
+- 14: слитно/раздельно/дефис;
+- 15: Н/НН;
+- 16: однородные члены и граница однородные/ССП;
+- 17: определения, причастные и деепричастные обороты;
+- 18: вводные слова и обращения;
+- 19: границы придаточных и однородные придаточные;
+- 20: разные виды связи и стык союзов;
+- 21: анализ правил тире, двоеточия и запятой.
+
+Связанные файлы:
+- 23-RUSSIAN-EXPLANATION-CONTENT-SPEC.txt
+- 24-RUSSIAN-EXPLANATION-BANK-SCHEMA.json
+- 25-RUSSIAN-EXPLANATION-UNIT-MAP.json
+- 26-RUSSIAN-EXPLANATION-WORK-PLAN.txt
+- 27-RUSSIAN-EXPLANATION-SOURCE-AUDIT-QUEUE.txt
+- 31..42 content/source/exception/contrast files
+- 43-RUSSIAN-EXPLANATION-WAVE-1-MANIFEST.json
+
+EXCEPTIONS TRAINER:
+Запланирован отдельный бесплатный учебный контур «Исключения и особые случаи».
+Будущий URL: /trenazhery/russkiy/isklyucheniya/
+Режимы: «Все исключения» и в будущем «Мои исключения».
+Банк исключений связан со Skill Graph и Explanation Bank, но не подключён к production.
+
+NEXT CONTENT STEPS:
+1. Независимый content review и validation первой волны 9–21.
+2. После review — статус content_reviewed только для реально прошедших units.
+3. Wave 2: задания 1–8 и 22–26.
+4. Задание 27 — отдельный контур по актуальным критериям и структуре сочинения.
+5. Продолжать извлекать из Розенталя полезные исключения и контрастные случаи для Exceptions Bank.
+6. Только после content/data gate проектировать безопасную интеграцию с fallback и rollback.
+
+CODEX POLICY:
+Codex не использовать для обычного контента, аудита, схем и GitHub-файлов. Подключать только к действительно сложной локальной массовой реализации/сборке/тестированию, где расход квоты оправдан.
+
+NEXT REQUIRED ARCHITECTURE ARTIFACTS:
+См. 02-CODEX-BUILD-INDEX.txt, но последовательность уточняется по текущему pilot status; не запускать всё механически.
 
 IMPORTANT:
-Не начинать реализацию AI до создания единого Skill Graph, схемы данных, формата Attempt, StudentSkillState, Recommendation Log и demo->trainer handoff.
+Не начинать реализацию AI до создания и проверки единого Skill Graph, схемы данных, формата Attempt, StudentSkillState, Recommendation Log и demo->trainer handoff.
