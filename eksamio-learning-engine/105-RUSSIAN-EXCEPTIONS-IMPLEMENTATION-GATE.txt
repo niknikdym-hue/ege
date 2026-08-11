@@ -1,0 +1,140 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — IMPLEMENTATION GATE
+
+STATUS: HOLD
+PRODUCT: /trenazhery/russkiy/isklyucheniya/
+CURRENT_TILDA_PAGE: NOT CREATED
+CURRENT_EGE_TRAINER: UNCHANGED
+
+PURPOSE
+
+Prevent content/source work from silently turning into production implementation.
+No public Tilda/T123 code should be built until all required gates below are explicitly satisfied.
+
+GATE A — SOURCE / CONTENT
+
+Required:
+[ ] canonical Explanation Bank machine validation PASS;
+[ ] canonical Exceptions Bank machine validation PASS;
+[ ] canonical Exceptions Practice Bank machine validation PASS;
+[ ] no duplicate explanation_id / exception_id / practice_item_id;
+[ ] all Skill Graph links valid or explicitly whitelisted;
+[ ] no needs_review source exception enters runtime;
+[ ] current practice bank editorial review PASS;
+[ ] Rosenthal/FIPI provenance clean.
+
+Current status: PARTIAL / machine validation pending local project access.
+
+GATE B — RUNTIME DATA CONTRACT
+
+Required:
+[ ] runtime payload schema approved;
+[ ] runtime payload builder created;
+[ ] answer evaluators defined by response_kind;
+[ ] topic mapping stable;
+[ ] content versioning/integrity strategy defined;
+[ ] no raw source books/provenance shipped unnecessarily.
+
+Current status: SCHEMA READY / builder pending canonical PASS.
+
+GATE C — LEARNER STATE
+
+Required:
+[ ] 102 learner-state schema approved;
+[ ] storage namespace approved;
+[ ] idempotent attempt event logic implemented/tested;
+[ ] schema migration rule tested;
+[ ] corrupt-state fallback tested;
+[ ] no collision with current trainer localStorage keys;
+[ ] anonymous no-registration path works.
+
+Current status: DESIGN READY / implementation not started.
+
+GATE D — SESSION ENGINE
+
+Required:
+[ ] 103 deterministic selector implemented;
+[ ] due > active > failed transfer > new priority behavior tested;
+[ ] no duplicate practice_item/context in same normal session;
+[ ] no padding duplicates when candidate set short;
+[ ] exact handoff handles only exact exception_ids;
+[ ] broad skill handoff never invents exception_id;
+[ ] selection reason log available for test/debug.
+
+Current status: SPEC READY / implementation not started.
+
+GATE E — PAGE UX
+
+Required:
+[ ] 101 UX spec approved;
+[ ] mobile layout approved;
+[ ] accessibility checks;
+[ ] feedback correct/wrong not color-only;
+[ ] empty states;
+[ ] `Все исключения` flow;
+[ ] `Мои исключения` flow;
+[ ] session result;
+[ ] rule drawer;
+[ ] no fake exam timer/gamification clutter.
+
+Current status: DESIGN READY / UI not built.
+
+GATE F — TILDA PACKAGING
+
+Required:
+[ ] evergreen page URL `/trenazhery/russkiy/isklyucheniya/`;
+[ ] year not hardcoded into persistent SEO/URL/canonical;
+[ ] header/footer separate;
+[ ] T123 blocks under Tilda size limit with safety margin;
+[ ] install/order file;
+[ ] runtime data split strategy if payload exceeds safe T123 size;
+[ ] no dependency on current EGE trainer DOM or local variables;
+[ ] current site light Eksamio visual system.
+
+Current status: NOT STARTED.
+
+GATE G — REGRESSION / SAFETY
+
+Required:
+[ ] existing `/ege/russkiy/trenazher/` untouched or verified byte-for-byte if no integration task;
+[ ] existing standalone orthoepy/paronym trainers unaffected;
+[ ] current answers/scoring unchanged;
+[ ] navigation/catalog update reviewed separately;
+[ ] storage keys do not collide;
+[ ] reload/autosave state tested;
+[ ] malformed runtime payload fails closed;
+[ ] rollback package ready.
+
+Current status: NOT STARTED.
+
+GATE H — OPTIONAL MAIN-TRAINER HANDOFF
+
+This is NOT required for first standalone public release.
+
+Before enabling:
+[ ] canonical explanation routing machine PASS;
+[ ] exact exception_id map exists for targeted current trainer errors;
+[ ] handoff URL/state contract documented;
+[ ] demo/control never interrupted;
+[ ] main trainer fallback works if Exceptions page unavailable;
+[ ] regression suite proves no scoring/answer changes.
+
+Current status: HOLD / later phase.
+
+IMPLEMENTATION AUTHORIZATION RULE
+
+Only after Gates A-D are PASS may coding of the standalone page begin.
+Only after Gates A-G are PASS may public publication be considered.
+Gate H is separate and may remain HOLD after standalone launch.
+
+CODex POLICY
+
+Do not spend Codex quota on content/spec/data-entry work.
+Potential Codex use is justified only later for a genuinely large local implementation/test pass if ChatGPT/local tools cannot complete it efficiently.
+
+CURRENT DECISION
+
+CONTENT/SPEC WORK: CONTINUE
+STANDALONE PAGE CODING: HOLD
+MAIN-TRAINER INTEGRATION: HOLD
+CURRENT TRAINER: UNCHANGED
