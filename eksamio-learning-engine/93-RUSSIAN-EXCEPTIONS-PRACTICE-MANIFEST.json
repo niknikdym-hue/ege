@@ -1,5 +1,5 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.1.0",
   "subject":"russian",
   "exam":"ege",
   "purpose":"exceptions_practice_bank_manifest",
@@ -7,8 +7,10 @@
   "schema":"91-RUSSIAN-EXCEPTIONS-PRACTICE-SCHEMA.json",
   "source_exceptions_manifest":"83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json",
   "practice_banks":[
-    {"path":"92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json","scope":"first original cross-domain pilot","expected_items":24,"status":"source_verified_pilot"}
+    {"path":"92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json","scope":"first original cross-domain pilot","expected_items":24,"status":"source_verified_pilot"},
+    {"path":"96-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE2-v0.1.json","scope":"second-context and high-value contrast expansion","expected_items":24,"status":"source_verified_wave"}
   ],
+  "expected_total_items":48,
   "builder":"build/build_russian_exceptions_practice.py",
   "canonical_output":"build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json",
   "validation_output":"audits/RUSSIAN-EXCEPTIONS-PRACTICE-VALIDATION.txt",
@@ -22,8 +24,9 @@
     "response_kind and transfer_level belong to schema enums",
     "answer and required feedback fields are present",
     "context_signature unique for exception_id + mode",
+    "manifest expected_total_items must equal sum of practice-bank expected_items",
     "no production trainer mutation"
   ],
-  "current_status":"pilot_ready_for_machine_validation",
+  "current_status":"48_card_source_practice_bank_ready_for_machine_validation",
   "production_integration":"HOLD"
 }
