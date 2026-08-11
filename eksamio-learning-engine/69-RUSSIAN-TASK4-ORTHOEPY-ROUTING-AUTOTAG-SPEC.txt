@@ -1,0 +1,125 @@
+EKSAMIO LEARNING ENGINE
+TASK 4 ORTHOEPY ROUTING AUTOTAG SPEC
+
+STATUS: READY FOR LOCAL DATA BUILD
+PRODUCTION: HOLD
+CODEX: NOT REQUIRED
+
+PURPOSE
+
+Не размечать вручную десятки карточек задания 4. Использовать уже существующую структуру текущего тренажёра:
+- trainer_item_id;
+- `bankEntryIds` по позициям 1..5;
+- проверенный `ORTHOEPIC-TRAINER-BANK.json`.
+
+1. INPUT
+
+Current trainer cards where:
+- task == 4;
+- `bankEntryIds` exists;
+- number of bankEntryIds equals number of answer options/words.
+
+Repository-visible source:
+`eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/`
+
+Verified normative bank:
+`eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ORTHOEPIC-TRAINER-BANK.json`
+
+2. GENERATED TAG PER CARD
+
+For every task-4 card:
+- trainer_item_id = existing card id;
+- task_number = 4;
+- routing_precision = word;
+- candidate_subskill_ids = ["normative_stress_selection"] plus narrower POS stress subskill ONLY if explicit verified POS metadata exists;
+- legacy = card.legacyFormat;
+- status = source_verified when all bankEntryIds resolve.
+
+For every position i:
+- position_id = `option_<i>`;
+- source_locator.bank_entry_id = bankEntryIds[i-1];
+- subskill_ids = ["normative_stress_selection"] by default;
+- explanation_id = "normative_stress_selection";
+- diagnostic_confidence = exact;
+- preserve expected correctness from the card answer as result metadata, but NEVER replace or recompute the official stored answer.
+
+3. POS-SPECIFIC ROUTING
+
+Accepted Skill Graph narrower IDs include:
+- stress_nouns
+- stress_adjectival_forms
+- stress_verbs
+- stress_participles
+- stress_gerunds
+- stress_adverbs
+
+IMPORTANT:
+Do NOT infer these automatically merely from the visible word if the normative bank does not carry explicit reviewed POS/form metadata.
+
+Reason:
+- historical review already found that the orthoepic bank lacked explicit POS metadata;
+- product routing precision must not exceed source metadata precision.
+
+Later safe upgrade:
+- add external reviewed POS/form metadata keyed by bankEntryId;
+- then enrich generated position tags without changing trainer cards or IDs.
+
+4. VALIDATION
+
+Build must fail if:
+- task-4 card has bankEntryIds count != visible option count;
+- bankEntryId is absent from ORTHOEPIC-TRAINER-BANK.json;
+- duplicate position_id is produced within a card;
+- generated tag points to a nonexistent trainer_item_id;
+- generator attempts to modify current trainer source data.
+
+5. PILOT EXAMPLE
+
+Card:
+`ege-ru-04-2026-04-120`
+
+Existing bankEntryIds:
+1. kilometer
+2. beet
+3. perspicacious
+4. poured_f
+5. blinds
+
+Generated routing positions:
+- option_1 -> kilometer -> normative_stress_selection
+- option_2 -> beet -> normative_stress_selection
+- option_3 -> perspicacious -> normative_stress_selection
+- option_4 -> poured_f -> normative_stress_selection
+- option_5 -> blinds -> normative_stress_selection
+
+The learner can therefore receive exact word-level normative feedback after the answer without claiming an unverified POS-specific weakness.
+
+6. LEARNING ENGINE CONSEQUENCE
+
+A wrong option may update evidence for:
+- `normative_stress_selection` immediately;
+- narrower POS stress skill only after explicit POS/form tag exists.
+
+The word itself can simultaneously feed:
+- personal error book;
+- spaced repetition;
+- exceptions/difficult-forms training;
+- next-item correctness.
+
+7. SAFETY
+
+Autotag generation must NEVER:
+- change `trainer_item_id`;
+- change the word list;
+- change highlighted stress;
+- change answer/altAnswers;
+- change scoring;
+- change T123/JS/CSS/HTML/localStorage;
+- publish anything.
+
+CURRENT DECISION
+
+TASK 4 WORD-LEVEL ROUTING: DETERMINISTIC BUILD READY
+MANUAL TAGGING OF ALL TASK-4 CARDS: NOT NEEDED
+POS-SPECIFIC ROUTING: HOLD UNTIL VERIFIED POS METADATA
+PRODUCTION INTEGRATION: HOLD
