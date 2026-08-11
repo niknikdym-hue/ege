@@ -1,0 +1,170 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — SESSION / PRIORITY POLICY
+
+STATUS: DESIGN READY / ADD-ONLY
+PRODUCTION: HOLD
+CURRENT TRAINERS: UNCHANGED
+
+GOAL
+
+Собрать короткую полезную сессию «Исключения и особые случаи», которая:
+- не превращается в случайный словарь;
+- не дублирует подряд одно и то же правило;
+- возвращает реальные ошибки ученика;
+- проверяет не только узнавание, но и самостоятельное воспроизведение/перенос.
+
+IMPORTANT
+
+`launch_priority` НЕ является difficulty.
+Difficulty остаётся null/неизвестной, пока не появятся данные.
+
+SOURCE-DRIVEN LAUNCH PRIORITY
+
+P0 — CURRENT DIRECT
+Исключение/особый случай непосредственно представлен:
+- в текущем 2026 trainer/demo corpus;
+- либо в текущем официальном нормативном списке/критерии.
+
+P1 — RECENT / REPEATED PRODUCT EVIDENCE
+Случай встречается:
+- в нескольких годах текущего trainer corpus;
+- либо является проверенным контрастом, повторяющимся в экзаменационном материале.
+
+P2 — CORE ROZENTAL CONTRAST
+Случай не обязан быть в текущей конкретной демоверсии, но:
+- непосредственно относится к accepted EGE skill/subskill;
+- является сильным правилом-разграничением/исключением;
+- полезен для предотвращения типичной механической ошибки.
+
+P3 — REFERENCE / LOW LAUNCH PRIORITY
+Редкое, устаревающее или мало представленное в текущем exam corpus исключение.
+Хранится в knowledge bank, но не должно вытеснять P0/P1 из короткой сессии.
+
+Priority assignment requires evidence metadata; do not assign P0/P1 merely because a word seems common.
+
+SESSION SOURCES
+
+When learner history exists, selection order is:
+1. due retention items;
+2. unresolved personal errors (`My Exceptions`);
+3. failed transfer checks;
+4. new P0/P1 items;
+5. new P2 items;
+6. limited P3 exploration.
+
+When learner history does not exist:
+- start with P0/P1 and several P2 contrasts;
+- do not front-load rare reference exceptions.
+
+SESSION SIZE — DESIGN DEFAULT
+
+Short session target:
+8–12 practice cards.
+
+This is a UX default, not a mastery rule.
+
+DIVERSITY RULES
+
+Avoid:
+- more than 2 consecutive cards from one exception_id;
+- long runs from one cluster when other due items exist;
+- four recognition multiple-choice cards in a row;
+- repeating the same exact context after an error.
+
+Prefer rotation:
+recognition -> recall -> context -> another domain -> later same exception transfer.
+
+AFTER A WRONG ANSWER
+
+1. Show short correct form/decision.
+2. Explain the exact contrast.
+3. Link to rule/explanation.
+4. Keep exception_id in unresolved state.
+5. Schedule a NEW context of the same exception later in the session or next due slot.
+
+Do not immediately show the same sentence with shuffled choices and call that mastery.
+
+AFTER A CORRECT ANSWER
+
+Recognition correct:
+- does not prove mastery;
+- may unlock recall/context item later.
+
+Recall/context correct:
+- stronger evidence;
+- still needs later retention check.
+
+Transfer correct:
+- strong evidence for stabilization;
+- use general mastery/retention spec for state transition.
+
+MY EXCEPTIONS
+
+An exception_id enters the personal set if:
+- learner answers its practice card incorrectly;
+- OR a main-trainer error is exactly routed to that exception_id;
+- OR a retention/transfer check fails.
+
+Do NOT add an exception_id when:
+- only a broad task score is wrong;
+- exact word/position is unknown;
+- source tag is partial/needs_followup.
+
+REMOVING FROM ACTIVE «MY EXCEPTIONS»
+
+Do not permanently delete history.
+Move from active to stabilized only after:
+- independent recall/context success;
+- transfer success or equivalent next-item correctness;
+- retention success after a later interval.
+
+Exact numerical thresholds belong to the common mastery spec, not this file.
+
+CROSS-PRODUCT DEDUPLICATION
+
+Orthoepy:
+- full word-bank practice belongs to the standalone orthoepy trainer;
+- Exceptions Trainer selects meaning-dependent forms, unusual forms, personal errors and high-value contrasts.
+
+Paronyms:
+- full systematic bank belongs to the standalone paronym trainer;
+- Exceptions Trainer selects current/recurrent contrast traps and personal errors.
+
+Main EGE trainer:
+- remains exam-oriented;
+- may later route a verified error into Exceptions Trainer;
+- must not be flooded with all exception reference content.
+
+SESSION METRICS
+
+Useful future metrics:
+- exception recall accuracy;
+- context accuracy;
+- first-retry success in a new context;
+- retention pass;
+- repeated-error rate by exception_id;
+- time-to-stabilization;
+- transfer back into main EGE task.
+
+Do NOT optimize for:
+- raw number of cards clicked;
+- time-on-site;
+- easy recognition accuracy alone.
+
+EXPERIMENTATION
+
+Possible future experiments after instrumentation:
+- session length 8 vs 12;
+- immediate vs delayed within-session retry;
+- contrast-first vs recall-first for new exception;
+- one-domain vs mixed-domain short sessions.
+
+Do not choose winners before measured data.
+
+CURRENT DECISION
+
+SESSION POLICY: READY FOR DATA-LAYER USE
+DIFFICULTY: NOT GUESSED
+PERSONAL ROUTE: SOURCE DESIGN READY
+PRODUCTION UI: NOT BUILT
+CODEX: NOT REQUIRED
