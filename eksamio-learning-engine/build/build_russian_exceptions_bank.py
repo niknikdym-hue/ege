@@ -22,6 +22,8 @@ SOURCE_BANKS = [
     "42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json",
     "48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json",
     "84-RUSSIAN-EXCEPTIONS-INTRODUCTORY-WORDS-v0.1.json",
+    "85-RUSSIAN-EXCEPTIONS-NE-NI-HIGH-RISK-v0.1.json",
+    "86-RUSSIAN-EXCEPTIONS-SOLID-SEPARATE-HIGH-RISK-v0.1.json",
 ]
 
 SKILL_GRAPH_FILE = "03-RUSSIAN-SKILL-GRAPH.json"
@@ -244,7 +246,6 @@ def validate_items(
 
         rule_ref = item.get("rule_ref")
         if isinstance(rule_ref, str) and rule_ref and rule_ref not in explanation_ids:
-            # Schema explicitly permits a stable rule identifier, so this is a warning.
             warnings.append(
                 f"{exception_id}: rule_ref {rule_ref!r} is not a current explanation_id; treat as stable rule id or review link"
             )
