@@ -1,13 +1,13 @@
 EKSAMIO LEARNING ENGINE
 RUSSIAN EXPLANATION CONTENT REVIEW STATUS
 
-STATUS: ACTIVE REVIEW / NORMALIZATION ADVANCED
+STATUS: ACTIVE REVIEW / ROUTING DATA BUILD ADVANCED
 SCOPE: tasks 1-27
 PRODUCTION: HOLD
 
 WHAT IS COMPLETE
 
-1. Source-layer coverage exists for all 27 tasks.
+1. Source-layer explanation coverage exists for all 27 tasks.
 2. Task 27 official FIPI 2026 criteria have a separate source gate, criteria map, learner self-check and normalized explanation components.
 3. Explanation routing architecture exists for tasks 1-27:
    - 58-RUSSIAN-EXPLANATION-ROUTING-SPEC.txt
@@ -16,99 +16,89 @@ WHAT IS COMPLETE
    - 65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json
 5. Canonical local build/merge design exists:
    - 64-RUSSIAN-EXPLANATION-CANONICAL-BUILD-SPEC.txt
-6. Current production trainer remains unchanged.
-7. Codex has not been used for this content build.
+6. Routing tag index exists:
+   - 75-RUSSIAN-EXPLANATION-ROUTING-TAG-INDEX.json
+7. Current production trainer remains unchanged.
+8. Codex has not been used for this content/routing build.
 
-NORMALIZATION COMPLETED
+CONTENT NORMALIZATION
 
-A. WAVE 2
-- 45-RUSSIAN-EXPLANATION-WAVE2-TEXT-LEXICAL-1-3-v0.1.json: normalized to common unit contract.
-- 46-RUSSIAN-EXPLANATION-WAVE2-NORMS-4-8-v0.1.json: normalized; internal verified orthoepic/paronym derivative sources no longer mislabeled as raw official FIPI files.
-- 47-RUSSIAN-EXPLANATION-WAVE2-TEXT-22-26-v0.1.json: normalized; all units now include explicit examples; task 25 legacy synonym route remains separate from current phraseology.
+- Wave 2 files 45-47 normalized to the common explanation-unit contract.
+- Task 27 file 55 normalized and linked to accepted Skill Graph IDs.
+- Wave 1 files 36 and 38 normalized directly.
+- Large source-reviewed files 34/40/41 use safe examples overlay 63 rather than destructive full rewrite.
+- Task 11 internal splits: file 61.
+- Task 14 internal splits: file 62.
+- Task 21 current-rule splits: file 67.
+- Additional task-14 hyphenated-adverb/repeated-word splits: file 72.
 
-B. TASK 27
-- routing map fixed to use actual Skill Graph subskills rather than explanation IDs;
-- 55-RUSSIAN-ESSAY-27-EXPLANATION-COMPONENTS-v0.1.json normalized to common unit contract;
-- source/volume gate has its own explanation unit;
-- K6 has a criterion-linked explanation without inventing a nonexistent ethics subskill;
-- current Skill Graph still has no standalone factual-accuracy subskill, so K4 is not falsely treated as exact skill diagnosis.
+IMPORTANT CONTENT FINDINGS
 
-C. WAVE 1 DIRECT NORMALIZATION
-- 32-RUSSIAN-EXPLANATION-BANK-v0.1.json: already conforms for N/NN prototype.
-- 36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json: normalized.
-- 38-RUSSIAN-EXPLANATION-ORTHOGRAPHY-13-14-v0.1.json: normalized.
+TASK 11
+The initial four internal branches do NOT fully cover every current card.
+Current `тушёнка / напряжённый` requires a suffix/spelling branch not yet represented by the four precise explanation IDs.
+Decision: do not force exact routing; use broad fallback until the missing rule branch is verified and added.
 
-D. TASK 11 GRANULARITY
-COMPLETE AT CONTENT LAYER.
-Created:
-- 61-RUSSIAN-EXPLANATION-TASK11-SUFFIX-SPLITS-v0.1.json
-Internal explanation IDs:
-- suffix_spelling_adjectives
-- suffix_spelling_verbs
-- suffix_spelling_nouns
-- suffix_spelling_adverbs
-These remain linked to the accepted Skill Graph node `suffix_spelling_by_part_of_speech`; no Skill Graph change.
+TASK 14
+The current 2026 card showed two missing precise branches:
+- `по-видимому` -> hyphenated PO- adverb model;
+- `давным-давно` -> repeated-word hyphen model.
+These are now covered by file 72.
+`полдня` remains needs_followup because a dedicated ПОЛ- spelling branch has not yet been added.
 
-E. TASK 14 GRANULARITY
-COMPLETE AT CONTENT LAYER.
-Created:
-- 62-RUSSIAN-EXPLANATION-TASK14-WRITING-SPLITS-v0.1.json
-Internal explanation IDs:
-- solid_separate_conjunctions
-- solid_separate_prepositions
-- solid_separate_adverbs
-- separate_particles_pronouns
-- hyphenated_models
-These remain linked to the accepted Skill Graph node `solid_separate_hyphenated_spelling`; no Skill Graph change.
+ROUTING TAG DATA BUILT
 
-F. LARGE WAVE-1 FILE SAFETY
-Instead of destructively rewriting large source-reviewed files 34, 40 and 41 through the GitHub contents API, missing required example arrays are supplied through:
-- 63-RUSSIAN-EXPLANATION-WAVE1-EXAMPLES-OVERLAY-v0.1.json
+Schema:
+- 65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json
 
-Overlay merge rule:
-- match by explanation_id;
-- add/replace only `examples`;
-- preserve source rule/algorithm/links;
-- exact target must exist once;
-- canonical local build will fail on missing/duplicate target.
+Index:
+- 75-RUSSIAN-EXPLANATION-ROUTING-TAG-INDEX.json
 
-Wave-1 manifest 43 now records this overlay and the task-11/task-14 splits.
+Explicit tag files:
+- 66-RUSSIAN-EXPLANATION-ROUTING-TAGS-PILOT-v0.1.json -> tasks 7, 8, 18, 22
+- 68-RUSSIAN-EXPLANATION-ROUTING-TAGS-ORTHO-PUNCT-v0.1.json -> tasks 15, 16, 21
+- 70-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK10-v0.1.json -> task 10
+- 71-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK9-v0.1.json -> task 9, word-level with unresolved items kept needs_followup
+- 73-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK12-14-v0.1.json -> tasks 12 and current task-14 variant
+- 74-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK17-20-v0.1.json -> tasks 17, 19, 20
 
-ROUTING STATUS
+Task 4:
+- 69-RUSSIAN-TASK4-ORTHOEPY-ROUTING-AUTOTAG-SPEC.txt
+- manual tagging of all orthoepic cards is unnecessary;
+- word-level routing can be generated deterministically from existing bankEntryIds;
+- narrower POS routing stays HOLD until explicit verified POS metadata exists.
 
-59-RUSSIAN-EXPLANATION-TASK-ROUTING-MAP.json now links:
-- task 11 -> four internal suffix explanation IDs;
-- task 14 -> five internal writing explanation IDs;
-- task 27 -> actual Skill Graph subskills + separate candidate explanation IDs including hard-gate and ethics units.
+CURRENT TAGGED OR AUTOTAG-READY TASKS
 
-65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json defines additive external tags for:
-- item
-- option
-- position
-- word
-- matching position
-- expert/self-check component
+4, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22
 
-No current trainer cards need to be modified to store these tags.
+This does NOT mean the other tasks lack explanations. Explanation coverage is still 27/27. It only means explicit external item/word/position routing metadata has now been built for these tasks.
+
+ROUTING SAFETY FINDINGS
+
+- Task 8: exact only by A-E matching position, never by total score.
+- Task 9: rows mix root-rule families; narrow mastery updates only from reviewed word tags. Several words deliberately remain needs_followup.
+- Task 10: current correct rows 2/3/4 isolate exact rule families; mixed incorrect rows stay broad.
+- Task 12: exact word-level split between finite verb endings and participle suffixes.
+- Task 14: exact only where the corresponding internal explanation model exists; no invented rule for ПОЛ-.
+- Task 15: numbered N/NN positions allow exact position routing; known exceptions link to exception bank.
+- Task 16: current option 3 is kept partial because the accepted Skill Graph has no dedicated homogeneous/nonhomogeneous-definition node.
+- Task 17: position 2 exact detached-definition boundary; internal coordination positions remain partial.
+- Task 19: exact boundaries plus exact negative evidence for homogeneous subordinate clauses joined by single И.
+- Task 20: conjunction junction is exact; other positions update only the broader mixed-complex-sentence skill.
+- Task 21: current exact rule splits created for dash/colon/comma variants.
+- Task 22: exact only by A-E matching position, not total score.
 
 WHAT REMAINS
 
-1. Source provenance audit of older wave-1/exception-bank source_refs:
-- official_fipi only for actual official documents/identifiers;
-- generated verified banks -> internal_verified_source;
-- vague source identifiers must be resolved before content_reviewed/integration.
-
-2. Build actual routing tag DATA for current 174 trainer items/positions where exact diagnosis is useful.
-Priority:
-- task 4 word/bankEntryId;
-- task 7 target-word morphology;
-- task 8 matching positions/error class;
-- tasks 9-16 mixed word/option rules;
-- task 18 numbered positions;
-- task 21 sentence rule family;
-- task 22 A-E matches;
-- task 24 option features;
+1. Continue routing tags for tasks where they materially improve diagnosis:
+- task 11 after missing suffix branch is added;
+- task 13 if option-level rule family adds value beyond the existing broad НЕ/НИ explanation;
+- tasks 23-24;
+- task 25 legacy/current split metadata;
 - task 26 multiple cohesion means.
+
+2. Source provenance audit of older wave-1/exception-bank source_refs.
 
 3. Task 27 word counter:
 Audit current implementation against official FIPI word-count rules before using the 149/150 boundary as anything more than a technical warning.
@@ -116,7 +106,7 @@ Audit current implementation against official FIPI word-count rules before using
 4. Canonical local build:
 When project files are available locally/container-side, follow 64-RUSSIAN-EXPLANATION-CANONICAL-BUILD-SPEC.txt:
 - parse all JSON;
-- merge overlay/splits;
+- merge overlays/splits;
 - validate required fields;
 - validate Skill Graph links;
 - validate routing links;
@@ -125,22 +115,13 @@ When project files are available locally/container-side, follow 64-RUSSIAN-EXPLA
 
 5. Final learner wording/editorial review after canonical build.
 
-CONTENT REVIEW PRINCIPLES
-
-- Rozental is the primary language-rule source.
-- FIPI is authoritative for current exam format, criteria and official lists.
-- Do not infer a narrow student weakness from a mixed item unless the result identifies the relevant position/word/option.
-- Do not turn a mnemonic into a linguistic rule.
-- Do not overload a correct-answer feedback card with a full textbook chapter.
-- Long reference material may exist in the knowledge bank; learner feedback remains layered and compact.
-
 CURRENT DECISION
 
 CONTENT COVERAGE: GO (27/27)
 SOURCE LAYER: GO
 DATA NORMALIZATION: ADVANCED / NOT YET MACHINE-CANONICAL
 ROUTING ARCHITECTURE: READY
-ROUTING TAG DATA: NOT YET BUILT
+ROUTING TAG DATA: ACTIVE / SUBSTANTIAL FIRST PASS COMPLETE
 PRODUCTION INTEGRATION: HOLD
 CURRENT TRAINER: UNCHANGED
 CODEX: NOT REQUIRED
