@@ -1,5 +1,5 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.0.1",
   "subject":"russian",
   "exam":"ege",
   "purpose":"verified_routing_tags_current_tasks_12_14",
@@ -38,7 +38,7 @@
         {"position_id":"option2_word1","source_locator":"(ПО)ЗИМНЕМУ парку -> по зимнему парку","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"solid_separate_hyphenated_spelling","diagnostic_confidence":"partial"},
         {"position_id":"option2_word2","source_locator":"КАКИМ(НИБУДЬ) -> каким-нибудь","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"hyphenated_models","diagnostic_confidence":"exact"},
         {"position_id":"option3_word1","source_locator":"ЧТО(БЫ) -> что бы","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"separate_particles_pronouns","diagnostic_confidence":"exact"},
-        {"position_id":"option3_word2","source_locator":"(ПОЛ)ДНЯ -> полдня","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"solid_separate_hyphenated_spelling","diagnostic_confidence":"needs_followup"},
+        {"position_id":"option3_word2","source_locator":"(ПОЛ)ДНЯ -> полдня","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"pol_half_spelling","diagnostic_confidence":"exact"},
         {"position_id":"option4_word1","source_locator":"ПОЧЕМУ(ТО) -> почему-то","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"hyphenated_models","diagnostic_confidence":"exact"},
         {"position_id":"option4_word2","source_locator":"(ПО)ВИДИМОМУ -> по-видимому","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"hyphenated_adverbs_po_model","diagnostic_confidence":"exact"},
         {"position_id":"option5_word1","source_locator":"(ПО)ЭТОМУ -> поэтому","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"solid_separate_adverbs","diagnostic_confidence":"partial"},
@@ -46,12 +46,12 @@
       ],
       "legacy":false,
       "status":"source_verified",
-      "review_notes":"Current correct options are 1 and 4. Exact word tags are used only where the internal explanation bank actually contains the relevant model. `полдня` remains needs_followup because half-word spelling is not yet represented by a dedicated internal task-14 explanation unit."
+      "review_notes":"Current correct options are 1 and 4. `полдня` is now exact through the dedicated Rozental-derived POL- branch in file 80. Only entries whose current internal explanation remains broader than the exact construction stay partial."
     }
   ],
   "validation_notes":[
     "Current trainer answers are task 12 = 134 and task 14 variant 1 = 14.",
-    "New explanation IDs hyphenated_adverbs_po_model and hyphenated_repeated_words exist in file 72.",
+    "Explanation IDs hyphenated_adverbs_po_model and hyphenated_repeated_words exist in file 72; pol_half_spelling exists in file 80.",
     "No source trainer card or answer was changed."
   ],
   "status":"source_verified_partial_precision"
