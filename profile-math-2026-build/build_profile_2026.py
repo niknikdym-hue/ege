@@ -4,10 +4,15 @@ from pathlib import Path
 import fitz
 from PIL import Image, ImageChops
 
-REPO=Path(__file__).resolve().parents[1]
-ROOT=REPO/'ege-matematika-profil-demoversiya-2026'
-SRC=REPO/'matematika-source-2026'/'original'/'МА-11 ЕГЭ 2026 ДЕМО_профильный.pdf'
 PREFIX='ege-matematika-profil-demoversiya-2026'
+HERE=Path(__file__).resolve()
+if HERE.parent.name=='scripts' and HERE.parent.parent.name==PREFIX:
+    ROOT=HERE.parent.parent
+    REPO=ROOT.parent
+else:
+    REPO=HERE.parents[1]
+    ROOT=REPO/PREFIX
+SRC=REPO/'matematika-source-2026'/'original'/'МА-11 ЕГЭ 2026 ДЕМО_профильный.pdf'
 PACKAGE_VERSION='1.0'
 CONTENT_VERSION='2026.1'
 STORAGE_KEY='eksamio_ege_math_profile_demo_2026_v1_0'
