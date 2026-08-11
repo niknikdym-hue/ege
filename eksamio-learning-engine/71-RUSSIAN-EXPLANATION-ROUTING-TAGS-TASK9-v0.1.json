@@ -1,5 +1,5 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.0.1",
   "subject":"russian",
   "exam":"ege",
   "purpose":"word_level_routing_tags_current_task_9",
@@ -29,18 +29,18 @@
         {"position_id":"row4_word3","source_locator":"ош..ломлённый -> ошеломлённый","subskill_ids":["root_spelling_selection"],"explanation_id":"root_spelling_selection","diagnostic_confidence":"needs_followup"},
 
         {"position_id":"row5_word1","source_locator":"разб..гатеть -> разбогатеть","subskill_ids":["root_spelling_selection"],"explanation_id":"root_spelling_selection","diagnostic_confidence":"needs_followup"},
-        {"position_id":"row5_word2","source_locator":"пор..сль -> поросль","subskill_ids":["alternating_root_vowels"],"explanation_id":"alternating_root_vowels","exception_ids":["alt_root_rast_ros_group"],"diagnostic_confidence":"exact"},
+        {"position_id":"row5_word2","source_locator":"пор..сль -> поросль","subskill_ids":["alternating_root_vowels"],"explanation_id":"alternating_root_vowels","diagnostic_confidence":"exact"},
         {"position_id":"row5_word3","source_locator":"провозгл..шать -> провозглашать","subskill_ids":["root_spelling_selection"],"explanation_id":"root_spelling_selection","diagnostic_confidence":"needs_followup"}
       ],
       "legacy":false,
       "status":"source_verified",
-      "review_notes":"Task 9 rows deliberately mix rule families, so row-level mastery routing is unsafe. Only word-level classifications with clear rule evidence are marked exact. Ambiguous lexical/root classifications remain on root_spelling_selection with needs_followup rather than being guessed."
+      "review_notes":"Task 9 rows deliberately mix rule families, so row-level mastery routing is unsafe. Only word-level classifications with clear rule evidence are marked exact. Ambiguous lexical/root classifications remain on root_spelling_selection with needs_followup rather than being guessed. `поросль` is treated as the regular РАСТ-/РАЩ-/РОС- alternation, not as an exception."
     }
   ],
   "validation_notes":[
     "Current trainer answer is 234; routing does not derive correctness from rule tags and does not alter the answer.",
     "The file intentionally contains needs_followup tags for words whose narrower school-rule classification was not independently verified in this pass.",
-    "Exact alternating-root and special-root tags are consistent with the Rozental-derived explanation/exception banks."
+    "Exact alternating-root and special-root tags are consistent with the Rozental-derived explanation bank."
   ],
   "status":"source_verified_partial_precision"
 }
