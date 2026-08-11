@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "exam": "ege",
+  "status": "design_only",
+  "production_integration": false,
+  "source_policy_ref": "23-RUSSIAN-EXPLANATION-CONTENT-SPEC.txt",
+  "bank_schema_ref": "24-RUSSIAN-EXPLANATION-BANK-SCHEMA.json",
+  "skill_graph_ref": "03-RUSSIAN-SKILL-GRAPH.json",
+  "priority_wave": "orthography_and_punctuation",
+  "task_groups": [
+    {
+      "task_number": 9,
+      "skill_id": "orthographic_norms",
+      "explanation_units": [
+        "root_spelling_selection",
+        "checked_unstressed_root_vowels",
+        "unchecked_root_vowels",
+        "alternating_root_vowels",
+        "special_root_vowel_rules"
+      ],
+      "handoff_readiness": "diagnostic_required",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 10,
+      "skill_id": "orthographic_norms",
+      "explanation_units": [
+        "prefix_spelling",
+        "prefix_z_s",
+        "prefix_pre_pri",
+        "vowels_y_i_after_prefix",
+        "separating_hard_soft_signs"
+      ],
+      "handoff_readiness": "diagnostic_required",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 11,
+      "skill_id": "orthographic_norms",
+      "explanation_units": [
+        "suffix_spelling_by_part_of_speech"
+      ],
+      "handoff_readiness": "diagnostic_required",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 12,
+      "skill_id": "orthographic_norms",
+      "explanation_units": [
+        "verb_conjugation_endings",
+        "participle_suffixes"
+      ],
+      "handoff_readiness": "diagnostic_required",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 13,
+      "skill_id": "orthographic_norms",
+      "explanation_units": [
+        "ne_contextual_spelling",
+        "ni_pronoun_adverb_spelling"
+      ],
+      "handoff_readiness": "diagnostic_required",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 14,
+      "skill_id": "orthographic_norms",
+      "explanation_units": [
+        "solid_separate_hyphenated_spelling"
+      ],
+      "handoff_readiness": "diagnostic_required",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 15,
+      "skill_id": "orthographic_norms",
+      "explanation_units": [
+        "n_nn_spelling"
+      ],
+      "handoff_readiness": "diagnostic_required",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 16,
+      "skill_id": "punctuation_norms",
+      "explanation_units": [
+        "homogeneous_members_punctuation",
+        "clause_boundary_vs_homogeneous"
+      ],
+      "handoff_readiness": "diagnostic_required",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 17,
+      "skill_id": "punctuation_norms",
+      "explanation_units": [
+        "detached_attributes",
+        "participial_phrase_detachment",
+        "gerundial_phrase_detachment"
+      ],
+      "handoff_readiness": "exact",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 18,
+      "skill_id": "punctuation_norms",
+      "explanation_units": [
+        "introductory_words_punctuation",
+        "forms_of_address_punctuation"
+      ],
+      "handoff_readiness": "diagnostic_required",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 19,
+      "skill_id": "punctuation_norms",
+      "explanation_units": [
+        "subordinate_clause_boundaries",
+        "homogeneous_subordinate_clauses"
+      ],
+      "handoff_readiness": "task_level_only",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 20,
+      "skill_id": "punctuation_norms",
+      "explanation_units": [
+        "mixed_connection_complex_sentence",
+        "junction_of_conjunctions"
+      ],
+      "handoff_readiness": "task_level_only",
+      "status": "source_audit_required"
+    },
+    {
+      "task_number": 21,
+      "skill_id": "punctuation_norms",
+      "explanation_units": [
+        "dash_rule_analysis",
+        "colon_rule_analysis",
+        "comma_rule_analysis"
+      ],
+      "handoff_readiness": "diagnostic_required",
+      "status": "source_audit_required"
+    }
+  ],
+  "integration_rule": "No unit in this map may modify production trainer code. Source audit and content review are required before any integration task."
+}
