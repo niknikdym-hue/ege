@@ -1,0 +1,172 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXPLANATION WAVE 2 REVIEW
+
+SCOPE: tasks 1-8, 22-26
+REVIEW TYPE: source/content-architecture + connector cross-link review
+DECISION: SOURCE-GO / INTEGRATION-HOLD
+PRODUCTION CHANGES: NONE
+CODEX: NOT USED
+
+1. SOURCE POLICY
+
+PASS.
+- Rozental remains the primary rule/explanation/boundary-case source.
+- Verified FIPI/current source corpus controls exam format and official lists.
+- Task 4 uses the verified orthoepic bank for canonical stress forms.
+- Task 5 uses the current verified paronym/source corpus for canonical pairs.
+- Rogaleva is supporting specialist evidence for phraseology only; it does not replace the general source policy.
+
+2. SKILL GRAPH CROSS-LINK REVIEW
+
+PASS FOR THE IDS USED IN WAVE 2.
+The following Wave 2 links were checked against 03-RUSSIAN-SKILL-GRAPH.json through the GitHub connector:
+
+Task 1:
+- text_cohesion
+- cohesion_gap_grammatical_fit
+- cohesion_determinative_pronoun
+- cohesion_demonstrative_pronoun
+
+Task 2:
+- lexical_norms_and_semantics
+- lexical_meaning_in_context
+- definition_context_matching
+- dictionary_sense_selection
+
+Task 3:
+- text_style_analysis
+- functional_style_identification
+- genre_and_communicative_purpose
+- functional_semantic_speech_type
+- language_feature_evidence
+- expressive_means_in_context
+
+Task 4:
+- orthoepic_norms
+- normative_stress_selection
+- stress_nouns
+- stress_adjectival_forms
+- stress_verbs
+- stress_participles
+- stress_gerunds
+- stress_adverbs
+
+Tasks 5-6:
+- paronym_context_choice
+- lexical_redundancy
+- lexical_collocation_correction
+
+Task 7:
+- morphological_norms
+- noun_form_norms
+- numeral_form_norms
+- verb_form_norms
+
+Task 8:
+- syntactic_norms
+- government_case_norm
+- indirect_speech_construction
+- uncoordinated_apposition_construction
+- gerundial_construction_norm
+- homogeneous_members_construction
+
+Task 22 checked device IDs:
+- expressive_means
+- device_assonance
+- device_hyperbole
+- device_metonymy
+- device_anaphora
+- device_parcellation
+- device_homogeneous_rows
+- device_address
+- device_epithet
+- device_comparison
+
+Task 23:
+- reading_comprehension
+- content_statement_verification
+- statement_polarity_control
+
+Task 24:
+- speech_type_analysis
+- narration_identification
+- description_identification
+- reasoning_identification
+- semantic_relation_between_sentences
+
+Task 25:
+- phraseologism_identification
+- contextual_synonym_selection
+
+Task 26:
+- text_cohesion
+- cohesion_demonstrative_pronoun
+- cohesion_possessive_pronoun
+- cohesion_conjunction
+- cohesion_word_forms
+- cohesion_cognate_words
+
+3. CURRENT TRAINER RELEVANCE
+
+PASS FOR THE SOURCE LAYER.
+Wave 2 was checked against the repository-visible current trainer preview/source bank.
+Examples used to anchor the content include:
+- task 1: определительные/указательные местоимения and multiple allowed answers;
+- task 2: context meanings such as ПРОЗРЕНИЕ/КРОВЬ, ОСНОВА, ЖИВОЙ;
+- task 3: combined style/type/lexical/grammar/expressive claims;
+- task 4: current 2026 orthoepic bank and older legacy format;
+- task 5: гарантийный/гарантированный, праздный/праздничный, памятливый/памятный;
+- task 6: очень оптимальные; совершить победу;
+- task 7: запечатлеть, с повидлом, полутораста, поезжай;
+- task 8: current five named error classes;
+- task 22: current/historical expressive-device matching;
+- task 23: соответствует / не соответствует;
+- task 24: narration/description/reasoning + semantic relations;
+- task 25: current phraseologism vs one historical contextual-synonym item;
+- task 26: interphrase cohesion.
+
+4. IMPORTANT CONTENT DECISIONS
+
+A. TASK 4
+Do not teach a fake universal stress rule. The official/verified bank is the canonical memory set; general patterns and contrasts are support only.
+
+B. TASK 8
+The source explanation is ready, but precise post-error runtime routing is conditional on position-level diagnosis. Until then, task-level feedback should not pretend to know which of five error classes the learner misunderstood.
+
+C. TASK 25
+Current phraseologism content and historical contextual-synonym content are separated. The historical card must not enter the current task-25 personal route unless explicitly marked legacy.
+
+D. TASK 22
+The learner-facing table may grow with Rozental, but runtime subskill links should only use verified Skill Graph IDs represented by the current bank.
+
+5. STRUCTURAL VALIDATION LIMITATION
+
+A local machine JSON parse was attempted without Codex, but the execution container could not resolve raw.githubusercontent.com. This is an environment/network limitation, not a discovered file error.
+
+Therefore current status is:
+- connector/file-existence review: PASS;
+- Skill Graph ID cross-link review: PASS for IDs used;
+- semantic/source review: PASS at source layer;
+- independent machine JSON parse: STILL REQUIRED before integration.
+
+Do not use this limitation as a reason to invoke Codex now. A machine parse can be done later when the folder is materialized locally or during the final package validation.
+
+6. INTEGRATION DECISION
+
+HOLD.
+Do not modify T123 / JS / CSS / HTML / localStorage / trainer_item_id / answers / scoring.
+
+Required before integration:
+1. machine JSON parse/schema validation;
+2. final learner wording/content review;
+3. exact item->subskill routing design where available;
+4. safe fallback to current feedback;
+5. control-mode/demo-mode no-hint regression checks;
+6. rollback plan.
+
+7. CURRENT RESULT
+
+WAVE 2 SOURCE CONTENT: GO
+WAVE 2 PRODUCTION INTEGRATION: HOLD
+CURRENT TRAINER: UNCHANGED
+CODEX QUOTA SPENT: 0
