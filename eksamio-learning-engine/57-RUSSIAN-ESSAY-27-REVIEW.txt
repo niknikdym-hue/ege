@@ -1,0 +1,112 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EGE TASK 27 REVIEW
+
+SCOPE: task 27 / EGE Russian 2026
+REVIEW TYPE: official-source + content-architecture review
+DECISION: SOURCE-GO / INTEGRATION-HOLD
+PRODUCTION CHANGES: NONE
+CODEX: NOT USED
+
+1. OFFICIAL SOURCE
+
+PASS.
+The 2026 FIPI methodological materials for regional subject commissions were used as the current authoritative criteria source.
+The criteria table and expert guidance confirm:
+- task 27 is expert-evaluated;
+- K1-K10;
+- maximum 22 points;
+- K1=0 due missing/incorrect author position forces K2=0 and K3=0;
+- 149 words or fewer under official counting rules means the task is not completed and receives zero across criteria;
+- work not based on the provided text is not evaluated;
+- a fully copied/retold source text without commentary receives zero across K1-K10.
+
+2. CRITERIA MAP
+
+PASS AT SOURCE LAYER.
+53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json records:
+- score range for each K1-K10 criterion;
+- K1 dependency;
+- K2 component structure;
+- K3 argument requirements;
+- K4-K10 error scales;
+- hard gates;
+- explicit prohibition on claiming automatic official scoring.
+
+The maxima sum to 22.
+
+3. K2 LEARNING CONTENT
+
+PASS.
+The explanation layer reflects the official distinction:
+- example-illustration;
+- explanation of the example;
+- second distinct example;
+- explanation of the second example;
+- naming the semantic relationship;
+- explaining HOW that relationship is realized in the two examples.
+
+Important official methodological insight preserved:
+A generic formula such as “the examples complement each other” is not sufficient unless the student explains in what concrete way the second example adds to the first.
+The semantic-link list is treated as open, not exhaustive.
+
+4. K3 LEARNING CONTENT
+
+PASS.
+The explanation layer separates:
+- statement of own attitude;
+- justification;
+- specific example-argument;
+- explanation/conclusion connecting the example to the student's thesis.
+
+The learner layer does not reduce K3 to “I agree with the author”.
+
+5. EXPERT SCORE VS SELF-EVALUATION
+
+PASS AT DESIGN LEVEL.
+54-RUSSIAN-ESSAY-27-LEARNER-SELF-CHECK-SPEC.txt requires a visible distinction between:
+- expert/official scoring;
+- learner self-evaluation;
+- technical checks such as approximate word count.
+
+No browser-generated result may be called an official expert score.
+
+6. NO-HINT SAFETY
+
+PASS AT DESIGN LEVEL.
+During demo/control essay writing:
+- no author-position hints;
+- no example suggestions;
+- no semantic-link prompts;
+- no generated argument;
+- no live rewriting/correction.
+
+Criterion-based explanations are post-completion only.
+
+7. WORD COUNT
+
+IMPORTANT IMPLEMENTATION HOLD.
+The existing/new browser counter must not be treated as an official threshold unless it implements FIPI counting rules exactly.
+Before integration:
+- audit current word-counter logic;
+- either implement official-compatible counting or label the counter as approximate/technical;
+- test 149/150 boundary and special cases.
+
+8. WHAT IS STILL PENDING
+
+- machine JSON/schema validation of new files;
+- final learner wording/editorial review;
+- production UI integration design;
+- regression tests;
+- rollback plan;
+- exact handling of self-evaluation state/storage;
+- any future AI evaluation spec separately.
+
+9. CURRENT DECISION
+
+TASK 27 OFFICIAL SOURCE: GO
+TASK 27 EXPLANATION CONTENT: SOURCE-GO
+TASK 27 SELF-CHECK UX: DESIGN-GO
+TASK 27 OFFICIAL AUTOMATIC SCORING: NO
+TASK 27 PRODUCTION INTEGRATION: HOLD
+CURRENT TRAINER: UNCHANGED
+CODEX QUOTA SPENT: 0
