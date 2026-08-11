@@ -1,0 +1,57 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "integration_status":"not_connected_to_production",
+  "content_version":"0.1.0",
+  "clusters":[
+    {
+      "cluster_id":"ne_ni_contrasts",
+      "subskill_ids":["ne_contextual_spelling","ni_pronoun_adverb_spelling"],
+      "exam_task_numbers":[13],
+      "items":[
+        {"exception_id":"ni_odin_vs_ne_odin","canonical_form":"ни один = никто; не один = много","rule_ref":"ni_pronoun_adverb_spelling","practice_modes":["contrast_normal_vs_exception","context_choice"],"source_ref":"rozental.doc; § 62 п. 1","status":"source_verified"},
+        {"exception_id":"ni_razu_vs_ne_raz","canonical_form":"ни разу = никогда; не раз = много раз","rule_ref":"ni_pronoun_adverb_spelling","practice_modes":["contrast_normal_vs_exception","context_choice"],"source_ref":"rozental.doc; § 62 п. 1","status":"source_verified"},
+        {"exception_id":"ni_fixed_turnovers","canonical_form":"во что бы то ни стало; как ни в чём не бывало; откуда ни возьмись; ни рыба ни мясо; ни жив ни мёртв; ни дать ни взять","rule_ref":"ni_pronoun_adverb_spelling","practice_modes":["recall_form","context_choice"],"source_ref":"rozental.doc; § 62 п. 4","status":"source_verified"},
+        {"exception_id":"ni_s_chem_ni_pri_chem","canonical_form":"остаться ни с чем; оказаться ни при чём","rule_ref":"ni_pronoun_adverb_spelling","practice_modes":["recall_form","context_choice"],"source_ref":"rozental.doc; § 62 п. 1","status":"source_verified"}
+      ]
+    },
+    {
+      "cluster_id":"conjunction_homophones",
+      "subskill_ids":["solid_separate_hyphenated_spelling"],
+      "exam_task_numbers":[14],
+      "items":[
+        {"exception_id":"chtoby_vs_chto_by","canonical_form":"чтобы — союз; что бы — местоимение + частица","memory_cue":"проверить возможность перестановки БЫ","source_ref":"rozental.doc; раздел 16 п. 1","status":"source_verified"},
+        {"exception_id":"tozhe_vs_to_zhe","canonical_form":"тоже = и; то же = то самое","memory_cue":"ТО ЖЕ часто сочетается с САМОЕ/ЧТО","source_ref":"rozental.doc; раздел 16 п. 2","status":"source_verified"},
+        {"exception_id":"takzhe_vs_tak_zhe","canonical_form":"также = и; так же = таким же образом","memory_cue":"ТАК ЖЕ часто имеет продолжение КАК","source_ref":"rozental.doc; раздел 16 п. 2","status":"source_verified"},
+        {"exception_id":"prichem_vs_pri_chem","canonical_form":"причём = в добавление; при чём — предлог + местоимение","source_ref":"rozental.doc; раздел 16 п. 3","status":"source_verified"},
+        {"exception_id":"pritom_vs_pri_tom","canonical_form":"притом = в добавление; при том — предлог + местоимение","source_ref":"rozental.doc; раздел 16 п. 3","status":"source_verified"},
+        {"exception_id":"zato_vs_za_to","canonical_form":"зато = но; за то — предлог + местоимение","source_ref":"rozental.doc; раздел 16 п. 4","status":"source_verified"},
+        {"exception_id":"itak_vs_i_tak","canonical_form":"итак = следовательно; и так — союз И + самостоятельное ТАК","source_ref":"rozental.doc; раздел 16 п. 5","status":"source_verified"}
+      ]
+    },
+    {
+      "cluster_id":"preposition_homophones",
+      "subskill_ids":["solid_separate_hyphenated_spelling"],
+      "exam_task_numbers":[14],
+      "items":[
+        {"exception_id":"vvidu_vs_v_vidu","canonical_form":"ввиду = из-за; в виду — сочетание с существительным вид","source_ref":"rozental.doc; раздел 15 п. 2","status":"source_verified"},
+        {"exception_id":"vsledstvie_vs_v_sledstvie","canonical_form":"вследствие = из-за; в следствие — сочетание с существительным следствие","source_ref":"rozental.doc; раздел 15 п. 2","status":"source_verified"},
+        {"exception_id":"naschet_vs_na_schet","canonical_form":"насчёт = о; на счёт — сочетание с существительным счёт","source_ref":"rozental.doc; раздел 15 п. 2","status":"source_verified"},
+        {"exception_id":"vrode_vs_v_rode","canonical_form":"вроде = подобно; в роде — сочетание с существительным род","source_ref":"rozental.doc; раздел 15 п. 2","status":"source_verified"}
+      ]
+    },
+    {
+      "cluster_id":"adverb_particle_boundaries",
+      "subskill_ids":["solid_separate_hyphenated_spelling"],
+      "exam_task_numbers":[14],
+      "items":[
+        {"exception_id":"nazavtra_vs_na_zavtra","canonical_form":"назавтра — наречие; на завтра — сочетание со значением срока","source_ref":"rozental.doc; § 53 п. 1","status":"source_verified"},
+        {"exception_id":"vnachale_vs_v_nachale","canonical_form":"вначале = сначала; в начале + зависимое слово","source_ref":"rozental.doc; § 53 п. 7","status":"source_verified"},
+        {"exception_id":"koe_with_preposition","canonical_form":"кое-кто, кое-какой; но кое у кого, кое с чем","source_ref":"rozental.doc; § 55 п. 3","status":"source_verified"},
+        {"exception_id":"taki_position","canonical_form":"ушёл-таки, опять-таки; но он таки ушёл","source_ref":"rozental.doc; § 55 п. 4","status":"source_verified"}
+      ]
+    }
+  ],
+  "review_notes":"Source-verified contrast bank for tasks 13-14. No production integration."
+}
