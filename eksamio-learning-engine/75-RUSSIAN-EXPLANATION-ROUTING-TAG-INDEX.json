@@ -1,35 +1,49 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.1.0",
   "subject":"russian",
   "exam":"ege",
   "purpose":"index_of_external_explanation_routing_metadata",
   "integration_status":"not_connected_to_production",
   "schema":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
   "files":[
+    {"path":"81-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK1-6-v0.1.json","tasks":[1,2,3,5,6],"status":"source_verified","precision":"item/option"},
     {"path":"66-RUSSIAN-EXPLANATION-ROUTING-TAGS-PILOT-v0.1.json","tasks":[7,8,18,22],"status":"source_verified","precision":"item/position/match_position"},
-    {"path":"68-RUSSIAN-EXPLANATION-ROUTING-TAGS-ORTHO-PUNCT-v0.1.json","tasks":[15,16,21],"status":"source_verified","precision":"position/option"},
-    {"path":"70-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK10-v0.1.json","tasks":[10],"status":"source_verified","precision":"option with broad fallback for mixed rows"},
     {"path":"71-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK9-v0.1.json","tasks":[9],"status":"source_verified_partial_precision","precision":"word; unresolved words remain needs_followup"},
+    {"path":"70-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK10-v0.1.json","tasks":[10],"status":"source_verified","precision":"option with broad fallback for mixed rows"},
+    {"path":"76-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK11-v0.1.json","tasks":[11],"status":"source_verified","precision":"word"},
     {"path":"73-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK12-14-v0.1.json","tasks":[12,14],"status":"source_verified_partial_precision","precision":"word"},
-    {"path":"74-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK17-20-v0.1.json","tasks":[17,19,20],"status":"source_verified","precision":"position"}
+    {"path":"77-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK13-v0.1.json","tasks":[13],"status":"source_verified","precision":"option"},
+    {"path":"68-RUSSIAN-EXPLANATION-ROUTING-TAGS-ORTHO-PUNCT-v0.1.json","tasks":[15,16,21],"status":"source_verified","precision":"position/option"},
+    {"path":"74-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK17-20-v0.1.json","tasks":[17,19,20],"status":"source_verified","precision":"position"},
+    {"path":"78-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK23-26-v0.1.json","tasks":[23,24,25,26],"status":"source_verified","precision":"item/option"}
   ],
   "generation_specs":[
-    {"path":"69-RUSSIAN-TASK4-ORTHOEPY-ROUTING-AUTOTAG-SPEC.txt","tasks":[4],"status":"ready_for_local_build","note":"Generate word-level tags deterministically from bankEntryIds; do not infer narrower POS subskill without verified POS metadata."}
+    {"path":"69-RUSSIAN-TASK4-ORTHOEPY-ROUTING-AUTOTAG-SPEC.txt","tasks":[4],"status":"ready_for_local_build","note":"Generate word-level tags deterministically from bankEntryIds where present; do not infer narrower POS subskill without verified POS metadata. The base current 04-01 card lacks bankEntryIds and therefore keeps task-level fallback unless separately tagged."}
   ],
   "supporting_explanation_splits":[
-    {"path":"61-RUSSIAN-EXPLANATION-TASK11-SUFFIX-SPLITS-v0.1.json","tasks":[11]},
+    {"path":"61-RUSSIAN-EXPLANATION-TASK11-SUFFIX-SPLITS-v0.1.json","tasks":[11],"note":"Includes suffix_yo_after_sibilants_verbal_derivatives for current тушёнка/напряжённый row."},
     {"path":"62-RUSSIAN-EXPLANATION-TASK14-WRITING-SPLITS-v0.1.json","tasks":[14]},
-    {"path":"67-RUSSIAN-EXPLANATION-TASK21-RULE-SPLITS-v0.1.json","tasks":[21]},
-    {"path":"72-RUSSIAN-EXPLANATION-TASK14-HYPHEN-ADVERB-SPLITS-v0.1.json","tasks":[14]}
+    {"path":"72-RUSSIAN-EXPLANATION-TASK14-HYPHEN-ADVERB-SPLITS-v0.1.json","tasks":[14]},
+    {"path":"80-RUSSIAN-EXPLANATION-TASK14-POL-SPLIT-v0.1.json","tasks":[14],"note":"POL- spelling; resolves current полдня route."},
+    {"path":"67-RUSSIAN-EXPLANATION-TASK21-RULE-SPLITS-v0.1.json","tasks":[21]}
   ],
-  "current_tagged_or_autotag_ready_tasks":[4,7,8,9,10,12,14,15,16,17,18,19,20,21,22],
-  "current_not_yet_tagged_tasks":[1,2,3,5,6,11,13,23,24,25,26,27],
+  "audits":[
+    {"path":"79-RUSSIAN-ESSAY-27-WORD-COUNT-AUDIT.txt","tasks":[27],"status":"audited","note":"Current trainer has no word counter or 150-word automatic gate; essay is not auto-scored. Future FIPI-compatible counter remains HOLD pending exact spec and tests."}
+  ],
+  "current_tagged_or_autotag_ready_tasks":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26],
+  "current_standard_routing_first_pass_complete":true,
+  "current_not_standard_tagged_tasks":[27],
+  "task_27_route":"expert_self_check",
   "notes":[
-    "Not-yet-tagged does not mean no explanation content: source-layer explanation coverage remains 27/27.",
-    "Some tasks do not need external tags because item-level routing is already unambiguous; the index tracks only explicit external routing metadata built so far.",
-    "Task 11 precise tagging is intentionally deferred for current row `тушёнка / напряжённый` until its missing suffix-rule branch is represented in the explanation bank.",
-    "Task 14 `полдня` remains needs_followup because the ПОЛ- spelling branch is not yet represented by a dedicated internal explanation unit.",
-    "No external routing metadata changes the trainer source, answer key or score."
+    "All first-part tasks 1-26 now have explicit external routing metadata or a deterministic generation specification in the first routing pass.",
+    "Coverage does not imply every mixed item is exact: precision is intentionally capped by evidence.",
+    "Task 9 still contains several word tags marked needs_followup rather than guessed narrow classifications.",
+    "Task 14 still has some broad/partial entries where a more specific learner explanation is not yet necessary or not yet represented.",
+    "Task 16 retains a partial branch for a construction not represented by a dedicated accepted Skill Graph node.",
+    "Task 25 external routing explicitly marks the 2022 contextual-synonym card legacy even though its source card currently says legacyFormat=false; the production card remains unchanged.",
+    "Task 26 multi-means items never infer a single failed subskill from an all-or-nothing wrong response.",
+    "Task 27 intentionally uses criterion-based expert/self-check routing rather than normal correct-answer routing.",
+    "No external routing metadata changes trainer source, answer key, scoring, localStorage or runtime behavior."
   ],
-  "status":"active_build"
+  "status":"first_pass_complete_for_tasks_1_26"
 }
