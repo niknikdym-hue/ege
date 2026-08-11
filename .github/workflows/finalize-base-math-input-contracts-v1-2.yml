@@ -1,0 +1,78 @@
+name: Finalize Base Math 2026 v1.2 Input Contracts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/finalize-base-math-input-contracts-v1-2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: browser-actions/setup-chrome@v1
+      - name: Install test dependencies
+        run: pip install latex2mathml selenium
+      - name: Apply per-example contracts
+        run: python ege-matematika-baza-demoversiya-2026/scripts/apply_per_example_input_contracts.py
+      - name: Build v1.2
+        run: python ege-matematika-baza-demoversiya-2026/scripts/build_demo_release.py
+      - name: Static contract gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026')
+          tm=json.loads((root/'ege-matematika-baza-demoversiya-2026-TASK-MAP.json').read_text(encoding='utf-8'))
+          cs=json.loads((root/'ege-matematika-baza-demoversiya-2026-INPUT-CONTRACT.json').read_text(encoding='utf-8'))['contracts']
+          numeric={f"{t['number']}-{v['variant']}" for t in tm['tasks'] for v in t['variants'] if v['control']=='numeric_input'}
+          assert len(numeric)==58,(len(numeric),numeric)
+          assert numeric==set(cs),(numeric-set(cs),set(cs)-numeric)
+          runtime=(root/'templates/runtime.js').read_text(encoding='utf-8')
+          assert 'целый ответ' not in runtime
+          assert 'NUMERIC_FORMATS' not in runtime
+          assert 'INPUT_CONTRACTS=__INPUT_CONTRACTS__' in runtime
+          generated=(root/'ege-matematika-baza-demoversiya-2026-T123-47.txt').read_text(encoding='utf-8')
+          assert '__INPUT_CONTRACTS__' not in generated
+          assert 'целый ответ' not in generated
+          print('STATIC INPUT CONTRACT GATE PASS 58/58')
+          PY
+      - name: Serve preview
+        run: |
+          cd ege-matematika-baza-demoversiya-2026
+          python -m http.server 8765 > /tmp/base-math-http.log 2>&1 &
+          echo $! > /tmp/base-math-http.pid
+          sleep 2
+      - name: Run legacy browser regression
+        env:
+          EKSAMIO_PREVIEW_URL: http://127.0.0.1:8765/ege-matematika-baza-demoversiya-2026-PREVIEW.html
+          EKSAMIO_EVIDENCE_OUT: tests/evidence/v1.2-selenium-evidence.json
+        run: cd ege-matematika-baza-demoversiya-2026 && python tests/test_v1_2_selenium.py
+      - name: Run 58-example input contract browser matrix
+        env:
+          EKSAMIO_PREVIEW_URL: http://127.0.0.1:8765/ege-matematika-baza-demoversiya-2026-PREVIEW.html
+          EKSAMIO_INPUT_EVIDENCE_OUT: tests/evidence/v1.2-input-contract-evidence.json
+        run: cd ege-matematika-baza-demoversiya-2026 && python tests/test_input_contracts_v1_2.py
+      - name: Remove obsolete base-math release ZIPs
+        run: |
+          find . -maxdepth 1 -type f -iname '*matematika*baza*.zip' ! -name 'ege-matematika-baza-demoversiya-2026-v1.2.zip' -print -delete
+          rm -f ege-matematika-baza-demoversiya-2026-v1.2-artifact-run.txt
+      - name: Commit final v1.2
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m 'Finalize base mathematics 2026 v1.2 per-example input validation'
+          git pull --rebase origin main
+          git push origin main
