@@ -1,0 +1,296 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — PUBLIC UX SPEC
+
+STATUS: DESIGN READY / NO PRODUCTION IMPLEMENTATION
+FUTURE_URL: /trenazhery/russkiy/isklyucheniya/
+CATALOG_LABEL: Исключения и особые случаи
+PAGE_TITLE_IN_UI: Тренажёр исключений
+CURRENT_TILDA_PAGE: NOT CREATED
+CURRENT_EGE_TRAINER: UNCHANGED
+
+PRODUCT ROLE
+
+Это отдельный бесплатный точечный тренажёр русского языка.
+Он не заменяет основной тренажёр ЕГЭ и не дублирует полностью тренажёры ударений/паронимов.
+
+Главная задача:
+помочь ученику системно закрепить исключения, трудные нормативные формы и случаи, где обычная короткая формула правила даёт ошибку.
+
+CORE ENTRY MODES
+
+1. ВСЕ ИСКЛЮЧЕНИЯ
+Доступен без истории ученика.
+Смешанная короткая сессия из новых/повторяемых high-value случаев.
+
+2. МОИ ИСКЛЮЧЕНИЯ
+Показывается как персональный режим, когда есть learner state.
+Содержит только exception_id, на которых ученик ошибался или не прошёл transfer/retention.
+
+3. РАБОТА НАД ОШИБКАМИ
+Контекстный вход из основного Learning Engine.
+Не обязательно отдельная постоянная вкладка на первом публичном релизе.
+Получает конкретный exception_id/набор exception_ids после точной диагностики.
+
+TOP PAGE STRUCTURE
+
+A. HERO / START
+- H1: «Тренажёр исключений по русскому языку»
+- короткое обещание без маркетинговой воды:
+  «Исключения, трудные формы и случаи, где легко применить не то правило.»
+- primary CTA: «Начать тренировку»
+- secondary when state exists: «Мои исключения»
+
+Не писать количество карточек как постоянное рекламное преимущество: банк будет расти.
+
+B. QUICK PROGRESS
+Если есть learner state:
+- «Повторить сегодня» — due count;
+- «В работе» — active personal exceptions;
+- «Закреплено» — stabilized count.
+
+Если state нет:
+- блок не показывать пустым;
+- не выводить заглушки/нулевые декоративные метрики.
+
+C. TOPIC FILTERS
+Не обязательны для первой сессии, но доступны после старта/через настройку:
+- Орфография
+- Морфология
+- Пунктуация
+- Лексические нормы
+- Синтаксис
+- Орфоэпия
+
+Внутренние cluster names не обязаны показываться ученику как технические skill IDs.
+
+D. EXPLANATION ABOUT METHOD
+Короткий блок:
+«Не просто запоминаем список: различаем правило и исключение, отвечаем без подсказки и возвращаем трудные случаи позже.»
+
+Не показывать архитектурные термины Learning Engine, mastery, retention, routing.
+
+SESSION SCREEN
+
+HEADER
+- progress inside current session: e.g. `4 из 10`;
+- no exam timer;
+- optional «Завершить»;
+- optional topic label in plain language.
+
+CARD
+- one task at a time;
+- no visual clutter;
+- prompt first;
+- answer control suited to response_kind;
+- primary button `Проверить` for short-text/choice when not auto-checking on selection;
+- `Не знаю` allowed only if product testing confirms it improves learning; default first version can omit it.
+
+AFTER CHECK — CORRECT
+Show compact feedback:
+- ✓ «Верно»
+- short norm/contrast
+- optional `Посмотреть правило`
+
+Do not dump full Rosenthal explanation after every correct answer.
+
+AFTER CHECK — WRONG
+Show:
+1. `Неверно` without punitive wording;
+2. correct answer;
+3. exact `why` from practice card/source exception;
+4. expandable `Правило и примеры`;
+5. action `Дальше`.
+
+The same sentence must not be repeated immediately as proof of mastery.
+A later independent context is scheduled through session policy.
+
+RULE DRAWER / CARD
+
+Opened voluntarily after feedback or before answer only in a future warm-up scenario.
+Suggested layers:
+- Короткое правило
+- Как различить
+- Пример
+- Ловушка
+- Исключения/контраст, if relevant
+
+Do not show source filenames/page locators to normal learners by default.
+Provenance is internal/audit data.
+
+SESSION RESULT
+
+Show learning result rather than raw celebratory score only.
+
+Required:
+- completed count;
+- correct first attempts;
+- «Нужно повторить» — exception items still active;
+- «Закрепили сегодня» — items that passed the session-level criterion (not permanent mastery);
+
+Useful CTA:
+- `Повторить ошибки`
+- `Ещё одна короткая тренировка`
+- `Вернуться к тренажёрам`
+
+Do NOT claim permanent mastery from one session.
+
+MY EXCEPTIONS SCREEN
+
+Sections:
+- Повторить сегодня
+- В работе
+- Закреплено
+
+Card/list item can show:
+- learner label (e.g. «ПРЕБЫВАТЬ / ПРИБЫВАТЬ»);
+- topic label;
+- last status;
+- next due in human-readable form.
+
+Do not expose:
+- internal exception_id;
+- raw skill/subskill IDs;
+- algorithmic mastery probability unless a future product explicitly needs it.
+
+FILTER / SORT
+
+Default:
+- due / unstable first.
+
+Optional filters:
+- topic;
+- only errors;
+- only new;
+- stabilized.
+
+Do not make user manually configure a complex study plan before they can start.
+
+MOBILE UX
+
+Primary target includes mobile.
+Requirements:
+- one-column card;
+- touch targets >= comfortable mobile size;
+- answer options full-width where practical;
+- no horizontal tables;
+- long rule tables transform into stacked rows/cards;
+- sticky bottom action may be used if it does not cover answer feedback;
+- keyboard appearance must not hide short-text input or check button.
+
+ACCESSIBILITY
+
+- keyboard reachable controls;
+- visible focus;
+- semantic buttons/inputs;
+- feedback not conveyed by color alone;
+- correct/wrong text labels plus icon/state;
+- sufficient contrast;
+- reduced-motion safe if animations are added;
+- aria-live or equivalent for dynamic answer feedback in implementation review.
+
+VISUAL STYLE
+
+Follow Eksamio light visual system and `/trenazhery/` family.
+Do not introduce a dark theme or visually unrelated game UI.
+
+Allowed gamification:
+- subtle progress;
+- streak/repetition only if it reflects learning state.
+
+Avoid:
+- coins;
+- fake XP economy;
+- distracting confetti after every answer;
+- pressure timers.
+
+DATA REQUIRED BY UX
+
+Session runtime needs only learner-safe resolved fields, not the whole source corpus:
+- practice_item_id
+- exception_id (internal)
+- prompt
+- response_kind
+- answer evaluator data
+- feedback
+- topic display label
+- session progress
+- learner exception state
+
+Source references and audit metadata can be excluded from the public runtime payload if retained in build artifacts.
+
+ENTRY FROM MAIN EGE TRAINER — FUTURE
+
+After exact post-error diagnosis, CTA may say:
+- «Потренировать этот случай»
+- «Добавить в работу над ошибками»
+
+Do NOT interrupt the student during control/demo.
+Do NOT auto-navigate away before they finish the current training flow.
+
+ENTRY FROM /trenazhery/
+
+Future catalog card:
+Title: «Исключения и особые случаи»
+Short description concept:
+«Трудные написания, формы и случаи, где легко применить не то правило. С повторением ваших ошибок.»
+
+Final public copy will be written separately after UI implementation scope is fixed.
+
+EMPTY STATES
+
+No personal errors yet:
+- do not show an empty depressing dashboard;
+- show `Мои исключения появятся здесь после тренировок` + CTA `Начать с основных`.
+
+No items due:
+- positive neutral message: `На сегодня обязательных повторений нет.`
+- optional CTA for new material.
+
+ERROR / DATA FAILURE
+
+If personal state cannot load:
+- allow anonymous/general `Все исключения` session;
+- do not erase local state silently;
+- do not show false zero progress.
+
+FIRST PUBLIC RELEASE — RECOMMENDED SCOPE
+
+IN:
+- Все исключения;
+- local learner state;
+- short mixed sessions;
+- first-attempt feedback;
+- retry/new-context queue;
+- basic due repetition;
+- My Exceptions list;
+- topic filters;
+- existing 72-card source practice bank after machine validation.
+
+OUT initially:
+- AI-generated rules;
+- AI-generated answers;
+- leaderboard;
+- social sharing;
+- server account sync;
+- paid gate;
+- automatic full integration with every current trainer error before routing data is validated.
+
+INTEGRATION GATE
+
+This UX spec does not authorize implementation.
+Before Tilda build:
+1. canonical Exceptions Bank PASS;
+2. canonical Practice Bank PASS;
+3. learner-state/storage contract approved;
+4. session selection algorithm spec approved;
+5. page/T123 implementation plan;
+6. regression/rollback plan;
+7. visual/mobile test.
+
+CURRENT DECISION
+
+PUBLIC UX: DESIGN READY
+PUBLIC PAGE: NOT CREATED
+PRACTICE SOURCE BANK: 72 CARDS / MACHINE PENDING
+CURRENT TRAINER: UNCHANGED
+PRODUCTION INTEGRATION: HOLD
