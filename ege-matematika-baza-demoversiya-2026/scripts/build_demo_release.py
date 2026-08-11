@@ -12,9 +12,9 @@ from latex2mathml.converter import convert as latex_to_mathml
 ROOT=Path(__file__).resolve().parents[1]
 REPO=ROOT.parent
 PREFIX='ege-matematika-baza-demoversiya-2026'
-PACKAGE_VERSION='1.1'
-CONTENT_VERSION='2026.2'
-STORAGE_KEY='eksamio_ege_math_base_demo_2026_v1_1'
+PACKAGE_VERSION='1.2'
+CONTENT_VERSION='2026.3'
+STORAGE_KEY='eksamio_ege_math_base_demo_2026_v1_2'
 ZIP_NAME=f'{PREFIX}-v{PACKAGE_VERSION}.zip'
 MAX_T123=45000
 TARGET_BLOCK=41000
@@ -186,6 +186,6 @@ def manifest_and_zip():
 
 if __name__=='__main__':
     gates=check_gates();tasks=enhance_task_map();write_metadata(tasks,gates);t123=build_blocks(tasks);write_installation(t123);update_exam_map(t123);build_preview(t123);out=manifest_and_zip()
-    evidence={'status':'BUILT_PENDING_TESTS','package':out.name,'package_version':PACKAGE_VERSION,'content_version':CONTENT_VERSION,'storage_key':STORAGE_KEY,'t123_blocks':len(t123),'t123_max_bytes':max((ROOT/n).stat().st_size for n in t123),'official_examples':sum(len(t['variants']) for t in tasks),'assets':len(list((ROOT/'assets').glob('*.webp'))),'reference_pages':[4,5,6,7],'acceptance_fixes':['numeric input syntax decoupled from answer correctness','raw invalid numeric input persists without stale-value fallback','task 1 integer-answer hint','Нꞏм normalized to Н·м']}
+    evidence={'status':'BUILT_PENDING_TESTS','package':out.name,'package_version':PACKAGE_VERSION,'content_version':CONTENT_VERSION,'storage_key':STORAGE_KEY,'t123_blocks':len(t123),'t123_max_bytes':max((ROOT/n).stat().st_size for n in t123),'official_examples':sum(len(t['variants']) for t in tasks),'assets':len(list((ROOT/'assets').glob('*.webp'))),'reference_pages':[4,5,6,7],'acceptance_fixes':['numeric input syntax decoupled from answer correctness','raw invalid numeric input persists without stale-value fallback','task 1 integer-answer hint','task 1 rejects non-integer numeric format with explicit student feedback','Нꞏм normalized to Н·м']}
     dump_json(ROOT/f'{PREFIX}-BUILD-EVIDENCE.json',evidence)
     print(json.dumps(evidence,ensure_ascii=False,indent=2))

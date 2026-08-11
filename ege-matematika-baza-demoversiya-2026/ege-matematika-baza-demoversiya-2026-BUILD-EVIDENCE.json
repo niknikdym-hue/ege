@@ -1,24 +1,28 @@
 {
   "status": "PASS_READY_FOR_TILDA_TEST",
-  "package": "ege-matematika-baza-demoversiya-2026-v1.1.zip",
-  "package_version": "1.1",
-  "content_version": "2026.2",
-  "storage_key": "eksamio_ege_math_base_demo_2026_v1_1",
+  "package": "ege-matematika-baza-demoversiya-2026-v1.2.zip",
+  "package_version": "1.2",
+  "content_version": "2026.3",
+  "storage_key": "eksamio_ege_math_base_demo_2026_v1_2",
   "t123_blocks": 47,
   "t123_max_bytes": 39340,
   "official_examples": 70,
   "assets": 25,
-  "reference_pages": [4, 5, 6, 7],
+  "reference_pages": [
+    4,
+    5,
+    6,
+    7
+  ],
   "acceptance_fixes": [
     "numeric input syntax decoupled from answer correctness",
     "raw invalid numeric input persists without stale-value fallback",
     "task 1 integer-answer hint",
+    "task 1 rejects non-integer numeric format with explicit student feedback",
     "Нꞏм normalized to Н·м"
   ],
-  "browser_audit": "PASS — Chrome/Selenium, 70/70 official examples via real controls + targeted regressions",
-  "clean_zip_browser_audit": "PASS — clean extracted ZIP preview, 70/70 official examples + targeted regressions",
-  "manual_student_acceptance": "PASS — all 21 positions reviewed; final scorer behavior checked",
+  "browser_audit": "PASS — Chrome/Selenium 70/70 + integer-format regression",
+  "manual_student_acceptance": "PASS — v1.2 targeted UX correction after production review",
   "full_correct_attempt": "21/21",
-  "javascript_errors": 0,
-  "browser_widths": [1280, 768, 390, 360, 320]
+  "javascript_errors": 0
 }
