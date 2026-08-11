@@ -1,0 +1,58 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"verified_routing_tags_current_tasks_12_14",
+  "integration_status":"not_connected_to_production",
+  "schema_ref":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
+  "items":[
+    {
+      "trainer_item_id":"ege-ru-12-2026-12-01",
+      "task_number":12,
+      "routing_precision":"word",
+      "candidate_subskill_ids":["verb_conjugation_endings","participle_suffixes"],
+      "word_tags":[
+        {"position_id":"row1_word1","source_locator":"трат..щий (накопления) -> тратящий","subskill_ids":["participle_suffixes"],"explanation_id":"participle_suffixes","diagnostic_confidence":"exact"},
+        {"position_id":"row1_word2","source_locator":"(шефы) постро..т -> построят","subskill_ids":["verb_conjugation_endings"],"explanation_id":"verb_conjugation_endings","diagnostic_confidence":"exact"},
+        {"position_id":"row2_word1","source_locator":"(друзья) выкро..т -> выкроят","subskill_ids":["verb_conjugation_endings"],"explanation_id":"verb_conjugation_endings","diagnostic_confidence":"exact"},
+        {"position_id":"row2_word2","source_locator":"ве..щий (ветерок) -> веющий","subskill_ids":["participle_suffixes"],"explanation_id":"participle_suffixes","diagnostic_confidence":"exact"},
+        {"position_id":"row3_word1","source_locator":"расходу..мый -> расходуемый","subskill_ids":["participle_suffixes"],"explanation_id":"participle_suffixes","diagnostic_confidence":"exact"},
+        {"position_id":"row3_word2","source_locator":"кол..шь (дрова) -> колешь","subskill_ids":["verb_conjugation_endings"],"explanation_id":"verb_conjugation_endings","diagnostic_confidence":"exact"},
+        {"position_id":"row4_word1","source_locator":"(экскаваторы) ро..т -> роют","subskill_ids":["verb_conjugation_endings"],"explanation_id":"verb_conjugation_endings","diagnostic_confidence":"exact"},
+        {"position_id":"row4_word2","source_locator":"сме..щий (возражать) -> смеющий","subskill_ids":["participle_suffixes"],"explanation_id":"participle_suffixes","diagnostic_confidence":"exact"},
+        {"position_id":"row5_word1","source_locator":"(учителя) цен..т -> ценят","subskill_ids":["verb_conjugation_endings"],"explanation_id":"verb_conjugation_endings","diagnostic_confidence":"exact"},
+        {"position_id":"row5_word2","source_locator":"сия..щий -> сияющий","subskill_ids":["participle_suffixes"],"explanation_id":"participle_suffixes","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Each target word is morphologically identifiable as a finite verb or participle, so word-level explanation routing is exact even though each answer row mixes both rule families."
+    },
+    {
+      "trainer_item_id":"ege-ru-14-2026-14-01",
+      "task_number":14,
+      "routing_precision":"word",
+      "candidate_subskill_ids":["solid_separate_hyphenated_spelling"],
+      "word_tags":[
+        {"position_id":"option1_word1","source_locator":"ДАВНЫМ(ДАВНО) -> давным-давно","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"hyphenated_repeated_words","diagnostic_confidence":"exact"},
+        {"position_id":"option1_word2","source_locator":"ЧЕМ(ТО) -> чем-то","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"hyphenated_models","diagnostic_confidence":"exact"},
+        {"position_id":"option2_word1","source_locator":"(ПО)ЗИМНЕМУ парку -> по зимнему парку","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"solid_separate_hyphenated_spelling","diagnostic_confidence":"partial"},
+        {"position_id":"option2_word2","source_locator":"КАКИМ(НИБУДЬ) -> каким-нибудь","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"hyphenated_models","diagnostic_confidence":"exact"},
+        {"position_id":"option3_word1","source_locator":"ЧТО(БЫ) -> что бы","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"separate_particles_pronouns","diagnostic_confidence":"exact"},
+        {"position_id":"option3_word2","source_locator":"(ПОЛ)ДНЯ -> полдня","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"solid_separate_hyphenated_spelling","diagnostic_confidence":"needs_followup"},
+        {"position_id":"option4_word1","source_locator":"ПОЧЕМУ(ТО) -> почему-то","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"hyphenated_models","diagnostic_confidence":"exact"},
+        {"position_id":"option4_word2","source_locator":"(ПО)ВИДИМОМУ -> по-видимому","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"hyphenated_adverbs_po_model","diagnostic_confidence":"exact"},
+        {"position_id":"option5_word1","source_locator":"(ПО)ЭТОМУ -> поэтому","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"solid_separate_adverbs","diagnostic_confidence":"partial"},
+        {"position_id":"option5_word2","source_locator":"(ЗА)ТО -> зато","subskill_ids":["solid_separate_hyphenated_spelling"],"explanation_id":"solid_separate_conjunctions","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Current correct options are 1 and 4. Exact word tags are used only where the internal explanation bank actually contains the relevant model. `полдня` remains needs_followup because half-word spelling is not yet represented by a dedicated internal task-14 explanation unit."
+    }
+  ],
+  "validation_notes":[
+    "Current trainer answers are task 12 = 134 and task 14 variant 1 = 14.",
+    "New explanation IDs hyphenated_adverbs_po_model and hyphenated_repeated_words exist in file 72.",
+    "No source trainer card or answer was changed."
+  ],
+  "status":"source_verified_partial_precision"
+}
