@@ -1,0 +1,94 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"future_public_runtime_payload_contract",
+  "integration_status":"not_connected_to_production",
+  "top_level_contract":{
+    "required":["schema_version","product_id","content_version","generated_at","topics","exceptions","practice_items"],
+    "fields":{
+      "schema_version":"runtime payload schema version",
+      "product_id":"russian_exceptions",
+      "content_version":"immutable content build identifier/version",
+      "generated_at":"ISO build timestamp",
+      "topics":"learner-facing topic metadata",
+      "exceptions":"minimal learner-safe exception metadata keyed by exception_id",
+      "practice_items":"practice cards keyed by practice_item_id",
+      "build_meta":"optional compact integrity metadata; no source books/provenance payload"
+    }
+  },
+  "topic_contract":{
+    "required":["topic_id","label","order"],
+    "fields":{
+      "topic_id":"stable learner-facing topic key",
+      "label":"e.g. Орфография, Пунктуация",
+      "order":"integer display order",
+      "description":"optional short learner-facing description"
+    }
+  },
+  "exception_runtime_contract":{
+    "required":["exception_id","label","topic_id","practice_item_ids"],
+    "fields":{
+      "exception_id":"stable internal id; not normally displayed",
+      "label":"short learner-facing label",
+      "topic_id":"runtime topic key",
+      "practice_item_ids":"eligible reviewed/source_verified practice IDs for this exception",
+      "rule_ref":"optional stable rule/explanation reference used to open rule drawer",
+      "launch_priority":"optional source-driven P0/P1/P2/P3; not difficulty",
+      "status":"enabled | disabled"
+    }
+  },
+  "practice_runtime_contract":{
+    "required":["practice_item_id","exception_id","mode","response_kind","prompt","answer","feedback","context_signature","transfer_level"],
+    "fields":{
+      "practice_item_id":"stable practice id",
+      "exception_id":"runtime exception id",
+      "mode":"practice mode",
+      "response_kind":"UI evaluator type",
+      "prompt":"learner-facing prompt payload",
+      "answer":"machine evaluator data; must not be rendered before check",
+      "alt_answers":"optional verified equivalents",
+      "distractors":"optional if not embedded in prompt options",
+      "feedback":"compact learner feedback",
+      "context_signature":"deduplication/session repeat key",
+      "transfer_level":"recognition | guided_recall | independent_context | transfer",
+      "topic_id":"denormalized optional topic key for fast filtering",
+      "status":"enabled | disabled"
+    }
+  },
+  "feedback_runtime_contract":{
+    "required":["correct_answer","why"],
+    "fields":{
+      "correct_answer":"short display answer",
+      "why":"specific learner explanation",
+      "rule_ref":"optional rule/explanation reference",
+      "explanation_id":"optional exact Explanation Bank id",
+      "exception_contrast_ids":"optional related exception ids",
+      "next_action":"optional UI-safe action code, not arbitrary HTML"
+    }
+  },
+  "excluded_from_runtime_payload":[
+    "raw Rosenthal/book text",
+    "source_refs and page locators",
+    "internal audit comments",
+    "review_notes unless specifically converted to learner copy",
+    "wrong_forms lists unless required as actual distractors",
+    "Skill Graph full graph",
+    "raw trainer source cards",
+    "current EGE answer banks unrelated to the selected practice payload",
+    "GitHub paths/commit ids"
+  ],
+  "answer_security_note":"This is a client-side free trainer, so answer data cannot be treated as secret against a determined user. The design goal is payload minimization and UI integrity, not false claims of secure exam delivery.",
+  "build_rules":[
+    "runtime payload generated only from canonical machine-PASS source/practice banks",
+    "include only source_verified/reviewed enabled items",
+    "every practice_item_id appears once",
+    "every exception practice_item_ids reference resolves",
+    "do not include needs_review source items",
+    "topic assignment must be deterministic from accepted skill/domain mapping",
+    "no runtime rule generation by AI",
+    "content_version changes when learner-visible normative content or evaluator answer changes"
+  ],
+  "future_output":"build/RUSSIAN-EXCEPTIONS-RUNTIME.json",
+  "production_integration":"HOLD"
+}
