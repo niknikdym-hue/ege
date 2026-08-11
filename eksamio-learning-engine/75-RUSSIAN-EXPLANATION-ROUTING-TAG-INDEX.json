@@ -1,0 +1,35 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"index_of_external_explanation_routing_metadata",
+  "integration_status":"not_connected_to_production",
+  "schema":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
+  "files":[
+    {"path":"66-RUSSIAN-EXPLANATION-ROUTING-TAGS-PILOT-v0.1.json","tasks":[7,8,18,22],"status":"source_verified","precision":"item/position/match_position"},
+    {"path":"68-RUSSIAN-EXPLANATION-ROUTING-TAGS-ORTHO-PUNCT-v0.1.json","tasks":[15,16,21],"status":"source_verified","precision":"position/option"},
+    {"path":"70-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK10-v0.1.json","tasks":[10],"status":"source_verified","precision":"option with broad fallback for mixed rows"},
+    {"path":"71-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK9-v0.1.json","tasks":[9],"status":"source_verified_partial_precision","precision":"word; unresolved words remain needs_followup"},
+    {"path":"73-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK12-14-v0.1.json","tasks":[12,14],"status":"source_verified_partial_precision","precision":"word"},
+    {"path":"74-RUSSIAN-EXPLANATION-ROUTING-TAGS-TASK17-20-v0.1.json","tasks":[17,19,20],"status":"source_verified","precision":"position"}
+  ],
+  "generation_specs":[
+    {"path":"69-RUSSIAN-TASK4-ORTHOEPY-ROUTING-AUTOTAG-SPEC.txt","tasks":[4],"status":"ready_for_local_build","note":"Generate word-level tags deterministically from bankEntryIds; do not infer narrower POS subskill without verified POS metadata."}
+  ],
+  "supporting_explanation_splits":[
+    {"path":"61-RUSSIAN-EXPLANATION-TASK11-SUFFIX-SPLITS-v0.1.json","tasks":[11]},
+    {"path":"62-RUSSIAN-EXPLANATION-TASK14-WRITING-SPLITS-v0.1.json","tasks":[14]},
+    {"path":"67-RUSSIAN-EXPLANATION-TASK21-RULE-SPLITS-v0.1.json","tasks":[21]},
+    {"path":"72-RUSSIAN-EXPLANATION-TASK14-HYPHEN-ADVERB-SPLITS-v0.1.json","tasks":[14]}
+  ],
+  "current_tagged_or_autotag_ready_tasks":[4,7,8,9,10,12,14,15,16,17,18,19,20,21,22],
+  "current_not_yet_tagged_tasks":[1,2,3,5,6,11,13,23,24,25,26,27],
+  "notes":[
+    "Not-yet-tagged does not mean no explanation content: source-layer explanation coverage remains 27/27.",
+    "Some tasks do not need external tags because item-level routing is already unambiguous; the index tracks only explicit external routing metadata built so far.",
+    "Task 11 precise tagging is intentionally deferred for current row `тушёнка / напряжённый` until its missing suffix-rule branch is represented in the explanation bank.",
+    "Task 14 `полдня` remains needs_followup because the ПОЛ- spelling branch is not yet represented by a dedicated internal explanation unit.",
+    "No external routing metadata changes the trainer source, answer key or score."
+  ],
+  "status":"active_build"
+}
