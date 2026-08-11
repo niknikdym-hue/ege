@@ -1,0 +1,167 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"exact_error_to_exception_handoff_map",
+  "integration_status":"not_connected_to_production",
+  "source_routing_index":"75-RUSSIAN-EXPLANATION-ROUTING-TAG-INDEX.json",
+  "exceptions_manifest":"83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json",
+  "mappings":[
+    {
+      "mapping_id":"handoff-t07-2026-zapechatlet",
+      "trainer_item_id":"ege-ru-07-2026-07-01",
+      "task_number":7,
+      "evidence_type":"word",
+      "evidence_key":"error_target",
+      "source_locator":"ЗАПЕЧАТЛИТЬ -> запечатлеть",
+      "exception_id":"verb_zapechatlet_infinitive",
+      "evidence_precision":"exact",
+      "activation_allowed":true,
+      "status":"source_verified"
+    },
+    {
+      "mapping_id":"handoff-t07-2025-povidlo",
+      "trainer_item_id":"ege-ru-07-2025-07-01",
+      "task_number":7,
+      "evidence_type":"word",
+      "evidence_key":"error_target",
+      "source_locator":"С ПОВИДЛОЙ -> с повидлом",
+      "exception_id":"morph_povidlo_instrumental",
+      "evidence_precision":"exact",
+      "activation_allowed":true,
+      "status":"source_verified"
+    },
+    {
+      "mapping_id":"handoff-t07-2024-polutorasta",
+      "trainer_item_id":"ege-ru-07-2024-07-01",
+      "task_number":7,
+      "evidence_type":"word",
+      "evidence_key":"error_target",
+      "source_locator":"НЕТ ПОЛТОРАСТА РУБЛЕЙ -> нет полутораста рублей",
+      "exception_id":"morph_polutorasta_oblique",
+      "evidence_precision":"exact",
+      "activation_allowed":true,
+      "status":"source_verified"
+    },
+    {
+      "mapping_id":"handoff-t07-2022-polutorasta",
+      "trainer_item_id":"ege-ru-07-2022-07-01",
+      "task_number":7,
+      "evidence_type":"word",
+      "evidence_key":"error_target",
+      "source_locator":"НЕТ ПОЛТОРАСТА РУБЛЕЙ -> нет полутораста рублей",
+      "exception_id":"morph_polutorasta_oblique",
+      "evidence_precision":"exact",
+      "activation_allowed":true,
+      "status":"source_verified"
+    },
+    {
+      "mapping_id":"handoff-t15-2026-v2-wooden",
+      "trainer_item_id":"ege-ru-15-2026-15-02",
+      "task_number":15,
+      "evidence_type":"position",
+      "evidence_key":"pos_1",
+      "source_locator":"деревя(1)ая -> деревянная",
+      "exception_id":"n_nn_wooden",
+      "evidence_precision":"exact",
+      "activation_allowed":true,
+      "status":"source_verified",
+      "condition":"activate only when learner position-level result shows an error on this N/NN position; do not infer from whole-task score alone"
+    },
+    {
+      "mapping_id":"handoff-t15-2026-v2-forged",
+      "trainer_item_id":"ege-ru-15-2026-15-02",
+      "task_number":15,
+      "evidence_type":"position",
+      "evidence_key":"pos_4",
+      "source_locator":"кова(4)ым -> кованым",
+      "exception_id":"n_nn_forged",
+      "evidence_precision":"exact",
+      "activation_allowed":true,
+      "status":"source_verified",
+      "condition":"activate only when learner position-level result shows an error on this N/NN position"
+    },
+    {
+      "mapping_id":"handoff-t13-2026-niskolko-ne",
+      "trainer_item_id":"ege-ru-13-2026-13-01",
+      "task_number":13,
+      "evidence_type":"option",
+      "evidence_key":"option_1",
+      "source_locator":"нисколько (НЕ)ОБОЗЛЁН",
+      "exception_id":"far_not_by_no_means_not_negative_pronoun",
+      "evidence_precision":"exact",
+      "activation_allowed":true,
+      "status":"source_verified",
+      "condition":"requires option-level mismatch evidence; whole-task wrong status is insufficient"
+    },
+    {
+      "mapping_id":"handoff-t13-2026-daleko-ne",
+      "trainer_item_id":"ege-ru-13-2026-13-01",
+      "task_number":13,
+      "evidence_type":"option",
+      "evidence_key":"option_3",
+      "source_locator":"далеко (НЕ)РОВНОЕ",
+      "exception_id":"far_not_by_no_means_not_negative_pronoun",
+      "evidence_precision":"exact",
+      "activation_allowed":true,
+      "status":"source_verified",
+      "condition":"requires option-level mismatch evidence; whole-task wrong status is insufficient"
+    },
+    {
+      "mapping_id":"handoff-t18-2026-slovno-left",
+      "trainer_item_id":"ege-ru-18-2026-18-01",
+      "task_number":18,
+      "evidence_type":"position",
+      "evidence_key":"pos_3",
+      "source_locator":"before словно; comma must NOT be inserted as for an introductory word",
+      "exception_id":"false_introductory_comparison_particles",
+      "evidence_precision":"exact",
+      "activation_allowed":true,
+      "status":"source_verified",
+      "condition":"activate when learner incorrectly marks this position as comma-required"
+    },
+    {
+      "mapping_id":"handoff-t18-2026-slovno-right",
+      "trainer_item_id":"ege-ru-18-2026-18-01",
+      "task_number":18,
+      "evidence_type":"position",
+      "evidence_key":"pos_4",
+      "source_locator":"after словно; comma must NOT be inserted as for an introductory word",
+      "exception_id":"false_introductory_comparison_particles",
+      "evidence_precision":"exact",
+      "activation_allowed":true,
+      "status":"source_verified",
+      "condition":"activate when learner incorrectly marks this position as comma-required"
+    }
+  ],
+  "explicit_non_mapping_examples":[
+    {
+      "case":"task 15 ordinary leather adjective",
+      "source_locator":"кожа(3)ый -> кожаный",
+      "decision":"NO exception handoff; normal N/NN rule case"
+    },
+    {
+      "case":"task 8 whole matching score",
+      "decision":"NO exception handoff from total score; exact A-E position and exact special-case evidence required"
+    },
+    {
+      "case":"task 9 whole row failure",
+      "decision":"NO exception handoff from row/task score when rule family or exact word is ambiguous"
+    },
+    {
+      "case":"task 22 total matching score",
+      "decision":"NO exception handoff from total score; expressive means are normal skill practice unless a separate exact special-case item exists"
+    }
+  ],
+  "validation_rules":[
+    "trainer_item_id must exist in accepted current repository-visible trainer snapshot",
+    "evidence_key must exist in reviewed routing tag data for enabled mapping",
+    "exception_id must exist and be source_verified/reviewed in canonical Exceptions Bank",
+    "evidence_precision must be exact for activation_allowed=true",
+    "whole-task score must never activate a mapping that requires option/word/position evidence",
+    "legacy/current routes remain separated",
+    "mapping does not change source trainer card or answer"
+  ],
+  "status":"source_verified_first_exact_subset",
+  "production_integration":"HOLD"
+}
