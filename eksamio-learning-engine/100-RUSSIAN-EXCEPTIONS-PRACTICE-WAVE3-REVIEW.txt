@@ -1,0 +1,93 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — PRACTICE WAVE 3 REVIEW
+
+STATUS: SOURCE/EDITORIAL REVIEW PASS / MACHINE VALIDATION PENDING
+PRACTICE_BANK: 98-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE3-v0.1.json
+ITEMS: 24
+CURRENT_TOTAL: 72 source practice cards
+PRODUCTION: HOLD
+CURRENT TRAINERS: UNCHANGED
+
+REVIEW SCOPE
+
+Checked:
+- source exception intent;
+- new context rather than repetition of waves 1-2;
+- answer unambiguity;
+- recall/transfer value;
+- source practice-mode suitability by design;
+- original Eksamio wording;
+- no long copied source exercise;
+- no production mutation.
+
+CONTENT
+
+N/NN
+- оловянный
+- стеклянный
+- ветреный / безветренный
+- жёваный
+- названый брат
+- посажёный отец
+
+ALTERNATING / SPECIAL ROOTS
+- зоревать
+- полог
+- пловец
+- плывуны
+- РАСТ-/РАЩ-/РОС- normal-vs-exception discrimination
+- скачок
+- утварь
+- изгарь
+
+Ц AFTER ROOT
+- цыган-
+- цыплёнок
+- на цыпочках
+
+PRE-/PRI- LEXICAL CONTRASTS
+- пребывать / прибывать
+- предать / придать
+- предел / придел
+- преемник / приёмник
+- преступить / приступить
+- претворить / притворить
+- преходящий / приходящий
+
+QUALITY FINDINGS
+
+PASS:
+- wave adds substantial recall rather than another recognition-heavy set;
+- lexical PRE-/PRI- pairs are tested in contexts that force meaning choice;
+- exception spelling recall uses short prompts and does not disclose the missing letter through answer format;
+- old Rosenthal examples are not reproduced as long exercise passages;
+- no item claims a difficulty score.
+
+SPECIAL NOTE — РАСТ-/РАЩ-/РОС-
+
+The `поросль` card deliberately checks a NORMAL member of the rule against the exception cluster. This is pedagogically useful because mastery of an exception list requires distinguishing exceptions from ordinary members of the same family. The feedback explicitly states that `поросль` is not itself an exception.
+
+MACHINE VALIDATION
+
+Current manifest:
+`99-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-MANIFEST.json`
+
+Current builder:
+`build/build_russian_exceptions_practice_current.py`
+
+Expected:
+- 72 practice cards;
+- all practice_item_id unique;
+- all exception_id links resolve;
+- all practice modes allowed by source exceptions;
+- no duplicate exception+mode+context_signature;
+- no ineligible source exception status.
+
+CURRENT DECISION
+
+WAVE 3 CONTENT: REVIEW PASS
+TOTAL SOURCE PRACTICE BANK: 72 CARDS
+MACHINE VALIDATION: PENDING LOCAL FILE ACCESS
+PUBLIC INTEGRATION: HOLD
+CURRENT EGE TRAINER: UNCHANGED
+CODEX: NOT REQUIRED
