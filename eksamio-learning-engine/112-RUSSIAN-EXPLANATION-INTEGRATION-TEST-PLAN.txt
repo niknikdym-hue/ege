@@ -1,0 +1,271 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EGE TRAINER — EXPLANATION INTEGRATION TEST PLAN
+
+STATUS: DESIGN READY / EXECUTION PENDING CANONICAL PASS + IMPLEMENTATION
+TARGET: existing `/ege/russkiy/trenazher/`
+PRODUCTION: HOLD
+
+TEST GOAL
+
+Prove that the explanation layer adds learning feedback without changing the current trainer's exam content, answers, scoring, item IDs, persistence, mode behavior or page stability.
+
+1. PRE-INTEGRATION BASELINE
+
+Capture before any production code change:
+- current trainer folder/file inventory;
+- SHA-256 for T123/JS/data files;
+- BANK-MANIFEST card totals and per-task counts;
+- task IDs list;
+- answer/altAnswer digest;
+- maxScore digest;
+- current localStorage keys/shape;
+- current mode labels/behavior;
+- current source LOCAL-TEST-RESULT as historical reference only, not substitute for new tests.
+
+2. CANONICAL DATA
+
+Must PASS before adapter tests:
+- Explanation Bank builder;
+- routing/tag cross-link validation;
+- 27/27 task coverage;
+- no duplicate explanation IDs;
+- no broken Skill Graph links;
+- no enabled route to missing explanation ID.
+
+3. RESOLVER FIXTURES
+
+For each routing precision class:
+- task;
+- item;
+- option;
+- word;
+- position;
+- match_position;
+- criterion_component.
+
+Test:
+- exact evidence -> exact explanation;
+- insufficient evidence -> safe fallback;
+- missing route -> current feedback;
+- partial/needs_review route -> no exact mastery/error claim;
+- legacy route -> correct legacy explanation only;
+- external payload missing -> current feedback only.
+
+4. HIGH-RISK TASK FIXTURES
+
+Task 4:
+- card with bankEntryId -> word-level normative stress route;
+- base card without bankEntryIds -> broad fallback;
+- no guessed POS subskill.
+
+Task 7:
+- noun/number/verb exact forms route correctly;
+- comparison-degree graph-gap case does not get false subskill route.
+
+Task 8:
+- A-E position error -> exact syntax subskill explanation;
+- only total 0/2 -> NO exact subskill diagnosis.
+
+Task 9:
+- reviewed word tag -> exact root explanation;
+- needs_followup word -> broad root fallback.
+
+Task 10:
+- homogeneous row -> exact prefix branch;
+- mixed row -> broad fallback.
+
+Task 11:
+- adjective/verb/noun/adverb suffix splits;
+- stressed Ё after sibilants branch;
+- no unsupported one-rule shortcut.
+
+Task 13:
+- option-level НЕ/НИ route;
+- current context with ДАЛЕКО НЕ / НИСКОЛЬКО НЕ;
+- no global «dependent word => separate» rule.
+
+Task 14:
+- conjunction/preposition/adverb/particle/hyphen/POL- branches;
+- `по-видимому`, `давным-давно`, `полдня`;
+- context controls homonymous forms.
+
+Task 15:
+- exact numbered positions;
+- wooden/forged/current examples;
+- external explanation cannot change current correct digit set.
+
+Task 16:
+- homogeneous vs compound route;
+- partial definition branch remains partial.
+
+Task 18:
+- вводное vs обращение;
+- `словно` negative evidence;
+- dual-function word explanation does not impose absolute comma rule.
+
+Task 20:
+- junction of conjunctions exact where position supports it;
+- mixed sentence fallback elsewhere.
+
+Task 21:
+- dash/colon/comma current variants;
+- sign identity alone is not treated as one rule.
+
+Task 22:
+- A-E exact match position;
+- total score only -> no exact device diagnosis.
+
+Task 25:
+- current phraseologism route;
+- historical contextual synonym route separated even if source card legacy flag is imperfect.
+
+Task 26:
+- multiple cohesion means: total wrong answer does not identify which means failed.
+
+Task 27:
+- no explanation while writing;
+- no correct/wrong auto-score;
+- post-completion self-check only;
+- no official expert-score claim.
+
+5. MODE BEHAVIOR
+
+PRACTICE
+- no rule before answer;
+- feedback after answer;
+- correct answer remains current evaluator answer.
+
+WARMUP (future)
+- rule drawer optional before answer;
+- closing drawer returns to unanswered item;
+- no answer exposed by rule payload.
+
+WORK ON ERRORS
+- detailed explanation after attempt;
+- independent new item not prefilled/revealed.
+
+CONTROL
+- no explanation until set completion;
+- after completion explanation does not retroactively change scores.
+
+DEMO
+- no learning UI during attempt;
+- post-attempt analysis only.
+
+6. CURRENT TRAINER INVARIANTS
+
+Automated comparison should prove identical before/after:
+- card IDs;
+- card count 174 (if current manifest still 174 at integration time; re-read current source, do not hardcode stale assumption blindly);
+- task coverage 1–27;
+- prompt data unless implementation explicitly wraps display without source edit;
+- answer values;
+- altAnswers;
+- maxScore;
+- current task mapping;
+- current source year/original number metadata.
+
+Any unexpected delta = FAIL.
+
+7. STORAGE / RELOAD
+
+If explanation-only integration adds no state:
+- existing answer persistence works unchanged;
+- reload restores current item/answers as before;
+- external payload can reload independently.
+
+If a future optional UI preference is stored:
+- separate namespaced key;
+- no collision with current trainer state;
+- failure to read preference does not affect exam answers.
+
+8. PAYLOAD FAILURE
+
+Simulate:
+- 404/missing external explanation data;
+- malformed JSON;
+- wrong content_version;
+- missing explanation_id;
+- route references disabled unit.
+
+Expected:
+- current trainer remains fully usable;
+- current feedback shown;
+- no answer/scoring failure;
+- no blank screen.
+
+9. CONTENT CONFLICT FAIL-CLOSED
+
+Fixture external explanation metadata intentionally conflicts with current answer.
+Expected:
+- external feedback suppressed;
+- current result retained;
+- conflict logged/audited;
+- no automatic «fix» to production answer.
+
+10. UI / ACCESSIBILITY
+
+- feedback inserted without layout jump that hides answer;
+- expandable rule keyboard-accessible;
+- visible focus;
+- correct/wrong not color-only;
+- long tables stack on mobile;
+- no duplicate IDs/ARIA relationships;
+- dynamic feedback announced appropriately.
+
+11. PERFORMANCE
+
+Measure after actual canonical payload exists:
+- payload bytes compressed/uncompressed;
+- parse time representative desktop/mobile;
+- first interaction delay;
+- memory footprint;
+- Tilda block sizes.
+
+Do not choose chunking strategy before measurement.
+
+12. REGRESSION RUN
+
+At minimum:
+- existing trainer data tests;
+- current visual contract tests;
+- manual smoke all modes;
+- representative tasks 1–27;
+- reload/persistence;
+- mobile Safari/Chrome-class browsers;
+- Tilda published page smoke.
+
+13. FEATURE-OFF TEST
+
+With external explanation feature disabled/unavailable:
+Expected behavior must match pre-integration baseline as closely as possible.
+
+This is the key rollback guarantee.
+
+14. HANDOFF — LATER SEPARATE TEST
+
+When enabled:
+- exact route CTA only when exception/skill evidence exact;
+- no guessed exception from broad score;
+- no navigation away during demo/control;
+- standalone Exceptions page failure does not break main trainer.
+
+15. RELEASE REPORT
+
+Required before GO:
+- canonical explanation PASS;
+- routing PASS;
+- resolver fixtures PASS;
+- invariants PASS;
+- mode behavior PASS;
+- payload fail-safe PASS;
+- accessibility/mobile PASS;
+- regression PASS;
+- feature-off rollback PASS;
+- package/commit/version identified.
+
+CURRENT DECISION
+
+TEST PLAN: READY
+CURRENT TRAINER CODE: UNCHANGED
+INTEGRATION IMPLEMENTATION: HOLD
