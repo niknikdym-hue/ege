@@ -1,0 +1,40 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"student_explanation_bank_internal_splits",
+  "integration_status":"not_connected_to_production",
+  "parent_skill_graph_subskill":"solid_separate_hyphenated_spelling",
+  "exam_task_numbers":[14],
+  "units":[
+    {
+      "explanation_id":"hyphenated_adverbs_po_model",
+      "skill_ids":["orthographic_norms"],
+      "subskill_ids":["solid_separate_hyphenated_spelling"],
+      "exam_task_numbers":[14],
+      "title":"Наречия с ПО-: по-новому, по-видимому, по-русски",
+      "short_rule":"Наречия с приставкой ПО- и суффиксальными моделями -ОМУ/-ЕМУ, -СКИ/-ЦКИ, -ЬИ пишутся через дефис.",
+      "rule":"Дефисное написание возникает в продуктивной модели наречий: по-новому, по-прежнему, по-видимому, по-русски, по-товарищески, по-волчьи. Нельзя переносить это правило на любое сочетание с ПО: сначала нужно убедиться, что перед нами именно наречие соответствующей модели, а не предлог ПО с прилагательным/местоимением или существительным.",
+      "algorithm":["Определите, является ли сочетание наречием.","Проверьте приставку ПО-.","Проверьте окончание/суффиксальную модель -ОМУ/-ЕМУ, -СКИ/-ЦКИ или -ЬИ.","Если модель совпадает, пишите через дефис.","Если ПО — обычный предлог, применяйте другое правило."],
+      "common_traps":["Писать через дефис любое слово после ПО.","Путать наречие по-новому с сочетанием по новому маршруту.","Не различать по-видимому как наречие/вводное слово и предложные сочетания другой структуры."],
+      "examples":[{"prompt":"(ПО)ВИДИМОМУ, поезд задержится.","answer":"по-видимому","why":"Наречие модели ПО- + -ОМУ пишется через дефис."},{"prompt":"работать (ПО)НОВОМУ","answer":"по-новому","why":"Наречие способа действия той же модели."},{"prompt":"идти по новому маршруту","answer":"по новому","why":"ПО — предлог, «новому» — определение к существительному «маршруту»."}],
+      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Орфография: дефисное написание наречий с ПО-","purpose":"rule","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-06.txt","locator":"ege-ru-14-2026-14-01: (ПО)ВИДИМОМУ","purpose":"exam_scope","verification_status":"verified"}],
+      "status":"source_verified"
+    },
+    {
+      "explanation_id":"hyphenated_repeated_words",
+      "skill_ids":["orthographic_norms"],
+      "subskill_ids":["solid_separate_hyphenated_spelling"],
+      "exam_task_numbers":[14],
+      "title":"Повторные образования: давным-давно",
+      "short_rule":"Повтор одного слова или близких по форме компонентов, образующий единое наречное/усилительное выражение, обычно оформляется дефисом.",
+      "rule":"Сочетания типа давным-давно, тихо-тихо, мало-помалу, точь-в-точь относятся к повторным или парным образованиям и имеют закреплённое дефисное написание. Формальное повторение ещё не достаточно: свободное синтаксическое повторение слов может оформляться иначе, поэтому проверяется словарная/модельная устойчивость выражения.",
+      "algorithm":["Проверьте, образует ли повтор единое устойчивое наречное или усилительное значение.","Установите, относится ли сочетание к нормативной дефисной модели повторных/парных образований.","Не путайте с обычным повтором слов в предложении, разделённым синтаксически."],
+      "common_traps":["Писать раздельно устойчивое давным-давно.","Считать любой повтор слов дефисным.","Смешивать повторные образования с сочетаниями через предлог."],
+      "examples":[{"prompt":"ДАВНЫМ(ДАВНО)","answer":"давным-давно","why":"Устойчивое повторное наречное образование пишется через дефис."},{"prompt":"тихо-тихо","answer":"через дефис","why":"Повтор образует единое усилительное значение."}],
+      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Орфография: дефисное написание наречий и повторных образований","purpose":"rule","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-06.txt","locator":"ege-ru-14-2026-14-01: ДАВНЫМ(ДАВНО)","purpose":"exam_scope","verification_status":"verified"}],
+      "status":"source_verified"
+    }
+  ],
+  "routing_note":"These units extend task-14 internal learner feedback without changing the accepted Skill Graph or the existing broad fallback in file 62."
+}
