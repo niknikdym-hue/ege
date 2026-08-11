@@ -27,6 +27,29 @@ If instructions conflict, the more specific current task wins, but safety constr
 - Difficulty must remain `null` unless supported by validated data or explicitly defined by a reviewed algorithm.
 - Preserve backward compatibility unless the task explicitly describes and tests a migration.
 
+## Russian explanations and rules — source policy
+
+For Russian-language rules, explanations, algorithms, examples and error explanations, do not reinvent established subject matter and do not generate a new grammar methodology from scratch.
+
+Primary working source directory:
+
+`eksamio-learning-engine/russkiy-knigi/`
+
+Use the books and reference materials in this directory as the priority subject-matter corpus for explanation content, together with official current FIPI materials where exam-specific facts or wording are required.
+
+Rules:
+
+- derive explanations from verified existing linguistic/teaching sources rather than inventing rules;
+- preserve the meaning and correctness of the source rule while adapting presentation for a concise interactive trainer;
+- do not copy long copyrighted passages verbatim; summarize, normalize and rewrite into original concise instructional wording;
+- keep provenance for each explanation/rule block: source file, relevant section/topic, and any conflict between sources;
+- if sources disagree materially, do not resolve by guess; mark `needs_review` and document the conflict;
+- do not treat non-official books as source of truth for current EGE task numbering, scoring, criteria or official exam requirements; those must come from current verified FIPI sources;
+- explanation UX may be new, but the underlying linguistic rule should come from established verified sources;
+- whenever possible, separate `rule`, `short_rule`, `algorithm`, `examples`, `common_traps`, and `error_explanation`, so one verified rule can serve many trainer items without duplicating text.
+
+The product principle is: do not invent the wheel; build a better learning interface around verified knowledge.
+
 ## Change workflow
 
 For implementation work that can affect existing behavior:
