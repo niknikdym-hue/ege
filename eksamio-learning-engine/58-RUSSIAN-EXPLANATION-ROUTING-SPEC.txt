@@ -1,0 +1,236 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXPLANATION ROUTING SPEC
+
+STATUS: DESIGN / ADD-ONLY
+SCOPE: tasks 1–27
+PRODUCTION_INTEGRATION: HOLD
+
+PURPOSE
+
+Определить, какое именно explanation unit показывать ученику после ответа, не притворяясь, что система диагностировала более узкий навык, чем реально позволяют данные конкретной карточки и результата.
+
+CORE RULE
+
+EXPLANATION PRECISION MUST NOT EXCEED DIAGNOSTIC PRECISION.
+
+Если результат показывает только «задание 10 выполнено неверно», нельзя автоматически утверждать, что ученик не знает ПРЕ-/ПРИ-, если в карточке одновременно проверялись З/С, Ы/И, приставки и другие случаи.
+
+При недостаточной диагностике показывать безопасный task-level разбор + выбор/короткую карту возможных правил, а точный subskill подтверждать следующим независимым диагностическим примером.
+
+1. ROUTING CLASSES
+
+A. EXACT_ITEM
+Карточка проверяет один достаточно узкий навык; объяснение можно выбрать по trainer_item_id.
+
+B. EXACT_POSITION
+В карточке несколько позиций, каждая позиция заранее размечена отдельным subskill. После проверки можно объяснить ошибочную позицию.
+Требует position-level result data.
+
+C. TASK_LEVEL
+Из результата известно только задание/карточка; точный subskill определить нельзя. Показывается общий алгоритм задания и компактная карта возможных веток.
+
+D. DIAGNOSTIC_FOLLOWUP
+Текущая карточка смешивает несколько правил. После ошибки сначала показывается безопасный общий разбор, затем новый короткий диагностический пример, который изолирует один subskill.
+
+E. EXPERT_SELF_CHECK
+Автоматическая диагностика содержания не считается достаточной. Используется criterion-based self-check / expert contour.
+
+F. LEGACY_SPLIT
+Исторический формат не должен маршрутизироваться как текущий формат того же номера задания.
+
+2. ROUTING BY TASK
+
+TASK 1 — средство связи
+Class: EXACT_ITEM / sometimes TASK_LEVEL.
+Cards usually specify required part of speech or pronoun class; item metadata can route to cohesion_gap_grammatical_fit plus the named pronoun type when known.
+Do not infer a narrower cohesion type from a free answer when multiple official alternatives are allowed unless the accepted answer is mapped explicitly.
+
+TASK 2 — lexical meaning
+Class: TASK_LEVEL / DIAGNOSTIC_FOLLOWUP.
+Current format may contain several dictionary/context pairs. Wrong overall answer does not prove which lexical sense operation failed.
+Safe explanation: lexical_meaning_in_context algorithm.
+Exact definition_context_matching diagnosis requires position/choice-level result.
+
+TASK 3 — text characteristics
+Class: DIAGNOSTIC_FOLLOWUP.
+Options combine style, communicative purpose, speech type, grammar and expressive means.
+Overall wrong set cannot safely identify one subskill.
+Post-error: general evidence-check algorithm; then short targeted diagnostic by option feature.
+
+TASK 4 — orthoepy
+Class: EXACT_POSITION when option correctness is available; otherwise TASK_LEVEL.
+Each word is an independently verifiable normative form.
+Best future routing: word/bankEntryId -> stress subskill/POS cluster -> normative explanation + exception/retention bank.
+Do not infer a universal stress rule.
+
+TASK 5 — paronyms
+Class: EXACT_ITEM.
+Card directly targets paronym_context_choice.
+Future fine routing may use paronym-pair ID.
+
+TASK 6 — lexical editing
+Class: EXACT_ITEM.
+Separate item types:
+- lexical_redundancy;
+- lexical_collocation_correction.
+The card itself supplies enough information to choose the explanation unit.
+
+TASK 7 — morphological forms
+Class: DIAGNOSTIC_FOLLOWUP unless error token/target word is pretagged.
+One card can mix noun, numeral, adjective/adverb and verb forms.
+If the known incorrect target word has metadata, route exactly to noun_form_norms / numeral_form_norms / verb_form_norms etc.
+Otherwise show morphological decision algorithm and follow with isolated diagnostic.
+
+TASK 8 — grammar error matching
+Class: EXACT_POSITION REQUIRED for precise routing.
+Each matched position corresponds to a named error class.
+Without position-level result, show task-level syntactic_error_matching table only.
+Never say «ошибка в деепричастном обороте» from a total 0/1/2 score alone.
+
+TASK 9 — root spelling
+Class: DIAGNOSTIC_FOLLOWUP.
+Rows may mix checked, unchecked, alternating and special root rules.
+Wrong row/set does not isolate the rule.
+Future option/word tagging can upgrade to EXACT_POSITION/WORD.
+
+TASK 10 — prefixes and morpheme boundary
+Class: DIAGNOSTIC_FOLLOWUP.
+Rows may mix prefix_z_s, prefix_pre_pri, vowels_y_i_after_prefix, separating signs and stable prefix spelling.
+Use general prefix decision tree, then diagnostic item.
+
+TASK 11 — suffixes
+Class: DIAGNOSTIC_FOLLOWUP.
+Current Skill Graph node is broad; item can mix suffix families/parts of speech.
+Before integration, split learner content into smaller explanation IDs or provide internal branches.
+
+TASK 12 — verb endings / participles
+Class: DIAGNOSTIC_FOLLOWUP.
+One response can involve both verb_conjugation_endings and participle_suffixes.
+Use general conjugation-to-form algorithm, then isolate the failing branch.
+
+TASK 13 — НЕ / НИ
+Class: DIAGNOSTIC_FOLLOWUP.
+Options mix parts of speech and contextual conditions.
+Do not infer «НЕ with participle» vs another rule from total result unless option/word metadata exists.
+
+TASK 14 — solid/separate/hyphenated
+Class: DIAGNOSTIC_FOLLOWUP.
+Broad mixed node; must branch by part of speech/construction.
+Recommended pre-integration content split: conjunctions / prepositions / adverbs / particles-pronoun combinations / hyphenated models.
+
+TASK 15 — Н / НН
+Class: DIAGNOSTIC_FOLLOWUP, upgradeable to EXACT_POSITION.
+Each marked position can be tagged by derivational class: denominative adjective / verbal adjective / participle / short form / exception.
+Without such tagging use N/NN decision tree, not a guessed exact explanation.
+
+TASK 16 — homogeneous members / clause boundary
+Class: DIAGNOSTIC_FOLLOWUP.
+The option set can test homogeneous-member punctuation and compound-sentence boundary.
+Exact diagnosis requires option-level sentence structure tags.
+
+TASK 17 — detached constructions
+Class: EXACT_ITEM or EXACT_POSITION depending card.
+Current cards often have identifiable constructions: detached attribute, participial phrase, gerundial phrase.
+When multiple constructions appear in one sentence, route by position tag rather than total answer.
+
+TASK 18 — introductory words / forms of address
+Class: EXACT_POSITION preferred.
+A sentence can contain both introductory words and addresses plus non-introductory homonyms.
+Position tagging enables precise explanation; total result only supports task-level contrast table.
+
+TASK 19 — subordinate clauses
+Class: TASK_LEVEL / DIAGNOSTIC_FOLLOWUP.
+Can test subordinate boundaries and homogeneous subordinate clauses together.
+
+TASK 20 — mixed connection / junction of conjunctions
+Class: TASK_LEVEL / DIAGNOSTIC_FOLLOWUP.
+Use hierarchical parse algorithm first. Exact junction-of-conjunctions diagnosis only if the relevant position is known.
+
+TASK 21 — punctuation rule analysis
+Class: DIAGNOSTIC_FOLLOWUP / EXACT_ITEM by variant.
+Variant itself usually targets one sign (dash, colon, comma), so choose the sign-specific explanation table.
+Exact rule family within the variant requires sentence-level tags.
+
+TASK 22 — expressive means matching
+Class: EXACT_POSITION REQUIRED for precise device routing.
+Each A–E match can map to one device. Total score alone must not identify which device was confused.
+Post-error without position data: show device distinction table for the variant's option set.
+
+TASK 23 — content verification
+Class: TASK_LEVEL.
+Core explanation is statement verification + polarity control.
+Exact failure type (fact/cause/evaluation/absolute wording) may be diagnosed later by option tags.
+
+TASK 24 — speech types / semantic relations
+Class: DIAGNOSTIC_FOLLOWUP.
+Options mix narration, description, reasoning and semantic relation claims.
+Overall wrong set cannot isolate one.
+
+TASK 25 — lexical analysis
+Class: EXACT_ITEM + LEGACY_SPLIT.
+Current items: phraseologism_identification.
+Historical synonym card: contextual_synonym_selection_legacy.
+Historical card must be explicitly tagged legacy and excluded from current phraseology route.
+
+TASK 26 — interphrase cohesion
+Class: EXACT_ITEM / TASK_LEVEL.
+The prompt explicitly names one or more cohesion means, so item metadata can often provide the relevant subskills.
+If several means are required in one answer, do not infer which one failed from total correctness alone.
+
+TASK 27 — essay
+Class: EXPERT_SELF_CHECK.
+Use official K1–K10 contour.
+No normal automatic correct-answer routing.
+After completion: criterion/component self-check and educational component routing.
+
+3. ROUTING OUTPUT CONTRACT
+
+A routing decision should contain:
+- trainer_item_id;
+- task_number;
+- result_precision: item | position | option | word | task | expert_self_check;
+- candidate_subskill_ids;
+- selected_explanation_ids;
+- confidence: exact | safe_general | diagnostic_required;
+- reason;
+- next_action: explain | explain_then_diagnose | self_check | no_learning_feedback_yet;
+- legacy flag when applicable.
+
+Do NOT store inferred student mastery from a `safe_general` route as if a specific subskill were proven weak.
+
+4. FALLBACK ORDER
+
+1. exact item/position explanation when evidence exists;
+2. safe general task/skill explanation;
+3. existing current trainer `card.explanation + steps + trap` fallback;
+4. if ambiguity matters, independent diagnostic item;
+5. never fabricate a precise weakness.
+
+5. WORK-ON-ERRORS RULE
+
+For DIAGNOSTIC_FOLLOWUP:
+wrong mixed item
+-> safe general explanation
+-> isolated new item for one candidate subskill
+-> result
+-> update subskill state only after diagnostic evidence
+-> later NIC-3 / retention.
+
+6. DATA SAFETY
+
+This spec changes no current trainer code/storage.
+No new localStorage keys are introduced here.
+No existing trainer_item_id is changed.
+No answer/scoring logic is changed.
+
+7. IMPLEMENTATION GATE
+
+Before runtime integration create a repository-visible routing map that tags current trainer items/positions without modifying their source content.
+The routing layer must be detachable; if it fails, existing feedback remains fully functional.
+
+CURRENT STATUS
+
+ROUTING ARCHITECTURE: DESIGNED
+PRODUCTION ROUTING: NOT IMPLEMENTED
+CURRENT TRAINER: UNCHANGED
+CODEX: NOT REQUIRED
