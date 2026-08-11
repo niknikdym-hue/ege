@@ -1,19 +1,24 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.0.1",
   "subject":"russian",
   "exam":"ege",
   "wave_id":"explanation_wave_1_tasks_9_21",
   "scope":{"tasks_from":9,"tasks_to":21,"production_integration":false},
   "source_policy":{"primary_rule_source":"eksamio-learning-engine/russkiy-knigi/rozental.doc","exam_format_source":"verified FIPI/demo/source corpus","other_books":"optional supporting presentation sources only"},
-  "status":"source_layer_complete_content_review_pending",
+  "status":"source_layer_complete_normalization_in_progress_integration_hold",
   "explanation_files":[
     {"path":"31-RUSSIAN-EXPLANATION-N-NN-SOURCE-AUDIT.txt","tasks":[15],"role":"prototype_source_audit"},
-    {"path":"32-RUSSIAN-EXPLANATION-BANK-v0.1.json","tasks":[15],"role":"n_nn_explanation"},
-    {"path":"34-RUSSIAN-EXPLANATION-ORTHOGRAPHY-9-10-v0.1.json","tasks":[9,10],"role":"orthography_explanations"},
-    {"path":"36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json","tasks":[11,12],"role":"orthography_explanations"},
-    {"path":"38-RUSSIAN-EXPLANATION-ORTHOGRAPHY-13-14-v0.1.json","tasks":[13,14],"role":"orthography_explanations"},
-    {"path":"40-RUSSIAN-EXPLANATION-PUNCTUATION-16-18-v0.1.json","tasks":[16,17,18],"role":"punctuation_explanations"},
-    {"path":"41-RUSSIAN-EXPLANATION-PUNCTUATION-19-21-v0.1.json","tasks":[19,20,21],"role":"punctuation_explanations"}
+    {"path":"32-RUSSIAN-EXPLANATION-BANK-v0.1.json","tasks":[15],"role":"n_nn_explanation","contract":"normalized"},
+    {"path":"34-RUSSIAN-EXPLANATION-ORTHOGRAPHY-9-10-v0.1.json","tasks":[9,10],"role":"orthography_explanations","contract":"source_file_plus_examples_overlay"},
+    {"path":"36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json","tasks":[11,12],"role":"orthography_explanations","contract":"normalized"},
+    {"path":"38-RUSSIAN-EXPLANATION-ORTHOGRAPHY-13-14-v0.1.json","tasks":[13,14],"role":"orthography_explanations","contract":"normalized"},
+    {"path":"40-RUSSIAN-EXPLANATION-PUNCTUATION-16-18-v0.1.json","tasks":[16,17,18],"role":"punctuation_explanations","contract":"source_file_plus_examples_overlay"},
+    {"path":"41-RUSSIAN-EXPLANATION-PUNCTUATION-19-21-v0.1.json","tasks":[19,20,21],"role":"punctuation_explanations","contract":"source_file_plus_examples_overlay"}
+  ],
+  "normalization_files":[
+    {"path":"61-RUSSIAN-EXPLANATION-TASK11-SUFFIX-SPLITS-v0.1.json","tasks":[11],"role":"precise_internal_learner_splits"},
+    {"path":"62-RUSSIAN-EXPLANATION-TASK14-WRITING-SPLITS-v0.1.json","tasks":[14],"role":"precise_internal_learner_splits"},
+    {"path":"63-RUSSIAN-EXPLANATION-WAVE1-EXAMPLES-OVERLAY-v0.1.json","tasks":[9,10,16,17,18,19,20,21],"role":"required_examples_overlay","merge_key":"explanation_id"}
   ],
   "exception_and_contrast_files":[
     {"path":"33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json","tasks":[15],"role":"n_nn_exceptions"},
@@ -25,10 +30,10 @@
   "task_coverage":[
     {"task":9,"status":"source_verified_content_created"},
     {"task":10,"status":"source_verified_content_created"},
-    {"task":11,"status":"source_verified_content_created"},
+    {"task":11,"status":"source_verified_content_created_with_internal_splits"},
     {"task":12,"status":"source_verified_content_created"},
     {"task":13,"status":"source_verified_content_created"},
-    {"task":14,"status":"source_verified_content_created"},
+    {"task":14,"status":"source_verified_content_created_with_internal_splits"},
     {"task":15,"status":"source_verified_content_created"},
     {"task":16,"status":"source_verified_content_created"},
     {"task":17,"status":"source_verified_content_created"},
@@ -37,12 +42,12 @@
     {"task":20,"status":"source_verified_content_created"},
     {"task":21,"status":"source_verified_content_created"}
   ],
-  "integration_gate":{"allowed":false,"reason":"Content review, schema/JSON validation, cross-link validation and regression/integration plan are still required before touching production trainer."},
+  "integration_gate":{"allowed":false,"reason":"Canonical merge, machine JSON/schema validation, final content review, exact routing tags and regression/integration plan are still required before touching production trainer."},
   "next_actions":[
-    "Run independent content review of wave 1 without editing production trainer.",
-    "Validate JSON files and cross-links to Skill Graph IDs.",
-    "Mark reviewed units content_reviewed only after passing checks.",
-    "Then build wave 2 for tasks 1-8 and 22-26; task 27 remains separate.",
-    "Continue extracting high-value Rozental exceptions into the exceptions knowledge bank."
+    "Create canonical merge/build specification for source files plus overlays/splits.",
+    "Finish contract/source provenance audit of wave 1 and exceptions banks.",
+    "Build item/position tag data for precise explanation routing.",
+    "Machine-validate canonical merged JSON when local/container file access is available.",
+    "Keep production trainer unchanged until integration gate."
   ]
 }
