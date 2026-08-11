@@ -1,0 +1,111 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"future_learner_state_contract_for_exceptions_trainer",
+  "integration_status":"not_connected_to_production",
+  "storage_design":{"future_namespace":"eksamio:russian:exceptions","version":1,"note":"Design only. Do not create or migrate this key in the current trainer before an approved implementation/storage gate."},
+  "profile_contract":{
+    "required":["schema_version","profile_id","created_at","updated_at","exceptions"],
+    "fields":{
+      "schema_version":"integer-compatible state schema version",
+      "profile_id":"anonymous local learner/profile identifier; no real name required",
+      "created_at":"ISO timestamp",
+      "updated_at":"ISO timestamp",
+      "exceptions":"object keyed by exception_id",
+      "session_history":"optional compact recent-session summaries",
+      "settings":"optional learner UX settings; never source truth for exam rules"
+    }
+  },
+  "exception_state_contract":{
+    "required":["exception_id","status","seen_count","correct_count","wrong_count","consecutive_correct","last_seen_at","last_result","next_due_at","retention_stage","updated_at"],
+    "fields":{
+      "exception_id":"must resolve to canonical Exceptions Bank",
+      "status":"new | active | due | stabilizing | stabilized",
+      "seen_count":"non-negative integer",
+      "correct_count":"non-negative integer",
+      "wrong_count":"non-negative integer",
+      "consecutive_correct":"non-negative integer; not itself mastery",
+      "last_seen_at":"ISO timestamp or null",
+      "last_wrong_at":"ISO timestamp or null",
+      "last_correct_at":"ISO timestamp or null",
+      "last_result":"correct | wrong | skipped | null",
+      "last_mode":"practice mode used at last attempt or null",
+      "last_transfer_level":"recognition | guided_recall | independent_context | transfer | null",
+      "next_due_at":"ISO timestamp or null",
+      "retention_stage":"new | learning | short_review | delayed_review | stabilized",
+      "transfer_passed":"boolean",
+      "retention_passed":"boolean",
+      "origin":"manual_practice | main_trainer_exact_error | transfer_failure | retention_failure | imported_future",
+      "origin_ref":"optional trainer_item_id/practice_item_id/event id",
+      "active_error_count":"non-negative integer representing unresolved wrong events, not lifetime wrong_count",
+      "last_practice_item_id":"optional",
+      "recent_context_signatures":"bounded list used to avoid immediate context repetition",
+      "updated_at":"ISO timestamp"
+    }
+  },
+  "status_semantics":{
+    "new":"known to bank but learner has not produced usable evidence yet",
+    "active":"learner has started work or has an unresolved error",
+    "due":"next_due_at is reached and review should be prioritized",
+    "stabilizing":"learner has recent recall/context success but retention is not yet confirmed",
+    "stabilized":"retention criterion has been met; history remains and future due checks may still be scheduled"
+  },
+  "attempt_event_contract":{
+    "required":["event_id","practice_item_id","exception_id","mode","started_at","answered_at","is_correct","response","source"],
+    "fields":{
+      "event_id":"unique attempt event id",
+      "practice_item_id":"canonical practice item id",
+      "exception_id":"source exception id",
+      "mode":"practice mode",
+      "started_at":"ISO timestamp",
+      "answered_at":"ISO timestamp",
+      "response_time_ms":"non-negative integer or null",
+      "response":"learner response in response-kind-compatible form",
+      "is_correct":"boolean",
+      "source":"exceptions_all | my_exceptions | main_trainer_handoff | retry | retention",
+      "transfer_level":"recognition | guided_recall | independent_context | transfer",
+      "context_signature":"practice context signature",
+      "was_repeated_in_session":"boolean",
+      "previous_wrong_same_exception":"boolean",
+      "session_id":"session id",
+      "created_at":"ISO timestamp"
+    }
+  },
+  "session_summary_contract":{
+    "required":["session_id","started_at","completed_at","items_seen","first_attempt_correct","wrong_exception_ids","source"],
+    "fields":{
+      "session_id":"unique session id",
+      "started_at":"ISO timestamp",
+      "completed_at":"ISO timestamp",
+      "items_seen":"integer",
+      "first_attempt_correct":"integer",
+      "wrong_exception_ids":"unique exception IDs wrong at least once in session",
+      "stabilizing_exception_ids":"optional IDs moved toward stabilization",
+      "due_completed_exception_ids":"optional due IDs reviewed",
+      "source":"all_exceptions | my_exceptions | work_on_errors | handoff",
+      "filters":"optional topic/session filters",
+      "schema_version":"state schema version"
+    }
+  },
+  "update_rules":[
+    "never mark stabilized after one recognition-only correct answer",
+    "wrong answer sets status active and increases wrong_count and active_error_count",
+    "exact main-trainer error may create/activate state only when routing identifies a specific exception_id",
+    "broad task failure must not create a guessed exception_id state",
+    "correct recognition can increment evidence but does not by itself set transfer_passed",
+    "transfer_passed requires an independent_context or transfer item under the future mastery policy",
+    "retention_passed requires later due evidence, not same-session repetition alone",
+    "stabilized status does not delete prior wrong_count/history",
+    "schema migration must be explicit and reversible",
+    "state update must be idempotent per event_id to prevent double counting after reload/retry"
+  ],
+  "privacy_and_storage_rules":[
+    "anonymous local use must work without registration",
+    "do not store source books or hidden answer banks inside learner state",
+    "do not store real name/email unless a future account layer explicitly owns that data",
+    "do not silently erase old state when schema version changes",
+    "server sync is a future separate layer"
+  ],
+  "production_integration":"HOLD"
+}
