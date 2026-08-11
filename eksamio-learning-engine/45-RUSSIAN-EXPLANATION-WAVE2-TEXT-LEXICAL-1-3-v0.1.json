@@ -1,0 +1,54 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"student_explanation_bank",
+  "integration_status":"not_connected_to_production",
+  "content_version":"0.1.0",
+  "scope":"tasks_1_3",
+  "units":[
+    {
+      "explanation_id":"cohesion_gap_grammatical_fit",
+      "skill_ids":["text_cohesion"],
+      "subskill_ids":["cohesion_gap_grammatical_fit","cohesion_determinative_pronoun","cohesion_demonstrative_pronoun"],
+      "exam_task_numbers":[1],
+      "title":"Средство связи: сначала смысл, потом часть речи и форма",
+      "short_rule":"Слово в пропуске должно одновременно связывать фрагменты текста по смыслу и грамматически подходить к предложению. Одного формального совпадения части речи недостаточно.",
+      "rule":"При подборе местоимения или другого средства связи сначала установите, на какой предмет, признак, действие или целый фрагмент указывает пропуск. Затем проверьте требуемый разряд местоимения и его форму. Определительные местоимения обобщают или выделяют предметы/лица; указательные отсылают к уже названному содержанию. В некоторых контекстах допустимо несколько официальных ответов, если они сохраняют и смысл, и грамматику.",
+      "algorithm":["Прочитайте предложение до и после пропуска.","Определите, что именно должно быть связано с предыдущим контекстом.","Установите требуемую часть речи/разряд по условию.","Подставьте кандидат и проверьте смысловую связь.","Проверьте грамматическую форму и сочетаемость.","Если возможны несколько слов, не отбрасывайте вариант только из-за привычности: решает контекст и официально допустимые формы."],
+      "common_traps":["Подбирать слово только по части речи.","Игнорировать, к какому фрагменту текста отсылает местоимение.","Считать единственно возможным первый пришедший в голову синонимичный вариант."],
+      "examples":[{"prompt":"Все участники собрались. ___ уже знали решение.","answer":"они/все — в зависимости от условия и контекста","why":"Нужно учитывать заданный разряд и функцию связи, а не только грамматическую возможность."}],
+      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Морфология: местоимение; стилистика связного текста","purpose":"rule","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-PREVIEW.html","locator":"task 1 cards","purpose":"exam_scope","verification_status":"verified"}],
+      "status":"source_verified"
+    },
+    {
+      "explanation_id":"lexical_meaning_in_context",
+      "skill_ids":["lexical_norms_and_semantics"],
+      "subskill_ids":["lexical_meaning_in_context","definition_context_matching","dictionary_sense_selection"],
+      "exam_task_numbers":[2],
+      "title":"Лексическое значение: проверяйте именно контекст",
+      "short_rule":"Многозначное слово нельзя узнавать по знакомому словарному толкованию. Нужно проверить, подходит ли это значение именно к предложению из текста.",
+      "rule":"Одно слово может иметь несколько значений. В задании требуется соотнести конкретное употребление с конкретным словарным толкованием. Надёжный приём — заменить выделенное слово предложенным толкованием и проверить, сохраняются ли смысл и логические связи предложения.",
+      "algorithm":["Найдите выделенное слово в исходном тексте.","Сформулируйте его значение своими словами по контексту.","Подставьте предложенное словарное толкование вместо слова.","Проверьте, не изменился ли смысл предложения.","Отдельно отсекайте значения, которые подходят слову вообще, но не подходят данному употреблению."],
+      "common_traps":["Выбирать самое знакомое значение слова.","Не возвращаться к исходному тексту.","Путать переносное, терминологическое и общеязыковое значение."],
+      "contrast_examples":[{"pair":["ключ от двери","ключ к пониманию"],"point":"Одинаковое слово — разные значения; решает контекст."},{"pair":["живая природа","живое изложение"],"point":"Прилагательное реализует разные лексические значения."}],
+      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Лексика: многозначность, прямое и переносное значение, лексическая сочетаемость","purpose":"rule","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-PREVIEW.html","locator":"task 2 cards","purpose":"exam_scope","verification_status":"verified"}],
+      "status":"source_verified"
+    },
+    {
+      "explanation_id":"functional_style_identification",
+      "skill_ids":["text_style_analysis"],
+      "subskill_ids":["functional_style_identification","genre_and_communicative_purpose","functional_semantic_speech_type","language_feature_evidence","expressive_means_in_context"],
+      "exam_task_numbers":[3],
+      "title":"Характеристика текста: доказывайте каждый признак",
+      "short_rule":"Стиль и тип речи определяют не по теме текста, а по цели, адресату, лексике, грамматике и композиции. Каждый выбранный вариант должен подтверждаться самим текстом.",
+      "rule":"Один и тот же предмет может описываться в научном, публицистическом, художественном или ином стиле. Поэтому тема не является доказательством. Сначала определите коммуникативную задачу и тип изложения, затем проверяйте конкретные признаки: термины и абстрактную лексику, оценочность, тропы, ряды однородных членов, вводные конструкции, отглагольные существительные и другие названные в варианте средства.",
+      "algorithm":["Определите, зачем создан текст и кому он адресован.","Определите ведущий тип речи: повествование, описание, рассуждение или сочетание.","Для каждого варианта найдите в тексте названные лексические признаки.","Проверьте морфологические и синтаксические утверждения на конкретных примерах.","Отдельно проверьте названные средства выразительности.","Отбрасывайте вариант, если хотя бы его ключевая часть не подтверждается текстом."],
+      "common_traps":["Научная тема = научный стиль.","Термин сам по себе доказывает научный стиль.","Считать характеристику верной, если подтверждается только половина формулировки.","Определять тип речи по одному предложению вместо анализируемого фрагмента."],
+      "examples":[{"prompt":"В тексте есть термины и метафоры. Можно ли автоматически назвать его научным?","answer":"нет","why":"Нужно учитывать цель, адресата и совокупность языковых признаков."}],
+      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Стилистика: функциональные стили, лексические и синтаксические средства","purpose":"rule","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-PREVIEW.html","locator":"task 3 cards","purpose":"exam_scope","verification_status":"verified"}],
+      "status":"source_verified"
+    }
+  ],
+  "review_notes":"Wave 2 tasks 1-3. Source layer only; no production changes. Task 3 is deliberately evidence-driven because one answer option can combine style, speech type, grammar and expressive means."
+}
