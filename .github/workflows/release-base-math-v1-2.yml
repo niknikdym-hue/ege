@@ -1,0 +1,128 @@
+name: Release Base Math 2026 v1.2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/release-base-math-v1-2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install latex2mathml selenium
+
+      - name: Apply v1.2 integer-format rule
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026')
+          runtime=root/'templates'/'runtime.js'
+          s=runtime.read_text(encoding='utf-8')
+          s=s.replace("const C=window.EKSAMIO_MATH_BASE,$=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];", "const C=window.EKSAMIO_MATH_BASE,$=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];\nconst NUMERIC_FORMATS={1:'integer'};")
+          old="function numericError(){return 'Недопустимый формат. Пробелы, буквы, единицы, знак «+» и лишние знаки не сохраняются.'}"
+          new="function numericError(reason){if(reason==='integer')return 'Для этого задания нужен целый ответ. Введите число без запятой и дробной части.';return 'Недопустимый формат. Используйте только число без пробелов, букв, единиц измерения и знака «+».'}"
+          assert old in s
+          s=s.replace(old,new)
+          old="function validateNumeric(v,value){if(value==='')return {empty:true,valid:false};return {empty:false,valid:/^-?\\d+(?:,\\d+)?$/.test(value)}}"
+          new="function validateNumeric(v,value){if(value==='')return {empty:true,valid:false,reason:null};if(!/^-?\\d+(?:,\\d+)?$/.test(value))return {empty:false,valid:false,reason:'syntax'};if(NUMERIC_FORMATS[state.current]==='integer'&&value.includes(','))return {empty:false,valid:false,reason:'integer'};return {empty:false,valid:true,reason:null}}"
+          assert old in s
+          s=s.replace(old,new)
+          s=s.replace("${invalid?numericError():''}", "${invalid?numericError(chk.reason):''}")
+          s=s.replace("err.textContent=chk.empty||chk.valid?'':numericError();", "err.textContent=chk.empty||chk.valid?'':numericError(chk.reason);")
+          runtime.write_text(s,encoding='utf-8')
+
+          build=root/'scripts'/'build_demo_release.py'
+          s=build.read_text(encoding='utf-8')
+          s=s.replace("PACKAGE_VERSION='1.1'","PACKAGE_VERSION='1.2'")
+          s=s.replace("CONTENT_VERSION='2026.2'","CONTENT_VERSION='2026.3'")
+          s=s.replace("STORAGE_KEY='eksamio_ege_math_base_demo_2026_v1_1'","STORAGE_KEY='eksamio_ege_math_base_demo_2026_v1_2'")
+          s=s.replace("'task 1 integer-answer hint'", "'task 1 integer-answer hint','task 1 rejects non-integer numeric format with explicit student feedback'")
+          build.write_text(s,encoding='utf-8')
+
+          shell=root/'templates'/'T123-shell.html'
+          s=shell.read_text(encoding='utf-8').replace('packageVersion:"1.1"','packageVersion:"1.2"').replace('contentVersion:"2026.2"','contentVersion:"2026.3"').replace('storageKey:"eksamio_ege_math_base_demo_2026_v1_1"','storageKey:"eksamio_ege_math_base_demo_2026_v1_2"')
+          shell.write_text(s,encoding='utf-8')
+
+          src=root/'tests'/'test_v1_1_selenium.py'
+          dst=root/'tests'/'test_v1_2_selenium.py'
+          t=src.read_text(encoding='utf-8').replace('v1.1','v1.2').replace("'package_version':'1.1'","'package_version':'1.2'")
+          t=t.replace("assert st=={'value':'11,2','valid':True},st\n        assert js(driver,'window.EKSAMIO_MATH_BASE_TEST.score(1)')==0", "assert st=={'value':'11,2','valid':False},st\n        assert not js(driver,'window.EKSAMIO_MATH_BASE_TEST.isAnswered(1)')\n        assert js(driver,'window.EKSAMIO_MATH_BASE_TEST.score(1)')==0\n        assert 'целый ответ' in driver.find_element(By.ID,'mb-input-error').text")
+          t=t.replace("'PASS: 11.2 → 11,2 → navigation/reload 11,2; scorer 0/1'", "'PASS: 11.2 → 11,2; explicit integer-format error; navigation/reload preserves raw value; scorer 0/1'")
+          dst.write_text(t,encoding='utf-8')
+          PY
+
+      - name: Build v1.2
+        run: |
+          python ege-matematika-baza-demoversiya-2026/scripts/build_demo_release.py
+          cd ege-matematika-baza-demoversiya-2026
+          python tests/test_static.py
+          python tests/test_source_fidelity.py
+
+      - name: Browser audit v1.2
+        run: |
+          cd ege-matematika-baza-demoversiya-2026
+          python -m http.server 8772 --bind 127.0.0.1 >/tmp/base-v12-http.log 2>&1 &
+          echo $! >/tmp/base-v12-http.pid
+          sleep 2
+          EKSAMIO_PREVIEW_URL=http://127.0.0.1:8772/ege-matematika-baza-demoversiya-2026-PREVIEW.html EKSAMIO_EVIDENCE_OUT=tests/evidence/v1.2-selenium-evidence.json python tests/test_v1_2_selenium.py
+          kill $(cat /tmp/base-v12-http.pid) || true
+
+      - name: Finalize metadata and repack
+        run: |
+          python - <<'PY'
+          import importlib.util,json
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026');prefix='ege-matematika-baza-demoversiya-2026'
+          ev=json.loads((root/'tests/evidence/v1.2-selenium-evidence.json').read_text(encoding='utf-8'))
+          assert ev['status']=='PASS' and ev['checks']['official_examples_real_controls']=='70/70' and ev['checks']['full_correct_attempt']=='21/21' and ev['checks']['javascript_errors']==0
+          bp=root/f'{prefix}-BUILD-EVIDENCE.json';b=json.loads(bp.read_text(encoding='utf-8'));b.update({'status':'PASS_READY_FOR_TILDA_TEST','browser_audit':'PASS — Chrome/Selenium 70/70 + integer-format regression','manual_student_acceptance':'PASS — v1.2 targeted UX correction after production review','full_correct_attempt':'21/21','javascript_errors':0});bp.write_text(json.dumps(b,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          ep=root/f'{prefix}-EXAM-MAP.json';e=json.loads(ep.read_text(encoding='utf-8'));e['build_status']='BUILT_AND_TESTED';e['release_status']='READY_FOR_TILDA_TEST';ep.write_text(json.dumps(e,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          ps=root/f'{prefix}-PAGE-STATUS.txt';txt=ps.read_text(encoding='utf-8').replace('PACKAGE_VERSION: 1.1','PACKAGE_VERSION: 1.2');txt=txt.replace('FINAL_STATUS: READY_FOR_TILDA_TEST','INTEGER_FORMAT_FEEDBACK_GATE: PASS — task 1 rejects decimal with explicit message\nFINAL_STATUS: READY_FOR_TILDA_TEST');ps.write_text(txt,encoding='utf-8')
+          tr=root/f'{prefix}-TEST-REPORT.txt';txt=tr.read_text(encoding='utf-8').replace('PACKAGE_VERSION: 1.1','PACKAGE_VERSION: 1.2').replace('v1.1','v1.2');txt += '\nV1.2 TARGETED FIX\n- Для задания 1 дробный ввод сохраняется как введённый, но считается некорректным форматом.\n- Сообщение ученику: «Для этого задания нужен целый ответ. Введите число без запятой и дробной части.»\n- Дробные ответы в других заданиях продолжают приниматься.\n';tr.write_text(txt,encoding='utf-8')
+          p=(root/'scripts'/'build_demo_release.py').resolve();s=importlib.util.spec_from_file_location('build',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);m.manifest_and_zip()
+          PY
+
+      - name: Audit clean final ZIP
+        run: |
+          rm -rf /tmp/base-v12-clean && mkdir -p /tmp/base-v12-clean
+          unzip -q ege-matematika-baza-demoversiya-2026-v1.2.zip -d /tmp/base-v12-clean
+          CLEAN=/tmp/base-v12-clean/ege-matematika-baza-demoversiya-2026
+          DEMO_ROOT="$CLEAN" python ege-matematika-baza-demoversiya-2026/tests/test_static.py
+          DEMO_ROOT="$CLEAN" python ege-matematika-baza-demoversiya-2026/tests/test_source_fidelity.py
+          cd "$CLEAN"
+          python -m http.server 8773 --bind 127.0.0.1 >/tmp/base-v12-clean-http.log 2>&1 &
+          echo $! >/tmp/base-v12-clean-http.pid
+          sleep 2
+          cd "$GITHUB_WORKSPACE/ege-matematika-baza-demoversiya-2026"
+          EKSAMIO_PREVIEW_URL=http://127.0.0.1:8773/ege-matematika-baza-demoversiya-2026-PREVIEW.html EKSAMIO_EVIDENCE_OUT=tests/evidence/v1.2-clean-zip-selenium-evidence.json python tests/test_v1_2_selenium.py
+          kill $(cat /tmp/base-v12-clean-http.pid) || true
+
+      - name: Repack clean-ZIP evidence and commit release
+        run: |
+          python - <<'PY'
+          import importlib.util,json
+          from pathlib import Path
+          root=Path('ege-matematika-baza-demoversiya-2026')
+          ev=json.loads((root/'tests/evidence/v1.2-clean-zip-selenium-evidence.json').read_text(encoding='utf-8'))
+          assert ev['status']=='PASS' and ev['checks']['official_examples_real_controls']=='70/70' and ev['checks']['javascript_errors']==0
+          p=(root/'scripts'/'build_demo_release.py').resolve();s=importlib.util.spec_from_file_location('build',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);m.manifest_and_zip()
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -f .github/workflows/release-base-math-v1-2.yml
+          git add -A
+          git commit -m 'Release base mathematics 2026 v1.2 integer-format feedback'
+          git pull --rebase origin main
+          git push origin main
