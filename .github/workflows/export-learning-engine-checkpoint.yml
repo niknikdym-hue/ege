@@ -1,0 +1,22 @@
+name: Export Learning Engine Checkpoint
+
+on:
+  push:
+    branches:
+      - chatgpt-export-learning-engine-20260811
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Upload Learning Engine folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: eksamio-learning-engine-current-checkpoint
+          path: eksamio-learning-engine
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
