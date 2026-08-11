@@ -1,0 +1,76 @@
+EKSAMIO LEARNING ENGINE
+CURRENT WORK STATUS ADDENDUM
+DATE: 2026-08-11
+READ AFTER: 00-WORK-STATUS.txt
+
+PURPOSE
+
+This ADD-ONLY file records work completed after the latest edit of `00-WORK-STATUS.txt` without rewriting the historical checkpoint during active source-bank expansion.
+
+LATEST DELTA
+
+EXCEPTIONS PRACTICE SOURCE BANK
+- Wave 1: 92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json — 24 cards.
+- Wave 2: 96-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE2-v0.1.json — 24 cards.
+- Wave 3: 98-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE3-v0.1.json — 24 cards.
+- CURRENT TOTAL: 72 original Eksamio source practice cards.
+
+CURRENT PRACTICE MANIFEST
+- `99-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-MANIFEST.json`
+- It is the current build manifest for all three waves.
+- `93-RUSSIAN-EXCEPTIONS-PRACTICE-MANIFEST.json` remains the frozen 48-card checkpoint for waves 1-2.
+
+CURRENT PRACTICE BUILDER
+- `build/build_russian_exceptions_practice_current.py`
+- thin wrapper over shared `build/build_russian_exceptions_practice.py`;
+- current manifest expected total: 72;
+- machine execution still pending local project-file access.
+
+REVIEWS
+- `94-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-REVIEW.txt`: PASS / machine pending.
+- `97-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE2-REVIEW.txt`: PASS / machine pending.
+- `100-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE3-REVIEW.txt`: PASS / machine pending.
+
+EXCEPTIONS SOURCE BANK
+Master manifest:
+- `83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json`
+
+Current registered source banks include:
+- 33 N/NN;
+- 35 roots/prefixes;
+- 37 suffixes/conjugation;
+- 39 NE/NI + solid/separate boundaries;
+- 42 punctuation contrasts;
+- 48 difficult norms;
+- 84 introductory-word special cases;
+- 85 high-risk NE/NI;
+- 86 high-risk solid/separate;
+- 87 task-7 noun morphology;
+- 88 task-8 syntax;
+- 89 selected paronym contrasts.
+
+Review-only graph gap:
+- `87A-RUSSIAN-MORPHOLOGY-GRAPH-GAP-CANDIDATES.txt`.
+
+SESSION POLICY
+- `95-RUSSIAN-EXCEPTIONS-SESSION-POLICY.txt`
+- priority is NOT guessed difficulty;
+- learner history/retention/personal errors outrank new reference material;
+- recognition alone does not establish mastery.
+
+CURRENT SAFETY
+
+- Current EGE trainer: UNCHANGED.
+- Current trainer T123/JS/CSS/HTML/localStorage: UNCHANGED.
+- Answers/scoring/trainer_item_id: UNCHANGED.
+- Tilda/public pages: UNCHANGED.
+- Production integration: HOLD.
+- Codex used for this work: NO.
+
+NEXT ACTIVE WORK
+
+1. Public Exceptions Trainer UX/data design.
+2. Personal exception-state contract (`All Exceptions` / future `My Exceptions`).
+3. Continue source-bank/practice expansion only where it adds real coverage rather than duplicates.
+4. Run canonical explanation/exceptions/practice builders when local files become available.
+5. Only after machine PASS: implementation/integration design and regression plan.
