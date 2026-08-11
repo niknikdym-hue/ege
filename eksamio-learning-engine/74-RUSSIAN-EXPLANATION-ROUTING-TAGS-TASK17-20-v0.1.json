@@ -1,0 +1,61 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"verified_routing_tags_current_tasks_17_19_20",
+  "integration_status":"not_connected_to_production",
+  "schema_ref":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
+  "items":[
+    {
+      "trainer_item_id":"ege-ru-17-2026-17-01",
+      "task_number":17,
+      "routing_precision":"position",
+      "candidate_subskill_ids":["detached_attributes","participial_phrase_detachment","gerundial_phrase_detachment"],
+      "position_tags":[
+        {"position_id":"pos_2","source_locator":"час (2) самый счастливый для неподвижных деревьев...","subskill_ids":["detached_attributes"],"explanation_id":"detached_attributes","diagnostic_confidence":"exact"},
+        {"position_id":"pos_3","source_locator":"...деревьев (3) и страшный...; no comma in key","subskill_ids":["detached_attributes"],"explanation_id":"detached_attributes","diagnostic_confidence":"partial"},
+        {"position_id":"pos_4","source_locator":"и (4) страшный...; no comma in key","subskill_ids":["detached_attributes"],"explanation_id":"detached_attributes","diagnostic_confidence":"partial"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Position 2 is the exact opening boundary of a postpositive detached definition group. Positions 3-4 are kept partial because they concern internal coordination inside that group rather than a separate Skill Graph node."
+    },
+    {
+      "trainer_item_id":"ege-ru-19-2026-19-01",
+      "task_number":19,
+      "routing_precision":"position",
+      "candidate_subskill_ids":["subordinate_clause_boundaries","homogeneous_subordinate_clauses"],
+      "position_tags":[
+        {"position_id":"pos_1","source_locator":"Чтобы различать виды птиц (1) орнитологи...","subskill_ids":["subordinate_clause_boundaries"],"explanation_id":"subordinate_clause_boundaries","diagnostic_confidence":"exact"},
+        {"position_id":"pos_2","source_locator":"определители (2) в которых дают характеристики...","subskill_ids":["subordinate_clause_boundaries"],"explanation_id":"subordinate_clause_boundaries","diagnostic_confidence":"exact"},
+        {"position_id":"pos_3","source_locator":"...дают характеристики пернатым (3) и...; no comma in key","subskill_ids":["homogeneous_subordinate_clauses"],"explanation_id":"homogeneous_subordinate_clauses","diagnostic_confidence":"exact"},
+        {"position_id":"pos_4","source_locator":"и (4) которые значительно упрощают...; no comma in key","subskill_ids":["homogeneous_subordinate_clauses"],"explanation_id":"homogeneous_subordinate_clauses","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Positions 3-4 provide negative punctuation evidence for two homogeneous relative subordinate clauses joined by a single И."
+    },
+    {
+      "trainer_item_id":"ege-ru-20-2026-20-01",
+      "task_number":20,
+      "routing_precision":"position",
+      "candidate_subskill_ids":["mixed_connection_complex_sentence","junction_of_conjunctions"],
+      "position_tags":[
+        {"position_id":"pos_1","source_locator":"предположение (1) и если...","subskill_ids":["mixed_connection_complex_sentence"],"explanation_id":"mixed_connection_complex_sentence","diagnostic_confidence":"exact"},
+        {"position_id":"pos_2","source_locator":"и (2) если оно неверно...; no comma in key","subskill_ids":["junction_of_conjunctions"],"explanation_id":"junction_of_conjunctions","diagnostic_confidence":"exact"},
+        {"position_id":"pos_3","source_locator":"если оно неверно (3) то...","subskill_ids":["mixed_connection_complex_sentence"],"explanation_id":"mixed_connection_complex_sentence","diagnostic_confidence":"exact"},
+        {"position_id":"pos_4","source_locator":"объяснений тому (4) что случилось...","subskill_ids":["mixed_connection_complex_sentence"],"explanation_id":"mixed_connection_complex_sentence","diagnostic_confidence":"exact"},
+        {"position_id":"pos_5","source_locator":"что случилось (5) я, пожалуй, не найду","subskill_ids":["mixed_connection_complex_sentence"],"explanation_id":"mixed_connection_complex_sentence","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"The narrow exact distinction available in the accepted Skill Graph is the conjunction junction at position 2. Other positions are routed to the broader mixed-complex-sentence skill, which is exact at that broad level but must not be interpreted as a more specific subtype diagnosis."
+    }
+  ],
+  "validation_notes":[
+    "Current trainer answers: task 17 = 2; task 19 = 12; task 20 = 1345.",
+    "Negative positions are tagged only when their absence of punctuation is itself diagnostic and structurally verified.",
+    "No trainer source data was modified."
+  ],
+  "status":"source_verified"
+}
