@@ -91,9 +91,16 @@ def flatten_exceptions(root: Path, manifest: Any) -> dict[str, dict[str, Any]]:
     return by_id
 
 
-def load_practice_items(root: Path, manifest: Any) -> tuple[list[dict[str, Any]], list[str]]:
+def load_practice_items(
+    root: Path, manifest: Any
+) -> tuple[list[dict[str, Any]], list[str], int]:
+    if not isinstance(manifest, dict):
+        raise BuildError(f"{PRACTICE_MANIFEST} must be an object")
+
     items: list[dict[str, Any]] = []
     source_files: list[str] = []
+    expected_sum = 0
+
     for row in get_manifest_paths(manifest, "practice_banks"):
         rel = row["path"]
         data = load_json(root / rel)
@@ -102,17 +109,39 @@ def load_practice_items(root: Path, manifest: Any) -> tuple[list[dict[str, Any]]
         bank_items = data["items"]
         if not all(isinstance(x, dict) for x in bank_items):
             raise BuildError(f"Non-object practice item in {rel}")
+
         expected = row.get("expected_items")
-        if isinstance(expected, int) and expected != len(bank_items):
+        if not isinstance(expected, int) or expected < 0:
+            raise BuildError(f"{rel}: expected_items must be a non-negative integer")
+        if expected != len(bank_items):
             raise BuildError(
                 f"{rel}: expected_items={expected}, actual={len(bank_items)}"
             )
+        expected_sum += expected
+
         for original in bank_items:
             item = json.loads(json.dumps(original, ensure_ascii=False))
             item["source_practice_bank"] = rel
             items.append(item)
         source_files.append(rel)
-    return items, source_files
+
+    manifest_total = manifest.get("expected_total_items")
+    if not isinstance(manifest_total, int) or manifest_total < 0:
+        raise BuildError(
+            f"{PRACTICE_MANIFEST}: expected_total_items must be a non-negative integer"
+        )
+    if manifest_total != expected_sum:
+        raise BuildError(
+            f"{PRACTICE_MANIFEST}: expected_total_items={manifest_total}, "
+            f"sum(expected_items)={expected_sum}"
+        )
+    if manifest_total != len(items):
+        raise BuildError(
+            f"{PRACTICE_MANIFEST}: expected_total_items={manifest_total}, "
+            f"actual practice items={len(items)}"
+        )
+
+    return items, source_files, manifest_total
 
 
 def nonempty(value: Any) -> bool:
@@ -225,6 +254,7 @@ def write_audit(
     path: Path,
     *,
     item_count: int,
+    expected_total: int,
     source_files: list[str],
     exceptions_count: int,
     errors: list[str],
@@ -237,6 +267,7 @@ def write_audit(
         f"STATUS: {'PASS' if not errors else 'FAIL'}",
         f"GENERATED_AT_UTC: {datetime.now(timezone.utc).isoformat()}",
         f"PRACTICE_ITEMS: {item_count}",
+        f"EXPECTED_TOTAL_ITEMS: {expected_total}",
         f"PRACTICE_BANKS: {len(source_files)}",
         f"SOURCE_EXCEPTION_IDS: {exceptions_count}",
         f"ERRORS: {len(errors)}",
@@ -270,21 +301,23 @@ def build(root: Path, output: Path, audit: Path) -> int:
     practice_schema = load_json(root / PRACTICE_SCHEMA)
 
     exceptions = flatten_exceptions(root, exception_manifest)
-    items, source_files = load_practice_items(root, practice_manifest)
+    items, source_files, expected_total = load_practice_items(root, practice_manifest)
     errors, warnings = validate(items, exceptions, practice_schema)
 
     items.sort(key=lambda row: row.get("practice_item_id", ""))
     payload = {
-        "schema_version":"1.0.0",
+        "schema_version":"1.0.1",
         "subject":"russian",
         "exam":"ege",
         "purpose":"canonical_exceptions_practice_bank",
-        "build_version":"0.1.0",
+        "build_version":"0.1.1",
         "generated_at_utc":datetime.now(timezone.utc).isoformat(),
         "generated_from":source_files,
         "items":items,
         "validation":{
             "practice_items":len(items),
+            "expected_total_items":expected_total,
+            "manifest_total_valid":len(items) == expected_total,
             "source_exception_ids":len(exceptions),
             "errors":errors,
             "warnings":warnings,
@@ -297,6 +330,7 @@ def build(root: Path, output: Path, audit: Path) -> int:
     write_audit(
         audit,
         item_count=len(items),
+        expected_total=expected_total,
         source_files=source_files,
         exceptions_count=len(exceptions),
         errors=errors,
