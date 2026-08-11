@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "exam": "ege",
+  "purpose": "student_explanation_bank",
+  "integration_status": "not_connected_to_production",
+  "allowed_statuses": [
+    "draft",
+    "source_verified",
+    "content_reviewed",
+    "ready_for_integration",
+    "needs_review"
+  ],
+  "unit_contract": {
+    "required": [
+      "explanation_id",
+      "skill_ids",
+      "subskill_ids",
+      "exam_task_numbers",
+      "short_rule",
+      "rule",
+      "algorithm",
+      "common_traps",
+      "examples",
+      "source_refs",
+      "status"
+    ],
+    "fields": {
+      "explanation_id": "stable lowercase snake_case identifier without year/version",
+      "skill_ids": "array of stable Skill Graph skill_id values",
+      "subskill_ids": "array of stable Skill Graph subskill_id values",
+      "exam_task_numbers": "derived current task-number links; not the identity of the skill",
+      "short_rule": "1-3 sentence learner-facing reminder",
+      "rule": "compact learner-facing explanation sufficient for the EGE use case",
+      "algorithm": "ordered learner-facing steps",
+      "common_traps": "array of common misconceptions or false cues",
+      "examples": "original Eksamio examples, not copied trainer-bank exercises",
+      "contrast_examples": "optional pairs/groups for commonly confused cases",
+      "verification_question": "optional short comprehension check; not a replacement for next independent trainer item",
+      "item_specific_notes": "optional mapping for cases requiring card-specific explanation supplements",
+      "source_refs": "array of provenance objects",
+      "status": "content lifecycle status",
+      "review_notes": "optional internal review notes"
+    }
+  },
+  "source_ref_contract": {
+    "required": [
+      "source_type",
+      "source_path",
+      "purpose"
+    ],
+    "fields": {
+      "source_type": "official_fipi | book | existing_trainer | internal_verified_source",
+      "source_path": "repository-relative path or stable source identifier",
+      "locator": "optional page/chapter/section locator when available",
+      "purpose": "rule | exception | example_method | exam_format | criterion | terminology",
+      "verification_status": "verified | partial | needs_review"
+    }
+  },
+  "integration_rules": {
+    "production_trainer_must_remain_unchanged_until_gate": true,
+    "no_new_localstorage_contract_before_separate_review": true,
+    "no_change_to_trainer_item_id": true,
+    "no_change_to_answers_or_scoring": true,
+    "fallback_to_existing_feedback_required": true,
+    "control_mode_hides_explanations_until_completion": true,
+    "demo_mode_hides_explanations_until_completion": true,
+    "practice_mode_explanation_after_answer": true,
+    "work_on_errors_requires_independent_followup_item": true
+  },
+  "units": []
+}
