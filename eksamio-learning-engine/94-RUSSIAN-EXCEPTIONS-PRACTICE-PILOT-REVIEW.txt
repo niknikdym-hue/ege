@@ -1,0 +1,94 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — PRACTICE PILOT REVIEW
+
+STATUS: SOURCE/EDITORIAL REVIEW PASS / MACHINE VALIDATION PENDING
+PILOT: 92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json
+ITEMS: 24
+PRODUCTION: HOLD
+CURRENT TRAINERS: UNCHANGED
+
+REVIEW SCOPE
+
+Checked:
+- source exception link intent;
+- answer unambiguity in the given context;
+- practice-mode suitability;
+- original learner-facing wording;
+- no long copied source exercises;
+- diagnostic usefulness;
+- no claim of official FIPI scoring;
+- no production integration.
+
+DOMAIN COVERAGE
+
+- Н/НН and lexicalized N/NN contrasts;
+- alternating roots / PRE-/PRI-;
+- НЕ/НИ;
+- derived prepositions and solid/separate spelling;
+- introductory/non-introductory distinctions;
+- task-7 noun morphology;
+- task-8 syntax;
+- selected paronyms;
+- punctuation rule contrasts;
+- orthoepic meaning-dependent stress.
+
+HIGH-VALUE PILOT CONTRASTS
+
+1. `деревянный` — recall of a true N/NN exception.
+2. `кованый` — exception against mechanical -ОВАНН- reasoning.
+3. `раненый / раненный` — context-dependent distinction.
+4. `пребывать / прибывать` — lexical PRE-/PRI- contrast.
+5. `сочетание` — alternating-root exception recall.
+6. `не кто иной, как / никто иной не` — NE/NI construction contrast.
+7. `несмотря на / не смотря` — preposition vs verbal construction.
+8. `в течение / в течении`, `навстречу / на встречу`, `вовремя / во время` — function-driven spelling.
+9. `словно`, `однако`, `наконец` — introductory-word false-positive / dual-function training.
+10. `доктора`, `полотенец` — morphology recall.
+11. `согласно приказу` — government norm.
+12. title apposition — `в романе «Война и мир»`.
+13. selected paronym context choices.
+14. punctuation: homogeneous vs compound sentence, conjunction junction, colon-rule classification.
+15. `Отзыв / отзЫв` — meaning-dependent orthoepic norm.
+
+EDITORIAL SAFETY FINDINGS
+
+PASS:
+- prompts are short enough for card UI;
+- no answer is revealed by a long quotation from the source;
+- explanations use rule logic rather than authority-only phrasing;
+- distractors are plausible learner errors or explicit alternative rule classes;
+- all practice cards are independent of current EGE trainer scoring.
+
+IMPORTANT LIMITS
+
+1. This review does not replace machine cross-link validation.
+2. `exception_id` existence and source practice-mode compatibility must still be validated by:
+   `build/build_russian_exceptions_practice.py`.
+3. Machine run is pending local project-file availability.
+4. Passing this review does NOT authorize Tilda/public integration.
+
+INTRODUCTORY WORDS NOTE
+
+The source layer intentionally teaches function rather than memorizing lists.
+Rosenthal distinguishes introductory and non-introductory uses for words/phrases including `наконец`, `в конце концов`, `однако`, `конечно`, `вообще`.
+A word form alone must not drive punctuation when the source describes multiple functions.
+
+PILOT SESSION USE — FUTURE
+
+A useful first public test can mix:
+- 4 recognition/choice cards;
+- 4 context/contrast cards;
+- 2 recall cards;
+- 1 transfer card;
+then revisit wrong exception_ids later in the session/retention cycle.
+
+This is a UX test mix, not a mastery threshold.
+
+CURRENT DECISION
+
+PILOT CONTENT: REVIEW PASS
+PILOT MACHINE VALIDATION: PENDING
+PRACTICE BUILDER: READY
+PUBLIC TRAINER: NOT BUILT YET
+CURRENT EGE TRAINER: UNCHANGED
+CODEX: NOT REQUIRED
