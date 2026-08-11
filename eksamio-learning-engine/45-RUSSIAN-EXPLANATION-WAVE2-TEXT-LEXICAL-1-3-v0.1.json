@@ -1,10 +1,10 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.0.1",
   "subject":"russian",
   "exam":"ege",
   "purpose":"student_explanation_bank",
   "integration_status":"not_connected_to_production",
-  "content_version":"0.1.0",
+  "content_version":"0.1.1",
   "scope":"tasks_1_3",
   "units":[
     {
@@ -31,6 +31,7 @@
       "rule":"Одно слово может иметь несколько значений. В задании требуется соотнести конкретное употребление с конкретным словарным толкованием. Надёжный приём — заменить выделенное слово предложенным толкованием и проверить, сохраняются ли смысл и логические связи предложения.",
       "algorithm":["Найдите выделенное слово в исходном тексте.","Сформулируйте его значение своими словами по контексту.","Подставьте предложенное словарное толкование вместо слова.","Проверьте, не изменился ли смысл предложения.","Отдельно отсекайте значения, которые подходят слову вообще, но не подходят данному употреблению."],
       "common_traps":["Выбирать самое знакомое значение слова.","Не возвращаться к исходному тексту.","Путать переносное, терминологическое и общеязыковое значение."],
+      "examples":[{"prompt":"ключ к задаче","answer":"способ решения / средство к пониманию","why":"Толкование «предмет для отпирания замка» здесь не подходит к контексту."}],
       "contrast_examples":[{"pair":["ключ от двери","ключ к пониманию"],"point":"Одинаковое слово — разные значения; решает контекст."},{"pair":["живая природа","живое изложение"],"point":"Прилагательное реализует разные лексические значения."}],
       "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Лексика: многозначность, прямое и переносное значение, лексическая сочетаемость","purpose":"rule","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-PREVIEW.html","locator":"task 2 cards","purpose":"exam_scope","verification_status":"verified"}],
       "status":"source_verified"
