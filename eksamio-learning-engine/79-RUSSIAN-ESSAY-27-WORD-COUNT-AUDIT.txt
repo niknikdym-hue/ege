@@ -1,0 +1,125 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EGE TASK 27 — WORD COUNT AUDIT
+
+STATUS: AUDITED / NO PRODUCTION CHANGE
+DATE: 2026-08-11
+PRODUCTION_INTEGRATION: HOLD
+
+SCOPE
+
+Current repository-visible Russian EGE trainer:
+- eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt
+
+Task:
+- ege-ru-27-2026-27-01
+
+OFFICIAL CONTEXT
+
+For EGE Russian task 27, the current official FIPI 2026 criteria include a minimum-volume gate of 150 words and separate official rules for counting words.
+The Learning Engine must not treat a browser approximation as an official expert count unless its behavior is explicitly validated against those official rules.
+
+CURRENT TRAINER FINDINGS
+
+1. THERE IS NO WORD COUNTER IN THE CURRENT TRAINER UI.
+
+For card.kind === "essay", answerControl() renders:
+- textarea;
+- autosave through the normal session answer persistence;
+- note that the trainer does not issue automatic expert evaluation.
+
+No visible word-count element is rendered.
+
+2. THERE IS NO 150-WORD AUTOMATIC GATE.
+
+Current isFilled() logic for essay is:
+String(value || "").trim().length >= 20
+
+This is only a technical minimum-input gate before self-check.
+It is a character-length check, not a word count and not an official FIPI threshold.
+
+3. ESSAY IS NOT AUTO-SCORED.
+
+scoreCard() returns null for essay.
+recordCard() does not record correct/wrong mastery for essay.
+Result view describes the essay as requiring independent/self/expert review.
+
+This is the correct safety direction for the current product state.
+
+4. CURRENT FEEDBACK DOES NOT CLAIM AN OFFICIAL WORD COUNT.
+
+Current essay feedback says that the essay is saved and moves the learner to self-check.
+There is no current claim that the system has verified the official 150-word condition.
+
+DECISION
+
+CURRENT TRAINER WORD-COUNT SAFETY: PASS
+
+Reason:
+- no inaccurate browser word counter is presented as official;
+- no 149/150 scoring boundary is automatically enforced;
+- no automatic expert score is generated.
+
+DO NOT CHANGE CURRENT TRAINER YET.
+
+FUTURE WORD COUNTER REQUIREMENTS
+
+A future learner-facing counter may be useful, but it must have two explicitly separate concepts:
+
+A. TECHNICAL LIVE COUNT
+Purpose:
+- help the learner monitor approximate volume while writing.
+
+UI wording must clearly identify it as a technical/working count unless full FIPI equivalence has been validated.
+
+B. FIPI-COMPATIBLE FINAL COUNT
+Purpose:
+- evaluate the official 150-word gate for a completed essay.
+
+This mode must not be implemented until:
+1. the exact current FIPI 2026 word-count rules are transcribed into a machine-testable specification;
+2. edge cases are enumerated;
+3. test fixtures cover each edge case;
+4. the implementation matches the fixtures;
+5. an independent audit confirms equivalence.
+
+REQUIRED FUTURE TEST CLASSES
+
+At minimum audit the official handling of:
+- ordinary whitespace-separated words;
+- initials and surname constructions;
+- numerals written with digits;
+- hyphenated compounds;
+- separate particles/prepositions/conjunctions;
+- abbreviations;
+- quoted material;
+- copied source-text fragments where official evaluation rules distinguish them;
+- punctuation-attached tokens;
+- em dash / hyphen boundaries;
+- line breaks and repeated spaces.
+
+IMPORTANT
+
+The list above is a TEST-PLANNING LIST, not a statement of what FIPI counts as one or multiple words in each case.
+Do not implement behavior from this list without the verified official counting rule.
+
+RECOMMENDED FUTURE UX
+
+During writing:
+`Ориентировочно: N слов`
+
+Before self-check:
+- if official-equivalent algorithm is NOT yet validated: do not issue PASS/FAIL at 150;
+- if later validated: show a separate official-compatible result with source/version metadata.
+
+No counter should block autosave.
+No counter should create an automatic K1-K10 expert score.
+
+CURRENT RESULT
+
+CURRENT_TRAINER_CHANGED: NO
+WORD_COUNTER_PRESENT: NO
+TECHNICAL_20_CHARACTER_GATE_PRESENT: YES
+OFFICIAL_150_WORD_GATE_PRESENT: NO
+AUTO_EXPERT_SCORE_PRESENT: NO
+CURRENT_SAFETY_STATUS: PASS
+FUTURE_FIPI_COMPATIBLE_COUNTER: HOLD UNTIL SPEC + TESTS
