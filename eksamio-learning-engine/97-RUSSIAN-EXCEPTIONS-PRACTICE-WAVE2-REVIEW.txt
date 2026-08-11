@@ -1,0 +1,89 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — PRACTICE WAVE 2 REVIEW
+
+STATUS: SOURCE/EDITORIAL REVIEW PASS / MACHINE VALIDATION PENDING
+PRACTICE_BANK: 96-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE2-v0.1.json
+ITEMS: 24
+PRODUCTION: HOLD
+CURRENT TRAINERS: UNCHANGED
+
+REVIEW SCOPE
+
+Checked:
+- each practice item targets a distinct verified exception/special-case concept;
+- prompt context is original Eksamio wording;
+- answer is unambiguous in the supplied context;
+- distractor/alternative is a realistic contrast, not an invented pseudo-rule;
+- feedback explains the distinction rather than merely revealing the answer;
+- no official score claim;
+- no current trainer mutation.
+
+CONTENT GROUPS
+
+SPELLING / WORD-FORM CONTRASTS
+- В ПРОДОЛЖЕНИЕ / В ПРОДОЛЖЕНИИ
+- В ЗАКЛЮЧЕНИЕ / В ЗАКЛЮЧЕНИИ
+- НАПОДОБИЕ / НА ПОДОБИЕ
+- ВПОСЛЕДСТВИИ / В СЛЕДСТВИИ
+- НЕВЗИРАЯ НА / НЕ ВЗИРАЯ
+- НЕДО- / НЕ + завершение конкретного действия
+- ДАЛЕКО НЕ + прилагательное
+
+INTRODUCTORY / NON-INTRODUCTORY FUNCTIONS
+- ПОЭТОМУ
+- ВООБЩЕ
+- КОНЕЧНО
+- В КОНЦЕ КОНЦОВ
+- ПРАВДА
+
+MORPHOLOGY
+- КУПОЛА
+- ПОМИДОРОВ
+- ВОРОТ
+
+SYNTAX
+- ПО ПРИЕЗДЕ
+- indirect speech person/time shift
+- homogeneous predicates with different government
+
+PARONYMS
+- ЛЕДОВЫЙ / ЛЕДЯНОЙ
+- ОТБОРОЧНЫЙ / ОТБОРНЫЙ
+- ПРОДУКТОВЫЙ / ПРОДУКТИВНЫЙ
+
+PUNCTUATION
+- dash rule classification
+- multiple comma rules inside one sentence
+- compound sentence with a common secondary element
+
+QUALITY FINDINGS
+
+PASS:
+- second wave uses new contexts rather than replaying the first pilot;
+- transfer/context cards are materially different from pure recognition cards;
+- wording remains compact enough for a card UI;
+- no source exercise is copied as a long passage;
+- no practice card requires knowing a Rosenthal paragraph number;
+- task labels/numbers are not exposed as a substitute for the rule.
+
+MACHINE VALIDATION STILL REQUIRED
+
+Builder:
+`build/build_russian_exceptions_practice.py`
+
+Must confirm:
+- 48 total practice items across files 92 + 96;
+- unique practice_item_id;
+- all exception_id links resolve against manifest 83 source banks;
+- practice mode is permitted by each source exception;
+- response kinds and transfer levels are valid;
+- no duplicate context signature for the same exception/mode.
+
+CURRENT DECISION
+
+WAVE 2 CONTENT: REVIEW PASS
+TOTAL SOURCE PRACTICE BANK: 48 CARDS
+MACHINE VALIDATION: PENDING LOCAL FILE ACCESS
+PUBLIC INTEGRATION: HOLD
+CURRENT EGE TRAINER: UNCHANGED
+CODEX: NOT REQUIRED
