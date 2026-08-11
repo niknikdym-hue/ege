@@ -32,6 +32,17 @@ jobs:
       - uses: browser-actions/setup-chrome@v1
       - name: Install test dependencies
         run: pip install latex2mathml selenium
+      - name: Fix migration script replacement semantics
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('ege-matematika-baza-demoversiya-2026/scripts/apply_per_example_input_contracts.py')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace("re.subn(r\"function numericError\\([^\\n]*\\nfunction numericPanel\\([^\\n]*\\n\",new_numeric,runtime,count=1)","re.subn(r\"function numericError\\([^\\n]*\\nfunction numericPanel\\([^\\n]*\\n\",lambda m:new_numeric,runtime,count=1)")
+          s=s.replace("re.subn(r\"function validateNumeric\\(v,value\\)\\{.*?\\}\\nfunction updateCode\",new_validate+'function updateCode',runtime,count=1,flags=re.S)","re.subn(r\"function validateNumeric\\(v,value\\)\\{.*?\\}\\nfunction updateCode\",lambda m:new_validate+'function updateCode',runtime,count=1,flags=re.S)")
+          s=s.replace("re.subn(r\"function bindNumeric\\(v\\)\\{.*?\\}\\nfunction disableMatchingDuplicates\",new_bind+'function disableMatchingDuplicates',runtime,count=1,flags=re.S)","re.subn(r\"function bindNumeric\\(v\\)\\{.*?\\}\\nfunction disableMatchingDuplicates\",lambda m:new_bind+'function disableMatchingDuplicates',runtime,count=1,flags=re.S)")
+          p.write_text(s,encoding='utf-8')
+          PY
       - name: Apply per-example contracts
         run: python ege-matematika-baza-demoversiya-2026/scripts/apply_per_example_input_contracts.py
       - name: Build v1.2
