@@ -29,7 +29,7 @@ RUSSIAN EXPLANATION LAYER — CURRENT STATUS
 SOURCE POLICY:
 - ФИПИ / verified exam corpus: формат ЕГЭ, номера заданий, критерии, официальные списки и ограничения.
 - `russkiy-knigi/rozental.doc`: основной рабочий источник №1 для правил русского языка, развёрнутых пояснений, исключений, разграничений и сложных случаев.
-- остальные книги `russkiy-knigi/`: дополнительные таблицы/схемы/способы подачи только при необходимости.
+- остальные книги `russkiy-knigi/`: дополнительные специализированные источники или способы подачи только при необходимости.
 
 PRODUCTION SAFETY:
 Текущий `russkiy-knigi/ege-russkiy-trenazher/` считается замороженным рабочим продуктом до отдельного integration gate.
@@ -43,52 +43,60 @@ EXPLANATION UX:
 - контроль: объяснения только после завершения;
 - демоверсия: объяснения только после завершения попытки.
 
-WAVE 1 — TASKS 9–21:
-STATUS: SOURCE LAYER COMPLETE / CONTENT REVIEW PENDING / PRODUCTION INTEGRATION HOLD
+FIRST PART — TASKS 1–26:
+STATUS: SOURCE CONTENT COMPLETE / CONTENT REVIEW + MACHINE VALIDATION PENDING / PRODUCTION INTEGRATION HOLD
 
-Созданы source-verified отдельные explanation units для:
-- 9: корни;
-- 10: приставки, Ы/И, Ъ/Ь;
-- 11: суффиксы;
-- 12: спряжение и причастия;
-- 13: НЕ/НИ;
-- 14: слитно/раздельно/дефис;
-- 15: Н/НН;
-- 16: однородные члены и граница однородные/ССП;
-- 17: определения, причастные и деепричастные обороты;
-- 18: вводные слова и обращения;
-- 19: границы придаточных и однородные придаточные;
-- 20: разные виды связи и стык союзов;
-- 21: анализ правил тире, двоеточия и запятой.
+Wave 1 (9–21):
+- manifest: 43-RUSSIAN-EXPLANATION-WAVE-1-MANIFEST.json
+- review: 44-RUSSIAN-EXPLANATION-WAVE-1-REVIEW.txt
 
-Связанные файлы:
-- 23-RUSSIAN-EXPLANATION-CONTENT-SPEC.txt
-- 24-RUSSIAN-EXPLANATION-BANK-SCHEMA.json
-- 25-RUSSIAN-EXPLANATION-UNIT-MAP.json
-- 26-RUSSIAN-EXPLANATION-WORK-PLAN.txt
-- 27-RUSSIAN-EXPLANATION-SOURCE-AUDIT-QUEUE.txt
-- 31..42 content/source/exception/contrast files
-- 43-RUSSIAN-EXPLANATION-WAVE-1-MANIFEST.json
+Wave 2 (1–8, 22–26):
+- 45-RUSSIAN-EXPLANATION-WAVE2-TEXT-LEXICAL-1-3-v0.1.json
+- 46-RUSSIAN-EXPLANATION-WAVE2-NORMS-4-8-v0.1.json
+- 47-RUSSIAN-EXPLANATION-WAVE2-TEXT-22-26-v0.1.json
+- 48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json
+- manifest: 49-RUSSIAN-EXPLANATION-WAVE-2-MANIFEST.json
+- review: 50-RUSSIAN-EXPLANATION-WAVE-2-REVIEW.txt
+
+Combined first-part manifest:
+- 51-RUSSIAN-EXPLANATION-FIRST-PART-MANIFEST.json
+- coverage: 26/26 tasks in first part have source-layer explanation content.
+
+IMPORTANT ROUTING LIMITS BEFORE INTEGRATION:
+- task 8: exact explanation requires position-level diagnosis; otherwise do not pretend to know the exact grammar error class;
+- task 22: exact device diagnosis requires position-level result;
+- task 25: current phraseologism route must be separated from historical contextual-synonym item;
+- task 26: exact means-of-cohesion routing may require item/option-level tagging.
 
 EXCEPTIONS TRAINER:
-Запланирован отдельный бесплатный учебный контур «Исключения и особые случаи».
+Запланирован отдельный бесплатный контур «Исключения и особые случаи».
 Будущий URL: /trenazhery/russkiy/isklyucheniya/
 Режимы: «Все исключения» и в будущем «Мои исключения».
 Банк исключений связан со Skill Graph и Explanation Bank, но не подключён к production.
+Source banks now include orthography, morphology, orthoepy, paronym contrasts, punctuation contrasts and difficult normative cases.
 
-NEXT CONTENT STEPS:
-1. Независимый content review и validation первой волны 9–21.
-2. После review — статус content_reviewed только для реально прошедших units.
-3. Wave 2: задания 1–8 и 22–26.
-4. Задание 27 — отдельный контур по актуальным критериям и структуре сочинения.
-5. Продолжать извлекать из Розенталя полезные исключения и контрастные случаи для Exceptions Bank.
-6. Только после content/data gate проектировать безопасную интеграцию с fallback и rollback.
+TASK 27:
+Отдельный контур.
+Нельзя применять обычную схему автоматического правильного ответа.
+Следующий содержательный этап — отдельная спецификация объяснений по сочинению на основе актуальных критериев ФИПИ: структура работы, позиция автора, комментарий/примеры, смысловая связь, собственное отношение/обоснование, речевые и языковые ошибки, самопроверка.
+AI-оценка не входит в базовый слой и не должна подменять официальные критерии.
+
+VALIDATION STATUS:
+- connector/file existence review: PASS for wave 2;
+- Skill Graph cross-link review: PASS for IDs used in wave 2;
+- source/content architecture review: SOURCE-GO;
+- independent machine JSON/schema parse: PENDING because current execution container cannot reach raw GitHub; do not spend Codex quota just for this.
+- production integration: HOLD.
+
+NEXT STEPS:
+1. Build task-27 explanation/criteria contour from current verified FIPI criteria.
+2. Continue extracting high-value Rozental exceptions into the Exceptions Bank.
+3. Prepare final learner wording/content review for tasks 1–26.
+4. When files are available locally/container-side, run machine JSON/schema validation.
+5. Only after content/data gate: item-to-subskill routing, fallback, regression tests, rollback and integration design.
 
 CODEX POLICY:
 Codex не использовать для обычного контента, аудита, схем и GitHub-файлов. Подключать только к действительно сложной локальной массовой реализации/сборке/тестированию, где расход квоты оправдан.
-
-NEXT REQUIRED ARCHITECTURE ARTIFACTS:
-См. 02-CODEX-BUILD-INDEX.txt, но последовательность уточняется по текущему pilot status; не запускать всё механически.
 
 IMPORTANT:
 Не начинать реализацию AI до создания и проверки единого Skill Graph, схемы данных, формата Attempt, StudentSkillState, Recommendation Log и demo->trainer handoff.
