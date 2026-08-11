@@ -1,0 +1,283 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — SESSION SELECTION SPEC
+
+STATUS: DESIGN READY / DETERMINISTIC FIRST VERSION
+PRODUCTION: HOLD
+CURRENT TRAINERS: UNCHANGED
+
+PURPOSE
+
+Определить первую прозрачную версию выбора карточек для короткой сессии.
+Не использовать AI/LLM для выбора следующей карточки.
+Не использовать guessed difficulty.
+
+INPUTS
+
+Required:
+- canonical Exceptions Bank;
+- canonical Exceptions Practice Bank;
+- learner exception state (or empty profile);
+- current timestamp;
+- requested session source: all_exceptions | my_exceptions | work_on_errors | handoff;
+- optional topic filters.
+
+Optional future:
+- exact main-trainer handoff exception_ids;
+- experiment assignment;
+- session length preference.
+
+DEFAULT SESSION LENGTH
+
+10 cards.
+Allowed design range: 8–12.
+
+This is a UX default, not a mastery threshold.
+
+ELIGIBILITY GATE
+
+Practice card eligible only if:
+1. practice status = source_verified or reviewed;
+2. source exception status = source_verified or reviewed;
+3. exception_id exists in canonical Exceptions Bank;
+4. topic filter matches if filter supplied;
+5. practice mode is allowed by source exception;
+6. context_signature is not blocked by immediate-repeat rule.
+
+Never select:
+- needs_review source exception;
+- practice card with broken source link;
+- practice card whose answer cannot be machine-evaluated;
+- a card removed/disabled by build-time validation.
+
+QUEUE BUCKETS
+
+Build candidate queues in this order:
+
+Q1 DUE
+exception state next_due_at <= now.
+
+Q2 ACTIVE PERSONAL ERRORS
+status active / unresolved wrong evidence, not yet due-only stabilized.
+
+Q3 FAILED TRANSFER
+transfer_passed=false after prior learning evidence.
+
+Q4 HANDOFF
+specific exact exception_ids supplied from main trainer/work-on-errors flow.
+Move this bucket before Q2 only when the session source is handoff/work_on_errors.
+
+Q5 NEW P0/P1
+new items with source-driven launch priority P0/P1 when such metadata exists.
+
+Q6 NEW P2
+core Rosenthal contrasts with accepted Skill Graph links.
+
+Q7 STABILIZED REVIEW / P3
+use sparingly when higher-priority queues do not fill session.
+
+NO LEARNER HISTORY
+
+If profile empty:
+- choose primarily new P0/P1;
+- then P2;
+- mix domains when possible;
+- avoid rare P3 until core bank has been sampled.
+
+If launch_priority metadata is not yet built:
+fallback deterministic order:
+1. exceptions tied to current 2026 trainer source;
+2. exceptions tied to repeated trainer years/current bank;
+3. remaining source_verified items in stable exception_id order, domain-mixed.
+
+Do not fake numeric priority scores.
+
+CARD CHOICE WITHIN EXCEPTION_ID
+
+Preferred progression:
+1. recognition / classification for completely unseen exception if no suitable recall card exists;
+2. recall_form or normative_variant;
+3. context_choice / independent_context;
+4. contrast/transfer card in a different context;
+5. later retention card.
+
+If learner previously failed a recognition card:
+- do not show same context immediately;
+- prefer explanation + later recall/context card.
+
+If learner passed recognition but has no recall/context evidence:
+- prioritize recall/context next time rather than another recognition card.
+
+If learner has failed context twice:
+- allow a simpler rule-class/contrast card before another transfer attempt.
+
+This is deterministic scaffolding, not a psychometric difficulty estimate.
+
+IMMEDIATE REPEAT RULE
+
+Do not select same `practice_item_id` twice in one normal session.
+
+Do not select same `context_signature` twice in one normal session.
+
+For same exception_id:
+- minimum gap target: at least 2 other cards before the next same-exception check;
+- if session source is `work_on_errors` and only one exception_id is supplied, use distinct contexts/modes and still avoid consecutive identical format when possible.
+
+DOMAIN MIXING
+
+Soft target:
+- no more than 3 consecutive cards from same learner-facing domain when alternatives exist;
+- no more than 2 consecutive cards from same exception cluster when alternatives exist.
+
+Domain mixing is a secondary constraint.
+Do not postpone an overdue personal error merely to achieve cosmetic variety.
+
+SELECTION ALGORITHM — V1
+
+1. Resolve eligible practice cards.
+2. Resolve exception state for each exception_id.
+3. Assign each exception to one queue bucket Q1–Q7.
+4. Sort inside bucket deterministically:
+   a. due timestamp ascending if applicable;
+   b. most recent unresolved error first for active personal items;
+   c. source launch priority if available;
+   d. exception_id lexical order as stable tie-breaker.
+5. Iterate buckets in session-source-specific priority order.
+6. For each exception choose best practice card by progression rule.
+7. Apply immediate-repeat and domain-mixing constraints.
+8. Continue until target session size or candidates exhausted.
+9. Record reasons for each selected card in an internal selection log.
+
+SELECTION REASON LOG
+
+For every selected card store internally:
+- session_id
+- position
+- practice_item_id
+- exception_id
+- queue_bucket
+- reason_code
+- learner_state_before summary
+- rejected_alternative_count (optional)
+
+Reason codes:
+- due_review
+- unresolved_error
+- failed_transfer
+- exact_handoff
+- new_current_priority
+- new_core_rule
+- stabilized_maintenance
+- fallback_fill
+
+This log is for debugging/analytics and is not shown to learner.
+
+MY EXCEPTIONS SESSION
+
+Only exception_ids that exist in learner state and are not merely unseen.
+Default ordering:
+1. due;
+2. active wrong;
+3. stabilizing;
+4. stabilized only if user explicitly includes them or session needs fill.
+
+ALL EXCEPTIONS SESSION
+
+Can include:
+- due personal items;
+- some active personal items;
+- new material.
+
+Personal due items should not be ignored just because user opened «Все исключения».
+
+WORK ON ERRORS / HANDOFF SESSION
+
+Input must contain exact exception_ids or exact source route.
+If only broad skill/subskill is known:
+- route to main skill practice, not a guessed Exceptions Trainer exception.
+
+For exact handoff:
+1. start with one explanation-linked context;
+2. then independent new practice item;
+3. later transfer/review.
+
+Do not show source trainer answer verbatim as the only retry.
+
+SESSION COMPLETION
+
+Session can end before target count if:
+- candidate set exhausted;
+- learner manually ends;
+- handoff set is intentionally smaller.
+
+Never pad with duplicated cards only to reach 10.
+
+STATE UPDATE ORDER
+
+For each answer:
+1. append attempt event idempotently;
+2. update exception aggregate state;
+3. compute due/active/stabilizing transition under mastery policy;
+4. only then select later same-exception card if session policy calls for it.
+
+A page reload must not double-count the attempt.
+
+FAIL-SAFE
+
+If learner state corrupt/unreadable:
+- do not overwrite it immediately;
+- start anonymous/general session from verified canonical practice bank;
+- mark state load error for diagnostics;
+- offer retry/recovery in implementation layer.
+
+If canonical practice bank unavailable:
+- fail closed for the Exceptions Trainer;
+- do not silently fetch/generated unverified questions;
+- show a plain retry/error state.
+
+EXPERIMENTATION HOOKS — FUTURE
+
+Can vary only after instrumentation:
+- target count 8 vs 10 vs 12;
+- within-session retry gap;
+- recognition-first vs recall-first for unseen items;
+- domain mixing strength.
+
+Experiment must never alter:
+- normative answer;
+- source rule;
+- exception membership;
+- exam facts.
+
+TEST CASES REQUIRED BEFORE IMPLEMENTATION
+
+A. Empty learner, >=10 eligible new items.
+Expected: mixed deterministic new session, no duplicates.
+
+B. 4 overdue personal items + new bank.
+Expected: overdue items included before new low-priority items.
+
+C. Same exception has recognition correct, recall unseen.
+Expected: recall/context preferred next.
+
+D. Wrong item just answered and only same context exists.
+Expected: do not immediately repeat identical card; continue other cards/end.
+
+E. Exact handoff with 2 exception_ids.
+Expected: both prioritized with distinct contexts.
+
+F. Broad skill-only handoff.
+Expected: no guessed exception_id.
+
+G. Corrupt state.
+Expected: verified general session possible; no silent state wipe.
+
+H. Fewer candidates than target count.
+Expected: short session, no padding duplicates.
+
+CURRENT DECISION
+
+SELECTION V1: SPEC READY
+AI: NOT NEEDED
+DIFFICULTY: NOT GUESSED
+IMPLEMENTATION: HOLD
+PRODUCTION TRAINER: UNCHANGED
