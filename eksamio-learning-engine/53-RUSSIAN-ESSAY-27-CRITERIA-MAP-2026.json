@@ -1,0 +1,143 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "task_number":27,
+  "criteria_year":2026,
+  "purpose":"expert_criteria_reference_and_learner_self_check_mapping",
+  "integration_status":"not_connected_to_production",
+  "official_source":{"publisher":"ФГБНУ ФИПИ","document":"Методические материалы для председателей и членов предметных комиссий субъектов РФ по проверке выполнения заданий с развёрнутым ответом ЕГЭ 2026. Русский язык","locators":["PDF p.4","PDF p.6","criteria table printed pp.10-12 / PDF indexes 9-11"]},
+  "max_score":22,
+  "global_gates":[
+    {
+      "gate_id":"author_position_gate",
+      "condition":"K1=0 because author/narrator position on the specified problem is missing or incorrect",
+      "effect":{"K1":0,"K2":0,"K3":0},
+      "learner_message":"Сначала проверьте, верно ли вы сформулировали позицию автора именно по указанной проблеме. Без этого комментарий и собственное отношение по К2–К3 не засчитываются.",
+      "automatic_detection_allowed":false
+    },
+    {
+      "gate_id":"minimum_volume_gate",
+      "condition":"149 words or fewer under official FIPI counting rules",
+      "effect":"K1-K10 all zero; task not completed",
+      "learner_message":"Для зачёта требуется не менее 150 слов по правилам подсчёта ФИПИ.",
+      "automatic_detection_allowed":"technical_estimate_only",
+      "warning":"Browser word count is advisory unless it implements the official counting rules exactly."
+    },
+    {
+      "gate_id":"source_text_gate",
+      "condition":"essay is not based on the provided source text",
+      "effect":"not evaluated",
+      "automatic_detection_allowed":false
+    },
+    {
+      "gate_id":"copy_retell_gate",
+      "condition":"essay is fully copied/retold source text without commentary",
+      "effect":"K1-K10 all zero",
+      "automatic_detection_allowed":false
+    }
+  ],
+  "criteria":[
+    {
+      "id":"K1",
+      "title":"Отражение позиции автора (рассказчика) по указанной проблеме",
+      "section":"content",
+      "max_points":1,
+      "scale":[{"points":1,"condition":"author/narrator position on the specified problem is formulated correctly in the essay"},{"points":0,"condition":"position is absent or incorrect"}],
+      "dependencies":{"if_zero":["K2=0","K3=0"]},
+      "learner_checks":["Я ответил на ту проблему, которая указана в задании.","Позиция автора сформулирована как смысловой вывод, а не как пересказ эпизода.","Моя формулировка не противоречит исходному тексту."],
+      "automatic_official_scoring":false
+    },
+    {
+      "id":"K2",
+      "title":"Комментарий к позиции автора (рассказчика)",
+      "section":"content",
+      "max_points":3,
+      "scale":[
+        {"points":3,"condition":"2 relevant text examples + explanation of each + semantic relation named and explained"},
+        {"points":2,"condition":"2 relevant text examples + explanation of each, but semantic relation is missing/incorrect or its explanation is missing/incorrect"},
+        {"points":1,"condition":"1 relevant text example with explanation"},
+        {"points":0,"condition":"insufficient/unexplained examples, no text support, retelling/large quotation instead of commentary, or no commentary"}
+      ],
+      "official_notes":["An example without explanation is not counted as a complete example-illustration.","A factual error made in the commentary is accounted for under K4."],
+      "learner_checks":["Есть первый пример из исходного текста.","Я объяснил, что показывает первый пример для позиции автора.","Есть второй пример из исходного текста.","Я объяснил, что показывает второй пример.","Я назвал смысловую связь между примерами.","Я объяснил, как эта связь помогает раскрыть позицию автора."],
+      "automatic_official_scoring":false
+    },
+    {
+      "id":"K3",
+      "title":"Собственное отношение к позиции автора (рассказчика) и его обоснование",
+      "section":"content",
+      "max_points":2,
+      "scale":[
+        {"points":2,"condition":"own attitude is formulated and justified, with a valid example-argument"},
+        {"points":1,"condition":"attitude is formulated and justified without example-argument, or example exists but attitude is not explicitly stated in an acceptable form"},
+        {"points":0,"condition":"attitude is only formal, absent/unjustified, or does not correspond to the specified problem"}
+      ],
+      "official_notes":["Example-argument source: reading, historical-cultural or life experience.","The example-argument must not repeat the author's judgments.","Certain media types explicitly excluded by FIPI are not accepted as sources for the example-argument."],
+      "learner_checks":["Я ясно выразил своё отношение к позиции автора.","Я объяснил, почему так думаю.","Есть конкретный пример-аргумент из допустимого опыта.","Аргумент не повторяет просто то, что уже сказал автор.","Обоснование относится к той же проблеме."],
+      "automatic_official_scoring":false
+    },
+    {
+      "id":"K4",
+      "title":"Фактическая точность речи",
+      "section":"speech_design",
+      "max_points":1,
+      "scale":[{"points":1,"max_errors":0},{"points":0,"min_errors":1}],
+      "learner_checks":["Я не перепутал события, героев, авторство, исторические/культурные факты.","Мои пояснения к примерам не искажают исходный текст."],
+      "automatic_official_scoring":false
+    },
+    {
+      "id":"K5",
+      "title":"Логичность речи",
+      "section":"speech_design",
+      "max_points":2,
+      "scale":[{"points":2,"max_errors":0},{"points":1,"min_errors":1,"max_errors":2},{"points":0,"min_errors":3}],
+      "learner_checks":["Нет противоречий между частями рассуждения.","Переходы между абзацами и тезисами понятны.","Выводы следуют из приведённых доводов."],
+      "automatic_official_scoring":false
+    },
+    {
+      "id":"K6",
+      "title":"Соблюдение этических норм",
+      "section":"speech_design",
+      "max_points":1,
+      "scale":[{"points":1,"condition":"no ethical violations under official criterion"},{"points":0,"condition":"officially defined ethical violation present"}],
+      "learner_checks":["В тексте нет оскорбительных, противоправных или иных формулировок, подпадающих под официальный критерий К6."],
+      "automatic_official_scoring":false,
+      "note":"Learner UI should link to a concise official-criteria explanation rather than trying to expand or reinterpret the legal/ethical list."
+    },
+    {
+      "id":"K7",
+      "title":"Соблюдение орфографических норм",
+      "section":"literacy",
+      "max_points":3,
+      "scale":[{"points":3,"errors":0},{"points":2,"min_errors":1,"max_errors":2},{"points":1,"min_errors":3,"max_errors":4},{"points":0,"min_errors":5}],
+      "automatic_official_scoring":false
+    },
+    {
+      "id":"K8",
+      "title":"Соблюдение пунктуационных норм",
+      "section":"literacy",
+      "max_points":3,
+      "scale":[{"points":3,"errors":0},{"points":2,"min_errors":1,"max_errors":2},{"points":1,"min_errors":3,"max_errors":4},{"points":0,"min_errors":5}],
+      "automatic_official_scoring":false
+    },
+    {
+      "id":"K9",
+      "title":"Соблюдение грамматических норм",
+      "section":"literacy",
+      "max_points":3,
+      "scale":[{"points":3,"errors":0},{"points":2,"min_errors":1,"max_errors":2},{"points":1,"min_errors":3,"max_errors":4},{"points":0,"min_errors":5}],
+      "automatic_official_scoring":false
+    },
+    {
+      "id":"K10",
+      "title":"Соблюдение речевых норм",
+      "section":"literacy",
+      "max_points":3,
+      "scale":[{"points":3,"errors":0},{"points":2,"min_errors":1,"max_errors":2},{"points":1,"min_errors":3,"max_errors":4},{"points":0,"min_errors":5}],
+      "automatic_official_scoring":false
+    }
+  ],
+  "score_check":{"sum_of_maxima":22,"expected":22,"status":"pass"},
+  "product_rules":{"expert_score_separate_from_self_evaluation":true,"no_help_during_demo":true,"no_help_during_control":true,"post_completion_self_check_allowed":true,"ai_evaluation_is_future_non_official_layer":true,"production_trainer_must_remain_unchanged_until_gate":true}
+}
