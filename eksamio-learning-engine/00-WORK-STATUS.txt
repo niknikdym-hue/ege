@@ -1,7 +1,7 @@
 EKSAMIO LEARNING ENGINE
 WORK STATUS
 
-STATUS: CONCEPT / ARCHITECTURE + RUSSIAN CONTENT BUILD ACTIVE
+STATUS: CONCEPT / ARCHITECTURE + RUSSIAN CONTENT AND ROUTING BUILD ACTIVE
 PILOT_SUBJECT: ЕГЭ — русский язык
 REPOSITORY: niknikdym-hue/ege
 DIRECTION_PATH: /eksamio-learning-engine/
@@ -44,11 +44,17 @@ EXPLANATION UX:
 - демоверсия: объяснения только после завершения попытки.
 
 FULL RUSSIAN TASK COVERAGE — TASKS 1–27:
-STATUS: SOURCE CONTENT COMPLETE / CONTENT REVIEW + MACHINE VALIDATION PENDING / PRODUCTION INTEGRATION HOLD
+STATUS: SOURCE CONTENT COMPLETE / ROUTING FIRST PASS COMPLETE FOR 1–26 / MACHINE-CANONICAL BUILD PENDING / PRODUCTION INTEGRATION HOLD
 
 First part tasks 1–26:
-- 51-RUSSIAN-EXPLANATION-FIRST-PART-MANIFEST.json
-- coverage: 26/26 source-layer explanation content complete.
+- source-layer explanation coverage: 26/26 COMPLETE;
+- external routing metadata or deterministic autotag path: 26/26 FIRST PASS COMPLETE;
+- routing tag index: `75-RUSSIAN-EXPLANATION-ROUTING-TAG-INDEX.json`.
+
+Routing precision remains evidence-bounded:
+- exact where item/option/word/position identifies a skill;
+- partial/fallback where a mixed all-or-nothing item cannot identify the exact weakness;
+- unresolved task-9 word classifications remain `needs_followup` rather than guessed.
 
 Task 27 essay:
 - 52-RUSSIAN-ESSAY-27-SOURCE-GATE-2026.txt
@@ -56,62 +62,75 @@ Task 27 essay:
 - 54-RUSSIAN-ESSAY-27-LEARNER-SELF-CHECK-SPEC.txt
 - 55-RUSSIAN-ESSAY-27-EXPLANATION-COMPONENTS-v0.1.json
 - 57-RUSSIAN-ESSAY-27-REVIEW.txt
-
-Combined all-task manifest:
-- 56-RUSSIAN-EXPLANATION-FULL-COVERAGE-MANIFEST.json
-- coverage: 27/27 tasks have source-layer explanation/self-check content appropriate to their assessment type.
-
-TASK 27 OFFICIAL CRITERIA — VERIFIED 2026:
-- expert evaluation K1–K10;
-- maximum 22 points;
-- K1=0 for missing/incorrect author position forces K2=0 and K3=0;
-- 149 words or fewer under official FIPI counting rules => task not completed, K1–K10 = 0;
-- work without support on the source text is not evaluated;
-- fully copied/retold source text without commentary => K1–K10 = 0;
-- K2 maximum requires 2 examples, explanation of each, named semantic relation and explanation of how that relation appears in the examples;
-- K3 maximum requires own attitude, justification and a concrete valid example-argument;
-- K7–K10 have the same numerical error-count scale but cover different error types.
+- 79-RUSSIAN-ESSAY-27-WORD-COUNT-AUDIT.txt
 
 TASK 27 PRODUCT BOUNDARY:
 - no hints during demo/control essay writing;
 - after completion: criterion-based learner self-check is allowed;
-- learner self-evaluation must be visibly separate from expert/official score;
+- learner self-evaluation is separate from expert/official score;
 - browser must not claim an official task-27 score;
-- word counter is technical unless it exactly implements FIPI counting rules;
 - AI essay evaluation is a separate future, explicitly non-official layer.
 
-IMPORTANT ROUTING LIMITS BEFORE INTEGRATION:
-- task 8: exact explanation requires position-level diagnosis;
-- task 22: exact device diagnosis requires position-level result;
-- task 25: current phraseologism route must be separated from historical contextual-synonym item;
-- task 26: exact means-of-cohesion routing may require item/option-level tagging;
-- task 27: content evaluation is expert/self-check, not normal automatic answer scoring.
+TASK 27 CURRENT WORD-COUNT FINDING:
+- current trainer has NO word counter;
+- current trainer has NO automatic 150-word gate;
+- essay input uses only a technical >=20-character gate before self-check;
+- essay is not auto-scored;
+- current behavior is safety-PASS;
+- future FIPI-compatible word counter remains HOLD until exact counting spec + edge-case fixtures + validation.
+
+EXPLANATION CONTENT NORMALIZATION:
+- common contract established;
+- task 11 has internal learner branches for adjective, verb, noun, adverb suffixes plus stressed Ё after sibilants in relevant verbal derivatives (`тушёнка / напряжённый`);
+- task 14 has internal learner branches for conjunctions, prepositions, adverbs, particle/pronoun combinations, hyphen models, ПО- adverbs, repeated-word formations and ПОЛ- spelling;
+- task 21 has current rule-specific dash/colon/comma explanation splits;
+- large source-reviewed files use additive examples overlay rather than risky wholesale rewrites.
+
+CANONICAL BUILD:
+- design: `64-RUSSIAN-EXPLANATION-CANONICAL-BUILD-SPEC.txt`;
+- builder/validator: `build/build_russian_explanation_bank.py`;
+- intended outputs:
+  - `build/RUSSIAN-EXPLANATION-BANK-CANONICAL.json`
+  - `audits/RUSSIAN-EXPLANATION-CANONICAL-VALIDATION.txt`
+
+Builder validates:
+- JSON parse;
+- deterministic overlay/split merge;
+- unique explanation_id;
+- required fields;
+- Skill Graph links;
+- routing explanation links;
+- task coverage 1–27;
+- unresolved partial/needs_followup counts.
+
+Machine execution is still pending because the current execution container cannot clone/reach GitHub. Do NOT spend Codex quota solely to run this validation.
 
 EXCEPTIONS TRAINER:
 Запланирован отдельный бесплатный контур «Исключения и особые случаи».
 Будущий URL: /trenazhery/russkiy/isklyucheniya/
 Режимы: «Все исключения» и в будущем «Мои исключения».
 Банк исключений связан со Skill Graph и Explanation Bank, но не подключён к production.
-Source banks now include orthography, morphology, orthoepy, paronym contrasts, punctuation contrasts and difficult normative cases.
+Source banks include orthography, morphology, orthoepy, paronym contrasts, punctuation contrasts and difficult normative cases.
 
 VALIDATION STATUS:
-- source coverage: 27/27 COMPLETE;
-- wave-2 Skill Graph connector cross-links: PASS for used IDs;
-- task-27 official source gate: PASS against FIPI 2026 methodological criteria;
+- source explanation coverage: 27/27 COMPLETE;
+- first-part routing first pass: 26/26 COMPLETE;
+- task-27 expert/self-check source contour: COMPLETE;
+- task-27 current word-count safety audit: PASS;
 - source/content architecture: SOURCE-GO;
-- independent machine JSON/schema parse: PENDING because current execution container cannot reach raw GitHub; do not spend Codex quota just for this;
+- independent machine JSON/schema/canonical build: PENDING LOCAL FILE ACCESS;
 - production integration: HOLD.
 
 NEXT STEPS:
-1. Final learner wording/content review across tasks 1–27.
+1. Continue source/provenance cleanup and final learner wording review while machine build is unavailable.
 2. Continue extracting high-value Rozental exceptions into the Exceptions Bank.
-3. Build the item/position-to-subskill routing map needed for precise explanations.
-4. When files are available locally/container-side, run machine JSON/schema validation.
-5. Audit current word-counter behavior for task 27 against official FIPI counting rules before any essay integration.
-6. Only after content/data gate: fallback, regression tests, rollback and integration design.
+3. Prepare canonical build tests/fixtures and run them when local project files are available.
+4. Resolve remaining task-9 `needs_followup` classifications only with verified lexical/source evidence.
+5. After canonical PASS: design explanation integration, fallback, regression tests and rollback.
+6. Only after data/content gate: connect explanation layer to the frozen trainer in a separately reviewed implementation step.
 
 CODEX POLICY:
-Codex не использовать для обычного контента, аудита, схем и GitHub-файлов. Подключать только к действительно сложной локальной массовой реализации/сборке/тестированию, где расход квоты оправдан.
+Codex не использовать для обычного контента, аудита, схем, routing-data и GitHub-файлов. Подключать только к действительно сложной локальной массовой реализации/сборке/тестированию, где расход квоты оправдан.
 
 IMPORTANT:
 Не начинать реализацию AI до создания и проверки единого Skill Graph, схемы данных, формата Attempt, StudentSkillState, Recommendation Log и demo->trainer handoff.
