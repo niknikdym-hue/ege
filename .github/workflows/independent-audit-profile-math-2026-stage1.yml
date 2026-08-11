@@ -1,0 +1,49 @@
+name: Independent Audit Profile Math 2026 Stage 1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/independent-audit-profile-math-2026-stage1.yml
+
+permissions:
+  contents: read
+
+jobs:
+  extract-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pymupdf
+      - name: Extract official PDF text independently
+        run: |
+          mkdir -p /tmp/profile-audit
+          python - <<'PY'
+          import fitz, json, pathlib
+          root=pathlib.Path('matematika-source-2026/original')
+          files={
+            'demo': root/'МА-11 ЕГЭ 2026 ДЕМО_профильный.pdf',
+            'spec': root/'МА-11 ЕГЭ 2026 СПЕЦ_профильный.pdf',
+            'cod': root/'МА-11 ЕГЭ 2026_КОДИФ.pdf',
+          }
+          out=pathlib.Path('/tmp/profile-audit')
+          meta={}
+          for key,path in files.items():
+              doc=fitz.open(path)
+              meta[key]={'pages':len(doc),'metadata':doc.metadata}
+              parts=[]
+              for i,p in enumerate(doc):
+                  parts.append(f'\n===== {key.upper()} PAGE {i+1} =====\n')
+                  parts.append(p.get_text('text', sort=True))
+              (out/f'{key}.txt').write_text(''.join(parts),encoding='utf-8')
+          (out/'meta.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps(meta,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: independent-profile-math-2026-source-text
+          path: /tmp/profile-audit
+          retention-days: 2
