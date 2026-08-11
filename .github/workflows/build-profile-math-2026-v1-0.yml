@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - .github/workflows/build-profile-math-2026-v1-0.yml
+      - profile-math-2026-build/**
 
 permissions:
   contents: write
@@ -32,7 +33,7 @@ jobs:
       - name: Static source and structure gate
         run: |
           python - <<'PY'
-          import csv,json,zipfile
+          import csv,json
           from pathlib import Path
           root=Path('ege-matematika-profil-demoversiya-2026');p='ege-matematika-profil-demoversiya-2026'
           d=json.loads((root/f'{p}-EXAM-DATA.json').read_text(encoding='utf-8'))
@@ -114,9 +115,7 @@ jobs:
         run: |
           rm -f ege-matematika-profil-demoversiya-VERIFIED-PACKAGE-v2.zip
           rm -f profile-math-2026-visual-source-run.txt
-          rm -f .github/workflows/profile-math-2026-visual-source-gate.yml
           rm -rf profile-math-2026-build
-          rm -f .github/workflows/build-profile-math-2026-v1-0.yml
       - name: Commit fresh audited release
         run: |
           git config user.name 'github-actions[bot]'
@@ -130,3 +129,5 @@ jobs:
           name: ege-matematika-profil-demoversiya-2026-v1.0
           path: ege-matematika-profil-demoversiya-2026-v1.0.zip
           retention-days: 7
+
+# retry-r2
