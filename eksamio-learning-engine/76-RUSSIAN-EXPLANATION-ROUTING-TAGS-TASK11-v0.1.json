@@ -1,0 +1,36 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"word_level_routing_tags_current_task_11",
+  "integration_status":"not_connected_to_production",
+  "schema_ref":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
+  "items":[
+    {
+      "trainer_item_id":"ege-ru-11-2026-11-01",
+      "task_number":11,
+      "routing_precision":"word",
+      "candidate_subskill_ids":["suffix_spelling_by_part_of_speech"],
+      "word_tags":[
+        {"position_id":"row1_word1","source_locator":"недоум..вая -> недоумевая","subskill_ids":["suffix_spelling_by_part_of_speech"],"explanation_id":"suffix_spelling_verbs","diagnostic_confidence":"exact"},
+        {"position_id":"row1_word2","source_locator":"вермишел..вый -> вермишелевый","subskill_ids":["suffix_spelling_by_part_of_speech"],"explanation_id":"suffix_spelling_adjectives","diagnostic_confidence":"exact"},
+
+        {"position_id":"row2_word1","source_locator":"раздва..ваться -> раздваиваться","subskill_ids":["suffix_spelling_by_part_of_speech"],"explanation_id":"suffix_spelling_verbs","diagnostic_confidence":"exact"},
+        {"position_id":"row2_word2","source_locator":"дымч..тый -> дымчатый","subskill_ids":["suffix_spelling_by_part_of_speech"],"explanation_id":"suffix_spelling_adjectives","diagnostic_confidence":"exact"},
+
+        {"position_id":"row3_word1","source_locator":"туш..нка -> тушёнка","subskill_ids":["suffix_spelling_by_part_of_speech"],"explanation_id":"suffix_yo_after_sibilants_verbal_derivatives","diagnostic_confidence":"exact"},
+        {"position_id":"row3_word2","source_locator":"напряж..нный -> напряжённый","subskill_ids":["suffix_spelling_by_part_of_speech"],"explanation_id":"suffix_yo_after_sibilants_verbal_derivatives","diagnostic_confidence":"exact"},
+
+        {"position_id":"row4_word1","source_locator":"застенч..вый -> застенчивый","subskill_ids":["suffix_spelling_by_part_of_speech"],"explanation_id":"suffix_spelling_adjectives","diagnostic_confidence":"exact"},
+        {"position_id":"row4_word2","source_locator":"застр..вать -> застревать","subskill_ids":["suffix_spelling_by_part_of_speech"],"explanation_id":"suffix_spelling_verbs","exception_ids":["verb_zastrevat"],"diagnostic_confidence":"exact"},
+
+        {"position_id":"row5_word1","source_locator":"ливн..вый -> ливневый","subskill_ids":["suffix_spelling_by_part_of_speech"],"explanation_id":"suffix_spelling_adjectives","diagnostic_confidence":"exact"},
+        {"position_id":"row5_word2","source_locator":"овлад..вать -> овладевать","subskill_ids":["suffix_spelling_by_part_of_speech"],"explanation_id":"suffix_spelling_verbs","diagnostic_confidence":"exact"}
+      ],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Task 11 current card is mixed by part of speech, so row-level mastery inference is unsafe. Word-level tags select the appropriate internal learner explanation. Row 3 is now covered by a dedicated Rozental-derived Ё-after-sibilants branch."
+    }
+  ],
+  "status":"source_verified_current_card"
+}
