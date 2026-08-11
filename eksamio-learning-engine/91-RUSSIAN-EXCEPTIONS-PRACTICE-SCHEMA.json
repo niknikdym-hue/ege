@@ -1,0 +1,48 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"practice_item_contract_for_exceptions_trainer",
+  "integration_status":"not_connected_to_production",
+  "practice_item_contract":{
+    "required":["practice_item_id","exception_id","mode","response_kind","prompt","answer","feedback","status"],
+    "fields":{
+      "practice_item_id":"stable unique string; independent from trainer_item_id",
+      "exception_id":"must resolve to canonical Exceptions Bank",
+      "mode":"one of practice_mode_enum",
+      "response_kind":"one of response_kind_enum",
+      "prompt":"learner-facing prompt object or string",
+      "answer":"structured expected answer",
+      "alt_answers":"optional, only source-verified equivalents",
+      "distractors":"optional realistic wrong choices",
+      "feedback":"object with short answer/why and optional explanation link",
+      "context_signature":"stable hashable semantic label used for deduplication",
+      "source_context":"optional pointer to source exception/trainer context; never a long copied passage",
+      "transfer_level":"recognition | guided_recall | independent_context | transfer",
+      "status":"draft | source_verified | reviewed | needs_review",
+      "review_notes":"optional internal notes"
+    }
+  },
+  "practice_mode_enum":["recognize_exception","recall_form","choose_rule_class","contrast_normal_vs_exception","context_choice","normative_variant"],
+  "response_kind_enum":["single_choice","multi_choice","short_text","normalize_form","punctuation_positions","classification"],
+  "transfer_level_enum":["recognition","guided_recall","independent_context","transfer"],
+  "feedback_contract":{
+    "required":["correct_answer","why"],
+    "optional":["explanation_id","rule_ref","next_action","exception_contrast_ids"]
+  },
+  "validation_rules":[
+    "practice_item_id unique",
+    "exception_id exists and source exception status is source_verified/reviewed",
+    "mode supported by both schema and source exception practice_modes",
+    "response_kind belongs to response_kind_enum",
+    "answer is non-empty and machine-comparable",
+    "alt_answers are never invented merely for learner convenience",
+    "distractors must be normatively wrong in this exact context or explicitly be alternative classification choices",
+    "context_signature unique inside exception_id + mode unless the item is intentionally a different transfer context",
+    "feedback rule_ref/explanation_id must resolve when present",
+    "practice text is original Eksamio wording and does not reproduce long copyrighted source exercises",
+    "no production trainer mutation"
+  ],
+  "canonical_future_output":"build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json",
+  "production_integration":"HOLD"
+}
