@@ -1,25 +1,29 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.1.0",
   "subject":"russian",
   "exam":"ege",
   "scope":"first_part_tasks_1_26",
   "production_integration":false,
-  "status":"source_content_complete_review_and_integration_pending",
+  "status":"source_content_complete_routing_first_pass_complete_machine_build_pending",
   "source_policy":{"primary_rule_source":"eksamio-learning-engine/russkiy-knigi/rozental.doc","exam_truth":"verified FIPI/current source corpus","current_trainer":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/"},
   "wave_1":{"manifest":"43-RUSSIAN-EXPLANATION-WAVE-1-MANIFEST.json","tasks":[9,10,11,12,13,14,15,16,17,18,19,20,21],"review":"44-RUSSIAN-EXPLANATION-WAVE-1-REVIEW.txt"},
   "wave_2":{"manifest":"49-RUSSIAN-EXPLANATION-WAVE-2-MANIFEST.json","tasks":[1,2,3,4,5,6,7,8,22,23,24,25,26],"review":"50-RUSSIAN-EXPLANATION-WAVE-2-REVIEW.txt"},
   "coverage":{"expected_tasks":26,"covered_tasks":26,"missing_tasks":[]},
+  "routing":{"architecture":"59-RUSSIAN-EXPLANATION-TASK-ROUTING-MAP.json","schema":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json","index":"75-RUSSIAN-EXPLANATION-ROUTING-TAG-INDEX.json","first_pass_tasks":26,"first_pass_complete":true,"precision_policy":"never infer narrower weakness than item/option/word/position evidence supports"},
+  "canonical_explanation_build":{"spec":"64-RUSSIAN-EXPLANATION-CANONICAL-BUILD-SPEC.txt","builder":"build/build_russian_explanation_bank.py","output":"build/RUSSIAN-EXPLANATION-BANK-CANONICAL.json","audit":"audits/RUSSIAN-EXPLANATION-CANONICAL-VALIDATION.txt","execution_status":"pending_local_file_access"},
   "learner_behavior":{"warmup":"optional rule before answer only in future warmup UX","practice":"explanation after answer","work_on_errors":"detailed explanation then independent new item","control":"no explanations until completion","demo":"no explanations until completion"},
   "core_content_contract":["short_rule","rule","algorithm","common_traps","examples_or_contrasts","source_refs","skill_subskill_links"],
-  "exceptions_layer":{"spec":"28-RUSSIAN-EXCEPTIONS-TRAINER-SPEC.txt","schema":"29-RUSSIAN-EXCEPTIONS-BANK-SCHEMA.json","banks":["33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json","35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json","37-RUSSIAN-EXCEPTIONS-SUFFIXES-CONJUGATION-v0.1.json","39-RUSSIAN-EXCEPTIONS-NE-NI-SOLID-v0.1.json","42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json","48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json"]},
+  "exceptions_layer":{"spec":"28-RUSSIAN-EXCEPTIONS-TRAINER-SPEC.txt","schema":"29-RUSSIAN-EXCEPTIONS-BANK-SCHEMA.json","master_manifest":"83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json","builder":"build/build_russian_exceptions_bank.py","canonical_output":"build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json","validation_output":"audits/RUSSIAN-EXCEPTIONS-CANONICAL-VALIDATION.txt","banks":["33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json","35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json","37-RUSSIAN-EXCEPTIONS-SUFFIXES-CONJUGATION-v0.1.json","39-RUSSIAN-EXCEPTIONS-NE-NI-SOLID-v0.1.json","42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json","48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json"],"normalized_legacy_banks":[39,42],"provenance_normalized_banks":[48]},
   "known_routing_constraints":[
-    {"task":8,"constraint":"exact post-error explanation requires position-level result; otherwise use safe task-level rule menu/feedback"},
-    {"task":22,"constraint":"exact device diagnosis requires position-level result; verified device table can still be shown after completion"},
-    {"task":25,"constraint":"current phraseologism items must be separated from historical contextual-synonym item"},
-    {"task":26,"constraint":"exact means-of-cohesion diagnosis may require item/option-level tagging where multiple means are tested"}
+    {"task":4,"constraint":"supplemental orthoepic cards with bankEntryIds can autotag; base current card without bankEntryIds keeps task-level fallback"},
+    {"task":8,"constraint":"exact post-error explanation requires A-E position-level result; total score is insufficient"},
+    {"task":9,"constraint":"mixed rows require word-level evidence; unresolved word classifications remain needs_followup"},
+    {"task":22,"constraint":"exact device diagnosis requires A-E position-level result"},
+    {"task":25,"constraint":"current phraseologism items are externally separated from historical contextual-synonym item"},
+    {"task":26,"constraint":"multi-means wrong answer does not identify which cohesion means failed"}
   ],
-  "pre_integration_required":["machine JSON/schema validation","final learner wording review","item-to-subskill routing map","fallback to current feedback","regression tests","rollback plan"],
-  "task_27":"separate_contour_required",
+  "pre_integration_required":["machine canonical JSON/schema validation","final learner wording review","fallback to current feedback","regression tests","rollback plan"],
+  "task_27":"separate_expert_self_check_contour",
   "current_trainer_unchanged":true,
   "codex_required_now":false
 }
