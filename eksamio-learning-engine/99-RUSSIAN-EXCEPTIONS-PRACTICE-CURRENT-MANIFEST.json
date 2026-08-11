@@ -1,0 +1,23 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"current_exceptions_practice_bank_manifest",
+  "integration_status":"not_connected_to_production",
+  "supersedes_for_current_build":"93-RUSSIAN-EXCEPTIONS-PRACTICE-MANIFEST.json",
+  "history_note":"File 93 remains the frozen 48-card checkpoint after waves 1-2. This current manifest adds wave 3 without rewriting the historical checkpoint.",
+  "schema":"91-RUSSIAN-EXCEPTIONS-PRACTICE-SCHEMA.json",
+  "source_exceptions_manifest":"83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json",
+  "practice_banks":[
+    {"path":"92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json","scope":"wave 1 cross-domain pilot","expected_items":24,"status":"source_verified_pilot"},
+    {"path":"96-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE2-v0.1.json","scope":"wave 2 high-value contrast expansion","expected_items":24,"status":"source_verified_wave"},
+    {"path":"98-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE3-v0.1.json","scope":"wave 3 recall and transfer on N/NN, roots, Ц and PRE/PRI","expected_items":24,"status":"source_verified_wave"}
+  ],
+  "expected_total_items":72,
+  "builder":"build/build_russian_exceptions_practice_current.py",
+  "base_builder":"build/build_russian_exceptions_practice.py",
+  "canonical_output":"build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json",
+  "validation_output":"audits/RUSSIAN-EXCEPTIONS-PRACTICE-VALIDATION.txt",
+  "current_status":"72_card_source_practice_bank_ready_for_machine_validation",
+  "production_integration":"HOLD"
+}
