@@ -1,0 +1,266 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EGE TRAINER — EXPLANATION INTEGRATION CONTRACT
+
+STATUS: DESIGN READY / IMPLEMENTATION HOLD
+TARGET_EXISTING_PRODUCT: /ege/russkiy/trenazher/
+CURRENT_TRAINER: FROZEN / UNCHANGED
+
+PURPOSE
+
+Define how future verified Explanation Bank content may be connected to the existing trainer WITHOUT rewriting the current card bank, answers, scoring, trainer_item_id or storage model merely to support explanations.
+
+NON-NEGOTIABLE
+
+Integration is an ADAPTER around existing result data.
+It is not a rebuild of the trainer.
+
+DO NOT CHANGE FOR EXPLANATION INTEGRATION
+
+- trainer_item_id;
+- task/card prompt text;
+- correct answers/alt answers;
+- score/maxScore;
+- current answer evaluation logic;
+- task numbering;
+- mode semantics;
+- existing autosave/localStorage keys unless a separate storage task explicitly authorizes a versioned extension;
+- demo/control answer-hiding behavior;
+- SEO/URL;
+- T123 structure except the minimal additive blocks/scripts explicitly approved by implementation plan.
+
+FUTURE COMPONENTS
+
+1. EXPLANATION RUNTIME PAYLOAD
+Generated from canonical Explanation Bank + routing data.
+Schema: `110-RUSSIAN-EXPLANATION-RUNTIME-PAYLOAD-SCHEMA.json`.
+
+2. RESULT ADAPTER
+Reads existing trainer result evidence after current evaluator finishes.
+Outputs a normalized explanation-resolution request.
+
+3. EXPLANATION RESOLVER
+Maps normalized evidence to:
+- exact explanation_id when evidence supports it;
+- safe broader explanation when evidence is ambiguous;
+- current trainer fallback otherwise.
+
+4. FEEDBACK RENDERER
+Renders learner copy after answer according to mode rules.
+Must not change score/result state.
+
+5. OPTIONAL HANDOFF PRODUCER — LATER
+May emit exact skill/subskill/exception route into Learning Engine/Exceptions Trainer only when result evidence supports it.
+Not required for first explanation integration.
+
+NORMALIZED RESULT REQUEST — FUTURE
+
+Suggested shape:
+{
+  trainer_item_id,
+  task_number,
+  mode,
+  item_is_complete,
+  item_is_correct,
+  selected_options?,
+  correct_options?,
+  position_results?,
+  match_results?,
+  entered_response?,
+  current_feedback?,
+  completion_scope
+}
+
+`completion_scope`:
+- item
+- training_set
+- control_set
+- demo_attempt
+
+The adapter may READ existing evaluator output but must not recompute official correctness independently unless a tested mirror is required solely for display diagnostics.
+
+RESOLUTION SAFETY
+
+EXACT route allowed only if:
+- routing metadata status reviewed/source-verified;
+- required position/word/option evidence is actually available;
+- route precision <= result evidence precision.
+
+Example:
+Task 8 total score 0/2 is NOT enough to say learner failed `government_case_norm`.
+Exact A-E result is required.
+
+Example:
+Task 15 numbered positions can support exact N/NN word feedback when position evidence exists.
+
+Example:
+Task 25 historical contextual synonym card must remain separated from current phraseologism route.
+
+FALLBACK ORDER
+
+1. exact external explanation if safely resolved;
+2. safe task/subskill-level external explanation;
+3. current existing item `explanation`/algorithm/trap;
+4. current generic feedback.
+
+If external runtime fails to load:
+- trainer must remain usable with current feedback;
+- answer checking/scoring must still work.
+
+This fallback independence is required before GO.
+
+BEFORE-ANSWER RULE ACCESS
+
+Default main practice mode:
+NO external explanation before answer.
+
+Warmup future mode:
+- may offer `Посмотреть правило` before answer;
+- must be intentionally enabled by the mode, not by a global always-on switch.
+
+Control/demo:
+- no explanation/rule drawer before completion.
+
+AFTER-ANSWER FEEDBACK — CORRECT
+
+Target compact layer:
+- current correct state;
+- one-line reason/short_rule if useful;
+- expandable `Правило`.
+
+Do not show a long table automatically after every correct answer.
+
+AFTER-ANSWER FEEDBACK — WRONG
+
+Target:
+- current wrong state;
+- correct answer from CURRENT evaluator/card, not external bank;
+- exact `why` if safely resolved;
+- short rule;
+- algorithm/trap as expandable blocks;
+- future CTA `Потренировать этот случай` only after handoff gate.
+
+CURRENT ANSWER IS AUTHORITATIVE FOR DISPLAY
+
+External Explanation Bank must NOT supply a replacement answer when current evaluator already owns the item answer.
+
+If external example says something inconsistent with current card answer:
+- mark integration error;
+- do not render conflicting explanation;
+- use current fallback;
+- audit source conflict separately.
+
+MODE RULES
+
+TRAINING
+- explanations after individual answer.
+
+WORK ON ERRORS
+- detailed explanation after attempt;
+- next independent item should not expose answer beforehand.
+
+CONTROL
+- collect results silently while control active;
+- render analysis only after control completion.
+
+DEMO
+- no external learning UI during attempt;
+- post-attempt report may use explanations/routing.
+
+ESSAY TASK 27
+
+Separate contour.
+Do not inject normal correct/wrong feedback during writing.
+After completion:
+- criterion-based self-check components may be shown;
+- no official automated K1–K10 score claim;
+- AI evaluation remains separate future layer.
+
+DATA LOADING OPTIONS — FUTURE
+
+Preferred:
+- standalone runtime JSON/data block generated at build time;
+- loaded/read independently from current card bank.
+
+Avoid:
+- duplicating whole Explanation Bank inside each card;
+- editing all 174 source cards to paste rule text;
+- adding large provenance/source data to browser payload.
+
+TILDA BLOCK STRATEGY — FUTURE
+
+Only after canonical/build PASS determine whether runtime payload should be:
+- one or several T123 JSON chunks;
+- static hosted JSON asset;
+- generated inline data modules.
+
+Selection depends on actual validated payload size and Tilda constraints.
+Do not choose before measuring canonical output.
+
+STORAGE
+
+First explanation-only integration SHOULD NOT require learner state changes.
+Rendering explanation can be stateless relative to existing answer state.
+
+Personal mastery/recommendation/exception handoff storage is a separate Learning Engine step.
+
+This separation minimizes regression risk.
+
+TELEMETRY — OPTIONAL FUTURE
+
+If event logging exists later, useful events:
+- explanation_shown
+- rule_opened
+- error_explanation_resolved_exact
+- error_explanation_fallback
+- retry_after_explanation
+
+Do not block explanation UI on analytics availability.
+
+FEATURE FLAG
+
+Future implementation should support disabling external explanation layer while leaving trainer functional.
+Possible conceptual flag:
+`explanationRuntimeEnabled`.
+
+Exact mechanism chosen during implementation.
+
+REGRESSION BASELINE
+
+Before first code edit:
+- snapshot/checksum current trainer package;
+- record current BANK-MANIFEST totals;
+- record current local tests;
+- record storage keys;
+- record current feedback behavior.
+
+After integration:
+expected unchanged:
+- card count;
+- task count;
+- correct answers;
+- score behavior;
+- item IDs;
+- storage compatibility;
+- current manual modes.
+
+Only intended delta:
+- richer post-answer explanation UI when feature enabled and route resolves.
+
+IMPLEMENTATION PHASE ORDER
+
+1. canonical Explanation Bank PASS;
+2. canonical routing/tag validation PASS;
+3. build minimal runtime payload;
+4. unit-test resolver on static fixtures;
+5. create standalone adapter/renderer prototype outside production T123;
+6. visual/behavior test;
+7. create additive Tilda integration package;
+8. regression test frozen trainer;
+9. rollout behind reversible feature boundary.
+
+CURRENT DECISION
+
+INTEGRATION CONTRACT: READY
+CODE EDITS TO CURRENT TRAINER: NOT AUTHORIZED YET
+PRODUCTION: HOLD
+CURRENT TRAINER: UNCHANGED
