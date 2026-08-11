@@ -1,0 +1,117 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXPLANATION WAVE 1 REVIEW
+
+SCOPE: tasks 9-21
+REVIEW TYPE: content-architecture/source review
+DECISION: SOURCE-GO / INTEGRATION-HOLD
+PRODUCTION CHANGES: NONE
+
+1. WHAT PASSES
+
+A. SOURCE POLICY
+PASS.
+Rozental is the primary rule/explanation/exception source.
+FIPI/current verified exam corpus remains authoritative for current exam format, criteria, official lists and task scope.
+
+B. PRODUCTION SAFETY
+PASS.
+No trainer T123/JS/CSS/HTML/localStorage/trainer_item_id/answer/scoring changes are part of wave 1.
+All new work is additive data/specification content under `eksamio-learning-engine/`.
+
+C. TASK COVERAGE
+PASS FOR SOURCE LAYER.
+Tasks 9-21 each have at least one source-verified explanation unit mapped to the relevant Skill Graph node(s).
+
+D. CURRENT TRAINER RELEVANCE
+PASS FOR CHECKED SAMPLES.
+Explanation logic was checked against current trainer cards, including:
+- task 15 N/NN cases;
+- task 16 homogeneous members vs compound sentence;
+- task 17 pre/post-positioned definitions and gerund phrase;
+- task 18 introductory words vs non-introductory `словно`, and forms of address;
+- task 19 homogeneous subordinate clauses;
+- task 20 junction of conjunctions with `если ... то`;
+- task 21 current dash/colon/comma rule-analysis variants.
+
+E. GENERAL VS SPECIFIC EXPLANATION
+PASS AT DESIGN LEVEL.
+The content layer separates reusable rule/subskill explanation from current card-specific feedback.
+
+F. EXCEPTIONS / CONTRASTS
+PASS AT FIRST-BANK LEVEL.
+Orthography and punctuation now have separate exception/contrast data rather than stuffing every special case into one rule card.
+
+2. IMPORTANT SELF-CHECK RESULT
+
+During review, `кас-/кос(н)-` was rechecked directly against Rozental § 3.
+The existing explanation classification is correct for the chosen source: O is written when N follows (`коснуться`, `прикосновение`), otherwise A (`касаться`, `касательная`).
+No change to file 34 was made.
+
+This check reinforces the project rule:
+do not silently replace Rozental's rule formulation with remembered school shorthand unless there is an explicit reason and the semantic result is preserved.
+
+3. WHAT DOES NOT YET PASS
+
+A. JSON / SCHEMA VALIDATION
+PENDING.
+All JSON files must be machine-validated before any integration or `content_reviewed` promotion.
+
+B. SKILL GRAPH CROSS-LINK VALIDATION
+PENDING.
+Every `skill_id` / `subskill_id` used in content files must be mechanically checked against the accepted Skill Graph.
+
+C. FULL CONTENT REVIEW
+PENDING.
+`source_verified` means the source basis exists; it does not yet mean the final learner wording is approved for production.
+
+D. BREADTH OF EXCEPTIONS
+IN PROGRESS.
+Rozental contains many more exceptions, lexicalized cases, homonym contrasts and boundary cases than the first bank currently includes.
+The knowledge bank should continue expanding, while public trainer priority can remain focused on EGE-relevant/high-value cases.
+
+E. TASK 11 GRANULARITY
+REVIEW REQUIRED.
+One Skill Graph node covers suffixes of several parts of speech. The current content branches internally, but before integration it may be safer to give those branches separate explanation IDs so an error receives only the relevant suffix rule.
+
+F. TASK 14 GRANULARITY
+REVIEW REQUIRED.
+The Skill Graph node is very broad. The content already separates conjunctions, prepositions, adverbs and particles internally. Before integration, likely split into separate explanation units for precise post-error routing.
+
+G. TASK 21 RULE FAMILY COVERAGE
+SOURCE LAYER PASSES CURRENT BANK, EXPANSION OPTIONAL.
+The current task bank's actual variants are covered. A future broader bank may introduce additional dash/colon/comma rule families; those should be added from Rozental when new trainer items require them rather than preloading every possible punctuation rule into one learner card.
+
+4. INTEGRATION DECISION
+
+HOLD.
+Do not alter production trainer yet.
+
+Integration can be reconsidered only after:
+1. JSON validation;
+2. Skill Graph cross-link validation;
+3. content review/promotion of selected units;
+4. item-to-subskill routing design;
+5. safe fallback to current feedback;
+6. control/demo no-hint regression requirements;
+7. rollback plan.
+
+5. NEXT WORK
+
+Immediate:
+- machine-validation/cross-link audit of wave 1;
+- continue Rozental exception extraction;
+- begin wave 2 only after wave 1 structural validation is clean.
+
+Wave 2:
+- tasks 1-8;
+- tasks 22-26.
+
+Separate contour:
+- task 27 essay.
+
+FINAL CURRENT STATUS
+
+WAVE 1 SOURCE CONTENT: GO
+WAVE 1 PRODUCTION INTEGRATION: HOLD
+CURRENT TRAINER: UNCHANGED
+CODEX: NOT REQUIRED
