@@ -1,0 +1,147 @@
+EKSAMIO LEARNING ENGINE
+LOCAL VALIDATION + CHECKPOINT PACKAGE SPEC
+
+STATUS: DESIGN READY / ADD-ONLY
+PURPOSE: one-command local validation and reproducible ZIP checkpoint
+CODEX_REQUIRED: NO
+PRODUCTION: UNCHANGED
+
+WHY
+
+The user wants to keep one current `eksamio-learning-engine/` folder inside local `exam-platform-tilda` and periodically receive one ZIP checkpoint instead of repeatedly moving the same files between ChatGPT/Codex/local machine.
+
+This spec defines a local no-network workflow.
+
+LOCAL ROOT
+
+Expected existing local project:
+`exam-platform-tilda/eksamio-learning-engine/`
+
+Do NOT create a second clone of the whole project just for validation.
+
+VALIDATION COMMAND
+
+From `eksamio-learning-engine/`:
+
+`python3 build/run_russian_learning_engine_validation.py`
+
+It runs, in order:
+1. `build/build_russian_explanation_bank.py`
+2. `build/build_russian_exceptions_bank.py`
+3. `build/build_russian_exceptions_practice_current.py`
+
+Outputs from individual builders remain:
+- `build/RUSSIAN-EXPLANATION-BANK-CANONICAL.json`
+- `audits/RUSSIAN-EXPLANATION-CANONICAL-VALIDATION.txt`
+- `build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json`
+- `audits/RUSSIAN-EXCEPTIONS-CANONICAL-VALIDATION.txt`
+- `build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json`
+- `audits/RUSSIAN-EXCEPTIONS-PRACTICE-VALIDATION.txt`
+
+Aggregate output:
+- `audits/RUSSIAN-LEARNING-ENGINE-VALIDATION-SUMMARY.txt`
+
+No network is required if all repo files are present locally.
+
+VALIDATION POLICY
+
+OVERALL PASS requires:
+- explanation builder exit 0;
+- exceptions builder exit 0;
+- practice builder exit 0.
+
+Warnings are preserved in individual audits but do not automatically fail if the builder explicitly treats them as warnings.
+
+Any exit 1/2 -> OVERALL FAIL.
+
+Do not package a FINAL checkpoint as validated if aggregate status is FAIL or missing.
+
+CHECKPOINT PACKAGE COMMAND
+
+After validation:
+
+`python3 build/package_learning_engine_checkpoint.py --require-pass`
+
+Default output directory:
+`eksamio-learning-engine/build/checkpoints/`
+
+Default archive naming:
+`eksamio-learning-engine-checkpoint-YYYYMMDD-HHMMSS.zip`
+
+Archive root inside ZIP:
+`eksamio-learning-engine/`
+
+The ZIP must include the working project folder contents, including:
+- control/status/spec files;
+- source explanation/exception/practice banks;
+- tasks/results/reviews/audits/specs/build scripts;
+- `russkiy-knigi/` contents that are actually present in the local workspace;
+- generated canonical JSON/audits when validation was run.
+
+Exclude:
+- `.git/`
+- `__pycache__/`
+- `.DS_Store`
+- temporary editor swap files;
+- previous ZIP checkpoints;
+- Python bytecode;
+- obvious OS metadata.
+
+CHECKSUM INVENTORY
+
+Packaging creates next to ZIP:
+`<archive-name>.sha256.txt`
+
+Inventory contains:
+`SHA256  relative/path/from/eksamio-learning-engine`
+for every file included in the archive, sorted by path.
+
+It also records:
+- archive SHA-256;
+- generated timestamp;
+- validation summary status;
+- file count.
+
+This inventory allows later verification that the local folder matches the delivered checkpoint.
+
+SAFETY
+
+Packaging script MUST NOT:
+- modify source files;
+- delete/move files;
+- alter current trainer;
+- run Git operations;
+- publish to Tilda;
+- rewrite localStorage/website code.
+
+It may only:
+- read files;
+- write validation outputs under build/audits through validators;
+- write ZIP/checksum files under build/checkpoints.
+
+`--require-pass`
+
+If aggregate validation summary is missing or not PASS:
+- refuse final validated package;
+- exit non-zero;
+- do not silently label ZIP as ready.
+
+Without `--require-pass`, a diagnostic ZIP may be created, but package metadata must clearly say `VALIDATION_STATUS: NOT_CONFIRMED` or `FAIL`.
+
+USER HANDOFF
+
+At a chosen checkpoint:
+1. run local validation;
+2. fix validation errors if any;
+3. create `--require-pass` ZIP;
+4. provide the ZIP to the user in chat;
+5. user places/unpacks it into existing `exam-platform-tilda` project.
+
+Do not ask the user to manually copy dozens of individual files.
+
+CURRENT DECISION
+
+VALIDATION ORCHESTRATION: NEXT SCRIPT
+CHECKPOINT PACKAGER: NEXT SCRIPT
+CURRENT GITHUB WORK: CONTINUE
+CURRENT TRAINER: UNCHANGED
