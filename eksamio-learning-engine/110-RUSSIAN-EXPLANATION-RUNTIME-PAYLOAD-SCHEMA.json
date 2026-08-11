@@ -1,0 +1,91 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"future_runtime_payload_for_existing_ege_trainer_explanations",
+  "integration_status":"not_connected_to_production",
+  "core_principle":"Keep the current trainer cards/answers/scoring unchanged. Resolve explanation content externally by trainer_item_id + result evidence + routing metadata.",
+  "top_level_contract":{
+    "required":["schema_version","content_version","units","routes"],
+    "fields":{
+      "schema_version":"runtime schema version",
+      "content_version":"canonical explanation/routing content version",
+      "units":"minimal learner-safe explanation units keyed by explanation_id",
+      "routes":"resolved routing metadata keyed by trainer_item_id or deterministic route key",
+      "build_meta":"optional integrity metadata"
+    }
+  },
+  "unit_runtime_contract":{
+    "required":["explanation_id","short_rule","rule","algorithm","common_traps","examples"],
+    "fields":{
+      "explanation_id":"stable explanation unit ID",
+      "title":"optional learner-facing title",
+      "short_rule":"compact feedback layer",
+      "rule":"expanded rule layer",
+      "algorithm":"ordered solving steps",
+      "common_traps":"learner-facing traps",
+      "examples":"original Eksamio examples",
+      "contrast_examples":"optional contrasts",
+      "learner_table":"optional structured table",
+      "semantic_link_table":"optional essay-specific table",
+      "verification_question":"optional self-check question",
+      "rule_drawer_sections":"optional precomputed UI sections"
+    }
+  },
+  "route_runtime_contract":{
+    "required":["route_id","task_number","precision","fallback"],
+    "fields":{
+      "route_id":"stable route id, usually based on trainer_item_id plus optional position/option key",
+      "trainer_item_id":"existing stable current trainer item id when route is item-specific",
+      "task_number":"1..27",
+      "precision":"task | item | option | word | position | match_position | criterion_component",
+      "position_id":"optional exact result position",
+      "option_id":"optional choice/row id",
+      "word_id":"optional word locator/tag",
+      "candidate_explanation_ids":"ordered allowed explanation units",
+      "exact_explanation_id":"optional when evidence is exact",
+      "fallback":"safe explanation/current-feedback behavior",
+      "legacy":"boolean",
+      "status":"enabled | partial | disabled"
+    }
+  },
+  "result_evidence_contract":{
+    "note":"This describes the data an integration adapter may read from the current trainer result. It does NOT authorize changing scoring.",
+    "evidence_types":[
+      "item_correctness",
+      "selected_options",
+      "expected_options",
+      "position_correctness",
+      "matching_position_result",
+      "entered_word_or_form",
+      "task_specific_existing_result",
+      "essay_self_check_component"
+    ]
+  },
+  "mode_behavior":{
+    "warmup":{"before_answer":"optional short_rule/rule drawer only when future warmup explicitly enables it","after_answer":"normal feedback allowed"},
+    "practice":{"before_answer":"none","after_answer":"short feedback + expandable rule"},
+    "work_on_errors":{"before_answer":"none for independent retry","after_answer":"detailed explanation + new item route"},
+    "control":{"before_answer":"none","after_answer":"only after control completion"},
+    "demo":{"before_answer":"none","after_answer":"only after whole attempt completion"}
+  },
+  "runtime_resolution_order":[
+    "use exact result evidence if route status enabled and precision matches",
+    "resolve exact_explanation_id when justified",
+    "otherwise choose safe candidate/fallback at task level",
+    "never infer exception/subskill from total score when item is mixed",
+    "preserve current trainer explanation as fallback when external content cannot resolve safely"
+  ],
+  "excluded_from_runtime_payload":[
+    "raw Rozental/book text",
+    "source_refs/page locators",
+    "Skill Graph full graph",
+    "audit notes",
+    "GitHub paths/commits",
+    "unreviewed explanation units",
+    "hidden source answer banks unrelated to current evaluation"
+  ],
+  "answer_integrity":"Runtime explanation payload never overrides the current trainer correct answer or score. If external explanation content conflicts with the trainer key, integration must fail closed and raise audit rather than silently changing either side.",
+  "future_output":"build/RUSSIAN-EXPLANATION-RUNTIME.json",
+  "production_integration":"HOLD"
+}
