@@ -1,0 +1,64 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN MORPHOLOGY — SKILL GRAPH GAP CANDIDATES
+
+STATUS: REVIEW CANDIDATES / DO NOT ROUTE YET
+PRODUCTION: UNCHANGED
+
+PURPOSE
+
+Зафиксировать проверенные языковые темы, которые присутствуют в фактическом материале задания 7, но не имеют собственного точного subskill в принятом `03-RUSSIAN-SKILL-GRAPH.json`.
+
+Нельзя привязывать эти темы к чужим `noun_form_norms`, `numeral_form_norms` или `verb_form_norms` только ради формального покрытия.
+
+CANDIDATE 1
+
+TOPIC: степени сравнения прилагательных и наречий
+CURRENT TRAINER EXAMPLE:
+- `более СТРОГО` — нормативная составная сравнительная форма;
+- ошибочная модель типа `более строже` смешивает составную и простую сравнительную степень.
+
+SOURCE:
+- `russkiy-knigi/rozental.doc` — морфологические нормы, образование степеней сравнения;
+- current trainer task 7.
+
+GRAPH STATUS:
+NO DEDICATED SUBSKILL CONFIRMED.
+
+DECISION:
+- не добавлять в canonical Exceptions Bank с ложной subskill-связью;
+- сохранить как кандидат на evidence-based Skill Graph extension;
+- до расширения графа при необходимости показывать только общий task-level feedback, без mastery-update конкретного subskill.
+
+CANDIDATE 2
+
+TOPIC: превосходная степень / формы типа `ближайший`
+CURRENT TRAINER EXAMPLE:
+- `БЛИЖАЙШАЯ станция` — нормативная форма в исторической карточке задания 7.
+
+SOURCE:
+- `russkiy-knigi/rozental.doc` — морфологические нормы, степени сравнения;
+- current trainer task 7 historical card.
+
+GRAPH STATUS:
+NO DEDICATED SUBSKILL CONFIRMED.
+
+DECISION:
+- не притягивать к `noun_form_norms`;
+- не создавать новый Skill Graph node без отдельного аудита фактического банка;
+- при будущем graph-extension проверить все task-7 cards/years, чтобы понять, достаточно ли одного subskill `comparison_degree_forms` или нужны более узкие ветки.
+
+NEXT GRAPH REVIEW RULE
+
+Skill Graph extension допустимо рассматривать только если:
+1. тема встречается в реальном trainer/demo corpus;
+2. она отдельно диагностируема;
+3. отдельное состояние mastery даст полезный learner route;
+4. новый node не дублирует уже существующий;
+5. provenance подтверждено.
+
+CURRENT DECISION
+
+LANGUAGE CONTENT: VERIFIED
+EXACT SKILL ROUTING: HOLD
+GRAPH CHANGE: NOT AUTHORIZED / REVIEW LATER
+CURRENT TRAINER: UNCHANGED
