@@ -1,10 +1,10 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.0.1",
   "subject":"russian",
   "exam":"ege",
   "purpose":"exceptions_training_bank",
   "integration_status":"not_connected_to_production",
-  "content_version":"0.1.0",
+  "content_version":"0.1.1",
   "items":[
     {
       "exception_id":"morph_kupol_plural",
@@ -80,45 +80,12 @@
       "canonical_form":"у наших ворот",
       "wrong_forms":["у наших воротей"],
       "rule_ref":"noun_form_norms",
-      "why_exception":"Существительное pluralia tantum «ворота» имеет нормативную форму родительного падежа «ворот».",
+      "why_exception":"Существительное «ворота» имеет нормативную форму родительного падежа «ворот».",
       "examples":["у старых ворот", "возле ворот"],
       "practice_modes":["recall_form","normative_variant","context_choice"],
-      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Морфологические нормы: формы существительных, употребляющихся преимущественно/только во множественном числе","purpose":"normative_form","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-PREVIEW.html","locator":"task 7 historical card: у наших ВОРОТ","purpose":"exam_scope","verification_status":"verified"}],
+      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Морфологические нормы: формы существительных множественного числа","purpose":"normative_form","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-PREVIEW.html","locator":"task 7 historical card: у наших ВОРОТ","purpose":"exam_scope","verification_status":"verified"}],
       "status":"source_verified"
-    },
-    {
-      "exception_id":"morph_comparative_bolee_strict",
-      "skill_ids":["morphological_norms"],
-      "subskill_ids":["noun_form_norms","verb_form_norms"],
-      "exam_task_numbers":[7],
-      "exception_type":"other_verified_case",
-      "prompt_label":"БОЛЕЕ СТРОГО, НО НЕ «БОЛЕЕ СТРОЖЕ»",
-      "canonical_form":"более строго; строже — две разные нормативные модели степени сравнения, их нельзя складывать",
-      "wrong_forms":["более строже"],
-      "rule_ref":"morphological_norms",
-      "why_exception":"Составная и простая сравнительная степень не соединяются в одной форме. В текущем Skill Graph нет отдельного subskill для степеней сравнения, поэтому этот элемент пока не используется для точного mastery-update.",
-      "examples":["Ответ сформулирован более строго.","Ответ сформулирован строже."],
-      "practice_modes":["choose_rule_class","normative_variant","context_choice"],
-      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Морфологические нормы: степени сравнения прилагательных и наречий","purpose":"rule_boundary","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-PREVIEW.html","locator":"task 7 current card: более СТРОГО","purpose":"exam_scope","verification_status":"verified"}],
-      "status":"needs_review",
-      "review_notes":"Skill Graph lacks a dedicated comparison-degree subskill. Keep this content available for the exceptions trainer but do not infer noun/verb weakness from it; graph linkage needs a later evidence-based decision."
-    },
-    {
-      "exception_id":"morph_superlative_blizhayshiy",
-      "skill_ids":["morphological_norms"],
-      "subskill_ids":["noun_form_norms"],
-      "exam_task_numbers":[7],
-      "exception_type":"other_verified_case",
-      "prompt_label":"БЛИЖАЙШИЙ, НО НЕ «САМЫЙ БЛИЖАЙШИЙ» КАК АВТОМАТИЧЕСКАЯ ФОРМУЛА",
-      "canonical_form":"ближайшая станция — нормативная форма; при образовании степеней сравнения нельзя механически наращивать показатели степени",
-      "rule_ref":"morphological_norms",
-      "why_exception":"Форма «ближайший» уже содержит показатель превосходной степени/лексикализованное значение близости. Конкретное сочетание с усилителями оценивается по норме и контексту, а не по принципу «чем больше показателей, тем сильнее степень».",
-      "examples":["ближайшая станция"],
-      "practice_modes":["normative_variant","choose_rule_class","context_choice"],
-      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Морфологические нормы: образование степеней сравнения","purpose":"rule_boundary","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-PREVIEW.html","locator":"task 7 historical card: БЛИЖАЙШАЯ станция","purpose":"exam_scope","verification_status":"verified"}],
-      "status":"needs_review",
-      "review_notes":"Current Skill Graph has no dedicated degree-of-comparison subskill; do not use this item for exact mastery updates yet."
     }
   ],
-  "review_notes":"High-value task-7 morphology forms. Items tied to accepted noun-form subskill are source_verified; comparison-degree items remain needs_review for Skill Graph routing despite source-verified language content."
+  "review_notes":"Only source-verified task-7 difficult forms that map cleanly to the accepted noun_form_norms Skill Graph node are included. Degree-of-comparison cases were moved to a separate graph-gap candidate note rather than being linked to an unrelated subskill."
 }
