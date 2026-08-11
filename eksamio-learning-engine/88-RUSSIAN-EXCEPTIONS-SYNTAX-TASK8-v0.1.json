@@ -1,10 +1,10 @@
 {
-  "schema_version":"1.0.0",
+  "schema_version":"1.0.1",
   "subject":"russian",
   "exam":"ege",
   "purpose":"exceptions_training_bank",
   "integration_status":"not_connected_to_production",
-  "content_version":"0.1.0",
+  "content_version":"0.1.1",
   "items":[
     {
       "exception_id":"syntax_dative_prepositions_government",
@@ -14,7 +14,7 @@
       "exception_type":"other_verified_case",
       "prompt_label":"СОГЛАСНО / БЛАГОДАРЯ / ВОПРЕКИ — ДАТЕЛЬНЫЙ ПАДЕЖ",
       "canonical_form":"согласно приказу; благодаря помощи; вопреки совету",
-      "wrong_forms":["согласно приказа","благодаря помощи (если форма ошибочно поставлена не в дательном падеже)","вопреки совета"],
+      "wrong_forms":["согласно приказа","вопреки совета"],
       "rule_ref":"syntactic_error_matching",
       "why_exception":"Управление этих производных предлогов требует дательного падежа. Разговорная или канцелярская аналогия с родительным падежом приводит к грамматической ошибке.",
       "examples":["Согласно приказу занятия перенесли.","Благодаря помощи команда закончила работу.","Вопреки совету он продолжил эксперимент."],
@@ -82,23 +82,7 @@
       "practice_modes":["choose_rule_class","contrast_normal_vs_exception","context_choice"],
       "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Синтаксические нормы: однородные члены при различном управлении","purpose":"rule_boundary","verification_status":"verified"}],
       "status":"source_verified"
-    },
-    {
-      "exception_id":"syntax_gerund_same_actor_contrast",
-      "skill_ids":["syntactic_norms"],
-      "subskill_ids":["gerundial_construction_norm"],
-      "exam_task_numbers":[8],
-      "exception_type":"other_verified_case",
-      "prompt_label":"ДЕЕПРИЧАСТИЕ: КТО ВЫПОЛНЯЕТ ОБА ДЕЙСТВИЯ",
-      "canonical_form":"Основное действие и действие деепричастия должны иметь общего производителя в нормативной конструкции.",
-      "rule_ref":"syntactic_error_matching",
-      "why_exception":"Формальная близость деепричастия к существительному не исправляет конструкцию, если грамматический субъект основного действия другой или отсутствует.",
-      "examples":["Читая текст, ученик делал пометки.","Ошибка: Читая текст, мне стало понятно мнение автора."],
-      "practice_modes":["choose_rule_class","contrast_normal_vs_exception","context_choice"],
-      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Синтаксические нормы: деепричастный оборот и субъект действия","purpose":"rule_boundary","verification_status":"verified"}],
-      "status":"source_verified",
-      "review_notes":"This overlaps conceptually with `syntax_gerund_same_actor_test` in file 48. The canonical builder must flag duplicate exception_id only; editorial deduplication should later decide whether both pedagogical records are useful or one should be retired."
     }
   ],
-  "review_notes":"High-value task-8 syntax special cases. Production trainer and current matching task remain unchanged."
+  "review_notes":"High-value task-8 syntax special cases. The gerund same-actor item is intentionally not duplicated because `syntax_gerund_same_actor_test` already exists in file 48. Production trainer and current matching task remain unchanged."
 }
