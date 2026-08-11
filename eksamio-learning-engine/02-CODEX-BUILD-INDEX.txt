@@ -1,0 +1,247 @@
+EKSAMIO LEARNING ENGINE
+CODEX BUILD INDEX
+
+PURPOSE
+Эта папка является единым рабочим контуром архитектуры персонализации Эксамио.
+Первый пилот — ЕГЭ по русскому языку.
+
+ВАЖНО
+Этот файл пока является индексом будущего комплекта. Наличие пункта в индексе не означает, что соответствующий файл уже создан или проверен.
+Codex не должен начинать финальную сборку Learning Engine только по этому индексу. Сначала должны быть подготовлены и проверены обязательные файлы ниже.
+
+CURRENT FILES
+00-WORK-STATUS.txt
+01-RUSSIAN-PILOT-CONCEPT.txt
+02-CODEX-BUILD-INDEX.txt
+
+REQUIRED ARCHITECTURE FILES
+
+03-RUSSIAN-SKILL-GRAPH.json
+Назначение:
+- карта навыков и поднавыков русского языка;
+- связь экзаменационных заданий с навыками;
+- prerequisite relationships;
+- стабильные skill_id.
+
+04-RUSSIAN-DEMO-TASK-MAP.json
+Назначение:
+- стабильные demo_item_id;
+- task number;
+- skill_id / subskill_id;
+- правила передачи результатов в общий профиль;
+- никакого изменения официальной последовательности демоверсии.
+
+05-RUSSIAN-TRAINER-ITEM-MAP.json
+Назначение:
+- стабильные trainer_item_id;
+- связь каждого проверенного тренировочного задания со skill_id/subskill_id;
+- source/provenance;
+- difficulty=null до появления валидной статистики, если сложность не подтверждена.
+
+06-STUDENT-DATA-SCHEMA.json
+Обязательные сущности:
+- StudentProfile;
+- Attempt;
+- StudentSkillState;
+- Recommendation;
+- RecommendationResult;
+- RetentionSchedule;
+- ControlAttempt.
+
+07-EVENT-SCHEMA.txt
+События минимум:
+- demo_started;
+- task_opened;
+- answer_saved;
+- answer_changed;
+- task_marked;
+- task_revisited;
+- demo_completed;
+- trainer_session_started;
+- trainer_item_answered;
+- recommendation_created;
+- recommendation_completed;
+- retention_due;
+- retention_completed;
+- control_completed.
+
+08-BROWSER-STORAGE-SPEC.txt
+MVP без обязательной регистрации.
+Определить:
+- namespace;
+- versioning;
+- migration policy;
+- storage limits;
+- corruption recovery;
+- reset/export behavior;
+- разделение экзаменационных попыток и тренировочной истории.
+
+09-DEMO-TO-TRAINER-HANDOFF-SPEC.txt
+Определить:
+- какие результаты демоверсии передаются;
+- как формируется список слабых навыков;
+- как тренажёр принимает handoff;
+- как собирается автоматическая работа над ошибками;
+- fallback при отсутствии точного поднавыка.
+
+10-MASTERY-ALGORITHM-SPEC.txt
+Первая версия должна быть прозрачной и детерминированной.
+Определить:
+- входные сигналы;
+- коэффициенты;
+- decay;
+- правила обновления;
+- статусы mastery;
+- минимальное количество данных;
+- обработку одиночной случайной ошибки.
+
+11-NEXT-ITEM-CORRECTNESS-SPEC.txt
+Определить:
+- NIC-1;
+- NIC-3;
+- transfer;
+- retention;
+- правила выбора валидного next item;
+- исключение слишком лёгких повторов;
+- критерии успешности.
+
+12-RECOMMENDATION-ENGINE-SPEC.txt
+Приоритеты:
+1. слабые навыки;
+2. высокоценные экзаменационные потери;
+3. незакреплённые ошибки;
+4. retention due;
+5. давно не проверявшиеся навыки;
+6. новые навыки;
+7. освоенные навыки для редкого контроля.
+
+13-SPACED-REPETITION-SPEC.txt
+Определить:
+- начальные интервалы;
+- изменение интервалов после успеха/ошибки;
+- due state;
+- правила overdue;
+- контроль против избыточных повторов.
+
+14-RUSSIAN-FREE-UX-SPEC.txt
+Бесплатный пользовательский контур:
+- карта потерь после демоверсии;
+- Потренировать слабые места;
+- автоматическая работа над ошибками;
+- Тренировка на сегодня;
+- книга ошибок;
+- базовая карта навыков;
+- контроль;
+- retention.
+
+15-ANALYTICS-METRICS-SPEC.txt
+Главные метрики обучения:
+- NIC-1;
+- NIC-3;
+- transfer success;
+- retention;
+- mastery gain;
+- повторные ошибки;
+- time-to-mastery;
+- прирост между контрольными попытками.
+
+Не использовать время на сайте как основную метрику качества обучения.
+
+16-EXPERIMENTATION-SPEC.txt
+Определить:
+- assignment в группы;
+- experiment_id;
+- variant_id;
+- primary learning metric;
+- guardrail metrics;
+- sample integrity;
+- rollout rules.
+
+17-CODEX-IMPLEMENTATION-RULES.txt
+Обязательные правила для Codex:
+- не менять официальное содержание демоверсии без отдельного аудита;
+- не генерировать отсутствующие официальные ответы/критерии;
+- не смешивать AI inference с source-of-truth exam data;
+- не делать paywall для базового learning loop;
+- не вводить difficulty вручную без основания;
+- сохранять обратную совместимость данных;
+- не публиковать экспериментальные функции без feature flag;
+- проводить тесты миграции storage;
+- проводить edge-case tests;
+- сохранять возможность пройти демоверсию полностью без AI.
+
+18-TEST-PLAN.txt
+Минимум:
+- unit tests алгоритмов;
+- demo->trainer integration;
+- storage migration;
+- repeated attempts;
+- corrupted state recovery;
+- multiple demo attempts;
+- same skill across different tasks;
+- retention scheduling;
+- no-data user;
+- fully mastered user;
+- user with contradictory evidence;
+- manual trainer mode compatibility.
+
+19-ROLLBACK-PLAN.txt
+Определить:
+- feature flags;
+- storage downgrade/migration behavior;
+- безопасное отключение персонализации;
+- сохранение базовых демоверсии и тренажёра при отказе нового слоя.
+
+20-AI-LAYER-SPEC.txt
+СОЗДАВАТЬ ПОСЛЕ СТАБИЛИЗАЦИИ БАЗОВОГО LEARNING ENGINE.
+
+AI получает структурированное состояние ученика и проверенные exam facts.
+AI не является source of truth для:
+- формата экзамена;
+- правильных ответов;
+- критериев;
+- максимальных баллов;
+- официальных правил проверки.
+
+21-AI-ESSAY-EVALUATION-SPEC.txt
+Отдельный контур для сочинения.
+Обязательно:
+- учебная, а не официальная оценка;
+- criterion-by-criterion evidence;
+- uncertainty;
+- повторная проверка после исправлений;
+- версия критериев и источник.
+
+22-SERVER-SYNC-SPEC.txt
+Создаётся на этапе аккаунтов.
+Определить:
+- identity;
+- local->server merge;
+- conflict handling;
+- multi-device sync;
+- privacy/data retention;
+- export/delete.
+
+BUILD GATES
+
+GATE 1 — SOURCE / CONTENT INTEGRITY
+Все связи task->skill и trainer item->skill проверены.
+
+GATE 2 — DATA CONTRACT
+Стабильные схемы Attempt, StudentSkillState, Recommendation и versioning.
+
+GATE 3 — FREE LOOP
+Demo -> diagnosis -> trainer -> verify -> retain работает без AI и без оплаты.
+
+GATE 4 — MEASUREMENT
+NIC, retention и recommendation log действительно записываются и проверяются.
+
+GATE 5 — EXPERIMENTATION
+Новые алгоритмы можно сравнивать без смешения групп.
+
+GATE 6 — AI
+AI подключается только после прохождения предыдущих gate.
+
+CORE NON-NEGOTIABLE RULE
+Базовый learning loop Эксамио остаётся бесплатным:
+Проверить -> найти проблему -> потренироваться -> проверить усвоение -> повторить.
