@@ -1,0 +1,34 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"exceptions_training_bank_corrections",
+  "integration_status":"not_connected_to_production",
+  "content_version":"0.1.0",
+  "items":[
+    {
+      "exception_id":"false_introductory_v_kontse_kontsov",
+      "skill_ids":["punctuation_norms"],
+      "subskill_ids":["introductory_words_punctuation"],
+      "exam_task_numbers":[18],
+      "exception_type":"punctuation_exception",
+      "prompt_label":"В КОНЦЕ КОНЦОВ — НЕ ВВОДНОЕ СОЧЕТАНИЕ",
+      "canonical_form":"Сочетание «в конце концов» само по себе не является вводным и не требует обособления запятыми. Запятые рядом возможны только по другим правилам структуры предложения.",
+      "wrong_forms":["автоматически обособлять «в конце концов» как вводное"],
+      "rule_ref":"introductory_words_punctuation",
+      "why_exception":"Смысл итоговости или последовательности событий не делает сочетание вводным. Нужно отличать его от действительно контекстно-двойственных единиц вроде «наконец» или «однако».",
+      "examples":["После долгих поисков мы в конце концов нашли нужную страницу.","Важно в конце концов проверить исходное условие ещё раз."],
+      "practice_modes":["recognize_exception","recall_form","choose_rule_class","contrast_normal_vs_exception","context_choice"],
+      "source_refs":[{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"Пунктуация: слова и сочетания, не являющиеся вводными; «в конце концов»","purpose":"rule_boundary","verification_status":"verified"}],
+      "status":"source_verified",
+      "review_notes":"Corrects the earlier source model `introductory_v_kontse_kontsov_dual_function`, which must be disabled in the current canonical build rather than treated as a dual-function introductory expression."
+    }
+  ],
+  "corrections":[
+    {
+      "disabled_exception_id":"introductory_v_kontse_kontsov_dual_function",
+      "replacement_exception_id":"false_introductory_v_kontse_kontsov",
+      "reason":"Rosenthal-based editorial recheck: «в конце концов» should not be taught as a normal introductory/non-introductory dual-function unit."
+    }
+  ]
+}
