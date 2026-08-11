@@ -1,0 +1,97 @@
+{
+  "schema_version":"1.0.0",
+  "subject":"russian",
+  "exam":"ege",
+  "purpose":"routing_tags_tasks_1_3_5_6",
+  "integration_status":"not_connected_to_production",
+  "schema_ref":"65-RUSSIAN-EXPLANATION-ROUTING-TAG-SCHEMA.json",
+  "items":[
+    {
+      "trainer_item_id":"ege-ru-01-2026-01-01",
+      "task_number":1,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["cohesion_gap_grammatical_fit","cohesion_determinative_pronoun"],
+      "exact_subskill_id":"cohesion_determinative_pronoun",
+      "explanation_id":"cohesion_gap_grammatical_fit",
+      "accepted_answers":["сам","весь"],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"The prompt explicitly requests an определительное местоимение, so the pronoun-class subskill is exact. Multiple accepted answers mean a correct response must not be interpreted as mastery of one particular lexical choice over the other."
+    },
+    {
+      "trainer_item_id":"ege-ru-02-2026-02-01",
+      "task_number":2,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["lexical_meaning_in_context","definition_context_matching","dictionary_sense_selection"],
+      "option_tags":[
+        {"position_id":"option_1","source_locator":"ПРИЙТИ — proposed dictionary sense vs text context","subskill_ids":["definition_context_matching","lexical_meaning_in_context"],"explanation_id":"lexical_meaning_in_context","diagnostic_confidence":"exact"},
+        {"position_id":"option_2","source_locator":"ДУХОВНЫЙ — proposed dictionary sense vs text context","subskill_ids":["definition_context_matching","lexical_meaning_in_context"],"explanation_id":"lexical_meaning_in_context","diagnostic_confidence":"exact"},
+        {"position_id":"option_3","source_locator":"ХАРАКТЕР — proposed dictionary sense vs text context","subskill_ids":["definition_context_matching","lexical_meaning_in_context"],"explanation_id":"lexical_meaning_in_context","diagnostic_confidence":"exact"},
+        {"position_id":"option_4","source_locator":"ПРОЗРЕНИЕ — proposed dictionary sense vs text context","subskill_ids":["definition_context_matching","lexical_meaning_in_context"],"explanation_id":"lexical_meaning_in_context","diagnostic_confidence":"exact"},
+        {"position_id":"option_5","source_locator":"КРОВЬ — proposed dictionary sense vs text context","subskill_ids":["definition_context_matching","lexical_meaning_in_context"],"explanation_id":"lexical_meaning_in_context","diagnostic_confidence":"exact"}
+      ],
+      "correct_options":["4","5"],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Every option tests definition/context matching. A wrong item answer identifies weakness at the lexical-context task level; exact option-level diagnosis requires preserving the learner's selected/missed option set."
+    },
+    {
+      "trainer_item_id":"ege-ru-03-2026-03-01",
+      "task_number":3,
+      "routing_precision":"option",
+      "candidate_subskill_ids":["functional_style_identification","genre_and_communicative_purpose","language_feature_evidence","expressive_means_in_context"],
+      "option_tags":[
+        {"position_id":"option_1","source_locator":"scientific style + author purpose claim","subskill_ids":["functional_style_identification","genre_and_communicative_purpose"],"explanation_id":"functional_style_identification","diagnostic_confidence":"exact"},
+        {"position_id":"option_2","source_locator":"genre claim: scientific report","subskill_ids":["genre_and_communicative_purpose"],"explanation_id":"functional_style_identification","diagnostic_confidence":"exact"},
+        {"position_id":"option_3","source_locator":"abstract vocabulary: сущность, время","subskill_ids":["language_feature_evidence"],"explanation_id":"functional_style_identification","diagnostic_confidence":"exact"},
+        {"position_id":"option_4","source_locator":"homogeneous members + detached attributes/adverbials","subskill_ids":["language_feature_evidence"],"explanation_id":"functional_style_identification","diagnostic_confidence":"exact"},
+        {"position_id":"option_5","source_locator":"comparison + extended metaphor","subskill_ids":["expressive_means_in_context"],"explanation_id":"functional_style_identification","diagnostic_confidence":"exact"}
+      ],
+      "correct_options":["3","4","5"],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Task 3 is mixed. Exact learner feedback should be based on selected/missed options rather than the total all-or-nothing score."
+    },
+    {
+      "trainer_item_id":"ege-ru-05-2026-05-01",
+      "task_number":5,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["paronym_context_choice"],
+      "exact_subskill_id":"paronym_context_choice",
+      "explanation_id":"paronym_context_choice",
+      "source_locator":"ГАРАНТИЙНОГО получения результата -> гарантированного получения результата",
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-06-2026-06-01",
+      "task_number":6,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["lexical_redundancy"],
+      "exact_subskill_id":"lexical_redundancy",
+      "explanation_id":"lexical_redundancy",
+      "source_locator":"очень оптимальные -> удалить очень",
+      "legacy":false,
+      "status":"source_verified"
+    },
+    {
+      "trainer_item_id":"ege-ru-06-2026-06-02",
+      "task_number":6,
+      "routing_precision":"item",
+      "candidate_subskill_ids":["lexical_collocation_correction"],
+      "exact_subskill_id":"lexical_collocation_correction",
+      "explanation_id":"lexical_collocation_correction",
+      "source_locator":"совершить победу -> одержать победу / допустимые официальные способы редактирования",
+      "accepted_answers":["одержать","усилие","усилия"],
+      "legacy":false,
+      "status":"source_verified",
+      "review_notes":"Multiple accepted repair strategies are preserved. Exact weakness is lexical collocation/editing, not one mandatory replacement token."
+    }
+  ],
+  "validation_notes":[
+    "Current trainer answers and accepted alternatives were read from the repository-visible trainer snapshot.",
+    "No trainer source card, answer, scoring rule or runtime file was modified.",
+    "Task 4 is intentionally excluded because it uses the separate bankEntryId-based autotag specification."
+  ],
+  "status":"source_verified_current_cards"
+}
