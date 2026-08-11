@@ -1,5 +1,5 @@
 {
-  "schema_version":"1.2.0",
+  "schema_version":"1.3.0",
   "subject":"russian",
   "exam":"ege",
   "purpose":"exceptions_and_special_cases_master_manifest",
@@ -15,11 +15,13 @@
     {"path":"48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json","scope":"orthoepy, morphology, paronym, syntax and historical-format cases","tasks":[4,5,7,8,25],"shape":"items","contract_status":"provenance_normalized_2026_08_11"},
     {"path":"84-RUSSIAN-EXCEPTIONS-INTRODUCTORY-WORDS-v0.1.json","scope":"introductory-word false positives and dual functions","tasks":[18],"shape":"items"},
     {"path":"85-RUSSIAN-EXCEPTIONS-NE-NI-HIGH-RISK-v0.1.json","scope":"NE/NI difficult contrasts","tasks":[13,14],"shape":"items"},
-    {"path":"86-RUSSIAN-EXCEPTIONS-SOLID-SEPARATE-HIGH-RISK-v0.1.json","scope":"derived-preposition, adverb and nominal spelling contrasts","tasks":[14],"shape":"items"}
+    {"path":"86-RUSSIAN-EXCEPTIONS-SOLID-SEPARATE-HIGH-RISK-v0.1.json","scope":"derived-preposition, adverb and nominal spelling contrasts","tasks":[14],"shape":"items"},
+    {"path":"87-RUSSIAN-EXCEPTIONS-MORPHOLOGY-TASK7-v0.1.json","scope":"task-7 difficult noun forms with clean accepted Skill Graph links","tasks":[7],"shape":"items"},
+    {"path":"88-RUSSIAN-EXCEPTIONS-SYNTAX-TASK8-v0.1.json","scope":"task-8 government, indirect speech, apposition and homogeneous-construction special cases","tasks":[8],"shape":"items"},
+    {"path":"89-RUSSIAN-EXCEPTIONS-PARONYMS-HIGH-VALUE-v0.1.json","scope":"selected high-value paronym contrasts represented in current/historical trainer corpus","tasks":[5],"shape":"items"}
   ],
-  "not_duplicated_full_banks":[
-    {"source":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ORTHOEPIC-TRAINER-BANK.json","reason":"Reference difficult items without duplicating the full 96-entry orthoepic source bank."}
-  ],
+  "review_only_sources":[{"path":"87A-RUSSIAN-MORPHOLOGY-GRAPH-GAP-CANDIDATES.txt","scope":"verified comparison-degree content that must not be routed to unrelated Skill Graph nodes"}],
+  "not_duplicated_full_banks":[{"source":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ORTHOEPIC-TRAINER-BANK.json","reason":"Reference difficult items without duplicating the full 96-entry orthoepic source bank."}],
   "canonical_output":"build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json",
   "validation_output":"audits/RUSSIAN-EXCEPTIONS-CANONICAL-VALIDATION.txt",
   "builder":"build/build_russian_exceptions_bank.py",
