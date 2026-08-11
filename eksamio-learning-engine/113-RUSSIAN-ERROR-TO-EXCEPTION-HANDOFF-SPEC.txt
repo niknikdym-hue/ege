@@ -1,0 +1,239 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN ERROR -> EXPLANATION -> EXCEPTION PRACTICE HANDOFF SPEC
+
+STATUS: DESIGN READY / IMPLEMENTATION HOLD
+CURRENT_EGE_TRAINER: UNCHANGED
+EXCEPTIONS_TRAINER: NOT PUBLIC YET
+
+PURPOSE
+
+Define the exact bridge between:
+1. an error in the existing Russian EGE trainer;
+2. the verified Explanation Bank;
+3. a specific exception/special-case practice route when evidence supports it;
+4. later learner state / My Exceptions / retention.
+
+CORE RULE
+
+NO GUESSING.
+
+A learner may be routed to a specific `exception_id` only when the result evidence identifies that exact exception/special case.
+
+A broad wrong task result may route to:
+- an explanation/skill;
+- a diagnostic follow-up;
+but NOT automatically to a guessed exception_id.
+
+FLOW
+
+MAIN TRAINER ATTEMPT
+-> current evaluator computes answer correctness/score
+-> Explanation Result Adapter reads evidence
+-> Explanation Resolver selects exact/safe feedback
+-> Exception Handoff Resolver checks exact exception link
+-> if exact: offer targeted practice / activate learner exception state
+-> if not exact: remain on skill-level practice/feedback
+-> new independent practice item
+-> next-item/transfer evidence
+-> retention schedule
+
+HANDOFF CLASSES
+
+A. EXACT_EXCEPTION
+Evidence resolves a specific exception_id.
+Examples:
+- task 15 position is exactly `деревянный` -> `n_nn_wooden`;
+- task 7 wrong target exactly `полутораста` -> `morph_polutorasta_oblique`;
+- current task13 context exactly maps to a verified NE/NI contrast item;
+- orthoepic supplemental word has a stable bankEntryId and that entry is explicitly represented as an Exceptions Bank special case.
+
+Allowed:
+- CTA `Потренировать этот случай`;
+- add/activate exact exception_id in learner state after actual error;
+- select independent practice card for same exception.
+
+B. EXACT_SKILL_ONLY
+Evidence resolves a skill/subskill but there is no specific exception_id.
+Examples:
+- ordinary checked vowel error;
+- normal comma boundary not an exception item;
+- a generic suffix branch.
+
+Allowed:
+- show exact explanation;
+- route to normal skill practice.
+
+Not allowed:
+- fabricate exception_id just because Exceptions Trainer has related content.
+
+C. MIXED_AMBIGUOUS
+Task/row contains multiple rule families and current result does not identify which element caused failure.
+
+Allowed:
+- broad explanation;
+- diagnostic follow-up item;
+- preserve route candidates internally.
+
+Not allowed:
+- exact exception state update.
+
+D. LEGACY_SEPARATE
+Historical format/source item uses a different skill from current task.
+
+Allowed:
+- historical explanation/practice if the historical item itself is being trained.
+
+Not allowed:
+- contaminate current task route.
+
+E. ESSAY_SELF_CHECK
+Task 27.
+No normal exception handoff from total essay result.
+Later individual language errors could route only if a separate verified essay error extractor identifies a specific orthography/punctuation/morphology issue.
+That future AI/expert layer is separate.
+
+HANDOFF EVIDENCE
+
+Possible exact evidence:
+- trainer_item_id when item has one exact exception target;
+- word/position tag;
+- option-specific tag;
+- matching A-E position;
+- bankEntryId;
+- current answer component tied to one exception_id.
+
+Insufficient alone:
+- task number;
+- total task score;
+- total session score;
+- user spent long time;
+- generic wrong status;
+- broad skill name.
+
+EXTERNAL MAPPING
+
+Preferred ADD-ONLY mapping file:
+`RUSSIAN-ERROR-EXCEPTION-HANDOFF-MAP.json`
+
+Do not paste exception IDs into every current source card.
+
+Mapping can reference:
+- trainer_item_id;
+- position_id/word_id/option_id;
+- exception_id;
+- evidence_precision;
+- status;
+- source provenance.
+
+MAPPING STATUS
+
+- reviewed: eligible for runtime handoff;
+- source_verified: eligible after mapping validation;
+- partial: explanation only, no personal exception activation;
+- needs_review: no runtime handoff.
+
+USER EXPERIENCE AFTER ERROR
+
+Normal post-answer sequence:
+1. current result / correct answer;
+2. explanation of exact error;
+3. if EXACT_EXCEPTION: subtle CTA `Потренировать этот случай`;
+4. do not force navigation;
+5. if learner continues main session, exception can be queued for later personal work only if learner-state integration is approved.
+
+WORK-ON-ERRORS FLOW
+
+If the learner explicitly enters Work on Errors:
+- exact exception route may automatically include corresponding practice item;
+- first practice must use a NEW context where possible;
+- after new correct answer, do not immediately delete the exception from My Exceptions;
+- schedule transfer/retention.
+
+ANONYMOUS USER
+
+Exact handoff can work locally without account.
+Future state is local namespaced state from schema 102.
+No registration gate.
+
+NO STATE IMPLEMENTATION IN FIRST EXPLANATION RELEASE
+
+Explanation integration can launch WITHOUT My Exceptions/handoff.
+Recommended safe sequencing:
+Phase 1: richer explanations only.
+Phase 2: standalone Exceptions Trainer.
+Phase 3: exact handoff + local learner state.
+
+This keeps regression risk small.
+
+HANDOFF MAP GENERATION
+
+Build from already reviewed routing tags + Exceptions Bank.
+For each exact routing tag:
+1. inspect exact word/position/option;
+2. check if a canonical exception_id matches that exact normative concept;
+3. attach only if direct match;
+4. record `none` if normal rule case;
+5. record `partial` if relation is thematic but not exact.
+
+Do not infer by shared subskill alone.
+Example:
+subskill `n_nn_spelling` includes many normal cases; it does not mean every N/NN error maps to `n_nn_wooden`.
+
+SPECIAL CURRENT CASES
+
+Task 7:
+- `ЗАПЕЧАТЛИТЬ -> запечатлеть` -> exact exception item exists;
+- `С ПОВИДЛОЙ -> с повидлом` -> exact;
+- `ПОЛТОРАСТА -> полутораста` -> exact.
+
+Task 15:
+- known word positions can map exact exceptions for wooden/forged when position is known;
+- ordinary `кожаный` remains normal rule, not forced into Exceptions Bank.
+
+Task 18:
+- `словно` non-introductory distinction may map to false-introductory exception set if exact position known;
+- generic missing comma near an introductory word need not be an exception.
+
+Task 25:
+- historical synonym item remains legacy route; current phraseologism errors are normal task/skill practice unless a future specific special-case bank exists.
+
+HANDOFF FAILURE
+
+If mapping payload fails:
+- explanation still works;
+- main trainer still works;
+- no personal exception is created;
+- CTA hidden.
+
+If exception target disabled in current Exceptions Bank:
+- hide handoff CTA;
+- keep explanation.
+
+ANALYTICS — FUTURE
+
+Useful events:
+- exception_handoff_offered
+- exception_handoff_opened
+- exception_handoff_deferred
+- exception_handoff_practice_completed
+- exception_handoff_transfer_passed
+
+Do not optimize CTA clicks as the learning outcome.
+
+VALIDATION BEFORE ENABLE
+
+- all enabled mapping trainer_item_id exist;
+- all position/word/option IDs exist;
+- every exception_id resolves to enabled canonical exception;
+- evidence_precision matches routing tag precision;
+- no partial mapping can activate My Exceptions;
+- legacy/current separation valid;
+- feature-off main trainer matches baseline.
+
+CURRENT DECISION
+
+HANDOFF ARCHITECTURE: READY
+HANDOFF MAP: NEXT DATA ARTIFACT
+EXPLANATION-ONLY INTEGRATION CAN PRECEDE HANDOFF
+CURRENT TRAINER: UNCHANGED
+PRODUCTION HANDOFF: HOLD
