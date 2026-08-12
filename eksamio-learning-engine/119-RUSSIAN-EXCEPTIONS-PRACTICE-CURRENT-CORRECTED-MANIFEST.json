@@ -1,11 +1,11 @@
 {
-  "schema_version": "1.0.1",
+  "schema_version": "1.0.2",
   "subject": "russian",
   "exam": "ege",
   "purpose": "current_corrected_exceptions_practice_manifest",
   "integration_status": "not_connected_to_production",
   "supersedes_for_current_build": "99-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-MANIFEST.json",
-  "history_note": "After the full 80/80 linguistic audit, the rejected universal «в конце концов» correction is removed from the current practice source set. Two audited replacements are added: context-dependent «в конце концов» and current normative «заревать». Raw 82 minus two superseded cards leaves exactly 80 active cards.",
+  "history_note": "After the full 80/80 linguistic audit, the rejected universal «в конце концов» correction is removed from the current practice source set. Two audited replacements are added: context-dependent «в конце концов» and current normative «заревать». Raw 82 minus two superseded cards leaves exactly 80 active cards. Course-grade audit fixes and post-audit learner-feedback polish are applied as explicit overlays without changing card count.",
   "schema": "91-RUSSIAN-EXCEPTIONS-PRACTICE-SCHEMA.json",
   "source_exceptions_manifest": "118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json",
   "practice_banks": [
@@ -47,9 +47,10 @@
   "expected_total_items_raw": 82,
   "expected_active_items": 80,
   "feedback_overlay": "131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json",
+  "feedback_polish_overlay": "136-RUSSIAN-EXCEPTIONS-LEARNER-FEEDBACK-POLISH-v0.1.json",
   "builder": "build/build_russian_exceptions_practice_course_grade.py",
   "canonical_output": "build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json",
   "validation_output": "audits/RUSSIAN-EXCEPTIONS-PRACTICE-VALIDATION.txt",
-  "current_status": "80_active_cards_reaudit_corrections_ready_for_build_validation",
+  "current_status": "80_active_cards_course_grade_overlays_ready_for_machine_validation",
   "production_integration": "HOLD"
 }
