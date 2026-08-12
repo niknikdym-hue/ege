@@ -1,0 +1,44 @@
+name: Profile mathematics 2025 source preprocessing
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - matematika-source-2025/scripts/preprocess_profile_2025.py
+      - .github/workflows/math-profile-2025-source-preprocessing.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preprocess:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: pip install --quiet pymupdf pillow
+      - name: Build canonical 2025 profile source pages
+        id: build
+        continue-on-error: true
+        run: |
+          python matematika-source-2025/scripts/preprocess_profile_2025.py > math-profile-2025-source-preprocessing.log 2>&1
+      - name: Show source preprocessing log
+        if: always()
+        run: cat math-profile-2025-source-preprocessing.log
+      - name: Commit canonical source evidence
+        if: steps.build.outcome == 'success'
+        run: |
+          rm -f math-profile-2025-source-preprocessing.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add matematika-source-2025/canonical-profile-printed-pages \
+                  ege-matematika-profil-demoversiya-2025/source-evidence \
+                  ege-matematika-profil-demoversiya-2025/source-diagnostics \
+                  ege-matematika-profil-demoversiya-2025/ege-matematika-profil-demoversiya-2025-SOURCE-INVENTORY.generated.json
+          git diff --cached --quiet || { git commit -m 'Build 2025 profile math canonical source evidence'; git push origin HEAD:main; }
+      - name: Fail workflow if preprocessing failed
+        if: steps.build.outcome == 'failure'
+        run: exit 1
