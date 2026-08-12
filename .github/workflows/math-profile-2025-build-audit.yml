@@ -1,0 +1,77 @@
+name: Profile mathematics 2025 build and browser audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ege-matematika-profil-demoversiya-2025/scripts/build_profile_2025.py
+      - ege-matematika-profil-demoversiya-2025/tests/test_profile_2025.py
+      - .github/workflows/math-profile-2025-build-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: pip install --quiet pymupdf pillow selenium
+      - name: Rebuild canonical 2025 source layer
+        run: python matematika-source-2025/scripts/preprocess_profile_2025.py
+      - name: Build package from accepted 2026 technical engine
+        run: python ege-matematika-profil-demoversiya-2025/scripts/build_profile_2025.py
+      - name: Static package gates
+        run: |
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path('ege-matematika-profil-demoversiya-2025')
+          prefix='ege-matematika-profil-demoversiya-2025'
+          blocks=sorted(root.glob(prefix+'-T123-*.txt'))
+          assert blocks
+          sizes={p.name:p.stat().st_size for p in blocks}
+          assert max(sizes.values())<45000,sizes
+          preview=(root/(prefix+'-PREVIEW.html')).read_text(encoding='utf-8')
+          assert 'профильной математике 2026' not in preview
+          assert 'ФИПИ 2026' not in preview
+          assert 'официальный пример ${v.variant}' not in preview
+          assert preview.count('<script')==preview.count('</script>')
+          ids=re.findall(r'\bid=["\']([^"\']+)["\']',preview)
+          assert len(ids)==len(set(ids)),[x for x in ids if ids.count(x)>1]
+          assert len(list((root/'assets').glob('condition-*.webp')))==37
+          assert len(list((root/'assets').glob('solution-*.webp')))==7
+          assert (root/'assets'/'reference-materials.webp').exists()
+          data=json.loads((root/(prefix+'-EXAM-DATA.json')).read_text(encoding='utf-8'))
+          assert data['sourceYear']==2025 and data['officialExampleCount']==37
+          assert data['storageKey']=='eksamio_ege_math_profile_demo_2025_v1_0'
+          print(json.dumps({'t123_blocks':len(blocks),'max_bytes':max(sizes.values()),'ids':len(ids)},ensure_ascii=False))
+          PY
+      - name: Start preview server
+        run: |
+          python -m http.server 8765 --directory ege-matematika-profil-demoversiya-2025 > /tmp/profile-2025-http.log 2>&1 &
+          echo $! > /tmp/profile-2025-http.pid
+          sleep 2
+      - name: Real DOM browser audit — all 37 official examples
+        run: python ege-matematika-profil-demoversiya-2025/tests/test_profile_2025.py
+      - name: Repack after browser evidence and final audit statuses
+        run: python ege-matematika-profil-demoversiya-2025/scripts/build_profile_2025.py --repack
+      - name: Commit verified package and evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add matematika-source-2025/canonical-profile-printed-pages \
+                  ege-matematika-profil-demoversiya-2025 \
+                  ege-matematika-profil-demoversiya-2025-v1.0.zip
+          git diff --cached --quiet || { git commit -m 'Build and browser-audit profile mathematics 2025'; git push origin HEAD:main; }
+      - name: Upload verified archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-matematika-profil-demoversiya-2025-v1.0
+          path: ege-matematika-profil-demoversiya-2025-v1.0.zip
+          if-no-files-found: error
