@@ -1,0 +1,161 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN — DRABKINA 5–11 COVERAGE / ROUTING AUDIT v0.1
+DATE: 2026-08-12
+STATUS: WORK IN PROGRESS / NO 100% CLAIM ALLOWED
+BRANCH: agent/russian-exceptions-content-polish
+
+PURPOSE
+
+Build the denominator for class-mode progress and for the future complete Difficult Cases / Exceptions knowledge base.
+The denominator is KNOWLEDGE ITEMS from the full school vertical, not cards, not current source records, and not solved questions.
+
+FIXED SOURCE RULE
+
+1. CLASS ROUTING 5–11: Drabkina/Subbotin project corpus is primary.
+2. COMPLETENESS CONTROL: project Rosenthal and other authoritative references.
+3. CURRENT NORM: current academic/dictionary norm overrides outdated school simplifications.
+4. OGE/EGE ROUTING: current FIPI exam scope is a separate route overlay.
+5. Current EGE task number MUST NOT determine school class.
+
+PROJECT DRABKINA CORPUS — PRESENCE
+
+All seven class-route files are present in `russkiy-knigi/`:
+- 5 class
+- 6 class
+- 7 class
+- 8 class
+- 9 class
+- 10 class
+- 11 class
+
+SOURCE-STRUCTURE STATUS
+
+5 class: VERIFIED source structure.
+6 class: VERIFIED source structure.
+7 class: VERIFIED source structure.
+8 class: PARTIAL — core Drabkina/Subbotin grade-8 scope is confirmed, but exact section-by-section TOC of the project 2018 practicum still needs direct verification before final item-level routing.
+9 class: VERIFIED source structure.
+10 class: VERIFIED source structure.
+11 class: VERIFIED source structure.
+
+IMPORTANT VERTICAL INTERPRETATION
+
+Grades 5–9 are the main school progression / first-study layer.
+Grade 10 is primarily an orthography reinforcement/systematization layer for EGE preparation.
+Grade 11 is primarily a syntax/punctuation reinforcement/systematization layer for EGE preparation.
+
+Therefore every knowledge item must support at least:
+- first_studied_class;
+- reinforcement_classes.
+
+Do NOT duplicate the same knowledge item as a new programme unit merely because it appears again in grade 10 or 11.
+
+FIRST CURRENT-BANK ROUTING RESULTS
+
+CONFIRMED ROUTE FAMILIES:
+
+5 CLASS FIRST STUDY
+- ЛАГ-/ЛОЖ- -> reinforce 6, 10.
+- РАСТ-/РАЩ-/РОС- -> reinforce 6, 10.
+- Е/И alternating-root family -> reinforce 6, 10.
+- basic homogeneous members / generalizing-word layer -> later complexity in 8, 11.
+
+6 CLASS FIRST STUDY
+- КАС-/КОС- -> reinforce 10.
+- ГОР-/ГАР- family -> reinforce 10; current norm correction ЗАРЕВАТЬ preserved.
+- ПРЕ-/ПРИ- -> reinforce 10.
+- Н/НН in denominal adjectives -> reinforce 7, 10.
+- НЕ with nouns/adjectives -> later broader NE/NI system in 7, 10.
+
+7 CLASS FIRST STUDY
+- Н/НН in participles and deverbal adjectives -> reinforce 10.
+- НЕ with participles / gerunds / adverbs and broader НЕ/НИ distinctions -> reinforce 10.
+- solid/separate/hyphen adverbial spelling -> reinforce 10.
+- derived prepositions -> reinforce 10.
+- conjunctions vs homonymous combinations -> reinforce 10.
+
+This directly covers current families such as:
+- деревянный / оловянный / стеклянный;
+- кованый / кованный кузнецом;
+- жёваный / жёванный ребёнком;
+- ПРЕ-/ПРИ- lexical contrasts;
+- ввиду / в виду;
+- вследствие / в следствие;
+- насчёт / на счёт;
+- вроде / в роде;
+- чтобы / что бы;
+- тоже / то же;
+- также / так же;
+- причём / при чём;
+- притом / при том;
+- зато / за то;
+- итак / и так.
+
+8 CLASS — CURRENTLY PROVISIONAL UNTIL EXACT PROJECT TOC
+- introductory words / contextual introductory vs non-introductory functions -> reinforce 11.
+- isolated members -> reinforce 11.
+- homogeneous-member system receives a more advanced syntax/punctuation layer.
+
+9 CLASS FIRST STUDY / OGE TRANSITION
+- complex subordinate sentence system -> reinforce 11.
+- subordinate clause types -> reinforce 11.
+- multiple subordination types -> reinforce 11.
+- asyndetic complex sentence system -> reinforce 11.
+
+10 CLASS
+Do not treat grade 10 as first study for the majority of current orthographic exception modules.
+Use it as reinforcement/systematization and EGE transfer where the underlying rule was introduced earlier.
+
+11 CLASS
+Do not treat grade 11 as first study for the majority of syntax/punctuation modules.
+Use it as reinforcement/systematization and EGE transfer where the underlying rule was introduced in grades 8–9 (or earlier for basic punctuation topics).
+
+UNRESOLVED CURRENT-BANK ROUTING — DO NOT GUESS
+
+The following families still require explicit class-stage evidence before final routing:
+- difficult morphological forms (ДОКТОРА, ПОМИДОРОВ, ВОРОТ etc.);
+- individual syntax/government norms;
+- paronym/lexical-norm pairs;
+- orthoepic difficult cases.
+
+For these families, EGE task numbers are NOT acceptable substitutes for school-class provenance.
+
+PROGRESS CONSEQUENCE
+
+Learner progress cannot yet be computed as a truthful class-programme percentage from the current 127-item source bank.
+The current 127 items are a CURRENT CONTENT SET, not the denominator of the school programme.
+
+The future learner-facing number must be:
+`mastered knowledge items in selected mode / complete knowledge items in selected mode`
+with the underlying mastery engine allowed to require independent retrieval, transfer and delayed retention.
+
+Cards only provide evidence for a knowledge item.
+Ten correct cards may represent fewer than ten knowledge items and may cover only a tiny share of the selected route.
+
+BLOCKERS BEFORE A TRUE 100% BASE CLAIM
+
+1. Verify exact grade-8 project practicum structure.
+2. Itemize all Drabkina 5–11 difficult cases / exceptions / contrasts / boundary cases.
+3. Deduplicate repeated material across grades.
+4. Mark first_studied_class and reinforcement_classes for every knowledge item.
+5. Flatten and map all current 127 source items to the master map.
+6. Resolve morphology / syntax / lexical / orthoepy class routing.
+7. Run Rosenthal completeness pass against the Drabkina-derived master map.
+8. Run current-norm audit on every retained item.
+9. Build OGE and EGE overlays from current official scope.
+10. Only after that calculate denominators for 5–11 / OGE / EGE / whole-base modes.
+
+FILES CREATED / USED
+
+- RUSSIAN-TRAINING-MODES-ARCHITECTURE.txt
+- RUSSIAN-DRABKINA-5-11-MASTER-MAP-v0.1.json
+- RUSSIAN-DRABKINA-CURRENT-BANK-ROUTING-v0.1.json
+- 135-RUSSIAN-DRABKINA-METHOD-SOURCE-MAP.txt
+- 118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json
+
+PUBLICATION SAFETY
+
+This audit changes architecture/source mapping only.
+No Tilda publication is authorized.
+No current EGE trainer modification is authorized.
+Current standalone preview remains separate.
