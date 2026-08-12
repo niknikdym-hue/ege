@@ -1,0 +1,17 @@
+name: ChatGPT Learning Engine Gate After P0
+on:
+  push:
+    branches:
+      - chatgpt-learning-engine-gate-after-p0-20260812
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload Learning Engine snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: eksamio-learning-engine-after-p0
+          path: eksamio-learning-engine/
+          if-no-files-found: error
+          compression-level: 6
