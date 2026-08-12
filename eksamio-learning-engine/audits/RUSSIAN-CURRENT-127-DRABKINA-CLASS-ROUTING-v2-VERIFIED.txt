@@ -4,18 +4,18 @@ DATE: 2026-08-12
 STATUS: VERIFIED BY MAIN COURSE-GRADE GATE
 NOT A 100% SCHOOL-PROGRAMME COVERAGE CLAIM
 
-VERIFIED RUN
+LATEST VERIFIED RUN
 
 GitHub Actions workflow: Russian Exceptions Course-Grade Gate
-Run: 31639055466
-Run number: 137
-Head: 542b51a765fba56a2b742eb8dea573889b8f42ef
+Run: 31639637314
+Run number: 141
+Head: 31b8d67dd72c29e2a200ccc755f0e3ec95a275d8
 Conclusion: SUCCESS
 Artifact: russian-exceptions-course-grade-gate
-Artifact id: 9158119192
-Artifact digest: sha256:5c4ffb1adfb2513bebb019a163bc4eeb4c3b347f80543f5ecca7dbd7b765112a
+Artifact id: 9158341379
+Artifact digest: sha256:3f1629acd9bdf1096a1b89dec4f37b5cdacbf7148b81821974c2b314951d2a55
 
-The main gate now explicitly runs:
+The main gate explicitly runs:
 `python build/build_russian_drabkina_class_routing_v2.py`
 immediately after the current canonical exception-bank build.
 
@@ -42,8 +42,8 @@ ROUTE-CLASS MEMBERSHIP COUNTS
 These are overlapping memberships: one knowledge item may belong to several Drabkina class routes because it is repeated/systematized later. They are still NOT final programme denominators because the complete 5-11 master map has not yet been itemized.
 
 - 5 class route: 15 current items
-- 6 class route: 25 current items
-- 7 class route: 54 current items
+- 6 class route: 26 current items
+- 7 class route: 56 current items
 - 8 class route: 16 current items
 - 9 class route: 6 current items
 - 10 class route: 81 current items
@@ -53,29 +53,28 @@ ROUTE STATUS COUNTS
 
 - verified_class_route: 36
 - verified_class_route_current_norm_override: 1
-- family_route_verified_item_locator_pending: 40
+- family_route_verified_item_locator_pending: 41
 - composite_verified_prerequisites: 9
 - provisional_grade8_exact_toc_pending: 12
-- route_class_verified_first_study_pending: 5
-- requires_exact_drabkina_item_locator: 23
+- route_class_verified_first_study_pending: 7
+- requires_exact_drabkina_item_locator: 20
 - legacy_exam_only_excluded: 1
 
 DENOMINATOR POLICY AT THIS CHECKPOINT
 
-- candidate_include: 103
-- pending_source: 23
+- candidate_include: 106
+- pending_source: 20
 - exclude_legacy_exam: 1
 
-`candidate_include` DOES NOT mean that the school denominator contains 103 items. It means only that these current items already have enough source evidence to be candidates inside the eventual full master map.
+`candidate_include` DOES NOT mean that the school denominator contains 106 items. It means only that these current items already have enough source evidence to be candidates inside the eventual full master map.
 
-23 CURRENT ITEMS STILL WITHOUT A CONFIRMED CLASS ROUTE
+20 CURRENT ITEMS STILL WITHOUT A CONFIRMED CLASS ROUTE
 
 Morphology / difficult forms:
 - morph_doktor_plural
 - morph_kupol_plural
 - morph_polotentse_genitive_plural
 - morph_polutorasta_oblique
-- morph_pomidor_genitive_plural
 - morph_povidlo_instrumental
 - morph_vorota_genitive_plural
 - verb_poezzhay_imperative
@@ -91,7 +90,6 @@ Paronyms / lexical norms:
 - paronym_produktovyi_produktivnyi
 
 Orthoepy:
-- stress_feminine_past_cluster
 - stress_otzyv_meaning_pair
 
 Syntax / government:
@@ -99,16 +97,20 @@ Syntax / government:
 - syntax_dative_prepositions_government
 - syntax_homogeneous_different_government
 - syntax_indirect_speech_person_shift
-- syntax_po_after_event_forms
 
-DIRECT DRABKINA RESOLUTIONS ADDED IN v2
+DIRECT DRABKINA RESOLUTIONS PRESENT IN THE VERIFIED ROUTER
 
 Grade 6 route:
 - СКАК-/СКОЧ- + СКАЧОК/СКАЧУ;
 - ПЛАВ-/ПЛОВ- + ПЛОВЕЦ/ПЛОВЧИХА;
 - ПЛЫВУНЫ attached to the same grade-6 family, exact item occurrence still pending;
 - ТВАР-/ТВОР- + УТВАРЬ;
-- ЗАР-/ЗОР- family, with the CURRENT learner norm ЗАРЕВАТЬ and obsolete ЗОРЕВАТЬ disabled.
+- ЗАР-/ЗОР- family, with the CURRENT learner norm ЗАРЕВАТЬ and obsolete ЗОРЕВАТЬ disabled;
+- ПОМИДОРОВ is directly present in the Drabkina grade-6 final control; exact earlier first-study stage remains pending.
+
+Grade 7 route:
+- after-event ПО-constructions are directly tested through errors such as ПО ПРИЕЗДУ / ПО ЗАВЕРШЕНИЮ; current route keeps the context-sensitive norm and exact earlier first-study stage pending;
+- the feminine-past stress family is directly tested through БРАЛА; exact occurrence of every member of the current cluster remains pending.
 
 Grade 10 route, while earlier first-study class remains unresolved:
 - МИЛОСТИВЫЙ;
@@ -132,7 +134,7 @@ No learner-facing class percentage is authorized from this current-127 checkpoin
 Reasons:
 1. current 127 is only the existing content set, not the full school vertical;
 2. exact grade-8 full project structure still needs completion;
-3. 23 current items still need exact class-route source evidence;
+3. 20 current items still need exact class-route source evidence;
 4. Drabkina 5-11 must be itemized beyond the current 127;
 5. repeated material must be deduplicated;
 6. Rosenthal completeness control and current-norm audit must be completed.
