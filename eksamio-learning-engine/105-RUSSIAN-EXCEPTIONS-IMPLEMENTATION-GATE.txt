@@ -1,140 +1,182 @@
 EKSAMIO LEARNING ENGINE
 RUSSIAN EXCEPTIONS TRAINER — IMPLEMENTATION GATE
 
-STATUS: HOLD
+STATUS: STANDALONE CODING AUTHORIZED / PUBLICATION HOLD
 PRODUCT: /trenazhery/russkiy/isklyucheniya/
 CURRENT_TILDA_PAGE: NOT CREATED
 CURRENT_EGE_TRAINER: UNCHANGED
 
 PURPOSE
 
-Prevent content/source work from silently turning into production implementation.
-No public Tilda/T123 code should be built until all required gates below are explicitly satisfied.
+Prevent source/data work from silently turning into public production changes.
+Standalone page code may be built only after A-D pass. Public publication remains
+forbidden until A-G pass. Main-trainer handoff is a later separate Gate H.
 
 GATE A — SOURCE / CONTENT
 
-Required:
-[ ] canonical Explanation Bank machine validation PASS;
-[ ] canonical Exceptions Bank machine validation PASS;
-[ ] canonical Exceptions Practice Bank machine validation PASS;
-[ ] no duplicate explanation_id / exception_id / practice_item_id;
-[ ] all Skill Graph links valid or explicitly whitelisted;
-[ ] no needs_review source exception enters runtime;
-[ ] current practice bank editorial review PASS;
-[ ] Rosenthal/FIPI provenance clean.
+Required and verified:
+[x] canonical Explanation Bank machine validation PASS;
+[x] canonical Exceptions Bank machine validation PASS;
+[x] canonical Exceptions Practice Bank machine validation PASS;
+[x] no duplicate explanation_id / exception_id / practice_item_id;
+[x] all Skill Graph links valid or explicitly whitelisted;
+[x] no needs_review source exception enters runtime;
+[x] current practice bank editorial review PASS;
+[x] Rosenthal/FIPI provenance clean in current machine build.
 
-Current status: PARTIAL / machine validation pending local project access.
+Current status: PASS.
+Current checkpoint: 72 explanation units / 127 exception items / 80 active practice cards.
+P0/P1 uncovered practice: 0.
 
 GATE B — RUNTIME DATA CONTRACT
 
-Required:
-[ ] runtime payload schema approved;
-[ ] runtime payload builder created;
-[ ] answer evaluators defined by response_kind;
-[ ] topic mapping stable;
-[ ] content versioning/integrity strategy defined;
-[ ] no raw source books/provenance shipped unnecessarily.
+Required and verified:
+[x] runtime payload schema approved;
+[x] runtime payload builder created;
+[x] answer evaluators defined by response_kind;
+[x] topic mapping stable;
+[x] deterministic content versioning/integrity strategy defined;
+[x] raw source books/provenance excluded from learner runtime;
+[x] deterministic T123 data chunk builder reconstructs exact runtime;
+[x] missing/duplicate/mixed-version chunks fail closed.
 
-Current status: SCHEMA READY / builder pending canonical PASS.
+Browser evaluator coverage currently supports all response_kind values present in the
+validated runtime:
+- single_choice;
+- classification;
+- short_text;
+- normalize_form.
+
+Orthographic safety tests prove the evaluator does NOT silently merge:
+- Ё/Е;
+- hyphenated/separate spelling;
+- meaningful internal uppercase stress marker.
+
+Current status: PASS.
 
 GATE C — LEARNER STATE
 
-Required:
-[ ] 102 learner-state schema approved;
-[ ] storage namespace approved;
-[ ] idempotent attempt event logic implemented/tested;
-[ ] schema migration rule tested;
-[ ] corrupt-state fallback tested;
-[ ] no collision with current trainer localStorage keys;
-[ ] anonymous no-registration path works.
+Required and verified:
+[x] 102 learner-state schema approved;
+[x] storage namespace approved: `eksamio:russian:exceptions`;
+[x] idempotent attempt event logic implemented/tested;
+[x] unknown/future schema fails closed instead of silent migration;
+[x] corrupt-state fallback tested without overwriting raw state;
+[x] no collision with current EGE trainer localStorage keys;
+[x] anonymous no-registration in-memory path works.
 
-Current status: DESIGN READY / implementation not started.
+Current EGE trainer keys independently checked:
+- `eksamio:ege-russian-trainer:progress:v1`
+- `eksamio:ege-russian-trainer:session:v1`
+
+Current status: PASS FOR STANDALONE CODING.
+Mastery thresholds/due intervals remain a separate policy and are NOT invented by the reducer.
 
 GATE D — SESSION ENGINE
 
-Required:
-[ ] 103 deterministic selector implemented;
-[ ] due > active > failed transfer > new priority behavior tested;
-[ ] no duplicate practice_item/context in same normal session;
-[ ] no padding duplicates when candidate set short;
-[ ] exact handoff handles only exact exception_ids;
-[ ] broad skill handoff never invents exception_id;
-[ ] selection reason log available for test/debug.
+Required and verified:
+[x] deterministic selector implemented in Python reference and browser JavaScript;
+[x] JavaScript selector parity-tested against accepted Python selector;
+[x] due > active > failed transfer > new priority behavior preserved;
+[x] no duplicate practice_item/context in the same normal session;
+[x] no padding duplicates when a focused candidate set is short;
+[x] exact handoff handles only exact exception_ids;
+[x] broad/empty handoff never invents exception_id;
+[x] selection reason code available for test/debug.
 
-Current status: SPEC READY / implementation not started.
+Current status: PASS.
+
+A-D AUTHORIZATION
+
+A-D: PASS.
+Standalone PAGE CODING is authorized inside `eksamio-learning-engine` only.
+This does NOT authorize Tilda publication, catalog changes, or edits to the current EGE trainer.
 
 GATE E — PAGE UX
 
 Required:
-[ ] 101 UX spec approved;
-[ ] mobile layout approved;
-[ ] accessibility checks;
+[x] 101 UX spec approved;
+[ ] actual standalone shell implemented;
+[ ] mobile layout implementation tested;
+[ ] accessibility implementation checks;
 [ ] feedback correct/wrong not color-only;
-[ ] empty states;
-[ ] `Все исключения` flow;
-[ ] `Мои исключения` flow;
-[ ] session result;
-[ ] rule drawer;
+[ ] empty states implemented;
+[ ] `Все исключения` flow implemented;
+[ ] `Мои исключения` flow implemented;
+[ ] session result implemented;
+[ ] rule drawer implemented;
 [ ] no fake exam timer/gamification clutter.
 
-Current status: DESIGN READY / UI not built.
+Current status: IMPLEMENTATION NEXT.
 
 GATE F — TILDA PACKAGING
 
 Required:
-[ ] evergreen page URL `/trenazhery/russkiy/isklyucheniya/`;
-[ ] year not hardcoded into persistent SEO/URL/canonical;
-[ ] header/footer separate;
-[ ] T123 blocks under Tilda size limit with safety margin;
-[ ] install/order file;
-[ ] runtime data split strategy if payload exceeds safe T123 size;
-[ ] no dependency on current EGE trainer DOM or local variables;
-[ ] current site light Eksamio visual system.
+[x] evergreen page URL `/trenazhery/russkiy/isklyucheniya/` fixed;
+[x] year excluded from persistent SEO/URL/canonical design;
+[x] header/footer remain separate;
+[x] runtime T123 chunking measured/validated: 3 data chunks, max 34,875 UTF-8 bytes;
+[x] loader rejects incomplete/mixed chunk sets at browser-core level;
+[ ] shell/code T123 blocks built and byte-audited;
+[ ] install/order file built;
+[ ] local preview package built;
+[ ] no dependency on current EGE trainer DOM/globals verified in final package;
+[ ] light Eksamio visual implementation reviewed.
 
-Current status: NOT STARTED.
+Current status: DATA DELIVERY PASS / PAGE PACKAGE PENDING.
 
 GATE G — REGRESSION / SAFETY
 
 Required:
-[ ] existing `/ege/russkiy/trenazher/` untouched or verified byte-for-byte if no integration task;
+[x] current `/ege/russkiy/trenazher/` untouched through data/browser-core phase;
+[ ] final standalone package regression proves existing trainer untouched;
 [ ] existing standalone orthoepy/paronym trainers unaffected;
 [ ] current answers/scoring unchanged;
-[ ] navigation/catalog update reviewed separately;
-[ ] storage keys do not collide;
-[ ] reload/autosave state tested;
-[ ] malformed runtime payload fails closed;
-[ ] rollback package ready.
+[x] navigation/catalog update remains explicitly separate;
+[x] storage key is namespaced and non-colliding;
+[ ] reload/autosave state tested in actual page shell;
+[x] malformed runtime payload fails closed at browser-core level;
+[x] rollback plan exists;
+[ ] full standalone preview smoke/mobile/accessibility PASS.
 
-Current status: NOT STARTED.
+Current status: PARTIAL / PUBLICATION HOLD.
 
 GATE H — OPTIONAL MAIN-TRAINER HANDOFF
 
 This is NOT required for first standalone public release.
 
 Before enabling:
-[ ] canonical explanation routing machine PASS;
-[ ] exact exception_id map exists for targeted current trainer errors;
-[ ] handoff URL/state contract documented;
-[ ] demo/control never interrupted;
+[ ] canonical explanation routing machine PASS at integration checkpoint;
+[x] initial exact exception_id map exists for targeted current trainer errors;
+[ ] handoff URL/state contract implemented;
+[ ] demo/control never interrupted in integrated implementation;
 [ ] main trainer fallback works if Exceptions page unavailable;
 [ ] regression suite proves no scoring/answer changes.
 
 Current status: HOLD / later phase.
 
-IMPLEMENTATION AUTHORIZATION RULE
+VALIDATION COMMANDS
 
-Only after Gates A-D are PASS may coding of the standalone page begin.
-Only after Gates A-G are PASS may public publication be considered.
-Gate H is separate and may remain HOLD after standalone launch.
+General Learning Engine source/data/runtime gate:
+`python3 build/run_russian_learning_engine_validation_current_v10.py`
 
-CODex POLICY
+Standalone implementation gate:
+`python3 build/run_russian_exceptions_standalone_validation.py`
 
-Do not spend Codex quota on content/spec/data-entry work.
-Potential Codex use is justified only later for a genuinely large local implementation/test pass if ChatGPT/local tools cannot complete it efficiently.
+Current standalone validation result before page-shell work:
+PASS.
+
+CODEX POLICY
+
+Do not spend Codex quota on this implementation while ChatGPT/local tools can build and test it.
+Potential Codex use remains reserved for a genuinely large local debugging/mass-browser test task that cannot be completed efficiently here.
 
 CURRENT DECISION
 
-CONTENT/SPEC WORK: CONTINUE
-STANDALONE PAGE CODING: HOLD
-MAIN-TRAINER INTEGRATION: HOLD
+SOURCE/DATA/RUNTIME: PASS
+BROWSER CORE: PASS
+STANDALONE PAGE CODING: AUTHORIZED
+PUBLICATION: HOLD
+CATALOG CHANGE: HOLD / SEPARATE
+MAIN-TRAINER INTEGRATION: HOLD / LATER
 CURRENT TRAINER: UNCHANGED
