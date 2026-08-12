@@ -131,3 +131,51 @@ PUBLICATION SAFETY REMAINS:
 - current EGE trainer unchanged;
 - Tilda preview/publication unchanged;
 - production integration HOLD.
+
+2026-08-12 CURRENT-127 ITEM-LEVEL ROUTING CHECKPOINT
+
+VERIFIED CANONICAL INPUT:
+- GitHub Actions run: 31629301470;
+- artifact: russian-exceptions-course-grade-gate / 9154402921;
+- canonical source items: 127;
+- current replacement `alt_root_zarevat_current`: present;
+- obsolete `alt_root_zorevat`: absent.
+
+NEW GENERATOR / AUDIT:
+- `build/build_russian_drabkina_class_routing.py`;
+- `audits/RUSSIAN-CURRENT-127-DRABKINA-CLASS-ROUTING.txt`.
+
+The generator was executed against the verified 127-item canonical artifact and classified every current item without an unknown fall-through.
+
+CURRENT FIRST-STUDY ROUTING COUNTS (NOT PROGRAMME PERCENTAGES):
+- 5 class: 15;
+- 6 class: 17;
+- 7 class: 43;
+- 8 class: 12 (provisional pending exact project-practicum structure);
+- 9 class: 6;
+- unassigned pending exact Drabkina locator: 34.
+
+ROUTE STATUS:
+- verified_class_route: 33;
+- family_route_verified_item_locator_pending: 39;
+- composite_verified_prerequisites: 9;
+- provisional_grade8_exact_toc_pending: 12;
+- requires_exact_drabkina_item_locator: 33;
+- legacy_exam_only_excluded: 1.
+
+DENOMINATOR SAFETY:
+- 93 current items are candidate school-base items with a class-family route;
+- 33 items remain pending exact school-stage source evidence;
+- 1 historical EGE task-25 synonym-format record is excluded from the future school-programme denominator;
+- these 127 items are still NOT the denominator of the school programme;
+- no learner progress percentage may be derived from these counts yet.
+
+COMPOSITE-ITEM RULE:
+Advanced contrast items may depend on knowledge first learned in more than one class. Such items carry `prerequisite_classes` and are not forced into the earliest elementary rule. Example families include punctuation contrasts combining grade-5 basics with grade-9 complex-sentence analysis.
+
+CURRENT NEXT SOURCE WORK:
+1. Verify exact grade-8 project practicum structure.
+2. Resolve the 33 `pending_source` items by exact Drabkina school-stage locator.
+3. Itemize Drabkina 5–11 beyond the current 127 to build the actual full-school denominator.
+4. Deduplicate grade-10/11 systematization from earlier first-study units.
+5. Run Rosenthal completeness and current-norm passes.
