@@ -5,6 +5,8 @@ Input is the already validated learner-safe Exceptions Runtime. The builder grou
 exception together with all of its practice cards, emits valid JSON envelopes wrapped in
 application/json <script> tags, verifies a conservative raw-byte ceiling, and writes a
 manifest with SHA-256 digests. No production/Tilda mutation.
+
+Custom CLI paths may be absolute or project-root-relative. Defaults are unchanged.
 """
 
 from __future__ import annotations
@@ -40,6 +42,11 @@ def compact_json(value: Any) -> str:
 
 def sha256_hex(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def resolve_project_path(root: Path, value: Path) -> Path:
+    """Resolve relative CLI paths under the Learning Engine project root."""
+    return value.resolve() if value.is_absolute() else (root / value).resolve()
 
 
 def envelope(runtime: dict[str, Any], exceptions: dict[str, Any], practice_items: dict[str, Any], index: int, count: int) -> dict[str, Any]:
@@ -181,25 +188,33 @@ def main() -> int:
     parser.add_argument("--max-block-bytes", type=int, default=DEFAULT_MAX_BLOCK_BYTES)
     args = parser.parse_args()
 
+    runtime_path = resolve_project_path(root, args.runtime)
+    output_dir = resolve_project_path(root, args.output_dir)
+    manifest_path = resolve_project_path(root, args.manifest)
+
     try:
         if args.max_block_bytes < 5_000:
             raise BuildError("max-block-bytes is unrealistically small")
-        runtime = load_json(args.runtime)
+        runtime = load_json(runtime_path)
         chunks = build_chunks(runtime, args.max_block_bytes)
         reconstruct(chunks, runtime)
-        if args.output_dir.exists():
-            shutil.rmtree(args.output_dir)
-        args.output_dir.mkdir(parents=True, exist_ok=True)
+        if output_dir.exists():
+            shutil.rmtree(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
         rows = []
         for chunk in chunks:
             idx = int(chunk["chunk_index"])
             name = f"trenazhery-russkiy-isklyucheniya-RUNTIME-{idx:02d}.txt"
-            path = args.output_dir / name
+            path = output_dir / name
             raw = wrapper_text(chunk).encode("utf-8")
             path.write_bytes(raw)
+            try:
+                rel_path = path.relative_to(root)
+            except ValueError as exc:
+                raise BuildError(f"Output chunk must stay under project root: {path}") from exc
             rows.append({
                 "chunk_index": idx,
-                "path": str(path.relative_to(root)).replace("\\", "/"),
+                "path": str(rel_path).replace("\\", "/"),
                 "bytes": len(raw),
                 "sha256": sha256_hex(raw),
                 "exceptions": len(chunk["exceptions"]),
@@ -223,10 +238,10 @@ def main() -> int:
             "chunks": rows,
             "production_integration": "not_connected",
         }
-        args.manifest.parent.mkdir(parents=True, exist_ok=True)
-        args.manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"PASS: chunks={len(chunks)}, max_bytes={max(row['bytes'] for row in rows)}, version={runtime['content_version']}, practice={len(runtime['practice_items'])}")
-        print(f"Manifest: {args.manifest}")
+        print(f"Manifest: {manifest_path}")
         return 0
     except BuildError as exc:
         print(f"BUILD ERROR: {exc}", file=sys.stderr)
