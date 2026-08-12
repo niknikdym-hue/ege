@@ -23,7 +23,7 @@ PREVIEW_REL = TRAINER_DIR_REL / "ege-russkiy-trenazher-PREVIEW.html"
 MANIFEST_REL = TRAINER_DIR_REL / "BANK-MANIFEST.json"
 REPORT_REL = Path("audits/RUSSIAN-SKILL-GRAPH-INDEPENDENT-VALIDATION.txt")
 
-ITEM_ID_RE = re.compile(r"^ege-ru-(\d{2})-(\d{4})-(\d{2})-(\d{2})$")
+ITEM_ID_RE = re.compile(r"^ege-ru-(\d{2})-(\d{4})-(\d{2})-(\d{2,3})$")
 SCRIPT_RE = re.compile(
     r'<script\b[^>]*class=["\'][^"\']*\ber-bank-chunk\b[^"\']*["\'][^>]*>(.*?)</script>',
     re.IGNORECASE | re.DOTALL,
