@@ -1,0 +1,77 @@
+RUSSIAN CURRENT 127 -> DRABKINA CLASS ROUTING AUDIT
+DATE: 2026-08-12
+STATUS: PASS FOR INVENTORY / PARTIAL CLASS VERIFICATION
+NOT A 100% COVERAGE OR PUBLICATION GATE
+
+CANONICAL SOURCE
+
+GitHub Actions run: 31629301470
+Artifact: russian-exceptions-course-grade-gate / 9154402921
+Head: 87b9511b11429bb3fd26f2b55b6c0156d02a78a4
+Canonical file: build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json
+Canonical items: 127
+
+The architecture/source-map commits made after this artifact did not modify the current exception source banks.
+
+ROUTING RESULT
+
+Every one of the 127 current canonical items is handled by `build/build_russian_drabkina_class_routing.py`.
+
+First-study route counts at this audit stage:
+- 5 class: 15
+- 6 class: 17
+- 7 class: 43
+- 8 class: 12
+- 9 class: 6
+- unassigned pending exact Drabkina locator: 34
+
+These counts are NOT programme coverage percentages and are NOT the final denominator of a class route.
+
+Route-status counts:
+- verified_class_route: 33
+- family_route_verified_item_locator_pending: 39
+- composite_verified_prerequisites: 9
+- provisional_grade8_exact_toc_pending: 12
+- requires_exact_drabkina_item_locator: 33
+- legacy_exam_only_excluded: 1
+
+Denominator policy at this stage:
+- candidate_include: 93
+- pending_source: 33
+- exclude_legacy_exam: 1
+
+GUARDS
+
+- canonical source count is exactly 127;
+- every current canonical item is classified by the generated audit;
+- obsolete `alt_root_zorevat` is absent;
+- current `alt_root_zarevat_current` is present;
+- class and EGE/OGE task route are separate dimensions;
+- grade-8 introductory/isolated-member routing remains provisional until exact project practicum structure is verified;
+- morphology, unresolved syntax/government, paronym and orthoepy cases remain unassigned where exact class-stage evidence is missing;
+- historical task-25 synonym record is excluded from the future school-programme denominator;
+- composite punctuation/NE items can carry prerequisite classes rather than being forced into the earliest elementary rule;
+- progress denominators remain DISALLOWED until the full Drabkina 5-11 master map is itemized and deduplicated and Rosenthal/current-norm completeness passes are complete.
+
+LOCAL VALIDATION AGAINST THE VERIFIED ARTIFACT
+
+PASS: mapped 127 canonical items.
+PASS: no duplicate exception_id.
+PASS: obsolete ЗОРЕВАТЬ absent.
+PASS: current ЗАРЕВАТЬ replacement present.
+PASS: no canonical item falls through an unknown routing branch.
+
+NEXT SOURCE WORK
+
+1. Verify exact grade-8 project practicum structure.
+2. Resolve the 33 `pending_source` current items by exact Drabkina class-stage locator.
+3. Itemize the Drabkina 5-11 vertical beyond the current 127 to establish the full school-base denominator.
+4. Deduplicate later grade-10/11 systematization from earlier first-study knowledge units.
+5. Run Rosenthal completeness control and current-norm audit.
+6. Add OGE/EGE route overlays only after the school knowledge item is stable.
+
+PUBLICATION SAFETY
+
+No Tilda publication authorized.
+Current EGE trainer unchanged.
+Production integration HOLD.
