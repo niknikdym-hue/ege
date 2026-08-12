@@ -30,9 +30,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install playwright
-          sudo apt-get update
-          sudo apt-get install -y chromium
-          echo "CHROMIUM_PATH=$(command -v chromium)" >> "$GITHUB_ENV"
+          BROWSER="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          if [ -z "$BROWSER" ]; then
+            sudo apt-get update
+            sudo apt-get install -y chromium
+            BROWSER="$(command -v chromium)"
+          fi
+          test -n "$BROWSER"
+          echo "CHROMIUM_PATH=$BROWSER" >> "$GITHUB_ENV"
+          "$BROWSER" --version
 
       - name: Build current canonical exception bank
         working-directory: eksamio-learning-engine
@@ -51,10 +57,7 @@ jobs:
           p = Path('build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json')
           data = json.loads(p.read_text(encoding='utf-8'))
           items = data.get('practice_items', data.get('items', []))
-          if isinstance(items, dict):
-              rows = list(items.values())
-          else:
-              rows = items
+          rows = list(items.values()) if isinstance(items, dict) else items
           assert len(rows) == 80, f'expected 80 active cards, got {len(rows)}'
           ids = {r.get('practice_item_id') for r in rows}
           assert 'ex-practice-zorevat-001' not in ids
