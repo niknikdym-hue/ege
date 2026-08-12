@@ -1,7 +1,7 @@
 EKSAMIO LEARNING ENGINE
 RUSSIAN EXCEPTIONS TRAINER — TILDA IMPLEMENTATION PLAN
 
-STATUS: PLAN READY / CODING NOT AUTHORIZED UNTIL IMPLEMENTATION GATE
+STATUS: DATA-LAYER IMPLEMENTATION ACTIVE / PUBLICATION HOLD
 FUTURE_URL: /trenazhery/russkiy/isklyucheniya/
 CURRENT EGE TRAINER: OUT OF SCOPE / UNCHANGED
 HEADER/FOOTER: SEPARATE
@@ -10,7 +10,7 @@ YEAR IN PERSISTENT URL/SEO: NO
 
 PURPOSE
 
-Prepare a standalone, reversible Tilda page package for the Exceptions Trainer after the local source/data/runtime gate passes.
+Prepare a standalone, reversible Tilda page package for the Exceptions Trainer. The source/data/runtime gate has passed; data-layer implementation may proceed while publication and catalog changes remain on hold.
 
 This plan deliberately separates:
 - product UI code;
@@ -105,13 +105,29 @@ LAYER 7 — OPTIONAL ANALYTICS HOOKS
 May be added later.
 Product must work if analytics is unavailable.
 
-RUNTIME DATA DELIVERY — DECIDE AFTER SIZE AUDIT
+RUNTIME DATA DELIVERY — MEASURED DECISION FOR STANDALONE EXCEPTIONS
 
 INPUT:
 `audits/RUSSIAN-RUNTIME-SIZE-AUDIT.txt`
 
+MEASURED CURRENT EXCEPTIONS RUNTIME:
+- current validated runtime contains 73 enabled exceptions and 80 practice items;
+- gzip size is irrelevant for raw T123 editor limits;
+- standalone first release should avoid an unnecessary external runtime-host dependency.
+
+CURRENT STANDALONE DECISION:
+- use deterministic T123 JSON chunks for Exceptions Runtime;
+- chunks are data only;
+- validated builder output: 3 data-only T123 chunks; largest block 34,875 UTF-8 bytes INCLUDING the application/json wrapper;
+- hard project safety ceiling remains below the accepted ~42.5 KiB/block boundary;
+- every chunk carries the same content version, sequence index and expected chunk count;
+- bootstrap fails closed if a chunk is missing, duplicated or from another version.
+
+This decision applies ONLY to the standalone Exceptions Trainer.
+The larger Explanation Runtime is a separate later integration decision.
+
 OPTION A — HOSTED STATIC JSON
-Prefer if runtime payload is large enough that T123 data chunks become cumbersome.
+Reserved for a future case where runtime payload or release workflow makes T123 data chunks cumbersome.
 
 Advantages:
 - small T123 code;
@@ -258,8 +274,8 @@ Standalone page must be removable without touching current EGE trainer.
 CURRENT DECISION
 
 TILDA PACKAGE ARCHITECTURE: READY
-DATA DELIVERY METHOD: WAIT FOR MEASURED SIZE
-STANDALONE CODING: AFTER MACHINE SOURCE/DATA GATE
+DATA DELIVERY METHOD: T123 DATA CHUNKS FOR STANDALONE EXCEPTIONS (MEASURED)
+STANDALONE CODING: DATA-LAYER ACTIVE AFTER MACHINE PASS; UI PACKAGE NEXT
 CATALOG CHANGE: SEPARATE
 MAIN TRAINER CHANGE: HOLD
 CODEX: NOT REQUIRED FOR THIS PLAN
