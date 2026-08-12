@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "exam": "ege",
+  "purpose": "practice_wave_4_p0_closure",
+  "integration_status": "not_connected_to_production",
+  "source_policy": "Only source-verified P0 exception/special-case items already present in the canonical Exceptions Bank. Learner-facing contexts are original Eksamio wording.",
+  "items": [
+    {
+      "practice_item_id": "ex-practice-garantiynyy-context-001",
+      "exception_id": "paronym_garantiynyy_garantirovannyy",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативное слово: производитель установил ___ срок обслуживания.", "options": ["гарантийный", "гарантированный"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "гарантийный срок обслуживания", "why": "ГАРАНТИЙНЫЙ означает «относящийся к гарантии, установленный гарантией»: гарантийный срок, гарантийный талон.", "rule_ref": "paronym_context_choice"},
+      "context_signature": "garantiynyy_service_period",
+      "transfer_level": "independent_context",
+      "status": "source_verified"
+    },
+    {
+      "practice_item_id": "ex-practice-garantirovannyy-context-001",
+      "exception_id": "paronym_garantiynyy_garantirovannyy",
+      "mode": "contrast_normal_vs_exception",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативное сочетание для значения «результат обеспечен заранее».", "options": ["гарантийный результат", "гарантированный результат"]},
+      "answer": {"option_index": 1},
+      "feedback": {"correct_answer": "гарантированный результат", "why": "ГАРАНТИРОВАННЫЙ означает «обеспеченный, такой, который гарантирован». ГАРАНТИЙНЫЙ относится к гарантии как условию, сроку или документу.", "rule_ref": "paronym_context_choice"},
+      "context_signature": "garantirovannyy_assured_result",
+      "transfer_level": "transfer",
+      "status": "source_verified"
+    },
+    {
+      "practice_item_id": "ex-practice-stress-fem-past-zanyala-001",
+      "exception_id": "stress_feminine_past_cluster",
+      "mode": "normative_variant",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативное ударение: Она ___ очередь за билетами.", "options": ["зАняла", "занялА"]},
+      "answer": {"option_index": 1},
+      "feedback": {"correct_answer": "занялА", "why": "В нормативной форме женского рода прошедшего времени: занялА.", "rule_ref": "normative_stress_selection"},
+      "context_signature": "stress_fem_past_zanyala_queue",
+      "transfer_level": "independent_context",
+      "status": "source_verified"
+    },
+    {
+      "practice_item_id": "ex-practice-stress-fem-past-dozhdalas-001",
+      "exception_id": "stress_feminine_past_cluster",
+      "mode": "recall_form",
+      "response_kind": "normalize_form",
+      "prompt": {"text": "Запишите форму ДОЖДАЛАСЬ, выделив ударную гласную заглавной буквой: Она наконец ___."},
+      "answer": {"text": "дождалАсь"},
+      "feedback": {"correct_answer": "дождалАсь", "why": "Нормативное ударение в этой форме падает на А: дождалАсь.", "rule_ref": "normative_stress_selection"},
+      "context_signature": "stress_fem_past_dozhdalas_recall",
+      "transfer_level": "guided_recall",
+      "status": "source_verified"
+    },
+    {
+      "practice_item_id": "ex-practice-stress-fem-past-klala-001",
+      "exception_id": "stress_feminine_past_cluster",
+      "mode": "contrast_normal_vs_exception",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Модель «ударение на окончании» нельзя переносить на все формы. Выберите нормативное ударение: Она ___ книгу на стол.", "options": ["клалА", "клАла"]},
+      "answer": {"option_index": 1},
+      "feedback": {"correct_answer": "клАла", "why": "КЛАЛА — отдельная нормативная форма: клАла. Поэтому правило о переносе ударения на окончание нельзя применять механически ко всем глаголам женского рода.", "rule_ref": "normative_stress_selection"},
+      "context_signature": "stress_fem_past_klala_contrast",
+      "transfer_level": "transfer",
+      "status": "source_verified"
+    },
+    {
+      "practice_item_id": "ex-practice-kupola-context-002",
+      "exception_id": "morph_kupol_plural",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативную форму: На фотографии хорошо видны старинные ___ собора.", "options": ["куполы", "купола"]},
+      "answer": {"option_index": 1},
+      "feedback": {"correct_answer": "купола", "why": "Нормативная форма именительного падежа множественного числа: КУПОЛА.", "rule_ref": "noun_form_norms"},
+      "context_signature": "kupol_plural_independent_context",
+      "transfer_level": "independent_context",
+      "status": "source_verified"
+    },
+    {
+      "practice_item_id": "ex-practice-polotenets-context-002",
+      "exception_id": "morph_polotentse_genitive_plural",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативную форму: В шкафу не осталось чистых ___.", "options": ["полотенцев", "полотенец"]},
+      "answer": {"option_index": 1},
+      "feedback": {"correct_answer": "полотенец", "why": "Родительный падеж множественного числа существительного ПОЛОТЕНЦЕ — ПОЛОТЕНЕЦ.", "rule_ref": "noun_form_norms"},
+      "context_signature": "polotentse_genitive_plural_independent_context",
+      "transfer_level": "independent_context",
+      "status": "source_verified"
+    },
+    {
+      "practice_item_id": "ex-practice-nn-forged-transfer-002",
+      "exception_id": "n_nn_forged",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативное написание: У входа стояли старые ___ ворота.", "options": ["кованые", "кованные"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "кованые ворота", "why": "В базовом слове КОВАНЫЙ пишется одна Н: сочетание -ОВ- здесь не является обычным суффиксом -ОВАНН-.", "rule_ref": "n_nn_spelling"},
+      "context_signature": "forged_gates_transfer_context",
+      "transfer_level": "transfer",
+      "status": "source_verified"
+    }
+  ],
+  "status": "source_verified_wave"
+}
