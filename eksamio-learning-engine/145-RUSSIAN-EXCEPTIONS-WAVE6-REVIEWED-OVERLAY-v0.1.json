@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "purpose": "wave6_manual_review_overlay",
+  "integration_status": "review_only_not_current_93",
+  "manual_review_ref": "144-RUSSIAN-EXCEPTIONS-WAVE6-MANUAL-CONTENT-REVIEW.txt",
+  "source_draft": "142-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-SOLID-SEPARATE-DRAFT-v0.1.json",
+  "reviewed_status": "reviewed",
+  "reviewed_practice_item_ids": [
+    "ex-practice-chtoby-solid-w6-001",
+    "ex-practice-chto-by-separate-w6-002",
+    "ex-practice-tozhe-solid-w6-003",
+    "ex-practice-to-zhe-separate-w6-004",
+    "ex-practice-takzhe-solid-w6-005",
+    "ex-practice-tak-zhe-separate-w6-006",
+    "ex-practice-prichem-solid-w6-007",
+    "ex-practice-pri-chem-separate-w6-008",
+    "ex-practice-pritom-solid-w6-009",
+    "ex-practice-pri-tom-separate-w6-010",
+    "ex-practice-zato-solid-w6-011",
+    "ex-practice-za-to-separate-w6-012",
+    "ex-practice-itak-solid-w6-013",
+    "ex-practice-i-tak-separate-w6-014",
+    "ex-practice-vvidu-solid-w6-015",
+    "ex-practice-v-vidu-separate-w6-016",
+    "ex-practice-vsledstvie-solid-w6-017",
+    "ex-practice-v-sledstvie-separate-w6-018",
+    "ex-practice-naschet-solid-w6-019",
+    "ex-practice-na-schet-separate-w6-020",
+    "ex-practice-vrode-solid-w6-021",
+    "ex-practice-v-rode-separate-w6-022",
+    "ex-practice-vnachale-solid-w6-023",
+    "ex-practice-v-nachale-separate-w6-024",
+    "ex-practice-snachala-solid-w6-025",
+    "ex-practice-s-nachala-separate-w6-026",
+    "ex-practice-nazavtra-solid-w6-027",
+    "ex-practice-na-zavtra-separate-w6-028"
+  ],
+  "item_patches": [
+    {
+      "practice_item_id": "ex-practice-za-to-separate-w6-012",
+      "prompt": {"text": "Выберите нормативное написание: Я проголосовал ___ предложение, которое поддержала группа.", "options": ["зато", "за то"]},
+      "answer": {"option_index": 1},
+      "feedback": {
+        "correct_answer": "за то предложение",
+        "why": "ЗА — предлог, ТО — указательное местоимение и относится к слову ПРЕДЛОЖЕНИЕ: за то предложение. Поэтому раздельно. Сравни: «Предложение спорное, зато конкретное» — союз ЗАТО, близкий к НО.",
+        "rule_ref": "solid_separate_conjunctions"
+      },
+      "context_signature": "w6_za_to_vote_proposal"
+    },
+    {
+      "practice_item_id": "ex-practice-v-rode-separate-w6-022",
+      "prompt": {"text": "Выберите нормативное написание: Ошибка была ___ существительного: к слову подобрали неверную форму согласования.", "options": ["вроде", "в роде"]},
+      "answer": {"option_index": 1},
+      "feedback": {
+        "correct_answer": "в роде существительного",
+        "why": "РОД здесь самостоятельное существительное: ошибка в чём? — в роде существительного. Поэтому раздельно. Сравни: «прибор вроде микроскопа» = «прибор наподобие микроскопа».",
+        "rule_ref": "solid_separate_prepositions"
+      },
+      "context_signature": "w6_v_rode_grammatical_gender_error"
+    }
+  ],
+  "review_summary": {
+    "reviewed_cards": 28,
+    "editorial_fixes": 2,
+    "hold": 0,
+    "fail_replace": 0,
+    "current_93_unchanged": true,
+    "tilda_change_allowed": false
+  }
+}
