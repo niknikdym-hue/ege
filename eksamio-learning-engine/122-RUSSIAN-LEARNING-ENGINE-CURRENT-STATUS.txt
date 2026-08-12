@@ -1,6 +1,6 @@
 EKSAMIO LEARNING ENGINE
 RUSSIAN PILOT — CURRENT STATUS
-DATE: 2026-08-11
+DATE: 2026-08-12
 READ AFTER: 00-WORK-STATUS.txt and 00A-WORK-STATUS-CURRENT-ADDENDUM.txt
 
 CURRENT PRODUCT SAFETY
@@ -47,7 +47,7 @@ CURRENT corrected practice manifest:
 - 119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json
 
 Raw current sources:
-- 73 rows (72 historical-wave rows + 1 correction row)
+- 81 rows (72 historical-wave rows + 1 correction row + 8 P0-closure rows)
 
 Disabled superseded practice:
 - `ex-practice-end-finally-001`
@@ -55,8 +55,13 @@ Disabled superseded practice:
 Replacement:
 - `ex-practice-v-kontse-kontsov-corrected-001`
 
+P0 CLOSURE WAVE:
+- 123-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE4-P0-CLOSURE-v0.1.json
+- 8 cards
+- machine coverage after wave: P0/P1 uncovered = 0
+
 EXPECTED ACTIVE PRACTICE BANK:
-- 72 cards
+- 80 cards
 
 CURRENT hardened builders:
 - build/build_russian_exceptions_bank_current_v2.py
@@ -77,6 +82,7 @@ Ready at design/reference-code layer:
 - minimal Exceptions Runtime builder;
 - practice coverage audit;
 - runtime size audit;
+- deterministic Exceptions Runtime -> T123 data chunk builder;
 - Tilda implementation plan;
 - rollback plan;
 - release test plan.
@@ -105,7 +111,7 @@ It includes:
 3. Explanation Runtime;
 4. Explanation Resolver synthetic tests;
 5. corrected canonical Exceptions Bank;
-6. corrected active 72-card Practice Bank;
+6. corrected active Practice Bank (80 cards after P0 closure);
 7. launch priority;
 8. Exceptions Runtime;
 9. practice coverage audit;
@@ -113,10 +119,22 @@ It includes:
 11. session selector tests;
 12. priority selector tests;
 13. learner-state reducer tests;
-14. exact error->exception handoff validation.
+14. exact error->exception handoff validation;
+15. deterministic Exceptions Runtime -> T123 chunk build/reconstruction validation.
 
 Aggregate local output:
 `audits/RUSSIAN-LEARNING-ENGINE-VALIDATION-CURRENT-V10-SUMMARY.txt`
+
+CURRENT INDEPENDENT MAIN-SNAPSHOT PASS (2026-08-12):
+- CURRENT v10 aggregate: PASS;
+- Skill Graph: 174/174 trainer cards, 0 warnings;
+- Explanation Bank: 72 units, tasks 1–27;
+- Exceptions Bank: 127 source items;
+- active Exceptions Practice Bank after wave 4: 80 cards;
+- P0/P1 uncovered practice: 0;
+- standalone Exceptions Runtime: 73 enabled exceptions / 80 practice items;
+- deterministic T123 runtime chunks: 3; max chunk 34,875 UTF-8 bytes;
+- production trainer unchanged.
 
 Current validated-package command after PASS:
 `python3 build/package_learning_engine_checkpoint_current_v10.py --require-pass`
@@ -127,20 +145,19 @@ It does NOT authorize Tilda/public integration.
 
 NEXT WORK ORDER
 
-1. Read/fix any machine FAIL from current v10 audit.
-2. Re-run v10 until all checks PASS.
-3. Use practice coverage audit to choose the next practice wave from actual P0/P1 gaps.
-4. Use runtime size audit to choose hosted JSON vs T123 data chunk strategy.
-5. Close formal Skill Graph REVIEW-001 after independent PASS.
-6. Package one checkpoint ZIP + SHA-256 inventory for the user's local `exam-platform-tilda` folder.
-7. Only after data gates: standalone Exceptions Trainer implementation.
-8. Rich explanation integration into current EGE trainer remains a later separate reversible phase.
+1. P0/P1 practice closure is complete; keep P0/P1 uncovered at zero.
+2. Build the standalone Exceptions Trainer package against the validated 80-card runtime.
+3. Use deterministic data-only T123 chunking for Exceptions Runtime; keep every chunk below the project safety margin.
+4. Validate evaluators, learner state, selector and chunk integrity locally.
+5. Package one standalone Tilda preview set; do not publish or change the catalog yet.
+6. Catalog card remains a separate later package.
+7. Main EGE trainer handoff/explanation integration remains a later reversible phase.
 
 CURRENT DECISION
 
 CONTENT: ADVANCED
 EXPLANATIONS: 1–27 SOURCE COVERED
-EXCEPTIONS PRACTICE: 72 ACTIVE EXPECTED AFTER CURRENT CORRECTION
+EXCEPTIONS PRACTICE: 80 ACTIVE / P0-P1 COVERAGE CLOSED
 RUNTIME/DATA TOOLING: BUILT
 LOCAL MACHINE GATE: CURRENT V10
 PUBLIC PAGE: HOLD
