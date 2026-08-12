@@ -1,13 +1,15 @@
 EKSAMIO LEARNING ENGINE
 NEW CHAT HANDOFF — RUSSIAN EXCEPTIONS TRAINER
 DATE: 2026-08-12
-STATUS: ACTIVE WORK / CONTENT SOURCE AUDIT IN PROGRESS
+STATUS: 80/80 CONTENT AUDIT COMPLETE / CORRECTION OVERLAY CREATED / PRODUCTION HOLD
 
 READ FIRST
 
 1. 122-RUSSIAN-LEARNING-ENGINE-CURRENT-STATUS.txt
 2. 128-RUSSIAN-EXCEPTIONS-CONTENT-AUDIT-RULES.txt
-3. this file
+3. 130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt
+4. 131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json
+5. this file
 
 PROJECT
 
@@ -23,7 +25,7 @@ exam-platform-tilda/eksamio-learning-engine/
 Live Tilda test page:
 https://eksamio.ru/trenazhery/russkiy/isklyucheniya/
 
-IMPORTANT: the live page is currently TEST/PREVIEW and must NOT be treated as content-approved until the full 80-card source audit is completed and a corrected package is rebuilt.
+IMPORTANT: the live page is TEST/PREVIEW and is NOT content-approved. Do not ask the user to reupload Tilda until source corrections, rebuild and final gates are complete.
 
 CURRENT TECHNICAL BASELINE
 
@@ -33,11 +35,10 @@ CURRENT TECHNICAL BASELINE
 - browser core PASS;
 - Chromium preview PASS;
 - learner state/storage namespace separate from current EGE trainer;
-- standalone page currently uses T123/runtime architecture;
 - main-trainer handoff remains HOLD;
 - catalog/public rollout remains HOLD.
 
-LATEST PUBLIC-RUNTIME SAFETY CHANGE
+PUBLIC-RUNTIME SAFETY
 
 Student-facing UI must never show non-FIPI source references.
 Forbidden in learner UI/runtime:
@@ -52,131 +53,187 @@ Forbidden in learner UI/runtime:
 
 FIPI may be shown only when genuinely relevant as the official current exam source.
 
-The runtime builder was changed to remove internal rule/source references from public payload and to fail on forbidden non-FIPI source leakage.
-After that change the generated package became smaller:
-- 8 T123 blocks total;
-- 3 runtime data blocks.
-The preview test was updated to validate the actual package manifest rather than hard-code the old 9/4 package shape.
-
-DO NOT ASK THE USER TO REUPLOAD TILDA YET.
-Wait until the full linguistic/source audit and corrections are complete, then provide one corrected package.
-
 MANDATORY CONTENT POLICY
 
 The user explicitly requires:
 - NO invented linguistic explanations;
 - NO improvised semantic stories;
-- NO "smart" rationalizations;
+- NO pseudo-etymology;
 - real rules + examples + exceptions/contrasts;
-- every word and every card checked against authoritative sources.
+- every word and every card checked against authoritative sources;
+- learner explanations raised to Drabkina/Subbotin quality because the same content core will later feed a full Russian course.
 
-Source order:
+DRABKINA/SUBBOTIN METHOD BASELINE
+
+Use the project Drabkina/Subbotin corpus fully for methodology, including tables, schemes, algorithms, contrasts, exception groupings and typical-error logic.
+Do not copy long source passages verbatim.
+Public Eksamio wording must be original.
+
+Desired structure:
+THEORY/RULE -> TABLE/SCHEME -> ALGORITHM -> APPLICATION -> CONTRAST -> TYPICAL TRAP -> INDEPENDENT CHECK.
+
+Current academic/dictionary norm overrides outdated teaching simplifications.
+
+SOURCE ORDER
+
 For orthography/punctuation:
 1. project Rosenthal reference;
-2. other authoritative books in project source folder;
-3. Gramota.ru where needed.
+2. authoritative project books including Drabkina/Subbotin;
+3. current academic/Gramota cross-check where needed.
 
-For morphology/orthoepy/lexical norms/government/syntax not actually covered by the Rosenthal project copy:
+For morphology/orthoepy/lexical norms/government/syntax:
 1. authoritative project books/dictionaries;
-2. Gramota.ru;
+2. current academic/Gramota reference;
 3. FIPI for official exam facts/formats/lists/criteria/constraints.
 
-If not confirmed: HOLD, not PASS.
+Do not attribute morphology, lexical norms or syntax to the project Rosenthal copy unless exact source text supports the claim.
 
-CURRENT CONTENT AUDIT
+FULL 80-CARD AUDIT RESULT
 
-Scope: ALL 80 active practice cards.
-No sampling.
-Each card must receive explicit:
-PASS / FIX / HOLD / FAIL-REPLACE.
+Durable audit:
+130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt
 
-Each card check includes:
-- exact word/form/case;
-- correct answer;
-- prompt wording;
-- explanation;
-- actual rule;
-- examples;
-- exceptions;
-- contrasts;
-- prompt/answer mechanical compatibility;
-- source attribution accuracy.
+ALL 80 ACTIVE CARDS EXPLICITLY REVIEWED: YES
+PASS: 48
+FIX: 30
+FAIL-REPLACE: 2
+HOLD: 0
 
-Preferred learner explanation format:
-RULE -> APPLICATION TO THIS WORD/CASE -> 2-3 NORMAL EXAMPLES -> EXCEPTION/CONTRAST WHEN RELEVANT.
+A PASS means the active answer/rule/boundary is safe at card level.
+A FIX usually means the answer itself is correct but learner explanation, rule boundary, course-grade contrast or provenance needs correction.
+Do not confuse answer correctness with content approval.
 
-CURRENT AUDIT GROUPING
+COURSE-GRADE CORRECTION OVERLAY
 
-The 80 cards have been grouped for complete review, including:
-- alternating roots;
-- Н/НН;
-- introductory/non-introductory constructions;
-- solid/separate spelling;
-- noun forms;
-- paronyms;
-- syntactic norms/government;
-- stress/orthoepy;
-- punctuation;
-- prefixes and other orthographic special cases.
+Durable overlay:
+131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json
 
-KNOWN CONTENT FAIL #1 — «В КОНЦЕ КОНЦОВ»
+It contains:
+- reusable Drabkina-style rule units;
+- N/NN learner algorithms and contrasts;
+- derivative-preposition table logic;
+- context-first introductory-word logic;
+- modernized alternating-root policy;
+- 30 FIX patches;
+- 2 disable-and-replace patches.
 
-The current/previous card teaching «в конце концов» as universally non-introductory is WRONG.
-The project Rosenthal source distinguishes context-dependent use.
-The corrected card must teach the distinction by context or be replaced.
-Do not preserve the old universal statement.
+The overlay is NOT connected to production.
 
-KNOWN CONTENT QUALITY FAIL #2 — «КОЖАНЫЙ»
+CRITICAL FAIL #1 — «В КОНЦЕ КОНЦОВ»
 
-The current explanation was rejected by the user because it used a forced/invented semantic rationale.
-Replace with the actual rule:
-- adjective formation;
-- suffix -ан-;
-- one Н;
-- normal comparable examples;
-- relevant exceptions/contrasts.
-No invented meaning story.
+Active card:
+ex-practice-v-kontse-kontsov-corrected-001
 
-SYSTEMIC SOURCE-ATTRIBUTION PROBLEM FOUND
+Status: FAIL-REPLACE.
+The universal statement «В КОНЦЕ КОНЦОВ само по себе не является вводным» is unsafe.
+Required model:
+- introductory use when it functions as conclusion/result of reasoning;
+- non-introductory use when it denotes ordinary factual/event result.
 
-Some internal entries used vague/false labels such as:
-"Rosenthal: morphological norms",
-"Rosenthal: lexical norms",
-"Rosenthal: syntactic norms".
+Project source bank 84 already contains the safer dual-function model.
+Overlay 131 contains a replacement context card.
 
-The project Rosenthal copy is «Справочник по русскому языку: орфография и пунктуация».
-Do not attribute unrelated norm areas to Rosenthal unless the exact text actually supports them.
-Re-source those cards to the appropriate authoritative project book/dictionary/Gramota.ru.
+CRITICAL FAIL #2 — «ЗОРЕВАТЬ»
 
-CURRENT NEXT ACTION — START HERE IN NEW CHAT
+Active card:
+ex-practice-zorevat-001
 
-1. Continue the 80/80 card source audit from the current active bank.
-2. Produce a per-card audit table/file with PASS/FIX/HOLD/REPLACE and source evidence.
-3. Correct every FIX/REPLACE using source-backed rule text and examples.
-4. Exclude HOLD cards from learner runtime until resolved.
-5. Rebuild canonical practice/runtime.
-6. Re-run machine gate + browser/Chromium preview.
-7. Only then create ONE corrected Tilda package for the user.
-8. Do not ask the user to repeatedly replace T123 blocks during the audit.
+Status: FAIL-REPLACE.
+Current learner answer «зоревать» is obsolete orthography.
+Modern norm: «заревать».
+The old exception was eliminated; modern academic spelling dictionaries use «заревать».
+Overlay 131 contains a current replacement card.
+
+N/NN CONTENT DECISION
+
+User-approved quality model:
+- identify part of speech/derivation;
+- state exact writing;
+- explain the rule branch;
+- give normal examples;
+- give a meaningful «Сравни» contrast.
+
+Examples fixed in overlay:
+КОВАНЫЙ — one Н as verb-derived adjective; compare КОВАННЫЙ КУЗНЕЦОМ — participle, НН.
+ЖЁВАНЫЙ — one Н as verb-derived adjective; compare ЖЁВАННЫЙ РЕБЁНКОМ — participle, НН.
+РАНЕНЫЙ БОЕЦ — РАНЕННЫЙ ОСКОЛКОМ БОЕЦ.
+НАЗВАНЫЙ БРАТ — НАЗВАННЫЙ В ЧЕСТЬ ОТЦА.
+ПОСАЖЁНЫЙ ОТЕЦ — ПОСАЖЕННЫЙ ЗА СТОЛ ГОСТЬ.
+
+SYSTEMIC PROVENANCE FIXES REQUIRED
+
+Morphology source bank:
+87-RUSSIAN-EXCEPTIONS-MORPHOLOGY-TASK7-v0.1.json
+
+Syntax source bank:
+88-RUSSIAN-EXCEPTIONS-SYNTAX-TASK8-v0.1.json
+
+Paronym source bank:
+89-RUSSIAN-EXCEPTIONS-PARONYMS-HIGH-VALUE-v0.1.json
+
+Relevant Wave2 norms entries:
+48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json
+
+Problem:
+vague/false Rosenthal labels for morphology/lexical/syntax.
+Required:
+re-source to Drabkina/project dictionaries/current academic/Gramota as appropriate.
+
+IMPORTANT MODERN-NORM BOUNDARIES
+
+1. ВООБЩЕ
+The active sentence «Он вообще не пользуется подсказками» is correctly non-introductory.
+Do not teach a universal «вообще never introductory» rule: current punctuation is context-dependent.
+
+2. КОНЕЧНО
+The active contrast is valid. Modern norm permits emphatic particle use without commas, e.g. response-like «Конечно правда!».
+
+3. ПО ПРИЕЗДЕ
+In meaning «после приезда» -> ПО ПРИЕЗДЕ.
+Do not teach «по приезду always wrong»: current reference recognizes a different dative meaning.
+
+4. СКАК-/СКОК-/СКАЧ-/СКОЧ-
+Do not use the crude school formula «before К A, before Ч O + exceptions скачок/скачу» as the final course rule.
+Use the fuller current pattern recorded in audit/overlay.
+
+5. ПЛАВ-/ПЛОВ-/ПЛЫВ-
+Keep useful school spelling groupings but avoid invented morphemic/historical stories.
+
+6. УТВАРЬ / ПОЛОГ
+Use cautious lexicalized/dictionary wording where modern morphemic treatment differs from older school segmentation.
+
+NEXT ACTION — START HERE
+
+1. Independently review overlay 131 for content accuracy and JSON/mechanical integrity.
+2. Apply source/provenance corrections to the non-production source banks 35/48/84/87/88/89 as required.
+3. Disable/replace the two FAIL cards.
+4. Apply the 30 FIX feedback/provenance patches.
+5. Regenerate the corrected active 80-card bank.
+6. Verify that active count remains exactly 80 and no obsolete/disabled card leaks into runtime.
+7. Run machine gate + browser/Chromium preview.
+8. Audit public payload for forbidden non-FIPI provenance leakage.
+9. Only after all gates PASS create ONE corrected Tilda package.
+10. Do not ask the user to repeatedly replace T123 blocks during this work.
 
 CODEX POLICY
 
 Do not use Codex for routine content/source audit or small repository edits.
-Use Codex only if a genuinely large local execution/testing task later justifies the quota.
+Use Codex only for a genuinely large local execution/testing task if later necessary.
 
 COMMUNICATION
 
 Russian.
 Direct execution.
-Do not ask the user to repeat already known project context.
-Do not claim PASS based only on machine validation when the linguistic/source audit is incomplete.
-Do not publish or authorize the current Exceptions Trainer content until 80/80 editorial/source review is complete.
+Do not ask the user to repeat known context.
+Do not claim production PASS merely because machine validation passes.
 
 CURRENT DECISION
 
 TECHNICAL STANDALONE BASE: PASS
-LINGUISTIC/SOURCE CONTENT: RE-AUDIT REQUIRED 80/80
+LINGUISTIC 80/80 AUDIT: COMPLETE
+COURSE-GRADE CORRECTION OVERLAY: CREATED / NOT INTEGRATED
+SOURCE-BANK CORRECTIONS: NEXT
 LIVE TILDA PAGE: TEST/PREVIEW ONLY
-NEW TILDA PACKAGE: DO NOT ISSUE UNTIL CONTENT AUDIT COMPLETE
+NEW TILDA PACKAGE: DO NOT ISSUE YET
 CURRENT EGE TRAINER: UNCHANGED
 MAIN-TRAINER INTEGRATION: HOLD
