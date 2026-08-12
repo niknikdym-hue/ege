@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "exam": "ege",
+  "purpose": "current_norm_exceptions_corrections",
+  "integration_status": "not_connected_to_production",
+  "content_version": "0.1.0",
+  "items": [
+    {
+      "exception_id": "alt_root_zarevat_current",
+      "skill_ids": ["orthographic_norms"],
+      "subskill_ids": ["alternating_root_vowels"],
+      "exam_task_numbers": [9],
+      "exception_type": "current_norm_replacement",
+      "prompt_label": "ЗАРЕВАТЬ",
+      "canonical_form": "заревать",
+      "wrong_forms": ["зоревать"],
+      "rule_ref": "alternating_root_vowels",
+      "why_exception": "Современная орфографическая норма — ЗАРЕВАТЬ. Старое написание ЗОРЕВАТЬ рекомендовалось как исключение в прежних правилах, но в современной норме это исключение устранено.",
+      "examples": ["заревать на рассвете"],
+      "practice_modes": ["recall_form", "recognize_exception", "contrast_normal_vs_exception"],
+      "source_refs": [
+        {"source_type":"internal_verified_source","source_path":"Gramota.ru: ответ справочной службы № 323975 (2025-07-19)","purpose":"current_norm","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"Gramota.ru: ответ справочной службы № 299340","purpose":"current_norm_history","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"}
+      ],
+      "status": "source_verified"
+    }
+  ],
+  "review_notes": "Current-norm replacement for obsolete learner-facing ЗОРЕВАТЬ. Old source entry remains in historical bank 35 but must be disabled in the current manifest. Tilda unchanged."
+}
