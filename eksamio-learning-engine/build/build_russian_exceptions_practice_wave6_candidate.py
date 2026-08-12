@@ -4,7 +4,7 @@
 Reuses the current audited course-grade loader, so the reviewed 93-card checkpoint
 keeps all overlays and Wave 5 content, then adds the 28-card Wave 6 draft through
 candidate manifest 143. Manual review overlay 145 converts exactly those 28 draft
-items to schema-valid REVIEWED status and applies two explicit editorial fixes.
+items to schema-valid REVIEWED status and applies explicit editorial fixes.
 Output stays under build/candidate-wave6. Current 93 and Tilda are not mutated.
 """
 
@@ -74,8 +74,6 @@ def load_reviewed_wave6_practice_items(
             f"Wave 6 review/active mismatch: unreviewed_active={missing_review}, reviewed_not_active={missing_active}"
         )
 
-    # Manual review changes only the 28 Wave 6 draft items. Current 93 remain byte-for-byte
-    # equivalent at this loader stage except for ordinary clone serialization.
     for pid in reviewed_ids_raw:
         item = by_id[pid]
         if item.get("status") != "source_verified_draft":
@@ -90,8 +88,8 @@ def load_reviewed_wave6_practice_items(
         raise base.BuildError(f"{WAVE6_REVIEW_OVERLAY}: item_patches must be object array")
     if summary.get("editorial_fixes") != len(patches):
         raise base.BuildError(f"{WAVE6_REVIEW_OVERLAY}: editorial fix count mismatch")
-    if len(patches) != 2:
-        raise base.BuildError(f"Wave 6 review overlay must contain exactly two editorial fixes, got {len(patches)}")
+    if len(patches) != 3:
+        raise base.BuildError(f"Wave 6 review overlay must contain exactly three editorial fixes, got {len(patches)}")
 
     patched_ids: set[str] = set()
     for patch in patches:
@@ -109,6 +107,7 @@ def load_reviewed_wave6_practice_items(
 
     expected_fix_ids = {
         "ex-practice-za-to-separate-w6-012",
+        "ex-practice-vrode-solid-w6-021",
         "ex-practice-v-rode-separate-w6-022",
     }
     if patched_ids != expected_fix_ids:
