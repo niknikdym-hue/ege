@@ -1,0 +1,133 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS — CONTENT REAUDIT INTEGRATION CHECK
+DATE: 2026-08-12
+TASK: TASK-003
+BRANCH: agent/russian-exceptions-content-polish
+STATUS: STATIC PASS / MACHINE BUILD PENDING
+
+SCOPE
+
+Verify that the completed 80/80 linguistic audit is represented in the current source/practice build configuration without touching Tilda or the frozen current EGE Russian trainer.
+
+CHECK 1 — AUDIT COVERAGE
+PASS
+- audited active cards: 80/80
+- historical audit dispositions:
+  - PASS: 48
+  - FIX: 30
+  - FAIL-REPLACE: 2
+  - HOLD: 0
+Source: `130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt`
+
+CHECK 2 — PRACTICE ACTIVE COUNT CONTRACT
+PASS (STATIC MANIFEST CHECK)
+Current manifest: `119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json`
+- registered raw items: 24 + 24 + 24 + 8 + 2 = 82
+- explicitly disabled historical items: 2
+- expected active items: 80
+- manifest value `expected_active_items`: 80
+
+Disabled historical practice IDs:
+- `ex-practice-end-finally-001`
+- `ex-practice-zorevat-001`
+
+CHECK 3 — CONTENT FIX OVERLAY
+PASS (STATIC OVERLAY CONTRACT)
+Overlay: `131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json`
+- patch entries: 32
+- audited FIX items: 30
+- audited FAIL-REPLACE items: 2
+- course-grade builder validates patch targets and replacement activity.
+Builder: `build/build_russian_exceptions_practice_course_grade.py`
+
+CHECK 4 — В КОНЦЕ КОНЦОВ
+PASS (CURRENT CONFIGURATION)
+Rejected universal non-introductory correction is not a current practice bank.
+Current replacement:
+- `ex-practice-v-kontse-kontsov-context-002`
+- source exception: `introductory_v_kontse_kontsov_dual_function`
+The learner must distinguish function in context rather than memorize an absolute ban.
+
+CHECK 5 — ЗАРЕВАТЬ / ЗОРЕВАТЬ
+PASS (CURRENT CONFIGURATION)
+Current source manifest:
+- disables `alt_root_zorevat`
+- maps it to `alt_root_zarevat_current`
+Current practice:
+- disables `ex-practice-zorevat-001`
+- adds `ex-practice-zarevat-current-001`
+
+CHECK 6 — N / NN COURSE-GRADE CONTENT
+PASS (CONTENT STRUCTURE)
+Updated:
+- `32-RUSSIAN-EXPLANATION-BANK-v0.1.json`
+- `33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json`
+- practice feedback overlay in `131-*`
+Coverage includes:
+- -АН-/-ЯН-/-ИН- vs -ОНН-/-ЕНН- and Н+Н;
+- кожаный;
+- деревянный / оловянный / стеклянный;
+- ветреный / безветренный / ветряной;
+- кованый / кованный;
+- жёваный / жёванный;
+- раненый / раненный;
+- названый брат;
+- посажёный отец;
+- short/full form boundary in the reusable explanation unit.
+
+CHECK 7 — DRABKINA METHOD PROVENANCE
+PASS (STATIC SOURCE POLICY)
+Map: `135-RUSSIAN-DRABKINA-METHOD-SOURCE-MAP.txt`
+- grade 10: direct method source for orthography, including N/NN and alternating roots;
+- grade 11: punctuation/syntax-facing method where relevant;
+- morphology/paronyms/syntax use the method map when an exact local page/section is not assigned;
+- no fabricated local PDF/page locator is allowed;
+- current academic/dictionary norm overrides outdated school simplifications.
+
+CHECK 8 — CURRENT ROOT MODEL
+PASS (SOURCE OVERLAY REGISTERED)
+`134-RUSSIAN-EXCEPTIONS-SOURCE-CONTENT-OVERLAY-v0.1.json` replaces the oversimplified learner explanation for `alt_root_skachok_skachu` with the fuller current СКАК-/СКОК-/СКАЧ-/СКОЧ- model.
+`118-*` registers the overlay and the current source builder validates that each overlay target exists and is applied.
+
+CHECK 9 — FALSE SOURCE ATTRIBUTION CLEANUP
+PASS FOR MODIFIED HIGH-RISK BANKS
+Removed vague Rosenthal morphology/lexical/syntax attribution from the currently modified high-risk banks:
+- `48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json`
+- `87-RUSSIAN-EXCEPTIONS-MORPHOLOGY-TASK7-v0.1.json`
+- `88-RUSSIAN-EXCEPTIONS-SYNTAX-TASK8-v0.1.json`
+- `89-RUSSIAN-EXCEPTIONS-PARONYMS-HIGH-VALUE-v0.1.json`
+Method provenance is separated from current normative/dictionary evidence.
+
+CHECK 10 — LEARNER-FACING INTRO COPY
+PASS (SOURCE UI ONLY)
+`standalone-exceptions-trainer/ui/rex-app.js` now uses the user-approved human copy:
+
+Lead:
+«Здесь собраны исключения, трудные формы и похожие случаи, которые легко перепутать. Решайте самостоятельно, а то, что оказалось сложным, позже встретится снова в новом контексте.»
+
+Method:
+«Как работает: сначала разбираемся, какое правило здесь действует, затем отвечаем самостоятельно. Сложные случаи и ошибки позже появятся снова — уже в других примерах.»
+
+CHECK 11 — PRODUCTION SAFETY
+PASS
+Branch comparison against `main` contains only `eksamio-learning-engine/` content/build/UI/task files.
+No Tilda package or live T123 block was changed.
+No current EGE Russian trainer production file was changed.
+
+NOT EXECUTED IN THIS ENVIRONMENT
+
+The following remain mandatory before production/Tilda authorization:
+1. canonical exceptions source build;
+2. course-grade 80-card practice canonical build;
+3. runtime build;
+4. package build;
+5. JSON/schema/content gate scripts;
+6. browser core checks;
+7. Chromium preview check;
+8. independent final content review of generated learner payload.
+
+Therefore:
+- CONTENT REAUDIT INTEGRATION: STATIC PASS
+- MACHINE CANONICAL BUILD: PENDING
+- BROWSER/CHROMIUM GATE: PENDING
+- PRODUCTION/TILDA: HOLD
