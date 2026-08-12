@@ -1,0 +1,17 @@
+name: ChatGPT REX Current Main Package Snapshot
+on:
+  push:
+    branches:
+      - chatgpt-rex-current-main-package-20260812
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload Learning Engine snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: eksamio-learning-engine-current-main-package
+          path: eksamio-learning-engine/
+          if-no-files-found: error
+          compression-level: 6
