@@ -1,7 +1,7 @@
 EKSAMIO LEARNING ENGINE
 NEW CHAT HANDOFF — RUSSIAN EXCEPTIONS TRAINER
 DATE: 2026-08-12
-STATUS: 80/80 CONTENT AUDIT COMPLETE / CORRECTION OVERLAY CREATED / PRODUCTION HOLD
+STATUS: 80/80 AUDIT COMPLETE / COURSE-GRADE CORRECTIONS APPLIED ON BRANCH / MACHINE GATE PENDING / TILDA HOLD
 
 READ FIRST
 
@@ -9,231 +9,142 @@ READ FIRST
 2. 128-RUSSIAN-EXCEPTIONS-CONTENT-AUDIT-RULES.txt
 3. 130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt
 4. 131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json
-5. this file
+5. 135-RUSSIAN-DRABKINA-METHOD-SOURCE-MAP.txt
+6. audits/RUSSIAN-EXCEPTIONS-CONTENT-REAUDIT-INTEGRATION-CHECK.txt
+7. this file
 
 PROJECT
+Repository: niknikdym-hue/ege
+Working root: eksamio-learning-engine/
+Current work branch: agent/russian-exceptions-content-polish
+Live Tilda page remains TEST/PREVIEW.
 
-Repository:
-https://github.com/niknikdym-hue/ege
+DO NOT UPDATE TILDA YET.
+Do not issue a new Tilda package until canonical source/practice/runtime builds and browser/Chromium gates pass.
+Current EGE Russian trainer remains frozen/unchanged.
 
-Working root:
-eksamio-learning-engine/
+CONTENT POLICY
 
-Current user local root:
-exam-platform-tilda/eksamio-learning-engine/
+- no invented linguistic explanations;
+- no pseudo-etymology;
+- no vague source attribution;
+- every learner rule must have an actual rule boundary, examples and relevant contrast;
+- Drabkina/Subbotin is the method baseline for tables, schemes, algorithms, exception grouping and error logic;
+- current academic/dictionary norm overrides outdated school simplifications;
+- public learner runtime must not expose non-FIPI provenance/source labels.
 
-Live Tilda test page:
-https://eksamio.ru/trenazhery/russkiy/isklyucheniya/
+80/80 AUDIT
 
-IMPORTANT: the live page is TEST/PREVIEW and is NOT content-approved. Do not ask the user to reupload Tilda until source corrections, rebuild and final gates are complete.
+Durable audit: 130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt
+- reviewed: 80/80
+- PASS: 48
+- FIX: 30
+- FAIL-REPLACE: 2
+- HOLD: 0
 
-CURRENT TECHNICAL BASELINE
+The 30 FIX items are now represented by course-grade feedback/provenance patches in 131.
+The 2 FAIL items now have current replacements in 133 and are excluded by current manifests.
 
-- current EGE Russian trainer remains frozen/unchanged;
-- standalone Exceptions Trainer exists separately;
-- Learning Engine machine gate previously PASS;
-- browser core PASS;
-- Chromium preview PASS;
-- learner state/storage namespace separate from current EGE trainer;
-- main-trainer handoff remains HOLD;
-- catalog/public rollout remains HOLD.
+CRITICAL REPLACEMENTS
 
-PUBLIC-RUNTIME SAFETY
+1. В КОНЦЕ КОНЦОВ
+Do not teach it as universally non-introductory.
+Current practice replacement asks the learner to distinguish:
+- conclusion/result of reasoning — possible introductory use;
+- factual/event result — ordinary non-introductory use.
 
-Student-facing UI must never show non-FIPI source references.
-Forbidden in learner UI/runtime:
-- Rosenthal name;
-- Gramota.ru;
-- project book names;
-- paragraph/page references;
-- rule_ref;
-- provenance;
-- source paths;
-- non-FIPI source URLs.
+2. ЗАРЕВАТЬ
+Current learner form: ЗАРЕВАТЬ.
+Historical ЗОРЕВАТЬ is disabled in current source/practice manifests.
 
-FIPI may be shown only when genuinely relevant as the official current exam source.
+N/NN COURSE-GRADE CONTENT
 
-MANDATORY CONTENT POLICY
+Updated:
+- 32-RUSSIAN-EXPLANATION-BANK-v0.1.json
+- 33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json
+- feedback patches in 131
 
-The user explicitly requires:
-- NO invented linguistic explanations;
-- NO improvised semantic stories;
-- NO pseudo-etymology;
-- real rules + examples + exceptions/contrasts;
-- every word and every card checked against authoritative sources;
-- learner explanations raised to Drabkina/Subbotin quality because the same content core will later feed a full Russian course.
+Required teaching model now includes:
+- кожаный: adjective from noun, -АН-, one Н;
+- wooden/tin/glass exception trio;
+- ветреный / безветренный / ветряной;
+- кованый / кованный;
+- жёваный / жёванный;
+- раненый / раненный;
+- названый брат / причастное НН;
+- посажёный отец / причастное НН;
+- short participle/adjective boundary in reusable explanation unit.
 
-DRABKINA/SUBBOTIN METHOD BASELINE
+DRABKINA SOURCE MAP
 
-Use the project Drabkina/Subbotin corpus fully for methodology, including tables, schemes, algorithms, contrasts, exception groupings and typical-error logic.
-Do not copy long source passages verbatim.
-Public Eksamio wording must be original.
+135-RUSSIAN-DRABKINA-METHOD-SOURCE-MAP.txt is the current internal mapping rule.
 
-Desired structure:
-THEORY/RULE -> TABLE/SCHEME -> ALGORITHM -> APPLICATION -> CONTRAST -> TYPICAL TRAP -> INDEPENDENT CHECK.
+Key mapping:
+- grade 10 -> orthography method, especially N/NN and alternating roots;
+- grade 11 -> punctuation/syntax-facing method where relevant;
+- grades 5–9 -> school algorithm/table support by topic;
+- morphology/paronyms/syntax without exact local locator -> use 135 as method provenance and keep current dictionary/grammar evidence separate;
+- never fabricate a local page/section locator.
 
-Current academic/dictionary norm overrides outdated teaching simplifications.
+OTHER HIGH-RISK CORRECTIONS APPLIED
 
-SOURCE ORDER
+- fuller current СКАК-/СКОК-/СКАЧ-/СКОЧ- model through source overlay 134;
+- morphology bank 87 re-sourced; false Rosenthal morphology attribution removed;
+- syntax bank 88 re-sourced and boundaries strengthened, including ПО ПРИЕЗДЕ vs another possible ПО ПРИЕЗДУ meaning;
+- paronym bank 89 upgraded to meaning + typical collocation + contrast and re-sourced;
+- wave-2 norm bank 48 cleaned of vague Rosenthal morphology/lexical/syntax attribution;
+- current source builder applies registered source-content overlay and fails if overlay targets are missing/not applied.
 
-For orthography/punctuation:
-1. project Rosenthal reference;
-2. authoritative project books including Drabkina/Subbotin;
-3. current academic/Gramota cross-check where needed.
+PRACTICE CURRENT CONFIGURATION
 
-For morphology/orthoepy/lexical norms/government/syntax:
-1. authoritative project books/dictionaries;
-2. current academic/Gramota reference;
-3. FIPI for official exam facts/formats/lists/criteria/constraints.
+Manifest: 119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json
+- raw registered items: 82
+- disabled historical items: 2
+- expected active cards: exactly 80
+- feedback overlay: 131
+- builder: build/build_russian_exceptions_practice_course_grade.py
 
-Do not attribute morphology, lexical norms or syntax to the project Rosenthal copy unless exact source text supports the claim.
+The course-grade practice builder fails closed if:
+- a FIX target disappears;
+- a FAIL/REPLACE item remains active;
+- a replacement is missing;
+- patch counts do not match 30 FIX + 2 replacements;
+- active count changes from 80.
 
-FULL 80-CARD AUDIT RESULT
+LEARNER-FACING INTRO COPY
 
-Durable audit:
-130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt
+Source UI `standalone-exceptions-trainer/ui/rex-app.js` now contains the user-approved human copy:
 
-ALL 80 ACTIVE CARDS EXPLICITLY REVIEWED: YES
-PASS: 48
-FIX: 30
-FAIL-REPLACE: 2
-HOLD: 0
+«Здесь собраны исключения, трудные формы и похожие случаи, которые легко перепутать. Решайте самостоятельно, а то, что оказалось сложным, позже встретится снова в новом контексте.»
 
-A PASS means the active answer/rule/boundary is safe at card level.
-A FIX usually means the answer itself is correct but learner explanation, rule boundary, course-grade contrast or provenance needs correction.
-Do not confuse answer correctness with content approval.
+«Как работает: сначала разбираемся, какое правило здесь действует, затем отвечаем самостоятельно. Сложные случаи и ошибки позже появятся снова — уже в других примерах.»
 
-COURSE-GRADE CORRECTION OVERLAY
+This source change is NOT published to Tilda yet.
 
-Durable overlay:
-131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json
+STATIC GATE
 
-It contains:
-- reusable Drabkina-style rule units;
-- N/NN learner algorithms and contrasts;
-- derivative-preposition table logic;
-- context-first introductory-word logic;
-- modernized alternating-root policy;
-- 30 FIX patches;
-- 2 disable-and-replace patches.
+audits/RUSSIAN-EXCEPTIONS-CONTENT-REAUDIT-INTEGRATION-CHECK.txt
+Status: STATIC PASS / MACHINE BUILD PENDING.
 
-The overlay is NOT connected to production.
-
-CRITICAL FAIL #1 — «В КОНЦЕ КОНЦОВ»
-
-Active card:
-ex-practice-v-kontse-kontsov-corrected-001
-
-Status: FAIL-REPLACE.
-The universal statement «В КОНЦЕ КОНЦОВ само по себе не является вводным» is unsafe.
-Required model:
-- introductory use when it functions as conclusion/result of reasoning;
-- non-introductory use when it denotes ordinary factual/event result.
-
-Project source bank 84 already contains the safer dual-function model.
-Overlay 131 contains a replacement context card.
-
-CRITICAL FAIL #2 — «ЗОРЕВАТЬ»
-
-Active card:
-ex-practice-zorevat-001
-
-Status: FAIL-REPLACE.
-Current learner answer «зоревать» is obsolete orthography.
-Modern norm: «заревать».
-The old exception was eliminated; modern academic spelling dictionaries use «заревать».
-Overlay 131 contains a current replacement card.
-
-N/NN CONTENT DECISION
-
-User-approved quality model:
-- identify part of speech/derivation;
-- state exact writing;
-- explain the rule branch;
-- give normal examples;
-- give a meaningful «Сравни» contrast.
-
-Examples fixed in overlay:
-КОВАНЫЙ — one Н as verb-derived adjective; compare КОВАННЫЙ КУЗНЕЦОМ — participle, НН.
-ЖЁВАНЫЙ — one Н as verb-derived adjective; compare ЖЁВАННЫЙ РЕБЁНКОМ — participle, НН.
-РАНЕНЫЙ БОЕЦ — РАНЕННЫЙ ОСКОЛКОМ БОЕЦ.
-НАЗВАНЫЙ БРАТ — НАЗВАННЫЙ В ЧЕСТЬ ОТЦА.
-ПОСАЖЁНЫЙ ОТЕЦ — ПОСАЖЕННЫЙ ЗА СТОЛ ГОСТЬ.
-
-SYSTEMIC PROVENANCE FIXES REQUIRED
-
-Morphology source bank:
-87-RUSSIAN-EXCEPTIONS-MORPHOLOGY-TASK7-v0.1.json
-
-Syntax source bank:
-88-RUSSIAN-EXCEPTIONS-SYNTAX-TASK8-v0.1.json
-
-Paronym source bank:
-89-RUSSIAN-EXCEPTIONS-PARONYMS-HIGH-VALUE-v0.1.json
-
-Relevant Wave2 norms entries:
-48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json
-
-Problem:
-vague/false Rosenthal labels for morphology/lexical/syntax.
-Required:
-re-source to Drabkina/project dictionaries/current academic/Gramota as appropriate.
-
-IMPORTANT MODERN-NORM BOUNDARIES
-
-1. ВООБЩЕ
-The active sentence «Он вообще не пользуется подсказками» is correctly non-introductory.
-Do not teach a universal «вообще never introductory» rule: current punctuation is context-dependent.
-
-2. КОНЕЧНО
-The active contrast is valid. Modern norm permits emphatic particle use without commas, e.g. response-like «Конечно правда!».
-
-3. ПО ПРИЕЗДЕ
-In meaning «после приезда» -> ПО ПРИЕЗДЕ.
-Do not teach «по приезду always wrong»: current reference recognizes a different dative meaning.
-
-4. СКАК-/СКОК-/СКАЧ-/СКОЧ-
-Do not use the crude school formula «before К A, before Ч O + exceptions скачок/скачу» as the final course rule.
-Use the fuller current pattern recorded in audit/overlay.
-
-5. ПЛАВ-/ПЛОВ-/ПЛЫВ-
-Keep useful school spelling groupings but avoid invented morphemic/historical stories.
-
-6. УТВАРЬ / ПОЛОГ
-Use cautious lexicalized/dictionary wording where modern morphemic treatment differs from older school segmentation.
-
-NEXT ACTION — START HERE
-
-1. Independently review overlay 131 for content accuracy and JSON/mechanical integrity.
-2. Apply source/provenance corrections to the non-production source banks 35/48/84/87/88/89 as required.
-3. Disable/replace the two FAIL cards.
-4. Apply the 30 FIX feedback/provenance patches.
-5. Regenerate the corrected active 80-card bank.
-6. Verify that active count remains exactly 80 and no obsolete/disabled card leaks into runtime.
-7. Run machine gate + browser/Chromium preview.
-8. Audit public payload for forbidden non-FIPI provenance leakage.
-9. Only after all gates PASS create ONE corrected Tilda package.
-10. Do not ask the user to repeatedly replace T123 blocks during this work.
-
-CODEX POLICY
-
-Do not use Codex for routine content/source audit or small repository edits.
-Use Codex only for a genuinely large local execution/testing task if later necessary.
-
-COMMUNICATION
-
-Russian.
-Direct execution.
-Do not ask the user to repeat known context.
-Do not claim production PASS merely because machine validation passes.
+Still mandatory before production/Tilda:
+1. canonical source build;
+2. canonical 80-card course-grade practice build;
+3. runtime build;
+4. package build;
+5. JSON/schema/content gates;
+6. public payload source-leak check;
+7. browser core test;
+8. Chromium preview test;
+9. independent final review of generated learner payload.
 
 CURRENT DECISION
 
-TECHNICAL STANDALONE BASE: PASS
-LINGUISTIC 80/80 AUDIT: COMPLETE
-COURSE-GRADE CORRECTION OVERLAY: CREATED / NOT INTEGRATED
-SOURCE-BANK CORRECTIONS: NEXT
-LIVE TILDA PAGE: TEST/PREVIEW ONLY
-NEW TILDA PACKAGE: DO NOT ISSUE YET
+80/80 LINGUISTIC AUDIT: COMPLETE
+COURSE-GRADE CONTENT CORRECTIONS: APPLIED ON BRANCH
+STATIC INTEGRATION CHECK: PASS
+MACHINE CANONICAL BUILD: PENDING
+BROWSER/CHROMIUM GATE: PENDING
+LIVE TILDA: TEST/PREVIEW ONLY
+NEW TILDA PACKAGE: HOLD
 CURRENT EGE TRAINER: UNCHANGED
 MAIN-TRAINER INTEGRATION: HOLD
