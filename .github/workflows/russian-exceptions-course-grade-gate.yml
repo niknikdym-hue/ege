@@ -74,6 +74,10 @@ jobs:
           print('PASS: exactly 80 active cards; audited replacements are active; ЗОРЕВАТЬ is not an accepted answer')
           PY
 
+      - name: Build launch priority
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_exceptions_launch_priority.py
+
       - name: Build runtime
         working-directory: eksamio-learning-engine
         run: python build/build_russian_exceptions_runtime.py
@@ -117,6 +121,7 @@ jobs:
           path: |
             eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json
             eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json
+            eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-LAUNCH-PRIORITY.json
             eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-RUNTIME.json
             eksamio-learning-engine/build/standalone-exceptions-tilda/**
             eksamio-learning-engine/audits/**
