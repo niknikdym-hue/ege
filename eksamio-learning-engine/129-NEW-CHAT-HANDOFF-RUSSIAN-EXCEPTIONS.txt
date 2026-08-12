@@ -1,7 +1,7 @@
 EKSAMIO LEARNING ENGINE
 NEW CHAT HANDOFF — RUSSIAN EXCEPTIONS TRAINER
 DATE: 2026-08-12
-STATUS: ORIGINAL 80/80 AUDIT COMPLETE / WAVE 5 PASS 13/13 / CURRENT 93 GATE PASS / TILDA HOLD
+STATUS: ORIGINAL 80/80 AUDIT COMPLETE / WAVE 5 PASS / WAVE 6 PASS / CURRENT 121 GATE PASS / TILDA HOLD
 
 READ FIRST
 
@@ -13,259 +13,227 @@ READ FIRST
 6. 136-RUSSIAN-EXCEPTIONS-LEARNER-FEEDBACK-POLISH-v0.1.json
 7. 138-RUSSIAN-EXCEPTIONS-WAVE5-MANUAL-CONTENT-REVIEW.txt
 8. 140-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE5-P0-TRANSFER-v1.0.json
-9. this file
+9. 141-RUSSIAN-EXCEPTIONS-WAVE6-SOLID-SEPARATE-SOURCE-AUDIT.txt
+10. 144-RUSSIAN-EXCEPTIONS-WAVE6-MANUAL-CONTENT-REVIEW.txt
+11. 145-RUSSIAN-EXCEPTIONS-WAVE6-REVIEWED-OVERLAY-v0.1.json
+12. results/RESULT-005-russian-exceptions-wave6-solid-separate.md
+13. this file
 
 PROJECT
 
 Repository: niknikdym-hue/ege
 Working root: eksamio-learning-engine/
-Current work branch: agent/russian-exceptions-content-polish
+Work branch: agent/russian-exceptions-content-polish
 Draft PR: #23
-Live Tilda page remains TEST/PREVIEW.
+Live Exceptions Tilda page: TEST/PREVIEW only.
 
-IMPORTANT SAFETY
+DO NOT
 
-- Current EGE Russian trainer is frozen/unchanged.
-- Tilda has NOT been updated during this audit/rebuild.
-- Do not publish or replace Tilda blocks until the user explicitly moves to that step.
-- Production integration remains HOLD.
-- A technical PASS never substitutes for a linguistic/source review; both are required.
+- do not update Tilda unless the user explicitly moves to publication/testing;
+- do not modify the current EGE Russian trainer;
+- do not expose non-FIPI internal provenance in learner UI/runtime;
+- do not treat technical PASS as linguistic PASS;
+- do not invent explanations, etymologies or exact local PDF/page locators;
+- do not restore old universal rules for В КОНЦЕ КОНЦОВ, ЗОРЕВАТЬ or crude СКАК/СКОЧ mnemonics.
 
-CONTENT POLICY
+METHOD POLICY
 
-- no invented linguistic explanations;
-- no pseudo-etymology;
-- no vague source attribution;
-- every learner rule must preserve its real boundary, examples and relevant contrast;
-- Drabkina/Subbotin is the method baseline for tables, schemes, algorithms, exception grouping and error logic;
-- current academic/dictionary norm overrides outdated school simplifications;
-- public learner runtime must not expose non-FIPI provenance/source labels;
-- do not fabricate exact local PDF/page locators.
+Drabkina/Subbotin is the school-method baseline for tables, schemes, decision algorithms, exception grouping, contrast and typical-error logic.
 
-ORIGINAL 80/80 AUDIT
+Course/learner structure:
+RULE -> TABLE/SCHEME -> ALGORITHM -> APPLICATION -> CONTRAST -> TRAP -> INDEPENDENT CHECK.
 
-Durable audit:
-130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt
+Current academic/dictionary norm overrides outdated teaching simplifications.
 
-Reviewed: 80/80
-PASS: 48
-FIX: 30
-FAIL-REPLACE: 2
-HOLD: 0
+Learners must not see Rosenthal, Gramota, Drabkina, page refs, rule_ref, provenance, source paths or non-FIPI URLs.
 
-The 30 FIX items are applied through course-grade corrections/provenance handling in 131.
-The two FAIL items were replaced and old versions are disabled:
-- false universal В КОНЦЕ КОНЦОВ;
-- obsolete learner answer ЗОРЕВАТЬ.
+ORIGINAL 80-CARD AUDIT
 
-POST-AUDIT LEARNER POLISH
+80/80 reviewed:
+PASS 48
+FIX 30
+FAIL-REPLACE 2
+HOLD 0
 
-136-RUSSIAN-EXCEPTIONS-LEARNER-FEEDBACK-POLISH-v0.1.json
+Unsafe items replaced:
+- В КОНЦЕ КОНЦОВ universal non-introductory claim -> context-dependent card;
+- ЗОРЕВАТЬ -> current ЗАРЕВАТЬ.
 
-After inspecting the generated learner payload, 8 technically correct but too-terse feedbacks were upgraded to the same course-grade standard:
-- согласно;
-- ворот;
-- полотенец;
-- помидоров;
-- предел / придел;
-- в продолжение;
-- на цыпочках;
-- colon explanatory rule.
+30 FIX corrections: overlay 131.
+Post-audit learner-feedback polish: overlay 136, 8 items.
 
-These changes alter explanation quality, not accepted answers.
+WAVE 5
 
-WAVE 5 — P0 TRANSFER CLOSURE
+13 reviewed transfer cards.
+Manual review: PASS 13/13.
+Final source: 140.
+Closed all P0/P1 practice gaps.
+
+WAVE 6 — СЛИТНО / РАЗДЕЛЬНО COURSE MODULE
 
 Task:
-tasks/TASK-004-russian-exceptions-p0-transfer-wave.md
+tasks/TASK-005-russian-exceptions-wave6-solid-separate.md
+
+Source audit:
+141-RUSSIAN-EXCEPTIONS-WAVE6-SOLID-SEPARATE-SOURCE-AUDIT.txt
+PASS 14/14 pairs.
 
 Manual review:
-138-RUSSIAN-EXCEPTIONS-WAVE5-MANUAL-CONTENT-REVIEW.txt
+144-RUSSIAN-EXCEPTIONS-WAVE6-MANUAL-CONTENT-REVIEW.txt
+REVIEWED PASS 28/28 after 3 explicit editorial fixes.
 
-Final reviewed wave:
-140-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE5-P0-TRANSFER-v1.0.json
+Review overlay:
+145-RUSSIAN-EXCEPTIONS-WAVE6-REVIEWED-OVERLAY-v0.1.json
 
-Wave 5 contains 13 new original Eksamio contexts:
-- ПРИЗНАТЕЛЬНЫЙ / ПРИЗНАННЫЙ — both directions;
-- СКАЧУ current full-rule transfer;
-- ЗАРЕВАЛ current-norm inflected transfer;
-- ДОКТОРА;
-- ПОМИДОРОВ;
-- ВОРОТ;
-- ЖЁВАННЫЙ in participial context;
-- СТЕКЛЯННЫЙ vs КОЖАНЫЙ;
-- ОЛОВЯННЫЙ vs СЕРЕБРЯНЫЙ;
-- ДЕРЕВЯННЫЙ vs ГЛИНЯНЫЙ;
-- ВОПРЕКИ СОВЕТУ government transfer;
-- ПО ОКОНЧАНИИ after-event transfer.
+Pairs, always trained both directions:
+- чтобы / что бы
+- тоже / то же
+- также / так же
+- причём / при чём
+- притом / при том
+- зато / за то
+- итак / и так
+- ввиду / в виду
+- вследствие / в следствие
+- насчёт / на счёт
+- вроде / в роде
+- вначале / в начале
+- сначала / с начала
+- назавтра / на завтра
 
-Manual content review: PASS 13/13.
+Important final editorial decisions:
+- ЗА ТО uses «Я проголосовал за то предложение, которое поддержала группа»;
+- В РОДЕ uses «Ошибка была в роде существительного...»;
+- reverse ВРОДЕ feedback contrasts with «ошибка в роде существительного»;
+- old artificial «в его роде было несколько художников» must never return.
 
-Before promotion, Wave 5 separately passed:
-- 93-card candidate build;
-- schema/content validation;
-- coverage audit;
-- P0/P1 uncovered = 0;
-- learner-safe runtime;
-- T123 chunking;
-- standalone package;
-- Chromium preview.
-
-CURRENT PRACTICE CONFIGURATION
+CURRENT PRACTICE
 
 Manifest:
 119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json
 
-Current counts:
-- raw registered items: 95;
-- disabled historical items: 2;
-- active learner cards: 93.
-
-Current layers:
-- source corrections: 132 / 134;
-- course-grade audited fixes: 131;
-- learner-feedback polish: 136;
-- reviewed Wave 5: 140.
+Raw registered practice items: 123
+Disabled historical items: 2
+CURRENT ACTIVE CARDS: 121
 
 Current builder:
 build/build_russian_exceptions_practice_course_grade.py
 
-The builder fails closed if required audited/polish targets or replacements disappear.
+Central fail-closed layers:
+- overlay 131 original audit corrections;
+- overlay 136 learner polish;
+- overlay 145 Wave 6 review if Wave 6 is active.
+
+Wave 6 is allowed into current only when all 28 active IDs exactly match the 28 reviewed IDs and exactly the three approved editorial patches are applied.
 
 CURRENT COVERAGE
 
-Canonical source exception/special-case items: 127.
-Practice-covered exception IDs: 74.
-Uncovered source IDs: 53.
-P0/P1 uncovered: 0.
+Source exception/special-case items: 127
+Covered exception IDs: 88
+Uncovered source IDs: 39
+P0/P1 uncovered: 0
+Remaining uncovered priority: P2 = 39
+Coverage ratio: 0.6929
 
-Do not interpret the remaining 53 as missed launch-critical errors. They are lower-priority P2/P3 source material and should be expanded deliberately in later waves.
+The remaining 39 are NOT silent launch-critical omissions. They are deliberate lower-priority expansion backlog.
 
-CRITICAL CURRENT NORM DECISIONS
+CRITICAL NORM DECISIONS
 
-1. В КОНЦЕ КОНЦОВ
-Context-dependent. Do not teach a universal non-introductory rule.
+В КОНЦЕ КОНЦОВ — context-dependent.
+ЗАРЕВАТЬ / ЗАРЕВАЛ — current; ЗОРЕВАТЬ is historical only.
+КОВАНЫЙ / ЖЁВАНЫЙ — verb-derived adjectives, one Н; participial КОВАННЫЙ / ЖЁВАННЫЙ in relevant contexts = НН.
+КОЖАНЫЙ — -АН-, one Н; ДЕРЕВЯННЫЙ / ОЛОВЯННЫЙ / СТЕКЛЯННЫЙ = exception trio with НН.
+РАНЕНЫЙ / РАНЕННЫЙ — context/action distinction.
+СКАК-/СКОК-/СКАЧ-/СКОЧ- — fuller current model.
+ПО ПРИЕЗДЕ / ПО ОКОНЧАНИИ — after-event prepositional forms; no false universal dative ban.
 
-2. ЗАРЕВАТЬ
-Current form is ЗАРЕВАТЬ; past form transfer ЗАРЕВАЛ.
-Historical ЗОРЕВАТЬ is not an accepted current answer.
+CURRENT FINAL GATE
 
-3. N/NN
-Course-grade contrast includes:
-- кожаный — suffix -АН-, one Н;
-- деревянный / оловянный / стеклянный — НН exceptions;
-- кованый — кованный кузнецом;
-- жёваный — жёванный ребёнком/щенком;
-- раненый — раненный осколком;
-- названый брат — названный в честь;
-- посажёный отец — посаженный за стол;
-- ветреный / безветренный / ветряной.
+Workflow:
+.github/workflows/russian-exceptions-course-grade-gate.yml
 
-4. СКАК-/СКОК-/СКАЧ-/СКОЧ-
-Use the fuller current model. Do not restore the crude old mnemonic.
+There is now ONE main current gate; the redundant Wave 6 candidate job was removed after promotion.
 
-5. ПО ПРИЕЗДЕ / ПО ОКОНЧАНИИ
-In the meaning AFTER AN EVENT use the prepositional forms. Do not convert that into a false universal ban on every dative ПО-construction.
+Verified main-only run:
+31628404036
+Head:
+8b73620bb63e533c3f05a6814f488833c0bb1677
 
-DRABKINA METHOD MAP
+PASS:
+- source build;
+- 121-card course-grade practice build;
+- launch priority;
+- coverage;
+- explicit Wave 6 28-card / 14-pair / two-direction checks;
+- reviewed status / unique context checks;
+- old rejected learner wording absent;
+- runtime;
+- source-leak check;
+- aggregate core;
+- browser core;
+- package;
+- Chromium;
+- size audit.
 
-135-RUSSIAN-DRABKINA-METHOD-SOURCE-MAP.txt
+FINAL ARTIFACT REVIEW
 
-Key policy:
-- grade 10 -> orthography method;
-- grade 11 -> punctuation/syntax-facing method where relevant;
-- grades 5–9 -> topic-specific school tables/algorithms;
-- method provenance and current normative evidence are separate when necessary.
+Artifact from run 31628404036 was downloaded and manually inspected.
 
-LEARNER-FACING INTRO COPY
+Confirmed:
+- practice 121;
+- runtime practice 121;
+- runtime represented exception IDs 88;
+- Wave 6 cards 28;
+- Wave 6 pairs 14;
+- all canonical Wave 6 statuses reviewed;
+- all three final editorial fixes present;
+- all rejected Wave 6 wording absent;
+- old course-grade N/NN corrections still present;
+- В КОНЦЕ КОНЦОВ and ЗАРЕВАТЬ corrections still present;
+- forbidden internal provenance absent.
 
-Current source and generated preview contain the user-approved text:
+Runtime version:
+sha256-f9e11fa4416492d0e062
+
+Package:
+- 10 T123 total;
+- 5 runtime-data blocks;
+- largest block 34,757 bytes;
+- Chromium PASS.
+
+USER-APPROVED INTRO COPY
 
 «Здесь собраны исключения, трудные формы и похожие случаи, которые легко перепутать. Решайте самостоятельно, а то, что оказалось сложным, позже встретится снова в новом контексте.»
 
 «Как работает: сначала разбираемся, какое правило здесь действует, затем отвечаем самостоятельно. Сложные случаи и ошибки позже появятся снова — уже в других примерах.»
 
-CURRENT FULL MACHINE / BROWSER GATE
+TILDA / CURRENT EGE TRAINER
 
-GitHub Actions final current-93 run:
-31625710299
-Head used for successful gate:
-202c1484258146c047077b4e38cc93824056950d
-
-OVERALL: PASS.
-
-Passed:
-- canonical source: 127 items / 0 warnings;
-- current course-grade practice: 93 cards / 0 warnings;
-- launch priority;
-- coverage: P0/P1 uncovered = 0;
-- runtime: 74 exceptions / 93 practice / 6 topics;
-- forbidden learner-source leakage check;
-- Learning Engine aggregate validation;
-- browser core evaluator/state/selector tests;
-- T123 chunks: 4 data chunks;
-- package: 9 T123 total;
-- Chromium preview smoke;
-- runtime size audit.
-
-Generated runtime version:
-sha256-e2acf685bb659fd96971
-
-Largest T123 block:
-34,077 bytes.
-
-FINAL GENERATED-PAYLOAD REVIEW
-
-The successful artifact itself was opened and inspected after the gate.
-Confirmed:
-- 93 cards actually present;
-- Wave 5 IDs actually present;
-- corrected KОВАНЫЙ / ЖЁВАНЫЙ explanations still present;
-- corrected В КОНЦЕ КОНЦОВ and ЗАРЕВАТЬ still present;
-- 8 learner-feedback polish changes still present;
-- user-approved intro copy present in preview;
-- no Rosenthal / Gramota / Drabkina / source_refs / source_path / provenance / rule_ref leak in learner runtime.
-
-IMPORTANT BUILD FIXES MADE DURING THIS WORK
-
-1. Aggregate validator was corrected to use the course-grade practice builder, preventing an old builder from silently overwriting reviewed feedback.
-2. T123 chunk builder now normalizes project-relative custom paths safely and rejects output outside project root.
-3. Standalone package builder accepts an isolated runtime manifest/output path for candidate testing while preserving default current behavior.
-4. Browser core test no longer hard-codes the historical 80-card count; it reads expected_active_items from the current manifest and verifies runtime consistency.
-
-TILDA / PUBLICATION
-
-Live page:
-https://eksamio.ru/trenazhery/russkiy/isklyucheniya/
-
-Treat as TEST/PREVIEW ONLY.
-No current Tilda blocks were replaced by this branch.
-A validated 93-card package now exists as a build artifact, but do not publish it until the user explicitly moves to Tilda/testing/publication.
-
-CURRENT EGE TRAINER
-
-UNCHANGED.
-Storage namespaces remain separate.
-Main-trainer handoff remains HOLD.
+Tilda: unchanged.
+Live Exceptions page: TEST/PREVIEW only.
+Current EGE Russian trainer: unchanged.
+Standalone storage namespace: separate.
+Publication: HOLD.
+PR #23: draft/unmerged.
 
 NEXT ACTION
 
-1. Preserve current 93 as the P0-complete reviewed checkpoint.
-2. Select the next deliberate content wave from the remaining 53 P2/P3 source items based on pedagogical value, not raw count.
-3. For each next wave: source review -> Drabkina-style teaching unit -> original practice contexts -> manual item review -> isolated machine/Chromium gate -> only then promotion.
-4. Keep building reusable Explanation Bank units so the future Russian course can reuse the verified linguistic core.
-5. Tilda/public rollout remains a separate explicit step controlled by the user.
+Freeze current 121 as reviewed checkpoint.
+Choose next coherent P2 course module from remaining 39 cases by pedagogical value, not raw count.
+For every future wave repeat:
+source review -> Drabkina-style reusable teaching unit -> original transfer contexts -> manual item review -> isolated candidate gate -> generated-payload review -> promotion.
 
 CURRENT DECISION
 
 ORIGINAL 80/80 AUDIT: COMPLETE
-POST-AUDIT POLISH: APPLIED
-WAVE 5 REVIEW: PASS 13/13
-CURRENT ACTIVE PRACTICE: 93
-P0/P1 COVERAGE: COMPLETE
+WAVE 5: PASS 13/13
+WAVE 6 SOURCE: PASS 14/14 PAIRS
+WAVE 6 CARDS: PASS 28/28
+CURRENT ACTIVE: 121
+COVERAGE: 88/127
+P0/P1 UNCOVERED: 0
+REMAINING BACKLOG: 39 P2
 CURRENT MACHINE/CORE/CHROMIUM: PASS
-FINAL GENERATED PAYLOAD REVIEW: PASS
-LIVE TILDA: UNCHANGED / TEST-PREVIEW ONLY
-NEW TILDA PUBLICATION: HOLD
+FINAL PAYLOAD REVIEW: PASS
+TILDA: UNCHANGED / HOLD
 CURRENT EGE TRAINER: UNCHANGED
-MAIN-TRAINER INTEGRATION: HOLD
