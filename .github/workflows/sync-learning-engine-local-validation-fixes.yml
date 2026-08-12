@@ -1,0 +1,62 @@
+name: Sync Learning Engine Local Validation Fixes
+
+on:
+  push:
+    branches:
+      - chatgpt-sync-validation-fixes-20260812
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply exactly two validated technical fixes
+        shell: python
+        run: |
+          from pathlib import Path
+
+          validator = Path("eksamio-learning-engine/build/validate_russian_skill_graph_against_trainer.py")
+          text = validator.read_text(encoding="utf-8")
+          old = 'ITEM_ID_RE = re.compile(r"^ege-ru-(\\d{2})-(\\d{4})-(\\d{2})-(\\d{2})$")'
+          new = 'ITEM_ID_RE = re.compile(r"^ege-ru-(\\d{2})-(\\d{4})-(\\d{2})-(\\d{2,3})$")'
+          assert text.count(old) == 1, f"validator regex occurrence count={text.count(old)}"
+          validator.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          punctuation = Path("eksamio-learning-engine/41-RUSSIAN-EXPLANATION-PUNCTUATION-19-21-v0.1.json")
+          text = punctuation.read_text(encoding="utf-8")
+          assert text.count('"decision_tree"') == 1, f"decision_tree occurrence count={text.count(chr(34) + 'decision_tree' + chr(34))}"
+          punctuation.write_text(text.replace('"decision_tree":', '"algorithm":', 1), encoding="utf-8")
+
+      - name: Verify exact diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff --name-only)
+          printf '%s\n' "${changed[@]}"
+          expected1='eksamio-learning-engine/41-RUSSIAN-EXPLANATION-PUNCTUATION-19-21-v0.1.json'
+          expected2='eksamio-learning-engine/build/validate_russian_skill_graph_against_trainer.py'
+          test "${#changed[@]}" -eq 2
+          printf '%s\n' "${changed[@]}" | grep -Fx "$expected1"
+          printf '%s\n' "${changed[@]}" | grep -Fx "$expected2"
+          python -m json.tool eksamio-learning-engine/41-RUSSIAN-EXPLANATION-PUNCTUATION-19-21-v0.1.json >/dev/null
+          python -m py_compile eksamio-learning-engine/build/validate_russian_skill_graph_against_trainer.py
+
+      - name: Commit and push to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            eksamio-learning-engine/build/validate_russian_skill_graph_against_trainer.py \
+            eksamio-learning-engine/41-RUSSIAN-EXPLANATION-PUNCTUATION-19-21-v0.1.json
+          git commit -m "Sync Learning Engine local validation fixes"
+          git push origin HEAD:main
