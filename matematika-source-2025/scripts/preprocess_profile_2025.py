@@ -23,19 +23,22 @@ JOBS = [
 
 # Printed-page crop coordinates in PDF points. The generated asset is a direct
 # crop of the official PDF raster; no formula/text reconstruction is used.
+# For alternative official examples, y0 starts below the red structural label
+# "ИЛИ": the learner receives one already-assigned official condition, not a
+# visible choice between variants.
 CONDITION_CROPS = {
-    "1-1": (4, 155, 272), "1-2": (4, 272, 393), "1-3": (4, 393, 492), "1-4": (5, 52, 155),
-    "2-1": (5, 165, 337), "2-2": (5, 337, 415),
-    "3-1": (5, 420, 520), "3-2": (6, 52, 180), "3-3": (6, 180, 340),
-    "4-1": (6, 360, 420), "4-2": (6, 420, 515),
-    "5-1": (7, 52, 125), "5-2": (7, 125, 215),
-    "6-1": (7, 235, 290), "6-2": (7, 290, 370), "6-3": (7, 370, 440), "6-4": (7, 440, 515),
-    "7-1": (8, 52, 95), "7-2": (8, 100, 190), "7-3": (8, 190, 275),
-    "8-1": (8, 290, 465), "8-2": (9, 52, 315),
+    "1-1": (4, 155, 272), "1-2": (4, 295, 393), "1-3": (4, 415, 492), "1-4": (5, 75, 155),
+    "2-1": (5, 165, 337), "2-2": (5, 363, 415),
+    "3-1": (5, 420, 520), "3-2": (6, 75, 180), "3-3": (6, 207, 340),
+    "4-1": (6, 360, 420), "4-2": (6, 446, 515),
+    "5-1": (7, 52, 125), "5-2": (7, 150, 215),
+    "6-1": (7, 235, 290), "6-2": (7, 316, 370), "6-3": (7, 395, 440), "6-4": (7, 465, 515),
+    "7-1": (8, 52, 95), "7-2": (8, 130, 190), "7-3": (8, 225, 275),
+    "8-1": (8, 290, 465), "8-2": (9, 75, 315),
     "9-1": (9, 330, 485),
-    "10-1": (10, 52, 125), "10-2": (10, 125, 225), "10-3": (10, 225, 315),
+    "10-1": (10, 52, 125), "10-2": (10, 150, 225), "10-3": (10, 250, 315),
     "11-1": (10, 330, 545),
-    "12-1": (11, 52, 125), "12-2": (11, 130, 225), "12-3": (11, 225, 325),
+    "12-1": (11, 52, 125), "12-2": (11, 170, 225), "12-3": (11, 270, 325),
     "13-1": (12, 125, 205), "14-1": (12, 200, 300), "15-1": (12, 295, 350), "16-1": (12, 345, 590),
     "17-1": (13, 55, 145), "18-1": (13, 140, 240), "19-1": (13, 240, 390),
 }
@@ -123,7 +126,6 @@ def split_pdf(name: str, pdf_path: Path):
             crop = raster.crop((0, 0, raster_mid, raster.height) if half == "left" else (raster_mid, 0, raster.width, raster.height))
             words = buckets[half]
             text = "\n".join(group_words(words)).strip()
-            # The official files are imposed two-up. Ignore only the empty trailing half.
             if not text and physical_index == len(doc) and half == "right":
                 continue
 
@@ -154,8 +156,6 @@ def split_pdf(name: str, pdf_path: Path):
             })
 
     joined_text = "\n".join(source_text_parts)
-    # Only a standalone service label counts as a draft marker. Words such as
-    # "проектной" and "проектов" in the codifier are normal curricular text.
     standalone_project_marker = bool(re.search(r"(?mi)^\s*ПРОЕКТ\s*$", joined_text))
     checks = {
         "contains_2025": "2025" in joined_text,
@@ -201,7 +201,7 @@ def build_condition_assets():
             "example": key, "source_printed_page": page_no, "crop_y_pt": [y0_pt, y1_pt],
             "file": str(asset_path.relative_to(REPO)), "width_px": crop.width, "height_px": crop.height,
             "bytes": len(blob), "sha256": hashlib.sha256(blob).hexdigest(),
-            "source_mode": "direct official PDF raster crop; no reconstructed text/formula",
+            "source_mode": "direct official PDF raster crop; alternate structural OR label omitted from learner crop",
         })
 
     expected_total = sum(EXPECTED_VARIANT_COUNTS.values())
