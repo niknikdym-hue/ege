@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Current v10 aggregate local validation runner for Russian Learning Engine.
 
-Adds learner-state reducer synthetic tests to current corrected canonical/runtime,
-Skill Graph, explanation resolver, session selector, coverage/size and handoff checks.
+Validates current corrected canonical/runtime data, Skill Graph, explanation resolver,
+session/state logic, deterministic Exceptions T123 chunking, coverage/size and handoff checks.
 No network or production mutation.
 """
 
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -19,9 +20,10 @@ CHECKS = [
     ("EXPLANATION_RUNTIME", "build/build_russian_explanation_runtime.py"),
     ("EXPLANATION_RESOLVER_SYNTHETIC_TESTS", "build/tests/test_russian_explanation_resolver.py"),
     ("EXCEPTIONS_CURRENT_CORRECTED_V2", "build/build_russian_exceptions_bank_current_v2.py"),
-    ("EXCEPTIONS_PRACTICE_CURRENT_CORRECTED_72_V2", "build/build_russian_exceptions_practice_current_corrected_v2.py"),
+    ("EXCEPTIONS_PRACTICE_CURRENT_CORRECTED_V2", "build/build_russian_exceptions_practice_current_corrected_v2.py"),
     ("EXCEPTIONS_LAUNCH_PRIORITY", "build/build_russian_exceptions_launch_priority.py"),
     ("EXCEPTIONS_RUNTIME", "build/build_russian_exceptions_runtime.py"),
+    ("EXCEPTIONS_T123_CHUNKS", "build/build_russian_exceptions_t123_chunks.py"),
     ("EXCEPTIONS_PRACTICE_COVERAGE", "build/audit_russian_exceptions_practice_coverage.py"),
     ("RUNTIME_SIZE_AUDIT", "build/audit_russian_runtime_sizes.py"),
     ("SESSION_SELECTOR_SYNTHETIC_TESTS", "build/tests/test_russian_exceptions_session_selector.py"),
@@ -48,6 +50,7 @@ def write_summary(root: Path, rows: list[dict[str, object]]) -> Path:
     passed = all(int(row["exit_code"]) == 0 for row in rows)
     path = root / SUMMARY_REL
     path.parent.mkdir(parents=True, exist_ok=True)
+    practice_manifest = json.loads((root / "119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json").read_text(encoding="utf-8"))
     lines = [
         "EKSAMIO LEARNING ENGINE",
         "RUSSIAN LEARNING ENGINE — CURRENT V10 AGGREGATE VALIDATION",
@@ -57,7 +60,7 @@ def write_summary(root: Path, rows: list[dict[str, object]]) -> Path:
         f"CHECKS_TOTAL: {len(rows)}",
         "CURRENT_EXCEPTIONS_MANIFEST: 118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json",
         "CURRENT_PRACTICE_MANIFEST: 119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json",
-        "EXPECTED_ACTIVE_PRACTICE_ITEMS: 72",
+        f"EXPECTED_ACTIVE_PRACTICE_ITEMS: {practice_manifest['expected_active_items']}",
         "",
         "CHECKS",
     ]
@@ -88,6 +91,7 @@ def write_summary(root: Path, rows: list[dict[str, object]]) -> Path:
         "- build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json",
         "- build/RUSSIAN-EXCEPTIONS-LAUNCH-PRIORITY.json",
         "- build/RUSSIAN-EXCEPTIONS-RUNTIME.json",
+        "- build/RUSSIAN-EXCEPTIONS-T123-CHUNKS-MANIFEST.json",
         "- audits/RUSSIAN-EXCEPTIONS-PRACTICE-COVERAGE.json",
         "- audits/RUSSIAN-RUNTIME-SIZE-AUDIT.txt",
         "",
