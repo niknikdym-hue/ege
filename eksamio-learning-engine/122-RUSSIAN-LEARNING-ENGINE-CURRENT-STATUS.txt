@@ -133,7 +133,7 @@ CURRENT INDEPENDENT MAIN-SNAPSHOT PASS (2026-08-12):
 - active Exceptions Practice Bank after wave 4: 80 cards;
 - P0/P1 uncovered practice: 0;
 - standalone Exceptions Runtime: 73 enabled exceptions / 80 practice items;
-- deterministic T123 runtime chunks: 3; max chunk 34,875 UTF-8 bytes;
+- deterministic T123 runtime chunks after learner-safe reference enrichment: 4; max chunk 34,768 UTF-8 bytes;
 - production trainer unchanged.
 
 Current validated-package command after PASS:
@@ -143,13 +143,36 @@ IMPORTANT:
 A machine PASS is a SOURCE/DATA/RUNTIME checkpoint only.
 It does NOT authorize Tilda/public integration.
 
+STANDALONE PAGE IMPLEMENTATION
+
+Local standalone implementation now exists under `standalone-exceptions-trainer/`:
+- runtime chunk loader;
+- answer evaluators;
+- learner-state reducer/storage;
+- deterministic selector;
+- shell/CSS/renderer;
+- all-exceptions flow;
+- My Exceptions flow;
+- feedback + rule drawer;
+- session result + retry errors.
+
+Generated Tilda preview package:
+- 9 T123 blocks total;
+- 4 deterministic runtime-data blocks;
+- max block 34,768 UTF-8 bytes;
+- SEO/HEAD/INSTALLATION/PREVIEW/PACKAGE-MANIFEST;
+- TEST-RESULT written after preview gate PASS.
+
+Local Chromium preview gate: PASS.
+Current EGE trainer source tree hash remained unchanged.
+
 NEXT WORK ORDER
 
-1. P0/P1 practice closure is complete; keep P0/P1 uncovered at zero.
-2. Build the standalone Exceptions Trainer package against the validated 80-card runtime.
-3. Use deterministic data-only T123 chunking for Exceptions Runtime; keep every chunk below the project safety margin.
-4. Validate evaluators, learner state, selector and chunk integrity locally.
-5. Package one standalone Tilda preview set; do not publish or change the catalog yet.
+1. Keep P0/P1 uncovered practice at zero.
+2. Sync reviewed standalone source/build/preview-test files to GitHub main.
+3. Reproduce standalone preview PASS from a fresh main snapshot.
+4. Hand the generated standalone package to the user for Tilda preview/hidden test only.
+5. Perform Tilda-side mobile/reload/runtime smoke before any public publication.
 6. Catalog card remains a separate later package.
 7. Main EGE trainer handoff/explanation integration remains a later reversible phase.
 
@@ -160,5 +183,5 @@ EXPLANATIONS: 1–27 SOURCE COVERED
 EXCEPTIONS PRACTICE: 80 ACTIVE / P0-P1 COVERAGE CLOSED
 RUNTIME/DATA TOOLING: BUILT
 LOCAL MACHINE GATE: CURRENT V10
-PUBLIC PAGE: HOLD
+PUBLIC PAGE: LOCAL PREVIEW PASS / TILDA PREVIEW NEXT / PUBLICATION HOLD
 CURRENT TRAINER: UNCHANGED

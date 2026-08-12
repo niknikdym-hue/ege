@@ -1,0 +1,101 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — STANDALONE PREVIEW REVIEW
+
+STATUS: LOCAL PREVIEW PASS / READY FOR TILDA PREVIEW OR HIDDEN TEST PAGE
+DATE: 2026-08-12
+PUBLICATION: HOLD
+CATALOG CHANGE: HOLD
+CURRENT EGE TRAINER: UNCHANGED
+CODEX: NOT USED
+
+VALIDATED PRODUCT
+Future URL:
+/trenazhery/russkiy/isklyucheniya/
+
+Current active practice:
+80 cards
+
+Current enabled runtime:
+73 exception/special-case entries
+80 practice items
+6 learner topics
+
+Runtime content version:
+sha256-20a002b6248a78c7ab38
+
+TILDA PACKAGE
+Generated blocks: 9
+Runtime data blocks: 4
+Largest T123 block: 34,768 UTF-8 bytes
+Project package ceiling used by builder: 35,000 bytes
+Header/footer: separate
+SEO/canonical: evergreen, no year
+
+Generated package includes:
+- trenazhery-russkiy-isklyucheniya-SEO.txt
+- trenazhery-russkiy-isklyucheniya-HEAD.txt
+- trenazhery-russkiy-isklyucheniya-INSTALLATION.txt
+- trenazhery-russkiy-isklyucheniya-T123-01.txt ... T123-09.txt
+- trenazhery-russkiy-isklyucheniya-PREVIEW.html
+- trenazhery-russkiy-isklyucheniya-PACKAGE-MANIFEST.json
+- trenazhery-russkiy-isklyucheniya-TEST-RESULT.txt after preview gate PASS
+
+BROWSER-CORE RESULT
+PASS:
+- deterministic runtime chunk reconstruction;
+- fail closed on missing/duplicate/mixed-version chunks;
+- current response_kind evaluators;
+- orthographically significant Ё/Е, hyphenation and stress marker not over-normalized;
+- learner-state load/save contract;
+- corrupt/future state preserved rather than silently overwritten;
+- idempotent event reducer;
+- JavaScript selector parity with accepted Python selector;
+- no storage-key collision with current EGE Russian trainer.
+
+CHROMIUM PREVIEW RESULT
+PASS in real headless Chromium using the exact fully inline generated preview package.
+
+Interactive smoke covered:
+1. page boots to «Тренажёр исключений»;
+2. no false «Мои исключения» before a genuine personal problem exists;
+3. complete 10-card all-correct session;
+4. correct feedback and next navigation;
+5. rule drawer opens with learner-safe reference content;
+6. all-correct new material does not populate «Мои исключения»;
+7. wrong answer creates a personal unresolved item;
+8. result screen offers «Повторить ошибки»;
+9. «Мои исключения» shows the real personal error and targeted practice action;
+10. mobile 375x812 has no horizontal overflow;
+11. mobile «Завершить» remains a quiet secondary action rather than full-width primary CTA;
+12. corrupt saved state displays a warning, remains byte-for-byte untouched and anonymous training still works;
+13. removal of one runtime data chunk produces «Тренажёр не загрузился» and no fabricated question card.
+
+PACKAGE NAMESPACE SAFETY
+PASS:
+- standalone package does not contain current EGE trainer storage keys;
+- standalone package does not contain `#er-trainer` / `__erTrainerTest` namespace;
+- new JS is scoped through `EksamioRussianExceptions` and `#rex-trainer`.
+
+PRODUCTION REGRESSION BOUNDARY
+Independent directory hash comparison on the current EGE trainer source snapshot before/after standalone work:
+- files: 23 / 23
+- SHA-256 tree hash before: 2ae672764d34efd14ee11ee313a10d321d1fe9b095d1f8bdd31877c064175592
+- SHA-256 tree hash after:  2ae672764d34efd14ee11ee313a10d321d1fe9b095d1f8bdd31877c064175592
+
+Therefore standalone implementation has not modified the current EGE trainer source tree.
+
+GATE INTERPRETATION
+SOURCE/DATA/RUNTIME: PASS
+BROWSER CORE: PASS
+LOCAL STANDALONE PREVIEW: PASS
+TILDA PACKAGE BUILD: PASS
+READY FOR TILDA PREVIEW/HIDDEN TEST PAGE: YES
+READY FOR PUBLIC PUBLICATION: NO
+READY FOR /trenazhery/ CATALOG CHANGE: NO — separate rollout
+READY FOR MAIN EGE TRAINER HANDOFF: NO — separate later phase
+
+NEXT
+- sync reviewed standalone source/build/test files to GitHub main;
+- reproduce this preview PASS from a fresh current-main snapshot;
+- then the package may be handed to the user for Tilda preview/hidden test only;
+- public release requires Tilda-side smoke and explicit release decision.

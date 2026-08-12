@@ -1,0 +1,86 @@
+#rex-trainer.rex-app{--rex-bg:#f6f8fb;--rex-card:#fff;--rex-text:#172033;--rex-muted:#667085;--rex-line:#e4e9f1;--rex-blue:#246bfd;--rex-blue-dark:#174fc4;--rex-good:#147a50;--rex-good-bg:#eef9f4;--rex-bad:#b42318;--rex-bad-bg:#fff1f0;--rex-warn:#9a6700;--rex-radius:20px;--rex-shadow:0 14px 40px rgba(28,39,60,.08);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--rex-text);line-height:1.5;background:var(--rex-bg);padding:32px 18px 56px}
+#rex-trainer *{box-sizing:border-box}
+#rex-trainer .rex-shell{max-width:960px;margin:0 auto}
+#rex-trainer .rex-screen{display:block}
+#rex-trainer .rex-panel{background:var(--rex-card);border:1px solid var(--rex-line);border-radius:var(--rex-radius);box-shadow:var(--rex-shadow);padding:28px}
+#rex-trainer .rex-hero{padding:36px}
+#rex-trainer .rex-eyebrow{margin:0 0 8px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--rex-blue)}
+#rex-trainer h1,#rex-trainer h2,#rex-trainer h3{margin-top:0;line-height:1.15;color:var(--rex-text)}
+#rex-trainer h1{font-size:clamp(32px,5vw,54px);letter-spacing:-.04em;margin-bottom:16px}
+#rex-trainer h2{font-size:clamp(24px,3vw,34px);letter-spacing:-.025em}
+#rex-trainer h3{font-size:19px}
+#rex-trainer .rex-lead{font-size:18px;max-width:720px;color:#475467;margin:0 0 24px}
+#rex-trainer .rex-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+#rex-trainer .rex-button{appearance:none;border:0;border-radius:14px;padding:13px 18px;min-height:48px;font:inherit;font-weight:750;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+#rex-trainer .rex-button:focus-visible,#rex-trainer .rex-option:focus-visible,#rex-trainer .rex-input:focus-visible,#rex-trainer .rex-chip:focus-visible,#rex-trainer .rex-icon-button:focus-visible{outline:3px solid rgba(36,107,253,.28);outline-offset:2px}
+#rex-trainer .rex-button-primary{background:var(--rex-blue);color:#fff;box-shadow:0 8px 18px rgba(36,107,253,.22)}
+#rex-trainer .rex-button-primary:hover{background:var(--rex-blue-dark)}
+#rex-trainer .rex-button-secondary{background:#fff;color:var(--rex-text);border:1px solid #cfd6e2}
+#rex-trainer .rex-button-quiet{background:transparent;color:var(--rex-blue);padding-inline:8px}
+#rex-trainer .rex-button[disabled]{cursor:not-allowed;opacity:.5;box-shadow:none}
+#rex-trainer .rex-notice{margin:18px 0 0;border-radius:14px;padding:12px 14px;background:#fff7e8;color:#704a00;border:1px solid #f2d59a;font-size:14px}
+#rex-trainer .rex-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0 0}
+#rex-trainer .rex-stat{border:1px solid var(--rex-line);border-radius:16px;padding:16px;background:#fbfcfe}
+#rex-trainer .rex-stat-value{display:block;font-size:25px;font-weight:850;line-height:1.1}
+#rex-trainer .rex-stat-label{display:block;color:var(--rex-muted);font-size:13px;margin-top:5px}
+#rex-trainer .rex-topic-block{margin-top:24px}
+#rex-trainer .rex-topic-label{font-weight:750;margin-bottom:10px}
+#rex-trainer .rex-chips{display:flex;flex-wrap:wrap;gap:8px}
+#rex-trainer .rex-chip{border:1px solid #d8dee9;background:#fff;color:#344054;border-radius:999px;padding:9px 13px;font:inherit;cursor:pointer}
+#rex-trainer .rex-chip[aria-pressed="true"]{background:#eaf1ff;border-color:#9dbbff;color:#174ea6;font-weight:750}
+#rex-trainer .rex-method{margin-top:24px;padding:18px;border-radius:16px;background:#eef4ff;color:#344054}
+#rex-trainer .rex-method strong{color:#174ea6}
+#rex-trainer .rex-session-top{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:14px}
+#rex-trainer .rex-progress-wrap{flex:1}
+#rex-trainer .rex-progress-meta{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:var(--rex-muted);margin-bottom:7px}
+#rex-trainer .rex-progress{height:8px;background:#e7ebf2;border-radius:999px;overflow:hidden}
+#rex-trainer .rex-progress>span{display:block;height:100%;background:var(--rex-blue);border-radius:inherit;transition:width .2s ease}
+#rex-trainer .rex-card{padding:30px;margin-top:12px}
+#rex-trainer .rex-topic{font-size:13px;color:var(--rex-blue);font-weight:750;margin-bottom:10px}
+#rex-trainer .rex-prompt{font-size:22px;font-weight:750;line-height:1.4;margin:0 0 22px;white-space:pre-wrap}
+#rex-trainer .rex-options{display:grid;gap:10px;margin-bottom:20px}
+#rex-trainer .rex-option{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:1px solid #d7dde8;border-radius:14px;background:#fff;padding:13px 14px;font:inherit;color:var(--rex-text);cursor:pointer}
+#rex-trainer .rex-option:hover{border-color:#aebbd0;background:#fbfcff}
+#rex-trainer .rex-option[aria-pressed="true"]{border-color:var(--rex-blue);box-shadow:0 0 0 2px rgba(36,107,253,.12);background:#f5f8ff}
+#rex-trainer .rex-option[disabled]{cursor:default}
+#rex-trainer .rex-option-index{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:9px;background:#eef2f7;font-size:13px;font-weight:800}
+#rex-trainer .rex-input{display:block;width:100%;border:1px solid #cfd6e2;border-radius:14px;padding:14px 15px;font:inherit;font-size:18px;color:var(--rex-text);background:#fff;margin-bottom:18px}
+#rex-trainer .rex-feedback{border-radius:16px;padding:18px;margin-top:18px;border:1px solid transparent}
+#rex-trainer .rex-feedback-good{background:var(--rex-good-bg);border-color:#b7e4cf}
+#rex-trainer .rex-feedback-bad{background:var(--rex-bad-bg);border-color:#f1c5c1}
+#rex-trainer .rex-feedback-title{font-weight:850;margin-bottom:8px}
+#rex-trainer .rex-feedback-good .rex-feedback-title{color:var(--rex-good)}
+#rex-trainer .rex-feedback-bad .rex-feedback-title{color:var(--rex-bad)}
+#rex-trainer .rex-answer{font-weight:800;margin:6px 0}
+#rex-trainer .rex-feedback p{margin:6px 0}
+#rex-trainer .rex-card-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+#rex-trainer .rex-result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}
+#rex-trainer .rex-result-card{padding:18px;border-radius:16px;border:1px solid var(--rex-line);background:#fbfcfe}
+#rex-trainer .rex-result-card strong{display:block;font-size:28px}
+#rex-trainer .rex-result-card span{font-size:13px;color:var(--rex-muted)}
+#rex-trainer .rex-list{display:grid;gap:10px;margin-top:16px}
+#rex-trainer .rex-list-item{display:flex;gap:14px;align-items:center;justify-content:space-between;border:1px solid var(--rex-line);border-radius:15px;padding:14px 16px;background:#fff}
+#rex-trainer .rex-list-main{min-width:0}
+#rex-trainer .rex-list-title{font-weight:800;overflow-wrap:anywhere}
+#rex-trainer .rex-list-meta{color:var(--rex-muted);font-size:13px;margin-top:3px}
+#rex-trainer .rex-empty{padding:22px;border-radius:16px;background:#f7f9fc;color:#475467}
+#rex-trainer .rex-live{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#rex-trainer .rex-dialog{width:min(680px,calc(100vw - 28px));max-height:85vh;border:0;border-radius:20px;padding:0;box-shadow:0 22px 70px rgba(17,24,39,.24);color:var(--rex-text)}
+#rex-trainer .rex-dialog::backdrop{background:rgba(16,24,40,.42)}
+#rex-trainer .rex-dialog-card{padding:0;margin:0}
+#rex-trainer .rex-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 24px 12px}
+#rex-trainer .rex-dialog-head h2{margin:0;font-size:24px}
+#rex-trainer .rex-dialog-body{padding:8px 24px 20px;max-height:58vh;overflow:auto}
+#rex-trainer .rex-dialog-card>.rex-button{margin:0 24px 24px}
+#rex-trainer .rex-icon-button{border:0;background:#f1f3f7;border-radius:11px;width:40px;height:40px;font-size:25px;cursor:pointer;color:#344054}
+#rex-trainer .rex-reference{display:grid;gap:14px}
+#rex-trainer .rex-reference-row{border-top:1px solid var(--rex-line);padding-top:12px}
+#rex-trainer .rex-reference-row:first-child{border-top:0;padding-top:0}
+#rex-trainer .rex-reference-label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--rex-muted);font-weight:800;margin-bottom:4px}
+#rex-trainer .rex-reference-text{white-space:pre-wrap}
+#rex-trainer .rex-error-panel{border:1px solid #f0b7b2;background:#fff5f4;border-radius:18px;padding:24px}
+@media (max-width:700px){#rex-trainer.rex-app{padding:20px 12px 40px}#rex-trainer .rex-panel,#rex-trainer .rex-hero,#rex-trainer .rex-card{padding:20px}#rex-trainer h1{font-size:36px}#rex-trainer .rex-lead{font-size:16px}#rex-trainer .rex-stats,#rex-trainer .rex-result-grid{grid-template-columns:1fr}#rex-trainer .rex-session-top{align-items:flex-start;flex-direction:column}#rex-trainer .rex-session-top .rex-button{min-height:42px;padding:9px 12px}#rex-trainer .rex-prompt{font-size:20px}#rex-trainer .rex-actions,#rex-trainer .rex-card-actions{display:grid;grid-template-columns:1fr}#rex-trainer .rex-button{width:100%}#rex-trainer .rex-list-item{align-items:flex-start;flex-direction:column}#rex-trainer .rex-list-item .rex-button{width:auto}}
+@media (prefers-reduced-motion:reduce){#rex-trainer *{scroll-behavior:auto!important;transition:none!important}}
+#rex-trainer .rex-session-top>.rex-button{border:0;background:transparent;color:var(--rex-muted);box-shadow:none;min-height:40px;padding:8px 10px}
+#rex-trainer .rex-session-top>.rex-button:hover{background:#eef2f7;color:var(--rex-text)}
+@media (max-width:700px){#rex-trainer .rex-session-top>.rex-button{width:auto;align-self:flex-end}}

@@ -132,7 +132,7 @@ def main() -> int:
             topics.setdefault(topic_id, {"topic_id":topic_id,"label":label,"order":order})
             priority = priorities.get(exception_id)
             if priority is None: raise BuildError(f"{exception_id}: missing launch priority row")
-            runtime_exceptions[exception_id] = {
+            runtime_exception = {
                 "exception_id": exception_id,
                 "label": row.get("prompt_label") or row.get("canonical_form") or exception_id,
                 "topic_id": topic_id,
@@ -141,6 +141,13 @@ def main() -> int:
                 "launch_priority": priority.get("launch_priority"),
                 "status": "enabled",
             }
+            # Learner-safe reference fields for the standalone rule drawer.
+            # Provenance/source paths remain excluded from browser runtime.
+            for key in ("canonical_form", "why_exception", "memory_cue"):
+                value = row.get(key)
+                if value not in (None, "", [], {}):
+                    runtime_exception[key] = value
+            runtime_exceptions[exception_id] = runtime_exception
 
         orphan_practice = sorted(pid for pid, row in runtime_practice.items() if row["exception_id"] not in runtime_exceptions)
         if orphan_practice: raise BuildError(f"Enabled practice items without runtime exception: {orphan_practice[:10]}")

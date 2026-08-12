@@ -118,7 +118,7 @@ MEASURED CURRENT EXCEPTIONS RUNTIME:
 CURRENT STANDALONE DECISION:
 - use deterministic T123 JSON chunks for Exceptions Runtime;
 - chunks are data only;
-- validated builder output: 3 data-only T123 chunks; largest block 34,875 UTF-8 bytes INCLUDING the application/json wrapper;
+- validated current builder output after learner-safe rule-reference enrichment: 4 data-only T123 chunks; largest block 34,768 UTF-8 bytes INCLUDING the application/json wrapper;
 - hard project safety ceiling remains below the accepted ~42.5 KiB/block boundary;
 - every chunk carries the same content version, sequence index and expected chunk count;
 - bootstrap fails closed if a chunk is missing, duplicated or from another version.
@@ -275,7 +275,7 @@ CURRENT DECISION
 
 TILDA PACKAGE ARCHITECTURE: READY
 DATA DELIVERY METHOD: T123 DATA CHUNKS FOR STANDALONE EXCEPTIONS (MEASURED)
-STANDALONE CODING: DATA-LAYER ACTIVE AFTER MACHINE PASS; UI PACKAGE NEXT
+STANDALONE CODING: LOCAL UI/PREVIEW PACKAGE PASS; READY FOR TILDA PREVIEW/HIDDEN TEST ONLY
 CATALOG CHANGE: SEPARATE
 MAIN TRAINER CHANGE: HOLD
 CODEX: NOT REQUIRED FOR THIS PLAN

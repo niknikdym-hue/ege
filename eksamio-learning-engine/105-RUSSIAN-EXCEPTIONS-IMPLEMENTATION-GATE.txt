@@ -107,7 +107,21 @@ Required:
 [ ] rule drawer implemented;
 [ ] no fake exam timer/gamification clutter.
 
-Current status: IMPLEMENTATION NEXT.
+Current status: PASS LOCALLY.
+
+Implemented/validated:
+[x] standalone shell implemented;
+[x] mobile 375px layout smoke passed with no horizontal overflow;
+[x] keyboard/focus/native controls and aria-live behavior implemented;
+[x] correct/wrong feedback uses text/icon plus color, not color only;
+[x] empty/personal-state behavior implemented;
+[x] `Все исключения` flow passed Chromium smoke;
+[x] `Мои исключения` flow passed Chromium smoke after a genuine personal error;
+[x] session result + retry-errors flow passed Chromium smoke;
+[x] rule drawer passed Chromium smoke with learner-safe runtime reference content;
+[x] no timer/XP/coins/confetti clutter.
+
+Current status: PASS FOR LOCAL PREVIEW.
 
 GATE F — TILDA PACKAGING
 
@@ -123,7 +137,16 @@ Required:
 [ ] no dependency on current EGE trainer DOM/globals verified in final package;
 [ ] light Eksamio visual implementation reviewed.
 
-Current status: DATA DELIVERY PASS / PAGE PACKAGE PENDING.
+Additional package checks:
+[x] shell/code T123 blocks built and byte-audited;
+[x] installation/order file built;
+[x] SEO/HEAD files built with evergreen canonical;
+[x] local preview package built;
+[x] no current EGE trainer namespace/storage dependency in package;
+[x] Eksamio light scoped implementation reviewed locally.
+
+Current generated package: 9 T123 blocks, including 4 deterministic runtime-data blocks; largest block 34,768 UTF-8 bytes.
+Current status: PASS FOR TILDA PREVIEW PACKAGE.
 
 GATE G — REGRESSION / SAFETY
 
@@ -139,7 +162,15 @@ Required:
 [x] rollback plan exists;
 [ ] full standalone preview smoke/mobile/accessibility PASS.
 
-Current status: PARTIAL / PUBLICATION HOLD.
+Additional local regression checks:
+[x] reload/state behavior exercised at browser-core/preview level;
+[x] full generated preview Chromium smoke passed;
+[x] current EGE trainer 23-file tree hash unchanged across standalone work.
+[ ] actual Tilda preview/hidden-page smoke;
+[ ] public URL smoke after explicit publication decision;
+[ ] `/trenazhery/` catalog addition reviewed separately.
+
+Current status: LOCAL PASS / TILDA-SIDE REGRESSION PENDING / PUBLICATION HOLD.
 
 GATE H — OPTIONAL MAIN-TRAINER HANDOFF
 
