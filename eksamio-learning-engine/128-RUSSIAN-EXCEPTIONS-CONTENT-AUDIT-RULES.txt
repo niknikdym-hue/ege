@@ -1,0 +1,153 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — CONTENT AUDIT RULES
+DATE: 2026-08-12
+STATUS: MANDATORY PROJECT RULES
+
+PURPOSE
+
+These rules govern every learner-facing card, word, answer, explanation, rule, example, contrast and exception in the Russian Exceptions Trainer and any later reuse of this content in the Russian Learning Engine.
+
+1. NO INVENTED LINGUISTIC EXPLANATIONS
+
+Do not invent pedagogical meanings, pseudo-etymologies, memory stories or "intuitive" explanations that are not supported by an authoritative source.
+Do not replace a real language rule with an improvised explanation of "why the word feels like this".
+If a claim cannot be sourced, it is HOLD and must not enter the learner-facing runtime.
+
+2. SOURCE PRIORITY
+
+For orthography and punctuation:
+1) D. E. Rosenthal, project copy of «Справочник по русскому языку: орфография и пунктуация»;
+2) other authoritative books already stored in the project source folder;
+3) Gramota.ru when an authoritative dictionary/reference clarification is needed.
+
+For morphology, orthoepy, lexical norms, government and syntactic norms that are not covered by the project Rosenthal reference:
+1) authoritative books/dictionaries already stored in the project source folder;
+2) Gramota.ru;
+3) FIPI only for current exam facts, official task format, current lists, criteria and official exam constraints.
+
+Never attribute morphology, lexical norms, orthoepy or syntax to Rosenthal unless the exact project source actually supports that claim.
+
+3. EACH CARD MUST BE VERIFIED WORD BY WORD
+
+Audit every active practice card individually.
+For every card verify:
+- the exact word/form/punctuation case;
+- the correct answer;
+- the wording of the prompt;
+- the explanation shown after checking;
+- the rule applied;
+- all examples shown with the rule;
+- all stated exceptions;
+- any contrast pair;
+- whether the prompt and expected answer are mechanically compatible;
+- whether the explanation teaches a valid general rule rather than a one-off invented story.
+
+No card receives PASS because a related rule is generally familiar.
+
+4. LEARNER-FACING EXPLANATION STANDARD
+
+Preferred structure:
+RULE -> APPLICATION TO THIS WORD/CASE -> 2-3 NORMAL EXAMPLES -> EXCEPTION/CONTRAST WHEN RELEVANT.
+
+Example style for Н/НН:
+- name the part of speech / formation if relevant;
+- identify the suffix or grammatical condition;
+- state the actual rule;
+- apply it to the current word;
+- give normal comparable examples;
+- list established exceptions where relevant.
+
+Do not use artificial "meanings", forced mnemonics or invented semantic rationalizations as the primary explanation.
+
+5. STATUS PER CARD
+
+PASS:
+- answer and explanation are fully supported by authoritative sources;
+- learner wording is clear and accurate;
+- examples and exceptions are correct;
+- no unsupported attribution.
+
+FIX:
+- the underlying language fact is valid but the prompt, answer contract, explanation, examples, wording or attribution must be corrected.
+
+HOLD:
+- authoritative confirmation is missing;
+- sources disagree materially;
+- the card is ambiguous or overgeneralized;
+- the expected answer depends on a non-universal rule;
+- the card cannot be made unambiguous without replacing it.
+
+FAIL/REPLACE:
+- the card teaches an incorrect rule or answer;
+- the explanation contradicts authoritative sources;
+- the card encodes a false universalization.
+
+6. KNOWN FAIL EXAMPLE — «В КОНЦЕ КОНЦОВ»
+
+Do not teach «в конце концов» as universally non-introductory.
+The project Rosenthal source distinguishes context-dependent use: it may function as an introductory expression in a conclusion/result-of-reasoning sense and may be non-introductory in other meanings such as final temporal/result meaning.
+Any learner card must preserve the contextual distinction or be removed.
+
+7. KNOWN EXPLANATION QUALITY EXAMPLE — «КОЖАНЫЙ»
+
+Do not explain the spelling with an invented semantic story.
+Use the actual school rule: adjective formation, suffix -ан-, one Н, then comparable examples and relevant exceptions/contrasts.
+The learner must see a real rule and examples, not an improvised meaning.
+
+8. SOURCE VISIBILITY IN LEARNER UI
+
+Learners MUST NOT see:
+- «Розенталь»;
+- Gramota.ru;
+- names of project books;
+- paragraph/page/section references;
+- rule_ref;
+- provenance;
+- internal source paths;
+- non-FIPI source URLs;
+- audit/status labels.
+
+These sources remain internal only.
+
+FIPI is the only source that may be shown to the learner, and only when it is genuinely useful as the official exam source for current exam format, criteria, official lists or constraints.
+
+9. PUBLIC RUNTIME SAFETY
+
+Non-FIPI source names/references must not merely be hidden by the renderer; they should be excluded from the public runtime payload where possible.
+Build/test tooling must fail if learner-facing payload contains forbidden source labels/URLs.
+Internal provenance remains preserved in source/audit data.
+
+10. AUDIT SCOPE — CURRENT BANK
+
+Current active practice bank: 80 cards.
+Audit ALL 80 cards.
+No sampling.
+No "representative" checking.
+No assumption that an earlier machine PASS validates linguistic correctness.
+Machine PASS validates structure/contracts; editorial/source PASS is separate.
+
+11. CURRENT AUDIT GROUPING
+
+For completeness, current cards are being audited by linguistic group, including:
+- alternating roots;
+- Н/НН;
+- introductory/non-introductory constructions;
+- solid/separate spelling;
+- noun forms;
+- paronyms;
+- syntactic norms/government;
+- stress/orthoepy;
+- punctuation;
+- prefixes and other orthographic special cases.
+
+The grouping is only a work-order device. Final status is still per individual card.
+
+12. RELEASE RULE
+
+No updated Tilda package is final until:
+- all 80 active cards have an explicit PASS/FIX/HOLD/REPLACE audit result;
+- every FIX/REPLACE entering runtime has been rechecked against source;
+- HOLD cards are excluded from learner-facing runtime;
+- the regenerated runtime/package passes machine and browser gates again.
+
+CURRENT PUBLIC TILDA PAGE MUST BE TREATED AS TEST/PREVIEW CONTENT UNTIL THIS SOURCE AUDIT IS COMPLETE.
