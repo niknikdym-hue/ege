@@ -72,6 +72,40 @@ def classify(row: dict) -> dict:
             note='Class route follows Drabkina grade 6. Learner norm is current ЗАРЕВАТЬ; obsolete textbook exception ЗОРЕВАТЬ must remain disabled.',
         ))
 
+    # Direct Drabkina grade-6 final control/test includes the normative noun form
+    # «килограмм помидоров». This proves grade-6 route membership; it does not by
+    # itself prove that grade 6 is the first-ever teaching stage for this form.
+    if eid == 'morph_pomidor_genitive_plural':
+        return _with_route_classes(v1.route(
+            None, status='route_class_verified_first_study_pending',
+            basis=['6: Драбкина, итоговый контроль: нормативное сочетание КИЛОГРАММ ПОМИДОРОВ'],
+            denominator='candidate_include',
+            note='Grade-6 route membership is direct. Exact earlier first-study class remains pending.',
+        ), extra=[6])
+
+    # Direct Drabkina grade-7 final control tests after-event ПО-constructions:
+    # «по приезду в Венецию» and «по завершению работ» are error targets.
+    # This proves grade-7 route membership for the current ПО ПРИЕЗДЕ / ПО ПРИБЫТИИ /
+    # ПО ОКОНЧАНИИ family, without claiming grade 7 is necessarily first study.
+    if eid == 'syntax_po_after_event_forms':
+        return _with_route_classes(v1.route(
+            None, status='route_class_verified_first_study_pending',
+            basis=['7: Драбкина, итоговый контроль: ошибки ПО ПРИЕЗДУ В ВЕНЕЦИЮ / ПО ЗАВЕРШЕНИЮ РАБОТ'],
+            denominator='candidate_include',
+            note='Grade-7 route membership is direct; current context-sensitive norm remains unchanged. Exact earlier first-study class remains pending.',
+        ), extra=[7])
+
+    # Direct Drabkina grade-7 final control includes the deliberately wrong stress
+    # «брАла», confirming the feminine-past stress family as a grade-7 route target.
+    # The current bank cluster is broader, so keep family-level locator pending.
+    if eid == 'stress_feminine_past_cluster':
+        return _with_route_classes(v1.route(
+            None, status='family_route_verified_item_locator_pending',
+            basis=['7: Драбкина, итоговый контроль: БРАЛА tested via erroneous stress БРА́ЛА; normative БРАЛА́'],
+            denominator='candidate_include',
+            note='Grade-7 route membership is verified for the family through БРАЛА; exact occurrence of every member of the current cluster remains pending.',
+        ), extra=[7])
+
     # Direct Drabkina grade-10 project practical confirms these exact suffix cases as
     # part of the grade-10 route, but the earlier first-study grade has not yet been
     # established from the 5-9 Drabkina vertical. Keep first_studied_class null.
@@ -129,7 +163,7 @@ def main() -> None:
     exact_pending = [x['exception_id'] for x in mapped if x['denominator_policy'] == 'pending_source']
 
     output = {
-        'schema_version': '0.2.0',
+        'schema_version': '0.2.1',
         'subject': 'russian',
         'purpose': 'current_127_canonical_items_to_drabkina_class_route_inventory',
         'status': 'complete_inventory_partial_class_verification',
@@ -191,6 +225,9 @@ def main() -> None:
         '- grade 6: ПЛАВ-/ПЛОВ- + ПЛОВЕЦ/ПЛОВЧИХА (ПЛЫВУНЫ family routed; exact item occurrence still pending);',
         '- grade 6: ТВАР-/ТВОР- + УТВАРЬ;',
         '- grade 6: ЗАР-/ЗОР- family; current learner form remains ЗАРЕВАТЬ;',
+        '- grade 6 route: ПОМИДОРОВ; earlier first-study class pending;',
+        '- grade 7 route: after-event ПО-constructions such as ПО ПРИЕЗДЕ / ПО ОКОНЧАНИИ; earlier first-study class pending;',
+        '- grade 7 route: feminine-past stress family via direct БРАЛА test; exact occurrence of all cluster members pending;',
         '- grade 10 route: МИЛОСТИВЫЙ/ЮРОДИВЫЙ; earlier first-study class pending;',
         '- grade 10 route: ЗАСТРЕВАТЬ/ЗАТМЕВАТЬ/ПРОДЛЕВАТЬ; earlier first-study class pending.',
         '',
