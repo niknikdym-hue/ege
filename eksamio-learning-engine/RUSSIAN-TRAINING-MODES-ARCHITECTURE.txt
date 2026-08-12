@@ -55,6 +55,7 @@ A knowledge item is stored once and may have routing metadata such as:
 - subtopic;
 - rule / exception / difficult case / contrast;
 - first_studied_class;
+- route_classes;
 - reinforcement_classes;
 - oge_relevance;
 - ege_relevance;
@@ -67,9 +68,34 @@ A knowledge item is stored once and may have routing metadata such as:
 Cards/questions are evidence and practice for a knowledge item. They are NOT the denominator of programme coverage.
 One item may require two contexts; another may require five or more.
 
+FIRST-STUDIED CLASS VS CLASS-ROUTE MEMBERSHIP
+
+These are deliberately DIFFERENT fields.
+
+`first_studied_class` answers:
+- where this underlying school knowledge is first introduced in the verified Drabkina vertical, when that first-study point is established.
+
+`route_classes` answers:
+- in which Drabkina class routes this knowledge is actually taught, practised, repeated or systematized and therefore belongs to that class-mode training set.
+
+`reinforcement_classes` is the subset of later `route_classes` where the item is repeated/systematized after first study.
+
+Example principle:
+- a rule first studied in grade 6 can legitimately belong to the grade-10 Drabkina route because grade 10 systematizes it for EGE preparation;
+- grade-10 mode must therefore include that knowledge even though `first_studied_class = 6`;
+- do NOT create a duplicate grade-10 knowledge item.
+
+If the exact first-study class is not yet established but a specific Drabkina class book explicitly contains the case, keep:
+- `first_studied_class = null`;
+- the confirmed class in `route_classes`;
+- source status showing that earlier provenance is still pending.
+
 CLASS MODE
 
 When a learner selects a class, the system loads the knowledge route appropriate to that class according to Drabkina.
+The class-mode denominator is built from the verified `route_classes` membership for that selected class, after the full master map has been completed and deduplicated.
+It is NOT built only from `first_studied_class`.
+
 The route may use earlier-class material as prerequisites or spaced review when needed, but the selected class remains the visible goal/context.
 
 Example:
@@ -120,6 +146,8 @@ or
 Сегодня: 10 из 10»
 
 The denominator is the full knowledge set of the selected mode (and, when a topic filter is intentionally selected, the relevant route/filter context), NOT the number of cards already seen.
+
+For a class mode, the denominator is based on the full verified Drabkina route membership for that class (`route_classes`), not only on items first introduced in that class.
 
 Different modes can therefore legitimately show different progress for the same learner.
 Example:
