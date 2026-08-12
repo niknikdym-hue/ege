@@ -1,0 +1,75 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — FRESH MAIN VERIFICATION
+
+STATUS: PASS
+DATE: 2026-08-12
+VERIFIED_MAIN_COMMIT: d663ade86763452212e588f835d51bf457f7e0a7
+PUBLICATION: HOLD
+CATALOG CHANGE: HOLD
+CURRENT EGE TRAINER: UNCHANGED
+CODEX: NOT USED
+
+PURPOSE
+
+Reproduce the standalone Exceptions Trainer source/data/runtime/package/browser PASS from a fresh GitHub main snapshot after the reviewed source package was committed atomically to main.
+
+RESULT
+
+Fresh snapshot aggregate:
+- Learning Engine CURRENT v10: PASS;
+- Skill Graph vs current trainer: 174/174 cards, 0 warnings;
+- Explanation Bank: 72 units / tasks 1–27;
+- Exceptions Bank: 127 source items;
+- active Exceptions Practice Bank: 80 cards;
+- P0/P1 uncovered practice: 0;
+- exact error->exception handoff validation: PASS;
+- browser core runtime/evaluator/state/selector parity: PASS.
+
+Standalone runtime/package:
+- enabled runtime exceptions: 73;
+- enabled practice items: 80;
+- learner topics: 6;
+- content version: sha256-20a002b6248a78c7ab38;
+- deterministic runtime T123 data chunks: 4;
+- largest runtime data block: 34,768 UTF-8 bytes;
+- full generated Tilda package: 9 T123 blocks;
+- package build: PASS.
+
+Fresh-snapshot Chromium smoke:
+PASS.
+Covered:
+- page boot;
+- complete 10-card session;
+- rule drawer;
+- correct/wrong feedback;
+- genuine personal-error creation;
+- My Exceptions targeted flow;
+- retry errors;
+- 375x812 mobile overflow check;
+- corrupt learner-state preservation/fallback;
+- fail-closed behavior when one runtime chunk is removed.
+
+REPRODUCTION COMMAND
+
+`python3 build/run_russian_exceptions_standalone_preview_validation.py`
+
+INTERPRETATION
+
+This is no longer only a local pre-sync result: the reviewed standalone source currently stored in GitHub main reproduces the full local preview PASS from a fresh repository snapshot.
+
+READY:
+- one local Learning Engine checkpoint archive for the user's `exam-platform-tilda` workspace;
+- standalone package inside `build/standalone-exceptions-tilda/` for Tilda preview/hidden test only.
+
+NOT AUTHORIZED YET:
+- public publication;
+- `/trenazhery/` catalog card;
+- main EGE trainer handoff/integration.
+
+NEXT
+
+1. Give the user one checkpoint ZIP containing the current `eksamio-learning-engine` snapshot and generated standalone Tilda preview package.
+2. Tilda preview/hidden-page smoke on real Tilda.
+3. Only after that smoke: explicit public-release decision.
+4. Catalog update remains a separate rollout.
+5. Main EGE trainer handoff remains a later reversible phase.
