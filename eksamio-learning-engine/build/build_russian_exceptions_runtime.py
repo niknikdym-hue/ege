@@ -29,6 +29,38 @@ class BuildError(RuntimeError):
     pass
 
 
+FORBIDDEN_PUBLIC_SOURCE_KEYS = {
+    "rule_ref", "provenance", "source_ref", "source_refs", "source_file",
+    "source_files", "source_path", "source_type", "source_locator", "citation",
+}
+FORBIDDEN_PUBLIC_SOURCE_MARKERS = (
+    "розенталь", "gramota.ru", "грамота.ру", "ушаков", "сычева", "драбкина",
+    "рогалева", "http://", "https://", "www.",
+)
+
+
+def validate_public_payload_no_hidden_sources(value: Any, path: str = "$") -> None:
+    """Fail build if non-FIPI source metadata/text leaks into learner runtime."""
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if key in FORBIDDEN_PUBLIC_SOURCE_KEYS:
+                raise BuildError(f"Forbidden learner-facing source field at {path}.{key}")
+            validate_public_payload_no_hidden_sources(child, f"{path}.{key}")
+        return
+    if isinstance(value, list):
+        for idx, child in enumerate(value):
+            validate_public_payload_no_hidden_sources(child, f"{path}[{idx}]")
+        return
+    if isinstance(value, str):
+        low = value.casefold()
+        # FIPI references may be deliberately learner-facing in future official-exam contexts.
+        if "фипи" in low or "fipi.ru" in low:
+            return
+        for marker in FORBIDDEN_PUBLIC_SOURCE_MARKERS:
+            if marker in low:
+                raise BuildError(f"Forbidden learner-facing source marker {marker!r} at {path}")
+
+
 def load_json(path: Path) -> Any:
     try:
         with path.open("r", encoding="utf-8") as fh:
@@ -54,7 +86,7 @@ def topic_for(exception: dict[str, Any]) -> tuple[str, str, int]:
 def compact_feedback(feedback: Any) -> dict[str, Any]:
     if not isinstance(feedback, dict):
         raise BuildError("Practice feedback must be object")
-    allowed = ("correct_answer", "why", "rule_ref", "explanation_id", "exception_contrast_ids", "next_action")
+    allowed = ("correct_answer", "why", "explanation_id", "exception_contrast_ids", "next_action")
     return {key: feedback[key] for key in allowed if key in feedback}
 
 
@@ -137,7 +169,6 @@ def main() -> int:
                 "label": row.get("prompt_label") or row.get("canonical_form") or exception_id,
                 "topic_id": topic_id,
                 "practice_item_ids": practice_ids,
-                "rule_ref": row.get("rule_ref"),
                 "launch_priority": priority.get("launch_priority"),
                 "status": "enabled",
             }
@@ -171,6 +202,7 @@ def main() -> int:
                 "production_integration":"not_connected"
             }
         }
+        validate_public_payload_no_hidden_sources(payload)
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(payload, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
         print(f"PASS: runtime exceptions={len(runtime_exceptions)}, practice={len(runtime_practice)}, topics={len(topics)}, version={version}")
