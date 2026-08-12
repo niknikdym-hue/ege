@@ -1,0 +1,182 @@
+EKSAMIO LEARNING ENGINE
+NEW CHAT HANDOFF — RUSSIAN EXCEPTIONS TRAINER
+DATE: 2026-08-12
+STATUS: ACTIVE WORK / CONTENT SOURCE AUDIT IN PROGRESS
+
+READ FIRST
+
+1. 122-RUSSIAN-LEARNING-ENGINE-CURRENT-STATUS.txt
+2. 128-RUSSIAN-EXCEPTIONS-CONTENT-AUDIT-RULES.txt
+3. this file
+
+PROJECT
+
+Repository:
+https://github.com/niknikdym-hue/ege
+
+Working root:
+eksamio-learning-engine/
+
+Current user local root:
+exam-platform-tilda/eksamio-learning-engine/
+
+Live Tilda test page:
+https://eksamio.ru/trenazhery/russkiy/isklyucheniya/
+
+IMPORTANT: the live page is currently TEST/PREVIEW and must NOT be treated as content-approved until the full 80-card source audit is completed and a corrected package is rebuilt.
+
+CURRENT TECHNICAL BASELINE
+
+- current EGE Russian trainer remains frozen/unchanged;
+- standalone Exceptions Trainer exists separately;
+- Learning Engine machine gate previously PASS;
+- browser core PASS;
+- Chromium preview PASS;
+- learner state/storage namespace separate from current EGE trainer;
+- standalone page currently uses T123/runtime architecture;
+- main-trainer handoff remains HOLD;
+- catalog/public rollout remains HOLD.
+
+LATEST PUBLIC-RUNTIME SAFETY CHANGE
+
+Student-facing UI must never show non-FIPI source references.
+Forbidden in learner UI/runtime:
+- Rosenthal name;
+- Gramota.ru;
+- project book names;
+- paragraph/page references;
+- rule_ref;
+- provenance;
+- source paths;
+- non-FIPI source URLs.
+
+FIPI may be shown only when genuinely relevant as the official current exam source.
+
+The runtime builder was changed to remove internal rule/source references from public payload and to fail on forbidden non-FIPI source leakage.
+After that change the generated package became smaller:
+- 8 T123 blocks total;
+- 3 runtime data blocks.
+The preview test was updated to validate the actual package manifest rather than hard-code the old 9/4 package shape.
+
+DO NOT ASK THE USER TO REUPLOAD TILDA YET.
+Wait until the full linguistic/source audit and corrections are complete, then provide one corrected package.
+
+MANDATORY CONTENT POLICY
+
+The user explicitly requires:
+- NO invented linguistic explanations;
+- NO improvised semantic stories;
+- NO "smart" rationalizations;
+- real rules + examples + exceptions/contrasts;
+- every word and every card checked against authoritative sources.
+
+Source order:
+For orthography/punctuation:
+1. project Rosenthal reference;
+2. other authoritative books in project source folder;
+3. Gramota.ru where needed.
+
+For morphology/orthoepy/lexical norms/government/syntax not actually covered by the Rosenthal project copy:
+1. authoritative project books/dictionaries;
+2. Gramota.ru;
+3. FIPI for official exam facts/formats/lists/criteria/constraints.
+
+If not confirmed: HOLD, not PASS.
+
+CURRENT CONTENT AUDIT
+
+Scope: ALL 80 active practice cards.
+No sampling.
+Each card must receive explicit:
+PASS / FIX / HOLD / FAIL-REPLACE.
+
+Each card check includes:
+- exact word/form/case;
+- correct answer;
+- prompt wording;
+- explanation;
+- actual rule;
+- examples;
+- exceptions;
+- contrasts;
+- prompt/answer mechanical compatibility;
+- source attribution accuracy.
+
+Preferred learner explanation format:
+RULE -> APPLICATION TO THIS WORD/CASE -> 2-3 NORMAL EXAMPLES -> EXCEPTION/CONTRAST WHEN RELEVANT.
+
+CURRENT AUDIT GROUPING
+
+The 80 cards have been grouped for complete review, including:
+- alternating roots;
+- Н/НН;
+- introductory/non-introductory constructions;
+- solid/separate spelling;
+- noun forms;
+- paronyms;
+- syntactic norms/government;
+- stress/orthoepy;
+- punctuation;
+- prefixes and other orthographic special cases.
+
+KNOWN CONTENT FAIL #1 — «В КОНЦЕ КОНЦОВ»
+
+The current/previous card teaching «в конце концов» as universally non-introductory is WRONG.
+The project Rosenthal source distinguishes context-dependent use.
+The corrected card must teach the distinction by context or be replaced.
+Do not preserve the old universal statement.
+
+KNOWN CONTENT QUALITY FAIL #2 — «КОЖАНЫЙ»
+
+The current explanation was rejected by the user because it used a forced/invented semantic rationale.
+Replace with the actual rule:
+- adjective formation;
+- suffix -ан-;
+- one Н;
+- normal comparable examples;
+- relevant exceptions/contrasts.
+No invented meaning story.
+
+SYSTEMIC SOURCE-ATTRIBUTION PROBLEM FOUND
+
+Some internal entries used vague/false labels such as:
+"Rosenthal: morphological norms",
+"Rosenthal: lexical norms",
+"Rosenthal: syntactic norms".
+
+The project Rosenthal copy is «Справочник по русскому языку: орфография и пунктуация».
+Do not attribute unrelated norm areas to Rosenthal unless the exact text actually supports them.
+Re-source those cards to the appropriate authoritative project book/dictionary/Gramota.ru.
+
+CURRENT NEXT ACTION — START HERE IN NEW CHAT
+
+1. Continue the 80/80 card source audit from the current active bank.
+2. Produce a per-card audit table/file with PASS/FIX/HOLD/REPLACE and source evidence.
+3. Correct every FIX/REPLACE using source-backed rule text and examples.
+4. Exclude HOLD cards from learner runtime until resolved.
+5. Rebuild canonical practice/runtime.
+6. Re-run machine gate + browser/Chromium preview.
+7. Only then create ONE corrected Tilda package for the user.
+8. Do not ask the user to repeatedly replace T123 blocks during the audit.
+
+CODEX POLICY
+
+Do not use Codex for routine content/source audit or small repository edits.
+Use Codex only if a genuinely large local execution/testing task later justifies the quota.
+
+COMMUNICATION
+
+Russian.
+Direct execution.
+Do not ask the user to repeat already known project context.
+Do not claim PASS based only on machine validation when the linguistic/source audit is incomplete.
+Do not publish or authorize the current Exceptions Trainer content until 80/80 editorial/source review is complete.
+
+CURRENT DECISION
+
+TECHNICAL STANDALONE BASE: PASS
+LINGUISTIC/SOURCE CONTENT: RE-AUDIT REQUIRED 80/80
+LIVE TILDA PAGE: TEST/PREVIEW ONLY
+NEW TILDA PACKAGE: DO NOT ISSUE UNTIL CONTENT AUDIT COMPLETE
+CURRENT EGE TRAINER: UNCHANGED
+MAIN-TRAINER INTEGRATION: HOLD
