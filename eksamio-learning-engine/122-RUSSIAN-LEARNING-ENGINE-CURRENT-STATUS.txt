@@ -2,13 +2,14 @@ EKSAMIO LEARNING ENGINE
 RUSSIAN PILOT — CURRENT STATUS
 DATE: 2026-08-12
 READ AFTER: 00-WORK-STATUS.txt and 00A-WORK-STATUS-CURRENT-ADDENDUM.txt
+LATEST MILESTONE: 127-RUSSIAN-EXCEPTIONS-FRESH-MAIN-VERIFICATION.txt
 
 CURRENT PRODUCT SAFETY
 
 CURRENT EGE RUSSIAN TRAINER: FROZEN / UNCHANGED
 CURRENT EGE DEMO: UNCHANGED
-T123/JS/CSS/HTML/ANSWERS/SCORING/LOCALSTORAGE: UNCHANGED
-PUBLIC EXCEPTIONS TRAINER: NOT CREATED
+CURRENT TRAINER T123/JS/CSS/HTML/ANSWERS/SCORING/LOCALSTORAGE: UNCHANGED
+PUBLIC EXCEPTIONS TRAINER: NOT PUBLISHED
 PRODUCTION INTEGRATION: HOLD
 CODEX USED FOR CURRENT WORK: NO
 
@@ -23,165 +24,170 @@ EXPLANATION LAYER
 - resolver synthetic tests cover exact/partial/fallback/demo/control behavior;
 - external explanation never owns current trainer answer or score.
 
-EXCEPTIONS SOURCE LAYER
+EXCEPTIONS SOURCE / PRACTICE
 
-Historical master checkpoint:
-- 83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json
-
-CURRENT corrected source manifest:
+CURRENT source manifest:
 - 118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json
 
-Current correction:
-- superseded `introductory_v_kontse_kontsov_dual_function` disabled;
-- replacement `false_introductory_v_kontse_kontsov` added in file 116;
-- earlier source history remains preserved rather than rewritten.
-
-EXCEPTIONS PRACTICE
-
-Historical waves:
-- 92 wave 1: 24 cards
-- 96 wave 2: 24 cards
-- 98 wave 3: 24 cards
-
-CURRENT corrected practice manifest:
+CURRENT practice manifest:
 - 119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json
 
-Raw current sources:
-- 81 rows (72 historical-wave rows + 1 correction row + 8 P0-closure rows)
+Practice history:
+- wave 1: 24 cards;
+- wave 2: 24 cards;
+- wave 3: 24 cards;
+- current correction: +1 replacement, 1 superseded card disabled;
+- wave 4 P0 closure: +8 cards.
 
-Disabled superseded practice:
-- `ex-practice-end-finally-001`
-
-Replacement:
-- `ex-practice-v-kontse-kontsov-corrected-001`
-
-P0 CLOSURE WAVE:
-- 123-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE4-P0-CLOSURE-v0.1.json
-- 8 cards
-- machine coverage after wave: P0/P1 uncovered = 0
-
-EXPECTED ACTIVE PRACTICE BANK:
+CURRENT ACTIVE PRACTICE BANK:
 - 80 cards
+- P0/P1 uncovered practice: 0
 
-CURRENT hardened builders:
-- build/build_russian_exceptions_bank_current_v2.py
-- build/build_russian_exceptions_practice_current_corrected_v2.py
+CURRENT MACHINE-BUILT SOURCE COUNTS:
+- Explanation Bank: 72 units / tasks 1–27
+- Exceptions Bank: 127 source items
+- active Practice Bank: 80 cards
 
-LEARNING ENGINE — EXCEPTIONS
+SKILL GRAPH / CURRENT TRAINER BASELINE
 
-Ready at design/reference-code layer:
-- public UX spec;
-- learner-state schema + idempotency addendum;
-- deterministic session selection policy;
-- hardened session selector;
-- priority-aware selector;
-- synthetic selector tests;
-- pure learner-state reducer;
-- synthetic state-reducer tests;
-- launch priority builder where priority != difficulty;
-- minimal Exceptions Runtime builder;
-- practice coverage audit;
-- runtime size audit;
-- deterministic Exceptions Runtime -> T123 data chunk builder;
-- Tilda implementation plan;
-- rollback plan;
-- release test plan.
+- current trainer snapshot: 174 cards;
+- independent Skill Graph validator: PASS 174/174, 0 warnings;
+- current trainer storage keys remain separate from standalone Exceptions storage namespace;
+- current trainer source remains outside standalone implementation scope.
 
-ERROR -> EXCEPTION HANDOFF
+CURRENT LEARNING ENGINE GATE
 
-- architecture spec 113;
-- first exact mapping subset 114;
-- exact source-data validator;
-- no guessed exception from broad task score.
-
-SKILL GRAPH
-
-- independent local validator exists: build/validate_russian_skill_graph_against_trainer.py
-- checks repository-visible trainer snapshot, BANK-MANIFEST task counts, current trainer IDs, difficulty=null, prerequisites and known historical task-25 anomaly;
-- formal closure gate: reviews/REVIEW-001-CLOSURE-GATE.md.
-
-CURRENT LOCAL MACHINE GATE
-
-Current aggregate validator:
+Aggregate validator:
 `python3 build/run_russian_learning_engine_validation_current_v10.py`
 
-It includes:
+CURRENT RESULT:
+PASS.
+
+Validated checks include:
 1. Skill Graph vs current trainer snapshot;
 2. canonical Explanation Bank;
 3. Explanation Runtime;
 4. Explanation Resolver synthetic tests;
 5. corrected canonical Exceptions Bank;
-6. corrected active Practice Bank (80 cards after P0 closure);
+6. active 80-card Practice Bank;
 7. launch priority;
 8. Exceptions Runtime;
-9. practice coverage audit;
-10. runtime size audit;
-11. session selector tests;
-12. priority selector tests;
-13. learner-state reducer tests;
-14. exact error->exception handoff validation;
-15. deterministic Exceptions Runtime -> T123 chunk build/reconstruction validation.
+9. deterministic runtime T123 chunk reconstruction;
+10. practice coverage audit;
+11. runtime size audit;
+12. session selector tests;
+13. priority selector tests;
+14. learner-state reducer tests;
+15. exact error->exception handoff validation.
 
-Aggregate local output:
-`audits/RUSSIAN-LEARNING-ENGINE-VALIDATION-CURRENT-V10-SUMMARY.txt`
+STANDALONE EXCEPTIONS IMPLEMENTATION
 
-CURRENT INDEPENDENT MAIN-SNAPSHOT PASS (2026-08-12):
-- CURRENT v10 aggregate: PASS;
-- Skill Graph: 174/174 trainer cards, 0 warnings;
-- Explanation Bank: 72 units, tasks 1–27;
-- Exceptions Bank: 127 source items;
-- active Exceptions Practice Bank after wave 4: 80 cards;
-- P0/P1 uncovered practice: 0;
-- standalone Exceptions Runtime: 73 enabled exceptions / 80 practice items;
-- deterministic T123 runtime chunks after learner-safe reference enrichment: 4; max chunk 34,768 UTF-8 bytes;
-- production trainer unchanged.
+Source location:
+`standalone-exceptions-trainer/`
 
-Current validated-package command after PASS:
-`python3 build/package_learning_engine_checkpoint_current_v10.py --require-pass`
-
-IMPORTANT:
-A machine PASS is a SOURCE/DATA/RUNTIME checkpoint only.
-It does NOT authorize Tilda/public integration.
-
-STANDALONE PAGE IMPLEMENTATION
-
-Local standalone implementation now exists under `standalone-exceptions-trainer/`:
+Implemented:
 - runtime chunk loader;
 - answer evaluators;
 - learner-state reducer/storage;
 - deterministic selector;
-- shell/CSS/renderer;
-- all-exceptions flow;
-- My Exceptions flow;
-- feedback + rule drawer;
-- session result + retry errors.
+- light Eksamio shell/CSS/renderer;
+- «Все исключения» flow;
+- «Мои исключения» flow;
+- feedback + learner-safe rule drawer;
+- session result;
+- retry errors;
+- corrupt/future-state safe fallback;
+- fail-closed incomplete/mixed runtime handling.
 
-Generated Tilda preview package:
+STANDALONE RUNTIME
+
+- enabled exceptions: 73
+- enabled practice items: 80
+- learner topics: 6
+- content version: sha256-20a002b6248a78c7ab38
+- runtime data delivery: deterministic T123 JSON chunks
+- runtime data blocks: 4
+- largest runtime data block: 34,768 UTF-8 bytes
+
+GENERATED TILDA PREVIEW PACKAGE
+
+Build command:
+`python3 build/build_russian_exceptions_standalone_package.py`
+
+Generated package location:
+`build/standalone-exceptions-tilda/`
+
+Package:
 - 9 T123 blocks total;
-- 4 deterministic runtime-data blocks;
-- max block 34,768 UTF-8 bytes;
-- SEO/HEAD/INSTALLATION/PREVIEW/PACKAGE-MANIFEST;
-- TEST-RESULT written after preview gate PASS.
+- 4 data-only runtime blocks;
+- SEO;
+- HEAD;
+- INSTALLATION;
+- PREVIEW.html;
+- PACKAGE-MANIFEST.json;
+- TEST-RESULT.txt after full preview gate PASS.
 
-Local Chromium preview gate: PASS.
-Current EGE trainer source tree hash remained unchanged.
+FULL STANDALONE PREVIEW GATE
+
+Command:
+`python3 build/run_russian_exceptions_standalone_preview_validation.py`
+
+Fresh GitHub main reproduction on 2026-08-12:
+PASS.
+
+Fresh-main result:
+- Learning Engine CURRENT v10: PASS;
+- browser-core parity: PASS;
+- deterministic 9-block package build: PASS;
+- Chromium preview smoke: PASS.
+
+Chromium smoke covers:
+- page boot;
+- complete 10-card session;
+- rule drawer;
+- correct/wrong feedback;
+- real personal error -> «Мои исключения»;
+- targeted retry;
+- mobile 375x812 without horizontal overflow;
+- corrupt state preservation/fallback;
+- fail-closed behavior when a runtime data chunk is missing.
+
+CURRENT EGE TRAINER REGRESSION BOUNDARY
+
+Standalone work has not modified the current EGE trainer source.
+Its independent source-tree hash remained unchanged across standalone implementation work.
+
+READY NOW
+
+- reviewed standalone source is in GitHub main;
+- fresh-main standalone preview gate reproduces PASS;
+- one checkpoint ZIP may be given to the user for the local `exam-platform-tilda` workspace;
+- generated `build/standalone-exceptions-tilda/` package may be used for a Tilda preview/hidden test page.
+
+NOT AUTHORIZED YET
+
+- public publication of `/trenazhery/russkiy/isklyucheniya/`;
+- `/trenazhery/` catalog card;
+- main EGE trainer handoff;
+- explanation integration into the current EGE trainer.
 
 NEXT WORK ORDER
 
-1. Keep P0/P1 uncovered practice at zero.
-2. Sync reviewed standalone source/build/preview-test files to GitHub main.
-3. Reproduce standalone preview PASS from a fresh main snapshot.
-4. Hand the generated standalone package to the user for Tilda preview/hidden test only.
-5. Perform Tilda-side mobile/reload/runtime smoke before any public publication.
-6. Catalog card remains a separate later package.
-7. Main EGE trainer handoff/explanation integration remains a later reversible phase.
+1. Hand the user one current `eksamio-learning-engine` checkpoint ZIP with the generated standalone Tilda preview package inside.
+2. Run real Tilda preview/hidden-page smoke: desktop/mobile/reload/state/runtime completeness.
+3. Only after Tilda-side PASS make an explicit public-release decision.
+4. Catalog addition remains a separate rollout/package.
+5. Main EGE trainer handoff/explanation integration remains a later reversible phase.
 
 CURRENT DECISION
 
 CONTENT: ADVANCED
 EXPLANATIONS: 1–27 SOURCE COVERED
 EXCEPTIONS PRACTICE: 80 ACTIVE / P0-P1 COVERAGE CLOSED
-RUNTIME/DATA TOOLING: BUILT
-LOCAL MACHINE GATE: CURRENT V10
-PUBLIC PAGE: LOCAL PREVIEW PASS / TILDA PREVIEW NEXT / PUBLICATION HOLD
+RUNTIME/DATA TOOLING: PASS
+BROWSER CORE: PASS
+FRESH-MAIN LOCAL PREVIEW: PASS
+TILDA PREVIEW PACKAGE: READY
+PUBLICATION: HOLD
+CATALOG CHANGE: HOLD / SEPARATE
 CURRENT TRAINER: UNCHANGED
