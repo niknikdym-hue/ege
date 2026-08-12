@@ -1,0 +1,174 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS — WAVE 8
+ПРЕ-/ПРИ- LEXICAL PAIRS — SOURCE AUDIT
+DATE: 2026-08-12
+STATUS: SOURCE GATE PASS 6/6 / CURRENT 133 UNCHANGED / TILDA HOLD
+
+PURPOSE
+
+Build a future-course lexical contrast table for six uncovered P2 pairs where the spelling is tied to the established lexical meaning of the whole word.
+
+Do NOT force these words through a simplified universal formula «ПРЕ = очень / ПРИ = приближение». Those general prefix meanings are useful elsewhere, but these pairs must be recognized by lexical meaning and normal collocation.
+
+METHOD BASELINE
+
+Drabkina/Subbotin:
+LEXICAL TABLE -> MEANING QUESTION -> NORMAL COLLOCATION -> CONTRAST -> TRAP -> INDEPENDENT CONTEXT.
+
+Normative/source basis:
+- 35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json;
+- PRE/PRI explanation branch in 34-RUSSIAN-EXPLANATION-ORTHOGRAPHY-9-10-v0.1.json;
+- project Rosenthal orthographic contrast chain registered in source bank 35;
+- current dictionary/Gramota cross-check for modern lexical meanings and collocations.
+
+SOURCE-GATE RESULTS — 6/6
+
+01. ПРЕДЕЛ / ПРИДЕЛ — PASS
+SOURCE ID: pre_pri_predel_pridel
+
+ПРЕДЕЛ:
+- boundary, limit, highest/outer point;
+- normal school contexts: предел возможностей, за пределами нормы, положить предел.
+
+ПРИДЕЛ:
+- an additional/side chapel or section of an Orthodox church with its own altar;
+- normal context: боковой придел храма.
+
+DIAGNOSTIC:
+Are we talking about a limit/boundary or a church architectural/liturgical section?
+
+TRAP:
+Do not choose by the vague visual similarity of the words. These are different lexical words.
+
+02. ПРЕДАТЬ / ПРИДАТЬ — PASS
+SOURCE ID: pre_pri_predat_pridat
+
+ПРЕДАТЬ:
+- betray someone/something;
+- hand over/give over in established lexical uses.
+High-value course context: предать друга, предать огласке.
+
+ПРИДАТЬ:
+- give/add a quality, form, meaning, direction, importance;
+- normal collocations: придать значение, придать форму, придать уверенности.
+
+DIAGNOSTIC:
+Betray/hand over vs give/add a property or quality.
+
+TRAP:
+Do not infer spelling only from whether an action feels complete or intense.
+
+03. ПРЕХОДЯЩИЙ / ПРИХОДЯЩИЙ — PASS
+SOURCE ID: pre_pri_prekhod_prikhod
+
+ПРЕХОДЯЩИЙ:
+- temporary, transient, not permanent;
+- normal collocations: преходящее явление, преходящий успех, преходящие ценности/обстоятельства where semantically appropriate.
+
+ПРИХОДЯЩИЙ:
+- one who comes/arrives; connected with regular arrival rather than permanent presence;
+- normal contexts: приходящий врач, приходящий работник.
+
+DIAGNOSTIC:
+Temporary/transient property vs a person/object characterized by coming/arriving.
+
+TRAP:
+Do not confuse PREХОДЯЩИЙ with the ordinary participial/adjectival family from ПРИХОДИТЬ.
+
+04. ПРЕЕМНИК / ПРИЁМНИК — PASS
+SOURCE ID: pre_pri_preemnik_priemnik
+
+ПРЕЕМНИК:
+- successor, continuator, one who takes over a role/tradition/authority;
+- normal contexts: преемник руководителя, преемник традиции.
+
+ПРИЁМНИК:
+- device/object that receives a signal or something transmitted; also lexical receiving-device meanings;
+- high-value school context: радиоприёмник, приёмник сигнала.
+
+DIAGNOSTIC:
+Successor/continuator vs receiving device/object.
+
+TRAP:
+Do not write ПРИЕМНИК for a successor merely because the successor “receives” duties; lexical norm controls the word.
+
+05. ПРЕСТУПИТЬ / ПРИСТУПИТЬ — PASS
+SOURCE ID: pre_pri_prestupit_pristupit
+
+ПРЕСТУПИТЬ:
+- violate/transgress a rule, law, boundary of what is permitted;
+- normal collocations: преступить закон, преступить запрет.
+
+ПРИСТУПИТЬ:
+- begin/start doing something;
+- government: приступить К чему? к работе, к выполнению задания, к проверке.
+
+DIAGNOSTIC:
+Violate/transgress vs begin an action.
+
+TRAP:
+The words differ both lexically and syntactically: ПРИСТУПИТЬ normally introduces the activity with К + dative.
+
+06. ПРЕТВОРИТЬ / ПРИТВОРИТЬ — PASS
+SOURCE ID: pre_pri_pretvorit_pritvorit
+
+ПРЕТВОРИТЬ:
+- put an idea, plan, intention into practice/reality;
+- normal collocations: претворить план в жизнь, претворить идею в жизнь.
+
+ПРИТВОРИТЬ:
+- shut/close a door, gate, window in the lexical verb sense;
+- normal context: притворить дверь.
+Related lexical family: ПРИТВОРИТЬСЯ = pretend, but this wave's direct pair is ПРЕТВОРИТЬ / ПРИТВОРИТЬ.
+
+DIAGNOSTIC:
+Implement/realize an idea vs close/shut a physical opening/door.
+
+TRAP:
+Do not explain ПРЕТВОРИТЬ through the simplistic «ПРЕ = very» rule; lexical meaning is decisive here.
+
+COURSE TABLE CONTRACT
+
+For each pair the reusable table must contain:
+
+WORD A | MEANING A | 2–3 NORMAL COLLOCATIONS | WORD B | MEANING B | 2–3 NORMAL COLLOCATIONS | COMMON TRAP
+
+Recommended anchor row already covered elsewhere:
+ПРЕБЫВАТЬ = находиться / ПРИБЫВАТЬ = приезжать, приходить.
+
+This anchor can introduce the course table but does not need new Wave 8 coverage unless a later transfer gap requires it.
+
+SOURCE-GATE SUMMARY
+
+SOURCE IDS REVIEWED: 6/6
+PASS: 6
+FIX: 0
+HOLD: 0
+FAIL/REPLACE: 0
+
+Generic `pre_pri_vocabulary_group` intentionally remains OUTSIDE Wave 8. It needs a separate dictionary-oriented audit and must not be bundled into these six clean lexical pairs.
+
+CURRENT 133 CHANGED: NO
+TILDA CHANGED: NO
+
+PRACTICE PLAN
+
+Wave 8 = 12 original Eksamio cards:
+- exactly 2 contexts per pair;
+- both lexical directions;
+- at least one independent_context/transfer item per pair;
+- feedback: exact meaning -> normal collocation -> contrast -> trap.
+
+NEXT
+
+1. Create reviewed 12-card Wave 8 draft outside current manifest.
+2. Manual review 12/12.
+3. Candidate expected active = 145.
+4. Validate schema/source practice modes/IDs/context signatures.
+5. Verify all six target source IDs become covered with transfer evidence.
+6. Build learner-safe runtime.
+7. Source-leak gate.
+8. T123/package/Chromium.
+9. Open generated candidate artifact and inspect all 12 cards.
+10. Promote only after all PASS.
+11. Tilda remains unchanged.
