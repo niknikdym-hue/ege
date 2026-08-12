@@ -1,11 +1,11 @@
 {
-  "schema_version": "1.0.2",
+  "schema_version": "1.1.0",
   "subject": "russian",
   "exam": "ege",
   "purpose": "current_corrected_exceptions_practice_manifest",
   "integration_status": "not_connected_to_production",
   "supersedes_for_current_build": "99-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-MANIFEST.json",
-  "history_note": "After the full 80/80 linguistic audit, the rejected universal «в конце концов» correction is removed from the current practice source set. Two audited replacements are added: context-dependent «в конце концов» and current normative «заревать». Raw 82 minus two superseded cards leaves exactly 80 active cards. Course-grade audit fixes and post-audit learner-feedback polish are applied as explicit overlays without changing card count.",
+  "history_note": "The original 80-card set received a full 80/80 linguistic audit, two unsafe items were replaced, 30 audited FIX patches and 8 learner-feedback polish patches were applied, then reviewed Wave 5 added 13 independent-context/transfer cards. Wave 5 passed 13/13 manual content review and an isolated 93-card build/coverage/runtime/T123/Chromium gate before promotion. Raw 95 minus two superseded historical cards leaves exactly 93 current active cards. Production/Tilda remains HOLD.",
   "schema": "91-RUSSIAN-EXCEPTIONS-PRACTICE-SCHEMA.json",
   "source_exceptions_manifest": "118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json",
   "practice_banks": [
@@ -35,22 +35,29 @@
     },
     {
       "path": "133-RUSSIAN-EXCEPTIONS-PRACTICE-CONTENT-CORRECTIONS-v0.1.json",
-      "scope": "80-card reaudit replacements for v-kontse-kontsov and zarevat",
+      "scope": "80-card reaudit replacements for context-dependent v-kontse-kontsov and current zarevat",
       "expected_items": 2,
       "status": "source_verified_reaudit_correction"
+    },
+    {
+      "path": "140-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE5-P0-TRANSFER-v1.0.json",
+      "scope": "reviewed P0 coverage closure and independent-context/transfer expansion",
+      "expected_items": 13,
+      "status": "source_verified_wave"
     }
   ],
   "disabled_practice_item_ids": [
     "ex-practice-end-finally-001",
     "ex-practice-zorevat-001"
   ],
-  "expected_total_items_raw": 82,
-  "expected_active_items": 80,
+  "expected_total_items_raw": 95,
+  "expected_active_items": 93,
   "feedback_overlay": "131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json",
   "feedback_polish_overlay": "136-RUSSIAN-EXCEPTIONS-LEARNER-FEEDBACK-POLISH-v0.1.json",
+  "wave5_manual_review": "138-RUSSIAN-EXCEPTIONS-WAVE5-MANUAL-CONTENT-REVIEW.txt",
   "builder": "build/build_russian_exceptions_practice_course_grade.py",
   "canonical_output": "build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json",
   "validation_output": "audits/RUSSIAN-EXCEPTIONS-PRACTICE-VALIDATION.txt",
-  "current_status": "80_active_cards_course_grade_overlays_ready_for_machine_validation",
+  "current_status": "93_active_cards_course_grade_p0_coverage_complete_ready_for_full_gate",
   "production_integration": "HOLD"
 }
