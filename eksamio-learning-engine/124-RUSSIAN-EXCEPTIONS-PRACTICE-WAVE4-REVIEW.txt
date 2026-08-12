@@ -1,0 +1,54 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS PRACTICE — WAVE 4 P0 CLOSURE REVIEW
+
+STATUS: CONTENT REVIEWED / MACHINE VALIDATION PASSED LOCALLY
+PRODUCTION: UNCHANGED
+
+SCOPE
+Close the only two uncovered P0 exceptions reported by the machine coverage audit and add independent-context/transfer evidence to the three already-covered P0 exceptions that had only recognition/guided-recall practice.
+
+SOURCE EXCEPTIONS
+- paronym_garantiynyy_garantirovannyy
+- stress_feminine_past_cluster
+- morph_kupol_plural
+- morph_polotentse_genitive_plural
+- n_nn_forged
+
+CARDS ADDED: 8
+
+COVERAGE INTENT
+1. гарантийный / гарантированный
+   - independent context: гарантийный срок обслуживания
+   - transfer contrast: гарантированный результат
+
+2. Женский род прошедшего времени
+   - independent normative choice: занялА
+   - guided recall: дождалАсь
+   - transfer contrast: клАла, demonstrating that end stress is not a universal mechanical rule
+
+3. КУПОЛ — КУПОЛА
+   - independent context added beyond prior guided recall
+
+4. ПОЛОТЕНЦЕ — ПОЛОТЕНЕЦ
+   - independent context added beyond prior guided recall
+
+5. КОВАНЫЙ
+   - transfer context `кованые ворота` added beyond prior recognition card
+
+EDITORIAL SAFETY
+- No new linguistic rule is invented.
+- All canonical forms already exist in the source-verified Exceptions Bank.
+- Stress cards use only forms explicitly present in the verified stress cluster.
+- Paronym contexts distinguish relation-to-guarantee (`гарантийный`) from assured result (`гарантированный`).
+- `кованые ворота` intentionally contains no dependent word that could change the grammatical analysis.
+- Learner-facing wording is original Eksamio wording.
+- No production trainer/T123/localStorage/scoring files are touched.
+
+MACHINE RESULT AFTER REGISTRATION
+- active practice cards: 80
+- P0/P1 uncovered: 0
+- P0 `morph_kupol_plural`, `morph_polotentse_genitive_plural`, `n_nn_forged`: independent_context or transfer now present
+- CURRENT aggregate: PASS
+
+NEXT
+Proceed with standalone Exceptions Trainer data/UI implementation while production publication remains HOLD.
