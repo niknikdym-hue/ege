@@ -1,0 +1,114 @@
+name: Russian Exceptions Course-Grade Gate
+
+on:
+  push:
+    branches:
+      - agent/russian-exceptions-content-polish
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/**'
+      - '.github/workflows/russian-exceptions-course-grade-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install playwright
+          sudo apt-get update
+          sudo apt-get install -y chromium
+          echo "CHROMIUM_PATH=$(command -v chromium)" >> "$GITHUB_ENV"
+
+      - name: Build current canonical exception bank
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_exceptions_bank_current_v2.py
+
+      - name: Build audited 80-card practice bank
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_exceptions_practice_course_grade.py
+
+      - name: Verify active learner cards and rejected forms
+        working-directory: eksamio-learning-engine
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          items = data.get('practice_items', data.get('items', []))
+          if isinstance(items, dict):
+              rows = list(items.values())
+          else:
+              rows = items
+          assert len(rows) == 80, f'expected 80 active cards, got {len(rows)}'
+          ids = {r.get('practice_item_id') for r in rows}
+          assert 'ex-practice-zorevat-001' not in ids
+          assert 'ex-practice-end-finally-001' not in ids
+          assert 'ex-practice-zarevat-current-001' in ids
+          assert 'ex-practice-v-kontse-kontsov-context-002' in ids
+          text = p.read_text(encoding='utf-8').lower()
+          assert 'зоревать' not in text, 'obsolete learner form leaked into canonical practice payload'
+          print('PASS: exactly 80 active cards; audited replacements are active')
+          PY
+
+      - name: Build runtime
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_exceptions_runtime.py
+
+      - name: Audit learner payload for internal-source leakage
+        working-directory: eksamio-learning-engine
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          files = [Path('build/RUSSIAN-EXCEPTIONS-RUNTIME.json')]
+          forbidden = [
+              'розентал', 'rosenthal', 'gramota.ru', 'драбкин', 'drabkina',
+              'source_refs', 'source_path', 'provenance', 'rule_ref',
+              'russkiy-knigi/', '130-russian-exceptions-80-card',
+          ]
+          for path in files:
+              text = path.read_text(encoding='utf-8').lower()
+              hits = [x for x in forbidden if x in text]
+              assert not hits, f'{path}: forbidden internal provenance leaked: {hits}'
+          print('PASS: no forbidden internal provenance in learner runtime')
+          PY
+
+      - name: Run standalone core validation
+        working-directory: eksamio-learning-engine
+        run: python build/run_russian_exceptions_standalone_validation.py
+
+      - name: Run standalone Chromium preview validation
+        working-directory: eksamio-learning-engine
+        run: python build/run_russian_exceptions_standalone_preview_validation.py
+
+      - name: Runtime size audit
+        working-directory: eksamio-learning-engine
+        run: python build/audit_russian_runtime_sizes.py
+
+      - name: Upload generated gate outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-exceptions-course-grade-gate
+          if-no-files-found: warn
+          path: |
+            eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json
+            eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json
+            eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-RUNTIME.json
+            eksamio-learning-engine/build/standalone-exceptions-tilda/**
+            eksamio-learning-engine/audits/**
