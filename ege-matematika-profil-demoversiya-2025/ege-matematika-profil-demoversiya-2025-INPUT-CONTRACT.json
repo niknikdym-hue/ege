@@ -1,0 +1,19 @@
+{
+  "status": "SOURCE_DERIVED_RUNTIME_NOT_BUILT",
+  "year": 2025,
+  "short_answer": {
+    "tasks": [1, 12],
+    "required_control": "single numeric text input",
+    "official_form": "integer or finite decimal",
+    "accepted_ui_notation": ["decimal comma", "decimal point", "leading minus where applicable"],
+    "normalization_rule": "normalize decimal comma to point for comparison; trim whitespace; do not accept expressions, fractions or units as short answer",
+    "scoring": "exact normalized numeric value per official answer table; 1 point each"
+  },
+  "extended_answer": {
+    "tasks": [13, 19],
+    "required_control": "textarea",
+    "scoring": "no automatic content score; after completion user self-assesses against official 2025 criteria",
+    "max_scores": {"13": 2, "14": 3, "15": 2, "16": 2, "17": 3, "18": 4, "19": 4},
+    "separation": "self-assessment points are displayed separately from automatic 1–12 points until combined explicitly on result screen"
+  }
+}
