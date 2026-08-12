@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "purpose": "post_audit_learner_feedback_polish",
+  "integration_status": "not_connected_to_production",
+  "tilda_change_allowed": false,
+  "quality_rule": "A technically correct learner explanation is not enough when it is too terse to teach the distinction. Prefer rule/application/contrast or trap where useful, without turning a card into a textbook page.",
+  "item_patches": [
+    {
+      "practice_item_id": "ex-practice-soglasno-001",
+      "action": "replace_feedback",
+      "feedback_why": "СОГЛАСНО требует дательного падежа: согласно чему? приказу. Сравни: вопреки чему? совету; благодаря чему? помощи — эти предлоги тоже требуют дательного падежа."
+    },
+    {
+      "practice_item_id": "ex-practice-vorot-001",
+      "action": "replace_feedback",
+      "feedback_why": "ВОРОТА употребляется только во множественном числе. В родительном падеже нормативная форма — ВОРОТ: возле ворот, у старых ворот. Форма «воротей» ненормативна."
+    },
+    {
+      "practice_item_id": "ex-practice-polotenets-001",
+      "action": "replace_feedback",
+      "feedback_why": "ПОЛОТЕНЦЕ → ПОЛОТЕНЕЦ в родительном падеже множественного числа: пара полотенец, несколько полотенец. Сравни: блюдце → блюдец. Форму «полотенцев» не образуем."
+    },
+    {
+      "practice_item_id": "ex-practice-pomidorov-001",
+      "action": "replace_feedback",
+      "feedback_why": "ПОМІДОР → ПОМИДОРОВ: в литературной норме родительный падеж множественного числа имеет форму с -ОВ — ящик помидоров, килограмм помидоров. Разговорное «ящик помидор» для нормативного ответа не подходит."
+    },
+    {
+      "practice_item_id": "ex-practice-predel-pridel-001",
+      "action": "replace_feedback",
+      "feedback_why": "Здесь речь о границе, поэтому ПРЕДЕЛ: терпению есть предел. ПРИДЕЛ — боковая часть храма. Эту пару выбираем по значению слова, а не механически по общему правилу ПРЕ-/ПРИ-."
+    },
+    {
+      "practice_item_id": "ex-practice-v-prodolzhenie-001",
+      "action": "replace_feedback",
+      "feedback_why": "В ПРОДОЛЖЕНИЕ недели = «в течение недели»: это производный предлог со значением времени, на конце -Е. Сравни: в продолжении романа появились новые герои — здесь ПРОДОЛЖЕНИЕ является существительным, поэтому -И."
+    },
+    {
+      "practice_item_id": "ex-practice-tsypochki-001",
+      "action": "replace_feedback",
+      "feedback_why": "После Ц в корне обычно пишется И, но есть традиционные исключения с Ы: цыган, цыплёнок, на цыпочках, цыц. Поэтому правильно: идти на цыпочках."
+    },
+    {
+      "practice_item_id": "ex-practice-colon-rule-001",
+      "action": "replace_feedback",
+      "feedback_why": "Вторая часть раскрывает, что именно понял говорящий: «Я понял одно, а именно: нужно проверить источник». Поэтому двоеточие ставится при пояснении содержания первой части, а не из-за перечисления или прямой речи."
+    }
+  ],
+  "patch_summary": {
+    "quality_polish_items": 8,
+    "patch_entries": 8,
+    "production_ready": false,
+    "requires_generated_payload_review": true
+  }
+}
