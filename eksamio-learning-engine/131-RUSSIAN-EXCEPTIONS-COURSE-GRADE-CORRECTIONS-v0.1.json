@@ -1,0 +1,176 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "purpose": "course_grade_content_corrections_overlay",
+  "integration_status": "not_connected_to_production",
+  "audit_ref": "130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt",
+  "tilda_change_allowed": false,
+  "content_policy": {
+    "method_baseline": "Drabkina/Subbotin: theory -> table/scheme -> algorithm -> trap -> contrast -> independent check",
+    "norm_priority": "current academic/dictionary norm overrides outdated teaching simplifications",
+    "no_invented_explanations": true,
+    "no_public_source_labels": true
+  },
+  "reusable_rule_units": [
+    {
+      "rule_id": "n_nn_noun_derived_adjectives_course",
+      "title": "Н/НН в прилагательных от существительных",
+      "short_rule": "Сначала установите, что прилагательное образовано от существительного. -АН-/-ЯН-/-ИН- обычно дают одну Н; -ОНН-/-ЕНН- и стык Н+Н — НН. После правила проверьте исключения.",
+      "algorithm": [
+        "Найдите производящее существительное.",
+        "Определите суффикс или стык морфем.",
+        "Для -АН-/-ЯН-/-ИН- ожидайте одну Н.",
+        "Для -ОНН-/-ЕНН- и Н+Н ожидайте НН.",
+        "Проверьте исключения: деревянный, оловянный, стеклянный; отдельно ветреный/безветренный."
+      ],
+      "examples": ["кожаный ремень", "глиняная чашка", "серебряный браслет", "деревянная рама", "оловянная фигурка", "стеклянная дверь"],
+      "contrasts": ["кожаный — деревянный", "глиняный — стеклянный", "ветреный день — безветренный вечер", "ветреный — ветряной"],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","purpose":"rule"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck"}
+      ],
+      "status": "source_verified"
+    },
+    {
+      "rule_id": "n_nn_verb_derived_adjectives_participles_course",
+      "title": "Отглагольное прилагательное или причастие: Н/НН",
+      "short_rule": "Для слова от глагола сначала различайте прилагательное и причастное употребление. Приставка, совершенный вид, зависимое слово в конкретной конструкции и модели -ОВАНН-/-ЁВАНН- помогают диагностике, но не заменяют смысловой проверки и списка особых случаев.",
+      "algorithm": [
+        "Определите производящий глагол и вид.",
+        "Проверьте приставку, кроме НЕ-.",
+        "Проверьте, есть ли зависимое слово, относящееся именно к этой форме.",
+        "Проверьте модель -ОВАНН-/-ЁВАНН-.",
+        "Проверьте особые пары: кованый/кованный, жёваный/жёванный, раненый/раненный, названый брат, посажёный отец."
+      ],
+      "contrasts": [
+        "кованая решётка — кованный кузнецом гвоздь",
+        "жёваная бумага — жёванный ребёнком кусок хлеба",
+        "раненый боец — раненный осколком боец",
+        "названый брат — названный в честь отца",
+        "посажёный отец — посаженный за стол гость"
+      ],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","purpose":"rule"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck"}
+      ],
+      "status": "source_verified"
+    },
+    {
+      "rule_id": "derivative_prepositions_course",
+      "title": "Производные предлоги и омонимичные формы",
+      "algorithm": [
+        "Определите значение всей конструкции, а не отдельного написания.",
+        "Если это производный предлог, примените его словарное написание.",
+        "Если существительное сохраняет предметное значение, примените падежную форму существительного.",
+        "Проверьте контрастную пару."
+      ],
+      "learner_table": [
+        {"write":"в течение","contrast":"в течении реки"},
+        {"write":"в продолжение","contrast":"в продолжении текста"},
+        {"write":"в заключение","contrast":"в заключении эксперта"},
+        {"write":"несмотря на","contrast":"не смотря в глаза"},
+        {"write":"невзирая на","contrast":"не взирая на собеседника"},
+        {"write":"наподобие","contrast":"контекст с существительным подобие"},
+        {"write":"навстречу другу","contrast":"на встречу с редактором"},
+        {"write":"вовремя","contrast":"во время урока"}
+      ],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/1528096458_1399-russkiy-yaz.-7kl.-prakt.-po-orfogr._drabkina_2018-120s.pdf","purpose":"example_method"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","purpose":"rule"}
+      ],
+      "status": "source_verified"
+    },
+    {
+      "rule_id": "introductory_function_context_course",
+      "title": "Вводное слово определяется функцией в контексте",
+      "short_rule": "Нельзя решать только по внешнему виду слова. Проверьте, выражает ли единица отношение говорящего/организацию рассуждения или является союзом, частицей, наречием либо членом предложения.",
+      "algorithm": [
+        "Определите значение слова именно в этом предложении.",
+        "Проверьте синтаксическую функцию и возможность осмысленного изъятия/замены.",
+        "Сравните с известной контрастной функцией того же слова.",
+        "Не переносите список «никогда вводных» на слова, которые современная норма различает контекстно."
+      ],
+      "contrasts": [
+        "Однако спор продолжался. — Он, однако, не согласился.",
+        "Наконец поезд подошёл. — Во-первых..., наконец, ...",
+        "Он вообще не пользуется подсказками. — контекстное вводное ВООБЩЕ в функции организации высказывания",
+        "Он, конечно, придёт. — Конечно правда!",
+        "Это правда. — Он, правда, опоздал.",
+        "В конце концов, главное — понять правило. — Мы в конце концов нашли документ."
+      ],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","purpose":"rule"},
+        {"source_type":"internal_verified_source","source_path":"84-RUSSIAN-EXCEPTIONS-INTRODUCTORY-WORDS-v0.1.json","purpose":"contrast"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck"}
+      ],
+      "status": "source_verified"
+    },
+    {
+      "rule_id": "alternating_roots_current_course",
+      "title": "Чередующиеся корни: школьная схема + современная граница",
+      "policy": [
+        "заревать is the current spelling; obsolete зоревать is not a learner answer",
+        "скак-/скок-/скач-/скоч- must use the fuller modern pattern",
+        "пловец/пловчиха and плывун are taught as exact lexical spellings without invented etymology",
+        "утварь and полог are handled cautiously as lexicalized/dictionary cases when modern morphemics differs from old school segmentation"
+      ],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","purpose":"historical_rule_baseline"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck"}
+      ],
+      "status": "source_verified"
+    }
+  ],
+  "item_patches": [
+    {"practice_item_id":"ex-practice-nn-wooden-001","action":"replace_feedback","feedback_why":"Прилагательное образовано от существительного. Суффикс -ЯН- обычно пишется с одной Н: глиняный, кожаный. ДЕРЕВЯННЫЙ — исключение: НН. Сравни также: оловянный, стеклянный."},
+    {"practice_item_id":"ex-practice-nn-forged-001","action":"replace_feedback","feedback_why":"КОВАНЫЙ — отглагольное прилагательное от глагола ковать; в этом употреблении пишется одна Н: кованая решётка. Сравни: кованный кузнецом гвоздь — причастие, НН."},
+    {"practice_item_id":"ex-practice-nn-wounded-001","action":"replace_feedback","feedback_why":"В сочетании РАНЕННЫЙ ОСКОЛКОМ БОЕЦ форма сохраняет значение действия, а зависимое слово называет орудие действия, поэтому пишется НН. Сравни: раненый боец — одна Н."},
+    {"practice_item_id":"ex-practice-nn-tin-001","action":"replace_feedback","feedback_why":"-ЯН- обычно даёт одну Н, но ОЛОВЯННЫЙ входит в традиционную тройку исключений с НН: деревянный, оловянный, стеклянный."},
+    {"practice_item_id":"ex-practice-nn-glass-001","action":"replace_feedback","feedback_why":"-ЯН- обычно даёт одну Н, но СТЕКЛЯННЫЙ — исключение с НН. Запомните тройку: деревянный, оловянный, стеклянный."},
+    {"practice_item_id":"ex-practice-nn-windy-001","action":"replace_feedback","feedback_why":"ВЕТРЕНЫЙ пишется с одной Н, БЕЗВЕТРЕННЫЙ — с НН. Не смешивайте с ВЕТРЯНОЙ: ветряная мельница, ветряная оспа."},
+    {"practice_item_id":"ex-practice-nn-chewed-001","action":"replace_feedback","feedback_why":"ЖЁВАНЫЙ — отглагольное прилагательное от жевать; в этом употреблении одна Н: жёваная бумага. Сравни: жёванный ребёнком кусок хлеба — причастие, НН."},
+    {"practice_item_id":"ex-practice-nn-named-brother-001","action":"replace_feedback","feedback_why":"В устойчивом сочетании НАЗВАНЫЙ БРАТ пишется одна Н. Сравни: человек, названный в честь отца; участник, названный победителем — причастное употребление, НН."},
+    {"practice_item_id":"ex-practice-nn-planted-father-001","action":"replace_feedback","feedback_why":"В устойчивом сочетании ПОСАЖЁНЫЙ ОТЕЦ пишется одна Н. Сравни: посаженный за стол гость; посаженное весной дерево — причастное употребление, НН."},
+    {"practice_item_id":"ex-practice-nn-forged-transfer-002","action":"replace_feedback","feedback_why":"КОВАНЫЙ — отглагольное прилагательное; кованые ворота пишется с одной Н. Сравни: ворота, кованные мастером, — причастное употребление, НН."},
+
+    {"practice_item_id":"ex-practice-doktora-001","action":"provenance_fix","source_policy":"Drabkina morphology table + current dictionary/Gramota; remove vague Rosenthal morphology attribution"},
+    {"practice_item_id":"ex-practice-polotenets-001","action":"provenance_fix","source_policy":"Drabkina noun-form table + current dictionary/Gramota; remove vague Rosenthal morphology attribution"},
+    {"practice_item_id":"ex-practice-kupola-001","action":"provenance_fix","source_policy":"Drabkina noun-form table + current dictionary/Gramota"},
+    {"practice_item_id":"ex-practice-pomidorov-001","action":"provenance_fix","source_policy":"current morphology dictionary/Gramota + Drabkina methodology"},
+    {"practice_item_id":"ex-practice-vorot-001","action":"provenance_fix","source_policy":"current morphology dictionary/Gramota + Drabkina methodology"},
+    {"practice_item_id":"ex-practice-kupola-context-002","action":"provenance_fix","source_policy":"Drabkina noun-form table + current dictionary/Gramota"},
+    {"practice_item_id":"ex-practice-polotenets-context-002","action":"provenance_fix","source_policy":"Drabkina noun-form table + current dictionary/Gramota"},
+
+    {"practice_item_id":"ex-practice-soglasno-001","action":"provenance_fix","source_policy":"current government reference/Gramota + Drabkina task-8 methodology; remove vague Rosenthal syntax attribution"},
+    {"practice_item_id":"ex-practice-apposition-001","action":"replace_feedback_and_provenance","feedback_why":"При родовом слове название произведения выступает как несогласованное приложение и сохраняет исходную форму: в романе «Война и мир». Сравни: без родового слова — в «Войне и мире».","source_policy":"current grammar reference + Drabkina task-8 methodology"},
+    {"practice_item_id":"ex-practice-po-priezde-001","action":"replace_feedback_and_provenance","feedback_why":"В значении «после приезда» употребляется форма ПО ПРИЕЗДЕ. Не делайте из этого правило «по приезду всегда ошибка»: форма ПО ПРИЕЗДУ возможна в другом дательном значении, например когда по самому приезду делают вывод.","source_policy":"current Gramota 2026 distinction + Drabkina task-8 methodology"},
+    {"practice_item_id":"ex-practice-indirect-speech-001","action":"replace_feedback","feedback_why":"При переводе прямой речи в косвенную формы лица выбираются с позиции рассказчика: «Я вернусь», — сказал он -> он сказал, что вернётся. Временные слова вроде «завтра» меняются только тогда, когда этого требует новая точка отсчёта; это не отдельная универсальная замена."},
+    {"practice_item_id":"ex-practice-homogeneous-government-001","action":"provenance_fix","source_policy":"current government reference/Gramota + Drabkina task-8 methodology; card answer remains unchanged"},
+
+    {"practice_item_id":"ex-practice-prazdnyi-001","action":"provenance_fix","source_policy":"current explanatory/paronym dictionary + Drabkina paronym method; remove vague Rosenthal lexical attribution"},
+    {"practice_item_id":"ex-practice-pamyatnyi-001","action":"provenance_fix","source_policy":"current explanatory/paronym dictionary + Drabkina paronym method"},
+    {"practice_item_id":"ex-practice-ledovyi-001","action":"provenance_fix","source_policy":"current dictionary + Drabkina paronym method"},
+    {"practice_item_id":"ex-practice-otborochnyi-001","action":"provenance_fix","source_policy":"current dictionary + Drabkina paronym method"},
+    {"practice_item_id":"ex-practice-produktovyi-001","action":"replace_feedback_and_provenance","feedback_why":"ПРОДУКТОВЫЙ обозначает связь с продуктами питания: продуктовый магазин, набор, корзина. ПРОДУКТИВНЫЙ — результативный, плодотворный: продуктивный метод, день, работа.","source_policy":"Drabkina paronym section + current dictionary"},
+    {"practice_item_id":"ex-practice-garantiynyy-context-001","action":"provenance_fix","source_policy":"current dictionary/paronym source; гарантийный = относящийся к гарантии/гарантийному сроку"},
+    {"practice_item_id":"ex-practice-garantirovannyy-context-001","action":"provenance_fix","source_policy":"current dictionary/paronym source; гарантированный = обеспеченный/предусмотренный как результат"},
+
+    {"practice_item_id":"ex-practice-skachok-001","action":"replace_feedback","feedback_why":"Современное правило рассматривает ряд СКАК-/СКОК-/СКАЧ-/СКОЧ-. СКАЧОК связан с формами глагола СКАКАТЬ (скачет, скачка) и пишется с А. Не используйте упрощённую формулу «перед Ч всегда О, а скачок — просто исключение»."},
+
+    {"practice_item_id":"ex-practice-v-kontse-kontsov-corrected-001","action":"disable_and_replace","reason":"false universalization of non-introductory status","replacement":{"practice_item_id":"ex-practice-v-kontse-kontsov-context-002","exception_id":"introductory_v_kontse_kontsov_dual_function","mode":"context_choice","response_kind":"single_choice","prompt":{"text":"В каком предложении сочетание В КОНЦЕ КОНЦОВ имеет обычное обстоятельственное значение результата событий и не является вводным?","options":["В конце концов, главное — понять правило, а не запомнить формулировку.","После долгих поисков мы в конце концов нашли нужный документ."]},"answer":{"option_index":1},"feedback":{"correct_answer":"После долгих поисков мы в конце концов нашли нужный документ.","why":"Во втором предложении сочетание обозначает фактический итог событий и входит в структуру сообщения. В первом оно оформляет заключение рассуждения говорящего и может выступать как вводное. Решает функция в конкретном контексте.","rule_ref":"introductory_words_punctuation"},"status":"source_verified"}},
+
+    {"practice_item_id":"ex-practice-zorevat-001","action":"disable_and_replace","reason":"obsolete spelling","replacement":{"practice_item_id":"ex-practice-zarevat-current-001","exception_id":"alt_root_zarevat_current","mode":"recall_form","response_kind":"short_text","prompt":{"text":"Запишите современную нормативную форму: з..ревать на рассвете."},"answer":{"text":"заревать"},"feedback":{"correct_answer":"заревать","why":"Современная орфографическая норма — ЗАРЕВАТЬ. Старое написание ЗОРЕВАТЬ было исключением в прежних правилах, но в современных орфографических словарях это исключение устранено."},"status":"source_verified"}}
+  ],
+  "patch_summary": {
+    "audit_fix_items": 30,
+    "audit_fail_replace_items": 2,
+    "patch_entries": 32,
+    "production_ready": false,
+    "requires_next_independent_review": true
+  }
+}
