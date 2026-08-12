@@ -1,5 +1,5 @@
 EKSAMIO LEARNING ENGINE
-RUSSIAN CURRENT 127 -> DRABKINA CLASS ROUTING v2
+RUSSIAN CURRENT 127 -> DRABKINA CLASS ROUTING
 DATE: 2026-08-12
 STATUS: VERIFIED BY MAIN COURSE-GRADE GATE
 NOT A 100% SCHOOL-PROGRAMME COVERAGE CLAIM
@@ -7,17 +7,17 @@ NOT A 100% SCHOOL-PROGRAMME COVERAGE CLAIM
 LATEST VERIFIED RUN
 
 GitHub Actions workflow: Russian Exceptions Course-Grade Gate
-Run: 31639637314
-Run number: 141
-Head: 31b8d67dd72c29e2a200ccc755f0e3ec95a275d8
+Run: 31640423806
+Run number: 151
+Head: 81a070343963a77a55335458b3c84f3ae935cdab
 Conclusion: SUCCESS
 Artifact: russian-exceptions-course-grade-gate
-Artifact id: 9158341379
-Artifact digest: sha256:3f1629acd9bdf1096a1b89dec4f37b5cdacbf7148b81821974c2b314951d2a55
+Artifact id: 9158630555
+Artifact digest: sha256:bc35f6610407bb7336a21399791ef558464ecc521d4e7dda4fc85a301825a0b5
 
-The main gate explicitly runs:
-`python build/build_russian_drabkina_class_routing_v2.py`
-immediately after the current canonical exception-bank build.
+The main gate now runs the route-aware current builder:
+`python build/build_russian_drabkina_class_routing_current.py`
+which layers newly source-verified routes over the audited v2 base.
 
 CANONICAL INPUT
 
@@ -28,7 +28,7 @@ Current `alt_root_zarevat_current`: present
 
 FIRST-STUDIED CLASS COUNTS
 
-These counts answer where the current knowledge item is first placed in the verified school vertical when established. They are NOT class-mode denominators.
+These are NOT class-mode denominators.
 
 - 5 class: 15
 - 6 class: 22
@@ -39,15 +39,15 @@ These counts answer where the current knowledge item is first placed in the veri
 
 ROUTE-CLASS MEMBERSHIP COUNTS
 
-These are overlapping memberships: one knowledge item may belong to several Drabkina class routes because it is repeated/systematized later. They are still NOT final programme denominators because the complete 5-11 master map has not yet been itemized.
+These are overlapping current-content memberships, NOT final programme denominators.
 
 - 5 class route: 15 current items
 - 6 class route: 26 current items
 - 7 class route: 56 current items
 - 8 class route: 16 current items
 - 9 class route: 6 current items
-- 10 class route: 81 current items
-- 11 class route: 22 current items
+- 10 class route: 82 current items
+- 11 class route: 24 current items
 
 ROUTE STATUS COUNTS
 
@@ -56,19 +56,19 @@ ROUTE STATUS COUNTS
 - family_route_verified_item_locator_pending: 41
 - composite_verified_prerequisites: 9
 - provisional_grade8_exact_toc_pending: 12
-- route_class_verified_first_study_pending: 7
-- requires_exact_drabkina_item_locator: 20
+- route_class_verified_first_study_pending: 9
+- requires_exact_drabkina_item_locator: 18
 - legacy_exam_only_excluded: 1
 
 DENOMINATOR POLICY AT THIS CHECKPOINT
 
-- candidate_include: 106
-- pending_source: 20
+- candidate_include: 108
+- pending_source: 18
 - exclude_legacy_exam: 1
 
-`candidate_include` DOES NOT mean that the school denominator contains 106 items. It means only that these current items already have enough source evidence to be candidates inside the eventual full master map.
+`candidate_include` does NOT mean that the school denominator contains 108 items. These 127 records are only the existing content set. A truthful learner denominator requires the full Drabkina 5–11 master map, deduplication, completeness control and current-norm audit.
 
-20 CURRENT ITEMS STILL WITHOUT A CONFIRMED CLASS ROUTE
+18 CURRENT ITEMS STILL WITHOUT A CONFIRMED CLASS ROUTE
 
 Morphology / difficult forms:
 - morph_doktor_plural
@@ -92,41 +92,41 @@ Paronyms / lexical norms:
 Orthoepy:
 - stress_otzyv_meaning_pair
 
-Syntax / government:
-- syntax_apposition_title_declension
-- syntax_dative_prepositions_government
+Syntax:
 - syntax_homogeneous_different_government
 - syntax_indirect_speech_person_shift
 
-DIRECT DRABKINA RESOLUTIONS PRESENT IN THE VERIFIED ROUTER
+LATEST DIRECT DRABKINA ROUTE RESOLUTIONS
 
 Grade 6 route:
 - СКАК-/СКОЧ- + СКАЧОК/СКАЧУ;
 - ПЛАВ-/ПЛОВ- + ПЛОВЕЦ/ПЛОВЧИХА;
-- ПЛЫВУНЫ attached to the same grade-6 family, exact item occurrence still pending;
+- ПЛЫВУНЫ family route (exact item occurrence still pending);
 - ТВАР-/ТВОР- + УТВАРЬ;
-- ЗАР-/ЗОР- family, with the CURRENT learner norm ЗАРЕВАТЬ and obsolete ЗОРЕВАТЬ disabled;
-- ПОМИДОРОВ is directly present in the Drabkina grade-6 final control; exact earlier first-study stage remains pending.
+- ЗАР-/ЗОР- family with current learner norm ЗАРЕВАТЬ;
+- ПОМИДОРОВ as direct grade-6 route material, while exact earlier first-study stage remains pending.
 
 Grade 7 route:
-- after-event ПО-constructions are directly tested through errors such as ПО ПРИЕЗДУ / ПО ЗАВЕРШЕНИЮ; current route keeps the context-sensitive norm and exact earlier first-study stage pending;
-- the feminine-past stress family is directly tested through БРАЛА; exact occurrence of every member of the current cluster remains pending.
+- after-event ПО-constructions through direct error targets ПО ПРИЕЗДУ / ПО ЗАВЕРШЕНИЮ;
+- feminine-past stress family through direct БРАЛА test.
 
-Grade 10 route, while earlier first-study class remains unresolved:
-- МИЛОСТИВЫЙ;
-- ЮРОДИВЫЙ;
-- ЗАСТРЕВАТЬ;
-- ЗАТМЕВАТЬ;
-- ПРОДЛЕВАТЬ.
+Grade 10 route:
+- МИЛОСТИВЫЙ / ЮРОДИВЫЙ;
+- ЗАСТРЕВАТЬ / ЗАТМЕВАТЬ / ПРОДЛЕВАТЬ;
+- title/apposition declension: the Drabkina final test directly diagnoses «В пьесе „Грозе“...» as a construction error with an uncoordinated apposition.
+
+Grade 11 route:
+- СОГЛАСНО / ВОПРЕКИ / БЛАГОДАРЯ government norms;
+- after-event ПО-constructions repeated in the government training.
 
 FIXED ROUTING SEMANTICS
 
 `first_studied_class` != `route_classes`.
 
 `first_studied_class` records the first verified school stage.
-`route_classes` records all Drabkina class routes in which the knowledge is actually taught/practised/repeated/systematized.
+`route_classes` records all Drabkina class routes in which the knowledge is actually taught, practised, repeated or systematized.
 
-The eventual class-mode denominator is built from the COMPLETE VERIFIED `route_classes` membership for that selected class, after full 5-11 itemization and deduplication. It is NOT built from current card count and NOT from `first_studied_class` alone.
+The future class-mode denominator is built from the COMPLETE VERIFIED `route_classes` membership for that selected class. It is NOT built from current card count and NOT from `first_studied_class` alone.
 
 PROGRESS SAFETY
 
@@ -134,8 +134,8 @@ No learner-facing class percentage is authorized from this current-127 checkpoin
 Reasons:
 1. current 127 is only the existing content set, not the full school vertical;
 2. exact grade-8 full project structure still needs completion;
-3. 20 current items still need exact class-route source evidence;
-4. Drabkina 5-11 must be itemized beyond the current 127;
+3. 18 current items still need exact class-route source evidence;
+4. Drabkina 5–11 must be itemized beyond the current 127;
 5. repeated material must be deduplicated;
 6. Rosenthal completeness control and current-norm audit must be completed.
 
