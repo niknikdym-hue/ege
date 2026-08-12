@@ -4,7 +4,7 @@
   "exam": "ege",
   "purpose": "exceptions_training_bank",
   "integration_status": "not_connected_to_production",
-  "content_version": "0.1.0",
+  "content_version": "0.2.0",
   "cluster": "n_nn_spelling",
   "items": [
     {
@@ -17,11 +17,15 @@
       "canonical_form": "деревянный",
       "wrong_forms": ["деревяный"],
       "rule_ref": "n_nn_spelling",
-      "why_exception": "Слово относится к традиционным исключениям из обычного написания прилагательных с -ЯН- и пишется с НН.",
-      "contrast_with": ["normal_yan_single_n"],
-      "examples": ["деревянная лестница", "деревянный футляр"],
+      "why_exception": "Прилагательные с суффиксом -ЯН- обычно пишутся с одной Н: глиняный, кожаный, серебряный. ДЕРЕВЯННЫЙ входит в традиционную тройку исключений с НН: деревянный, оловянный, стеклянный.",
+      "contrast_with": ["normal_yan_single_n", "n_nn_tin", "n_nn_glass"],
+      "examples": ["деревянная лестница", "деревянный футляр", "кожаный ремень — деревянная рама"],
       "practice_modes": ["recognize_exception", "recall_form", "contrast_normal_vs_exception", "context_choice"],
-      "source_refs": [{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 35, п. 12","purpose":"exception","verification_status":"verified"}],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method","verification_status":"verified"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 35, п. 12","purpose":"exception","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"}
+      ],
       "status": "source_verified"
     },
     {
@@ -34,11 +38,15 @@
       "canonical_form": "оловянный",
       "wrong_forms": ["оловяный"],
       "rule_ref": "n_nn_spelling",
-      "why_exception": "Традиционное исключение из обычного написания прилагательных с -ЯН-: пишется НН.",
-      "contrast_with": ["normal_yan_single_n"],
-      "examples": ["оловянная фигурка"],
+      "why_exception": "Суффикс -ЯН- обычно даёт одну Н, но ОЛОВЯННЫЙ — исключение с НН. Его запоминают вместе со словами ДЕРЕВЯННЫЙ и СТЕКЛЯННЫЙ.",
+      "contrast_with": ["normal_yan_single_n", "n_nn_wooden", "n_nn_glass"],
+      "examples": ["оловянная фигурка", "глиняная чашка — оловянная фигурка"],
       "practice_modes": ["recognize_exception", "recall_form", "contrast_normal_vs_exception", "context_choice"],
-      "source_refs": [{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 35, п. 12","purpose":"exception","verification_status":"verified"}],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method","verification_status":"verified"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 35, п. 12","purpose":"exception","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"}
+      ],
       "status": "source_verified"
     },
     {
@@ -51,11 +59,15 @@
       "canonical_form": "стеклянный",
       "wrong_forms": ["стекляный"],
       "rule_ref": "n_nn_spelling",
-      "why_exception": "Традиционное исключение из обычного написания прилагательных с -ЯН-: пишется НН.",
-      "contrast_with": ["normal_yan_single_n"],
-      "examples": ["стеклянная дверь"],
+      "why_exception": "Суффикс -ЯН- обычно даёт одну Н, но СТЕКЛЯННЫЙ — исключение с НН. Тройка исключений: ДЕРЕВЯННЫЙ, ОЛОВЯННЫЙ, СТЕКЛЯННЫЙ.",
+      "contrast_with": ["normal_yan_single_n", "n_nn_wooden", "n_nn_tin"],
+      "examples": ["стеклянная дверь", "серебряный браслет — стеклянная перегородка"],
       "practice_modes": ["recognize_exception", "recall_form", "contrast_normal_vs_exception", "context_choice"],
-      "source_refs": [{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 35, п. 12","purpose":"exception","verification_status":"verified"}],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method","verification_status":"verified"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 35, п. 12","purpose":"exception","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"}
+      ],
       "status": "source_verified"
     },
     {
@@ -68,11 +80,15 @@
       "canonical_form": "ветреный; безветренный",
       "wrong_forms": ["ветренный", "безветреный"],
       "rule_ref": "n_nn_spelling",
-      "why_exception": "В слове «ветреный» закреплена одна Н, а приставочное «безветренный» пишется с НН.",
-      "contrast_with": ["n_nn_wooden", "normal_enn_double_n"],
-      "examples": ["ветреный день", "безветренный вечер"],
+      "why_exception": "В слове ВЕТРЕНЫЙ пишется одна Н: ветреный день, ветреная погода. В приставочном БЕЗВЕТРЕННЫЙ — НН. Отдельно различайте ВЕТРЯНОЙ: ветряная мельница, ветряная оспа.",
+      "contrast_with": ["normal_enn_double_n", "vetryanoy_lexical_contrast"],
+      "examples": ["ветреный день", "безветренный вечер", "ветряная мельница"],
       "practice_modes": ["recall_form", "contrast_normal_vs_exception", "context_choice", "normative_variant"],
-      "source_refs": [{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 35, п. 12","purpose":"exception","verification_status":"verified"}],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method","verification_status":"verified"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 35, п. 12","purpose":"exception","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"}
+      ],
       "status": "source_verified"
     },
     {
@@ -83,13 +99,18 @@
       "exception_type": "orthographic_exception",
       "prompt_label": "КОВАНЫЙ",
       "canonical_form": "кованый",
-      "wrong_forms": ["кованный"],
+      "wrong_forms": ["кованный (в значении прилагательного без причастного контекста)"],
       "rule_ref": "n_nn_spelling",
-      "why_exception": "В слове «кованый» сочетание -ОВ- не является обычным суффиксом -ОВАНН-; в базовой форме пишется одна Н.",
-      "contrast_with": ["normal_ovann_double_n"],
-      "examples": ["кованая решётка"],
+      "why_exception": "КОВАНЫЙ — отглагольное прилагательное от глагола КОВАТЬ; в прилагательном пишется одна Н: кованая решётка, кованые ворота. Сравните причастное употребление с зависимым словом: кованный кузнецом гвоздь — НН.",
+      "contrast_with": ["normal_ovann_double_n", "forged_participle_context"],
+      "examples": ["кованая решётка", "кованые ворота", "кованный кузнецом гвоздь"],
       "practice_modes": ["recognize_exception", "recall_form", "contrast_normal_vs_exception", "context_choice"],
-      "source_refs": [{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 48, п. 6, примечание","purpose":"exception","verification_status":"verified"},{"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-07.txt","locator":"task 15 current bank: кованым","purpose":"exam_scope","verification_status":"verified"}],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method","verification_status":"verified"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 48, п. 6, примечание","purpose":"exception","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"},
+        {"source_type":"existing_trainer","source_path":"eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-07.txt","locator":"task 15 current bank: кованым","purpose":"exam_scope","verification_status":"verified"}
+      ],
       "status": "source_verified"
     },
     {
@@ -100,13 +121,17 @@
       "exception_type": "orthographic_exception",
       "prompt_label": "ЖЁВАНЫЙ",
       "canonical_form": "жёваный",
-      "wrong_forms": ["жёванный"],
+      "wrong_forms": ["жёванный (в значении прилагательного без причастного контекста)"],
       "rule_ref": "n_nn_spelling",
-      "why_exception": "Как и в слове «кованый», -ЕВ- входит в основу и не работает как обычный суффикс -ЁВАНН-; базовая форма пишется с одной Н.",
-      "contrast_with": ["n_nn_forged", "normal_ovann_double_n"],
-      "examples": ["жёваная бумага"],
+      "why_exception": "ЖЁВАНЫЙ — отглагольное прилагательное от глагола ЖЕВАТЬ; в прилагательном пишется одна Н: жёваная бумага. Сравните причастное употребление: жёванный ребёнком кусок хлеба — НН.",
+      "contrast_with": ["n_nn_forged", "normal_ovann_double_n", "chewed_participle_context"],
+      "examples": ["жёваная бумага", "жёванный ребёнком кусок хлеба"],
       "practice_modes": ["recognize_exception", "recall_form", "contrast_normal_vs_exception", "context_choice"],
-      "source_refs": [{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 48, п. 6, примечание","purpose":"exception","verification_status":"verified"}],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method","verification_status":"verified"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 48, п. 6, примечание","purpose":"exception","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"}
+      ],
       "status": "source_verified"
     },
     {
@@ -117,13 +142,17 @@
       "exception_type": "lexicalized_case",
       "prompt_label": "НАЗВАНЫЙ БРАТ",
       "canonical_form": "названый брат",
-      "wrong_forms": ["названный брат"],
+      "wrong_forms": ["названный брат (в устойчивом значении родства)"],
       "rule_ref": "n_nn_spelling",
-      "why_exception": "В устойчивом значении родства закреплено написание с одной Н; его нельзя механически выводить из наличия приставки.",
+      "why_exception": "В устойчивом сочетании НАЗВАНЫЙ БРАТ пишется одна Н. Это словарно закреплённое прилагательное. Сравните причастное употребление с НН: человек, названный в честь отца; участник, названный победителем.",
       "contrast_with": ["named_by_someone_participle"],
-      "examples": ["названый брат", "человек, названный победителем"],
+      "examples": ["названый брат", "человек, названный в честь отца", "участник, названный победителем"],
       "practice_modes": ["recognize_exception", "contrast_normal_vs_exception", "context_choice"],
-      "source_refs": [{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 48, п. 2","purpose":"exception","verification_status":"verified"}],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method","verification_status":"verified"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 48, п. 2","purpose":"exception","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"}
+      ],
       "status": "source_verified"
     },
     {
@@ -134,13 +163,17 @@
       "exception_type": "lexicalized_case",
       "prompt_label": "ПОСАЖЁНЫЙ ОТЕЦ",
       "canonical_form": "посажёный отец",
-      "wrong_forms": ["посажённый отец"],
+      "wrong_forms": ["посажённый отец (в традиционном свадебном наименовании)"],
       "rule_ref": "n_nn_spelling",
-      "why_exception": "В традиционном наименовании лица закреплена одна Н; обычное причастие «посаженный» в значении результата действия пишется с НН.",
+      "why_exception": "В традиционном свадебном наименовании ПОСАЖЁНЫЙ ОТЕЦ пишется с одной Н. Сравните обычное причастие с НН: посаженный за стол гость; посаженное весной дерево.",
       "contrast_with": ["planted_normal_participle"],
-      "examples": ["посажёный отец", "посаженное весной дерево"],
+      "examples": ["посажёный отец", "посаженный за стол гость", "посаженное весной дерево"],
       "practice_modes": ["recognize_exception", "contrast_normal_vs_exception", "context_choice"],
-      "source_refs": [{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 48, п. 2","purpose":"exception","verification_status":"verified"}],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method","verification_status":"verified"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 48, п. 2","purpose":"exception","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"}
+      ],
       "status": "source_verified"
     },
     {
@@ -153,11 +186,15 @@
       "canonical_form": "раненый боец; раненный в руку боец",
       "wrong_forms": ["раненный боец (без причастного контекста)", "раненый в руку боец"],
       "rule_ref": "n_nn_spelling",
-      "why_exception": "Количество Н зависит от значения и причастного употребления: качественное/лексикализованное «раненый» противопоставляется форме, сохраняющей явное значение действия, например с пояснительным словом.",
-      "contrast_with": ["n_nn_forged"],
-      "examples": ["раненый боец", "раненный осколком боец"],
+      "why_exception": "Нужно различить прилагательное и причастное употребление. РАНЕНЫЙ БОЕЦ — одна Н. Если форма сохраняет значение действия и зависимое слово уточняет это действие, пишется НН: раненный осколком боец, раненный в руку солдат. Само наличие любого зависимого слова нельзя превращать в универсальный тест для всех слов на Н/НН.",
+      "contrast_with": ["n_nn_forged", "wounded_participle_context"],
+      "examples": ["раненый боец", "раненный осколком боец", "раненный в руку солдат"],
       "practice_modes": ["contrast_normal_vs_exception", "context_choice", "normative_variant"],
-      "source_refs": [{"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 48, п. 2","purpose":"rule_boundary","verification_status":"verified"}],
+      "source_refs": [
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf","purpose":"example_method","verification_status":"verified"},
+        {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/rozental.doc","locator":"§ 48, п. 2","purpose":"rule_boundary","verification_status":"verified"},
+        {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"}
+      ],
       "status": "source_verified"
     }
   ],
@@ -166,7 +203,11 @@
     "normal_enn_double_n",
     "normal_ovann_double_n",
     "named_by_someone_participle",
-    "planted_normal_participle"
+    "planted_normal_participle",
+    "forged_participle_context",
+    "chewed_participle_context",
+    "wounded_participle_context",
+    "vetryanoy_lexical_contrast"
   ],
-  "review_notes": "First exceptions cluster only. No production integration. Before public use, add independent content review and generate original distractor/context sets for each practice mode."
+  "review_notes": "N/NN cluster upgraded after full 80-card audit. Drabkina/Subbotin method is used for school-facing algorithm/contrast structure; normative boundaries are cross-checked separately. No production/Tilda integration."
 }
