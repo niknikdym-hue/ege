@@ -2,26 +2,83 @@ EKSAMIO LEARNING ENGINE
 RUSSIAN PILOT — CURRENT STATUS
 DATE: 2026-08-12
 READ AFTER: 00-WORK-STATUS.txt and 00A-WORK-STATUS-CURRENT-ADDENDUM.txt
-LATEST MILESTONE: 127-RUSSIAN-EXCEPTIONS-FRESH-MAIN-VERIFICATION.txt
+LATEST MILESTONE: 129-NEW-CHAT-HANDOFF-RUSSIAN-EXCEPTIONS.txt
+MANDATORY CONTENT RULES: 128-RUSSIAN-EXCEPTIONS-CONTENT-AUDIT-RULES.txt
 
 CURRENT PRODUCT SAFETY
 
 CURRENT EGE RUSSIAN TRAINER: FROZEN / UNCHANGED
 CURRENT EGE DEMO: UNCHANGED
 CURRENT TRAINER T123/JS/CSS/HTML/ANSWERS/SCORING/LOCALSTORAGE: UNCHANGED
-PUBLIC EXCEPTIONS TRAINER: NOT PUBLISHED
+LIVE EXCEPTIONS PAGE: TEST/PREVIEW ONLY
+PUBLIC CONTENT APPROVAL: HOLD
 PRODUCTION INTEGRATION: HOLD
-CODEX USED FOR CURRENT WORK: NO
+CODEX USED FOR CURRENT CONTENT AUDIT: NO
+
+CRITICAL CONTENT STATUS
+
+The standalone Exceptions technical implementation passed machine/browser gates, but the linguistic/source content is now under a mandatory full re-audit.
+Technical PASS does NOT authorize linguistic/content PASS.
+
+Current active practice bank: 80 cards.
+Required editorial/source audit: 80/80 cards, no sampling.
+Each card must receive PASS / FIX / HOLD / REPLACE.
+
+Mandatory rules are defined in:
+128-RUSSIAN-EXCEPTIONS-CONTENT-AUDIT-RULES.txt
+
+New-chat continuation state is defined in:
+129-NEW-CHAT-HANDOFF-RUSSIAN-EXCEPTIONS.txt
+
+KNOWN CONTENT ISSUES ALREADY FOUND
+
+1. «В конце концов»
+The previous universal teaching that the expression is always non-introductory is incorrect. Rosenthal distinguishes context-dependent use. Card must teach the contextual distinction or be replaced.
+
+2. «Кожаный»
+The previous explanation used an invented/forced semantic rationale. It must be replaced by the actual rule: adjective formation, suffix -ан-, one Н, comparable examples and relevant exceptions/contrasts.
+
+3. Source attribution
+Some internal entries used vague/incorrect attributions such as "Rosenthal: morphological norms / lexical norms / syntactic norms". The project Rosenthal source is an orthography/punctuation reference; non-covered norm areas must be re-sourced to the appropriate project books/dictionaries or Gramota.ru.
+
+SOURCE POLICY
+
+Orthography/punctuation:
+1. project Rosenthal reference;
+2. authoritative books already stored in the project source folder;
+3. Gramota.ru when needed.
+
+Morphology/orthoepy/lexical norms/government/syntax not actually covered by Rosenthal:
+1. authoritative project books/dictionaries;
+2. Gramota.ru;
+3. FIPI for current official exam facts, task format, criteria, lists and constraints.
+
+If not authoritatively confirmed: HOLD, not PASS.
+
+LEARNER-FACING SOURCE VISIBILITY
+
+Learners must NOT see:
+- Rosenthal;
+- Gramota.ru;
+- project book names;
+- paragraph/page references;
+- rule_ref;
+- provenance;
+- internal source paths;
+- non-FIPI source URLs.
+
+FIPI is the only source that may be shown to the learner, and only when genuinely relevant as the official exam source.
+
+Public runtime must exclude non-FIPI source references where possible and build/test tooling must fail on forbidden source leakage.
 
 EXPLANATION LAYER
 
 - learner explanation coverage: tasks 1–27 at source layer;
-- Rosenthal is primary language-rule source;
+- Rosenthal remains primary language-rule source for orthography/punctuation;
 - FIPI remains authoritative for current exam facts/criteria/lists;
 - canonical Explanation Bank builder exists;
 - minimal Explanation Runtime builder exists;
 - deterministic Explanation Resolver exists;
-- resolver synthetic tests cover exact/partial/fallback/demo/control behavior;
 - external explanation never owns current trainer answer or score.
 
 EXCEPTIONS SOURCE / PRACTICE
@@ -32,21 +89,11 @@ CURRENT source manifest:
 CURRENT practice manifest:
 - 119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json
 
-Practice history:
-- wave 1: 24 cards;
-- wave 2: 24 cards;
-- wave 3: 24 cards;
-- current correction: +1 replacement, 1 superseded card disabled;
-- wave 4 P0 closure: +8 cards.
-
 CURRENT ACTIVE PRACTICE BANK:
 - 80 cards
 - P0/P1 uncovered practice: 0
 
-CURRENT MACHINE-BUILT SOURCE COUNTS:
-- Explanation Bank: 72 units / tasks 1–27
-- Exceptions Bank: 127 source items
-- active Practice Bank: 80 cards
+IMPORTANT: coverage completeness is not the same as linguistic correctness. The 80-card source audit is mandatory before release.
 
 SKILL GRAPH / CURRENT TRAINER BASELINE
 
@@ -55,30 +102,14 @@ SKILL GRAPH / CURRENT TRAINER BASELINE
 - current trainer storage keys remain separate from standalone Exceptions storage namespace;
 - current trainer source remains outside standalone implementation scope.
 
-CURRENT LEARNING ENGINE GATE
+CURRENT LEARNING ENGINE MACHINE GATE
 
 Aggregate validator:
 `python3 build/run_russian_learning_engine_validation_current_v10.py`
 
-CURRENT RESULT:
-PASS.
+Machine result: PASS.
 
-Validated checks include:
-1. Skill Graph vs current trainer snapshot;
-2. canonical Explanation Bank;
-3. Explanation Runtime;
-4. Explanation Resolver synthetic tests;
-5. corrected canonical Exceptions Bank;
-6. active 80-card Practice Bank;
-7. launch priority;
-8. Exceptions Runtime;
-9. deterministic runtime T123 chunk reconstruction;
-10. practice coverage audit;
-11. runtime size audit;
-12. session selector tests;
-13. priority selector tests;
-14. learner-state reducer tests;
-15. exact error->exception handoff validation.
+This validates structure/contracts/runtime mechanics. It does NOT replace the current linguistic/source audit.
 
 STANDALONE EXCEPTIONS IMPLEMENTATION
 
@@ -93,101 +124,50 @@ Implemented:
 - light Eksamio shell/CSS/renderer;
 - «Все исключения» flow;
 - «Мои исключения» flow;
-- feedback + learner-safe rule drawer;
+- feedback + rule drawer;
 - session result;
 - retry errors;
 - corrupt/future-state safe fallback;
 - fail-closed incomplete/mixed runtime handling.
 
-STANDALONE RUNTIME
+LATEST PUBLIC-RUNTIME SAFETY CHANGE
 
-- enabled exceptions: 73
-- enabled practice items: 80
-- learner topics: 6
-- content version: sha256-20a002b6248a78c7ab38
-- runtime data delivery: deterministic T123 JSON chunks
-- runtime data blocks: 4
-- largest runtime data block: 34,768 UTF-8 bytes
+Internal source references were removed from learner-facing runtime.
+Forbidden non-FIPI source leakage now causes build/test failure.
+After this cleanup the generated package shape became:
+- 8 T123 blocks total;
+- 3 data-only runtime blocks.
 
-GENERATED TILDA PREVIEW PACKAGE
+The preview test now validates the actual package manifest rather than hard-coding the old 9/4 shape.
 
-Build command:
-`python3 build/build_russian_exceptions_standalone_package.py`
+LIVE TILDA TEST PAGE
 
-Generated package location:
-`build/standalone-exceptions-tilda/`
+https://eksamio.ru/trenazhery/russkiy/isklyucheniya/
 
-Package:
-- 9 T123 blocks total;
-- 4 data-only runtime blocks;
-- SEO;
-- HEAD;
-- INSTALLATION;
-- PREVIEW.html;
-- PACKAGE-MANIFEST.json;
-- TEST-RESULT.txt after full preview gate PASS.
-
-FULL STANDALONE PREVIEW GATE
-
-Command:
-`python3 build/run_russian_exceptions_standalone_preview_validation.py`
-
-Fresh GitHub main reproduction on 2026-08-12:
-PASS.
-
-Fresh-main result:
-- Learning Engine CURRENT v10: PASS;
-- browser-core parity: PASS;
-- deterministic 9-block package build: PASS;
-- Chromium preview smoke: PASS.
-
-Chromium smoke covers:
-- page boot;
-- complete 10-card session;
-- rule drawer;
-- correct/wrong feedback;
-- real personal error -> «Мои исключения»;
-- targeted retry;
-- mobile 375x812 without horizontal overflow;
-- corrupt state preservation/fallback;
-- fail-closed behavior when a runtime data chunk is missing.
+Treat this page as TEST/PREVIEW ONLY until the 80/80 content audit is complete and a corrected package is rebuilt.
+Do not ask the user to repeatedly replace T123 during the audit.
 
 CURRENT EGE TRAINER REGRESSION BOUNDARY
 
 Standalone work has not modified the current EGE trainer source.
-Its independent source-tree hash remained unchanged across standalone implementation work.
-
-READY NOW
-
-- reviewed standalone source is in GitHub main;
-- fresh-main standalone preview gate reproduces PASS;
-- one checkpoint ZIP may be given to the user for the local `exam-platform-tilda` workspace;
-- generated `build/standalone-exceptions-tilda/` package may be used for a Tilda preview/hidden test page.
-
-NOT AUTHORIZED YET
-
-- public publication of `/trenazhery/russkiy/isklyucheniya/`;
-- `/trenazhery/` catalog card;
-- main EGE trainer handoff;
-- explanation integration into the current EGE trainer.
+Main-trainer handoff/explanation integration remains HOLD.
 
 NEXT WORK ORDER
 
-1. Hand the user one current `eksamio-learning-engine` checkpoint ZIP with the generated standalone Tilda preview package inside.
-2. Run real Tilda preview/hidden-page smoke: desktop/mobile/reload/state/runtime completeness.
-3. Only after Tilda-side PASS make an explicit public-release decision.
-4. Catalog addition remains a separate rollout/package.
-5. Main EGE trainer handoff/explanation integration remains a later reversible phase.
+1. Continue source audit of all 80 active cards.
+2. Produce a per-card PASS/FIX/HOLD/REPLACE audit record with source evidence.
+3. Correct every FIX/REPLACE using real rule + application + normal examples + exceptions/contrast.
+4. Exclude unresolved HOLD cards from learner runtime.
+5. Rebuild practice/runtime and rerun machine + browser/Chromium gates.
+6. Only then issue ONE corrected Tilda package.
+7. Catalog addition remains separate.
+8. Main EGE trainer integration remains a later reversible phase.
 
 CURRENT DECISION
 
-CONTENT: ADVANCED
-EXPLANATIONS: 1–27 SOURCE COVERED
-EXCEPTIONS PRACTICE: 80 ACTIVE / P0-P1 COVERAGE CLOSED
-RUNTIME/DATA TOOLING: PASS
-BROWSER CORE: PASS
-FRESH-MAIN LOCAL PREVIEW: PASS
-TILDA PREVIEW PACKAGE: READY
-PUBLICATION: HOLD
-CATALOG CHANGE: HOLD / SEPARATE
-CURRENT TRAINER: UNCHANGED
+TECHNICAL STANDALONE BASE: PASS
+LINGUISTIC/SOURCE CONTENT: FULL RE-AUDIT 80/80 IN PROGRESS
+LIVE TILDA PAGE: TEST/PREVIEW ONLY
+NEW TILDA PACKAGE: HOLD UNTIL CONTENT AUDIT COMPLETE
+CURRENT EGE TRAINER: UNCHANGED
+MAIN-TRAINER INTEGRATION: HOLD
