@@ -1,0 +1,364 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER
+FULL 80-CARD LINGUISTIC + DRABKINA/SUBBOTIN AUDIT v0.1
+
+DATE: 2026-08-12
+STATUS: AUDIT COMPLETE / CONTENT CORRECTIONS REQUIRED / PRODUCTION HOLD
+MODE: ADD-ONLY AUDIT
+SCOPE: ALL 80 ACTIVE PRACTICE CARDS
+TILDA: NOT CHANGED
+CURRENT EGE TRAINER: NOT CHANGED
+
+PURPOSE
+
+Каждая активная карточка проверена отдельно по пяти уровням:
+1) точный нормативный ответ;
+2) реальное правило и граница его применимости;
+3) исключение/контраст;
+4) learner-facing explanation;
+5) корректная provenance.
+
+Новый методический бар:
+Драбкина/Субботин используются максимально полно как проверенная школьная методика:
+ТЕОРИЯ -> ТАБЛИЦА/СХЕМА -> АЛГОРИТМ -> ТИПИЧНАЯ ОШИБКА -> КОНТРАСТ -> САМОСТОЯТЕЛЬНАЯ ПРОВЕРКА.
+Нормативный источник имеет приоритет, если старое пособие содержит устаревшее или слишком категоричное правило.
+
+STATUS CONTRACT
+PASS = answer, rule, boundary, exception/contrast and provenance are safe.
+FIX = answer is correct, but rule wording, boundary, examples, Drabkina-level pedagogy or provenance must be corrected.
+FAIL-REPLACE = active card teaches a wrong/outdated answer or false universalization and must be replaced.
+
+SUMMARY
+ACTIVE CARDS: 80
+PASS: 48
+FIX: 30
+FAIL-REPLACE: 2
+HOLD: 0
+
+SOURCE KEY
+D4-ORTHO = Drabkina/Subbotin: orthoepy tables/algorithms.
+D5-PAR = Drabkina/Subbotin: paronym definitions and collocation contrasts.
+D7-MORPH = Drabkina/Subbotin: morphology/difficult noun forms.
+D8-SYNTAX = Drabkina/Subbotin: grammatical errors and syntax algorithms.
+D9-ROOTS = Drabkina/Subbotin: alternating-root tables.
+D10-PREPRI = Drabkina/Subbotin: PRE-/PRI- lexical contrasts.
+D13-NENI = Drabkina/Subbotin: НЕ/НИ algorithms.
+D14-WRITING = Drabkina/Subbotin: solid/separate writing and derivative-preposition tables.
+D15-NN = Drabkina/Subbotin: N/NN table + adjective/participle algorithm.
+D18-INTRO = Drabkina/Subbotin: introductory-word table + algorithm.
+D16-21-PUNCT = Drabkina/Subbotin punctuation algorithms.
+R-ORTH / R-PUNCT = project rozental.doc, exact orthography/punctuation use only.
+G-* = current academic/dictionary cross-check via Gramota.ru.
+FIPI-ORTHO-2026 = current official-list-derived project orthoepic bank.
+
+PROJECT DRABKINA/SUBBOTIN CORPUS USED
+- russkij-jaz_-5kl_-prakt_-po-orf_-i-punkt__drabkina_2019-128s.pdf
+- 1622575648_russkij-jaz_-6kl_-prakt_-po-orf_-i-punkt__drabkina_2019-128s.pdf
+- 1528096458_1399-russkiy-yaz.-7kl.-prakt.-po-orfogr._drabkina_2018-120s.pdf
+- 1528096318_1400-russkiy-yaz.-8kl.-prakt.-po-orfogr._drabkina_2018-120s.pdf
+- 1563779010_174-russkij-jazyk_-9kl_-prakt_-po-orfografii-i-punkt__drabkina_2018-136s.pdf
+- Drabkina_S._Russkiy_yazik_10_klass_gotovimsya_k_EGE.pdf
+- Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf
+
+PER-CARD AUDIT
+
+01 | ex-practice-nn-wooden-001 | ANSWER деревяННая | FIX
+Rule: -ЯН- normally one Н; ДЕРЕВЯННЫЙ is an НН exception. Add contrast глиняный/кожаный vs деревянный/оловянный/стеклянный. SRC D15-NN/G-NN.
+
+02 | ex-practice-nn-forged-001 | ANSWER кованая решётка | FIX
+Answer correct. Explain as verb-derived adjective from КОВАТЬ, one Н; compare КОВАННЫЙ КУЗНЕЦОМ ГВОЗДЬ — participle, НН. Do not stop at vague «not ordinary -ОВАНН-». SRC D15-NN/G-NN.
+
+03 | ex-practice-nn-wounded-001 | ANSWER раненный осколком | FIX
+Answer correct. Add explicit pair РАНЕНЫЙ БОЕЦ / РАНЕННЫЙ ОСКОЛКОМ БОЕЦ and warn that a dependent word is not a universal part-of-speech test. SRC D15-NN/G-NN.
+
+04 | ex-practice-pre-pri-001 | ANSWER прибывать | PASS
+ПРИБЫВАТЬ = reach/arrive; ПРЕБЫВАТЬ = stay/be. SRC D10-PREPRI/R-ORTH.
+
+05 | ex-practice-alt-sochetat-001 | ANSWER сочетание | PASS
+School exception in ЧЕТ-/ЧИТ- group; keep Е, no invented etymology. SRC D9-ROOTS/R-ORTH.
+
+06 | ex-practice-ne-kto-001 | ANSWER не кто иной, как | PASS
+Affirmative comparison НЕ КТО ИНОЙ, КАК vs negative НИКТО ИНОЙ НЕ. SRC D13-NENI/R-ORTH.
+
+07 | ex-practice-nesmotrya-001 | ANSWER Несмотря на | PASS
+Concessive derivative preposition; contrast НЕ СМОТРЯ (= не глядя). SRC D14-WRITING/R-ORTH.
+
+08 | ex-practice-ne-without-form-001 | ANSWER недоумевал | PASS
+Modern word does not function without НЕ; solid spelling. SRC D13-NENI/R-ORTH.
+
+09 | ex-practice-v-techenie-001 | ANSWER В течение | PASS
+Temporal derivative preposition, separate, -Е; contrast В ТЕЧЕНИИ РЕКИ. SRC D14-WRITING/R-ORTH.
+
+10 | ex-practice-navstrechu-001 | ANSWER на встречу с редактором | PASS
+Noun retains lexical meaning; contrast ИДТИ НАВСТРЕЧУ ДРУГУ. SRC D14-WRITING/R-ORTH.
+
+11 | ex-practice-vovremya-001 | ANSWER вовремя | PASS
+Adverb = своевременно; contrast ВО ВРЕМЯ УРОКА. SRC D14-WRITING/R-ORTH.
+
+12 | ex-practice-slovno-001 | ANSWER не вводное | PASS
+СЛОВНО is not introductory in this structure. SRC D18-INTRO/G-INTRO.
+
+13 | ex-practice-odnako-001 | ANSWER противительный союз | PASS
+Initial ОДНАКО here = НО; contrast introductory use in middle/end. SRC D18-INTRO/G-INTRO.
+
+14 | ex-practice-nakonets-001 | ANSWER «Наконец поезд подошёл...» non-introductory | PASS
+Correct distinction: discourse order vs temporal/result meaning. SRC D18-INTRO/G-INTRO.
+
+15 | ex-practice-doktora-001 | ANSWER доктора | FIX
+Form correct. Re-source morphology away from project Rosenthal; use Drabkina/dictionary/Gramota. SRC D7-MORPH/G-DICT.
+
+16 | ex-practice-polotenets-001 | ANSWER полотенец | FIX
+Form correct. Re-source; link to reusable genitive-plural table rather than isolated memory. SRC D7-MORPH/G-DICT.
+
+17 | ex-practice-soglasno-001 | ANSWER согласно приказу | FIX
+Dative government correct. Re-source syntax/government away from false Rosenthal morphology/syntax labels. SRC D8-SYNTAX/G-GOV.
+
+18 | ex-practice-apposition-001 | ANSWER в романе «Война и мир» | FIX
+Correct. Add contrast В РОМАНЕ «ВОЙНА И МИР» / В «ВОЙНЕ И МИРЕ»; re-source syntax. SRC D8-SYNTAX/G-GRAM.
+
+19 | ex-practice-prazdnyi-001 | ANSWER праздничный | FIX
+Meanings correct. Re-source paronym norm; teach collocation pair ПРАЗДНЫЙ ЧЕЛОВЕК/РАЗГОВОР — ПРАЗДНИЧНЫЙ ОБЕД/ДЕНЬ. SRC D5-PAR/G-DICT.
+
+20 | ex-practice-pamyatnyi-001 | ANSWER памятное | FIX
+Correct. Re-source; pair ПАМЯТЛИВЫЙ ЧЕЛОВЕК — ПАМЯТНОЕ МЕСТО/СОБЫТИЕ. SRC D5-PAR/G-DICT.
+
+21 | ex-practice-and-compound-001 | ANSWER comma needed | PASS
+Two grammatical bases; И connects SSP clauses. SRC D16-21-PUNCT/R-PUNCT.
+
+22 | ex-practice-junction-001 | ANSWER no comma between ЧТО and ЕСЛИ | PASS
+Double conjunction ЕСЛИ..., ТО blocks free extraction of inner clause. SRC D16-21-PUNCT/G-PUNCT.
+
+23 | ex-practice-colon-rule-001 | ANSWER second part explains first | PASS
+Second part opens content of «одно». SRC D16-21-PUNCT/R-PUNCT.
+
+24 | ex-practice-stress-otzyv-001 | ANSWER отзЫв посла | PASS
+Current pair: Отзыв о книге / отзЫв посла. SRC D4-ORTHO/FIPI-ORTHO-2026.
+
+25 | ex-practice-v-prodolzhenie-001 | ANSWER В продолжение | PASS
+Temporal derivative preposition, separate, -Е; contrast В ПРОДОЛЖЕНИИ ТЕКСТА. SRC D14-WRITING/R-ORTH.
+
+26 | ex-practice-v-zaklyuchenie-001 | ANSWER В заключение | PASS
+Meaning «под конец» is correct; course needs contrast with noun contexts В ЗАКЛЮЧЕНИИ. SRC D14-WRITING/R-ORTH.
+
+27 | ex-practice-napodobie-001 | ANSWER наподобие | PASS
+Derivative preposition = вроде/подобно, solid. SRC D14-WRITING/R-ORTH.
+
+28 | ex-practice-vposledstvii-001 | ANSWER впоследствии | PASS
+Adverb = позже, solid, ending -ИИ. SRC D14-WRITING/R-ORTH.
+
+29 | ex-practice-nevziraya-001 | ANSWER Невзирая на | PASS
+Concessive derivative preposition, solid; contrast literal НЕ ВЗИРАЯ. SRC D14-WRITING/R-ORTH.
+
+30 | ex-practice-nedo-001 | ANSWER не досмотрел фильм до конца | PASS
+НЕ + ДО- = action not completed; contrast НЕДО- insufficiency, e.g. НЕДООЦЕНИТЬ. SRC D13-NENI/R-ORTH.
+
+31 | ex-practice-far-not-001 | ANSWER далеко не простой | PASS
+ДАЛЕКО НЕ strengthens negation; separate. SRC D13-NENI/R-ORTH.
+
+32 | ex-practice-poetomu-001 | ANSWER ПОЭТОМУ non-introductory | PASS
+Logical connection does not make a word introductory. SRC D18-INTRO/G-INTRO.
+
+33 | ex-practice-voobshche-001 | ANSWER adverb/non-introductory | PASS
+In this sentence ВООБЩЕ has adverbial meaning. Course must also show modern context-dependent introductory use; do not mechanically copy an older «never introductory» table. SRC D18-INTRO/G-INTRO.
+
+34 | ex-practice-konechno-001 | ANSWER «Он, конечно, перепроверит расчёт.» | PASS
+Modern contrast with emphatic particle is valid; «Конечно правда!» may be non-separated. Our current nuance is more accurate than a simplified old table. SRC D18-INTRO/G-INTRO.
+
+35 | ex-practice-v-kontse-kontsov-corrected-001 | CURRENT ANSWER «само сочетание не вводное» | FAIL-REPLACE
+False universalization. Restore context distinction: introductory as conclusion/result of reasoning vs non-introductory as event/result circumstance. Project bank 84 already contains the safer model. SRC D18-INTRO/G-INTRO/84-bank.
+
+36 | ex-practice-pravda-001 | ANSWER member of sentence | PASS
+«Это правда» = sentence member. General unit should also show particle/introductory/conjunction uses. SRC D18-INTRO/G-INTRO.
+
+37 | ex-practice-kupola-001 | ANSWER купола | FIX
+Form correct and present in Drabkina. Re-source morphology away from Rosenthal. SRC D7-MORPH/G-DICT.
+
+38 | ex-practice-pomidorov-001 | ANSWER помидоров | FIX
+Form correct. Re-source and attach to genitive-plural table. SRC D7-MORPH/G-DICT.
+
+39 | ex-practice-vorot-001 | ANSWER ворот | FIX
+Form correct. Re-source; teach as normative pluralia-tantum form. SRC D7-MORPH/G-DICT.
+
+40 | ex-practice-po-priezde-001 | ANSWER по приезде | FIX
+Correct specifically in meaning «after arrival». Current reference also permits ПО ПРИЕЗДУ in another dative meaning; never teach «по приезду is always wrong». Re-source. SRC D8-SYNTAX/G-329881.
+
+41 | ex-practice-indirect-speech-001 | ANSWER «Он сказал, что вернётся на следующий день.» | FIX
+Chosen option is correct because speaker-person shift Я -> ОН is required. Do not teach «завтра -> на следующий день» as a universal automatic replacement; temporal deictics depend on reporting context. Rewrite explanation/example. SRC D8-SYNTAX/G-GRAM.
+
+42 | ex-practice-homogeneous-government-001 | ANSWER «интересуется историей и изучает её» | FIX
+CARD ITSELF IS CORRECT. интересоваться чем? / изучать что? Re-source syntax/government and connect to reusable government table. SRC D8-SYNTAX/G-GOV.
+
+43 | ex-practice-ledovyi-001 | ANSWER ледовая обстановка | FIX
+Correct. Re-source; pair ЛЕДОВАЯ ОБСТАНОВКА/АРЕНА — ЛЕДЯНАЯ ГЛЫБА/ВОДА/РУКА. SRC D5-PAR/G-DICT.
+
+44 | ex-practice-otborochnyi-001 | ANSWER отборочный тур | FIX
+Correct. Re-source; ОТБОРОЧНЫЙ = for selection, ОТБОРНЫЙ = selected as best/high-quality. SRC D5-PAR/G-DICT.
+
+45 | ex-practice-produktovyi-001 | ANSWER продуктовая корзина | FIX
+Correct. Drabkina gives a detailed ПРОДУКТИВНЫЙ/ПРОДУКТОВЫЙ contrast. Re-source and expand collocations. SRC D5-PAR/G-DICT.
+
+46 | ex-practice-dash-rules-001 | ANSWER dash between subject and predicate | PASS
+«Цель поездки — подготовить материал»: no enumeration/generalizing-word rule here. SRC D16-21-PUNCT/R-PUNCT.
+
+47 | ex-practice-comma-multi-rule-001 | ANSWER rules are different | PASS
+First comma separates subordinate clause; later commas separate homogeneous members. SRC D16-21-PUNCT/R-PUNCT.
+
+48 | ex-practice-and-common-element-001 | ANSWER no comma | PASS
+Common adverbial «к вечеру» applies to both predicative parts; special SSP case without comma. SRC D16-21-PUNCT/G-PUNCT.
+
+49 | ex-practice-nn-tin-001 | ANSWER оловянная | FIX
+Answer correct. Teach -ЯН- normally Н + exception trio ДЕРЕВЯННЫЙ/ОЛОВЯННЫЙ/СТЕКЛЯННЫЙ. SRC D15-NN/G-NN.
+
+50 | ex-practice-nn-glass-001 | ANSWER стеклянная | FIX
+Same fix: rule + exception trio + ordinary contrasts. SRC D15-NN/G-NN.
+
+51 | ex-practice-nn-windy-001 | ANSWER ветреный день — безветренный вечер | FIX
+Pair correct. Add separate contrast ВЕТРЯНОЙ (ветряная мельница/оспа) so meanings/models are not mixed. SRC D15-NN/G-NN.
+
+52 | ex-practice-nn-chewed-001 | ANSWER жёваная | FIX
+Answer correct. Explain verb-derived adjective from ЖЕВАТЬ, one Н; compare ЖЁВАННЫЙ РЕБЁНКОМ КУСОК — participle, НН. SRC D15-NN/G-NN.
+
+53 | ex-practice-nn-named-brother-001 | ANSWER названый брат | FIX
+Answer correct. Required contrast: НАЗВАНЫЙ БРАТ — НАЗВАННЫЙ В ЧЕСТЬ ОТЦА / НАЗВАННЫЙ ПОБЕДИТЕЛЕМ. SRC D15-NN/G-NN.
+
+54 | ex-practice-nn-planted-father-001 | ANSWER посажёный отец | FIX
+Answer correct. Required contrast: ПОСАЖЁНЫЙ ОТЕЦ — ПОСАЖЕННЫЙ ЗА СТОЛ ГОСТЬ / ПОСАЖЕННОЕ ДЕРЕВО. SRC D15-NN/G-NN.
+
+55 | ex-practice-zorevat-001 | CURRENT ANSWER зоревать | FAIL-REPLACE
+Obsolete orthography. Modern form is ЗАРЕВАТЬ. Old «зоревать» exception was removed; academic orthographic dictionary has used «заревать» since 1999. SRC G-319937/current academic dictionary.
+
+56 | ex-practice-polog-001 | ANSWER полог | PASS
+Correct. Modern learner wording should treat it as lexicalized/dictionary case rather than forced productive ЛАГ-/ЛОЖ- derivation. SRC R-ORTH/G-MORPHEME.
+
+57 | ex-practice-plovets-001 | ANSWER пловец | PASS
+Traditional spelling with О; avoid invented historical derivation. SRC D9-ROOTS/G-ROOTS.
+
+58 | ex-practice-plyvuny-001 | ANSWER плывуны | PASS
+For ПЛЫВУН = water-saturated soil, Ы is normative; do not confuse with ПЛАВУН in other meanings. SRC G-ROOTS/G-DICT.
+
+59 | ex-practice-rast-ros-001 | ANSWER поросль | PASS
+Regular РАСТ-/РАЩ-/РОС- model; useful contrast to true exceptions (отрасль, росток etc.). SRC D9-ROOTS/R-ORTH.
+
+60 | ex-practice-skachok-001 | ANSWER скачок | FIX
+Answer correct, but old mnemonic is too crude. Rebuild general rule as modern СКАК-/СКОК-/СКАЧ-/СКОЧ- pattern; do not teach СКАЧОК as an isolated exception without boundary. SRC D9-ROOTS/current G-319154.
+
+61 | ex-practice-utvar-001 | ANSWER утварь | PASS
+Traditional school exception is usable as memory hook, but modern morphemics may treat УТВАРЬ- as indivisible root. Current cautious «special dictionary spelling» is safe. SRC D9-ROOTS/G-325135.
+
+62 | ex-practice-gar-special-001 | ANSWER изгарь | PASS
+ИЗГАРЬ remains a valid exceptional spelling in ГАР-/ГОР-. SRC D9-ROOTS/current academic rule.
+
+63 | ex-practice-tsygan-001 | ANSWER цыганский | PASS
+ЦЫГАН family: normative Ы after Ц in root. SRC D9-ROOTS/current academic rule.
+
+64 | ex-practice-tsyplyonok-001 | ANSWER цыплёнок | PASS
+Normative traditional exception with Ы after Ц. SRC D9-ROOTS/current academic rule.
+
+65 | ex-practice-tsypochki-001 | ANSWER на цыпочках | PASS
+Normative exception with Ы after Ц. SRC D9-ROOTS/current academic rule.
+
+66 | ex-practice-prebyvat-002 | ANSWER пребывать | PASS
+ПРЕБЫВАТЬ = be/stay; correct contrast with ПРИБЫВАТЬ. SRC D10-PREPRI/R-ORTH.
+
+67 | ex-practice-predat-pridat-001 | ANSWER придать | PASS
+ПРИДАТЬ quality/property; ПРЕДАТЬ person/cause/secret etc. SRC D10-PREPRI/R-ORTH.
+
+68 | ex-practice-predel-pridel-001 | ANSWER предел | PASS
+ПРЕДЕЛ = boundary; ПРИДЕЛ = side chapel. SRC D10-PREPRI/R-ORTH.
+
+69 | ex-practice-preemnik-priemnik-001 | ANSWER преемником | PASS
+ПРЕЕМНИК = successor; ПРИЁМНИК = receiver/device/person receiving. SRC D10-PREPRI/R-ORTH.
+
+70 | ex-practice-prestupit-pristupit-001 | ANSWER приступить | PASS
+ПРИСТУПИТЬ К РАБОТЕ = begin; ПРЕСТУПИТЬ ЗАКОН/ГРАНИЦУ = violate/cross. SRC D10-PREPRI/R-ORTH.
+
+71 | ex-practice-pretvorit-pritvorit-001 | ANSWER претворить | PASS
+ПРЕТВОРИТЬ ИДЕЮ = realize; ПРИТВОРИТЬ ДВЕРЬ / ПРИТВОРИТЬСЯ = different lexeme. SRC D10-PREPRI/R-ORTH.
+
+72 | ex-practice-prekhodyashchiy-prikhodyashchiy-001 | ANSWER преходящее | PASS
+ПРЕХОДЯЩИЙ = temporary; ПРИХОДЯЩИЙ = one who comes. SRC D10-PREPRI/R-ORTH.
+
+73 | ex-practice-garantiynyy-context-001 | ANSWER гарантийный срок обслуживания | FIX
+Correct. Re-source paronym norm; store pair ГАРАНТИЙНЫЙ СРОК/ТАЛОН — ГАРАНТИРОВАННЫЙ РЕЗУЛЬТАТ. SRC D5-PAR/G-DICT.
+
+74 | ex-practice-garantirovannyy-context-001 | ANSWER гарантированный результат | FIX
+Correct. Current learner explanation is good; internal Rosenthal-lexical provenance must be removed. SRC D5-PAR/G-DICT.
+
+75 | ex-practice-stress-fem-past-zanyala-001 | ANSWER занялА | PASS
+Current 2026 norm. Course may group feminine past forms but must not make final-stress pattern universal. SRC D4-ORTHO/FIPI-ORTHO-2026.
+
+76 | ex-practice-stress-fem-past-dozhdalas-001 | ANSWER дождалАсь | PASS
+Current 2026 norm. SRC D4-ORTHO/FIPI-ORTHO-2026.
+
+77 | ex-practice-stress-fem-past-klala-001 | ANSWER клАла | PASS
+Current 2026 norm; card correctly blocks false universalization «feminine past = final stress». SRC D4-ORTHO/FIPI-ORTHO-2026.
+
+78 | ex-practice-kupola-context-002 | ANSWER купола | FIX
+Answer correct; second context is useful transfer. Re-source underlying exception_id. SRC D7-MORPH/G-DICT.
+
+79 | ex-practice-polotenets-context-002 | ANSWER полотенец | FIX
+Answer correct; second context is useful transfer. Re-source and connect to genitive-plural table. SRC D7-MORPH/G-DICT.
+
+80 | ex-practice-nn-forged-transfer-002 | ANSWER кованые ворота | FIX
+Answer correct. Keep transfer context but upgrade feedback to approved format: verb-derived adjective + one Н + compare participle КОВАННЫЙ МАСТЕРОМ/ИЗ ЖЕЛЕЗА. SRC D15-NN/G-NN.
+
+CRITICAL MODERNIZATION NOTES
+
+1. В КОНЦЕ КОНЦОВ
+Source bank 84 already contains the safer dual-function model. Active correction layer 117 contradicts it. Replace the active universal card.
+
+2. ЗАРЕВАТЬ
+Old school exception ЗОРЕВАТЬ is not current orthographic norm. Replace source exception and practice item; obsolete spelling must not reach learner runtime.
+
+3. ВООБЩЕ
+Older memorization tables may list it among non-introductory words. Current academic punctuation recognizes context-dependent functions. Keep the current non-introductory sentence, but course rule must show the wider boundary.
+
+4. КОНЕЧНО
+Simplified tables may call it always introductory. Current academic punctuation permits emphatic particle use without commas. Preserve current nuanced contrast.
+
+5. ПО ПРИЕЗДЕ
+After-arrival meaning -> ПО ПРИЕЗДЕ. Current reference also recognizes ПО ПРИЕЗДУ in another dative meaning. Never teach «по приезду is always wrong».
+
+6. СКАК-/СКОК-/СКАЧ-/СКОЧ-
+Replace old oversimplified mnemonic with the fuller modern pattern.
+
+7. ПЛАВ-/ПЛОВ-/ПЛЫВ-
+School spelling table is useful, but modern morphemic analysis is more nuanced. Teach exact spellings/lexical contrasts, not invented history.
+
+8. УТВАРЬ
+Traditional exception is acceptable as a school memory hook; modern morphemic sources can treat УТВАРЬ- as one root. Learner text should remain cautious.
+
+COURSE-GRADE CONTENT CONTRACT
+
+The practice item should not become a wall of textbook text. Reusable Explanation Bank should contain:
+- short_rule;
+- full compact rule;
+- decision_tree/algorithm;
+- learner_table where useful;
+- common_traps;
+- 2-4 original Eksamio examples;
+- contrast_examples;
+- item_specific application;
+- internal source_refs.
+
+After an error:
+SPECIFIC APPLICATION -> SHORT RULE -> CONTRAST -> NEW INDEPENDENT ITEM.
+The same verified unit must later expand into a course lesson/table without rewriting the linguistic core.
+
+NEXT ACTION
+1. Create source-correction overlay for all 30 FIX cards and 2 FAIL-REPLACE cards.
+2. Re-source morphology/syntax/paronym banks away from invalid Rosenthal labels.
+3. Upgrade N/NN explanation unit first from Drabkina-style table/algorithm.
+4. Modernize alternating roots (заревать; СКАК/СКОК/СКАЧ/СКОЧ; lexicalized cases).
+5. Upgrade introductory-word unit with explicit context tests.
+6. Rebuild canonical practice/runtime only after content review.
+7. Do not update Tilda until all corrections pass.
+
+AUDIT DECISION
+80/80 CARDS EXPLICITLY REVIEWED: YES
+EVERY ACTIVE ANSWER CHECKED: YES
+EVERY LINKED RULE/EXCEPTION BOUNDARY CHECKED: YES
+DRABKINA/SUBBOTIN METHODOLOGY COMPARED: YES
+CURRENT-NORM CONFLICTS IDENTIFIED: YES
+PRODUCTION/TILDA CHANGED: NO
+PUBLICATION AUTHORIZATION: HOLD
