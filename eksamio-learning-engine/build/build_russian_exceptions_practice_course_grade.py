@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Build the audited 80-card Russian Exceptions Practice Bank.
 
-The historical wave files remain immutable checkpoints. Current card selection is
-controlled by manifest 119; learner-facing explanation fixes are applied from the
-reviewed overlay 131. The builder fails closed if an audited FIX target disappears
-or if a FAIL/REPLACE item remains active.
+Historical wave files remain immutable checkpoints. Current card selection is
+controlled by manifest 119. Audited fixes are applied from overlay 131 and a
+separate post-audit learner-feedback polish is applied from overlay 136.
+The builder fails closed if an audited FIX target disappears, a FAIL/REPLACE item
+remains active, or any quality-polish target is missing.
 
 Data-only: does not publish or modify Tilda/current EGE trainer files.
 """
@@ -23,6 +24,7 @@ import build_russian_exceptions_practice_current_corrected_v2 as current
 CURRENT_EXCEPTION_MANIFEST = "118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json"
 CURRENT_PRACTICE_MANIFEST = "119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json"
 COURSE_GRADE_OVERLAY = "131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json"
+LEARNER_FEEDBACK_POLISH = "136-RUSSIAN-EXCEPTIONS-LEARNER-FEEDBACK-POLISH-v0.1.json"
 
 FEEDBACK_ACTIONS = {"replace_feedback", "replace_feedback_and_provenance"}
 VALID_ACTIONS = FEEDBACK_ACTIONS | {"provenance_fix", "disable_and_replace"}
@@ -32,23 +34,26 @@ def _clone(value: Any) -> Any:
     return json.loads(json.dumps(value, ensure_ascii=False))
 
 
-def load_course_grade_practice_items(
-    root: Path, manifest: Any
-) -> tuple[list[dict[str, Any]], list[str], int]:
-    items, source_files, expected_active = current.load_active_practice_items(root, manifest)
-    overlay = base.load_json(root / COURSE_GRADE_OVERLAY)
+def _load_patch_list(root: Path, rel: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    overlay = base.load_json(root / rel)
     if not isinstance(overlay, dict):
-        raise base.BuildError(f"{COURSE_GRADE_OVERLAY} must be an object")
+        raise base.BuildError(f"{rel} must be an object")
     patches = overlay.get("item_patches")
     if not isinstance(patches, list) or not all(isinstance(x, dict) for x in patches):
-        raise base.BuildError(f"{COURSE_GRADE_OVERLAY}: item_patches must be object array")
-
+        raise base.BuildError(f"{rel}: item_patches must be object array")
     patch_summary = overlay.get("patch_summary", {})
     expected_patches = patch_summary.get("patch_entries") if isinstance(patch_summary, dict) else None
     if not isinstance(expected_patches, int) or expected_patches != len(patches):
         raise base.BuildError(
-            f"{COURSE_GRADE_OVERLAY}: patch count mismatch: summary={expected_patches!r}, actual={len(patches)}"
+            f"{rel}: patch count mismatch: summary={expected_patches!r}, actual={len(patches)}"
         )
+    return overlay, patches
+
+
+def load_course_grade_practice_items(
+    root: Path, manifest: Any
+) -> tuple[list[dict[str, Any]], list[str], int]:
+    items, source_files, expected_active = current.load_active_practice_items(root, manifest)
 
     by_id: dict[str, dict[str, Any]] = {}
     for item in items:
@@ -59,6 +64,9 @@ def load_course_grade_practice_items(
             raise base.BuildError(f"duplicate active practice_item_id before overlay: {pid}")
         by_id[pid] = item
 
+    # 1) Audited 80/80 correction overlay.
+    overlay, patches = _load_patch_list(root, COURSE_GRADE_OVERLAY)
+    patch_summary = overlay.get("patch_summary", {})
     seen_patch_ids: set[str] = set()
     feedback_applied = 0
     provenance_reviewed = 0
@@ -131,10 +139,43 @@ def load_course_grade_practice_items(
         raise base.BuildError(
             f"overlay replacement count mismatch: summary={expected_replace!r}, validated={replacement_validated}"
         )
-    if len(items) != expected_active:
-        raise base.BuildError(f"overlay changed active item count: expected={expected_active}, actual={len(items)}")
 
-    source_files = list(source_files) + [COURSE_GRADE_OVERLAY]
+    # 2) Human-review polish: safe cards whose feedback was still too terse for
+    # course-grade teaching. This does not change answers, prompts or card count.
+    polish, polish_patches = _load_patch_list(root, LEARNER_FEEDBACK_POLISH)
+    polish_summary = polish.get("patch_summary", {})
+    expected_polish = polish_summary.get("quality_polish_items") if isinstance(polish_summary, dict) else None
+    if not isinstance(expected_polish, int) or expected_polish != len(polish_patches):
+        raise base.BuildError(
+            f"{LEARNER_FEEDBACK_POLISH}: quality count mismatch: summary={expected_polish!r}, actual={len(polish_patches)}"
+        )
+    polish_seen: set[str] = set()
+    for patch in polish_patches:
+        pid = patch.get("practice_item_id")
+        action = patch.get("action")
+        if not isinstance(pid, str) or not pid:
+            raise base.BuildError(f"{LEARNER_FEEDBACK_POLISH}: patch missing practice_item_id")
+        if pid in polish_seen:
+            raise base.BuildError(f"{LEARNER_FEEDBACK_POLISH}: duplicate patch for {pid}")
+        polish_seen.add(pid)
+        if action != "replace_feedback":
+            raise base.BuildError(f"{LEARNER_FEEDBACK_POLISH}: only replace_feedback is allowed, got {action!r} for {pid}")
+        item = by_id.get(pid)
+        if item is None:
+            raise base.BuildError(f"quality-polish feedback target is not active: {pid}")
+        why = patch.get("feedback_why")
+        if not isinstance(why, str) or not why.strip():
+            raise base.BuildError(f"{pid}: quality polish requires non-empty feedback_why")
+        feedback = item.get("feedback")
+        if not isinstance(feedback, dict):
+            raise base.BuildError(f"{pid}: active item has no feedback object")
+        feedback["why"] = why.strip()
+        item["learner_feedback_polish"] = LEARNER_FEEDBACK_POLISH
+
+    if len(items) != expected_active:
+        raise base.BuildError(f"overlays changed active item count: expected={expected_active}, actual={len(items)}")
+
+    source_files = list(source_files) + [COURSE_GRADE_OVERLAY, LEARNER_FEEDBACK_POLISH]
     return [_clone(x) for x in items], source_files, expected_active
 
 
