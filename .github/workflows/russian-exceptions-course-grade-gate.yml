@@ -48,6 +48,10 @@ jobs:
         working-directory: eksamio-learning-engine
         run: python build/build_russian_exceptions_practice_course_grade.py
 
+      - name: Build launch priority
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_exceptions_launch_priority.py
+
       - name: Audit current practice coverage
         working-directory: eksamio-learning-engine
         run: python build/audit_russian_exceptions_practice_coverage.py
@@ -111,10 +115,6 @@ jobs:
 
           print(f'PASS: {expected} current active cards; P0 uncovered=0; audited replacements and Wave 5 transfer cards are active')
           PY
-
-      - name: Build launch priority
-        working-directory: eksamio-learning-engine
-        run: python build/build_russian_exceptions_launch_priority.py
 
       - name: Build runtime
         working-directory: eksamio-learning-engine
