@@ -1,0 +1,73 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS TRAINER — BROWSER CORE REVIEW
+
+STATUS: PASS
+DATE: 2026-08-12
+PRODUCTION: UNCHANGED
+
+SOURCE MODULES
+- standalone-exceptions-trainer/core/rex-runtime-loader.js
+- standalone-exceptions-trainer/core/rex-evaluators.js
+- standalone-exceptions-trainer/core/rex-state.js
+- standalone-exceptions-trainer/core/rex-selector.js
+
+TESTS
+- standalone-exceptions-trainer/tests/test-core.js
+- build/tests/test_russian_exceptions_browser_core.py
+- build/run_russian_exceptions_standalone_validation.py
+
+VALIDATED AGAINST
+- current machine-built Exceptions Runtime;
+- current 3 deterministic T123 runtime chunks;
+- all 80 active practice cards;
+- accepted Python selector reference;
+- current frozen EGE trainer localStorage source.
+
+RESULTS
+
+RUNTIME LOADER
+PASS:
+- exact reconstruction from all chunks;
+- missing chunk fails closed;
+- duplicate chunk fails closed;
+- mixed content version fails closed;
+- duplicate/broken topic, exception and practice links are rejected.
+
+ANSWER EVALUATORS
+PASS:
+- canonical correct response accepted for all 80 current practice cards;
+- deliberately wrong alternatives rejected where applicable;
+- supported runtime response kinds: single_choice, classification, short_text, normalize_form;
+- text comparison trims/collapses incidental whitespace and ignores ordinary case when case is not the target;
+- internal uppercase stress marker remains significant;
+- Ё/Е are not merged;
+- hyphen/separate spelling is not merged.
+
+LEARNER STATE
+PASS:
+- anonymous schema-v1 profile creation;
+- save/load contract;
+- corrupt JSON fails safe without overwrite;
+- future/unknown schema fails safe without overwrite;
+- event_id replay is idempotent;
+- wrong event activates unresolved error;
+- independent/transfer correct sets transfer evidence but does not invent permanent mastery;
+- retention correct records delayed-review evidence but still does not mark stabilized automatically;
+- current EGE trainer storage keys are distinct from `eksamio:russian:exceptions`.
+
+SESSION SELECTOR
+PASS:
+- JavaScript output parity with Python priority-aware current selector in empty, personal-state, my-exceptions and exact-handoff scenarios;
+- empty handoff fails closed;
+- focused handoff may under-fill and never pads with duplicate practice IDs;
+- context signatures remain unique inside selected session;
+- queue reason codes retained for diagnostics.
+
+BOUNDARY
+
+This PASS authorizes standalone page-shell/UI coding only.
+It does NOT authorize:
+- Tilda publication;
+- `/trenazhery/` catalog change;
+- current EGE trainer modification;
+- main-trainer handoff integration.
