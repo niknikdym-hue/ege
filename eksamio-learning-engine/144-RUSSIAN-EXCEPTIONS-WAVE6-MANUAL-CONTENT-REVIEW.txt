@@ -1,0 +1,196 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS — WAVE 6 SOLID / SEPARATE
+MANUAL CONTENT REVIEW
+DATE: 2026-08-12
+STATUS: REVIEWED 28/28 / INITIAL PASS 26 + EDITORIAL FIX 2 / AFTER FIX PASS 28/28 / CURRENT 93 UNCHANGED / TILDA HOLD
+
+SCOPE
+
+Draft:
+142-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-SOLID-SEPARATE-DRAFT-v0.1.json
+
+Source audit:
+141-RUSSIAN-EXCEPTIONS-WAVE6-SOLID-SEPARATE-SOURCE-AUDIT.txt
+
+Pairs: 14
+Cards: 28
+Design: exactly two directions per pair — solid and separate.
+
+REVIEW CONTRACT
+
+Each card was checked individually for:
+- exact prompt and naturalness;
+- exact correct option;
+- opposite option being wrong in this exact context;
+- part-of-speech / construction diagnosis;
+- diagnostic replacement/question being valid for this pair;
+- feedback preserving the real rule boundary;
+- meaningful contrast with the other member of the pair;
+- no invented etymology or universal mnemonic;
+- original Eksamio wording;
+- unique context_signature;
+- transfer_level;
+- compatibility with the linked source exception and explanation branch.
+
+CURRENT-NORM SPOT CHECK
+
+Current Gramota/reference evidence was additionally checked for potentially confusing boundaries:
+- ПРИТОМ = conjunction «к тому же / причем» vs ПРИ ТОМ = preposition + demonstrative pronoun in constructions such as ПРИ ТОМ УСЛОВИИ;
+- НАЗАВТРА = adverb «when the next day came» vs НА ЗАВТРА = planned/assigned for tomorrow;
+- ВВИДУ = causal preposition «из-за» vs В ВИДУ in noun combinations such as ИМЕТЬ В ВИДУ;
+- ВСЛЕДСТВИЕ = causal preposition; noun СЛЕДСТВИЕ remains independently declined in nominal constructions;
+- ЗАТО = adversative/compensatory conjunction vs ЗА ТО as a separate preposition + demonstrative-pronoun construction;
+- service-word spellings ВРОДЕ and НАСЧЁТ remain solid; their nominal homonyms are diagnosed by actual noun meaning.
+
+Drabkina/Subbotin remains the learner-method baseline; current academic/dictionary norm controls the final rule boundary.
+
+INITIAL REVIEW RESULT
+
+PASS WITHOUT EDIT: 26
+EDITORIAL FIX BEFORE APPROVAL: 2
+HOLD: 0
+FAIL/REPLACE: 0
+
+The two FIXes were not wrong accepted answers. They were changed because the examples were less natural/less pedagogically clean than available alternatives.
+
+FIX A
+PRACTICE ID: ex-practice-za-to-separate-w6-012
+PAIR: ЗАТО / ЗА ТО
+OLD CONTEXT:
+«Ученика похвалили за то точное объяснение правила.»
+DECISION: FIX FOR NATURALNESS / DIAGNOSTIC CLARITY.
+REPLACEMENT CONTEXT:
+«Я проголосовал за то предложение, которое поддержала группа.»
+WHY BETTER:
+ЗА is transparently a preposition; ТО is a demonstrative pronoun referring to ПРЕДЛОЖЕНИЕ. The contrast with conjunction ЗАТО cannot be mistaken for a memorized punctuation formula.
+APPROVED FEEDBACK CORE:
+«ЗА — предлог, ТО — указательное местоимение и относится к слову ПРЕДЛОЖЕНИЕ: за то предложение. Поэтому раздельно. Сравни: “Предложение спорное, зато конкретное” — союз ЗАТО, близкий к НО.»
+
+FIX B
+PRACTICE ID: ex-practice-v-rode-separate-w6-022
+PAIR: ВРОДЕ / В РОДЕ
+OLD CONTEXT:
+«В роде этого мастера было несколько известных художников.»
+DECISION: FIX FOR NATURALNESS / UNAMBIGUOUS NOUN MEANING.
+REPLACEMENT CONTEXT:
+«Ошибка была в роде существительного: к слову подобрали неверную форму согласования.»
+WHY BETTER:
+РОД is unambiguously the independent grammatical noun. The learner can ask «ошибка в чём? — в роде существительного». This gives a clean contrast with service-word ВРОДЕ = «наподобие».
+APPROVED FEEDBACK CORE:
+«РОД здесь самостоятельное существительное: ошибка в чём? — в роде существительного. Поэтому раздельно. Сравни: “прибор вроде микроскопа” = “прибор наподобие микроскопа”.»
+
+CARD-BY-CARD DECISIONS AFTER FIXES
+
+01 ex-practice-chtoby-solid-w6-001 — REVIEWED PASS
+Purpose conjunction ЧТОБЫ; clear goal context; contrast ЧТО БЫ retained.
+
+02 ex-practice-chto-by-separate-w6-002 — REVIEWED PASS
+Independent pronoun ЧТО + movable particle БЫ; question context is natural.
+
+03 ex-practice-tozhe-solid-w6-003 — REVIEWED PASS
+Additive ТОЖЕ; diagnostic relation to И is appropriate in this exact context.
+
+04 ex-practice-to-zhe-separate-w6-004 — REVIEWED PASS
+ТО ЖЕ ПРАВИЛО; pronoun retains deictic meaning; ТО ЖЕ САМОЕ diagnostic is clean.
+
+05 ex-practice-takzhe-solid-w6-005 — REVIEWED PASS
+Additive ТАКЖЕ; not confused with manner comparison.
+
+06 ex-practice-tak-zhe-separate-w6-006 — REVIEWED PASS
+ТАК ЖЕ, КАК; independent manner meaning is explicit.
+
+07 ex-practice-prichem-solid-w6-007 — REVIEWED PASS
+Joining/additive ПРИЧЁМ; exact context natural.
+
+08 ex-practice-pri-chem-separate-w6-008 — REVIEWED PASS
+Free interrogative ПРИ ЧЁМ; pronoun meaning explicit.
+
+09 ex-practice-pritom-solid-w6-009 — REVIEWED PASS
+Conjunction ПРИТОМ = «к тому же / причем»; current reference distinction confirmed.
+
+10 ex-practice-pri-tom-separate-w6-010 — REVIEWED PASS
+ПРИ ТОМ УСЛОВИИ; demonstrative ТО is independent; current reference uses this contrast.
+
+11 ex-practice-zato-solid-w6-011 — REVIEWED PASS
+Adversative/compensatory ЗАТО; replacement by НО is valid for this sentence.
+
+12 ex-practice-za-to-separate-w6-012 — REVIEWED PASS AFTER FIX
+Approved context: «Я проголосовал за то предложение, которое поддержала группа.»
+
+13 ex-practice-itak-solid-w6-013 — REVIEWED PASS
+ИТАК organizes conclusion/result of reasoning; punctuation in prompt correct.
+
+14 ex-practice-i-tak-separate-w6-014 — REVIEWED PASS
+Independent ТАК in «он и так помнил»; no false joining.
+
+15 ex-practice-vvidu-solid-w6-015 — REVIEWED PASS
+Causal ВВИДУ = ИЗ-ЗА; current reference confirms.
+
+16 ex-practice-v-vidu-separate-w6-016 — REVIEWED PASS
+ИМЕТЬ В ВИДУ; noun combination, separate spelling; current reference confirms.
+
+17 ex-practice-vsledstvie-solid-w6-017 — REVIEWED PASS
+Causal ВСЛЕДСТВИЕ = ИЗ-ЗА; no confusion with noun inflection.
+
+18 ex-practice-v-sledstvie-separate-w6-018 — REVIEWED PASS
+Target noun СЛЕДСТВИЕ is independent in «вмешательство в следствие по делу»; accusative after directional/target relation is deliberate. Do not teach a fake invariant ending for all nominal uses; case depends on syntax.
+
+19 ex-practice-naschet-solid-w6-019 — REVIEWED PASS
+NАСЧЁТ = О / ОТНОСИТЕЛЬНО; clear topic relation.
+
+20 ex-practice-na-schet-separate-w6-020 — REVIEWED PASS
+Bank/account noun СЧЁТ retained; clear separate construction.
+
+21 ex-practice-vrode-solid-w6-021 — REVIEWED PASS
+Service-word ВРОДЕ = НАПОДОБИЕ; comparison context clear.
+
+22 ex-practice-v-rode-separate-w6-022 — REVIEWED PASS AFTER FIX
+Approved context: «Ошибка была в роде существительного: к слову подобрали неверную форму согласования.»
+
+23 ex-practice-vnachale-solid-w6-023 — REVIEWED PASS
+Adverb ВНАЧАЛЕ = СНАЧАЛА / СПЕРВА.
+
+24 ex-practice-v-nachale-separate-w6-024 — REVIEWED PASS
+Noun НАЧАЛО has dependent word СТАТЬИ; clean nominal contrast.
+
+25 ex-practice-snachala-solid-w6-025 — REVIEWED PASS
+Adverb СНАЧАЛА = СПЕРВА.
+
+26 ex-practice-s-nachala-separate-w6-026 — REVIEWED PASS
+Noun НАЧАЛО with dependent word СЕМЕСТРА; clear separate construction.
+
+27 ex-practice-nazavtra-solid-w6-027 — REVIEWED PASS
+НАЗАВТРА = «когда наступил следующий день»; current reference confirms this exact semantic boundary.
+
+28 ex-practice-na-zavtra-separate-w6-028 — REVIEWED PASS
+НА ЗАВТРА = planned/assigned for tomorrow; current reference confirms separate spelling in this meaning.
+
+FINAL MANUAL REVIEW RESULT
+
+CARDS REVIEWED: 28/28
+PASS AFTER EDIT: 28
+FIX APPLIED: 2
+HOLD: 0
+FAIL/REPLACE: 0
+BIDIRECTIONAL PAIRS: 14/14
+CURRENT 93 CHANGED: NO
+TILDA CHANGED: NO
+
+STATUS POLICY
+
+The draft source used internal non-schema marker source_verified_draft. That marker must not be passed through as a learner-card status.
+After this manual review, the candidate build may transform all 28 reviewed Wave 6 items to schema-valid status REVIEWED while applying only the two explicit content fixes recorded above.
+
+NEXT GATE
+
+1. Apply explicit reviewed overlay; do not rewrite historical draft silently.
+2. Candidate build expected active practice = 121.
+3. Validate schema and linked source practice_modes.
+4. Verify exactly 2 Wave 6 cards per target pair and both answer directions.
+5. Build learner-safe candidate runtime.
+6. Source-leak gate.
+7. T123/package build.
+8. Chromium preview.
+9. Open generated candidate payload and inspect all 28 Wave 6 cards.
+10. Promote only if every step PASS.
+11. Tilda remains HOLD.
