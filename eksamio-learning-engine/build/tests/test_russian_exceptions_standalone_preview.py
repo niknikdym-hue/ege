@@ -52,8 +52,15 @@ def main() -> int:
     html = preview.read_text(encoding="utf-8")
 
     # Static package safety before browser execution.
-    if manifest.get("t123_blocks") != 9 or manifest.get("runtime_data_blocks") != 4:
-        raise AssertionError(f"unexpected package shape: {manifest.get('t123_blocks')} / {manifest.get('runtime_data_blocks')}")
+    data_blocks = int(manifest.get("runtime_data_blocks", 0))
+    total_blocks = int(manifest.get("t123_blocks", 0))
+    if data_blocks < 1 or total_blocks != data_blocks + 5:
+        raise AssertionError(f"unexpected package shape: {total_blocks} / {data_blocks}")
+    roles = [row.get("role") for row in manifest.get("files", [])]
+    if roles[:4] != ["shell_css", "runtime_loader", "evaluators_state", "selector"] or roles[-1:] != ["app_init"]:
+        raise AssertionError(f"unexpected package role order: {roles}")
+    if sum(1 for role in roles if isinstance(role, str) and role.startswith("runtime_data_")) != data_blocks:
+        raise AssertionError("runtime data block count does not match manifest roles")
     if int(manifest.get("largest_block_bytes", 999999)) > int(manifest.get("max_block_bytes", 0)):
         raise AssertionError("package contains oversized T123 block")
     package_text = "\n".join((out / row["file"]).read_text(encoding="utf-8") for row in manifest["files"])
@@ -149,7 +156,7 @@ def main() -> int:
 
         # Remove one runtime chunk: UI must fail closed, not invent questions.
         scripts = list(re.finditer(r'<script type="application/json" class="rex-runtime-chunk"[\s\S]*?</script>\s*', html))
-        assert len(scripts) == 4
+        assert len(scripts) == data_blocks
         match = scripts[-1]
         broken_html = html[:match.start()] + html[match.end():]
         page2 = browser.new_page(viewport={"width": 900, "height": 700})
