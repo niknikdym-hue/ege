@@ -3,8 +3,8 @@
 
 Validates current corrected canonical/runtime data, Skill Graph, explanation resolver,
 session/state logic, deterministic Exceptions T123 chunking, coverage/size and handoff checks.
-Uses the audited course-grade 80-card practice builder so aggregate validation cannot
-silently overwrite reviewed learner feedback with an older checkpoint.
+Uses the audited course-grade current practice builder so aggregate validation cannot
+silently overwrite reviewed learner feedback with an older checkpoint or stale card count.
 No network or production mutation.
 """
 
