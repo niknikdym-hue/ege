@@ -44,6 +44,10 @@ jobs:
         working-directory: eksamio-learning-engine
         run: python build/build_russian_exceptions_bank_current_v2.py
 
+      - name: Build Drabkina 5-11 class-route inventory
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_drabkina_class_routing_v2.py
+
       - name: Build current audited course-grade practice bank
         working-directory: eksamio-learning-engine
         run: python build/build_russian_exceptions_practice_course_grade.py
@@ -200,6 +204,7 @@ jobs:
           if-no-files-found: warn
           path: |
             eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json
+            eksamio-learning-engine/build/RUSSIAN-CURRENT-127-DRABKINA-CLASS-ROUTING-v2.json
             eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json
             eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-LAUNCH-PRIORITY.json
             eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-RUNTIME.json
