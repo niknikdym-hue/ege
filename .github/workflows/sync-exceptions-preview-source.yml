@@ -1,0 +1,64 @@
+name: Sync Reviewed Exceptions Preview Source
+on:
+  push:
+    branches:
+      - chatgpt-sync-exceptions-preview-source-20260812
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preserve reviewed source bundle
+        run: |
+          cp .github/rex-sync-source.b64 /tmp/rex-sync-source.b64
+          base64 -d /tmp/rex-sync-source.b64 > /tmp/rex-sync-source.tar.gz
+          echo "e691f124b4df25c0050bb2c62a7fe109c8a3e62101ca056e8d1da341bf9ed5b1  /tmp/rex-sync-source.tar.gz" | sha256sum -c -
+      - name: Apply bundle to current main
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+          tar -xzf /tmp/rex-sync-source.tar.gz -C eksamio-learning-engine
+      - name: Verify exact source scope
+        run: |
+          git add -- \
+            eksamio-learning-engine/build/build_russian_exceptions_runtime.py \
+            eksamio-learning-engine/build/build_russian_exceptions_standalone_package.py \
+            eksamio-learning-engine/build/tests/test_russian_exceptions_standalone_preview.py \
+            eksamio-learning-engine/build/run_russian_exceptions_standalone_preview_validation.py \
+            eksamio-learning-engine/standalone-exceptions-trainer/ui/rex-shell.html \
+            eksamio-learning-engine/standalone-exceptions-trainer/ui/rex.css \
+            eksamio-learning-engine/standalone-exceptions-trainer/ui/rex-app.js \
+            eksamio-learning-engine/standalone-exceptions-trainer/page/trenazhery-russkiy-isklyucheniya-SEO.txt \
+            eksamio-learning-engine/standalone-exceptions-trainer/page/trenazhery-russkiy-isklyucheniya-HEAD.txt \
+            eksamio-learning-engine/105-RUSSIAN-EXCEPTIONS-IMPLEMENTATION-GATE.txt \
+            eksamio-learning-engine/121-RUSSIAN-EXCEPTIONS-TILDA-IMPLEMENTATION-PLAN.txt \
+            eksamio-learning-engine/122-RUSSIAN-LEARNING-ENGINE-CURRENT-STATUS.txt \
+            eksamio-learning-engine/126-RUSSIAN-EXCEPTIONS-STANDALONE-PREVIEW-REVIEW.txt
+          git diff --cached --name-only | sort > /tmp/actual.txt
+          cat > /tmp/expected.txt <<'EOF'
+          eksamio-learning-engine/105-RUSSIAN-EXCEPTIONS-IMPLEMENTATION-GATE.txt
+          eksamio-learning-engine/121-RUSSIAN-EXCEPTIONS-TILDA-IMPLEMENTATION-PLAN.txt
+          eksamio-learning-engine/122-RUSSIAN-LEARNING-ENGINE-CURRENT-STATUS.txt
+          eksamio-learning-engine/126-RUSSIAN-EXCEPTIONS-STANDALONE-PREVIEW-REVIEW.txt
+          eksamio-learning-engine/build/build_russian_exceptions_runtime.py
+          eksamio-learning-engine/build/build_russian_exceptions_standalone_package.py
+          eksamio-learning-engine/build/run_russian_exceptions_standalone_preview_validation.py
+          eksamio-learning-engine/build/tests/test_russian_exceptions_standalone_preview.py
+          eksamio-learning-engine/standalone-exceptions-trainer/page/trenazhery-russkiy-isklyucheniya-HEAD.txt
+          eksamio-learning-engine/standalone-exceptions-trainer/page/trenazhery-russkiy-isklyucheniya-SEO.txt
+          eksamio-learning-engine/standalone-exceptions-trainer/ui/rex-app.js
+          eksamio-learning-engine/standalone-exceptions-trainer/ui/rex-shell.html
+          eksamio-learning-engine/standalone-exceptions-trainer/ui/rex.css
+          EOF
+          sed -i 's/^          //' /tmp/expected.txt
+          diff -u /tmp/expected.txt /tmp/actual.txt
+          test "$(git status --porcelain | grep -v '^M  \|^A  ' | wc -l)" -eq 0 || { git status --porcelain; exit 1; }
+      - name: Commit exact reviewed source to main
+        run: |
+          git config user.name "niknikdym-hue"
+          git config user.email "niknikdym@gmail.com"
+          git commit -m "Add standalone Russian exceptions preview package source"
+          git push origin main
