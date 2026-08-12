@@ -1,0 +1,150 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS — WAVE 7 НЕ / НИ
+MANUAL CONTENT REVIEW
+DATE: 2026-08-12
+STATUS: REVIEWED 12/12 / PASS AFTER 3 PRE-CANDIDATE FIXES / CURRENT 121 UNCHANGED / TILDA HOLD
+
+SCOPE
+
+Source audit:
+146-RUSSIAN-EXCEPTIONS-WAVE7-NE-NI-SOURCE-AUDIT.txt
+
+Historical draft:
+147-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE7-NE-NI-DRAFT-v0.1.json
+
+Target source IDs: 5
+Cards: 12
+
+REVIEW CONTRACT
+
+Each card checked for:
+- exact construction and normative particle;
+- meaning distinction before spelling choice;
+- linked source ID and allowed practice mode;
+- natural learner-facing sentence;
+- correct contrast and rule boundary;
+- no fake universal mnemonic;
+- exact stable phrase form where applicable;
+- unique ASCII-safe practice ID and context signature;
+- transfer value for future course reuse.
+
+SOURCE GATE
+
+146 = PASS 5/5.
+Current reference cross-check additionally confirmed:
+- НЕ ЧТО ИНОЕ, КАК vs НИЧТО ИНОЕ НЕ;
+- «ни что иное, как» is not a normative third construction;
+- stable НИ expressions such as ВО ЧТО БЫ ТО НИ СТАЛО, ОТКУДА НИ ВОЗЬМИСЬ, НИ ПРИ ЧЁМ, НИ С ЧЕМ, НИ РЫБА НИ МЯСО.
+
+INITIAL DRAFT REVIEW
+
+PASS WITHOUT EDIT: 9
+FIX BEFORE APPROVAL: 3
+HOLD: 0
+FAIL/REPLACE: 0
+
+FIX 1 — exact source-pattern alignment
+DRAFT ID: ex-practice-ne-chto-inoe-w7-001
+
+Draft used the valid instrumental construction:
+«не чем иным, как ошибкой».
+
+For this source ID and future course table, use the exact canonical contrast being taught:
+
+APPROVED PROMPT:
+«Выберите нормативную конструкцию: Это было ___ ошибка в настройке.»
+
+OPTIONS:
+- не что иное, как
+- ничто иное, как
+
+ANSWER:
+не что иное, как
+
+WHY:
+This is affirmative identification: «это было именно ошибкой/это была именно ошибка». It must be taught directly against НИЧТО ИНОЕ НЕ. Do not create or accept «ни что иное, как».
+
+FIX 2 — technical identifier safety
+DRAFT ID accidentally contained mixed Latin/Cyrillic characters:
+ex-practice-otkuda-ni-vozmись-w7-011
+
+APPROVED ASCII ID:
+ex-practice-otkuda-ni-vozmish-w7-011
+
+APPROVED ASCII CONTEXT SIGNATURE:
+w7_fixed_otkuda_ni_vozmish_wind
+
+This is a technical identifier correction only; learner content stays ОТКУДА НИ ВОЗЬМИСЬ.
+
+FIX 3 — natural fixed-turnover context
+DRAFT ID: ex-practice-ni-ryba-ni-myaso-w7-012
+
+Draft sentence:
+«Получился ответ ни рыба ни мясо.»
+
+APPROVED PROMPT:
+«Выберите нормативную форму фразеологического оборота: Его ответ — ___.»
+
+ANSWER:
+ни рыба ни мясо
+
+WHY:
+The dash makes the predicative phrase natural and removes any distraction unrelated to НЕ/НИ.
+
+CARD-BY-CARD FINAL DECISIONS
+
+01. ne_chto_inoe_vs_nichto_inoe / affirmative НЕ ЧТО ИНОЕ, КАК — REVIEWED PASS AFTER FIX 1
+02. ne_chto_inoe_vs_nichto_inoe / negative НИЧТО ИНОЕ НЕ — REVIEWED PASS
+03. ni_odin_vs_ne_odin / НИ ОДИН — REVIEWED PASS
+04. ni_odin_vs_ne_odin / НЕ ОДИН — REVIEWED PASS
+05. ni_razu_vs_ne_raz / НИ РАЗУ — REVIEWED PASS
+06. ni_razu_vs_ne_raz / НЕ РАЗ — REVIEWED PASS
+07. ni_s_chem_ni_pri_chem / НИ С ЧЕМ — REVIEWED PASS
+08. ni_s_chem_ni_pri_chem / НИ ПРИ ЧЁМ — REVIEWED PASS
+09. ni_fixed_turnovers / ВО ЧТО БЫ ТО НИ СТАЛО — REVIEWED PASS
+10. ni_fixed_turnovers / КАК НИ В ЧЁМ НЕ БЫВАЛО — REVIEWED PASS
+11. ni_fixed_turnovers / ОТКУДА НИ ВОЗЬМИСЬ — REVIEWED PASS AFTER FIX 2
+12. ni_fixed_turnovers / НИ РЫБА НИ МЯСО — REVIEWED PASS AFTER FIX 3
+
+SPECIAL COURSE DECISIONS
+
+1. НЕ ЧТО ИНОЕ, КАК and НИЧТО ИНОЕ НЕ belong in one contrast table with the already-covered НЕ КТО ИНОЙ, КАК / НИКТО ИНОЙ НЕ.
+
+2. НИ ОДИН / НЕ ОДИН and НИ РАЗУ / НЕ РАЗ must be taught through quantity meaning:
+- zero/not a single occurrence -> НИ;
+- more than one / repeatedly -> НЕ.
+
+3. НИ С ЧЕМ / НИ ПРИ ЧЁМ are negative-pronoun constructions with an internal preposition; do not mix them with Wave 6 service-word pairs.
+
+4. Fixed НИ turns are taught as exact stable constructions grouped by pattern where useful. Do not invent one universal syntactic derivation for all of them.
+
+FINAL MANUAL REVIEW RESULT
+
+CARDS REVIEWED: 12/12
+PASS AFTER EDIT: 12
+PRE-CANDIDATE FIXES: 3
+HOLD: 0
+FAIL/REPLACE: 0
+CURRENT 121 CHANGED: NO
+TILDA CHANGED: NO
+
+IMPLEMENTATION DECISION
+
+Do not promote historical draft 147 directly.
+Create a clean reviewed Wave 7 file with:
+- all 12 approved cards;
+- schema-valid status REVIEWED;
+- exact fixes from this review;
+- manual_review_ref back to this file.
+
+NEXT GATE
+
+1. Candidate current 121 + reviewed Wave 7 = expected 133 active cards.
+2. Validate schema, source practice modes, IDs and context signatures.
+3. Verify all five target source IDs gain context/transfer evidence.
+4. Build learner-safe runtime.
+5. Source-leak gate.
+6. T123/package/Chromium.
+7. Open generated candidate payload and inspect all 12 Wave 7 cards.
+8. Promote only after every step PASS.
+9. Tilda remains unchanged.
