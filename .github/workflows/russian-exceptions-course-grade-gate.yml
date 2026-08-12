@@ -163,3 +163,148 @@ jobs:
             eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-RUNTIME.json
             eksamio-learning-engine/build/standalone-exceptions-tilda/**
             eksamio-learning-engine/audits/**
+
+  wave6_candidate:
+    needs: gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Chromium smoke dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install playwright
+          BROWSER="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          if [ -z "$BROWSER" ]; then
+            sudo apt-get update
+            sudo apt-get install -y chromium
+            BROWSER="$(command -v chromium)"
+          fi
+          test -n "$BROWSER"
+          echo "CHROMIUM_PATH=$BROWSER" >> "$GITHUB_ENV"
+          "$BROWSER" --version
+
+      - name: Build current source bank and launch priorities
+        working-directory: eksamio-learning-engine
+        run: |
+          python build/build_russian_exceptions_bank_current_v2.py
+          python build/build_russian_exceptions_launch_priority.py
+
+      - name: Build isolated 121-card Wave 6 candidate
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_exceptions_practice_wave6_candidate.py
+
+      - name: Audit Wave 6 candidate coverage
+        working-directory: eksamio-learning-engine
+        run: |
+          python build/audit_russian_exceptions_practice_coverage.py \
+            --practice build/candidate-wave6/RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-CANDIDATE.json \
+            --json-output audits/candidate-wave6/RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-COVERAGE.json \
+            --text-output audits/candidate-wave6/RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-COVERAGE.txt
+
+      - name: Verify Wave 6 bidirectional pair coverage
+        working-directory: eksamio-learning-engine
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          practice = json.loads(Path('build/candidate-wave6/RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-CANDIDATE.json').read_text(encoding='utf-8'))
+          items = practice.get('practice_items', practice.get('items', []))
+          rows = list(items.values()) if isinstance(items, dict) else items
+          assert len(rows) == 121, len(rows)
+
+          wave = json.loads(Path('142-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-SOLID-SEPARATE-DRAFT-v0.1.json').read_text(encoding='utf-8'))
+          wrows = wave['items']
+          assert len(wrows) == 28
+          assert len({r['practice_item_id'] for r in wrows}) == 28
+          assert len({r['context_signature'] for r in wrows}) == 28
+
+          targets = [
+              'chtoby_vs_chto_by', 'tozhe_vs_to_zhe', 'takzhe_vs_tak_zhe',
+              'prichem_vs_pri_chem', 'pritom_vs_pri_tom', 'zato_vs_za_to', 'itak_vs_i_tak',
+              'vvidu_vs_v_vidu', 'vsledstvie_vs_v_sledstvie', 'naschet_vs_na_schet', 'vrode_vs_v_rode',
+              'vnachale_vs_v_nachale', 'snachala_vs_s_nachala', 'nazavtra_vs_na_zavtra',
+          ]
+          from collections import Counter
+          counts = Counter(r['exception_id'] for r in wrows)
+          assert set(counts) == set(targets), (set(counts), set(targets))
+          assert all(counts[eid] == 2 for eid in targets), counts
+          for eid in targets:
+              pair_rows = [r for r in wrows if r['exception_id'] == eid]
+              levels = {r['transfer_level'] for r in pair_rows}
+              assert levels & {'independent_context', 'transfer'}, (eid, levels)
+              answers = {r['answer']['option_index'] for r in pair_rows}
+              assert answers == {0, 1}, (eid, answers)
+
+          coverage = json.loads(Path('audits/candidate-wave6/RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-COVERAGE.json').read_text(encoding='utf-8'))
+          assert coverage['practice_items_total'] == 121
+          assert coverage['p0_p1_uncovered_count'] == 0
+          crows = {r['exception_id']: r for r in coverage['rows']}
+          for eid in targets:
+              assert crows[eid]['practice_count'] >= 2, (eid, crows[eid]['practice_count'])
+              levels = set(crows[eid].get('transfer_levels', {}))
+              assert levels & {'independent_context', 'transfer'}, (eid, levels)
+
+          print('PASS: Wave 6 candidate has 121 cards; all 14 target pairs have two directions and context/transfer evidence')
+          PY
+
+      - name: Build learner-safe Wave 6 candidate runtime
+        working-directory: eksamio-learning-engine
+        run: |
+          python build/build_russian_exceptions_runtime.py \
+            --practice build/candidate-wave6/RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-CANDIDATE.json \
+            --output build/candidate-wave6/RUSSIAN-EXCEPTIONS-RUNTIME-WAVE6-CANDIDATE.json
+
+      - name: Audit Wave 6 candidate learner payload for source leakage
+        working-directory: eksamio-learning-engine
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('build/candidate-wave6/RUSSIAN-EXCEPTIONS-RUNTIME-WAVE6-CANDIDATE.json')
+          text = path.read_text(encoding='utf-8').lower()
+          forbidden = ['розентал','rosenthal','gramota.ru','драбкин','drabkina','source_refs','source_path','provenance','rule_ref','russkiy-knigi/']
+          hits = [x for x in forbidden if x in text]
+          assert not hits, hits
+          print('PASS: Wave 6 candidate learner runtime has no forbidden internal provenance')
+          PY
+
+      - name: Build Wave 6 candidate T123 chunks
+        working-directory: eksamio-learning-engine
+        run: |
+          python build/build_russian_exceptions_t123_chunks.py \
+            --runtime build/candidate-wave6/RUSSIAN-EXCEPTIONS-RUNTIME-WAVE6-CANDIDATE.json \
+            --output-dir build/candidate-wave6/t123-exceptions-runtime \
+            --manifest build/candidate-wave6/RUSSIAN-EXCEPTIONS-T123-CHUNKS-MANIFEST.json
+
+      - name: Build isolated Wave 6 preview package
+        working-directory: eksamio-learning-engine
+        run: |
+          python build/build_russian_exceptions_standalone_package.py \
+            --runtime-manifest build/candidate-wave6/RUSSIAN-EXCEPTIONS-T123-CHUNKS-MANIFEST.json \
+            --output-dir build/candidate-wave6/standalone-exceptions-tilda
+
+      - name: Chromium smoke Wave 6 candidate preview
+        working-directory: eksamio-learning-engine
+        run: |
+          cp build/candidate-wave6/RUSSIAN-EXCEPTIONS-RUNTIME-WAVE6-CANDIDATE.json build/RUSSIAN-EXCEPTIONS-RUNTIME.json
+          rm -rf build/standalone-exceptions-tilda
+          cp -R build/candidate-wave6/standalone-exceptions-tilda build/standalone-exceptions-tilda
+          python build/tests/test_russian_exceptions_standalone_preview.py
+
+      - name: Upload Wave 6 candidate outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-exceptions-wave6-solid-separate-candidate
+          if-no-files-found: warn
+          path: |
+            eksamio-learning-engine/build/candidate-wave6/**
+            eksamio-learning-engine/audits/candidate-wave6/**
