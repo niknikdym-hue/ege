@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "exam": "ege",
+  "purpose": "wave7_ne_ni_candidate_manifest",
+  "integration_status": "review_only_not_current",
+  "source_exceptions_manifest": "118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json",
+  "schema": "91-RUSSIAN-EXCEPTIONS-PRACTICE-SCHEMA.json",
+  "practice_banks": [
+    {"path":"92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json","expected_items":24,"status":"source_verified_pilot"},
+    {"path":"96-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE2-v0.1.json","expected_items":24,"status":"source_verified_wave"},
+    {"path":"98-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE3-v0.1.json","expected_items":24,"status":"source_verified_wave"},
+    {"path":"123-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE4-P0-CLOSURE-v0.1.json","expected_items":8,"status":"source_verified_wave"},
+    {"path":"133-RUSSIAN-EXCEPTIONS-PRACTICE-CONTENT-CORRECTIONS-v0.1.json","expected_items":2,"status":"source_verified_reaudit_correction"},
+    {"path":"140-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE5-P0-TRANSFER-v1.0.json","expected_items":13,"status":"source_verified_wave"},
+    {"path":"142-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-SOLID-SEPARATE-DRAFT-v0.1.json","expected_items":28,"status":"reviewed_via_overlay_145"},
+    {"path":"149-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE7-NE-NI-v1.0.json","expected_items":12,"status":"reviewed_wave"}
+  ],
+  "disabled_practice_item_ids": ["ex-practice-end-finally-001","ex-practice-zorevat-001"],
+  "expected_total_items_raw": 135,
+  "expected_active_items": 133,
+  "feedback_overlay": "131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json",
+  "feedback_polish_overlay": "136-RUSSIAN-EXCEPTIONS-LEARNER-FEEDBACK-POLISH-v0.1.json",
+  "wave6_review_overlay": "145-RUSSIAN-EXCEPTIONS-WAVE6-REVIEWED-OVERLAY-v0.1.json",
+  "wave7_source_audit": "146-RUSSIAN-EXCEPTIONS-WAVE7-NE-NI-SOURCE-AUDIT.txt",
+  "wave7_manual_review": "148-RUSSIAN-EXCEPTIONS-WAVE7-MANUAL-CONTENT-REVIEW.txt",
+  "candidate_builder": "build/build_russian_exceptions_practice_wave7_candidate.py",
+  "candidate_output": "build/candidate-wave7/RUSSIAN-EXCEPTIONS-PRACTICE-WAVE7-CANDIDATE.json",
+  "production_integration": "HOLD",
+  "current_121_manifest_unchanged": true
+}
