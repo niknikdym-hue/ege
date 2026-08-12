@@ -85,15 +85,18 @@ def classify(row: dict) -> dict:
 
     # Direct Drabkina grade-7 final control tests after-event ПО-constructions:
     # «по приезду в Венецию» and «по завершению работ» are error targets.
-    # This proves grade-7 route membership for the current ПО ПРИЕЗДЕ / ПО ПРИБЫТИИ /
-    # ПО ОКОНЧАНИИ family, without claiming grade 7 is necessarily first study.
+    # Drabkina grade 11 also directly repeats ПО ПРИБЫТИИ / ПО ОКОНЧАНИИ /
+    # ПО ПРИЕЗДЕ inside its government-norm training.
     if eid == 'syntax_po_after_event_forms':
         return _with_route_classes(v1.route(
             None, status='route_class_verified_first_study_pending',
-            basis=['7: Драбкина, итоговый контроль: ошибки ПО ПРИЕЗДУ В ВЕНЕЦИЮ / ПО ЗАВЕРШЕНИЮ РАБОТ'],
+            basis=[
+                '7: Драбкина, итоговый контроль: ошибки ПО ПРИЕЗДУ В ВЕНЕЦИЮ / ПО ЗАВЕРШЕНИЮ РАБОТ',
+                '11: Драбкина, тренинг по управлению: ПО ПРИБЫТИЮ / ПО ОКОНЧАНИЮ / ПО ПРИЕЗДУ as correction targets',
+            ],
             denominator='candidate_include',
-            note='Grade-7 route membership is direct; current context-sensitive norm remains unchanged. Exact earlier first-study class remains pending.',
-        ), extra=[7])
+            note='Grade-7 and grade-11 route membership are direct; current context-sensitive norm remains unchanged. Exact earlier first-study class remains pending.',
+        ), extra=[7, 11])
 
     # Direct Drabkina grade-7 final control includes the deliberately wrong stress
     # «брАла», confirming the feminine-past stress family as a grade-7 route target.
@@ -105,6 +108,18 @@ def classify(row: dict) -> dict:
             denominator='candidate_include',
             note='Grade-7 route membership is verified for the family through БРАЛА; exact occurrence of every member of the current cluster remains pending.',
         ), extra=[7])
+
+    # Direct Drabkina grade-11 training on government explicitly requires correction
+    # of forms such as «согласно сложившихся традиций», «вопреки установившихся правил»
+    # and «благодаря глубоких знаний». This is direct route evidence for the current
+    # dative-preposition government family; earlier first-study class is still pending.
+    if eid == 'syntax_dative_prepositions_government':
+        return _with_route_classes(v1.route(
+            None, status='route_class_verified_first_study_pending',
+            basis=['11: Драбкина, «Виды связи слов в словосочетании», упражнение на нормы управления: СОГЛАСНО / ВОПРЕКИ / БЛАГОДАРЯ + correct case'],
+            denominator='candidate_include',
+            note='Grade-11 route membership is direct. Exact earlier first-study class remains pending.',
+        ), extra=[11])
 
     # Direct Drabkina grade-10 project practical confirms these exact suffix cases as
     # part of the grade-10 route, but the earlier first-study grade has not yet been
@@ -163,7 +178,7 @@ def main() -> None:
     exact_pending = [x['exception_id'] for x in mapped if x['denominator_policy'] == 'pending_source']
 
     output = {
-        'schema_version': '0.2.1',
+        'schema_version': '0.2.2',
         'subject': 'russian',
         'purpose': 'current_127_canonical_items_to_drabkina_class_route_inventory',
         'status': 'complete_inventory_partial_class_verification',
@@ -229,7 +244,9 @@ def main() -> None:
         '- grade 7 route: after-event ПО-constructions such as ПО ПРИЕЗДЕ / ПО ОКОНЧАНИИ; earlier first-study class pending;',
         '- grade 7 route: feminine-past stress family via direct БРАЛА test; exact occurrence of all cluster members pending;',
         '- grade 10 route: МИЛОСТИВЫЙ/ЮРОДИВЫЙ; earlier first-study class pending;',
-        '- grade 10 route: ЗАСТРЕВАТЬ/ЗАТМЕВАТЬ/ПРОДЛЕВАТЬ; earlier first-study class pending.',
+        '- grade 10 route: ЗАСТРЕВАТЬ/ЗАТМЕВАТЬ/ПРОДЛЕВАТЬ; earlier first-study class pending;',
+        '- grade 11 route: СОГЛАСНО / ВОПРЕКИ / БЛАГОДАРЯ government norms; earlier first-study class pending;',
+        '- grade 11 route: after-event ПО-constructions repeated in government training.',
         '',
         'GUARDS:',
         '- `first_studied_class` and `route_classes` are separate.',
