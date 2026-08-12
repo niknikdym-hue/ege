@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.0.1",
   "subject": "russian",
   "purpose": "wave6_manual_review_overlay",
   "integration_status": "review_only_not_current_93",
@@ -49,6 +49,17 @@
       "context_signature": "w6_za_to_vote_proposal"
     },
     {
+      "practice_item_id": "ex-practice-vrode-solid-w6-021",
+      "prompt": {"text": "Выберите нормативное написание: На столе стоял прибор ___ небольшого микроскопа.", "options": ["вроде", "в роде"]},
+      "answer": {"option_index": 0},
+      "feedback": {
+        "correct_answer": "вроде небольшого микроскопа",
+        "why": "ВРОДЕ здесь имеет цельное сравнительное значение «подобно, наподобие». Сравни: «ошибка в роде существительного» — РОД является самостоятельным существительным, поэтому В РОДЕ пишется раздельно.",
+        "rule_ref": "solid_separate_prepositions"
+      },
+      "context_signature": "w6_vrode_microscope"
+    },
+    {
       "practice_item_id": "ex-practice-v-rode-separate-w6-022",
       "prompt": {"text": "Выберите нормативное написание: Ошибка была ___ существительного: к слову подобрали неверную форму согласования.", "options": ["вроде", "в роде"]},
       "answer": {"option_index": 1},
@@ -62,7 +73,7 @@
   ],
   "review_summary": {
     "reviewed_cards": 28,
-    "editorial_fixes": 2,
+    "editorial_fixes": 3,
     "hold": 0,
     "fail_replace": 0,
     "current_93_unchanged": true,
