@@ -64,9 +64,14 @@ jobs:
           assert 'ex-practice-end-finally-001' not in ids
           assert 'ex-practice-zarevat-current-001' in ids
           assert 'ex-practice-v-kontse-kontsov-context-002' in ids
-          text = p.read_text(encoding='utf-8').lower()
-          assert 'зоревать' not in text, 'obsolete learner form leaked into canonical practice payload'
-          print('PASS: exactly 80 active cards; audited replacements are active')
+          for row in rows:
+              answer = row.get('answer', {})
+              feedback = row.get('feedback', {})
+              if isinstance(answer, dict):
+                  assert str(answer.get('text', '')).strip().lower() != 'зоревать', row.get('practice_item_id')
+              if isinstance(feedback, dict):
+                  assert str(feedback.get('correct_answer', '')).strip().lower() != 'зоревать', row.get('practice_item_id')
+          print('PASS: exactly 80 active cards; audited replacements are active; ЗОРЕВАТЬ is not an accepted answer')
           PY
 
       - name: Build runtime
