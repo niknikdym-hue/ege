@@ -6,8 +6,8 @@ STATUS: READY_FOR_TILDA_UPLOAD
 LIVE_GO: NO
 
 FINAL PACKAGE
-- filename: ege-matematika-baza-demoversiya-2024-v1.0.zip
-- SHA256: 6e485d196cf12575930e27f02aeb4d0827a785604cd633df5730eb770de5bdee
+- filename: ege-matematika-baza-demoversiya-2024-v1.0-INDEPENDENT-AUDITED.zip
+- SHA256: 7326b0322c36adaf7df2412113de5a2399e6fbff490863f22a18e9df51627e3f
 - page URL: /ege/matematika-baza/demoversiya/2024/
 - T123: 8 blocks, T123-01 through T123-08 strictly in order
 - maximum T123: 40851 bytes
@@ -36,8 +36,16 @@ FINAL GATES
 - JS errors: 0
 - console errors: 0
 - clean unpacked final ZIP browser rerun: PASS
-- internal second source/content review: PASS, NOT third-party certification
+- internal second source/content review: PASS
+- SEPARATE INDEPENDENT FINAL AUDIT: PASS — performed after build on clean final ZIP; internal PASS flags were not accepted as evidence
+- independent answer/task/control/contract static audit: PASS
+- independent formula recomputation: 11/11 PASS
+- independent visual review: 17/17 PASS
+- independent real-DOM browser/scorer rerun: 52/52 correct+wrong PASS
 - no __pycache__ / .pyc
+
+INDEPENDENT AUDIT NOTE
+For tasks 6 and 8 the source map enumerates equivalent permutations while data stores a canonical order with order_ignored=true. Independent audit verified accepted sets are identical; this is not a product defect and no scorer/content change was made.
 
 IMPORTANT PRE-RELEASE CORRECTIONS
 - corrected task/example boundary: task 14 has 2 examples; task 15 has 3; agricultural-land item = 15.3, answer 9;
@@ -49,6 +57,9 @@ IMPORTANT PRE-RELEASE CORRECTIONS
 
 VISUAL POLICY
 Use the already accepted base-math policy: direct source crops are preferred where practical; reconstructed visuals are permitted only after per-example source-fidelity/semantic audit. For 2024 this audit is PASS 17/17. Do not describe reconstructions as official source crops.
+
+MANDATORY PROCESS RULE FOR FUTURE WORK
+A build-time audit and an internal second pass are not sufficient by themselves. Before any future demo package is handed to Tilda, a separate independent final audit must be run against the clean final ZIP. If code/content/T123/scorer/assets/exam data changes after that audit, audit the new final ZIP again. This rule is mandatory for every future subject and year.
 
 TILDA INSTALL ORDER
 1. ege-matematika-baza-demoversiya-2024-T123-01.txt
