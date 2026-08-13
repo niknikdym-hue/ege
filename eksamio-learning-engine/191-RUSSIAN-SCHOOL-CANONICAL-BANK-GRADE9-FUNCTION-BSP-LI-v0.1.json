@@ -1,0 +1,39 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"GRADE9_FUNCTION_BSP_LI_WORKING_ADMITTED",
+  "refs":["147-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE9-v0.1.json","148-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE9-LI-ADDENDUM-v0.1.json","155-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE11-v0.1.json"],
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "canonical_units":[
+    {
+      "unit_id":"school-subordinator-vs-relative-word-what-when-how",
+      "label":"ЧТО / КОГДА / КАК: союз или союзное слово по функции в придаточной части",
+      "grade_routes":[{"grade":9,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_syntax_confirmed",
+      "decision_model":"Подчинительный союз не является членом придаточного предложения; союзное слово — местоимение или местоименное наречие и выполняет синтаксическую функцию внутри придаточной части.",
+      "learner_policy":"Одно и то же внешнее слово нельзя классифицировать вне предложения."
+    },
+    {
+      "unit_id":"school-colon-bsp-vs-generalizing-word",
+      "label":"Двоеточие: БСП с пояснением/причиной/изъяснением vs простое предложение с обобщающим словом",
+      "grade_routes":[{"grade":9,"role":"explicitly_taught_or_singled_out"},{"grade":11,"role":"practised_or_tested"}],
+      "norm":"current_academic_rule_confirmed_with_variation_note",
+      "decision_model":["В БСП вторая часть может пояснять первую, обосновывать её/называть причину или раскрывать изъяснительное содержание.","В простом предложении двоеточие после обобщающего слова перед перечислением — другой синтаксический механизм."],
+      "current_variation":"В современной академической пунктуации в ряде пояснительных, причинно-обосновывающих и изъяснительных БСП возможно тире вместо двоеточия; школьную диагностическую модель нельзя превращать в абсолют 'только двоеточие'.",
+      "canonicalization":"single_identity_across_grades_9_11"
+    },
+    {
+      "unit_id":"school-li-particle-vs-conjunction-boundary",
+      "label":"ЛИ: вопросительная частица или союз по функции",
+      "grade_routes":[{"grade":9,"role":"explicitly_taught_or_singled_out"},{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_dictionary_and_syntax_confirmed",
+      "members":["Поедем ли мы сегодня? — частица","Интересно узнать, победим ли мы. — союзная функция"],
+      "additional_boundary":"Повторяющееся ЛИ может участвовать в разделительно-сочинительных конструкциях; классификация всегда опирается на целую конструкцию.",
+      "canonicalization":"single_identity_across_grades_9_11"
+    }
+  ],
+  "count_assertion":{"declared_canonical_units":3},
+  "exam_routes":[],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
