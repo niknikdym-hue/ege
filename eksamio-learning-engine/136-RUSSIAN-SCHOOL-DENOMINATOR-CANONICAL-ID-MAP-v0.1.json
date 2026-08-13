@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-13",
+  "status": "ACTIVE_ID_CORRECTION_OVERLAY",
+  "purpose": "remove_grade_identity_from_canonical_school_denominator_units",
+  "work_spec_ref": "133-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-WORK-SPEC.txt",
+  "applies_to": [
+    "134-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE5-v0.1.json",
+    "135-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE5-ADDENDUM-v0.1.json"
+  ],
+  "rule": "Grade belongs only in grade_routes. Grade-prefixed IDs in the first extraction pass are deprecated provisional IDs and MUST NOT be used as canonical denominator identities.",
+  "id_map": {
+    "school-g5-shibilants-iu-a-lexical-exceptions": "school-shibilants-iu-a-lexical-exceptions",
+    "school-g5-separating-sign-foreign-and-complex-boundaries": "school-separating-sign-foreign-and-complex-boundaries",
+    "school-g5-separating-hard-sign-before-e-boundary": "school-separating-hard-sign-before-e-boundary",
+    "school-g5-rast-rashch-ros-exception-set": "school-rast-rashch-ros-exception-set",
+    "school-g5-zhog-zheg-part-of-speech-contrast": "school-zhog-zheg-part-of-speech-contrast",
+    "school-g5-o-after-sibilants-lexical-o-set": "school-o-after-sibilants-lexical-o-set",
+    "school-g5-rasschityvat-rasschitat-vs-raschet": "school-rasschityvat-rasschitat-vs-raschet",
+    "school-g5-tsy-exception-family": "school-tsy-exception-family",
+    "school-g5-chet-chit-sochetat-sochetanie": "school-chet-chit-sochetat-sochetanie",
+    "school-g5-ne-verbs-without-ne": "school-ne-verbs-without-ne",
+    "school-g5-conjugation-brity-stelit": "school-conjugation-brity-stelit",
+    "school-g5-podyachiy-separating-sign-conflict": "school-podyachiy-separating-sign-conflict",
+    "school-g5-soft-sign-toch-v-toch": "school-soft-sign-toch-v-toch",
+    "school-g5-adjective-ending-question-method-boundary": "school-adjective-ending-question-method-boundary"
+  },
+  "build_gate": {
+    "forbid_new_grade_prefixed_canonical_ids": true,
+    "required_regex_for_new_canonical_ids": "^school-(?!g[0-9]+-).+",
+    "grade_route_required": true,
+    "cross_grade_reuse_required_when_same_linguistic_unit": true
+  },
+  "migration_policy": "During working extraction, consumers must resolve provisional IDs through this map. At canonical build time only canonical IDs are emitted; provisional IDs remain provenance aliases only.",
+  "production_files_changed": false
+}
