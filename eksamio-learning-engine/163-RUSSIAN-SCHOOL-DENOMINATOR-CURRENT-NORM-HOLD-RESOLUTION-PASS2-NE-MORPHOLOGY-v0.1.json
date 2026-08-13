@@ -1,0 +1,108 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CURRENT_NORM_HOLD_RESOLUTION_PASS2_NE_MORPHOLOGY_COMPLETE",
+  "inputs":[
+    "139-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE6-NE-ADDENDUM-v0.1.json",
+    "161-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-PASS2-v0.1.json"
+  ],
+  "production_integration":"HOLD",
+  "problem":"The grade-6 source groups `не рад / не готов / не должен / не согласен / не намерен / не обязан / не надо / не нужно / не жаль` under an overbroad short-adjective label. Grade-10 material creates overlap with special NE boundaries. Canonical ownership must follow the actual orthographic/morphological decision, not the textbook chapter heading.",
+  "authoritative_current_evidence":[
+    {
+      "source":"Gramota.ru Учебник — НЕ с прилагательными",
+      "url":"https://gramota.ru/uchebnik/pravila/ne-s-prilagatelnymi",
+      "supports":["не готов","не должен","не обязан","не рад"],
+      "finding":"These forms are included in the dictionary-check set of adjectives/short forms whose НЕ spelling is fixed as separate."
+    },
+    {
+      "source":"Gramota.ru Russian Orthographic Dictionary / search",
+      "url":"https://gramota.ru/poisk?mode=all&query=%D0%BD%D0%B5+%D0%BD%D0%B0%D0%BC%D0%B5%D1%80%D0%B5%D0%BD",
+      "supports":["не намерен"],
+      "finding":"Dictionary entry fixes separate spelling `не намерен`."
+    },
+    {
+      "source":"Gramota.ru reference service / orthographic-dictionary recommendation",
+      "url":"https://gramota.ru/poisk?mode=spravka&query=%D0%BD%D0%B5+%D1%81%D0%BE%D0%B3%D0%BB%D0%B0%D1%81%D0%B5%D0%BD",
+      "supports":["не согласен"],
+      "finding":"The orthographic dictionary recommends separate `не согласен / не согласна`; older discussion notes contextual theoretical variation, but current learner default must not be taught as a blanket short-adjective rule invented from the source heading."
+    },
+    {
+      "source":"Gramota.ru reference service — НЕ with non-adjectival predicative/category-of-state words",
+      "url":"https://gramota.ru/poisk?query=%D0%BD%D0%B5+%D0%B6%D0%B0%D0%BB%D1%8C&simple=0",
+      "supports":["не надо","не жаль"],
+      "finding":"НЕ is written separately with category-of-state/predicative words not correlated with adjectives, including `не надо`, `не жаль`."
+    },
+    {
+      "source":"Gramota.ru answer 324749 and answer 323868",
+      "urls":["https://gramota.ru/spravka/vopros/324749","https://gramota.ru/spravka/vopros/323868"],
+      "supports":["надо","нужно"],
+      "finding":"`надо` and `нужно` in necessity meaning may be classified as predicatives/category-of-state words in school/grammatical traditions; `нужно` must also be distinguished from the neuter short form of adjective `нужный`."
+    },
+    {
+      "source":"Gramota.ru answer 235370",
+      "url":"https://gramota.ru/spravka/vopros/235370",
+      "supports":["не нужно"],
+      "finding":"In predicate necessity meaning, `не нужно` is separate. `Ненужно` exists in another adverbial use, so surface string alone cannot define the unit."
+    }
+  ],
+  "canonicalization_decisions":[
+    {
+      "operation":"SPLIT_SOURCE_BUCKET",
+      "old_id":"school-ne-short-predicative-separate-set",
+      "new_units":[
+        {
+          "unit_id":"school-ne-dictionary-fixed-short-adjective-predicative-forms",
+          "canonical_label":"НЕ раздельно в словарно закреплённых кратких/предикативных формах",
+          "canonical_members":["не рад","не готов","не должен","не намерен","не обязан"],
+          "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"repeated_or_reviewed"}],
+          "norm_status":"current_confirmed",
+          "counting_policy":"one coherent orthographic decision family; source members remain independently testable",
+          "notes":"Do not force one modern part-of-speech label on every member. The learner fact is dictionary-fixed separate НЕ in these forms."
+        },
+        {
+          "unit_id":"school-ne-soglasen-spelling-boundary",
+          "canonical_label":"НЕ СОГЛАСЕН: normative learner default and context boundary",
+          "canonical_members":["не согласен","не согласна"],
+          "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"repeated_or_reviewed"}],
+          "norm_status":"current_with_context_note",
+          "counting_policy":"separate boundary unit",
+          "notes":"Current orthographic-dictionary recommendation is separate spelling. Preserve internal note that older/reference discussion acknowledges semantic-context variation; do not teach source bucket as a universal morphological category."
+        },
+        {
+          "unit_id":"school-ne-nado-zhal-predicative-separate",
+          "canonical_label":"НЕ НАДО, НЕ ЖАЛЬ: раздельное написание предикативных слов",
+          "canonical_members":["не надо","не жаль"],
+          "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"repeated_or_reviewed"}],
+          "norm_status":"current_confirmed",
+          "counting_policy":"one orthographic family",
+          "notes":"Do not call these short adjectives."
+        },
+        {
+          "unit_id":"school-ne-nuzhno-function-spelling-boundary",
+          "canonical_label":"НЕ НУЖНО / НЕНУЖНО: различать функцию слова НУЖНО",
+          "canonical_members":["не нужно"],
+          "contrast_members":["ненужно много"],
+          "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"repeated_or_reviewed"}],
+          "norm_status":"current_confirmed_with_function_split",
+          "counting_policy":"one functional orthographic boundary unit",
+          "notes":"In necessity/predicate meaning: `не нужно` separately. `Нужно` can also be the neuter short form of `нужный`; `ненужно` is attested in a different adverbial function. Future examples must encode syntax/meaning, not ask from the isolated string alone."
+        }
+      ]
+    }
+  ],
+  "overlap_resolution":{
+    "old_overlap_members":["не жаль","не надо","не нужно"],
+    "decision":"REMOVE_FROM_GENERIC school-ne-adverbs-special-boundaries OWNERSHIP IF THAT UNIT DUPLICATES THESE SURFACE CASES; route/provenance may remain as secondary evidence, but canonical mastery ownership is assigned to the new function-specific units above.",
+    "status":"resolved_at_identity_level"
+  },
+  "source_label_correction":{
+    "rejected":"all nine items are short adjectives",
+    "replacement":"mixed source bucket split by current linguistic function and orthographic decision",
+    "learner_facing_source_names":false
+  },
+  "counts":{"old_source_bucket_members":9,"new_canonical_units":4,"members_lost":0,"unresolved_members":0},
+  "exam_routes_created":0,
+  "production_files_changed":false,
+  "tilda_changed":false
+}
