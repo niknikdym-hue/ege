@@ -1,0 +1,68 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CURRENT_NORM_PASS6_MORPHEMIC_SPECIALS_COMPLETE",
+  "production_integration":"HOLD",
+  "units":[
+    {
+      "unit_id":"school-chet-chit-sochetat-sochetanie",
+      "operation":"RECLASSIFY_AS_TRADITIONAL_SPECIAL_SPELLING_NOT_CHET_CHIT_EXCEPTION",
+      "canonical_members":["сочетать","сочетание"],
+      "grade_routes":[5,6,10],
+      "current_rule":"Current academic rules explicitly state that `сочетать, сочетание` are written with Е and are not cognate with the listed -чит- root groups.",
+      "norm_status":"current_confirmed_with_reclassification",
+      "learner_policy":"Do not teach a fictitious simple 'ЧЕТ/ЧИТ exception' derivation. Teach these forms as traditional special spellings with dictionary/current-rule support."
+    },
+    {
+      "unit_id":"school-i-y-after-prefix-vzimat-exception",
+      "operation":"KEEP_LEXICAL_SPECIAL_CASE",
+      "canonical_members":["взимать"],
+      "grade_routes":[6,10],
+      "norm_status":"current_confirmed",
+      "notes":"Current Gramota explicitly discusses `взимать` as a special spelling within the И/Ы-after-prefix topic."
+    },
+    {
+      "unit_id":"school-i-y-after-prefix-retain-i-boundary",
+      "operation":"KEEP_STRUCTURED_BOUNDARY",
+      "grade_routes":[6,10],
+      "branches":[
+        {"branch":"сверх-","examples":["сверхинтересный","сверхизысканный"]},
+        {"branch":"меж-","examples":["межинститутский","межигровой"]},
+        {"branch":"borrowed prefixes","examples":["дезинформация","гиперинфляция","суперинтересный","постинфарктный"]},
+        {"branch":"first parts of compounds/abbreviations","examples":["пединститут","спортинвентарь","госимущество"]}
+      ],
+      "norm_status":"current_confirmed",
+      "counting_policy":"one decision unit with branches, not four unrelated exceptions"
+    },
+    {
+      "unit_id":"school-pol-polu-writing-boundary",
+      "operation":"EXPAND_OLD_SCHOOL_BOUNDARY_TO_CURRENT_RULE_STRUCTURE",
+      "grade_routes":[6,10],
+      "branches":[
+        {"branch":"POL solid by default","examples":["полметра","полгорода","полстакана"]},
+        {"branch":"POL hyphen before vowel","examples":["пол-августа","пол-яблока"]},
+        {"branch":"POL hyphen before capital","examples":["пол-Москвы","пол-России"]},
+        {"branch":"POL hyphen before Л","examples":["пол-лимона","пол-литра"]},
+        {"branch":"POL + multiword phrase separate","examples":["пол Московской области","пол учебного года"]},
+        {"branch":"POLU solid by default","examples":["полуостров","полукруг"]},
+        {"branch":"POLU before proper name / second part with hyphen","examples":["полу-Европа","полу-конференц-зал"]},
+        {"branch":"dictionary specials","examples":["поллитровка","пол-йогурта"]}
+      ],
+      "norm_status":"current_confirmed_expanded",
+      "source_scope_note":"Older grade routes prove the core boundary; current-only finer branches are normative scope and do not automatically add extra school denominator identities."
+    },
+    {
+      "unit_id":"school-lag-lozh-polog-exception",
+      "operation":"KEEP_TRADITIONAL_SPECIAL_CASE_WITH_CURRENT_MORPHEMIC_CORRECTION",
+      "canonical_members":["полог"],
+      "grade_routes":[10],
+      "norm_status":"current_confirmed_with_morphemic_rewording",
+      "current_note":"The current rule preserves the special spelling but notes that the root -лог- is no longer identified in `полог` in modern language analysis.",
+      "learner_policy":"Do not claim `полог` is transparently a modern -лаг-/-лож- root exception without the morphemic note."
+    }
+  ],
+  "counts":{"units_reviewed":5,"units_current_norm_ready":5},
+  "exam_routes_created":0,
+  "production_files_changed":false,
+  "tilda_changed":false
+}
