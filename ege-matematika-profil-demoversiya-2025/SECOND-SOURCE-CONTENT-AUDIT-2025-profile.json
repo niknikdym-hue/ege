@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "review_type": "SECOND_SOURCE_CONTENT_REVIEW",
+  "scope": "Internal second review pass against canonical repo FIPI 2025 sources; separate from build implementation and Selenium runtime audit; not third-party certification.",
+  "source_year": 2025,
+  "official_examples": 37,
+  "short_examples": 30,
+  "extended_examples": 7,
+  "checks": {
+    "official_source_identity": "PASS: all 3 repo FIPI 2025 PDFs match locked SHA-256; 37 condition assets reported",
+    "official_answer_table": "PASS: 30/30 short-answer values rechecked against canonical FIPI 2025 printed page 14",
+    "exam_structure": "PASS: part 1 = 12/12; part 2 = 7/20; total = 19 tasks / 32 primary",
+    "duration_and_scoring_specification": "PASS: 235 minutes; official max-score map 2/3/2/2/3/4/4",
+    "primary_score_cap": "PASS: maximum primary score 32",
+    "extended_criteria_maxima": "PASS: tasks 13-19 criteria maxima checked on canonical printed pages 15-22",
+    "condition_asset_map": "PASS: 37/37 official examples, exact per-task counts, direct-source raster crops",
+    "implementation_data_crosscheck": "PASS: EXAM-DATA matches independently re-read source values and structure",
+    "audit_matrix": "PASS: exactly 37 rows; all final browser/source rows PASS; no open defect IDs",
+    "browser_evidence_crosscheck": "PASS: 37/37 real controls; 30/30 correct+wrong short answers; 0 severe JS errors",
+    "tilda_size_crosscheck": "PASS: 59 T123 blocks; max 42292 bytes < 45000",
+    "year_and_variant_isolation": "PASS: no 2026 content label; learner variant number template absent; 2025 storage isolated"
+  }
+}
