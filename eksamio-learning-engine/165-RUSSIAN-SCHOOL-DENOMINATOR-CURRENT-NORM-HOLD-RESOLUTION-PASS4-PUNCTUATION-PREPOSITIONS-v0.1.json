@@ -1,0 +1,157 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CURRENT_NORM_HOLD_RESOLUTION_PASS4_PUNCTUATION_PREPOSITIONS_COMPLETE",
+  "inputs":[
+    "156-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE11-FINAL-ADDENDUM-v0.1.json",
+    "161-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-PASS2-v0.1.json"
+  ],
+  "production_integration":"HOLD",
+  "purpose":"Replace school-source mechanical comma formulas with current context-sensitive punctuation decision units while preserving grade-11 source routes.",
+  "authoritative_current_evidence":[
+    {
+      "source":"Gramota.ru — Справочник по пунктуации, Приложение 1. Непервообразные предлоги",
+      "url":"https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-1-nepervoobraznye-predlogi",
+      "finding":"Circumstantial turns with derived prepositions are not governed by one universal comma rule. Some may be isolated or not depending on ambiguity, length, position, semantic closeness and authorial emphasis; isolation may be wrong if the phrase is part of the predicate or tightly linked to it."
+    },
+    {
+      "source":"Gramota.ru — Полные академические правила, §75",
+      "url":"https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/znaki-prepinaniya-pri-obosoblennykh-obstoyatelstvakh",
+      "finding":"Derived-preposition circumstances are isolated when their meaning is emphasized. Isolation is obligatory between subject and predicate because the turn interrupts their direct relation. `Несмотря на` may be unisolated when immediately after the verb; word order matters."
+    },
+    {
+      "source":"Gramota.ru — Полные академические правила, §78",
+      "url":"https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/znaki-prepinaniya-pri-ogranichitelnovydelitelnykh-oborotakh",
+      "finding":"Inclusion/exclusion/replacement turns with `кроме, наряду с, помимо, (не) исключая, за исключением, включая, сверх, вместо` are isolated or not according to context. Isolation is obligatory in absolute initial position, between subject and predicate, or between governing and governed word."
+    },
+    {
+      "source":"Gramota.ru — Учебник, Обособленные дополнения",
+      "url":"https://gramota.ru/uchebnik/pravila/obosoblennye-dopolneniya-ogranichitelno-vydelitelnye-oboroty",
+      "finding":"Current school-facing simplification: `кроме` is isolated irrespective of inclusion/exclusion meaning; `вместо` is isolated when the dependent noun denotes an action, but normally not when it denotes an object used in replacement or when `вместо` means `за / в качестве`."
+    },
+    {
+      "source":"Gramota.ru answer 331444, 7 Apr 2026",
+      "url":"https://gramota.ru/spravka/vopros/331444",
+      "finding":"`вместо меня` in `вместо меня будет участвовать другой член команды` is not isolated: it is the sole complement and there is nothing to isolate it from."
+    }
+  ],
+  "canonicalization_decisions":[
+    {
+      "unit_id":"school-derived-preposition-circumstance-variable-isolation",
+      "operation":"REPLACE_MECHANICAL_SOURCE_FORMULA_WITH_STRUCTURED_CONTEXT_DECISION",
+      "canonical_label":"Обособление обстоятельств с производными предлогами: позиция, смысловое выделение и связь со сказуемым",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "branches":[
+        {
+          "branch_id":"mandatory-structural-break",
+          "rule":"Обособление обязательно, если оборот разрывает непосредственную синтаксическую связь, прежде всего расположен между подлежащим и сказуемым; в ограничительно-выделительной модели также между управляющим и управляемым словом.",
+          "status":"current_confirmed"
+        },
+        {
+          "branch_id":"optional-context-group",
+          "members":["благодаря","ввиду","в зависимости от","в силу","вследствие","за неимением","наряду с","по причине","по случаю","при наличии","при условии","согласно","соответственно","сверх (в значении кроме/помимо)"],
+          "rule":"Вне обязательной позиции обособление зависит от смыслового выделения, распространённости, порядка слов, близости к сказуемому и необходимости обозначить границы оборота.",
+          "status":"current_confirmed"
+        },
+        {
+          "branch_id":"usually-isolated-group",
+          "members":["вопреки"],
+          "rule":"Ограничительно/выделительно воспринимаемый оборот обычно обособляется, кроме тесной связи со сказуемым или другой структуры, делающей обособление неуместным.",
+          "status":"current_confirmed"
+        },
+        {
+          "branch_id":"tight-predicate-no-isolation",
+          "rule":"Если оборот входит в состав сказуемого или настолько тесно связан с ним по смыслу, что изъятие разрушает основное сообщение, запятые не ставятся только по признаку наличия производного предлога.",
+          "status":"current_confirmed"
+        },
+        {
+          "branch_id":"ambiguity-boundary-isolation",
+          "rule":"Оборот обособляется, если требуется явно обозначить его границы и снять двусмысленность.",
+          "status":"current_confirmed"
+        }
+      ],
+      "source_correction":"Reject the grade-11 source's compact position/length formula as a universal learner algorithm. Preserve it only as historical/source pedagogy evidence.",
+      "norm_status":"current_confirmed_with_context_model",
+      "counting_policy":"one structured punctuation decision unit; branches are diagnostic states, not automatically extra denominator units"
+    },
+    {
+      "unit_id":"school-concessive-preposition-circumstance-isolation",
+      "operation":"KEEP_SEPARATE_PUNCTUATION_UNIT_AND_ADD_CONTEXT_EXCEPTION",
+      "canonical_label":"НЕСМОТРЯ НА / НЕВЗИРАЯ НА: обособление уступительного обстоятельства",
+      "canonical_members":["несмотря на","невзирая на"],
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "branches":[
+        {
+          "branch_id":"usual-isolation",
+          "rule":"Обороты обычно обособляются, особенно при смысловом выделении и в позиции, разрывающей главную синтаксическую связь.",
+          "status":"current_confirmed"
+        },
+        {
+          "branch_id":"possible-no-isolation",
+          "rule":"Обособление не абсолютно: полный академический справочник допускает отсутствие запятых в контексте без специального смыслового выделения; для `несмотря на` отдельно отмечена возможность не обособлять оборот непосредственно после глагола.",
+          "status":"current_confirmed"
+        }
+      ],
+      "orthography_link":"Keep separate from `school-nesmotrya-vs-ne-smotrya`: this unit decides punctuation, the other decides preposition vs gerund spelling/function.",
+      "norm_status":"current_confirmed_with_context_exception",
+      "learner_policy":"Do not teach `несмотря на = commas always` as an absolute rule."
+    },
+    {
+      "unit_id":"school-obosob-additions-krome-vmesto-boundary",
+      "operation":"SPLIT_PARENT_TO_SEMANTIC_PUNCTUATION_BRANCHES",
+      "canonical_label":"Ограничительно-выделительные и заместительные обороты: КРОМЕ / ПОМИМО / ЗА ИСКЛЮЧЕНИЕМ / ВМЕСТО и др.",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "branches":[
+        {
+          "branch_id":"krome",
+          "members":["кроме"],
+          "rule":"Современная школьная норма обособляет обороты с `кроме` независимо от того, означает ли оно исключение или включение. Старое правило, связывавшее запятую только со значением исключения, не использовать.",
+          "status":"current_confirmed_school_model",
+          "advanced_note":"Полные академические формулировки описывают всю группу ограничительно-выделительных оборотов контекстно; при learner implementation primary school-facing branch may be used only where its syntactic pattern is unambiguous."
+        },
+        {
+          "branch_id":"pomimo-za-isklyucheniem-isklyuchaya",
+          "members":["помимо","за исключением","исключая","не исключая","включая"],
+          "rule":"Такие обороты обычно обособляются; обязательность усиливается в структурно разрывающих позициях. Тесная связь со сказуемым/структурой требует отдельной проверки, а `исключая` надо отличать от деепричастного употребления.",
+          "status":"current_confirmed_contextual"
+        },
+        {
+          "branch_id":"naryadu-s-sverkh",
+          "members":["наряду с","сверх (в значении кроме/помимо)"],
+          "rule":"Возможны обособление и необособление в зависимости от позиции, смыслового выделения и связи с основной конструкцией.",
+          "status":"current_confirmed_contextual"
+        },
+        {
+          "branch_id":"vmesto-action",
+          "members":["вместо + существительное со значением действия"],
+          "rule":"В типовой модели замещения действия оборот обособляется: `Вместо ответа, ...`.",
+          "status":"current_confirmed"
+        },
+        {
+          "branch_id":"vmesto-object-replacement",
+          "members":["вместо + предмет/лицо в значении замены"],
+          "rule":"Обособление не является автоматическим и часто не требуется: `вместо шляпы`, `вместо меня`; если оборот означает `за / в качестве`, он не обособляется.",
+          "status":"current_confirmed"
+        },
+        {
+          "branch_id":"mandatory-position-overlay",
+          "rule":"Для всей ограничительно-выделительной группы полные академические правила требуют обособления в абсолютном начале предложения, между подлежащим и сказуемым или между управляющим и управляемым словом; применять этот structural overlay перед лексическим shortcut.",
+          "status":"current_confirmed"
+        }
+      ],
+      "norm_status":"current_confirmed_structured",
+      "counting_policy":"organizational parent does not add to denominator over independently counted semantic branches; final learner granularity to be fixed at materialization gate"
+    }
+  ],
+  "source_conflicts_resolved":[
+    "Do not teach a universal comma rule for all derived-preposition circumstances.",
+    "Do not teach `несмотря на / невзирая на` as absolutely always isolated in every position/context.",
+    "Do not use old `кроме = comma only for exclusion` semantics as modern rule.",
+    "Do not teach `вместо` as uniformly isolated or uniformly unisolated; distinguish action, object/person replacement, `за/в качестве`, and structural position."
+  ],
+  "counts":{"canonical_hold_groups_reviewed":3,"resolved_to_structured_current_units":3,"remaining_hold_in_these_groups":0},
+  "exam_routes_created":0,
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false
+}
