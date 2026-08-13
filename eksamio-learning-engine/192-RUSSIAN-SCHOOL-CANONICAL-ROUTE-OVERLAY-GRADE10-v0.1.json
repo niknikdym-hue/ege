@@ -1,0 +1,45 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"GRADE10_EXISTING_CANONICAL_ROUTE_OVERLAY_WORKING_ADMITTED",
+  "purpose":"Add Grade-10 Drabkina routes to already existing grade-independent canonical units without creating new denominator identities.",
+  "source_ref":"152-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE10-GRAMMAR-v0.1.json",
+  "canonical_bank_ref":"178-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK06-GRADE7-PREPOSITIONS-CONJUNCTIONS-v0.1.json",
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "route_additions":[
+    {"unit_id":"school-v-techenie-v-techenii","grade":10,"role":"explicitly_taught_or_singled_out","evidence":"Grade-10 derivative-preposition contrast family explicitly names в течение/в течении."},
+    {"unit_id":"school-v-prodolzhenie-v-prodolzhenii","grade":10,"role":"explicitly_taught_or_singled_out","evidence":"Grade-10 derivative-preposition contrast family explicitly names в продолжение/в продолжении."},
+    {"unit_id":"school-vsledstvie-v-sledstvii-vposledstvii","grade":10,"role":"explicitly_taught_or_singled_out","source_member_scope":["вследствие","в следствии","впоследствии"],"evidence":"Grade-10 source explicitly drills all three forms together."},
+    {"unit_id":"school-vvidu-v-vide-imet-v-vidu","grade":10,"role":"explicitly_taught_or_singled_out","source_member_scope":["ввиду","в виде","иметь в виду"],"evidence":"Grade-10 source explicitly gives the three-way distinction."},
+    {"unit_id":"school-poseredine-vmesto-homonym-boundaries","grade":10,"role":"explicitly_taught_or_singled_out","evidence":"Grade-10 source explicitly drills посередине/по середине and вместо/в место."},
+    {"unit_id":"school-nesmotrya-vs-ne-smotrya","grade":10,"role":"explicitly_taught_or_singled_out","source_member_scope":["несмотря на","не смотря","несмотря на то что"],"evidence":"Grade-10 source explicitly contrasts the preposition, gerund construction and concessive conjunction."},
+    {"unit_id":"school-conjunction-chtoby-chto-by","grade":10,"role":"explicitly_taught_or_singled_out"},
+    {"unit_id":"school-conjunction-tozhe-to-zhe","grade":10,"role":"explicitly_taught_or_singled_out"},
+    {"unit_id":"school-conjunction-takzhe-tak-zhe","grade":10,"role":"explicitly_taught_or_singled_out"},
+    {"unit_id":"school-conjunction-zato-za-to","grade":10,"role":"explicitly_taught_or_singled_out"},
+    {"unit_id":"school-conjunction-pritom-pri-tom","grade":10,"role":"explicitly_taught_or_singled_out"},
+    {"unit_id":"school-conjunction-prichyom-pri-chyom","grade":10,"role":"explicitly_taught_or_singled_out"},
+    {"unit_id":"school-conjunction-ottogo-ot-togo","grade":10,"role":"explicitly_taught_or_singled_out"}
+  ],
+  "source_family_evidence":{
+    "conjunction_members":["чтобы — что бы","тоже — то же","также — так же","зато — за то","притом — при том","причём — при чём","оттого — от того"],
+    "policy":"The Grade-10 source family is decomposed only onto canonical branches whose literal pair is present in the source member list."
+  },
+  "not_admitted_from_generic_family_only":[
+    "school-v-zaklyuchenie-v-zaklyuchenii",
+    "school-naschet-na-schet",
+    "school-kak-budto-separate-spelling"
+  ],
+  "pending_separate_canonicalization":[
+    "school-navstrechu-vs-na-vstrechu",
+    "school-napodobie-vs-na-podobie",
+    "school-itak-vs-i-tak"
+  ],
+  "count_assertion":{"route_additions":13,"new_denominator_identities":0},
+  "exam_routes":[],
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false
+}
