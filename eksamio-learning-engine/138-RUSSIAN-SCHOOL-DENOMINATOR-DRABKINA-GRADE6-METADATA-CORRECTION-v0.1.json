@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-13",
+  "status": "ACTIVE_METADATA_CORRECTION_OVERLAY",
+  "applies_to": "137-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE6-v0.1.json",
+  "reason": "Immediate post-write self-check found that the first-pass metadata count did not match the actual candidate_units array.",
+  "corrected_counts": {
+    "candidate_units": 17,
+    "new_canonical_candidates_vs_grade5_first_pass": 14,
+    "repeated_grade_routes_for_existing_candidates": 3,
+    "source_form_excluded_by_current_norm": 1,
+    "current_bank_comparison_pending": 17
+  },
+  "repeated_grade_route_unit_ids": [
+    "school-rast-rashch-ros-exception-set",
+    "school-chet-chit-sochetat-sochetanie",
+    "school-soft-sign-toch-v-toch"
+  ],
+  "gate_rule": "Any consumer of 137 must apply this correction overlay. Canonical build must assert declared candidate count == actual candidate array length and declared repeated/new partition == actual classification counts.",
+  "production_files_changed": false
+}
