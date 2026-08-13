@@ -1,0 +1,157 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"PASS2_PARENT_BRANCH_AND_OVERLAP_DECISIONS_ACTIVE",
+  "spec_ref":"159-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-SPEC.txt",
+  "pass1_ref":"160-RUSSIAN-SCHOOL-DENOMINATOR-CROSS-GRADE-MERGE-PASS1-v0.1.json",
+  "mechanical_identity_count_after_pass1":113,
+  "mechanical_count_warning":"113 is a working identity count after obvious cross-grade duplicate collapse, not a final denominator. It still contains HOLD/conflict records and broad/narrow identities requiring decisions below.",
+  "decisions":[
+    {
+      "decision_id":"P2-001",
+      "subject":"school-pre-pri-phonetic-twins",
+      "operation":"MERGE_TO_PARENT_WITH_BRANCHES",
+      "parent_id":"school-pre-pri-lexical-contrast-family",
+      "branch_granularity":"pair",
+      "branches":["пребывать—прибывать","претворить—притворить","преступить—приступить","преклоняться—приклоняться","предать—придать","предание—придание","преемник—приёмник","преходящий—приходящий","превратный—привратник","предел—придел","презирать—призреть","непреложный—приложение","непременный—применить"],
+      "count_policy":"parent is organizational; learner mastery may be tracked per verified lexical contrast branch so one large list does not count as one mastered fact",
+      "norm_status":"pending_pair_by_pair"
+    },
+    {
+      "decision_id":"P2-002",
+      "subject":"school-derivative-preposition-e-i-contrast-family and related narrower contrast units",
+      "operation":"MERGE_TO_PARENT_WITH_BRANCHES",
+      "parent_id":"school-derivative-preposition-homonym-contrast-family",
+      "child_or_branch_ids":["school-v-techenie-v-techenii","school-v-prodolzhenie-v-prodolzhenii","school-v-zaklyuchenie-v-zaklyuchenii","school-vsledstvie-v-sledstvii-vposledstvii","school-navstrechu-vs-na-vstrechu","school-vvidu-v-vide-imet-v-vidu","school-napodobie-vs-na-podobie","school-poseredine-vmesto-homonym-boundaries"],
+      "count_policy":"organizational parent not counted as an additional mastered exception if branches are independently counted",
+      "norm_status":"pending_branch_by_branch"
+    },
+    {
+      "decision_id":"P2-003",
+      "subject":"school-conjunction-homonym-contrast-family",
+      "operation":"MERGE_TO_PARENT_WITH_BRANCHES",
+      "parent_id":"school-conjunction-homonym-contrast-family",
+      "branches":["чтобы—что бы","тоже—то же","также—так же","зато—за то","притом—при том","причём—при чём","оттого—от того"],
+      "count_policy":"branch-level mastery; parent organizational only",
+      "norm_status":"pending_pair_by_pair"
+    },
+    {
+      "decision_id":"P2-004",
+      "subject":"school-kak-comma-functional-boundary",
+      "operation":"MERGE_TO_PARENT_WITH_STRUCTURED_BRANCHES",
+      "parent_id":"school-kak-comma-functional-boundary",
+      "branches":["comparison/adjectival similarity","correlative так/такой...как","как и","parenthetical formulae как правило/как обычно/etc.","не кто иной, как / не что иное, как","causal apposition","subordinate conjunction","comparative construction","part of predicate","preceded by НЕ/совсем/почти/именно/просто/вроде/прямо/совершенно/не иначе","как..., так и...","inside compound conjunction","stable phraseological expression","meaning 'as/in the capacity of'","как можно/как нельзя + comparative","identification/qualification","adverbial manner","non-comparative fixed constructions"],
+      "count_policy":"one high-level decision engine with branch-level diagnostics; do not inflate denominator by treating every table row as an independent school exception before current-norm review",
+      "norm_status":"pending_Rosenthal_branch_by_branch"
+    },
+    {
+      "decision_id":"P2-005",
+      "subject":"school-nn-verb-derived-nn-exception-set + school-nn-verb-derived-one-n-exception-contrast-set + school-kovany-zhovany-root-boundary",
+      "operation":"KEEP_SEPARATE_SIBLINGS_UNDER_NN_PARENT",
+      "parent_id":"school-nn-verb-derived-special-cases",
+      "reason":"NN lexical exception list, one-N/contextual pairs and кованый/жёваный morphemic boundary are different learner decisions even though the textbook groups them in one chapter",
+      "norm_status":"mixed_members_need_item_review"
+    },
+    {
+      "decision_id":"P2-006",
+      "subject":"school-nn-derived-noun-adverb-inheritance + school-adverb-n-nn-source-word-inheritance + school-nn-derived-noun-memorized-set",
+      "operation":"PARENT_CHILD_RESTRUCTURE",
+      "parent_id":"school-nn-derived-word-inheritance",
+      "children":["school-adverb-n-nn-source-word-inheritance","school-nn-derived-noun-inheritance","school-nn-derived-noun-memorized-set"],
+      "reason":"general derivational inheritance is reusable rule; memorized nouns remain lexical exceptions and must not be erased into the general rule",
+      "norm_status":"pending"
+    },
+    {
+      "decision_id":"P2-007",
+      "subject":"school-one-n-lexical-adjectives",
+      "operation":"HOLD_FINAL_MEMBERSET",
+      "reason":"grade-6 and grade-10 sources give overlapping/broader pedagogical lists, but individual members may differ in modern morphological explanation; do not freeze one denominator family until item-level review",
+      "norm_status":"mixed_members_need_item_review"
+    },
+    {
+      "decision_id":"P2-008",
+      "subject":"school-ne-short-predicative-separate-set + school-ne-adverbs-special-boundaries",
+      "operation":"HOLD_OVERLAP_AND_RECLASSIFY",
+      "overlap_members":["не жаль","не надо","не нужно"],
+      "reason":"source headings use broad school labels that mix morphological categories; duplicate surface forms must have one canonical ownership after authoritative morphology review",
+      "norm_status":"source_classification_needs_review"
+    },
+    {
+      "decision_id":"P2-009",
+      "subject":"school-po-after-event-prepositional-forms",
+      "operation":"KEEP_ONE_CANONICAL_FAMILY_WITH_MEMBER_FORMS",
+      "branches":["по окончании","по прибытии","по возвращении","по завершении","по истечении","по предъявлении","по приезде","по прилёте"],
+      "reason":"same semantic-government decision in post-event meaning; separate words need practice examples but not independent denominator identities by default",
+      "norm_status":"current_rule_supported"
+    },
+    {
+      "decision_id":"P2-010",
+      "subject":"numeral special declension families",
+      "operation":"KEEP_SEPARATE_SIBLINGS",
+      "units":["school-numeral-declension-40-90-100","school-numeral-declension-50-80","school-numeral-declension-200-900","school-numeral-soft-sign-position-boundary"],
+      "reason":"different paradigms/orthographic decisions; merging into one 'numerals' unit would hide distinct mastery",
+      "norm_status":"current_supported"
+    },
+    {
+      "decision_id":"P2-011",
+      "subject":"gerund/deverbal punctuation special cases",
+      "operation":"KEEP_SEPARATE_SIBLINGS_UNDER_PARENT",
+      "parent_id":"school-gerund-punctuation-special-cases",
+      "children":["school-gerund-shared-agent-boundary","school-gerund-idioms-no-isolation","school-gerund-adverbial-no-isolation-boundary","school-gerund-after-conjunction-isolation-boundary","school-gerund-two-turns-shared-predicate-i-boundary"],
+      "reason":"shared topic, materially different learner decisions",
+      "norm_status":"pending_branch_by_branch"
+    },
+    {
+      "decision_id":"P2-012",
+      "subject":"introductory/non-introductory function words",
+      "operation":"KEEP_SEPARATE_CONTEXT_UNITS_UNDER_PARENT",
+      "parent_id":"school-introductory-function-context-family",
+      "children":["school-odnako-function-context","school-znachit-function-context","school-nakonets-function-context","school-voobshche-function-context"],
+      "reason":"each surface word has its own functional contrast; one giant 'introductory words' identity would make mastery meaningless",
+      "norm_status":"mixed; ВООБЩЕ source overgeneralization needs correction"
+    },
+    {
+      "decision_id":"P2-013",
+      "subject":"subject-predicate dash special cases",
+      "operation":"KEEP_SEPARATE_SIBLINGS_UNDER_PARENT",
+      "parent_id":"school-subject-predicate-dash-special-cases",
+      "children":["school-dash-subject-predicate-closing-comma-boundary","school-dash-subject-predicate-no-dash-boundaries"],
+      "reason":"one is interaction of two punctuation requirements; the other is suppression/context boundary for the base dash rule",
+      "norm_status":"pending_Rosenthal_context_review"
+    },
+    {
+      "decision_id":"P2-014",
+      "subject":"school-adverb-nonfree-stems-solid-lexical-set",
+      "operation":"KEEP_PARENT_WITH_MEMBER_LEVEL_PRACTICE_PENDING_NORM",
+      "reason":"large lexicalized set is a coherent source family but individual spellings must remain addressable for practice and dictionary review; parent should not count in addition to independently counted members",
+      "norm_status":"pending_item_by_item"
+    },
+    {
+      "decision_id":"P2-015",
+      "subject":"NE/NI specific contrasts",
+      "operation":"KEEP_SEPARATE_SIBLINGS_UNDER_PARENT",
+      "parent_id":"school-ne-ni-special-cases",
+      "children":["school-ne-ni-context-boundary","school-ne-ni-ni-odin-ne-odin-ni-razu-ne-raz","school-ne-kto-inoy-vs-nikto-inoy","school-ni-fixed-idioms","school-ni-particle-vs-repeating-conjunction"],
+      "reason":"different semantics/syntax/lexicalization; common chapter does not imply one mastery unit",
+      "norm_status":"pending_branch_by_branch"
+    },
+    {
+      "decision_id":"P2-016",
+      "subject":"school-obosob-additions-krome-vmesto-boundary + school-derived-preposition-circumstance-variable-isolation + school-concessive-preposition-circumstance-isolation",
+      "operation":"KEEP_SEPARATE_SIBLINGS_UNDER_PUNCTUATION_PARENT",
+      "parent_id":"school-prepositional-circumstance-addition-isolation-special-cases",
+      "reason":"addition/exclusion, variable circumstance isolation and concessive despite/nevziraya cases have distinct semantic and punctuation conditions",
+      "norm_status":"current-context-review-required"
+    }
+  ],
+  "explicit_hold_set":[
+    "school-podyachiy-separating-sign-conflict",
+    "school-ne-short-predicative-separate-set: morphology ownership unresolved",
+    "school-one-n-lexical-adjectives: final member classification unresolved",
+    "school-itak-vs-i-tak: source part-of-speech wording internally inconsistent",
+    "school-voobshche-function-context: source absolute wording conflicts with current contextual treatment"
+  ],
+  "metric_rule":"organizational parent nodes do not add to denominator when their child/branch units are the counted mastery objects; exact denominator count remains unknown until this granularity policy is applied consistently to all identities",
+  "next_pass":"apply current-norm review to HOLD/mixed groups, then materialize canonical working bank and only afterwards compare with recovered current 127",
+  "production_files_changed":false
+}
