@@ -1,0 +1,31 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"GRADE10_NE_NI_CONTRASTS_WORKING_ADMITTED",
+  "source_ref":"152-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE10-GRAMMAR-v0.1.json",
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "canonical_units":[
+    {
+      "unit_id":"school-ne-ni-ni-odin-ne-odin-ni-razu-ne-raz",
+      "label":"НИ ОДИН / НЕ ОДИН; НИ РАЗУ / НЕ РАЗ",
+      "grade_routes":[{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "members":["ни один = никто","не один = много/многие","ни разу = никогда","не раз = много раз"],
+      "decision_model":"Choose НЕ or НИ by meaning of the whole construction, not by a mechanical neighboring-word cue.",
+      "norm":"current_academic_rule_confirmed"
+    },
+    {
+      "unit_id":"school-ne-kto-inoy-vs-nikto-inoy",
+      "label":"НЕ КТО ИНОЙ, КАК / НЕ ЧТО ИНОЕ, КАК vs НИКТО ИНОЙ / НИЧТО ИНОЕ",
+      "grade_routes":[{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "members":["не кто иной, как","не что иное, как"],
+      "contrast_members":["никто иной не...","ничто иное не..."],
+      "decision_model":"НЕ КТО ИНОЙ, КАК and НЕ ЧТО ИНОЕ, КАК are affirmative identification/comparison constructions with separate НЕ and a comma before КАК. НИКТО ИНОЙ / НИЧТО ИНОЕ belong to negative constructions and use the negative pronouns written solid.",
+      "forbidden_form":"ни что иное, как",
+      "norm":"current_academic_rule_confirmed"
+    }
+  ],
+  "count_assertion":{"declared_canonical_units":2},
+  "exam_routes":[],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
