@@ -1,0 +1,39 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"GRADE9_CONJUNCTION_STRUCTURES_WORKING_ADMITTED",
+  "refs":["147-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE9-v0.1.json","155-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE11-v0.1.json"],
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "canonical_units":[
+    {
+      "unit_id":"school-ssp-no-comma-common-element-boundary",
+      "label":"ССП с одиночным И / ИЛИ / ЛИБО: специальные условия отсутствия запятой",
+      "grade_routes":[{"grade":9,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_academic_rule_confirmed",
+      "decision_model":"Запятая между частями ССП может не ставиться при реальном общем компоненте или иной нормативно установленной структурно-интонационной общности; наличие союза И само по себе решения не даёт.",
+      "learner_policy":"Сначала установить грамматические основы и общий элемент/общую конструкцию, затем решать вопрос о запятой."
+    },
+    {
+      "unit_id":"school-paired-conjunction-fixed-pairs",
+      "label":"Двойные и градационные союзы: распознавать конкретную нормативную модель",
+      "grade_routes":[{"grade":9,"role":"explicitly_taught_or_singled_out"},{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "core_school_models":["не только … но и …","как … так и …"],
+      "norm":"current_confirmed_with_source_wording_correction",
+      "source_correction":"Не переносить формулу 2018 года как утверждение, что у каждого первого компонента существует только одна неизменная в языке вторая часть. Современная норма допускает и другие градационные модели в соответствующем контексте.",
+      "canonicalization":"single_identity_across_grades_9_11",
+      "learner_policy":"Оценивать конкретную союзную конструкцию, а не механически браковать всякое отклонение от одной школьной пары."
+    },
+    {
+      "unit_id":"school-junction-of-conjunctions-to-no-boundary",
+      "label":"Стык союзов: запятая определяется строением вложенной придаточной части",
+      "grade_routes":[{"grade":9,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_academic_rule_confirmed",
+      "decision_model":["Если вложенную придаточную часть можно структурно изъять/перестроить без разрушения связи, на стыке союзов возможна/требуется запятая по общей модели.","При двойном союзе с продолжением ТО запятая между двумя союзами обычно не ставится.","Начало предложения и иные структуры требуют отдельного синтаксического разбора."],
+      "learner_policy":"Мнемоника 'есть ТО — нет запятой' допустима только после определения структуры союза, а не вместо синтаксического анализа."
+    }
+  ],
+  "count_assertion":{"declared_canonical_units":3},
+  "exam_routes":[],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
