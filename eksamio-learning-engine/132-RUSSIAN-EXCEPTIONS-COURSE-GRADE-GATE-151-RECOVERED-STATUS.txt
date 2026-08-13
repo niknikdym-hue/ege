@@ -1,0 +1,105 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS / SCHOOL BASE
+RECOVERED COURSE-GRADE GATE CHECKPOINT 151
+DATE: 2026-08-13
+STATUS: RECOVERED BASELINE / ADD-ONLY / PRODUCTION UNCHANGED
+
+PURPOSE
+
+This file restores the last user-accepted checkpoint from the previous chat so that continuation no longer depends on chat memory.
+
+IMPORTANT PROVENANCE LIMIT
+
+The late checkpoint archives named in the previous chat (`russian-exceptions-course-grade-gate-135.zip`, `-137.zip`, `-141.zip`, `-147.zip`, `-151.zip`) are not present in current GitHub `main`, and their bytes were not recoverable from the current conversation/library search.
+
+Therefore the numerical/status statements below are RECOVERED PROJECT STATE supplied by the user from the accepted previous-chat handoff. They are authoritative for continuation planning, but they are NOT new linguistic source evidence and must not be used to prove a rule, answer, grade route, or current norm by themselves.
+
+LAST COMMITTED PRE-RECOVERY LINE IN MAIN
+
+- 130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt
+- 131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json
+
+RECOVERED CHECKPOINT 151 STATE
+
+CURRENT_BASE_UNITS: 127
+UNITS_WITH_AT_LEAST_ONE_CONFIRMED_DRABKINA_GRADE_ROUTE: 108
+UNITS_WITHOUT_CONFIRMED_DRABKINA_GRADE_ROUTE: 18
+EXAM_ONLY_OLD_ENTRY_EXCLUDED_FROM_FUTURE_SCHOOL_DENOMINATOR: 1
+
+RECOVERED GRADE ROUTE COUNTS
+
+GRADE_5: 15
+GRADE_6: 26
+GRADE_7: 56
+GRADE_8: 16
+GRADE_9: 6
+GRADE_10: 82
+GRADE_11: 24
+
+COUNTING RULE
+
+These are route counts, not percentages and not sizes of the complete school program.
+One canonical unit may have several grade routes because the same material may be taught/repeated in multiple grades.
+
+RECOVERED EXAMPLES OF CONFIRMED ROUTING
+
+- `помидоров`: route to grade 6 confirmed in the previous checkpoint.
+- `по приезде / по окончании`: route to grade 7, with repeat/presence in grade 11.
+- government with `согласно / вопреки / благодаря`: route to grade 11.
+- non-agreed apposition with a title of a work: route to grade 10.
+
+CRITICAL ROUTING RULE
+
+Do NOT invent the first grade of study.
+If Drabkina confirms only a later repetition/presence, record only that confirmed route. A later appearance must never be converted into an inferred `first_taught_grade`.
+
+RECOVERED GATE BEHAVIOR
+
+The course-grade gate had been hardened so that class routing is built/checked as part of the main gate and a new unit cannot silently enter denominator calculations without explicit routing state.
+
+RECOVERED LAST CONTROL RESULT
+
+CHECKPOINT_RUN: 151
+RESULT: PASS
+PRACTICE_CARDS_REPORTED_GREEN: 121
+RUNTIME_REPORTED_GREEN: YES
+CHROMIUM_REPORTED_GREEN: YES
+
+These PASS statements are recovered status metadata. They do not replace rerunning the validators when the missing late archive/build state is reconstructed locally.
+
+CURRENT WORK ORDER — OVERRIDES THE OLD “FINISH THE 18” FRAMING
+
+1. Build the FULL school denominator from the entire Drabkina/Subbotin vertical for grades 5–11, including units absent from the current 127.
+2. Deduplicate repeated appearances into canonical linguistic units while preserving every evidenced grade route.
+3. Use Rosenthal as a completeness/rule-control layer for orthography and punctuation, not as a source for domains it does not actually cover.
+4. Run current academic/dictionary norm review and record conflicts with older school formulations instead of silently copying outdated simplifications.
+5. Add OGE/EGE routes separately from school-grade routes, using current FIPI evidence only for exam-specific facts, lists, format and constraints.
+6. Only after the denominator is closed may learner progress/coverage percentages be treated as honest product metrics.
+
+DENOMINATOR PRINCIPLE
+
+The denominator must be built independently of the current 127-unit bank.
+The current bank is a comparison set, not the definition of completeness.
+
+SOURCE VERTICAL PRESENT IN REPOSITORY
+
+- russkiy-knigi/russkij-jaz_-5kl_-prakt_-po-orf_-i-punkt__drabkina_2019-128s.pdf
+- russkiy-knigi/1622575648_russkij-jaz_-6kl_-prakt_-po-orf_-i-punkt__drabkina_2019-128s.pdf
+- russkiy-knigi/1528096458_1399-russkiy-yaz.-7kl.-prakt.-po-orfogr._drabkina_2018-120s.pdf
+- russkiy-knigi/1528096318_1400-russkiy-yaz.-8kl.-prakt.-po-orfogr._drabkina_2018-120s.pdf
+- russkiy-knigi/1563779010_174-russkij-jazyk_-9kl_-prakt_-po-orfografii-i-punkt__drabkina_2018-136s.pdf
+- russkiy-knigi/Drabkina_S._Russkiy_yazik_10_klass_gotovimsya_k_EGE.pdf
+- russkiy-knigi/Drabkina_S._Russkiy_yazik_11_klass_gotovimsya_k_EGE.pdf
+
+SAFETY BOUNDARY
+
+TILDA_CHANGED: NO
+CURRENT_EGE_TRAINER_CHANGED: NO
+STANDALONE_RUNTIME_CHANGED: NO
+CURRENT_121_CARD_SET_CHANGED: NO
+SCORING_CHANGED: NO
+LOCALSTORAGE_CHANGED: NO
+
+NEXT DURABLE ARTIFACT
+
+Create a denominator extraction contract, then build grade inventories from source evidence without deriving completeness from the old 127.
