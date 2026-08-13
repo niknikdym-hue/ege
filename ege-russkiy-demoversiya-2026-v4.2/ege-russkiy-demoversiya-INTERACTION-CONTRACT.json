@@ -215,10 +215,21 @@
     {
       "number": 27,
       "kind": "essay",
-      "control": "extended_textarea",
+      "control": "paper_or_demo_essay",
       "automatic_scoring": false,
       "max_score": 22,
-      "variants": 1
+      "variants": 1,
+      "required_t123": "T123-06",
+      "demo_input_language_assistance": "disabled",
+      "after_finish_demo": "frozen_read_only_essay",
+      "after_finish_paper": "editable_transferred_text",
+      "k7_k10_analysis": {
+        "source": "system_findings",
+        "confirmed": "hard_cap_only",
+        "possible": "does_not_change_cap",
+        "no_findings": "not_proof_and_no_automatic_score"
+      },
+      "self_assessment_scale": "0-22"
     }
   ]
 }

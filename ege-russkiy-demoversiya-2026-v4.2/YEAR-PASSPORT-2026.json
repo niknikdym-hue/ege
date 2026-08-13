@@ -70,6 +70,25 @@
     "K9": 3,
     "K10": 3
   },
+  "required_t123_blocks": [
+    "T123-01",
+    "T123-02",
+    "T123-03",
+    "T123-04",
+    "T123-05",
+    "T123-06"
+  ],
+  "task27_review": {
+    "modes": ["paper", "demo"],
+    "demo_after_finish": "frozen_read_only",
+    "paper_after_finish": "editable_transfer",
+    "language_assistance": "disabled_in_demo",
+    "findings": ["confirmed", "possible"],
+    "confirmed_hard_caps": {"1-2": 2, "3-4": 1, "5+": 0},
+    "possible_changes_cap": false,
+    "zero_findings_auto_score": false,
+    "self_assessment_scale": "0-22"
+  },
   "storage_key": "eksamio_ege_russian_demo_2026_v4_1",
   "task_schemas": {
     "26": {

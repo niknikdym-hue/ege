@@ -1,61 +1,95 @@
 from playwright.sync_api import sync_playwright
-import pathlib, json, sys
-base=pathlib.Path(__file__).parent
-patch=(base/'ege-russkiy-demoversiya-T123-06.txt').read_text(encoding='utf-8')
-html='''<!doctype html><html><head><meta charset="utf-8"></head><body>
-<div id="ege-demo-2026" data-state="running">
- <div id="edemo-task-stage"><div class="edemo-task-number">Задание 27 из 27</div><div class="edemo-answer"><label>Текст</label><textarea id="edemo-answer-input"></textarea><span id="edemo-live-word-count"></span></div></div>
- <section id="edemo-result" class="edemo-result">
-  <div class="edemo-score-card"><div><span id="edemo-essay-score">—</span>/22</div><p id="edemo-essay-status"></p></div>
-  <div class="edemo-score-card"><span id="edemo-total-score">—</span><p id="edemo-total-status"></p></div>
-  <section><p><span id="edemo-result-word-count">0</span></p><div id="edemo-criteria"></div></section>
- </section>
-</div>
-<script>
-window.__edemoRussian2026v41={technicalWordCount:function(v){var m=String(v||'').match(/[А-ЯЁа-яёA-Za-z]+(?:-[А-ЯЁа-яёA-Za-z]+)*/g);return m?m.length:0;}};
-(function(){var i=document.getElementById('edemo-answer-input');i.addEventListener('input',function(){var k='eksamio_ege_russian_demo_2026_v4_1',s=JSON.parse(localStorage.getItem(k)||'{"answers":{}}');s.answers=s.answers||{};s.answers[27]=i.value;localStorage.setItem(k,JSON.stringify(s));});})();
-</script>
-'''+patch+'''</body></html>'''
+import pathlib, json, os, sys
+
+base=pathlib.Path(__file__).resolve().parent
+preview=(base/'ege-russkiy-demoversiya-PREVIEW.html').read_text(encoding='utf-8')
+for n in range(1,6):
+    block=(base/f'ege-russkiy-demoversiya-T123-{n:02d}.txt').read_text(encoding='utf-8')
+    if block not in preview:
+        raise SystemExit(f'FAIL real preview does not contain exact T123-{n:02d}')
+hotfix=(base/'ege-russkiy-demoversiya-T123-06.txt').read_text(encoding='utf-8')
+html=preview.replace('</body>',hotfix+'</body>')
+
+browser_candidates=[
+    os.environ.get('BROWSER_EXECUTABLE'),
+    '/usr/bin/chromium',
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+]
+browser_executable=next((p for p in browser_candidates if p and pathlib.Path(p).exists()),None)
+if not browser_executable:
+    raise SystemExit('FAIL no Chromium-compatible browser executable')
+
 fails=[]
-def check(c,m):
-    if not c:fails.append(m)
-with sync_playwright() as p:
-    browser=p.chromium.launch(headless=True, executable_path='/usr/bin/chromium', args=['--no-sandbox'])
-    page=browser.new_page(viewport={'width':1000,'height':900})
-    page.evaluate("Object.defineProperty(window,'localStorage',{configurable:true,value:{_d:{},getItem(k){return Object.prototype.hasOwnProperty.call(this._d,k)?this._d[k]:null},setItem(k,v){this._d[k]=String(v)},removeItem(k){delete this._d[k]}}})")
-    page.set_content(html,wait_until='domcontentloaded')
-    check(page.locator('.edemo-essay-mode').count()==1,'mode selector mounted')
-    check(not page.locator('.edemo-answer').is_visible(),'paper mode hides demo textarea')
-    page.check('#edemo-paper-complete')
-    core=page.evaluate("JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_1'))")
-    check(core['answers']['27']=='—','paper marker stored through core input event')
-    page.check('input[name="edemo-writing-mode"][value="demo"]')
-    check(page.locator('.edemo-answer').is_visible(),'demo mode shows textarea')
-    page.fill('#edemo-answer-input','Демо текст сочинения')
-    page.evaluate("document.getElementById('ege-demo-2026').setAttribute('data-state','finished')")
-    page.wait_for_timeout(100)
-    check(page.locator('#edemo-task27-transfer').count()==1,'post-exam transfer mounted')
-    check(page.locator('#edemo-criteria[data-task27-hotfix="true"]').count()==1,'review replaces old criteria')
-    words149=' '.join(['слово']*149)
-    page.fill('#edemo-transferred-essay',words149)
-    check(page.locator('#edemo-threshold-box').get_attribute('data-state')=='danger','149 words triggers danger guidance')
-    words150=' '.join(['слово']*150)
-    page.fill('#edemo-transferred-essay',words150)
-    check(page.locator('#edemo-threshold-box').get_attribute('data-state')=='ok','150 words reaches threshold')
-    page.check('#edemo-review-eligibility')
+def check(cond,msg):
+    if not cond:fails.append(msg)
+def reset_storage(page):
+    page.evaluate("localStorage.removeItem('eksamio_ege_russian_demo_2026_v4_1');localStorage.removeItem('eksamio_ege_russian_demo_2026_v4_2_task27_review')")
+def load_real(page):
+    page.set_content(html,wait_until='domcontentloaded',timeout=15000)
+def go_task27(page):
+    page.click('#edemo-start')
+    page.locator('#edemo-nav .edemo-nav-btn').nth(26).click()
+def finish(page):
+    page.once('dialog',lambda d:d.accept())
+    page.click('#edemo-finish-top')
+def max_k1_k6(page):
     for k,v in [('K1','1'),('K2','3'),('K3','2'),('K4','1'),('K5','2'),('K6','1')]:
         page.select_option(f'[data-review-score="{k}"]',v)
-    for k in ['K7','K8','K9','K10']:
-        page.select_option(f'[data-confirmed-errors="{k}"]','0')
-    check(page.locator('#edemo-essay-score').inner_text()=='22','official score max 22')
-    check('24/24' in page.locator('#edemo-diagnostic24').inner_text(),'normalized diagnostic max 24')
-    # possible errors must not reduce score
-    page.select_option('[data-possible-errors="K7"]','5')
-    check(page.locator('#edemo-essay-score').inner_text()=='22','possible errors do not reduce score in UI')
+
+with sync_playwright() as p:
+    browser=p.chromium.launch(headless=True,executable_path=browser_executable,args=['--no-sandbox'])
+    page=browser.new_page(viewport={'width':1280,'height':900})
+    errors=[]
+    page.on('console',lambda m:errors.append(f'console {m.type}: {m.text}') if m.type=='error' else None)
+    page.on('pageerror',lambda e:errors.append(f'pageerror: {e}'))
+    page.evaluate("Object.defineProperty(window,'localStorage',{configurable:true,value:{_d:{},getItem(k){return Object.prototype.hasOwnProperty.call(this._d,k)?this._d[k]:null},setItem(k,v){this._d[k]=String(v)},removeItem(k){delete this._d[k]}}})")
+
+    # Demo mode on the real PREVIEW composed from exact T123-01...T123-05 plus T123-06.
+    load_real(page);go_task27(page)
+    page.check('input[name="edemo-writing-mode"][value="demo"]')
+    essay=page.locator('#edemo-answer-input')
+    for attr,want in [('spellcheck','false'),('autocomplete','off'),('autocorrect','off'),('autocapitalize','off'),('data-gramm','false'),('data-enable-grammarly','false'),('writingSuggestions','false')]:
+        check(essay.get_attribute(attr)==want,f'demo textarea {attr}={want}')
+    original='Это это исходное сочинение без точки'
+    essay.fill(original)
+    finish(page)
+    check(page.locator('h3',has_text='Ваше сочинение').count()==1,'demo result has Ваше сочинение')
+    check(page.locator('#edemo-frozen-essay').inner_text()==original,'demo essay frozen verbatim')
+    check(page.locator('#edemo-transferred-essay').count()==0,'demo result has no editable transferred text')
+    check(page.locator('#edemo-diagnostic24').count()==0,'0-24 diagnostic removed')
     saved=page.evaluate("JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_2_task27_review'))")
-    check(saved['transferredText']==words150,'transferred text persisted')
-    check(saved['confirmedErrors']['K7']==0 and saved['possibleErrors']['K7']==5,'error states persisted separately')
+    check(saved['analysisStatus']=='complete','system analysis runs after finish')
+    check(len(saved['confirmedFindings']['K10'])==1,'system creates confirmed finding')
+    check(len(saved['possibleFindings']['K8'])==1,'system creates possible finding')
+    check(page.locator('[data-confirmed-errors]').count()==0,'no manual confirmed-error counters')
+    page.check('#edemo-review-eligibility');max_k1_k6(page)
+    for k in ['K7','K8','K9']:page.select_option(f'[data-review-score="{k}"]','3')
+    page.select_option('[data-review-score="K10"]','2')
+    check(page.locator('#edemo-essay-score').inner_text()=='21','confirmed K10 hard cap limits max to 21')
+    page.eval_on_selector('[data-review-score="K10"]',"el=>{el.value='3';el.dispatchEvent(new Event('change',{bubbles:true}))}")
+    check(page.locator('[data-review-score="K10"]').input_value()=='2','programmatic score above cap rejected in UI')
+    # Core answer changes after finish must not mutate the frozen essay.
+    page.evaluate("let s=JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_1'));s.answers[27]='ИЗМЕНЕНО ПОСЛЕ ФИНИША';localStorage.setItem('eksamio_ege_russian_demo_2026_v4_1',JSON.stringify(s))")
+    load_real(page)
+    check(page.locator('#edemo-frozen-essay').inner_text()==original,'frozen demo essay survives reload and core mutation')
+
+    # Paper mode alone gets editable transferred text; analysis updates automatically.
+    reset_storage(page);load_real(page);go_task27(page)
+    page.check('#edemo-paper-complete');finish(page)
+    check(page.locator('#edemo-frozen-essay').count()==0,'paper result has no frozen demo block')
+    check(page.locator('#edemo-transferred-essay').count()==1,'paper result has editable transferred text')
+    page.fill('#edemo-transferred-essay','Текст на бумаге без точки')
+    paper_saved=page.evaluate("JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_2_task27_review'))")
+    check(paper_saved['analysisStatus']=='complete','paper transfer triggers system analysis')
+    check(len(paper_saved['possibleFindings']['K8'])==1,'possible finding generated without confirmed cap')
+    page.check('#edemo-review-eligibility');max_k1_k6(page)
+    for k in ['K7','K8','K9','K10']:page.select_option(f'[data-review-score="{k}"]','3')
+    check(page.locator('#edemo-essay-score').inner_text()=='22','possible findings do not change 22-point maximum')
+    check(page.locator('#edemo-diagnostic24').count()==0,'no 0-24 scale in paper mode')
+    check(not errors,'; '.join(errors))
     browser.close()
+
 if fails:
-    print('FAIL browser task27:',len(fails));print('\n'.join(fails));sys.exit(1)
-print('PASS browser task27: modes, transfer, 149/150 threshold, scoring, possible-vs-confirmed persistence')
+    print('FAIL real-preview task27 browser regression:',len(fails));print('\n'.join(fails));sys.exit(1)
+print('PASS real-preview task27 browser: T123-01...06, language aids off, frozen demo essay, paper transfer, analysis findings, hard caps')

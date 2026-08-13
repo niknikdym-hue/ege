@@ -1,29 +1,38 @@
-TASK 27 HOTFIX — LOCAL TEST RESULT
+TASK 27 HOTFIX — NO-GO REMEDIATION TEST RESULT
 
 UNIT:
-PASS task27 hotfix unit tests: 17 assertions
+PASS task27 v4.2 unit tests: 26 assertions
+
+Hard-cap evidence:
+- 1 confirmed → максимум 2;
+- 3 confirmed → максимум 1;
+- 5 confirmed → максимум 0;
+- possible findings не меняют cap;
+- score выше cap, подставленный программно, отклоняется;
+- новый анализ удаляет ранее сохранённый score выше cap;
+- отсутствие findings не создаёт автоматическую оценку 3;
+- К1=0, full-zero и eligibility gates сохранены;
+- API нормированной шкалы 0–24 отсутствует.
+
+REAL-PREVIEW BROWSER REGRESSION:
+PASS real-preview task27 browser: T123-01...06, language aids off, frozen demo essay, paper transfer, analysis findings, hard caps
 
 Проверено:
-- K7–K10: 0 / 1–2 / 3–4 / 5+ подтверждённых ошибок;
-- missing confirmed data => null / не оценено;
-- possible errors не снижают балл;
-- официальный максимум = 22;
-- учебная нормированная шкала: 22 -> 24;
-- зависимость К1=0 => К2=0 и К3=0;
-- подтверждённый порог 149 слов или меньше => 0;
-- без подтверждения eligibility итог не вычисляется.
+- PREVIEW содержит точные T123-01…T123-05, затем в тестовый runtime подключается точный T123-06;
+- spellcheck/autocomplete/autocorrect/autocapitalize/writing suggestions отключены;
+- демо-текст фиксируется read-only в «Ваше сочинение»;
+- editable transfer отсутствует в demo и присутствует только в paper;
+- системный анализ автоматически формирует confirmed/possible findings;
+- пользовательских счётчиков confirmed/possible нет;
+- hard cap отражается в UI, значение выше cap отклоняется;
+- possible finding не мешает получить 22/22 после самостоятельной оценки;
+- frozen text не меняется после reload/core-state mutation;
+- шкалы 0–24 нет.
 
-BROWSER SMOKE:
-PASS browser task27: modes, transfer, 149/150 threshold, scoring, possible-vs-confirmed persistence
+FULL DEMO REGRESSION:
+- PASS data/regression: 204 checks, 28/28;
+- PASS unit scorer: 24 assertions;
+- PASS visual contract: 27 checks;
+- PASS old browser regression, including reload and responsive widths.
 
-Проверено:
-- переключение «бумага / демо-ввод»;
-- paper mode скрывает демо-textarea;
-- отметка рукописного ответа сохраняется через исходный core state;
-- постэкзаменационный перенос текста;
-- граница 149/150;
-- отдельные confirmed / possible errors;
-- K1–K6 + K7–K10 = 22 при максимуме;
-- возможные ошибки не уменьшают 22;
-- локальное сохранение перенесённого текста и review-state;
-- исправленный MutationObserver не зацикливается.
+Tilda не обновлялась.

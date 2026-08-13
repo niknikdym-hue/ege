@@ -23,67 +23,100 @@
   ];
 
   function byId(id){return document.getElementById(id);}
-  function emptyErrorMap(){return{K7:null,K8:null,K9:null,K10:null};}
-  function emptyNoteMap(){return{K7:"",K8:"",K9:"",K10:""};}
+  function emptyFindingMap(){return{K7:[],K8:[],K9:[],K10:[]};}
+  function escapeHtml(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function sanitizeFinding(item,criterion,status){
+    if(!item||typeof item!=="object")return null;
+    var message=String(item.message||item.label||"").trim();if(!message)return null;
+    return{id:String(item.id||criterion+"-"+status+"-"+message).slice(0,160),criterion:criterion,status:status,message:message.slice(0,500),evidence:String(item.evidence||"").slice(0,500)};
+  }
+  function normalizeFindingMap(raw,status){
+    var out=emptyFindingMap();ERROR_CRITERIA.forEach(function(k){var list=raw&&Array.isArray(raw[k])?raw[k]:[];out[k]=list.map(function(x){return sanitizeFinding(x,k,status);}).filter(Boolean);});return out;
+  }
   function freshReviewState(){return{
-    version:1,writingMode:"paper",paperCompleted:false,transferredText:"",sourceFileName:"",
-    essayScores:{},confirmedErrors:emptyErrorMap(),possibleErrors:emptyErrorMap(),
-    confirmedNotes:emptyNoteMap(),possibleNotes:emptyNoteMap(),zeroReasons:{},eligibilityConfirmed:false
+    version:2,writingMode:"paper",paperCompleted:false,transferredText:"",frozenEssay:"",demoEssayFrozen:false,sourceFileName:"",
+    essayScores:{},confirmedFindings:emptyFindingMap(),possibleFindings:emptyFindingMap(),
+    analysisStatus:"pending",analysisVersion:"",zeroReasons:{},eligibilityConfirmed:false
   };}
   function normalizeReviewState(raw){
     var base=freshReviewState(),next=Object.assign(base,raw||{});
-    next.essayScores=next.essayScores&&typeof next.essayScores==="object"?next.essayScores:{};
-    next.confirmedErrors=Object.assign(emptyErrorMap(),next.confirmedErrors||{});
-    next.possibleErrors=Object.assign(emptyErrorMap(),next.possibleErrors||{});
-    next.confirmedNotes=Object.assign(emptyNoteMap(),next.confirmedNotes||{});
-    next.possibleNotes=Object.assign(emptyNoteMap(),next.possibleNotes||{});
+    next.version=2;next.essayScores=next.essayScores&&typeof next.essayScores==="object"?next.essayScores:{};
+    next.confirmedFindings=normalizeFindingMap(next.confirmedFindings,"confirmed");
+    next.possibleFindings=normalizeFindingMap(next.possibleFindings,"possible");
     next.zeroReasons=next.zeroReasons&&typeof next.zeroReasons==="object"?next.zeroReasons:{};
     next.writingMode=next.writingMode==="demo"?"demo":"paper";
+    next.transferredText=String(next.transferredText||"");next.frozenEssay=String(next.frozenEssay||"");next.demoEssayFrozen=next.demoEssayFrozen===true;
+    next.analysisStatus=next.analysisStatus==="complete"?"complete":"pending";
     return next;
   }
   function loadReviewState(){try{var raw=localStorage.getItem(REVIEW_STORAGE_KEY);return raw?normalizeReviewState(JSON.parse(raw)):freshReviewState();}catch(e){return freshReviewState();}}
   function saveReviewState(){try{localStorage.setItem(REVIEW_STORAGE_KEY,JSON.stringify(reviewState));return true;}catch(e){return false;}}
   function loadCoreState(){try{var raw=localStorage.getItem(CORE_STORAGE_KEY);return raw?JSON.parse(raw):{};}catch(e){return{};}}
-  function escapeHtml(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
   function technicalWordCount(v){
-    var api=window.__edemoRussian2026v41;
-    if(api&&typeof api.technicalWordCount==="function")return api.technicalWordCount(v);
-    var t=String(v||"").replace(/\u00A0/g," "),m=t.match(/[А-ЯЁа-яёA-Za-z]+(?:-[А-ЯЁа-яёA-Za-z]+)*/g);return m?m.length:0;
+    var api=window.__edemoRussian2026v41;if(api&&typeof api.technicalWordCount==="function")return api.technicalWordCount(v);
+    var m=String(v||"").replace(/\u00A0/g," ").match(/[А-ЯЁа-яёA-Za-z]+(?:-[А-ЯЁа-яёA-Za-z]+)*/g);return m?m.length:0;
   }
-  function normalizeCount(v){if(v===null||v===undefined||v==="")return null;var n=Number(v);return Number.isFinite(n)&&n>=0?Math.floor(n):null;}
-  function scoreByConfirmedErrors(v){var n=normalizeCount(v);if(n===null)return null;if(n===0)return 3;if(n<=2)return 2;if(n<=4)return 1;return 0;}
+  function confirmedCap(count){var n=Math.max(0,Math.floor(Number(count)||0));if(n===0)return null;if(n<=2)return 2;if(n<=4)return 1;return 0;}
+  function findingCount(state,criterion,status){var map=status==="confirmed"?state.confirmedFindings:state.possibleFindings;return map&&Array.isArray(map[criterion])?map[criterion].length:0;}
+  function criterionCap(state,criterion){return confirmedCap(findingCount(state,criterion,"confirmed"));}
+  function acceptedErrorScore(state,criterion){
+    if(state.analysisStatus!=="complete")return null;
+    if(!Object.prototype.hasOwnProperty.call(state.essayScores,criterion))return null;
+    var n=Number(state.essayScores[criterion]);if(!Number.isFinite(n)||n<0||n>3)return null;
+    var cap=criterionCap(state,criterion);if(cap!==null&&n>cap)return null;
+    return Math.floor(n);
+  }
+  function applyAnalysisResult(state,result){
+    var s=normalizeReviewState(state),payload=result&&typeof result==="object"?result:{};
+    s.confirmedFindings=normalizeFindingMap(payload.confirmed,"confirmed");
+    s.possibleFindings=normalizeFindingMap(payload.possible,"possible");
+    s.analysisStatus="complete";s.analysisVersion=String(payload.version||"external-v1");
+    ERROR_CRITERIA.forEach(function(k){var cap=criterionCap(s,k);if(cap!==null&&Object.prototype.hasOwnProperty.call(s.essayScores,k)&&Number(s.essayScores[k])>cap)delete s.essayScores[k];});
+    return s;
+  }
+  function makeFinding(criterion,status,id,message,evidence){return{id:id,criterion:criterion,status:status,message:message,evidence:evidence||""};}
+  function analyzeEssayText(text){
+    var value=String(text||""),confirmed=emptyFindingMap(),possible=emptyFindingMap(),match,seen={};
+    var typoRules=[
+      {re:/(?:^|[^А-ЯЁа-яё])вообщем(?:$|[^А-ЯЁа-яё])/giu,id:"k7-voobschem",message:"Слитное написание «вообщем» требует исправления."},
+      {re:/(?:^|[^А-ЯЁа-яё])вобщем(?:$|[^А-ЯЁа-яё])/giu,id:"k7-vobschem",message:"Слитное написание «вобщем» требует исправления."},
+      {re:/(?:^|[^А-ЯЁа-яё])какбудто(?:$|[^А-ЯЁа-яё])/giu,id:"k7-kakbudto",message:"«Как будто» пишется раздельно."},
+      {re:/(?:^|[^А-ЯЁа-яё])изза(?:$|[^А-ЯЁа-яё])/giu,id:"k7-izza",message:"«Из-за» пишется через дефис."}
+    ];
+    typoRules.forEach(function(rule){if(rule.re.test(value))confirmed.K7.push(makeFinding("K7","confirmed",rule.id,rule.message,"Автоматическое правило высокой точности"));});
+    var beforePunctuation=/\s+([,.;:!?])/gu,index=0;while((match=beforePunctuation.exec(value))&&index<20){confirmed.K8.push(makeFinding("K8","confirmed","k8-space-"+match.index,"Пробел перед знаком «"+match[1]+"». ","Позиция "+(match.index+1)));index++;}
+    var grammarRules=[{re:/(?:^|[^А-ЯЁа-яё])ихн(?:ий|яя|ее|ие|его|ей|ему|им|ими|их)(?:$|[^А-ЯЁа-яё])/giu,id:"k9-ikhniy",message:"Ненормативная форма местоимения «ихний»."}];
+    grammarRules.forEach(function(rule){if(rule.re.test(value))confirmed.K9.push(makeFinding("K9","confirmed",rule.id,rule.message,"Автоматическое правило высокой точности"));});
+    var words=[],wordRe=/[А-ЯЁа-яёA-Za-z]+(?:-[А-ЯЁа-яёA-Za-z]+)*/g;while((match=wordRe.exec(value)))words.push({text:match[0],index:match.index});for(var i=1;i<words.length;i++){if(words[i].text.toLocaleLowerCase("ru-RU")===words[i-1].text.toLocaleLowerCase("ru-RU")){var key="k10-repeat-"+words[i].index;if(!seen[key]){confirmed.K10.push(makeFinding("K10","confirmed",key,"Повтор слова «"+words[i].text+"» подряд.","Позиция "+(words[i].index+1)));seen[key]=true;}}}
+    var mixed=/\b(?=[А-ЯЁа-яёA-Za-z]*[А-ЯЁа-яё])(?=[А-ЯЁа-яёA-Za-z]*[A-Za-z])[А-ЯЁа-яёA-Za-z]+\b/gu;index=0;while((match=mixed.exec(value))&&index<20){possible.K7.push(makeFinding("K7","possible","k7-mixed-"+match.index,"Смешение кириллицы и латиницы в слове «"+match[0]+"».","Требуется ручная проверка"));index++;}
+    var repeated=/([!?])\1+/gu;index=0;while((match=repeated.exec(value))&&index<20){possible.K8.push(makeFinding("K8","possible","k8-repeat-"+match.index,"Повторяющиеся знаки «"+match[0]+"».","Требуется проверка контекста"));index++;}
+    if(value.trim()&&!/[.!?…]$/.test(value.trim()))possible.K8.push(makeFinding("K8","possible","k8-ending","В конце текста не найден завершающий знак препинания.","Требуется ручная проверка"));
+    return{version:"builtin-conservative-v1",confirmed:confirmed,possible:possible};
+  }
   function hasZeroReason(s){return ZERO_REASONS.some(function(r){return !!s.zeroReasons[r.id];});}
   function officialEssayScore(input){
-    var s=normalizeReviewState(input);
-    if(hasZeroReason(s))return 0;
-    if(!s.eligibilityConfirmed)return null;
+    var s=normalizeReviewState(input);if(hasZeroReason(s))return 0;if(!s.eligibilityConfirmed||s.analysisStatus!=="complete")return null;
     for(var i=0;i<CRITERIA.length;i++)if(!Object.prototype.hasOwnProperty.call(s.essayScores,CRITERIA[i].id))return null;
-    for(var j=0;j<ERROR_CRITERIA.length;j++)if(scoreByConfirmedErrors(s.confirmedErrors[ERROR_CRITERIA[j]])===null)return null;
     var total=0,k1=Number(s.essayScores.K1);
     CRITERIA.forEach(function(c){var n=Number(s.essayScores[c.id]);if((c.id==="K2"||c.id==="K3")&&k1===0)n=0;total+=Math.min(c.max,Math.max(0,n));});
-    ERROR_CRITERIA.forEach(function(k){total+=scoreByConfirmedErrors(s.confirmedErrors[k]);});
+    for(var j=0;j<ERROR_CRITERIA.length;j++){var score=acceptedErrorScore(s,ERROR_CRITERIA[j]);if(score===null)return null;total+=score;}
     return total;
   }
-  function normalizedScore24(score){return score===null?null:Math.round(Math.max(0,Math.min(22,Number(score)))*24/22);}
-  function countOptionHtml(value){
-    var options=[{v:"",t:"Нет подтверждённых данных"},{v:"0",t:"0"},{v:"1",t:"1"},{v:"2",t:"2"},{v:"3",t:"3"},{v:"4",t:"4"},{v:"5",t:"5 и более"}];
-    return options.map(function(o){return '<option value="'+o.v+'"'+(String(value==null?"":value)===o.v?' selected':'')+'>'+o.t+'</option>';}).join("");
-  }
-  function possibleOptionHtml(value){
-    var options=[{v:"",t:"Нет данных"},{v:"0",t:"0"},{v:"1",t:"1"},{v:"2",t:"2"},{v:"3",t:"3"},{v:"4",t:"4"},{v:"5",t:"5 и более"}];
-    return options.map(function(o){return '<option value="'+o.v+'"'+(String(value==null?"":value)===o.v?' selected':'')+'>'+o.t+'</option>';}).join("");
-  }
-  function setCoreEssayValue(value){
-    var input=byId("edemo-answer-input");if(!input)return;
-    input.value=value;input.dispatchEvent(new Event("input",{bubbles:true}));
-  }
   function currentCoreEssay(){var s=loadCoreState(),v=s.answers&&s.answers[27];return typeof v==="string"?v:"";}
+  function setCoreEssayValue(value){var input=byId("edemo-answer-input");if(!input)return;input.value=value;input.dispatchEvent(new Event("input",{bubbles:true}));}
+  function disableLanguageAssistance(input){
+    input.setAttribute("spellcheck","false");input.spellcheck=false;input.setAttribute("autocomplete","off");
+    input.setAttribute("autocorrect","off");input.setAttribute("autocapitalize","off");input.setAttribute("data-gramm","false");
+    input.setAttribute("data-gramm_editor","false");input.setAttribute("data-enable-grammarly","false");input.setAttribute("writingSuggestions","false");
+  }
+  function essayForReview(){return reviewState.writingMode==="demo"?reviewState.frozenEssay:reviewState.transferredText;}
+  function runSystemAnalysis(){reviewState=applyAnalysisResult(reviewState,analyzeEssayText(essayForReview()));saveReviewState();}
+  function freezeDemoEssay(){if(reviewState.writingMode!=="demo")return;if(!reviewState.demoEssayFrozen){var value=currentCoreEssay();reviewState.frozenEssay=value===PAPER_MARKER?"":value;reviewState.demoEssayFrozen=true;}if(reviewState.analysisStatus!=="complete")runSystemAnalysis();else saveReviewState();}
 
   var reviewState=loadReviewState(),root,observer,taskObserver;
 
   function addStyles(){
-    if(byId("edemo-task27-hotfix-style"))return;
-    var style=document.createElement("style");style.id="edemo-task27-hotfix-style";
+    if(byId("edemo-task27-hotfix-style"))return;var style=document.createElement("style");style.id="edemo-task27-hotfix-style";
     style.textContent='\
 #ege-demo-2026 .edemo-essay-mode{margin-top:20px;padding:16px;border:1px solid #dfe4eb;border-radius:14px;background:#f8fafc}\
 #ege-demo-2026 .edemo-essay-mode__choices{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 0}\
@@ -93,94 +126,81 @@
 #ege-demo-2026 .edemo-scan-preview{min-height:160px;border:1px dashed #c9d3df;border-radius:12px;padding:12px;background:#fafbfc;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}\
 #ege-demo-2026 .edemo-scan-preview img{display:block;max-width:100%;max-height:420px;object-fit:contain}\
 #ege-demo-2026 .edemo-transfer-text{width:100%;min-height:320px;padding:14px;border:1px solid #cdd4df;border-radius:12px;font:inherit;line-height:1.55;resize:vertical}\
+#ege-demo-2026 .edemo-frozen-essay{white-space:pre-wrap;min-height:160px;padding:16px;border:1px solid #d5dce6;border-radius:12px;background:#f7f9fc;line-height:1.65;overflow-wrap:anywhere}\
 #ege-demo-2026 .edemo-threshold[data-state="danger"]{border-left:5px solid #b84e4e}\
 #ege-demo-2026 .edemo-threshold[data-state="ok"]{border-left:5px solid #2f8a58}\
-#ege-demo-2026 .edemo-error-table{display:grid;gap:10px}\
-#ege-demo-2026 .edemo-error-row{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(160px,.7fr) minmax(160px,.7fr) minmax(90px,.35fr);gap:10px;align-items:center;padding:12px;border:1px solid #dfe4eb;border-radius:12px}\
-#ege-demo-2026 .edemo-error-row select,#ege-demo-2026 .edemo-error-notes textarea{width:100%;padding:9px;border:1px solid #cdd4df;border-radius:9px;background:#fff;font:inherit}\
-#ege-demo-2026 .edemo-error-notes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 18px}\
-#ege-demo-2026 .edemo-error-notes textarea{min-height:74px;resize:vertical}\
-#ege-demo-2026 .edemo-diagnostic24{margin-top:10px;padding:10px 12px;border-radius:10px;background:#f6f8fb}\
-@media(max-width:760px){#ege-demo-2026 .edemo-transfer-grid{grid-template-columns:1fr}#ege-demo-2026 .edemo-error-row{grid-template-columns:1fr}#ege-demo-2026 .edemo-error-notes{grid-template-columns:1fr}}';
-    document.head.appendChild(style);
+#ege-demo-2026 .edemo-error-table{display:grid;gap:12px}\
+#ege-demo-2026 .edemo-error-row{padding:14px;border:1px solid #dfe4eb;border-radius:12px}\
+#ege-demo-2026 .edemo-findings{margin:8px 0 0;padding-left:20px}\
+#ege-demo-2026 .edemo-findings--possible{color:#596579}\
+@media(max-width:760px){#ege-demo-2026 .edemo-transfer-grid{grid-template-columns:1fr}}';document.head.appendChild(style);
   }
 
   function mountEssayMode(){
-    var stage=byId("edemo-task-stage"),input=byId("edemo-answer-input");
-    if(!stage||!input||input.tagName!=="TEXTAREA"||stage.querySelector(".edemo-essay-mode"))return;
+    var stage=byId("edemo-task-stage"),input=byId("edemo-answer-input");if(!stage||!input||input.tagName!=="TEXTAREA")return;
     var number=stage.querySelector(".edemo-task-number");if(!number||number.textContent.indexOf("Задание 27")===-1)return;
-    var answer=input.closest(".edemo-answer");if(!answer)return;
-    var panel=document.createElement("div");panel.className="edemo-essay-mode";
-    panel.innerHTML='<strong>Как вы выполняете сочинение?</strong><p class="edemo-mini">На реальном ЕГЭ ответ на задание 27 пишется от руки. Поле ввода ниже — только демо-режим интерфейса.</p><div class="edemo-essay-mode__choices"><label><input type="radio" name="edemo-writing-mode" value="paper"'+(reviewState.writingMode==="paper"?' checked':'')+'> На бумаге — как на экзамене</label><label><input type="radio" name="edemo-writing-mode" value="demo"'+(reviewState.writingMode==="demo"?' checked':'')+'> Демо-ввод в браузере</label></div><div class="edemo-paper-panel" id="edemo-paper-panel"><label><input type="checkbox" id="edemo-paper-complete"'+(reviewState.paperCompleted?' checked':'')+'> Сочинение написано на бумаге</label><p class="edemo-mini">После завершения попытки можно добавить фото/скан как референс и перенести текст для проверки. Сам файл не загружается на сервер и не сохраняется в localStorage.</p></div>';
+    disableLanguageAssistance(input);if(stage.querySelector(".edemo-essay-mode"))return;
+    var answer=input.closest(".edemo-answer");if(!answer)return;var panel=document.createElement("div");panel.className="edemo-essay-mode";
+    panel.innerHTML='<strong>Как вы выполняете сочинение?</strong><p class="edemo-mini">На реальном ЕГЭ ответ пишется от руки. В демо-поле отключены браузерные языковые подсказки.</p><div class="edemo-essay-mode__choices"><label><input type="radio" name="edemo-writing-mode" value="paper"'+(reviewState.writingMode==="paper"?' checked':'')+'> На бумаге — как на экзамене</label><label><input type="radio" name="edemo-writing-mode" value="demo"'+(reviewState.writingMode==="demo"?' checked':'')+'> Демо-ввод в браузере</label></div><div class="edemo-paper-panel" id="edemo-paper-panel"><label><input type="checkbox" id="edemo-paper-complete"'+(reviewState.paperCompleted?' checked':'')+'> Сочинение написано на бумаге</label><p class="edemo-mini">После завершения можно добавить фото/скан и вручную перенести текст. Файл не отправляется и не сохраняется.</p></div>';
     answer.parentNode.insertBefore(panel,answer);
     function applyMode(){var paper=reviewState.writingMode==="paper";answer.style.display=paper?"none":"block";byId("edemo-paper-panel").style.display=paper?"block":"none";}
-    panel.querySelectorAll('input[name="edemo-writing-mode"]').forEach(function(r){r.addEventListener("change",function(){if(!r.checked)return;reviewState.writingMode=r.value;saveReviewState();if(r.value==="demo"&&input.value===PAPER_MARKER)setCoreEssayValue("");if(r.value==="paper"&&reviewState.paperCompleted)setCoreEssayValue(PAPER_MARKER);applyMode();});});
+    panel.querySelectorAll('input[name="edemo-writing-mode"]').forEach(function(r){r.addEventListener("change",function(){if(!r.checked)return;reviewState.writingMode=r.value;reviewState.frozenEssay="";reviewState.demoEssayFrozen=false;reviewState.analysisStatus="pending";reviewState.confirmedFindings=emptyFindingMap();reviewState.possibleFindings=emptyFindingMap();saveReviewState();if(r.value==="demo"&&input.value===PAPER_MARKER)setCoreEssayValue("");if(r.value==="paper"&&reviewState.paperCompleted)setCoreEssayValue(PAPER_MARKER);applyMode();});});
     byId("edemo-paper-complete").addEventListener("change",function(e){reviewState.paperCompleted=e.target.checked;saveReviewState();if(reviewState.writingMode==="paper")setCoreEssayValue(e.target.checked?PAPER_MARKER:"");});
-    if(reviewState.writingMode==="paper"&&reviewState.paperCompleted&&input.value!==PAPER_MARKER)setCoreEssayValue(PAPER_MARKER);
-    applyMode();
+    if(reviewState.writingMode==="paper"&&reviewState.paperCompleted&&input.value!==PAPER_MARKER)setCoreEssayValue(PAPER_MARKER);applyMode();
   }
 
-  function ensureTransferredText(){
-    if(reviewState.transferredText)return;
-    var v=currentCoreEssay();if(v&&v!==PAPER_MARKER){reviewState.transferredText=v;saveReviewState();}
-  }
-  function updateTransferStatus(){
-    var ta=byId("edemo-transferred-essay"),box=byId("edemo-threshold-box");if(!ta||!box)return;
-    var count=technicalWordCount(ta.value),low=count<=149;box.setAttribute("data-state",low?"danger":"ok");
-    box.innerHTML=low?'<p><strong>Технический счётчик: '+count+' слов.</strong> Если официальный подсчёт подтвердит 149 слов или меньше, задание 27 оценивается 0 баллов по К1–К10.</p>':'<p><strong>Технический счётчик: '+count+' слов.</strong> Порог 150 достигнут по техническому подсчёту; окончательно объём подтверждается по правилам ФИПИ.</p>';
+  function updateWordStatus(){
+    var box=byId("edemo-threshold-box");if(!box)return;var count=technicalWordCount(essayForReview()),low=count<=149;box.setAttribute("data-state",low?"danger":"ok");
+    box.innerHTML=low?'<p><strong>Технический счётчик: '+count+' слов.</strong> Если официальный подсчёт подтвердит 149 слов или меньше, задание оценивается 0 баллов.</p>':'<p><strong>Технический счётчик: '+count+' слов.</strong> Порог 150 достигнут по техническому подсчёту; окончательный подсчёт выполняется по правилам ФИПИ.</p>';
     var coreCount=byId("edemo-result-word-count");if(coreCount)coreCount.textContent=count;
   }
-  function mountTransfer(){
-    var result=byId("edemo-result");if(!result||byId("edemo-task27-transfer"))return;
-    ensureTransferredText();
+  function mountCompletedEssay(){
+    var result=byId("edemo-result");if(!result||byId("edemo-task27-essay"))return;freezeDemoEssay();
     var criteriaSection=byId("edemo-criteria");criteriaSection=criteriaSection?criteriaSection.closest("section"):null;
-    var section=document.createElement("section");section.className="ep-panel ep-section";section.id="edemo-task27-transfer";
-    section.innerHTML='<h3 class="ep-section-title">Перенос рукописного сочинения после экзамена</h3><p>Добавьте фото или скан как локальный референс и перенесите текст в поле справа. Фото/скан не отправляется и не сохраняется; сохраняется только введённый текст.</p><div class="edemo-transfer-grid"><div><label for="edemo-essay-scan"><strong>Фото или скан</strong></label><input id="edemo-essay-scan" type="file" accept="image/*,application/pdf"><div class="edemo-scan-preview" id="edemo-scan-preview">'+(reviewState.sourceFileName?'Последний выбранный файл: '+escapeHtml(reviewState.sourceFileName)+'<br><span class="edemo-mini">После reload файл нужно выбрать заново.</span>':'Выберите фото/скан. Для изображения появится предпросмотр.')+'</div></div><div><label for="edemo-transferred-essay"><strong>Перенесённый текст</strong></label><textarea class="edemo-transfer-text" id="edemo-transferred-essay" spellcheck="true">'+escapeHtml(reviewState.transferredText)+'</textarea><p class="edemo-save-status" id="edemo-transfer-save">Текст сохраняется автоматически.</p><div class="ep-panel edemo-threshold" id="edemo-threshold-box"></div></div></div>';
+    var section=document.createElement("section");section.className="ep-panel ep-section";section.id="edemo-task27-essay";
+    if(reviewState.writingMode==="demo"){
+      section.innerHTML='<h3 class="ep-section-title">Ваше сочинение</h3><p>Текст зафиксирован в момент завершения экзамена и доступен только для чтения.</p><div id="edemo-frozen-essay" class="edemo-frozen-essay" role="document" aria-readonly="true">'+escapeHtml(reviewState.frozenEssay||"Сочинение не введено.")+'</div><div class="ep-panel edemo-threshold" id="edemo-threshold-box"></div>';
+    }else{
+      section.innerHTML='<h3 class="ep-section-title">Перенос рукописного сочинения после экзамена</h3><p>Добавьте фото или скан как локальный референс и перенесите текст. Редактируемое поле доступно только для режима «На бумаге».</p><div class="edemo-transfer-grid"><div><label for="edemo-essay-scan"><strong>Фото или скан</strong></label><input id="edemo-essay-scan" type="file" accept="image/*,application/pdf"><div class="edemo-scan-preview" id="edemo-scan-preview">Выберите фото/скан. Для изображения появится предпросмотр.</div></div><div><label for="edemo-transferred-essay"><strong>Перенесённый текст</strong></label><textarea class="edemo-transfer-text" id="edemo-transferred-essay" spellcheck="true">'+escapeHtml(reviewState.transferredText)+'</textarea><p id="edemo-transfer-save">Текст сохраняется автоматически.</p><div class="ep-panel edemo-threshold" id="edemo-threshold-box"></div></div></div>';
+    }
     if(criteriaSection)result.insertBefore(section,criteriaSection);else result.appendChild(section);
-    byId("edemo-transferred-essay").addEventListener("input",function(e){reviewState.transferredText=e.target.value;saveReviewState();byId("edemo-transfer-save").textContent="✓ Текст сохранён автоматически";updateTransferStatus();});
-    byId("edemo-essay-scan").addEventListener("change",function(e){var f=e.target.files&&e.target.files[0],preview=byId("edemo-scan-preview");if(!f)return;reviewState.sourceFileName=f.name;saveReviewState();if(/^image\//.test(f.type)){var reader=new FileReader();reader.onload=function(){preview.innerHTML='<img alt="Предпросмотр рукописного сочинения" src="'+reader.result+'">';};reader.readAsDataURL(f);}else preview.innerHTML='<span>Выбран файл: <strong>'+escapeHtml(f.name)+'</strong><br><span class="edemo-mini">PDF сохранён только как локальный референс этой сессии.</span></span>';});
-    updateTransferStatus();
+    var transferred=byId("edemo-transferred-essay");if(transferred){if(reviewState.analysisStatus!=="complete")runSystemAnalysis();transferred.addEventListener("input",function(e){reviewState.transferredText=e.target.value;runSystemAnalysis();byId("edemo-transfer-save").textContent="✓ Текст сохранён; системный анализ К7–К10 обновлён.";updateWordStatus();renderCriteria();});}
+    var scan=byId("edemo-essay-scan");if(scan)scan.addEventListener("change",function(e){var f=e.target.files&&e.target.files[0],preview=byId("edemo-scan-preview");if(!f)return;reviewState.sourceFileName=f.name;saveReviewState();if(/^image\//.test(f.type)){var reader=new FileReader();reader.onload=function(){preview.innerHTML='<img alt="Предпросмотр рукописного сочинения" src="'+reader.result+'">';};reader.readAsDataURL(f);}else preview.textContent="Выбран файл: "+f.name;});
+    updateWordStatus();
   }
 
+  function findingList(items,emptyText,css){if(!items.length)return '<p class="edemo-mini">'+emptyText+'</p>';return '<ul class="edemo-findings '+css+'">'+items.map(function(x){return '<li>'+escapeHtml(x.message)+(x.evidence?' <span class="edemo-mini">('+escapeHtml(x.evidence)+')</span>':'')+'</li>';}).join("")+'</ul>';}
+  function scoreOptions(criterion,state){
+    var cap=criterionCap(state,criterion),selected=Object.prototype.hasOwnProperty.call(state.essayScores,criterion)?Number(state.essayScores[criterion]):null,html='<option value="">Не оценено</option>';
+    for(var i=0;i<=3;i++){var disabled=cap!==null&&i>cap;html+='<option value="'+i+'"'+(selected===i?' selected':'')+(disabled?' disabled':'')+'>'+i+(disabled?' — выше hard cap':'')+'</option>';}
+    return html;
+  }
   function renderCriteria(){
-    var w=byId("edemo-criteria");if(!w)return;w.innerHTML="";
-    var gate=document.createElement("div");gate.className="ep-panel edemo-zero-gate";
-    gate.innerHTML='<p><strong>Шаг 1. Проверьте общие основания полного нуля</strong></p><p class="edemo-mini">Технический счётчик не обнуляет работу автоматически: отметка ставится только после проверки по правилам ФИПИ.</p>';
+    var w=byId("edemo-criteria");if(!w)return;w.innerHTML="";var gate=document.createElement("div");gate.className="ep-panel edemo-zero-gate";
+    gate.innerHTML='<p><strong>Шаг 1. Проверьте общие основания полного нуля</strong></p><p class="edemo-mini">Технический счётчик не обнуляет работу автоматически.</p>';
     ZERO_REASONS.forEach(function(r){var label=document.createElement("label");label.className="edemo-zero-option";label.innerHTML='<input type="checkbox" data-review-zero="'+r.id+'"'+(reviewState.zeroReasons[r.id]?' checked':'')+'><span>'+escapeHtml(r.label)+'</span>';gate.appendChild(label);});
     var confirm=document.createElement("label");confirm.className="edemo-confirm-option";confirm.innerHTML='<input type="checkbox" id="edemo-review-eligibility"'+(reviewState.eligibilityConfirmed?' checked':'')+(hasZeroReason(reviewState)?' disabled':'')+'><span><strong>Подтверждаю:</strong> официальный объём проверен, работа опирается на исходный текст и не является полным переписыванием/пересказом.</span>';gate.appendChild(confirm);w.appendChild(gate);
     gate.querySelectorAll("[data-review-zero]").forEach(function(box){box.addEventListener("change",function(){reviewState.zeroReasons[box.getAttribute("data-review-zero")]=box.checked;if(hasZeroReason(reviewState))reviewState.eligibilityConfirmed=false;saveReviewState();renderCriteria();updateResultScores();});});
     var cb=byId("edemo-review-eligibility");if(cb)cb.addEventListener("change",function(){reviewState.eligibilityConfirmed=cb.checked;saveReviewState();renderCriteria();updateResultScores();});
-    if(hasZeroReason(reviewState)){var danger=document.createElement("div");danger.className="ep-panel edemo-danger";danger.innerHTML='<p><strong>Отмечено основание полного нуля.</strong> Официальная шкала К1–К10 даёт 0/22.</p>';w.appendChild(danger);updateResultScores();return;}
-    if(!reviewState.eligibilityConfirmed){var note=document.createElement("div");note.className="ep-panel edemo-warning";note.innerHTML='<p>Критерии откроются после явного подтверждения общих условий оценивания.</p>';w.appendChild(note);updateResultScores();return;}
+    if(hasZeroReason(reviewState)){var danger=document.createElement("div");danger.className="ep-panel edemo-danger";danger.innerHTML='<p><strong>Отмечено основание полного нуля.</strong> Самооценка К1–К10: 0/22.</p>';w.appendChild(danger);updateResultScores();return;}
+    if(!reviewState.eligibilityConfirmed){var note=document.createElement("div");note.className="ep-panel edemo-warning";note.innerHTML='<p>Критерии откроются после подтверждения общих условий оценивания.</p>';w.appendChild(note);updateResultScores();return;}
     CRITERIA.forEach(function(c){var row=document.createElement("div"),has=Object.prototype.hasOwnProperty.call(reviewState.essayScores,c.id),opts='<option value="">Не оценено</option>';for(var i=0;i<=c.max;i++)opts+='<option value="'+i+'"'+(has&&Number(reviewState.essayScores[c.id])===i?' selected':'')+'>'+i+'</option>';var dep=(c.id==="K2"||c.id==="K3")&&Number(reviewState.essayScores.K1)===0;row.className="edemo-criterion";row.innerHTML='<div><strong>'+c.label+'</strong><br><span class="edemo-mini">Максимум: '+c.max+(dep?' · при К1 = 0 автоматически 0':'')+'</span></div><select data-review-score="'+c.id+'"'+(dep?' disabled':'')+'>'+opts+'</select>';w.appendChild(row);row.querySelector("select").addEventListener("change",function(e){if(e.target.value==="")delete reviewState.essayScores[c.id];else reviewState.essayScores[c.id]=Number(e.target.value);if(c.id==="K1"&&Number(e.target.value)===0){reviewState.essayScores.K2=0;reviewState.essayScores.K3=0;}saveReviewState();renderCriteria();updateResultScores();});});
-    var title=document.createElement("div");title.className="ep-panel";title.innerHTML='<p><strong>К7–К10. Грамотность: подтверждённые и возможные ошибки</strong></p><p class="edemo-mini">Баллы рассчитываются только по явно подтверждённому количеству ошибок. «Нет данных» не означает ни ошибку, ни отсутствие ошибок. Возможные ошибки показываются отдельно и балл не снижают.</p>';w.appendChild(title);
+    var title=document.createElement("div");title.className="ep-panel";title.innerHTML='<p><strong>К7–К10. Результаты системного анализа</strong></p><p class="edemo-mini">Confirmed findings задают только верхнюю границу балла. Possible findings показываются для перепроверки и hard cap не меняют. Если ошибок не найдено, 3 балла автоматически не выставляются.</p>';w.appendChild(title);
+    if(reviewState.analysisStatus!=="complete"){var pending=document.createElement("div");pending.className="ep-panel edemo-warning";pending.innerHTML='<p><strong>Системный анализ К7–К10 ещё не сформирован.</strong> Итоговая самооценка остаётся незавершённой.</p>';w.appendChild(pending);updateResultScores();return;}
     var table=document.createElement("div");table.className="edemo-error-table";w.appendChild(table);
-    ERROR_CRITERIA.forEach(function(k){var sc=scoreByConfirmedErrors(reviewState.confirmedErrors[k]),row=document.createElement("div");row.className="edemo-error-row";row.innerHTML='<strong>'+k+'. '+ERROR_LABELS[k]+'</strong><label>Подтверждено<select data-confirmed-errors="'+k+'">'+countOptionHtml(reviewState.confirmedErrors[k])+'</select></label><label>Возможно<select data-possible-errors="'+k+'">'+possibleOptionHtml(reviewState.possibleErrors[k])+'</select></label><div><span class="edemo-mini">Балл</span><br><strong data-error-score="'+k+'">'+(sc===null?'—':sc+'/3')+'</strong></div>';table.appendChild(row);
-      var notes=document.createElement("div");notes.className="edemo-error-notes";notes.innerHTML='<label><span class="edemo-mini">Подтверждённые ошибки / примеры</span><textarea data-confirmed-note="'+k+'">'+escapeHtml(reviewState.confirmedNotes[k])+'</textarea></label><label><span class="edemo-mini">Возможные ошибки / что перепроверить</span><textarea data-possible-note="'+k+'">'+escapeHtml(reviewState.possibleNotes[k])+'</textarea></label>';table.appendChild(notes);
-    });
-    w.querySelectorAll("[data-confirmed-errors]").forEach(function(sel){sel.addEventListener("change",function(){var k=sel.getAttribute("data-confirmed-errors");reviewState.confirmedErrors[k]=sel.value===""?null:Number(sel.value);saveReviewState();renderCriteria();updateResultScores();});});
-    w.querySelectorAll("[data-possible-errors]").forEach(function(sel){sel.addEventListener("change",function(){var k=sel.getAttribute("data-possible-errors");reviewState.possibleErrors[k]=sel.value===""?null:Number(sel.value);saveReviewState();});});
-    w.querySelectorAll("[data-confirmed-note]").forEach(function(el){el.addEventListener("input",function(){reviewState.confirmedNotes[el.getAttribute("data-confirmed-note")]=el.value;saveReviewState();});});
-    w.querySelectorAll("[data-possible-note]").forEach(function(el){el.addEventListener("input",function(){reviewState.possibleNotes[el.getAttribute("data-possible-note")]=el.value;saveReviewState();});});
+    ERROR_CRITERIA.forEach(function(k){var confirmed=reviewState.confirmedFindings[k],possible=reviewState.possibleFindings[k],cap=criterionCap(reviewState,k),row=document.createElement("div");row.className="edemo-error-row";row.innerHTML='<strong>'+k+'. '+ERROR_LABELS[k]+'</strong><p class="edemo-mini">Confirmed: '+confirmed.length+' · hard cap: '+(cap===null?'не установлен':cap+'/3')+' · Possible: '+possible.length+'</p><div><strong>Confirmed findings</strong>'+findingList(confirmed,'Система не сформировала подтверждённых находок. Это не доказывает отсутствие ошибок.','')+'</div><div><strong>Possible findings</strong>'+findingList(possible,'Возможных находок нет.','edemo-findings--possible')+'</div><label><strong>Самооценка</strong><select data-review-score="'+k+'">'+scoreOptions(k,reviewState)+'</select></label>';table.appendChild(row);row.querySelector("select").addEventListener("change",function(e){var candidate=e.target.value===""?null:Number(e.target.value),limit=criterionCap(reviewState,k);if(candidate!==null&&limit!==null&&candidate>limit){e.target.value=Object.prototype.hasOwnProperty.call(reviewState.essayScores,k)?String(reviewState.essayScores[k]):"";return;}if(candidate===null)delete reviewState.essayScores[k];else reviewState.essayScores[k]=candidate;saveReviewState();updateResultScores();});});
     updateResultScores();
   }
-
   function updateResultScores(){
-    var score=officialEssayScore(reviewState),diag=normalizedScore24(score),scoreEl=byId("edemo-essay-score"),status=byId("edemo-essay-status");
-    if(scoreEl)scoreEl.textContent=score===null?"—":score;
-    if(status)status.textContent=score===null?"Самооценка не завершена":hasZeroReason(reviewState)?"0 баллов: подтверждено основание полного нуля":"Учебная самооценка по ФИПИ заполнена";
-    var card=scoreEl?scoreEl.closest(".edemo-score-card"):null;if(card){var old=byId("edemo-diagnostic24");if(!old){old=document.createElement("div");old.className="edemo-diagnostic24 edemo-mini";old.id="edemo-diagnostic24";card.appendChild(old);}old.textContent=diag===null?"Учебная шкала 0–24: —":"Учебная шкала 0–24: "+diag+"/24 (нормирована из официальных 0–22; не является баллом ФИПИ)";}
-    var total=byId("edemo-total-score"),totalStatus=byId("edemo-total-status");if(total)total.textContent="—";if(totalStatus)totalStatus.textContent="Официальный общий балл требует экспертной проверки задания 27";
+    var score=officialEssayScore(reviewState),scoreEl=byId("edemo-essay-score"),status=byId("edemo-essay-status");if(scoreEl)scoreEl.textContent=score===null?"—":score;
+    if(status)status.textContent=score===null?"Самооценка не завершена":hasZeroReason(reviewState)?"0 баллов: подтверждено основание полного нуля":"Самооценка задания 27 по шкале 0–22 заполнена";
+    var old=byId("edemo-diagnostic24");if(old)old.remove();var total=byId("edemo-total-score"),totalStatus=byId("edemo-total-status");if(total)total.textContent="—";if(totalStatus)totalStatus.textContent="Официальный общий балл требует экспертной проверки задания 27";
   }
+  function mountFinished(){if(!root||root.getAttribute("data-state")!=="finished")return;freezeDemoEssay();mountCompletedEssay();if(byId("edemo-criteria")&&!byId("edemo-criteria").getAttribute("data-task27-hotfix")){byId("edemo-criteria").setAttribute("data-task27-hotfix","true");renderCriteria();}updateWordStatus();updateResultScores();}
+  function submitAnalysis(result){reviewState=applyAnalysisResult(reviewState,result);saveReviewState();renderCriteria();updateResultScores();return JSON.parse(JSON.stringify(reviewState));}
+  function init(){root=byId(ROOT_ID);if(!root)return;addStyles();mountEssayMode();mountFinished();observer=new MutationObserver(function(){mountFinished();});observer.observe(root,{attributes:true,attributeFilter:["data-state"]});var stage=byId("edemo-task-stage");if(stage){taskObserver=new MutationObserver(function(){mountEssayMode();});taskObserver.observe(stage,{childList:true});}}
 
-  function mountFinished(){if(!root||root.getAttribute("data-state")!=="finished")return;mountTransfer();if(byId("edemo-criteria")&&!byId("edemo-criteria").getAttribute("data-task27-hotfix")){byId("edemo-criteria").setAttribute("data-task27-hotfix","true");renderCriteria();}updateTransferStatus();updateResultScores();}
-  function init(){
-    root=byId(ROOT_ID);if(!root)return;addStyles();mountEssayMode();mountFinished();
-    observer=new MutationObserver(function(){mountFinished();});observer.observe(root,{attributes:true,attributeFilter:["data-state"]});
-    var stage=byId("edemo-task-stage");if(stage){taskObserver=new MutationObserver(function(){mountEssayMode();});taskObserver.observe(stage,{childList:true});}
-  }
-
-  window.__edemoRussian2026Task27Review={scoreByConfirmedErrors:scoreByConfirmedErrors,officialEssayScore:officialEssayScore,normalizedScore24:normalizedScore24,normalizeReviewState:normalizeReviewState,reviewStorageKey:REVIEW_STORAGE_KEY,paperMarker:PAPER_MARKER};
+  window.__edemoRussian2026Task27Review={confirmedCap:confirmedCap,criterionCap:criterionCap,acceptedErrorScore:acceptedErrorScore,officialEssayScore:officialEssayScore,applyAnalysisResult:applyAnalysisResult,analyzeEssayText:analyzeEssayText,normalizeReviewState:normalizeReviewState,submitAnalysis:submitAnalysis,reviewStorageKey:REVIEW_STORAGE_KEY,paperMarker:PAPER_MARKER};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
 </script>
