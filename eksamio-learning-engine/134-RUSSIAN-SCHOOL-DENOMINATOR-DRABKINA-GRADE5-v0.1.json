@@ -1,0 +1,305 @@
+{
+  "schema_version": "0.1.0",
+  "subject": "russian",
+  "purpose": "school_denominator_drabkina_grade5_candidate_inventory",
+  "date": "2026-08-13",
+  "status": "working_candidate_inventory",
+  "production_integration": "HOLD",
+  "baseline_ref": "132-RUSSIAN-EXCEPTIONS-COURSE-GRADE-GATE-151-RECOVERED-STATUS.txt",
+  "work_spec_ref": "133-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-WORK-SPEC.txt",
+  "project_source": {
+    "grade": 5,
+    "path": "eksamio-learning-engine/russkiy-knigi/russkij-jaz_-5kl_-prakt_-po-orf_-i-punkt__drabkina_2019-128s.pdf",
+    "title": "Русский язык. 5 класс. Практикум по орфографии и пунктуации",
+    "authors": ["С. В. Драбкина", "Д. И. Субботин"],
+    "edition_year": 2019,
+    "project_pdf_present": true,
+    "project_pdf_directly_read_in_this_pass": false,
+    "reason": "GitHub connector exposes the binary file but cannot decode PDF bytes as UTF-8 in the current tool path."
+  },
+  "extraction_aid": {
+    "type": "same_edition_text_replica",
+    "base_url": "https://grammarian.school/teaching/5practical/",
+    "toc_matched_to_project_edition": true,
+    "use_policy": "navigation_and_candidate_extraction_only",
+    "final_source_gate": "Exact-project-source/current-norm checks remain required before denominator closure or learner runtime use."
+  },
+  "counts": {
+    "candidate_units": 12,
+    "admitted_to_working_denominator": 11,
+    "needs_review_before_working_admission": 1,
+    "current_norm_review_pending": 12,
+    "current_bank_comparison_pending": 12
+  },
+  "candidate_units": [
+    {
+      "unit_id": "school-g5-shibilants-iu-a-lexical-exceptions",
+      "domain": "orthography",
+      "unit_type": "lexical_set",
+      "canonical_label": "Брошюра, жюри, парашют: исключения после шипящих",
+      "normalized_members": ["брошюра", "жюри", "парашют"],
+      "parent_rule": "После Ж, Ч, Ш, Щ в базовой школьной модели пишутся И, У, А; эти слова отдельно даны как исключения.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Буквы И, У, А после шипящих",
+        "locator": "explicit 'слова-исключения' block before exercises 33–34",
+        "replica_url": "https://grammarian.school/teaching/5practical/5.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-g5-separating-sign-foreign-and-complex-boundaries",
+      "domain": "orthography",
+      "unit_type": "special_rule",
+      "canonical_label": "Разделительные Ъ/Ь: специальные позиции вне простой приставочной модели",
+      "normalized_members": ["двухъярусный", "трёхъярусный", "четырёхъярусный", "фельдъегерь", "бульон", "павильон", "шампиньон", "интерьер"],
+      "parent_rule": "Источник отдельно выделяет сложные слова с двух-/трёх-/четырёх-, ряд иноязычных случаев и разграничение Ъ/Ь.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Правописание разделительного Ъ и Ь знака",
+        "locator": "special numbered subcases in the rule block",
+        "replica_url": "https://grammarian.school/teaching/5practical/6.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "Do not split every ordinary example into a denominator unit; this candidate represents the explicitly isolated special subcases."
+    },
+    {
+      "unit_id": "school-g5-separating-hard-sign-before-e-boundary",
+      "domain": "orthography",
+      "unit_type": "boundary_case",
+      "canonical_label": "сэкономить: разделительный Ъ перед Э не ставится",
+      "normalized_members": ["сэкономить"],
+      "parent_rule": "Разделительный Ъ после приставки не переносится механически на позицию перед Э.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Правописание разделительного Ъ и Ь знака",
+        "locator": "exercise 39, explicit contrast 'съэкономить — сэкономить'",
+        "replica_url": "https://grammarian.school/teaching/5practical/6.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-g5-rast-rashch-ros-exception-set",
+      "domain": "orthography",
+      "unit_type": "lexical_set",
+      "canonical_label": "РАСТ/РАЩ/РОС: словарные исключения",
+      "normalized_members": ["росток", "Ростислав", "Ростов", "ростовщик", "отрасль", "на вырост"],
+      "parent_rule": "В школьной модели РАСТ/РАЩ/РОС выбор А/О зависит от следующего сочетания согласных; источник отдельно даёт исключения.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Буквы О–А в корнях РАСТ–РАЩ–РОС",
+        "locator": "explicit 'Исключения' block after exercise 107",
+        "replica_url": "https://grammarian.school/teaching/5practical/20.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-g5-zhog-zheg-part-of-speech-contrast",
+      "domain": "orthography",
+      "unit_type": "contrast",
+      "canonical_label": "-ЖОГ- / -ЖЁГ-: существительное и глагол",
+      "normalized_members": ["ожог — ожёг", "поджог — поджёг"],
+      "parent_rule": "Источник отдельно разграничивает О в существительных и Ё в глагольных формах этой модели.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Буквы Ё, О после шипящих в корне слова",
+        "locator": "explicit 'Запомните: -ЖОГ- и -ЖЁГ-' block and exercise 111",
+        "replica_url": "https://grammarian.school/teaching/5practical/21.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-g5-o-after-sibilants-lexical-o-set",
+      "domain": "orthography",
+      "unit_type": "lexical_set",
+      "canonical_label": "О после шипящих в корне: словарная группа",
+      "normalized_members": ["шоколад", "шофёр", "крыжовник", "шов", "шоссе", "обжора", "шорник", "капюшон", "жокей", "чащоба", "шорох", "чопорный", "трущоба"],
+      "parent_rule": "Источник выделяет словарные слова с О после шипящих, которые не выводятся из базовой проверки через Е.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Буквы Ё, О после шипящих в корне слова",
+        "locator": "explicit additional memorization list after exercise 116",
+        "replica_url": "https://grammarian.school/teaching/5practical/21.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "source_quality_note": "The replica also shows an apparent wrong answer key in one later test item on О/Ё. The denominator candidate is based on the explicit lexical list, not on that test key. Current norm must be independently checked later."
+    },
+    {
+      "unit_id": "school-g5-rasschityvat-rasschitat-vs-raschet",
+      "domain": "orthography",
+      "unit_type": "contrast",
+      "canonical_label": "рассчитывать / рассчитать — расчёт / расчётливый",
+      "normalized_members": ["рассчитывать", "рассчитать", "расчёт", "расчётливый"],
+      "parent_rule": "Источник специально противопоставляет написание СС в глагольных формах и одну С в словах расчёт/расчётливый.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Буквы Ё, О после шипящих в корне слова",
+        "locator": "exercises 113–114, explicit spelling contrast",
+        "replica_url": "https://grammarian.school/teaching/5practical/21.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "pedagogy_note": "The source uses a mnemonic story. Per project rule 128, learner-facing explanation must later use a real linguistic spelling/morphemic rationale, not the invented story."
+    },
+    {
+      "unit_id": "school-g5-tsy-exception-family",
+      "domain": "orthography",
+      "unit_type": "lexical_set",
+      "canonical_label": "ЦЫ: традиционная группа исключений",
+      "normalized_members": ["цыган", "цыц", "цыплёнок", "цыпочки"],
+      "parent_rule": "Источник выделяет традиционную группу ЦЫ; производные и формы должны дедуплицироваться к этим лексическим основам, где это уместно.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Буквы И, Ы после Ц",
+        "locator": "exercise 125 mnemonic family plus exercises 126–128",
+        "replica_url": "https://grammarian.school/teaching/5practical/22.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "Forms such as цыганочка/цыплята are evidence for the same lexical families, not automatically separate denominator units."
+    },
+    {
+      "unit_id": "school-g5-chet-chit-sochetat-sochetanie",
+      "domain": "orthography",
+      "unit_type": "lexical_set",
+      "canonical_label": "ЧЕТ/ЧИТ: сочетать, сочетание",
+      "normalized_members": ["сочетать", "сочетание"],
+      "parent_rule": "Within the Е/И alternating-root material the source explicitly labels these forms as exceptions.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Буквы Е–И в корнях с чередованием",
+        "locator": "explicit exception line immediately after exercise 160",
+        "replica_url": "https://grammarian.school/teaching/5practical/27.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-g5-ne-verbs-without-ne",
+      "domain": "orthography",
+      "unit_type": "boundary_case",
+      "canonical_label": "НЕ с глаголами: слова, не употребляющиеся без НЕ",
+      "normalized_members": ["негодовать", "недоумевать", "ненавидеть"],
+      "parent_rule": "Source separately gives the lexical boundary for verbs that are not used without НЕ.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Не с глаголами",
+        "locator": "opening rule block before exercise 157",
+        "replica_url": "https://grammarian.school/teaching/5practical/26.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "source_quality_note": "Do not inherit the source's broad 'always separate except...' wording as a universal learner rule. Later norm review must cover other solid-writing mechanisms such as НЕДО- separately."
+    },
+    {
+      "unit_id": "school-g5-conjugation-brity-stelit",
+      "domain": "orthography_morphology",
+      "unit_type": "special_rule",
+      "canonical_label": "брить, стелить: I спряжение в школьной модели исключений",
+      "normalized_members": ["брить", "стелить"],
+      "parent_rule": "The grade-5 material tests these as exceptional relative to the simple infinitive-ending heuristic.",
+      "grade_routes": [{"grade": 5, "role": "practised_or_tested"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Итоговый контроль / личные окончания глаголов",
+        "locator": "final test contrasts стелить against II-conjugation choices and брить against I-conjugation choices",
+        "replica_url": "https://grammarian.school/teaching/5practical/29.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "Route role is deliberately not 'first taught'; current evidence proves grade-5 practice/presence only."
+    },
+    {
+      "unit_id": "school-g5-podyachiy-separating-sign-conflict",
+      "domain": "orthography",
+      "unit_type": "boundary_case",
+      "canonical_label": "подьячий: source-internal Ь/Ъ conflict to resolve",
+      "normalized_members": ["подьячий"],
+      "parent_rule": "Special lexical boundary in the separating Ъ/Ь topic.",
+      "grade_routes": [{"grade": 5, "role": "presence_confirmed_role_unclear"}],
+      "source_evidence": [{
+        "evidence_level": "needs_review",
+        "topic": "Правописание разделительного Ъ и Ь знака",
+        "locator": "same page gives подьячий with Ь in the numbered rule and answer list, but one memorization line appears as подЪячий",
+        "replica_url": "https://grammarian.school/teaching/5practical/6.html"
+      }],
+      "working_denominator_admission": "HOLD_UNTIL_SOURCE_NORM_REVIEW",
+      "current_norm_review_status": "source_conflict_needs_review",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "Do not resolve by guess and do not use the conflicting memorization line as learner-facing evidence."
+    }
+  ],
+  "source_quality_findings": [
+    {
+      "finding_id": "g5-source-quality-001",
+      "severity": "needs_review",
+      "topic": "Буквы Ё, О после шипящих в корне слова",
+      "finding": "A later test answer shown in the same-edition replica appears inconsistent with the spellings in the tested words.",
+      "policy": "Use explicit rule/list evidence for candidate extraction; never treat an answer key as authoritative without independent norm verification."
+    },
+    {
+      "finding_id": "g5-source-quality-002",
+      "severity": "needs_review",
+      "topic": "Разделительный Ъ/Ь",
+      "finding": "The same page contains an internal inconsistency for подьячий/подъячий.",
+      "policy": "Keep the candidate on HOLD until exact project source and current norm are checked."
+    },
+    {
+      "finding_id": "g5-pedagogy-001",
+      "severity": "method_only",
+      "topic": "рассчитывать / расчёт",
+      "finding": "The source uses a fictional mnemonic story to explain the spelling contrast.",
+      "policy": "The contrast may be routed from the source, but project rule 128 forbids reusing invented semantic stories as the actual learner explanation."
+    }
+  ],
+  "next_pass": {
+    "grade5_remaining": [
+      "Open/read the inaccessible exact-text replica sections for personal verb endings and prefix З/С to extract only source-attested special cases.",
+      "Review grade-5 noun/adjective ending sections for any explicitly isolated exception sets rather than ordinary paradigms.",
+      "Cross-check every admitted candidate against the project PDF when a binary-readable path is available.",
+      "Do not compare against the recovered 127 until grade-5 extraction is complete."
+    ],
+    "then": "Proceed to grade 6 under the same denominator contract."
+  },
+  "production_files_changed": false
+}
