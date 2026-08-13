@@ -1,0 +1,95 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-13",
+  "status": "working_addendum",
+  "parent_inventory": "137-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE6-v0.1.json",
+  "metadata_correction_ref": "138-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE6-METADATA-CORRECTION-v0.1.json",
+  "work_spec_ref": "133-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-WORK-SPEC.txt",
+  "production_integration": "HOLD",
+  "added_candidates": 4,
+  "candidate_units": [
+    {
+      "unit_id": "school-ne-nouns-without-ne-lexical-boundary",
+      "domain": "orthography_lexical",
+      "unit_type": "boundary_case",
+      "canonical_label": "НЕ с существительными: слова, не употребляющиеся без НЕ",
+      "normalized_members": ["небылица", "невежа", "невежда", "ненависть", "непоседа", "неряха", "невольник", "недотёпа", "негодование"],
+      "grade_routes": [{"grade": 6, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{"evidence_level": "same_edition_text_replica", "topic": "НЕ с именами существительными", "locator": "exercises 93–95 explicitly isolate words not used without НЕ and distinguish невежа/невежда", "replica_url": "https://grammarian.school/teaching/6practical/14.html"}],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "Membership is normalized from source exercises and must be dictionary-checked item by item before final denominator closure."
+    },
+    {
+      "unit_id": "school-ne-adjectives-negative-intensifier-boundary",
+      "domain": "orthography_syntax",
+      "unit_type": "boundary_case",
+      "canonical_label": "НЕ с прилагательными: усилители отрицания и отрицательные местоименные слова",
+      "normalized_members": ["отнюдь не", "далеко не", "вовсе не", "нисколько не", "ничуть не", "никому не", "никем не"],
+      "grade_routes": [{"grade": 6, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{"evidence_level": "same_edition_text_replica", "topic": "НЕ с именами прилагательными", "locator": "exercise 109 explicitly lists the negative-context words and builds contrastive practice", "replica_url": "https://grammarian.school/teaching/6practical/15.html"}],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "pedagogy_note": "Do not reuse the source's metaphor 'words-magnets' as the linguistic rule. Learner explanation must name the real negative-context condition."
+    },
+    {
+      "unit_id": "school-ne-adjectives-category-separate-boundaries",
+      "domain": "orthography_morphology",
+      "unit_type": "boundary_case",
+      "canonical_label": "НЕ с прилагательными: притяжательные, сравнительная степень и относительные в отрицательном противопоставлении",
+      "normalized_members": ["не мамин", "не выше", "не лучше", "не золотой"],
+      "grade_routes": [{"grade": 6, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{"evidence_level": "same_edition_text_replica", "topic": "НЕ с именами прилагательными", "locator": "exercise 111 separately enumerates these category boundaries", "replica_url": "https://grammarian.school/teaching/6practical/15.html"}],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "The relative-adjective branch depends on actual negation/opposition semantics; final explanation must not be reduced to a lexical list."
+    },
+    {
+      "unit_id": "school-ne-short-predicative-separate-set",
+      "domain": "orthography_morphology_syntax",
+      "unit_type": "lexical_set",
+      "canonical_label": "Раздельное НЕ в кратких/предикативных формах: рад, готов, должен, согласен, намерен, обязан, надо, нужно, жаль",
+      "normalized_members": ["не рад", "не готов", "не должен", "не согласен", "не намерен", "не обязан", "не надо", "не нужно", "не жаль"],
+      "grade_routes": [{"grade": 6, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{"evidence_level": "same_edition_text_replica", "topic": "НЕ с именами прилагательными", "locator": "exercise 119 explicitly gives a memorization set for separate НЕ", "replica_url": "https://grammarian.school/teaching/6practical/15.html"}],
+      "current_norm_review_status": "source_classification_needs_review",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "working_denominator_admission": "HOLD_AS_ONE_UNDIVIDED_UNIT_UNTIL_MORPHOLOGY_REVIEW",
+      "notes": "The school source labels the whole set as short adjectives, but надо/нужно/жаль are not safely carried into the project under that blanket part-of-speech label. Preserve spelling evidence, but reclassify each form with an authoritative morphology source before learner use."
+    }
+  ],
+  "source_quality_findings": [
+    {
+      "finding_id": "g6-ne-adj-heading-001",
+      "severity": "source_text_error_or_template_slip",
+      "finding": "Inside the chapter 'НЕ с именами прилагательными', exercise 103 asks the learner to explain when НЕ with nouns is written solid/separate. The surrounding exercises are about adjectives, so this wording must not be copied as-is into project content.",
+      "decision": "Do not use the erroneous wording as a rule statement; keep it only as source-quality provenance."
+    },
+    {
+      "finding_id": "g6-ne-pedagogy-magnets-002",
+      "severity": "pedagogy_only",
+      "finding": "The source uses the metaphor 'words-magnets' for negative-context words.",
+      "decision": "Routing evidence is usable, but project rule 128 forbids substituting such a mnemonic metaphor for the actual linguistic condition."
+    }
+  ],
+  "grade6_working_total_after_addendum": {
+    "candidate_units_before_addendum": 17,
+    "candidate_units_added": 4,
+    "candidate_units_working_total": 21,
+    "source_form_excluded_by_current_norm": 1
+  },
+  "next_pass": [
+    "Extract exact special cases from complex adjective spelling, numerals, pronouns, verb suffixes and imperative Ь.",
+    "Run authoritative morphology review of the exercise-119 predicative set before admission as a canonical learner unit.",
+    "Keep current bank comparison pending until grade-6 source extraction reaches a stable stopping point."
+  ],
+  "production_files_changed": false
+}
