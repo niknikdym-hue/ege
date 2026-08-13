@@ -1,0 +1,56 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CURRENT_ACADEMIC_REVIEW_COMPLETE_PROJECT_ROSENTHAL_TEXT_CROSSCHECK_PENDING",
+  "scope":"grade11_punctuation_holds_from_156",
+  "refs":["156-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE11-FINAL-ADDENDUM-v0.1.json","eksamio-learning-engine/russkiy-knigi/rozental.doc"],
+  "source_access":{"project_rozental_present":true,"project_rozental_blob_sha":"fdf42bd826133c006e667ad0a70b09c78bcafcb1","project_rozental_text_readable_in_current_connector":false,"policy":"Do not attribute unseen wording to the project DOC. Current academic punctuation rules were reviewed independently; project Rosenthal textual crosscheck remains pending."},
+  "production_integration":"HOLD",
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "units":[
+    {
+      "unit_id":"school-gerund-two-turns-shared-predicate-i-boundary",
+      "decision":"CURRENT_NORM_CONFIRMED",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "current_model":"Two homogeneous gerund phrases connected by a single nonrepeated coordinating conjunction И are not separated from each other by a comma when they function as homogeneous adverbials of the same predicate. If adjacent gerund phrases belong to different predicates, each phrase is isolated separately according to its own syntactic attachment.",
+      "project_rozental_crosscheck":"PENDING_BINARY_TEXT_ACCESS",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-derived-preposition-circumstance-variable-isolation",
+      "decision":"CURRENT_NORM_RESOLVED_CONTEXTUAL_NOT_MECHANICAL",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "members":["благодаря","согласно","вопреки","вследствие","ввиду","при условии","за неимением/за отсутствием","в силу","по причине","по случаю"],
+      "current_model":[
+        "Such circumstances can be isolated for semantic emphasis or to mark their boundaries.",
+        "Isolation is obligatory when the construction interrupts the direct subject-predicate connection.",
+        "In other positions isolation is often optional and depends on structure, semantics, order and intended emphasis.",
+        "Do not teach a universal comma after an initial prepositional circumstance.",
+        "НЕСМОТРЯ НА / НЕВЗИРАЯ НА have their own stronger isolation pattern and should not be mechanically generalized to every derived preposition."
+      ],
+      "source_correction":"Replace the simplified 2018 school condition with a context-sensitive decision model.",
+      "project_rozental_crosscheck":"PENDING_BINARY_TEXT_ACCESS",
+      "canonicalization":"punctuation unit remains separate from government/case units using the same prepositions",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-obosob-additions-krome-vmesto-boundary",
+      "decision":"CURRENT_NORM_RESOLVED_CONTEXTUAL",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "members":["кроме","помимо","наряду с","за исключением","исключая","включая","сверх","вместо"],
+      "current_model":[
+        "Restrictive/inclusive/replacement constructions are isolated or not isolated according to context; blanket ALWAYS-ISOLATE wording is rejected.",
+        "КРОМЕ constructions are normally treated as isolatable restrictive/inclusive constructions in current academic rules; the old semantic opposition inclusion vs exclusion is not a reliable sole punctuation test.",
+        "ВМЕСТО requires a semantic and structural branch: replacement of an action is isolated; replacement of a concrete item may be non-isolated; ВМЕСТО meaning 'за / в качестве' is not isolated.",
+        "Absolute initial position and interruption of subject-predicate or governing-dependent connections are strong/mandatory isolation conditions in the academic rule."
+      ],
+      "source_correction":"Preserve the 2018 school route but replace blanket isolation with current contextual branching.",
+      "project_rozental_crosscheck":"PENDING_BINARY_TEXT_ACCESS",
+      "exam_routes":[]
+    }
+  ],
+  "counts":{"reviewed_units":3,"current_norm_resolved":3,"project_rozental_text_crosscheck_pending":3,"final_denominator_units_declared":0},
+  "notes":["No FIPI routes.","No learner progress percentage.","No production/Tilda/runtime/scoring/localStorage changes."],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
