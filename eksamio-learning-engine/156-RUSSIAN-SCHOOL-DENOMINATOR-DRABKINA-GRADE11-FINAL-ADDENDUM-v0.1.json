@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-13",
+  "status": "working_grade11_final_addendum",
+  "parent_inventory": "155-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE11-v0.1.json",
+  "production_integration": "HOLD",
+  "route_records": [
+    {
+      "unit_id": "school-gerund-two-turns-shared-predicate-i-boundary",
+      "domain": "punctuation_syntax",
+      "unit_type": "boundary_case",
+      "canonical_label": "Два деепричастных оборота с одним сказуемым, соединённые одиночным И",
+      "normalized_members": ["оборот 1 и оборот 2 относятся к одному сказуемому — между ними нет запятой как между однородными обстоятельствами"],
+      "grade_routes": [{"grade": 11, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Обособленные обстоятельства",
+        "locator": "explicit Запомните block: no comma before/after И when two gerund phrases refer to the same predicate",
+        "replica_url": "https://grammarian.school/teaching/11practical/15.html"
+      }],
+      "current_norm_review_status": "current_rule_supported_pending_Rosenthal_project_crosscheck",
+      "dedupe_status": "new_candidate_identity",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-derived-preposition-circumstance-variable-isolation",
+      "domain": "punctuation_syntax",
+      "unit_type": "boundary_case",
+      "canonical_label": "Обстоятельства с благодаря / согласно / вопреки / вследствие / ввиду и др.: обособление зависит от структуры и смысла",
+      "normalized_members": ["благодаря", "согласно", "вопреки", "вследствие", "ввиду", "при условии", "за неимением", "в силу", "по причине", "по случаю"],
+      "grade_routes": [{"grade": 11, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Обособленные обстоятельства",
+        "locator": "source gives a school condition based on expansion and pre-predicate position",
+        "replica_url": "https://grammarian.school/teaching/11practical/15.html"
+      }],
+      "current_norm_review_status": "source_simplification_needs_context_and_Rosenthal_review",
+      "dedupe_status": "new_punctuation_unit_separate_from_case-government-unit",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "Current punctuation references allow more context/authorial-semantic variation than a single mechanical condition. Do not ship the source's simplified condition as a universal learner rule."
+    },
+    {
+      "unit_id": "school-obosob-additions-krome-vmesto-boundary",
+      "domain": "punctuation_syntax_semantics",
+      "unit_type": "boundary_case",
+      "canonical_label": "КРОМЕ / ПОМИМО / ВМЕСТО / ЗА ИСКЛЮЧЕНИЕМ и др.: включение, исключение, замещение и обособление",
+      "normalized_members": ["кроме", "помимо", "вместо", "за исключением", "исключая", "сверх", "наряду с"],
+      "grade_routes": [{"grade": 11, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Обособленные дополнения",
+        "locator": "dedicated grade-11 chapter distinguishes inclusion/exclusion/replacement meanings",
+        "replica_url": "https://grammarian.school/teaching/11practical/18.html"
+      }],
+      "current_norm_review_status": "source_simplification_needs_context_review",
+      "dedupe_status": "new_candidate_identity",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "Do not teach blanket 'always isolate'. Current reference practice allows non-isolation in some structural/semantic contexts, especially ВМЕСТО in direct replacement meaning."
+    }
+  ],
+  "counts": {
+    "added_route_records": 3,
+    "grade11_working_route_records_after_addendum": 24
+  },
+  "counting_warning": "The resulting 24 happens to equal the recovered checkpoint's old GRADE_11 route count. That old count was not used as a target, stopping criterion or source-selection filter.",
+  "production_files_changed": false
+}
