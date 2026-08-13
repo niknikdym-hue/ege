@@ -1,0 +1,73 @@
+EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2024
+FINAL TILDA HANDOFF
+Дата: 2026-08-13
+
+STATUS: READY_FOR_TILDA_UPLOAD
+LIVE_GO: NO
+
+FINAL PACKAGE
+- filename: ege-matematika-baza-demoversiya-2024-v1.0.zip
+- SHA256: 6e485d196cf12575930e27f02aeb4d0827a785604cd633df5730eb770de5bdee
+- page URL: /ege/matematika-baza/demoversiya/2024/
+- T123: 8 blocks, T123-01 through T123-08 strictly in order
+- maximum T123: 40851 bytes
+- header/footer: separate, not included
+
+EXAM LOCK
+- source year: 2024
+- 21 tasks
+- 180 minutes
+- max primary score 21
+- 52 official FIPI examples
+- all tasks short-answer
+
+FINAL GATES
+- source gate: PASS
+- source text gate: PASS_AFTER_CORRECTION
+- formula gate: PASS — 11/11
+- visual semantic gate: PASS_RECONSTRUCTED_SOURCE_FIDELITY — 17/17
+- interaction/scorer gate: PASS — 52/52 official examples, correct+wrong through real DOM controls
+- visible official-example source tag: PASS 52/52
+- full-correct attempt: 21/21
+- state restore: PASS
+- result review: PASS — 21/21 rows, own answer and official accepted answer shown
+- references: 4/4 PASS
+- responsive: 1280/768/390/360/320 PASS, overflow 0
+- JS errors: 0
+- console errors: 0
+- clean unpacked final ZIP browser rerun: PASS
+- internal second source/content review: PASS, NOT third-party certification
+- no __pycache__ / .pyc
+
+IMPORTANT PRE-RELEASE CORRECTIONS
+- corrected task/example boundary: task 14 has 2 examples; task 15 has 3; agricultural-land item = 15.3, answer 9;
+- restored missing/shortened official task wording before final build;
+- did not duplicate printed FIPI «Ответ: ____» where Eksamio has its own answer field;
+- corrected 9.1 reconstructed lake scale to preserve official answer 3;
+- corrected 10.2 clock to 16:00, official answer 120°;
+- corrected 320 px grid overflow without changing task/scorer/state logic.
+
+VISUAL POLICY
+Use the already accepted base-math policy: direct source crops are preferred where practical; reconstructed visuals are permitted only after per-example source-fidelity/semantic audit. For 2024 this audit is PASS 17/17. Do not describe reconstructions as official source crops.
+
+TILDA INSTALL ORDER
+1. ege-matematika-baza-demoversiya-2024-T123-01.txt
+2. ege-matematika-baza-demoversiya-2024-T123-02.txt
+3. ege-matematika-baza-demoversiya-2024-T123-03.txt
+4. ege-matematika-baza-demoversiya-2024-T123-04.txt
+5. ege-matematika-baza-demoversiya-2024-T123-05.txt
+6. ege-matematika-baza-demoversiya-2024-T123-06.txt
+7. ege-matematika-baza-demoversiya-2024-T123-07.txt
+8. ege-matematika-baza-demoversiya-2024-T123-08.txt
+
+AFTER PUBLICATION
+1. production smoke on the published URL;
+2. manual student acceptance;
+3. only then set LIVE_GO: YES.
+
+Read first if a new chat starts:
+- 00-BASE-2024-WORK-RULES-AND-HANDOFF.txt
+- 01-BASE-2024-SOURCE-GATE-STATUS.txt
+- 02-BASE-2024-CURRENT-CHECKPOINT.txt
+- 03-BASE-2024-EXAMPLE-MAP-A.txt
+- 04-BASE-2024-READY-FOR-TILDA.txt
