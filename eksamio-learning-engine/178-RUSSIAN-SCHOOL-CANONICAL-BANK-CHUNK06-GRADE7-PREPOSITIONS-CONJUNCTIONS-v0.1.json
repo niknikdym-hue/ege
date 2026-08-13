@@ -1,0 +1,184 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CANONICAL_BANK_CHUNK06_WORKING_ADMITTED",
+  "scope":"grade7_preposition_and_conjunction_homonym_specials",
+  "refs":[
+    "142-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE7-v0.1.json",
+    "161-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-PASS2-v0.1.json",
+    "172-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK04-ADVERBS-PRONOUNS-HYPHEN-v0.1.json"
+  ],
+  "production_integration":"HOLD",
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "count_assertion":{
+    "declared_canonical_units":16,
+    "organizational_parents_counted":0,
+    "rule":"Count branch/mastery units only. Do not count organizational parent plus its branches."
+  },
+  "canonicalization_correction":{
+    "subject":"school-naschet-na-schet",
+    "decision":"ADD_MISSING_BRANCH_FROM_GRADE7_SOURCE",
+    "reason":"The exact Grade-7 candidate inventory includes НАСЧЁТ — НА СЧЁТ, but PASS2 P2-002 omitted it from child_or_branch_ids. Current dictionary norm confirms the contrast. This correction adds the branch without changing the organizational-parent counting rule."
+  },
+  "canonical_units":[
+    {
+      "unit_id":"school-v-techenie-v-techenii",
+      "parent_id":"school-derivative-preposition-homonym-contrast-family",
+      "label":"В ТЕЧЕНИЕ vs В ТЕЧЕНИИ",
+      "members":["в течение часа"],
+      "contrast_members":["в течении реки"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_academic_rule_confirmed"
+    },
+    {
+      "unit_id":"school-v-prodolzhenie-v-prodolzhenii",
+      "parent_id":"school-derivative-preposition-homonym-contrast-family",
+      "label":"В ПРОДОЛЖЕНИЕ vs В ПРОДОЛЖЕНИИ",
+      "members":["в продолжение разговора"],
+      "contrast_members":["в продолжении рассказа"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_academic_rule_confirmed"
+    },
+    {
+      "unit_id":"school-v-zaklyuchenie-v-zaklyuchenii",
+      "parent_id":"school-derivative-preposition-homonym-contrast-family",
+      "label":"В ЗАКЛЮЧЕНИЕ vs В ЗАКЛЮЧЕНИИ",
+      "members":["в заключение выступления"],
+      "contrast_members":["в заключении комиссии"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_academic_rule_confirmed"
+    },
+    {
+      "unit_id":"school-vsledstvie-v-sledstvii-vposledstvii",
+      "parent_id":"school-derivative-preposition-homonym-contrast-family",
+      "label":"ВСЛЕДСТВИЕ vs В СЛЕДСТВИИ; ВПОСЛЕДСТВИИ — отдельное слово",
+      "members":["вследствие дождя"],
+      "contrast_members":["в следствии по делу"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out","source_member_scope":["вследствие — в следствии"]}],
+      "norm":"current_academic_rule_confirmed",
+      "scope_note":"ВПОСЛЕДСТВИИ belongs to the global canonical branch name from PASS2 but is not asserted here as a Grade-7 Drabkina member without a Grade-7 locator."
+    },
+    {
+      "unit_id":"school-naschet-na-schet",
+      "parent_id":"school-derivative-preposition-homonym-contrast-family",
+      "label":"НАСЧЁТ vs НА СЧЁТ",
+      "members":["говорить насчёт поездки"],
+      "contrast_members":["перевести деньги на счёт"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_dictionary_confirmed"
+    },
+    {
+      "unit_id":"school-vvidu-v-vide-imet-v-vidu",
+      "parent_id":"school-derivative-preposition-homonym-contrast-family",
+      "label":"ВВИДУ vs В ВИДУ / ИМЕТЬ В ВИДУ",
+      "members":["ввиду обстоятельств"],
+      "contrast_members":["иметь в виду","держать в виду"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out","source_member_scope":["ввиду — в виду/иметь в виду"]}],
+      "norm":"current_dictionary_confirmed",
+      "learner_policy":"Do not reduce the distinction to visual similarity; distinguish derivative preposition from noun phrase/fixed expression."
+    },
+    {
+      "unit_id":"school-poseredine-vmesto-homonym-boundaries",
+      "parent_id":"school-derivative-preposition-homonym-contrast-family",
+      "label":"ПОСЕРЕДИНЕ / ПО СЕРЕДИНЕ; ВМЕСТО / В МЕСТО",
+      "members":["посередине комнаты","вместо сестры"],
+      "contrast_members":["не по краю, а по середине дороги","в место пребывания"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_dictionary_and_context_confirmed",
+      "learner_policy":"ПОСЕРЕДИНЕ in the ordinary meaning 'in the middle' is solid; ПО СЕРЕДИНЕ requires an actual noun phrase/context. ВМЕСТО is a preposition; В МЕСТО is a free preposition+noun combination."
+    },
+    {
+      "unit_id":"school-nesmotrya-vs-ne-smotrya",
+      "label":"НЕСМОТРЯ НА vs НЕ СМОТРЯ",
+      "members":["несмотря на усталость"],
+      "contrast_members":["не смотря под ноги"],
+      "grade_routes":[
+        {"grade":7,"role":"explicitly_taught_or_singled_out"},
+        {"grade":8,"role":"practised_or_tested","evidence_level":"same_edition_exact_sample"}
+      ],
+      "norm":"current_confirmed",
+      "canonicalization":"single_cross_grade_identity"
+    },
+    {
+      "unit_id":"school-conjunction-chtoby-chto-by",
+      "parent_id":"school-conjunction-homonym-contrast-family",
+      "label":"ЧТОБЫ vs ЧТО БЫ",
+      "members":["чтобы"],
+      "contrast_members":["что бы"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_academic_rule_confirmed"
+    },
+    {
+      "unit_id":"school-conjunction-tozhe-to-zhe",
+      "parent_id":"school-conjunction-homonym-contrast-family",
+      "label":"ТОЖЕ vs ТО ЖЕ",
+      "members":["тоже"],
+      "contrast_members":["то же"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_academic_rule_confirmed"
+    },
+    {
+      "unit_id":"school-conjunction-takzhe-tak-zhe",
+      "parent_id":"school-conjunction-homonym-contrast-family",
+      "label":"ТАКЖЕ vs ТАК ЖЕ",
+      "members":["также"],
+      "contrast_members":["так же"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_academic_rule_confirmed"
+    },
+    {
+      "unit_id":"school-conjunction-zato-za-to",
+      "parent_id":"school-conjunction-homonym-contrast-family",
+      "label":"ЗАТО vs ЗА ТО",
+      "members":["зато"],
+      "contrast_members":["за то"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_academic_rule_confirmed"
+    },
+    {
+      "unit_id":"school-conjunction-pritom-pri-tom",
+      "parent_id":"school-conjunction-homonym-contrast-family",
+      "label":"ПРИТОМ vs ПРИ ТОМ",
+      "members":["притом"],
+      "contrast_members":["при том условии","при всём при том"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_dictionary_confirmed"
+    },
+    {
+      "unit_id":"school-conjunction-prichyom-pri-chyom",
+      "parent_id":"school-conjunction-homonym-contrast-family",
+      "label":"ПРИЧЁМ vs ПРИ ЧЁМ",
+      "members":["причём"],
+      "contrast_members":["при чём тут это?"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_dictionary_confirmed"
+    },
+    {
+      "unit_id":"school-conjunction-ottogo-ot-togo",
+      "parent_id":"school-conjunction-homonym-contrast-family",
+      "label":"ОТТОГО vs ОТ ТОГО",
+      "members":["оттого молчал","оттого что"],
+      "contrast_members":["зависит от того, что...","отрёкся от того, кому..."],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_dictionary_and_context_confirmed"
+    },
+    {
+      "unit_id":"school-kak-budto-separate-spelling",
+      "label":"КАК БУДТО: раздельно, без дефиса",
+      "members":["как будто"],
+      "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_dictionary_confirmed"
+    }
+  ],
+  "organizational_parents":[
+    {"unit_id":"school-derivative-preposition-homonym-contrast-family","counted":false},
+    {"unit_id":"school-conjunction-homonym-contrast-family","counted":false}
+  ],
+  "source_scope_notes":[
+    "Grade-7 route evidence comes from the same-edition text replica already recorded in 142; this chunk does not upgrade it to project_source_exact.",
+    "Current norm verification is independent from the Grade-7 route evidence.",
+    "No FIPI routes are created here."
+  ],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
