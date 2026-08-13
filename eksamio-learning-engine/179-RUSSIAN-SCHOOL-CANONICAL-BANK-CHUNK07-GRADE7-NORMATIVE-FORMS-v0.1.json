@@ -1,0 +1,51 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CANONICAL_BANK_CHUNK07_WORKING_ADMITTED",
+  "scope":"grade7_normative_forms",
+  "refs":["142-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE7-v0.1.json","155-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE11-v0.1.json","161-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-PASS2-v0.1.json"],
+  "production_integration":"HOLD",
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "count_assertion":{"declared_canonical_units":3},
+  "canonical_units":[
+    {
+      "unit_id":"school-po-after-event-prepositional-forms",
+      "domain":"morphology_government",
+      "unit_type":"semantic_government_family",
+      "label":"ПО в значении ПОСЛЕ: по окончании, по прибытии, по приезде и др.",
+      "canonical_members":["по окончании","по прибытии","по возвращении","по завершении","по истечении","по предъявлении","по приезде","по прилёте"],
+      "grade_routes":[
+        {"grade":7,"role":"practised_or_tested","source_member_scope":["по приезде"]},
+        {"grade":11,"role":"practised_or_tested","source_member_scope":["по окончании","по прибытии","по возвращении","по завершении","по истечении","по предъявлении","по приезде","по прилёте"]}
+      ],
+      "norm":"current_rule_confirmed_with_semantic_boundary",
+      "semantic_boundary":"This family applies when ПО means 'after an event'. It does not declare dative forms universally impossible in unrelated meanings.",
+      "canonicalization":"absorbs narrower school-po-priezde-after-arrival identity; count family once",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-genitive-plural-sapog",
+      "domain":"morphology_norm",
+      "unit_type":"difficult_form",
+      "label":"САПОГ: родительный множественного числа без -ОВ",
+      "members":["пара сапог","без сапог","восемь сапог"],
+      "grade_routes":[{"grade":7,"role":"practised_or_tested","source_member_scope":["пара сапог"]}],
+      "norm":"current_dictionary_confirmed",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-comparative-no-double-degree",
+      "domain":"morphology_norm",
+      "unit_type":"form_boundary",
+      "label":"Ниже / более низкий, но не более ниже",
+      "members":["ниже","более низкий"],
+      "nonstandard_members":["более ниже","более лучше","более веселее"],
+      "grade_routes":[{"grade":7,"role":"practised_or_tested","source_member_scope":["более ниже"]}],
+      "norm":"current_literary_norm_confirmed",
+      "exam_routes":[]
+    }
+  ],
+  "notes":["No FIPI routes.","No learner coverage percentage.","No production/Tilda/runtime/scoring/localStorage changes."],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
