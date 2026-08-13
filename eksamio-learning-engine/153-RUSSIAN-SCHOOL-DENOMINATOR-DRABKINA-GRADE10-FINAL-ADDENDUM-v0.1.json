@@ -1,0 +1,74 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-13",
+  "status": "working_grade10_final_addendum",
+  "source_gate_ref": "150-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE10-SOURCE-ACCESS-GATE-v0.1.txt",
+  "production_integration": "HOLD",
+  "route_records": [
+    {
+      "unit_id": "school-adverb-soft-sign-exceptions-uzh-zamuzh-nevterpezh",
+      "domain": "orthography",
+      "unit_type": "lexical_set",
+      "canonical_label": "Ь после шипящих в наречиях: уж, замуж, невтерпёж",
+      "normalized_members": ["уж", "замуж", "невтерпёж"],
+      "grade_routes": [{"grade": 10, "role": "explicitly_taught_or_singled_out"}],
+      "source": {"topic": "Правописание мягкого знака на конце слов после шипящих", "url": "https://grammarian.school/teaching/10practical/12.html", "locator": "explicit exception row in the parts-of-speech table; exercise 43"},
+      "dedupe_status": "repeat_existing_grade7_unit",
+      "current_norm_review_status": "current_confirmed",
+      "pedagogy_note": "The source also gives a historical mnemonic/derivational explanation. It is not required as learner-facing rule evidence and must not be reused unless independently linguistically verified and pedagogically necessary."
+    },
+    {
+      "unit_id": "school-ne-participle-dependent-short-opposition-boundary",
+      "domain": "orthography_morphology",
+      "unit_type": "boundary_case",
+      "canonical_label": "НЕ с причастиями: зависимое слово, краткая форма, противопоставление",
+      "grade_routes": [{"grade": 10, "role": "explicitly_taught_or_singled_out"}],
+      "source": {"topic": "Правописание НЕ с причастиями", "url": "https://grammarian.school/teaching/10practical/33.html", "locator": "explicit rule table + exercise 96"},
+      "dedupe_status": "repeat_existing_grade7_unit",
+      "current_norm_review_status": "pending_authoritative_crosscheck"
+    },
+    {
+      "unit_id": "school-ne-adjectives-negative-intensifier-boundary",
+      "domain": "orthography_syntax",
+      "unit_type": "boundary_case",
+      "canonical_label": "НЕ с прилагательными: далеко/отнюдь/вовсе/нисколько/ничуть и отрицательные местоименные слова",
+      "grade_routes": [{"grade": 10, "role": "explicitly_taught_or_singled_out"}],
+      "source": {"topic": "Правописание НЕ с именами прилагательными", "url": "https://grammarian.school/teaching/10practical/21.html", "locator": "explicit negative-context list and contrast exercises"},
+      "dedupe_status": "repeat_and_expand_existing_grade6_unit",
+      "current_norm_review_status": "pending_authoritative_crosscheck",
+      "pedagogy_note": "Source metaphor 'слова-магниты' is methodology only; learner explanation must name the actual negative-context condition."
+    },
+    {
+      "unit_id": "school-ne-short-predicative-separate-set",
+      "domain": "orthography_morphology_syntax",
+      "unit_type": "lexical_set",
+      "canonical_label": "Раздельное НЕ: рад, прав, готов, должен, согласен, намерен, склонен, обязан, прочь, надо, нужно, жаль",
+      "normalized_members": ["не рад", "не прав", "не готов", "не должен", "не согласен", "не намерен", "не склонен", "не обязан", "не прочь", "не надо", "не нужно", "не жаль"],
+      "grade_routes": [{"grade": 10, "role": "explicitly_taught_or_singled_out"}],
+      "source": {"topic": "Правописание НЕ с именами прилагательными", "url": "https://grammarian.school/teaching/10practical/21.html", "locator": "explicit always-separate memorization set before exercise 70"},
+      "dedupe_status": "repeat_and_expand_grade6_hold_unit",
+      "current_norm_review_status": "source_classification_needs_review",
+      "working_denominator_admission": "SPELLING_SET_ROUTE_CONFIRMED; MORPHOLOGICAL_CLASSIFICATION_REMAINS_HOLD",
+      "notes": "The school source places all members under a short-adjective heading, but `надо`, `нужно`, `жаль` cannot be safely propagated under that blanket classification. Preserve spelling evidence and reclassify item by item before learner content."
+    },
+    {
+      "unit_id": "school-ne-adverbs-special-boundaries",
+      "domain": "orthography_morphology_syntax",
+      "unit_type": "boundary_case",
+      "canonical_label": "НЕ с наречиями: дефис, усилители, предикативность и сравнительная степень",
+      "normalized_members": ["не по-товарищески", "не по-русски", "не по-моему", "не очень", "не вполне", "не совсем", "не жаль", "не надо", "не время", "не пора", "не интереснее", "не лучше", "не меньше", "не хуже"],
+      "grade_routes": [{"grade": 10, "role": "explicitly_taught_or_singled_out"}],
+      "source": {"topic": "Правописание НЕ с наречиями", "url": "https://grammarian.school/teaching/10practical/43.html", "locator": "explicit separate-spelling boundary table + exercise 126"},
+      "dedupe_status": "new_candidate_identity_with_overlap_to_predicative_set_to_resolve_at_canonicalization",
+      "current_norm_review_status": "pending_morphology_and_dictionary_crosscheck",
+      "notes": "Surface forms `не жаль` and `не надо` overlap the separate memorized set above. Canonicalization must choose one linguistic ownership model and preserve both grade/topic provenances without duplicate learner units."
+    }
+  ],
+  "counts": {
+    "added_route_records": 5,
+    "new_candidate_identity": 1,
+    "repeat_or_expand_existing_units": 4,
+    "grade10_working_route_records_total_after_all_layers": 55
+  },
+  "production_files_changed": false
+}
