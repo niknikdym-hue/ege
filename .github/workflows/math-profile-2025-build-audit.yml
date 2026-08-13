@@ -6,6 +6,7 @@ on:
     paths:
       - ege-matematika-profil-demoversiya-2025/scripts/build_profile_2025.py
       - ege-matematika-profil-demoversiya-2025/tests/test_profile_2025.py
+      - ege-matematika-profil-demoversiya-2025/audit/verify_content_2025.py
       - .github/workflows/math-profile-2025-build-audit.yml
   workflow_dispatch:
 
@@ -59,6 +60,33 @@ jobs:
           sleep 2
       - name: Real DOM browser audit — all 37 official examples
         run: python ege-matematika-profil-demoversiya-2025/tests/test_profile_2025.py
+      - name: Second source/content review against FIPI 2025
+        run: python ege-matematika-profil-demoversiya-2025/audit/verify_content_2025.py
+      - name: Clean generated Python cache
+        run: find ege-matematika-profil-demoversiya-2025 -type d -name '__pycache__' -prune -exec rm -rf {} +
+      - name: Final pre-upload audit gates
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          root=Path('ege-matematika-profil-demoversiya-2025')
+          prefix='ege-matematika-profil-demoversiya-2025'
+          with (root/'AUDIT-MATRIX-2025-profile.csv').open('r',encoding='utf-8-sig',newline='') as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==37
+          assert all(r['result']=='PASS' and not r['defect_id'].strip() for r in rows)
+          second=json.loads((root/'SECOND-SOURCE-CONTENT-AUDIT-2025-profile.json').read_text(encoding='utf-8'))
+          assert second['status']=='PASS' and second['review_type']=='SECOND_SOURCE_CONTENT_REVIEW'
+          build=json.loads((root/(prefix+'-BUILD-EVIDENCE.json')).read_text(encoding='utf-8'))
+          assert build['second_source_content_review']=='PASS'
+          status=(root/(prefix+'-PAGE-STATUS.txt')).read_text(encoding='utf-8')
+          assert 'SECOND_SOURCE_CONTENT_REVIEW_GATE: PASS' in status
+          assert 'AUDIT_SCOPE: INTERNAL_SECOND_PASS_NOT_THIRD_PARTY_CERTIFICATION' in status
+          assert 'LIVE_GO: NO' in status
+          assert not list(root.rglob('__pycache__'))
+          assert not list(root.rglob('*.pyc'))
+          print(json.dumps({'audit_rows':len(rows),'second_source_review':'PASS','repo_cache':'CLEAN'},ensure_ascii=False))
+          PY
       - name: Repack after browser evidence and final audit statuses
         run: python ege-matematika-profil-demoversiya-2025/scripts/build_profile_2025.py --repack
       - name: Commit verified package and evidence
