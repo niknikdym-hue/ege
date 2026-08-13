@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-13",
+  "status": "GRADE8_PARTIAL_EXACT_EVIDENCE_WORKING_SET",
+  "source_gate_ref": "145-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE8-SOURCE-ACCESS-GATE-v0.1.txt",
+  "production_integration": "HOLD",
+  "confirmed_route_records": [
+    {
+      "unit_id": "school-odnako-function-context",
+      "domain": "punctuation_morphology",
+      "unit_type": "boundary_case",
+      "canonical_label": "ОДНАКО: союз / вводное слово / междометие по функции",
+      "grade_routes": [{"grade":8,"role":"practised_or_tested"}],
+      "source_evidence": [{"evidence_level":"same_edition_exact_sample","edition":2018,"sample":"ОДНАКО он ошибается","task":"identify incorrect morphological classifications","source":"indexed exact-edition 2018 sample page"}],
+      "current_norm_review_status": "current_confirmed",
+      "current_norm_note": "Current punctuation/dictionary norm distinguishes conjunction, introductory word and interjection; introductory ОДНАКО does not occupy ordinary sentence-initial position.",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-nesmotrya-vs-ne-smotrya",
+      "domain": "orthography_morphology",
+      "unit_type": "contrast",
+      "canonical_label": "НЕСМОТРЯ НА — НЕ СМОТРЯ",
+      "grade_routes": [{"grade":8,"role":"practised_or_tested"}],
+      "source_evidence": [{"evidence_level":"same_edition_exact_sample","edition":2018,"sample":"продолжал работать, НЕСМОТРЯ НА усталость","task":"identify incorrect morphological classifications","source":"indexed exact-edition 2018 sample page"}],
+      "current_norm_review_status": "current_confirmed",
+      "current_norm_note": "Derivative preposition НЕСМОТРЯ НА is written solid; literal gerund НЕ СМОТРЯ is separate.",
+      "dedupe_status": "merge_with_existing_grade7_canonical_unit",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    }
+  ],
+  "pending_exact_2018_search_queue": [
+    {"candidate_key":"grade8-dash-subject-predicate-no-dash-boundaries","topic":"Тире между подлежащим и сказуемым","status":"PENDING_EXACT_DRABKINA_2018","candidate_scope":["personal-pronoun subject","НЕ before nominal predicate","comparative conjunction before predicate","introductory word / particle / adverb between main members","inversion / secondary member boundary"],"navigation_basis":"grade-8 curriculum + later Drabkina/course continuity; not final route evidence"},
+    {"candidate_key":"grade8-homogeneous-heterogeneous-definitions","topic":"Однородные и неоднородные определения","status":"PENDING_EXACT_DRABKINA_2018","navigation_basis":"grade-8 programmes explicitly use Drabkina practical material in this syntax block"},
+    {"candidate_key":"grade8-generalizing-word-punctuation","topic":"Обобщающие слова при однородных членах","status":"PENDING_EXACT_DRABKINA_2018","candidate_scope":["colon before list","dash after list when sentence continues","а именно / например / как-то boundary"],"navigation_basis":"grade-8 course structure; exact Drabkina rule/exercise still required"},
+    {"candidate_key":"grade8-nonagreed-definition-isolation","topic":"Обособленные несогласованные определения","status":"PENDING_EXACT_DRABKINA_2018","navigation_basis":"public work programme explicitly says it uses didactic material from Drabkina/Subbotin grade-8 practical course"},
+    {"candidate_key":"grade8-apposition-isolation-boundaries","topic":"Обособленные приложения","status":"PENDING_EXACT_DRABKINA_2018","navigation_basis":"public work programme explicitly references analysis of a table and didactic material from the Drabkina/Subbotin grade-8 practical course"},
+    {"candidate_key":"grade8-introductory-construction-boundaries","topic":"Вводные конструкции","status":"PENDING_EXACT_DRABKINA_2018","navigation_basis":"public work programme explicitly references theoretical/didactic material and exercise 67 from the Drabkina/Subbotin grade-8 practical course"},
+    {"candidate_key":"grade8-address-boundary","topic":"Обращение","status":"PENDING_EXACT_DRABKINA_2018","navigation_basis":"public work programme explicitly references exercise 112 from the Drabkina/Subbotin grade-8 practical course"},
+    {"candidate_key":"grade8-interjection-yes-no-boundary","topic":"Междометия и слова ДА/НЕТ","status":"PENDING_EXACT_DRABKINA_2018","navigation_basis":"public work programme explicitly references exercise 114 from the Drabkina/Subbotin grade-8 practical course"}
+  ],
+  "counts": {
+    "confirmed_grade8_route_records": 2,
+    "pending_exact_search_topics": 8,
+    "pending_topics_counted_in_denominator_metrics": 0
+  },
+  "gate_rule": "Only confirmed_route_records may currently contribute a grade-8 evidence route. pending_exact_2018_search_queue is navigation data and contributes zero to denominator/coverage metrics.",
+  "production_files_changed": false
+}
