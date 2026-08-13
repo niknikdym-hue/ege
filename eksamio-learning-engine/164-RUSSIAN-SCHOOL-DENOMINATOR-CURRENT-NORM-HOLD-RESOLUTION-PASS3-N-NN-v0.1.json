@@ -1,0 +1,161 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CURRENT_NORM_HOLD_RESOLUTION_PASS3_N_NN_PARTIAL_COMPLETE",
+  "inputs":[
+    "142-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE7-v0.1.json",
+    "151-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE10-ORTHOGRAPHY-v0.1.json",
+    "161-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-PASS2-v0.1.json"
+  ],
+  "production_integration":"HOLD",
+  "major_findings":[
+    {
+      "finding_id":"NN-001-G7-BUCKET-NOT-ONE-EXCEPTION-TYPE",
+      "finding":"The grade-7 18-member NN table cannot remain one canonical 'verb-derived NN exception set'. It mixes modern memorized lexical exceptions, dictionary adjectives, and forms whose NN is explainable by regular participial/derivational structure.",
+      "decision":"SPLIT_BY_ORTHOGRAPHIC_BASIS"
+    },
+    {
+      "finding_id":"NN-002-SCHITANNY-OBSOLETE-BUCKET",
+      "finding":"The grade-7 source includes `считанный` in the NN memorization bucket. Current norm distinguishes `считаные минуты/часы` (one Н, adjective meaning 'very few') from a true participle such as `считанные кем-либо предметы` (НН).",
+      "decision":"REJECT_SOURCE_AS_BLANKET_NN_MEMBER_AND_CREATE_CONTEXT_BOUNDARY"
+    },
+    {
+      "finding_id":"N-003-ONE-N-ADJECTIVE-BUCKET-IS-HETEROGENEOUS",
+      "finding":"The grade-6/10 one-N adjective lists are orthographically useful but morphologically heterogeneous. Current Gramota rules explicitly distinguish non-derived/dictionary adjectives, adjectives formed without suffix -н-, and ordinary -ан-/-ян- cases.",
+      "decision":"KEEP_PARENT_FOR_PRACTICE_WITH_EXPLANATORY_BRANCHES"
+    }
+  ],
+  "current_authoritative_evidence":[
+    {
+      "source":"Gramota.ru answer 329251, 20 Jan 2026",
+      "url":"https://gramota.ru/spravka/vopros/329251",
+      "finding":"Current exception list for NN in this zone includes lexicalized adjectives such as `блаженный, виданный, вожделенный, доморощенный, долгожданный, жданный, желанный, лелеянный, неведанный, невиданный, негаданный, недреманный, нежданный, немедленный, медленный, неслыханный, нечаянный, Первозванный, самонадеянный, священный` and several compound technical formations."
+    },
+    {
+      "source":"Gramota.ru answer 285900",
+      "url":"https://gramota.ru/spravka/vopros/285900",
+      "finding":"`невиданный`, `неслыханный` and related НЕ-forms are memorized exceptions with NN."
+    },
+    {
+      "source":"Gramota.ru answers 327541 / 327295 (2025)",
+      "urls":["https://gramota.ru/poisk?mode=spravka&query=%D1%81%D1%87%D0%B8%D1%82%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5","https://gramota.ru/poisk?query=%D0%A1%D1%87%D0%B8%D1%82%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5+%D0%BC%D0%B8%D0%BD%D1%83%D1%82%D1%8B"],
+      "finding":"Modern norm: `считаные минуты` with one Н; NN remains in participial use such as `считанные ... стулья`."
+    },
+    {
+      "source":"Gramota.ru answer 324659, 12 Aug 2025",
+      "url":"https://gramota.ru/poisk?mode=spravka&query=%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D1%8B%D0%B9",
+      "finding":"`раненый солдат` vs `раненный в ногу/в бою солдат` is a current contextual N/NN boundary; the explanation is tied to the bidirectional/aspectual behavior of `ранить` and dependent words/context."
+    },
+    {
+      "source":"Gramota.ru answer 203775",
+      "url":"https://gramota.ru/poisk?mode=spravka&query=%D0%BF%D0%BE%D1%81%D0%B0%D0%B6%D1%91%D0%BD%D1%8B%D0%B9",
+      "finding":"Stable one-N adjective combinations include `конченый человек`, `названый брат/сестра`, `посажёный отец/мать`, `Прощёное воскресенье`; `смышлёный` is always one Н."
+    },
+    {
+      "source":"Gramota.ru Учебник — Н/НН in denominative adjectives + answer 328131",
+      "urls":["https://gramota.ru/uchebnik/pravila/bukvy-n-i-nn-v-otymennykh-prilagatelnykh-i-obrazovannykh-ot-nikh-narechiyakh-i-sushchestvitelnykh","https://gramota.ru/poisk?mode=spravka&query=%D1%80%D1%83%D0%BC%D1%8F%D0%BD%D1%8B%D0%B9"],
+      "finding":"One-N difficult adjectives are not one morphological type. The rule separately treats `багряный, зелёный, пряный, румяный, юный`; `свиной, бараний` are formed without suffix -н-."
+    }
+  ],
+  "canonicalization_decisions":[
+    {
+      "old_id":"school-nn-verb-derived-nn-exception-set",
+      "operation":"SPLIT_AND_RETAIN_SOURCE_PROVENANCE",
+      "new_units":[
+        {
+          "unit_id":"school-nn-current-memorized-lexical-exception-core",
+          "canonical_label":"НН: современные словарно запоминаемые исключения в зоне отглагольных прилагательных",
+          "canonical_members_from_grade7_source":["невиданный","неслыханный","негаданный","нежданный","нечаянный","желанный","медленный","неожиданный","священный"],
+          "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"repeated_or_reviewed"}],
+          "norm_status":"current_confirmed_core",
+          "notes":"This is the intersection of the grade-7 source list with current authoritative memorized-exception guidance. Do not silently expand it to the entire modern list until source/completeness phase."
+        },
+        {
+          "unit_id":"school-nn-dictionary-lexical-adjectives-grade7",
+          "canonical_label":"НН: словарные прилагательные из 7-классного источника, не сводимые к одному 'исключению из правила'",
+          "canonical_members":["окаянный","отчаянный","чванный","чеканный"],
+          "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+          "norm_status":"current_spelling_confirmed_explanatory_grouping_pending",
+          "notes":"Current dictionaries confirm spellings and adjective status for these lexical items. Keep as a dictionary-practice group for now; do not claim the same derivational reason for all four."
+        },
+        {
+          "unit_id":"school-nn-regular-participial-forms-source-misgrouped",
+          "canonical_label":"Формы с НН из старой таблицы, которые не должны считаться отдельным lexical-exception denominator unit",
+          "source_members":["обещанный","данный","слушанный","слышанный"],
+          "grade_routes":[{"grade":7,"role":"presence_confirmed_role_unclear"}],
+          "norm_status":"current_forms_exist_regular_rule_ownership",
+          "denominator_policy":"EXCLUDE_AS_SEPARATE_EXCEPTION_IDENTITIES unless later completeness review finds an independent special boundary",
+          "notes":"For example, current dictionaries analyze `обещанный`, `слушанный`, `слышанный` as passive participial forms of the corresponding verbs. Their occurrence in the old memorization table does not justify counting them as lexical exceptions."
+        },
+        {
+          "unit_id":"school-schitany-schitanny-context-boundary",
+          "canonical_label":"СЧИТАНЫЙ / СЧИТАННЫЙ: прилагательное 'очень немногие' vs причастие",
+          "canonical_members":["считаные минуты","считаные часы"],
+          "contrast_members":["считанные кем-либо предметы"],
+          "grade_routes":[{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+          "norm_status":"current_confirmed_source_correction",
+          "source_conflict":"Grade-7 source bucket gives `считанный` without the modern semantic/context split.",
+          "learner_policy":"Never teach `считанные минуты` as current norm."
+        }
+      ],
+      "unresolved_source_member_ownership":[],
+      "member_accounting_note":"All 18 old source members are retained either in a current canonical unit or in a non-denominator source-provenance bucket; no member is silently dropped."
+    },
+    {
+      "old_id":"school-nn-verb-derived-one-n-exception-contrast-set",
+      "operation":"SPLIT_TO_CURRENT_BOUNDARIES",
+      "new_units":[
+        {
+          "unit_id":"school-raneny-ranenny-context-boundary",
+          "members":["раненый солдат","раненный в ногу солдат","раненный в бою солдат"],
+          "norm_status":"current_confirmed"
+        },
+        {
+          "unit_id":"school-nazvany-posazhony-koncheny-fixed-combinations",
+          "members":["названый брат","названая сестра","посажёный отец","посажёная мать","конченый человек"],
+          "contrast_members":["названный кем-либо","посаженные деревья","конченная в срок работа"],
+          "norm_status":"current_confirmed"
+        },
+        {
+          "unit_id":"school-smyshlyony-one-n",
+          "members":["смышлёный"],
+          "norm_status":"current_confirmed"
+        },
+        {
+          "unit_id":"school-besheny-one-n-lexical-adjective",
+          "members":["бешеный","бешеный взгляд"],
+          "norm_status":"current_confirmed",
+          "notes":"Current dictionary gives adjective `бешеный`; Gramota explains one Н under the ordinary verb-derived adjective rule from imperfective `бесить`, so do not label it a lexical exception in final learner explanation."
+        }
+      ]
+    },
+    {
+      "old_ids":["school-one-n-lexical-adjectives-grade6-set","school-one-n-lexical-adjectives"],
+      "operation":"MERGE_TO_PARENT_WITH_EXPLANATORY_BRANCHES",
+      "canonical_parent_id":"school-one-n-difficult-adjectives",
+      "all_source_members":["единый","зелёный","багряный","румяный","юный","свиной","пряный","пьяный","бараний"],
+      "branches":[
+        {"branch_id":"memorized_or_nonproductive","members":["багряный","зелёный","пряный","румяный","юный"],"status":"current_rule_confirmed"},
+        {"branch_id":"formed_without_suffix_n","members":["свиной","бараний"],"status":"current_rule_confirmed"},
+        {"branch_id":"dictionary_spelling_route_specific","members":["единый","пьяный"],"status":"current_spelling_confirmed_precise_explanatory_branch_not_required_for_denominator_identity"}
+      ],
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out","source_member_scope":["единый","зелёный","багряный","румяный","юный","свиной"]},{"grade":10,"role":"explicitly_taught_or_singled_out","source_member_scope":["единый","зелёный","румяный","пряный","юный","свиной","пьяный","бараний"]}],
+      "norm_status":"current_spelling_confirmed_with_structured_explanation",
+      "counting_policy":"parent organizational; branch/member mastery policy to be decided during denominator materialization, without double-counting parent plus members"
+    }
+  ],
+  "critical_source_corrections":[
+    "`считанные минуты` must be corrected to current `считаные минуты` in any future learner content.",
+    "Do not describe all 18 grade-7 NN-table words as one modern class of exceptions.",
+    "Do not describe `бешеный` as a lexical exception merely because the old source table groups it with exceptions.",
+    "Do not describe all one-N adjectives as one morphological formation type."
+  ],
+  "remaining_n_nn_work":[
+    "Verify any additional N/NN lexical items introduced outside grade-7/10 source buckets during Rosenthal completeness phase.",
+    "Decide final counted granularity for lexical list parents vs individual members before learner progress metrics.",
+    "Recheck rare dictionary lexical items if they become learner-facing examples."
+  ],
+  "exam_routes_created":0,
+  "production_files_changed":false,
+  "tilda_changed":false
+}
