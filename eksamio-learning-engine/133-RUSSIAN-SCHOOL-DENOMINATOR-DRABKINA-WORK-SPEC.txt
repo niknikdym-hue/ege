@@ -1,0 +1,201 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN SCHOOL DENOMINATOR — DRABKINA/SUBBOTIN VERTICAL
+WORK SPEC v0.1
+DATE: 2026-08-13
+STATUS: ACTIVE / ADD-ONLY / SOURCE-FIRST
+PRODUCTION_INTEGRATION: HOLD
+
+PURPOSE
+
+Build an evidence-based denominator for the Russian Exceptions / Special Cases learning contour from the full Drabkina/Subbotin grade vertical 5–11.
+
+The denominator answers:
+“What source-attested exception, boundary, lexicalized special case or high-value contrast belongs to the school learning base, and in which grades is its presence actually evidenced?”
+
+It must NOT answer this by looking only at the current Eksamio bank.
+
+SCOPE
+
+INCLUDE candidate units when Drabkina/Subbotin explicitly teaches or drills at least one of the following:
+- named exception;
+- memorized lexical exception set;
+- lexicalized spelling/special form that is singled out from the ordinary algorithm;
+- normative contrast whose two sides are easily confused and require different rules/forms;
+- boundary case where a general school algorithm changes because of part of speech, syntactic function, lexical meaning, morphemic structure or another explicit condition;
+- special grammatical/orthographic/punctuation case explicitly isolated by the source;
+- source-attested difficult normative form that belongs to the Exceptions/Special Cases product concept.
+
+DO NOT automatically include every ordinary rule/topic merely because it appears in a grade book.
+A general rule may be recorded as the parent rule for an exception unit without becoming a denominator unit itself.
+
+CANONICAL UNIT MODEL
+
+Each denominator unit must have a stable canonical identity independent of grade repetition.
+
+Required conceptual fields:
+- `unit_id`
+- `domain`
+- `unit_type`: exception | lexical_set | contrast | boundary_case | special_rule | difficult_form
+- `canonical_label`
+- `normalized_members` where the unit is a lexical family/set
+- `parent_rule` where relevant
+- `grade_routes[]`
+- `source_evidence[]`
+- `current_norm_review_status`
+- `dedupe_status`
+- `current_bank_match_status`
+- `exam_routes[]` (initially empty unless separately proven by FIPI)
+- `notes`
+
+GRADE ROUTE CONTRACT
+
+A grade route records source presence, not an invented educational chronology.
+
+Allowed route roles:
+- `explicitly_taught_or_singled_out`: the source explicitly presents the unit as rule/exception/special case in that grade;
+- `practised_or_tested`: the unit is explicitly exercised/tested in that grade but the available evidence does not establish first introduction;
+- `repeated_or_reviewed`: the source clearly frames it as repetition/review;
+- `presence_confirmed_role_unclear`: presence is certain but the source evidence does not justify a stronger role.
+
+NEVER infer `first_taught_grade` from the earliest grade currently found.
+Search incompleteness is not pedagogy.
+A grade may be the earliest proven route and still not be the first historical introduction.
+
+MULTI-GRADE RULE
+
+One canonical unit may have many grade routes.
+Do not duplicate the denominator unit simply because it appears again in grades 6, 7, 10 or 11.
+Preserve each evidenced route and deduplicate only at the canonical linguistic-unit layer.
+
+SOURCE POLICY
+
+Primary grade-routing corpus:
+1. exact project Drabkina/Subbotin books in `eksamio-learning-engine/russkiy-knigi/`;
+2. source-equivalent text/navigation replicas may be used only as an extraction aid when the binary project PDF is temporarily unreadable through the current connector;
+3. extraction-aid evidence must remain explicitly marked and must NOT be mislabeled as direct project-PDF verification.
+
+Rule/current-norm layers are separate:
+- orthography/punctuation: project Rosenthal plus authoritative project references and current dictionary/academic evidence when needed;
+- morphology/orthoepy/lexical norms/government/syntax: appropriate authoritative books/dictionaries and current academic/dictionary evidence;
+- FIPI: current exam facts, official lists, criteria, task format and exam constraints only.
+
+SOURCE EVIDENCE LEVELS
+
+Use one of:
+- `project_source_exact`: exact project source was directly inspected at the relevant location;
+- `same_edition_text_replica`: matching edition/text replica was inspected while the project binary is present but not directly readable in the current tool path;
+- `project_topic_presence_only`: project source file/topic presence is confirmed but exact unit text was not yet inspected;
+- `secondary_navigation_only`: used only to locate a likely source passage; not enough for denominator admission by itself;
+- `needs_review`: evidence is conflicting, incomplete or ambiguous.
+
+A unit may enter a WORKING candidate inventory on `same_edition_text_replica`, but final denominator closure requires source verification strong enough for the project’s audit standard.
+
+COPYRIGHT / CONTENT EXTRACTION RULE
+
+Do not reproduce long textbook passages.
+Store normalized linguistic facts, concise paraphrased rules, unit membership and source locators.
+Do not copy mnemonic verses or long exercise texts into the project dataset.
+
+CURRENT-NORM CONTRACT
+
+Drabkina routing evidence proves that the school source teaches/practises the unit; it does NOT automatically prove that every wording/example in an older edition is current.
+
+For every canonical unit later run a separate norm review:
+- `pending`
+- `current_confirmed`
+- `current_with_rewording`
+- `obsolete_source_form_replaced`
+- `source_conflict_needs_review`
+
+Examples already known from prior project audit show why this layer is mandatory: older teaching simplifications may be too categorical, while current norm may require a contextual distinction.
+
+DEDUPE CONTRACT
+
+Deduplicate by linguistic identity, not by string identity alone.
+
+Examples:
+- a lexical family and its inflected/derived exercise forms normally remain one canonical unit if the same exception condition governs them;
+- two visually identical expressions with different grammatical functions may require separate branches under one contrast unit;
+- a general rule plus its named exception must not collapse into a single undifferentiated token;
+- grade repetitions remain routes, not new denominator units.
+
+CURRENT BANK COMPARISON
+
+Do not use current bank membership to decide denominator admission.
+After a grade inventory is source-built, compare it against the recovered current-base set with statuses:
+- `already_present_exact`
+- `already_present_partial`
+- `missing_from_current_bank`
+- `current_bank_has_broader_or_different_unit`
+- `comparison_pending`
+
+Do not silently add missing denominator units to learner runtime during this phase.
+
+EXAM ROUTING CONTRACT
+
+School-grade routes and exam routes are orthogonal.
+Do not translate “appears in grade 10/11 Drabkina” into “EGE route”.
+Do not translate “common in EGE prep” into a school-grade route.
+
+Exam routes require separate current FIPI evidence and should be attached only after the school denominator and norm review are structurally stable.
+
+PROGRESS METRIC RULE
+
+Until all seven grade sources have been systematically extracted and deduplicated, do NOT publish a percentage such as “we cover X% of all school exceptions”.
+
+Allowed interim reporting:
+- source books processed / 7;
+- candidate units extracted per book;
+- canonical units after dedupe;
+- units awaiting exact-source verification;
+- units awaiting current-norm review;
+- current-bank matches/misses after comparison.
+
+Forbidden interim reporting:
+- learner completeness percentage based on the old 127;
+- denominator percentage based on partially processed grade books.
+
+WORK ORDER
+
+PHASE A — SOURCE DENOMINATOR
+1. Grade 5 inventory.
+2. Grade 6 inventory.
+3. Grade 7 inventory.
+4. Grade 8 inventory.
+5. Grade 9 inventory.
+6. Grade 10 inventory.
+7. Grade 11 inventory.
+
+PHASE B — CANONICALIZATION
+8. Cross-grade dedupe.
+9. Preserve all grade routes and provenance.
+10. Compare canonical denominator to recovered current bank.
+
+PHASE C — COMPLETENESS / NORM
+11. Rosenthal completeness/rule control for supported domains.
+12. Other authoritative project books/dictionaries for unsupported domains.
+13. Current academic/dictionary norm review.
+14. Resolve or HOLD conflicts; never guess.
+
+PHASE D — EXAM ROUTES
+15. OGE/FIPI routing.
+16. EGE/FIPI routing.
+17. Separate exam-only units from school denominator when appropriate.
+
+PHASE E — PRODUCT METRICS
+18. Only after closure calculate honest learner coverage/progress metrics.
+
+PRODUCTION SAFETY
+
+During PHASE A–D:
+- do not modify Tilda;
+- do not modify current EGE trainer;
+- do not modify current standalone runtime;
+- do not change scoring;
+- do not change localStorage;
+- do not silently expand the learner-facing 121-card set.
+
+CURRENT START POINT
+
+Recovered baseline: `132-RUSSIAN-EXCEPTIONS-COURSE-GRADE-GATE-151-RECOVERED-STATUS.txt`.
+First new source inventory: grade 5.
