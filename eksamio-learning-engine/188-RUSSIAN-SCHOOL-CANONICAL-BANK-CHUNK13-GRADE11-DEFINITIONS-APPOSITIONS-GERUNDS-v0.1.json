@@ -1,0 +1,97 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CANONICAL_BANK_CHUNK13_WORKING_ADMITTED",
+  "scope":"grade11_definitions_appositions_and_gerund_special_boundaries",
+  "refs":[
+    "155-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE11-v0.1.json",
+    "156-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE11-FINAL-ADDENDUM-v0.1.json",
+    "161-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-PASS2-v0.1.json",
+    "183-RUSSIAN-SCHOOL-GRADE11-PUNCTUATION-HOLDS-CURRENT-ACADEMIC-REVIEW-v0.1.json"
+  ],
+  "production_integration":"HOLD",
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "count_assertion":{"declared_canonical_units":5,"gerund_parent_counted":0},
+  "canonical_units":[
+    {
+      "unit_id":"school-nonagreed-definition-isolation-boundaries",
+      "domain":"punctuation_syntax",
+      "unit_type":"context_boundary",
+      "label":"Несогласованные определения: обособление зависит от определяемого слова, позиции, распространённости и пояснительной функции",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "current_branches":[
+        {"branch":"proper-name","rule":"Несогласованные определения при имени собственном обособляются в типовой модели, поскольку определяемое лицо уже индивидуализировано."},
+        {"branch":"personal-pronoun","rule":"Несогласованные определения при личном местоимении обособляются."},
+        {"branch":"common-noun-with-other-definitions","rule":"Обособлению способствует наличие перед определяемым нарицательным существительным согласованных определений и пояснительная/добавочная функция; тесно необходимая идентифицирующая характеристика может не обособляться."},
+        {"branch":"comparative-dependent","rule":"Несогласованные определения, выраженные сравнительной степенью с зависимыми словами, требуют контекстной проверки и обычно получают пояснительный/уточняющий оттенок при обособлении."},
+        {"branch":"infinitive-definition","rule":"Инфинитивное определение обычно не обособляется в тесном словосочетании. Тире используется при дополнительном разъяснительном значении, особенно когда определяемое слово уже имеет определение и возможна подстановка А ИМЕННО; позиция внутри предложения требует отдельной проверки."}
+      ],
+      "norm":"current_academic_rule_confirmed_with_context_structure",
+      "learner_policy":"Do not reduce the unit to a five-item ALWAYS-ISOLATE list.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-apposition-introducer-isolation-boundary",
+      "domain":"punctuation_syntax",
+      "unit_type":"context_boundary",
+      "label":"Приложения и пояснительные/присоединительные конструкции с ПО ИМЕНИ / ПО ФАМИЛИИ / ПО ПРОЗВИЩУ / РОДОМ / ИЛИ / ТО ЕСТЬ / НАПРИМЕР и др.",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "source_member_scope":["по фамилии","по имени","по кличке","родом из","например","в том числе","особенно","или","даже","то есть"],
+      "current_branches":[
+        {"branch":"named-apposition-introducers","members":["по имени","по фамилии","по прозвищу/по кличке","по происхождению","родом"],"rule":"Such appositions are isolated when they explain/clarify the preceding referent; they may be non-isolated when the naming phrase carries the main restrictive/identifying meaning."},
+        {"branch":"ili-explanatory","members":["или = то есть"],"rule":"The explanatory construction is isolated; ordinary disjunctive ИЛИ is a different function."},
+        {"branch":"to-est-explanatory","members":["то есть"],"rule":"The explanatory construction is set off; the conjunction ТО ЕСТЬ itself is not an introductory word and does not automatically require a comma after it."},
+        {"branch":"joining-explanatory-markers","members":["например","в том числе","особенно","даже"],"rule":"These words can introduce joining/clarifying constructions that are isolated as a whole; the surface word alone does not impose commas in every syntactic use."}
+      ],
+      "norm":"current_academic_rule_confirmed_with_function_split",
+      "learner_policy":"Identify the appositional/explanatory construction and the connector function; never teach all listed surface words as automatic comma triggers.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-gerund-idioms-no-isolation",
+      "parent_id":"school-gerund-punctuation-special-cases",
+      "domain":"punctuation_phraseology",
+      "unit_type":"lexicalized_boundary",
+      "label":"Фразеологизированные деепричастные сочетания: без обычного обособления деепричастного оборота",
+      "source_members":["спустя рукава","не мудрствуя лукаво","сломя голову","не покладая рук","не смыкая глаз","положа руку на сердце","сложа руки","скрепя сердце","затаив дыхание","разиня рот","засучив рукава"],
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "current_norm":"current_academic_rule_confirms_phraseological_non_isolation",
+      "current_core_examples":["спустя рукава","не покладая рук","сломя голову","затаив дыхание","засучив рукава"],
+      "scope_policy":"The source list remains provenance. Before any rare member is made learner-facing, retain dictionary/phraseology control; do not invent phraseological status merely from historical shape.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-gerund-adverbial-no-isolation-boundary",
+      "parent_id":"school-gerund-punctuation-special-cases",
+      "domain":"punctuation_morphology_syntax",
+      "unit_type":"function_boundary",
+      "label":"Одиночное деепричастие / деепричастная форма: наречное значение vs второе действие",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "source_member_scope":["лёжа","сидя","стоя","молча","шутя","нехотя","играя","зря","не глядя","не спеша"],
+      "current_model":["When the form directly characterizes manner of the predicate action and functions close to an adverb, it may be non-isolated.","The same lexical form may be isolated when word order, intonation or context restores a distinct secondary-action meaning.","Some historically gerund-like lexical items are no longer synchronically analyzed as ordinary productive gerunds."],
+      "norm":"current_academic_rule_confirmed_contextual",
+      "learner_policy":"Never decide punctuation from the word list alone; use syntactic function and context.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-gerund-after-conjunction-isolation-boundary",
+      "parent_id":"school-gerund-punctuation-special-cases",
+      "domain":"punctuation_syntax",
+      "unit_type":"structural_boundary",
+      "label":"Деепричастный оборот после союза: отделимость от союза; особая структурная граница с А",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "current_model":["A gerund phrase following an ordinary conjunction or conjunctive word is normally separated from it by a comma because the conjunction is not part of the gerund phrase.","With А, if the gerund phrase can be removed/rearranged without destroying the grammatical structure, it is separated from А by a comma.","If А is structurally and semantically integrated with the gerund phrase and removal requires rebuilding the sentence, no comma is placed between А and the gerund phrase.","A conjunction that itself begins the gerund construction is a different structural case and must not be split mechanically."],
+      "norm":"current_academic_rule_confirmed",
+      "learner_policy":"Test syntactic detachability/attachment; do not use 'after А always/no comma' as a shortcut.",
+      "exam_routes":[]
+    }
+  ],
+  "organizational_parent":{"unit_id":"school-gerund-punctuation-special-cases","counted":false},
+  "related_not_duplicated":[
+    {"unit_id":"school-gerund-two-turns-shared-predicate-i-boundary","status":"current_resolved_in_183; do not create a second identity here"},
+    {"unit_id":"school-gerund-shared-agent-boundary","status":"canonical materialized in 185; syntax norm unit distinct from punctuation units here"}
+  ],
+  "notes":["No FIPI routes are created here.","No learner coverage percentage is calculated.","No production/Tilda/runtime/scoring/localStorage changes."],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
