@@ -6,7 +6,8 @@ vm.createContext(sandbox);vm.runInContext(code,sandbox);
 const api=sandbox.window.__edemoRussian2026Task27Review;let fails=[],checks=0;
 function eq(name,got,want){checks++;if(got!==want)fails.push(`${name}: got ${got}, want ${want}`)}
 function finding(k,n,status='confirmed'){return Array.from({length:n},(_,i)=>({id:`${k}-${status}-${i}`,message:`${status} ${i+1}`}))}
-function analysis(confirmed={},possible={}){return{version:'test-v1',confirmed,possible}}
+function analysis(confirmed={},possible={},technical=[]){return{version:'test-v1',confirmed,possible,technical}}
+function confirmedTotal(result){return ['K7','K8','K9','K10'].reduce((sum,k)=>sum+result.confirmed[k].length,0)}
 function maxState(){let s=api.applyAnalysisResult({eligibilityConfirmed:true,zeroReasons:{},essayScores:{K1:1,K2:3,K3:2,K4:1,K5:2,K6:1}},analysis());for(const k of ['K7','K8','K9','K10'])s.essayScores[k]=3;return s}
 
 eq('0 confirmed has no cap',api.confirmedCap(0),null);
@@ -22,6 +23,9 @@ eq('no findings leave result incomplete',api.officialEssayScore(empty),null);
 let possible=maxState();possible=api.applyAnalysisResult(possible,analysis({}, {K7:finding('K7',5,'possible')}));possible.essayScores.K7=3;
 eq('possible does not change cap',api.criterionCap(possible,'K7'),null);
 eq('possible does not reduce score',api.officialEssayScore(possible),22);
+let possibleK10=maxState();possibleK10=api.applyAnalysisResult(possibleK10,analysis({}, {K10:finding('K10',5,'possible')}));possibleK10.essayScores.K10=3;
+eq('possible K10 has no hard cap',api.criterionCap(possibleK10,'K10'),null);
+eq('possible K10 keeps full score',api.officialEssayScore(possibleK10),22);
 let one=maxState();one=api.applyAnalysisResult(one,analysis({K7:finding('K7',1)}));one.essayScores.K7=2;
 eq('1 confirmed cap accepted',api.acceptedErrorScore(one,'K7'),2);
 eq('1 confirmed total max',api.officialEssayScore(one),21);
@@ -38,9 +42,39 @@ eq('new analysis removes existing score above cap',Object.prototype.hasOwnProper
 let dep=maxState();dep.essayScores.K1=0;dep.essayScores.K2=3;dep.essayScores.K3=2;eq('K1 dependency',api.officialEssayScore(dep),16);
 let zero=maxState();zero.zeroReasons.under150=true;eq('149-or-less gate',api.officialEssayScore(zero),0);
 let gate=maxState();gate.eligibilityConfirmed=false;eq('eligibility gate',api.officialEssayScore(gate),null);
-let auto=api.analyzeEssayText('Это это пример без точки');
-eq('system analysis creates confirmed finding',auto.confirmed.K10.length,1);
-eq('system analysis creates possible finding',auto.possible.K8.length,1);
+let adjacent=api.analyzeEssayText('Это это было важно');
+eq('adjacent duplicate is not confirmed K10',adjacent.confirmed.K10.length,0);
+eq('adjacent duplicate is possible K10',adjacent.possible.K10.length,1);
+let adjacentState=api.applyAnalysisResult(maxState(),adjacent);adjacentState.essayScores.K10=3;
+eq('adjacent possible K10 has no cap',api.criterionCap(adjacentState,'K10'),null);
+eq('adjacent possible K10 keeps 22',api.officialEssayScore(adjacentState),22);
+let spacing=api.analyzeEssayText('Это пример , текста.');
+eq('space before punctuation is not confirmed K8',spacing.confirmed.K8.length,0);
+eq('space before punctuation is not possible K8',spacing.possible.K8.length,0);
+eq('space before punctuation is technical only',spacing.technical.length,1);
+let spacingState=api.applyAnalysisResult(maxState(),spacing);spacingState.essayScores.K8=3;
+eq('technical spacing has no K8 cap',api.criterionCap(spacingState,'K8'),null);
+eq('technical spacing keeps 22',api.officialEssayScore(spacingState),22);
+let builtinAudit=api.analyzeEssayText('Вообщем какбудто изза ихний. Это это слово , текст без точки');
+eq('built-in preliminary analyzer creates no confirmed findings',confirmedTotal(builtinAudit),0);
+eq('spelling candidates are possible',builtinAudit.possible.K7.length,3);
+eq('grammar candidate is possible',builtinAudit.possible.K9.length,1);
+eq('speech repetition candidate is possible',builtinAudit.possible.K10.length,1);
+eq('technical spacing stays separate',builtinAudit.technical.length,1);
+let stylistic=api.analyzeEssayText('Далеко, далеко за рекой мерцал свет.');
+eq('potential stylistic repetition is never confirmed',stylistic.confirmed.K10.length,0);
+let keyLexis=api.analyzeEssayText('Герой думает. Герой действует. Герой меняется.');
+eq('key lexical repetition is not confirmed',keyLexis.confirmed.K10.length,0);
+eq('three repetitions in one paragraph are possible',keyLexis.possible.K10.length,1);
+let paragraphs=api.analyzeEssayText('Герой принимает решение.\n\nГерой отвечает за него.');
+eq('repetition across paragraph boundary is not confirmed',paragraphs.confirmed.K10.length,0);
+eq('repetition across paragraph boundary is not aggregated',paragraphs.possible.K10.length,0);
+let quoted=api.analyzeEssayText('Автор поясняет, что написание «вообщем» ошибочно.');
+eq('quoted spelling candidate is not confirmed',quoted.confirmed.K7.length,0);
+eq('quoted spelling candidate remains possible',quoted.possible.K7.length,1);
+let noEnding=api.analyzeEssayText('Текст без завершающего знака');
+eq('missing terminal punctuation is possible K8',noEnding.possible.K8.length,1);
+eq('missing terminal punctuation is not confirmed K8',noEnding.confirmed.K8.length,0);
 eq('normalized 0-24 API removed',Object.prototype.hasOwnProperty.call(api,'normalizedScore24'),false);
 if(fails.length){console.error(fails.join('\n'));process.exit(1)}
 console.log(`PASS task27 v4.2 unit tests: ${checks} assertions`);

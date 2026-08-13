@@ -1,7 +1,9 @@
 ЛОКАЛЬНЫЙ RELEASE-GATE — ЕГЭ РУССКИЙ ЯЗЫК 2026, ВЕРСИЯ 4.2
-NO-GO REMEDIATION ДЛЯ ЗАДАНИЯ 27
+СОДЕРЖАТЕЛЬНОЕ ИСПРАВЛЕНИЕ TASK 27 ПОСЛЕ NO-GO commit bb13c9d6
 
-STATUS: PASS — LOCAL PACKAGE READY; TILDA NOT UPDATED
+LOCAL RELEASE-GATE: PASS
+RELEASE STATUS: NO-GO FOR TILDA — требуется повторный независимый содержательный аудит
+TILDA: NOT UPDATED / NOT PUBLISHED
 
 Обязательный состав: T123-01 … T123-06.
 
@@ -9,23 +11,27 @@ STATUS: PASS — LOCAL PACKAGE READY; TILDA NOT UPDATED
 - PASS data/regression: 204 checks, 35 task-variant positives, total 28/28;
 - PASS unit scorer: 24 assertions;
 - PASS visual contract: 27 checks;
-- PASS browser: typed fields, OR persistence, reload, result separation, essay dependency, responsive widths 320/360/390/768/1280.
+- PASS browser: typed fields, OR persistence, reload, result separation, essay dependency, responsive widths.
 
 Новые тесты задания 27:
-- PASS task27 v4.2 unit tests: 26 assertions;
-- PASS real-preview task27 browser: точные T123-01…T123-05 внутри PREVIEW плюс T123-06;
-- language aids off;
-- frozen read-only demo essay и отдельный paper transfer;
-- automatic confirmed/possible findings;
-- hard caps 1→2, 3→1, 5→0;
-- possible не меняет cap;
-- программное значение выше cap отклоняется;
-- ноль findings не выдаёт auto-3;
-- шкала 0–24 отсутствует, самооценка только 0–22;
-- frozen text сохраняется после reload и не меняется при изменении core answer после finish.
+- PASS task27 v4.2 unit tests: 49 assertions;
+- PASS real-preview task27 browser: T123-01...06, language aids off, frozen demo essay, preliminary findings, technical notes, verified hard caps.
 
-Границы изменений:
-- T123-01: только вводная формулировка о системном анализе findings без автоматического балла;
-- T123-02…T123-04: SHA-256 без изменений;
-- T123-05: только атрибуты textarea задания 27;
-- Tilda: не обновлялась и не публиковалась.
+Содержательные regressions:
+- «Это это было важно» → confirmed K10 = 0; possible K10 допустим; hard cap отсутствует;
+- контекстные, стилистические и ключевые повторы никогда не становятся confirmed автоматически;
+- повторы между абзацами не агрегируются;
+- «Это пример , текста.» → confirmed/possible K8 = 0; только technical finding; hard cap K8 отсутствует;
+- встроенные regex-правила не создают confirmed без отдельной однозначной проверки;
+- externally validated confirmed: 1–2 → cap 2; 3–4 → cap 1; 5+ → cap 0;
+- программное значение выше cap отклоняется;
+- possible и technical не меняют cap;
+- ноль findings не выдаёт auto-3;
+- шкала 0–24 отсутствует, самооценка только 0–22.
+
+Границы изменений относительно bb13c9d6:
+- T123-01…T123-05: SHA-256 без изменений;
+- задания 1–26 и их scorer: без изменений;
+- основная логика: T123-06;
+- тесты и связанные audit/status/contract-файлы обновлены;
+- Tilda не обновлялась и не публиковалась.

@@ -224,9 +224,13 @@
       "after_finish_demo": "frozen_read_only_essay",
       "after_finish_paper": "editable_transferred_text",
       "k7_k10_analysis": {
-        "source": "system_findings",
-        "confirmed": "hard_cap_only",
+        "label": "preliminary_automatic_check",
+        "source": "conservative_candidates_plus_separately_validated_findings",
+        "confirmed": "hard_cap_only_after_unambiguous_separate_validation",
         "possible": "does_not_change_cap",
+        "context_dependent_repetition": "possible_only",
+        "space_before_punctuation": "technical_only_not_k8",
+        "expert_review_required": true,
         "no_findings": "not_proof_and_no_automatic_score"
       },
       "self_assessment_scale": "0-22"

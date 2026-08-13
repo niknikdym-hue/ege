@@ -33,16 +33,23 @@
   function normalizeFindingMap(raw,status){
     var out=emptyFindingMap();ERROR_CRITERIA.forEach(function(k){var list=raw&&Array.isArray(raw[k])?raw[k]:[];out[k]=list.map(function(x){return sanitizeFinding(x,k,status);}).filter(Boolean);});return out;
   }
+  function normalizeTechnicalFindings(raw){
+    return(Array.isArray(raw)?raw:[]).map(function(item,index){
+      if(!item||typeof item!=="object")return null;var message=String(item.message||item.label||"").trim();if(!message)return null;
+      return{id:String(item.id||"technical-"+index).slice(0,160),status:"technical",message:message.slice(0,500),evidence:String(item.evidence||"").slice(0,500)};
+    }).filter(Boolean);
+  }
   function freshReviewState(){return{
     version:2,writingMode:"paper",paperCompleted:false,transferredText:"",frozenEssay:"",demoEssayFrozen:false,sourceFileName:"",
     essayScores:{},confirmedFindings:emptyFindingMap(),possibleFindings:emptyFindingMap(),
-    analysisStatus:"pending",analysisVersion:"",zeroReasons:{},eligibilityConfirmed:false
+    technicalFindings:[],analysisStatus:"pending",analysisVersion:"",zeroReasons:{},eligibilityConfirmed:false
   };}
   function normalizeReviewState(raw){
     var base=freshReviewState(),next=Object.assign(base,raw||{});
     next.version=2;next.essayScores=next.essayScores&&typeof next.essayScores==="object"?next.essayScores:{};
     next.confirmedFindings=normalizeFindingMap(next.confirmedFindings,"confirmed");
     next.possibleFindings=normalizeFindingMap(next.possibleFindings,"possible");
+    next.technicalFindings=normalizeTechnicalFindings(next.technicalFindings);
     next.zeroReasons=next.zeroReasons&&typeof next.zeroReasons==="object"?next.zeroReasons:{};
     next.writingMode=next.writingMode==="demo"?"demo":"paper";
     next.transferredText=String(next.transferredText||"");next.frozenEssay=String(next.frozenEssay||"");next.demoEssayFrozen=next.demoEssayFrozen===true;
@@ -70,28 +77,37 @@
     var s=normalizeReviewState(state),payload=result&&typeof result==="object"?result:{};
     s.confirmedFindings=normalizeFindingMap(payload.confirmed,"confirmed");
     s.possibleFindings=normalizeFindingMap(payload.possible,"possible");
+    s.technicalFindings=normalizeTechnicalFindings(payload.technical);
     s.analysisStatus="complete";s.analysisVersion=String(payload.version||"external-v1");
     ERROR_CRITERIA.forEach(function(k){var cap=criterionCap(s,k);if(cap!==null&&Object.prototype.hasOwnProperty.call(s.essayScores,k)&&Number(s.essayScores[k])>cap)delete s.essayScores[k];});
     return s;
   }
   function makeFinding(criterion,status,id,message,evidence){return{id:id,criterion:criterion,status:status,message:message,evidence:evidence||""};}
+  function makeTechnicalFinding(id,message,evidence){return{id:id,status:"technical",message:message,evidence:evidence||""};}
   function analyzeEssayText(text){
-    var value=String(text||""),confirmed=emptyFindingMap(),possible=emptyFindingMap(),match,seen={};
+    var value=String(text||""),confirmed=emptyFindingMap(),possible=emptyFindingMap(),technical=[],match,seen={};
     var typoRules=[
-      {re:/(?:^|[^А-ЯЁа-яё])вообщем(?:$|[^А-ЯЁа-яё])/giu,id:"k7-voobschem",message:"Слитное написание «вообщем» требует исправления."},
-      {re:/(?:^|[^А-ЯЁа-яё])вобщем(?:$|[^А-ЯЁа-яё])/giu,id:"k7-vobschem",message:"Слитное написание «вобщем» требует исправления."},
-      {re:/(?:^|[^А-ЯЁа-яё])какбудто(?:$|[^А-ЯЁа-яё])/giu,id:"k7-kakbudto",message:"«Как будто» пишется раздельно."},
-      {re:/(?:^|[^А-ЯЁа-яё])изза(?:$|[^А-ЯЁа-яё])/giu,id:"k7-izza",message:"«Из-за» пишется через дефис."}
+      {re:/(?:^|[^А-ЯЁа-яё])вообщем(?:$|[^А-ЯЁа-яё])/giu,id:"k7-voobschem",message:"Проверьте написание «вообщем» с учётом цитирования и контекста."},
+      {re:/(?:^|[^А-ЯЁа-яё])вобщем(?:$|[^А-ЯЁа-яё])/giu,id:"k7-vobschem",message:"Проверьте написание «вобщем» с учётом цитирования и контекста."},
+      {re:/(?:^|[^А-ЯЁа-яё])какбудто(?:$|[^А-ЯЁа-яё])/giu,id:"k7-kakbudto",message:"Проверьте написание «какбудто» с учётом цитирования и контекста."},
+      {re:/(?:^|[^А-ЯЁа-яё])изза(?:$|[^А-ЯЁа-яё])/giu,id:"k7-izza",message:"Проверьте написание «изза» с учётом цитирования и контекста."}
     ];
-    typoRules.forEach(function(rule){if(rule.re.test(value))confirmed.K7.push(makeFinding("K7","confirmed",rule.id,rule.message,"Автоматическое правило высокой точности"));});
-    var beforePunctuation=/\s+([,.;:!?])/gu,index=0;while((match=beforePunctuation.exec(value))&&index<20){confirmed.K8.push(makeFinding("K8","confirmed","k8-space-"+match.index,"Пробел перед знаком «"+match[1]+"». ","Позиция "+(match.index+1)));index++;}
-    var grammarRules=[{re:/(?:^|[^А-ЯЁа-яё])ихн(?:ий|яя|ее|ие|его|ей|ему|им|ими|их)(?:$|[^А-ЯЁа-яё])/giu,id:"k9-ikhniy",message:"Ненормативная форма местоимения «ихний»."}];
-    grammarRules.forEach(function(rule){if(rule.re.test(value))confirmed.K9.push(makeFinding("K9","confirmed",rule.id,rule.message,"Автоматическое правило высокой точности"));});
-    var words=[],wordRe=/[А-ЯЁа-яёA-Za-z]+(?:-[А-ЯЁа-яёA-Za-z]+)*/g;while((match=wordRe.exec(value)))words.push({text:match[0],index:match.index});for(var i=1;i<words.length;i++){if(words[i].text.toLocaleLowerCase("ru-RU")===words[i-1].text.toLocaleLowerCase("ru-RU")){var key="k10-repeat-"+words[i].index;if(!seen[key]){confirmed.K10.push(makeFinding("K10","confirmed",key,"Повтор слова «"+words[i].text+"» подряд.","Позиция "+(words[i].index+1)));seen[key]=true;}}}
+    typoRules.forEach(function(rule){if(rule.re.test(value))possible.K7.push(makeFinding("K7","possible",rule.id,rule.message,"Кандидат требует проверки по нормативному словарю и в контексте"));});
+    var beforePunctuation=/\s+([,.;:!?])/gu,index=0;while((match=beforePunctuation.exec(value))&&index<20){technical.push(makeTechnicalFinding("space-before-punctuation-"+match.index,"Лишний пробел перед знаком «"+match[1]+"».","Техническое оформление, не finding К8 и не hard cap"));index++;}
+    var grammarRules=[{re:/(?:^|[^А-ЯЁа-яё])ихн(?:ий|яя|ее|ие|его|ей|ему|им|ими|их)(?:$|[^А-ЯЁа-яё])/giu,id:"k9-ikhniy",message:"Проверьте форму местоимения «ихний» с учётом цитирования, передачи чужой речи и контекста."}];
+    grammarRules.forEach(function(rule){if(rule.re.test(value))possible.K9.push(makeFinding("K9","possible",rule.id,rule.message,"Кандидат требует контекстной проверки грамматической нормы"));});
+    var paragraphs=value.split(/\n\s*\n+/),paragraphOffset=0;
+    paragraphs.forEach(function(paragraph,paragraphIndex){
+      var words=[],counts={},wordRe=/[А-ЯЁа-яёA-Za-z]+(?:-[А-ЯЁа-яёA-Za-z]+)*/g;
+      while((match=wordRe.exec(paragraph))){var normalized=match[0].toLocaleLowerCase("ru-RU");words.push({text:match[0],normalized:normalized,index:paragraphOffset+match.index});counts[normalized]=(counts[normalized]||0)+1;}
+      for(var i=1;i<words.length;i++)if(words[i].normalized===words[i-1].normalized){var key="k10-adjacent-"+words[i].index;if(!seen[key]){possible.K10.push(makeFinding("K10","possible",key,"Возможный повтор слова «"+words[i].text+"» подряд.","Абзац "+(paragraphIndex+1)+"; требуется проверить функцию повтора и контекст"));seen[key]=true;}}
+      Object.keys(counts).forEach(function(word){if(counts[word]<3||word.length<4)return;var key="k10-paragraph-"+paragraphIndex+"-"+word;if(seen[key])return;possible.K10.push(makeFinding("K10","possible",key,"Слово «"+word+"» встречается в одном абзаце "+counts[word]+" раза.","Требуется проверить оправданность, ключевую лексику и возможность эквивалентной замены"));seen[key]=true;});
+      paragraphOffset+=paragraph.length+2;
+    });
     var mixed=/\b(?=[А-ЯЁа-яёA-Za-z]*[А-ЯЁа-яё])(?=[А-ЯЁа-яёA-Za-z]*[A-Za-z])[А-ЯЁа-яёA-Za-z]+\b/gu;index=0;while((match=mixed.exec(value))&&index<20){possible.K7.push(makeFinding("K7","possible","k7-mixed-"+match.index,"Смешение кириллицы и латиницы в слове «"+match[0]+"».","Требуется ручная проверка"));index++;}
     var repeated=/([!?])\1+/gu;index=0;while((match=repeated.exec(value))&&index<20){possible.K8.push(makeFinding("K8","possible","k8-repeat-"+match.index,"Повторяющиеся знаки «"+match[0]+"».","Требуется проверка контекста"));index++;}
     if(value.trim()&&!/[.!?…]$/.test(value.trim()))possible.K8.push(makeFinding("K8","possible","k8-ending","В конце текста не найден завершающий знак препинания.","Требуется ручная проверка"));
-    return{version:"builtin-conservative-v1",confirmed:confirmed,possible:possible};
+    return{version:"builtin-preliminary-fipi-2026-v2",confirmed:confirmed,possible:possible,technical:technical};
   }
   function hasZeroReason(s){return ZERO_REASONS.some(function(r){return !!s.zeroReasons[r.id];});}
   function officialEssayScore(input){
@@ -144,7 +160,7 @@
     panel.innerHTML='<strong>Как вы выполняете сочинение?</strong><p class="edemo-mini">На реальном ЕГЭ ответ пишется от руки. В демо-поле отключены браузерные языковые подсказки.</p><div class="edemo-essay-mode__choices"><label><input type="radio" name="edemo-writing-mode" value="paper"'+(reviewState.writingMode==="paper"?' checked':'')+'> На бумаге — как на экзамене</label><label><input type="radio" name="edemo-writing-mode" value="demo"'+(reviewState.writingMode==="demo"?' checked':'')+'> Демо-ввод в браузере</label></div><div class="edemo-paper-panel" id="edemo-paper-panel"><label><input type="checkbox" id="edemo-paper-complete"'+(reviewState.paperCompleted?' checked':'')+'> Сочинение написано на бумаге</label><p class="edemo-mini">После завершения можно добавить фото/скан и вручную перенести текст. Файл не отправляется и не сохраняется.</p></div>';
     answer.parentNode.insertBefore(panel,answer);
     function applyMode(){var paper=reviewState.writingMode==="paper";answer.style.display=paper?"none":"block";byId("edemo-paper-panel").style.display=paper?"block":"none";}
-    panel.querySelectorAll('input[name="edemo-writing-mode"]').forEach(function(r){r.addEventListener("change",function(){if(!r.checked)return;reviewState.writingMode=r.value;reviewState.frozenEssay="";reviewState.demoEssayFrozen=false;reviewState.analysisStatus="pending";reviewState.confirmedFindings=emptyFindingMap();reviewState.possibleFindings=emptyFindingMap();saveReviewState();if(r.value==="demo"&&input.value===PAPER_MARKER)setCoreEssayValue("");if(r.value==="paper"&&reviewState.paperCompleted)setCoreEssayValue(PAPER_MARKER);applyMode();});});
+    panel.querySelectorAll('input[name="edemo-writing-mode"]').forEach(function(r){r.addEventListener("change",function(){if(!r.checked)return;reviewState.writingMode=r.value;reviewState.frozenEssay="";reviewState.demoEssayFrozen=false;reviewState.analysisStatus="pending";reviewState.confirmedFindings=emptyFindingMap();reviewState.possibleFindings=emptyFindingMap();reviewState.technicalFindings=[];saveReviewState();if(r.value==="demo"&&input.value===PAPER_MARKER)setCoreEssayValue("");if(r.value==="paper"&&reviewState.paperCompleted)setCoreEssayValue(PAPER_MARKER);applyMode();});});
     byId("edemo-paper-complete").addEventListener("change",function(e){reviewState.paperCompleted=e.target.checked;saveReviewState();if(reviewState.writingMode==="paper")setCoreEssayValue(e.target.checked?PAPER_MARKER:"");});
     if(reviewState.writingMode==="paper"&&reviewState.paperCompleted&&input.value!==PAPER_MARKER)setCoreEssayValue(PAPER_MARKER);applyMode();
   }
@@ -164,7 +180,7 @@
       section.innerHTML='<h3 class="ep-section-title">Перенос рукописного сочинения после экзамена</h3><p>Добавьте фото или скан как локальный референс и перенесите текст. Редактируемое поле доступно только для режима «На бумаге».</p><div class="edemo-transfer-grid"><div><label for="edemo-essay-scan"><strong>Фото или скан</strong></label><input id="edemo-essay-scan" type="file" accept="image/*,application/pdf"><div class="edemo-scan-preview" id="edemo-scan-preview">Выберите фото/скан. Для изображения появится предпросмотр.</div></div><div><label for="edemo-transferred-essay"><strong>Перенесённый текст</strong></label><textarea class="edemo-transfer-text" id="edemo-transferred-essay" spellcheck="true">'+escapeHtml(reviewState.transferredText)+'</textarea><p id="edemo-transfer-save">Текст сохраняется автоматически.</p><div class="ep-panel edemo-threshold" id="edemo-threshold-box"></div></div></div>';
     }
     if(criteriaSection)result.insertBefore(section,criteriaSection);else result.appendChild(section);
-    var transferred=byId("edemo-transferred-essay");if(transferred){if(reviewState.analysisStatus!=="complete")runSystemAnalysis();transferred.addEventListener("input",function(e){reviewState.transferredText=e.target.value;runSystemAnalysis();byId("edemo-transfer-save").textContent="✓ Текст сохранён; системный анализ К7–К10 обновлён.";updateWordStatus();renderCriteria();});}
+    var transferred=byId("edemo-transferred-essay");if(transferred){if(reviewState.analysisStatus!=="complete")runSystemAnalysis();transferred.addEventListener("input",function(e){reviewState.transferredText=e.target.value;runSystemAnalysis();byId("edemo-transfer-save").textContent="✓ Текст сохранён; предварительная автоматическая проверка обновлена.";updateWordStatus();renderCriteria();});}
     var scan=byId("edemo-essay-scan");if(scan)scan.addEventListener("change",function(e){var f=e.target.files&&e.target.files[0],preview=byId("edemo-scan-preview");if(!f)return;reviewState.sourceFileName=f.name;saveReviewState();if(/^image\//.test(f.type)){var reader=new FileReader();reader.onload=function(){preview.innerHTML='<img alt="Предпросмотр рукописного сочинения" src="'+reader.result+'">';};reader.readAsDataURL(f);}else preview.textContent="Выбран файл: "+f.name;});
     updateWordStatus();
   }
@@ -176,7 +192,7 @@
     return html;
   }
   function renderCriteria(){
-    var w=byId("edemo-criteria");if(!w)return;w.innerHTML="";var gate=document.createElement("div");gate.className="ep-panel edemo-zero-gate";
+    var w=byId("edemo-criteria");if(!w)return;w.innerHTML="";var analysisIntro=document.createElement("div");analysisIntro.className="ep-panel";analysisIntro.innerHTML='<p><strong>К7–К10. Предварительная автоматическая проверка</strong></p><ul class="edemo-findings"><li>Автоматическая проверка не заменяет экспертную проверку и может не обнаружить часть ошибок.</li><li>Possible findings требуют самостоятельной проверки контекста и не влияют на hard cap.</li><li>Отсутствие findings не означает отсутствия ошибок и не выставляет автоматически 3 балла.</li><li>Hard cap применяется только к confirmed findings, однозначно подтверждённым отдельной проверкой.</li></ul>';w.appendChild(analysisIntro);var gate=document.createElement("div");gate.className="ep-panel edemo-zero-gate";
     gate.innerHTML='<p><strong>Шаг 1. Проверьте общие основания полного нуля</strong></p><p class="edemo-mini">Технический счётчик не обнуляет работу автоматически.</p>';
     ZERO_REASONS.forEach(function(r){var label=document.createElement("label");label.className="edemo-zero-option";label.innerHTML='<input type="checkbox" data-review-zero="'+r.id+'"'+(reviewState.zeroReasons[r.id]?' checked':'')+'><span>'+escapeHtml(r.label)+'</span>';gate.appendChild(label);});
     var confirm=document.createElement("label");confirm.className="edemo-confirm-option";confirm.innerHTML='<input type="checkbox" id="edemo-review-eligibility"'+(reviewState.eligibilityConfirmed?' checked':'')+(hasZeroReason(reviewState)?' disabled':'')+'><span><strong>Подтверждаю:</strong> официальный объём проверен, работа опирается на исходный текст и не является полным переписыванием/пересказом.</span>';gate.appendChild(confirm);w.appendChild(gate);
@@ -185,10 +201,10 @@
     if(hasZeroReason(reviewState)){var danger=document.createElement("div");danger.className="ep-panel edemo-danger";danger.innerHTML='<p><strong>Отмечено основание полного нуля.</strong> Самооценка К1–К10: 0/22.</p>';w.appendChild(danger);updateResultScores();return;}
     if(!reviewState.eligibilityConfirmed){var note=document.createElement("div");note.className="ep-panel edemo-warning";note.innerHTML='<p>Критерии откроются после подтверждения общих условий оценивания.</p>';w.appendChild(note);updateResultScores();return;}
     CRITERIA.forEach(function(c){var row=document.createElement("div"),has=Object.prototype.hasOwnProperty.call(reviewState.essayScores,c.id),opts='<option value="">Не оценено</option>';for(var i=0;i<=c.max;i++)opts+='<option value="'+i+'"'+(has&&Number(reviewState.essayScores[c.id])===i?' selected':'')+'>'+i+'</option>';var dep=(c.id==="K2"||c.id==="K3")&&Number(reviewState.essayScores.K1)===0;row.className="edemo-criterion";row.innerHTML='<div><strong>'+c.label+'</strong><br><span class="edemo-mini">Максимум: '+c.max+(dep?' · при К1 = 0 автоматически 0':'')+'</span></div><select data-review-score="'+c.id+'"'+(dep?' disabled':'')+'>'+opts+'</select>';w.appendChild(row);row.querySelector("select").addEventListener("change",function(e){if(e.target.value==="")delete reviewState.essayScores[c.id];else reviewState.essayScores[c.id]=Number(e.target.value);if(c.id==="K1"&&Number(e.target.value)===0){reviewState.essayScores.K2=0;reviewState.essayScores.K3=0;}saveReviewState();renderCriteria();updateResultScores();});});
-    var title=document.createElement("div");title.className="ep-panel";title.innerHTML='<p><strong>К7–К10. Результаты системного анализа</strong></p><p class="edemo-mini">Confirmed findings задают только верхнюю границу балла. Possible findings показываются для перепроверки и hard cap не меняют. Если ошибок не найдено, 3 балла автоматически не выставляются.</p>';w.appendChild(title);
-    if(reviewState.analysisStatus!=="complete"){var pending=document.createElement("div");pending.className="ep-panel edemo-warning";pending.innerHTML='<p><strong>Системный анализ К7–К10 ещё не сформирован.</strong> Итоговая самооценка остаётся незавершённой.</p>';w.appendChild(pending);updateResultScores();return;}
+    if(reviewState.analysisStatus!=="complete"){var pending=document.createElement("div");pending.className="ep-panel edemo-warning";pending.innerHTML='<p><strong>Предварительная автоматическая проверка К7–К10 ещё не сформирована.</strong> Итоговая самооценка остаётся незавершённой.</p>';w.appendChild(pending);updateResultScores();return;}
     var table=document.createElement("div");table.className="edemo-error-table";w.appendChild(table);
-    ERROR_CRITERIA.forEach(function(k){var confirmed=reviewState.confirmedFindings[k],possible=reviewState.possibleFindings[k],cap=criterionCap(reviewState,k),row=document.createElement("div");row.className="edemo-error-row";row.innerHTML='<strong>'+k+'. '+ERROR_LABELS[k]+'</strong><p class="edemo-mini">Confirmed: '+confirmed.length+' · hard cap: '+(cap===null?'не установлен':cap+'/3')+' · Possible: '+possible.length+'</p><div><strong>Confirmed findings</strong>'+findingList(confirmed,'Система не сформировала подтверждённых находок. Это не доказывает отсутствие ошибок.','')+'</div><div><strong>Possible findings</strong>'+findingList(possible,'Возможных находок нет.','edemo-findings--possible')+'</div><label><strong>Самооценка</strong><select data-review-score="'+k+'">'+scoreOptions(k,reviewState)+'</select></label>';table.appendChild(row);row.querySelector("select").addEventListener("change",function(e){var candidate=e.target.value===""?null:Number(e.target.value),limit=criterionCap(reviewState,k);if(candidate!==null&&limit!==null&&candidate>limit){e.target.value=Object.prototype.hasOwnProperty.call(reviewState.essayScores,k)?String(reviewState.essayScores[k]):"";return;}if(candidate===null)delete reviewState.essayScores[k];else reviewState.essayScores[k]=candidate;saveReviewState();updateResultScores();});});
+    ERROR_CRITERIA.forEach(function(k){var confirmed=reviewState.confirmedFindings[k],possible=reviewState.possibleFindings[k],cap=criterionCap(reviewState,k),row=document.createElement("div");row.className="edemo-error-row";row.innerHTML='<strong>'+k+'. '+ERROR_LABELS[k]+'</strong><p class="edemo-mini">Confirmed: '+confirmed.length+' · hard cap: '+(cap===null?'не установлен':cap+'/3')+' · Possible: '+possible.length+'</p><div><strong>Confirmed findings</strong>'+findingList(confirmed,'Подтверждённых находок нет. Это не доказывает отсутствие ошибок.','')+'</div><div><strong>Possible findings</strong>'+findingList(possible,'Возможных находок нет. Это не доказывает отсутствие ошибок.','edemo-findings--possible')+'</div><label><strong>Самооценка</strong><select data-review-score="'+k+'">'+scoreOptions(k,reviewState)+'</select></label>';table.appendChild(row);row.querySelector("select").addEventListener("change",function(e){var candidate=e.target.value===""?null:Number(e.target.value),limit=criterionCap(reviewState,k);if(candidate!==null&&limit!==null&&candidate>limit){e.target.value=Object.prototype.hasOwnProperty.call(reviewState.essayScores,k)?String(reviewState.essayScores[k]):"";return;}if(candidate===null)delete reviewState.essayScores[k];else reviewState.essayScores[k]=candidate;saveReviewState();updateResultScores();});});
+    if(reviewState.technicalFindings.length){var technical=document.createElement("div");technical.className="ep-panel";technical.id="edemo-technical-findings";technical.innerHTML='<p><strong>Технические замечания интерфейса</strong></p><p class="edemo-mini">Не относятся к К7–К10, не являются ошибками по критериям и не влияют на балл или hard cap.</p>'+findingList(reviewState.technicalFindings,'','edemo-findings--possible');w.appendChild(technical);}
     updateResultScores();
   }
   function updateResultScores(){

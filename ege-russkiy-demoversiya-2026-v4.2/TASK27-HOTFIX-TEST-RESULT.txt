@@ -1,38 +1,39 @@
-TASK 27 HOTFIX — NO-GO REMEDIATION TEST RESULT
+TASK 27 CONTENT NO-GO REMEDIATION — TEST RESULT
 
 UNIT:
-PASS task27 v4.2 unit tests: 26 assertions
-
-Hard-cap evidence:
-- 1 confirmed → максимум 2;
-- 3 confirmed → максимум 1;
-- 5 confirmed → максимум 0;
-- possible findings не меняют cap;
-- score выше cap, подставленный программно, отклоняется;
-- новый анализ удаляет ранее сохранённый score выше cap;
-- отсутствие findings не создаёт автоматическую оценку 3;
-- К1=0, full-zero и eligibility gates сохранены;
-- API нормированной шкалы 0–24 отсутствует.
-
-REAL-PREVIEW BROWSER REGRESSION:
-PASS real-preview task27 browser: T123-01...06, language aids off, frozen demo essay, paper transfer, analysis findings, hard caps
+PASS task27 v4.2 unit tests: 49 assertions
 
 Проверено:
-- PREVIEW содержит точные T123-01…T123-05, затем в тестовый runtime подключается точный T123-06;
-- spellcheck/autocomplete/autocorrect/autocapitalize/writing suggestions отключены;
-- демо-текст фиксируется read-only в «Ваше сочинение»;
-- editable transfer отсутствует в demo и присутствует только в paper;
-- системный анализ автоматически формирует confirmed/possible findings;
-- пользовательских счётчиков confirmed/possible нет;
-- hard cap отражается в UI, значение выше cap отклоняется;
-- possible finding не мешает получить 22/22 после самостоятельной оценки;
-- frozen text не меняется после reload/core-state mutation;
-- шкалы 0–24 нет.
+- соседние одинаковые слова не создают confirmed K10;
+- possible K10 не создаёт hard cap;
+- допустимые/стилистические/ключевые повторы не становятся confirmed;
+- повтор между абзацами не агрегируется;
+- пробел перед знаком — technical, не K8;
+- встроенный предварительный анализатор не создаёт confirmed;
+- validated confirmed hard caps: 1–2→2, 3–4→1, 5+→0;
+- tampered score выше cap отклоняется;
+- отсутствие findings не выдаёт 3 автоматически;
+- шкала 0–24 отсутствует.
+
+REAL-PREVIEW BROWSER REGRESSION:
+PASS real-preview task27 browser: T123-01...06, language aids off, frozen demo essay, preliminary findings, technical notes, verified hard caps
+
+Проверено:
+- точный PREVIEW содержит неизменённые T123-01…T123-05 и подключает T123-06;
+- языковые подсказки отключены;
+- frozen demo essay и paper-only transfer сохранены;
+- заголовок «Предварительная автоматическая проверка» и ограничения применимости видимы;
+- «Это это…» остаётся possible K10 без cap и допускает 22/22 при самостоятельной оценке;
+- отдельно валидированный confirmed K10 создаёт cap и отклоняет значение выше него;
+- пробел перед запятой показывается отдельным technical finding и не снижает K8;
+- console/page errors отсутствуют.
 
 FULL DEMO REGRESSION:
-- PASS data/regression: 204 checks, 28/28;
+- PASS data/regression: 204 checks, 35 task-variant positives, 28/28;
 - PASS unit scorer: 24 assertions;
 - PASS visual contract: 27 checks;
-- PASS old browser regression, including reload and responsive widths.
+- PASS old browser regression, включая reload и responsive widths.
 
+MANIFEST-SHA256: обновляется последним и проверяется перед commit.
+RELEASE STATUS: NO-GO FOR TILDA до повторного независимого содержательного аудита.
 Tilda не обновлялась.
