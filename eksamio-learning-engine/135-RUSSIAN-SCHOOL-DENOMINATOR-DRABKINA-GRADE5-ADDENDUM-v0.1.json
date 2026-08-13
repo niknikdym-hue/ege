@@ -1,0 +1,64 @@
+{
+  "schema_version": "0.1.0",
+  "subject": "russian",
+  "purpose": "school_denominator_drabkina_grade5_addendum",
+  "date": "2026-08-13",
+  "status": "working_addendum",
+  "parent_inventory": "134-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE5-v0.1.json",
+  "work_spec_ref": "133-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-WORK-SPEC.txt",
+  "production_integration": "HOLD",
+  "added_candidates": 2,
+  "candidate_units": [
+    {
+      "unit_id": "school-g5-soft-sign-toch-v-toch",
+      "domain": "orthography",
+      "unit_type": "difficult_form",
+      "canonical_label": "точь-в-точь: Ь после шипящей в устойчивом наречном сочетании",
+      "normalized_members": ["точь-в-точь"],
+      "parent_rule": "Источник отдельно выносит написание устойчивого сочетания в блок 'Запомните' внутри темы о мягком знаке после шипящих.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Правописание мягкого знака на конце слов после шипящих",
+        "locator": "opening 'Запомните: точь-в-точь' block before exercise 164",
+        "replica_url": "https://grammarian.school/teaching/5practical/29.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-g5-adjective-ending-question-method-boundary",
+      "domain": "orthography_morphology",
+      "unit_type": "boundary_case",
+      "canonical_label": "Окончания прилагательных: граница метода проверки вопросом",
+      "normalized_members": ["-ой", "-ий", "-ый"],
+      "parent_rule": "Безударное окончание прилагательного обычно соотносится с окончанием вопросительного слова, но источник отдельно предупреждает, что этот приём не определяет окончание мужского/среднего рода в именительном и винительном падежах, где возможны -ой, -ий, -ый.",
+      "grade_routes": [{"grade": 5, "role": "explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Правописание гласных в падежных окончаниях имён прилагательных",
+        "locator": "explicit limitation immediately after the question-word checking rule",
+        "replica_url": "https://grammarian.school/teaching/5practical/24.html"
+      }],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "This is not a lexical exception; it is admitted because the project denominator explicitly includes source-attested boundaries where a general algorithm stops working."
+    }
+  ],
+  "grade5_working_total_after_addendum": {
+    "candidate_units": 14,
+    "working_admitted_or_pending_norm": 13,
+    "source_conflict_hold": 1
+  },
+  "remaining_grade5_work": [
+    "Exact-project-PDF verification when a binary-readable path is available.",
+    "Current-norm review for all admitted candidates.",
+    "Systematic check of still-inaccessible exact sections (especially prefix З/С and personal verb endings) for additional source-attested special cases.",
+    "Cross-grade dedupe only after grade inventories are built."
+  ],
+  "production_files_changed": false
+}
