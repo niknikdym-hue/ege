@@ -1,0 +1,78 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-13",
+  "status": "working_addendum",
+  "parent_inventory": "142-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE7-v0.1.json",
+  "production_integration": "HOLD",
+  "candidate_units": [
+    {
+      "unit_id": "school-adverb-repeat-hyphen-vs-noun-expression-boundary",
+      "domain": "orthography_morphology",
+      "unit_type": "contrast",
+      "canonical_label": "Повторные наречия через дефис vs сочетания существительных с предлогом раздельно",
+      "normalized_members": ["точь-в-точь — точка в точку","бок о бок","с глазу на глаз","след в след","в конце концов","крепко-накрепко","не сегодня-завтра"],
+      "grade_routes": [{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "source_evidence": [{"evidence_level":"same_edition_text_replica","topic":"Дефисное написание наречий","locator":"rule immediately before exercise 61 explicitly contrasts hyphenated repeated/synonymous adverbs with noun+preposition expressions written separately","replica_url":"https://grammarian.school/teaching/7practical/34.html"}],
+      "current_norm_review_status": "pending_pair_by_pair",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "Spelling identity is distinct from the separate syntactic/introductory-function issue for `в конце концов`; canonicalization must not collapse orthographic and punctuation-function branches."
+    },
+    {
+      "unit_id": "school-adverbs-uju-separate-exception-set",
+      "domain": "orthography",
+      "unit_type": "lexical_set",
+      "canonical_label": "Наречные сочетания на -ую: на боковую, на попятную, в открытую, на мировую",
+      "normalized_members": ["на боковую","на попятную","в открытую","на мировую"],
+      "grade_routes": [{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "source_evidence": [{"evidence_level":"same_edition_text_replica","topic":"Слитное и раздельное написание наречий","locator":"rule 4 explicitly gives these four as exceptions to solid spelling of adverbs ending -УЮ","replica_url":"https://grammarian.school/teaching/7practical/36.html"}],
+      "current_norm_review_status": "pending_dictionary_crosscheck",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-adverbs-ah-solid-exception-set",
+      "domain": "orthography",
+      "unit_type": "lexical_set",
+      "canonical_label": "Наречия на -ах: впотьмах, впопыхах, второпях",
+      "normalized_members": ["впотьмах","впопыхах","второпях"],
+      "grade_routes": [{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "source_evidence": [{"evidence_level":"same_edition_text_replica","topic":"Слитное и раздельное написание наречий","locator":"rule for -АХ combinations explicitly lists these three as exceptions","replica_url":"https://grammarian.school/teaching/7practical/36.html"}],
+      "current_norm_review_status": "pending_dictionary_crosscheck",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-collective-numeral-adverb-writing-boundary",
+      "domain": "orthography_morphology",
+      "unit_type": "contrast",
+      "canonical_label": "втроём/надвое vs по двое/по трое/по одному; поодиночке",
+      "normalized_members": ["втроём","всемером","надвое","вдвое","втрое","по двое","по трое","по одному","поодиночке"],
+      "grade_routes": [{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "source_evidence": [{"evidence_level":"same_edition_text_replica","topic":"Слитное и раздельное написание наречий","locator":"rule 6 explicitly contrasts В/НА + collective numeral with ПО constructions and singles out поодиночке","replica_url":"https://grammarian.school/teaching/7practical/36.html"}],
+      "current_norm_review_status": "pending",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-adverbs-nonfree-stems-solid-lexical-set",
+      "domain": "orthography_lexical",
+      "unit_type": "lexical_set",
+      "canonical_label": "Слитные наречия с исторически/современно несвободными основами",
+      "normalized_members": ["вдребезги","натощак","исподтишка","исподлобья","вдогонку","дотла","запанибрата","насмарку","невпопад","понаслышке","спросонья","спозаранку","наспех","наугад","невдомёк","вдоволь","взаперти","восвояси","впритык","впросак","врасплох","всмятку","втихомолку","изнутри","снаружи","невзначай","невмоготу","пополудни","чересчур"],
+      "grade_routes": [{"grade":7,"role":"explicitly_taught_or_singled_out"}],
+      "source_evidence": [{"evidence_level":"same_edition_text_replica","topic":"Слитное и раздельное написание наречий","locator":"first lexicalized solid-spelling group in the source summary table","replica_url":"https://grammarian.school/teaching/7practical/36.html"}],
+      "current_norm_review_status": "pending_item_by_item_dictionary_crosscheck",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "This is a denominator lexical family, not a license to teach historical etymology as a mnemonic. Final runtime may split the family into smaller practice clusters after norm review."
+    }
+  ],
+  "counts":{"added":5,"grade7_working_candidate_route_records_after_addendum":25},
+  "production_files_changed":false
+}
