@@ -1,0 +1,27 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"NI_PARTICLE_CONJUNCTION_CROSS_GRADE_WORKING_ADMITTED",
+  "refs":["142-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE7-v0.1.json","152-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE10-GRAMMAR-v0.1.json"],
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "canonical_units":[
+    {
+      "unit_id":"school-ni-particle-vs-repeating-conjunction",
+      "label":"НИ: усилительная частица vs повторяющийся союз НИ… НИ",
+      "branches":{
+        "particle":{"model":"НИ reinforces an already expressed or structurally implied negation.","example":"не слышно ни звука"},
+        "repeating_conjunction":{"model":"Repeated НИ connects homogeneous members in a negative construction.","example":"не слышно ни шорохов, ни голосов"}
+      },
+      "grade_routes":[
+        {"grade":7,"role":"explicitly_taught_or_singled_out","source_member_scope":["не слышно ни звука"]},
+        {"grade":10,"role":"explicitly_taught_or_singled_out","source_member_scope":["не было ни звука","ни моря, ни неба"]}
+      ],
+      "norm":"current_morphology_syntax_confirmed",
+      "counting_policy":"One learner boundary with two functional branches; do not count particle and repeating-conjunction branches again as separate denominator units."
+    }
+  ],
+  "count_assertion":{"declared_canonical_units":1},
+  "exam_routes":[],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
