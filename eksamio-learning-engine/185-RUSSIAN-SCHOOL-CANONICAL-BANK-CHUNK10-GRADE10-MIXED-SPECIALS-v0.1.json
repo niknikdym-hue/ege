@@ -1,0 +1,59 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CANONICAL_BANK_CHUNK10_WORKING_ADMITTED",
+  "scope":"grade10_remaining_non_NE_NI_specials",
+  "refs":["152-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE10-GRAMMAR-v0.1.json","170 canonical N/NN chunk","161-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-PASS2-v0.1.json"],
+  "production_integration":"HOLD",
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "count_assertion":{"declared_canonical_units":5,"organizational_parents_counted":0},
+  "canonical_units":[
+    {
+      "unit_id":"school-nn-derived-noun-adverb-inheritance",
+      "label":"Н/НН в производных наречиях и существительных: сохранять написание производящей основы там, где словообразовательная связь установлена",
+      "grade_routes":[{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_academic_rule_confirmed",
+      "relationship":{"child_unit":"school-adverb-n-nn-source-word-inheritance","child_grade_route":7},
+      "counting_policy":"General derivational parent and independently counted child practice unit must not be double-counted. Final granularity remains denominator-materialization policy.",
+      "learner_policy":"First establish part of speech and motivating word; do not transfer N/NN from a visually similar word blindly."
+    },
+    {
+      "unit_id":"school-nn-derived-noun-memorized-set",
+      "label":"ТРУЖЕНИК, МАСЛЕНИЦА, ПУДРЕНИЦА, ГОСТИНИЦА, ПРИДАНОЕ: словарная школьная группа",
+      "members":["труженик","масленица","пудреница","гостиница","приданое"],
+      "grade_routes":[{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"all_current_spellings_dictionary_confirmed",
+      "learner_policy":"Keep as a dictionary-practice group. Do not invent one shared derivational exception rule for all five; where current word formation is transparent, explain it separately."
+    },
+    {
+      "unit_id":"school-gerund-shared-agent-boundary",
+      "label":"Деепричастие и основное действие: общий субъект; безличная конструкция возможна при инфинитиве и совпадении субъекта действий",
+      "grade_routes":[{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_literary_norm_confirmed",
+      "decision_model":["In an ordinary personal clause, the gerund action and predicate action must belong to the same agent.","A gerund construction is permitted in an impersonal clause containing an infinitive when the gerund and infinitive imply the same agent.","An impersonal clause without such an infinitive does not license a dangling gerund merely by context."],
+      "learner_policy":"Do not teach the obsolete absolute shortcut 'gerunds are impossible in impersonal sentences'."
+    },
+    {
+      "unit_id":"school-pri-chem-ni-pri-chem-nipochem",
+      "label":"ПРИ ЧЁМ / НИ ПРИ ЧЁМ / НИПОЧЁМ",
+      "members":["при чём тут","ни при чём","нипочём"],
+      "grade_routes":[{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_dictionary_confirmed",
+      "decision_model":["ПРИ ЧЁМ is a separate preposition+pronoun combination in the relational question pattern.","НИ ПРИ ЧЁМ is a fixed separate combination meaning noninvolvement.","НИПОЧЁМ is a lexicalized solid adverb/predicative word with its own meanings."],
+      "learner_policy":"Do not choose spelling from pronunciation alone; distinguish the lexical construction."
+    },
+    {
+      "unit_id":"school-adverb-po-solid-u-model",
+      "aliases":["school-adverb-po-solid-no-omu-boundary"],
+      "label":"ПОНЕМНОГУ, ПОМНОГУ, ПОДОЛГУ: слитная словообразовательная модель ПО- + основа наречия + -У",
+      "members":["понемногу","помногу","подолгу"],
+      "grade_routes":[{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "norm":"current_dictionary_and_wordformation_confirmed",
+      "current_model":"The final -о of the motivating adverb is truncated and prefix по- plus suffix -у form the derived adverb; current Gramota gives помногу, подолгу, понемногу among this model.",
+      "learner_policy":"Replace the weak mnemonic 'not the ПО-...-ОМУ model' with the positive current word-formation model."
+    }
+  ],
+  "exam_routes":[],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
