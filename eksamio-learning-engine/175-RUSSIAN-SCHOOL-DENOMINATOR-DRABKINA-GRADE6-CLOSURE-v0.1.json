@@ -1,0 +1,108 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"GRADE6_SPECIAL_DENOMINATOR_EXTRACTION_CLOSED_WORKING",
+  "production_integration":"HOLD",
+  "metric_status":"NOT_GLOBAL_DENOMINATOR",
+  "refs":[
+    "137-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE6-v0.1.json",
+    "138-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE6-METADATA-CORRECTION-v0.1.json",
+    "139-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE6-NE-ADDENDUM-v0.1.json",
+    "172-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK04-ADVERBS-PRONOUNS-HYPHEN-v0.1.json",
+    "173-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK05-MORPHOLOGY-NUMERALS-GRADE6-10-v0.1.json",
+    "174-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK06-GRADE6-COMPLEX-ADJECTIVE-SPECIALS-v0.1.json"
+  ],
+  "counts": {
+    "previous_working_candidate_routes_after_139": 21,
+    "newly_recovered_special_route_records": 8,
+    "working_candidate_routes_after_closure": 29,
+    "obsolete_source_forms_excluded_by_current_norm": 1,
+    "ordinary_rule_chapters_reviewed_but_not_counted_as_special_unit": 1
+  },
+  "new_route_records": [
+    {
+      "unit_id":"school-complex-adjectives-grade6-memorized-four",
+      "topic":"Сложные прилагательные: специально запоминаемые написания",
+      "evidence_level":"same_edition_text_replica",
+      "source_locator":"6practical/19, task 153 'Запомни'",
+      "source_scope":["вечнозелёный","общественно полезный","иссиня-чёрный","изжелта-красный"],
+      "current_norm":"confirmed_item_by_item"
+    },
+    {
+      "unit_id":"school-numerals-internal-soft-sign-50-80-500-900",
+      "topic":"Мягкий знак внутри сложных числительных",
+      "evidence_level":"same_edition_text_replica",
+      "source_locator":"6practical/20",
+      "current_norm":"confirmed"
+    },
+    {
+      "unit_id":"school-numerals-two-form-paradigm-40-90-100",
+      "topic":"Склонение 40, 90, 100",
+      "evidence_level":"same_edition_text_replica",
+      "source_locator":"6practical/20, task 159",
+      "current_norm":"confirmed"
+    },
+    {
+      "unit_id":"school-numerals-both-parts-decline-50-80-200-900",
+      "topic":"Склонение обеих частей сложных числительных",
+      "evidence_level":"same_edition_text_replica",
+      "source_locator":"6practical/20, tasks 159–161",
+      "current_norm":"confirmed"
+    },
+    {
+      "unit_id":"school-indefinite-pronouns-hyphen-koe-preposition-boundary",
+      "topic":"Неопределённые местоимения: дефис и предлог внутри формы",
+      "evidence_level":"project_topic_presence_only",
+      "source_locator":"Grade-6 contents confirms dedicated chapter; exact same-edition page text not recovered in this pass",
+      "current_norm":"confirmed",
+      "gate":"ROUTE_ACCEPTED_AS_WORKING_PRESENCE_ONLY; upgrade evidence before final source-closure metrics"
+    },
+    {
+      "unit_id":"school-negative-pronouns-ne-ni-stress-preposition-boundary",
+      "topic":"Отрицательные местоимения: НЕ/НИ, ударение, предлог",
+      "evidence_level":"same_edition_text_replica",
+      "source_locator":"6practical/22",
+      "current_norm":"confirmed"
+    },
+    {
+      "unit_id":"school-verb-stressed-va-boundary",
+      "topic":"Ударный -ВА- и гласная перед ним",
+      "evidence_level":"same_edition_text_replica",
+      "source_locator":"6practical/23, task 187",
+      "current_norm":"confirmed"
+    },
+    {
+      "unit_id":"school-verb-eva-memorized-set",
+      "topic":"Специальная группа на -ева́-",
+      "evidence_level":"same_edition_text_replica",
+      "source_locator":"6practical/23, task 188 'Запомни'",
+      "source_scope":["застревать","затмевать","продлевать"],
+      "current_norm":"confirmed_with_broader_authoritative_scope"
+    }
+  ],
+  "excluded_by_current_norm": [
+    {
+      "source_form":"зоревать",
+      "source_topic":"ЗАР/ЗОР",
+      "decision":"EXCLUDE_FROM_CURRENT_CANONICAL_BANK",
+      "current_form":"заревать",
+      "reason":"Historical exception no longer belongs to current spelling norm."
+    }
+  ],
+  "reviewed_not_counted": [
+    {
+      "topic":"Правописание Ь в глаголах повелительного наклонения",
+      "decision":"DO_NOT_COUNT_AS_SPECIAL_UNIT_IN_GRADE6_DENOMINATOR",
+      "reason":"The same-edition grade-6 chapter evidences the ordinary rule, but the special current forms ляг/лягте were not located in that school source. They may enter later through Rosenthal/current-norm completeness, not by an invented Grade-6 route."
+    }
+  ],
+  "closure_gates": [
+    "29 is a Grade-6 working route count, not a global unique canonical-unit count and not a percentage.",
+    "Cross-grade repeats are not removed by this closure file; canonical chunks own deduplication.",
+    "The indefinite-pronoun Grade-6 route remains weaker evidence until an exact same-edition locator is recovered.",
+    "No current-bank comparison, FIPI route assignment or learner coverage percentage is performed here.",
+    "No production/Tilda/runtime/scoring/localStorage content is changed."
+  ],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
