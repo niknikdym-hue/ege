@@ -1,0 +1,166 @@
+{
+  "schema_version": "0.1.0",
+  "subject": "russian",
+  "purpose": "school_denominator_drabkina_grade9_candidate_inventory",
+  "date": "2026-08-13",
+  "status": "working_candidate_inventory",
+  "production_integration": "HOLD",
+  "baseline_ref": "132-RUSSIAN-EXCEPTIONS-COURSE-GRADE-GATE-151-RECOVERED-STATUS.txt",
+  "work_spec_ref": "133-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-WORK-SPEC.txt",
+  "project_source": {
+    "grade": 9,
+    "path": "eksamio-learning-engine/russkiy-knigi/1563779010_174-russkij-jazyk_-9kl_-prakt_-po-orfografii-i-punkt__drabkina_2018-136s.pdf",
+    "title": "Русский язык. 9 класс. Практикум по орфографии и пунктуации. Готовимся к ГИА",
+    "authors": ["С. В. Драбкина", "Д. И. Субботин"],
+    "edition_year": 2018,
+    "project_pdf_present": true,
+    "project_pdf_directly_read_in_this_pass": false
+  },
+  "extraction_aid": {
+    "type": "same_edition_text_replica",
+    "base_url": "https://grammarian.school/teaching/gia/",
+    "edition_match": "grade/title/authors/year matched to project source",
+    "use_policy": "source-routing and candidate extraction; final project-PDF verification remains desirable"
+  },
+  "counts": {
+    "candidate_route_records": 5,
+    "new_candidate_identities": 4,
+    "merge_with_existing_candidate_identities": 1,
+    "current_bank_comparison_pending": 5
+  },
+  "candidate_units": [
+    {
+      "unit_id": "school-ssp-no-comma-common-element-boundary",
+      "domain": "punctuation_syntax",
+      "unit_type": "boundary_case",
+      "canonical_label": "ССП: когда запятая перед И между частями не ставится",
+      "normalized_members": [
+        "общий второстепенный член",
+        "общее придаточное предложение",
+        "общее вводное слово/сочетание/предложение",
+        "обе части вопросительные",
+        "обе части побудительные",
+        "обе части восклицательные",
+        "неопределённо-личные части с одним и тем же производителем действия",
+        "безличные части с синонимичными сказуемыми",
+        "назывные части"
+      ],
+      "parent_rule": "Базовая запятая между частями ССП отменяется при специально перечисленных структурно-смысловых условиях.",
+      "grade_routes": [{"grade":9,"role":"explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Отсутствие запятой перед союзом И в сложносочинённом предложении",
+        "locator": "explicit no-comma exception/boundary list on grade-9 page",
+        "replica_url": "https://grammarian.school/teaching/gia/15.html"
+      }],
+      "current_norm_review_status": "pending_Rosenthal_crosscheck",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "This is admitted as a boundary unit, not as a duplicate of the ordinary comma-in-SSP rule."
+    },
+    {
+      "unit_id": "school-paired-conjunction-fixed-pairs",
+      "domain": "syntax_norm_punctuation",
+      "unit_type": "contrast",
+      "canonical_label": "Постоянные пары двойных союзов: не только… но и; как… так и",
+      "normalized_members": [
+        "не только … но и …",
+        "как … так и …",
+        "не только … а также … — ненормативная смешанная пара",
+        "как … а также … — ненормативная смешанная пара"
+      ],
+      "grade_routes": [{"grade":9,"role":"explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Сочинительные союзы / ССП",
+        "locator": "explicit 'Запомните!' block: components of paired conjunctions are fixed and must not be mixed",
+        "replica_url": "https://grammarian.school/teaching/gia/15.html"
+      }],
+      "current_norm_review_status": "pending_authoritative_syntax_crosscheck",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "The source supplies malformed examples as error diagnostics; learner runtime should use concise original examples after norm review, not copy textbook sentences."
+    },
+    {
+      "unit_id": "school-subordinator-vs-relative-word-what-when-how",
+      "domain": "syntax_morphology",
+      "unit_type": "boundary_case",
+      "canonical_label": "ЧТО / КОГДА / КАК: союз или союзное слово",
+      "normalized_members": [
+        "что — союз / союзное слово",
+        "когда — союз / союзное слово",
+        "как — союз / союзное слово"
+      ],
+      "parent_rule": "Подчинительный союз не является членом придаточного предложения; союзное слово является членом придаточного и несёт собственное синтаксическое значение.",
+      "grade_routes": [{"grade":9,"role":"explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Сложноподчинённые предложения",
+        "locator": "source explicitly contrasts союз / союзное слово and gives separate examples for ЧТО, КОГДА, КАК",
+        "replica_url": "https://grammarian.school/teaching/gia/16.html"
+      }],
+      "current_norm_review_status": "pending_authoritative_syntax_crosscheck",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-junction-of-conjunctions-to-no-boundary",
+      "domain": "punctuation_syntax",
+      "unit_type": "boundary_case",
+      "canonical_label": "Стык союзов: что, если… / что если…, то…",
+      "normalized_members": [
+        "что, если … — запятая при отсутствии второй части союза",
+        "что если …, то … — без запятой на стыке",
+        "сочинительный + подчинительный союз: та же структурная проверка"
+      ],
+      "grade_routes": [{"grade":9,"role":"explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Знаки препинания на стыке союзов",
+        "locator": "dedicated grade-9 rule/exercises: comma depends on presence of continuation ТО/ТАК/НО etc.",
+        "replica_url": "https://grammarian.school/teaching/gia/29.html"
+      }],
+      "current_norm_review_status": "pending_Rosenthal_crosscheck",
+      "dedupe_status": "merge_candidate_with_existing_exception_card_boundary",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "This adds a grade-9 source route to the already represented junction-of-conjunctions skill; do not create duplicate learner content merely for the new grade route."
+    },
+    {
+      "unit_id": "school-colon-bsp-vs-generalizing-word",
+      "domain": "punctuation_syntax",
+      "unit_type": "contrast",
+      "canonical_label": "Двоеточие в БСП vs двоеточие после обобщающего слова",
+      "normalized_members": [
+        "БСП: причина / пояснение / дополнение второй частью",
+        "простое предложение: обобщающее слово перед однородными членами"
+      ],
+      "grade_routes": [{"grade":9,"role":"explicitly_taught_or_singled_out"}],
+      "source_evidence": [{
+        "evidence_level": "same_edition_text_replica",
+        "topic": "Бессоюзные предложения: двоеточие",
+        "locator": "explicit 'Запомните' contrast and diagnostic tests distinguish BСП colon from generalizing-word colon",
+        "replica_url": "https://grammarian.school/teaching/gia/32.html"
+      }],
+      "current_norm_review_status": "pending_Rosenthal_crosscheck",
+      "dedupe_status": "pending_cross_grade",
+      "current_bank_match_status": "comparison_pending",
+      "exam_routes": [],
+      "notes": "The ordinary full list of BСП colon/dash semantic rules is not automatically admitted as denominator units; only the explicitly isolated confusing contrast is recorded here."
+    }
+  ],
+  "scope_exclusions": [
+    "2018 GIA/OGE task numbering, timing and exam-format statements are not school-denominator evidence and are excluded from current exam routing.",
+    "Ordinary classification of subordinate-clause types is not admitted merely because it is a chapter topic.",
+    "The full ordinary BСП dash rule table is not admitted unless later evidence identifies a distinct exception/boundary/contrast worth canonicalizing."
+  ],
+  "next_pass": [
+    "Search remaining exact grade-9 chapters and final tests for additional explicit Запомните / contrast / normative-error blocks.",
+    "Do not use recovered old GRADE_9:6 count as a target or stopping criterion.",
+    "After source sweep, close grade 9 and proceed to grade 10."
+  ],
+  "production_files_changed": false
+}
