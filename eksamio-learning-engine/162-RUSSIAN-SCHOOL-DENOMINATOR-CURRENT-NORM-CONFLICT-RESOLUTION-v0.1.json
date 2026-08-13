@@ -1,0 +1,61 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CURRENT_NORM_CONFLICT_PASS1_COMPLETE",
+  "purpose":"resolve high-risk source conflicts that block canonicalization; authoritative current Gramota evidence used where appropriate",
+  "resolutions":[
+    {
+      "case_id":"NORM-001-PODYACHIY",
+      "unit_id":"school-podyachiy-separating-sign-conflict",
+      "source_conflict":"The grade-5 extraction layer showed an internal source inconsistency between подьячий and подъячий.",
+      "current_norm":"подьячий",
+      "authoritative_evidence":{"source":"Gramota.ru Metadictionary / Russian Orthographic Dictionary","url":"https://gramota.ru/meta/podyachiy","result":"подьячий"},
+      "decision":"RESOLVE_TO_CURRENT_SPELLING",
+      "canonicalization_action":"rename/normalize the conflict unit to a current lexical special-case member `подьячий`; preserve source typo/conflict only in provenance",
+      "norm_status":"current_confirmed",
+      "learner_policy":"Never show подъячий as a valid modern answer. The old conflicting source line is not a distractor unless explicitly labelled as an error in a controlled exercise."
+    },
+    {
+      "case_id":"NORM-002-VOOBSHCHE",
+      "unit_id":"school-voobshche-function-context",
+      "source_conflict":"The 2018 grade-11 source places ВООБЩЕ in a blanket list of words that never function as introductory.",
+      "current_norm":"ВООБЩЕ has context-dependent functions; it can be introductory in the meaning close to `вообще говоря`, and can also be an adverb/particle in other contexts.",
+      "authoritative_evidence":{"source":"Gramota.ru Punctuation Guide","url":"https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/voobshche","result":"ВООБЩЕ: introductory word and interjection; current rules also document adverb/particle uses by context"},
+      "decision":"KEEP_CONTEXTUAL_CANONICAL_UNIT_REJECT_SOURCE_ABSOLUTE_RULE",
+      "canonicalization_action":"retain grade-11 route as source presence but replace the source's universal learner rule with a context-function decision unit",
+      "norm_status":"current_with_rewording",
+      "learner_policy":"Never teach `вообще` as universally non-introductory."
+    },
+    {
+      "case_id":"NORM-003-ITAK",
+      "unit_id":"school-itak-vs-i-tak",
+      "source_conflict":"The grade-10 source wording treats ИТАК inconsistently, calling it a conjunction in one place and an introductory word in adjacent explanation.",
+      "current_norm":"ИТАК is a conjunction. It is close in meaning to `следовательно / таким образом` and is separated from the following sentence/part by comma or, more rarely, dash according to punctuation structure.",
+      "authoritative_evidence":{"source":"Gramota.ru Punctuation Guide","url":"https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/itak","result":"ИТАК, союз"},
+      "decision":"RESOLVE_SOURCE_CLASSIFICATION",
+      "canonicalization_action":"keep the spelling/function contrast `итак / и так`; canonical label and explanation must classify ИТАК as a conjunction, not as an introductory word",
+      "norm_status":"current_confirmed",
+      "learner_policy":"Do not reproduce the source's contradictory introductory-word label."
+    },
+    {
+      "case_id":"NORM-004-ZAREVAT",
+      "unit_id":"school-zar-zor-current-norm-conflict",
+      "source_conflict":"Grade-6 and grade-10 Drabkina layers retain older `зоревать` as an exception.",
+      "current_norm":"заревать",
+      "authoritative_evidence":{"source":"Gramota.ru reference service citing current academic orthographic dictionary history","url":"https://gramota.ru/poisk?mode=spravka&query=%D0%B7%D0%B0%D1%80%D0%B5%D0%B2%D0%B0%D1%82%D1%8C","result":"current spelling only заревать; old зоревать is historical/obsolete"},
+      "decision":"EXCLUDE_OBSOLETE_SOURCE_MEMBER",
+      "canonicalization_action":"do not create a current learner exception `зоревать`; preserve old form only in source-conflict provenance. If the lexical item is included, canonical current member is `заревать` under the current ЗАР/ЗОР rule model.",
+      "norm_status":"obsolete_source_form_replaced",
+      "learner_policy":"Never accept зоревать as a current correct learner answer."
+    }
+  ],
+  "counts":{"cases_reviewed":4,"resolved":4,"remaining_hold_from_these_cases":0},
+  "still_unresolved_high_value_groups":[
+    "school-ne-short-predicative-separate-set vs school-ne-adverbs-special-boundaries: morphology/ownership overlap",
+    "school-one-n-lexical-adjectives: item-level morphological membership",
+    "large grade-7 N/NN lexical exception lists: item-level current classification",
+    "variable punctuation with derived-preposition circumstances and КРОМЕ/ВМЕСТО groups: contextual branch review"
+  ],
+  "exam_routes_created":0,
+  "production_files_changed":false
+}
