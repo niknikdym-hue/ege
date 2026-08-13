@@ -1,19 +1,125 @@
 {
-  "status": "SOURCE_DERIVED_RUNTIME_NOT_BUILT",
-  "year": 2025,
-  "short_answer": {
-    "tasks": [1, 12],
-    "required_control": "single numeric text input",
-    "official_form": "integer or finite decimal",
-    "accepted_ui_notation": ["decimal comma", "decimal point", "leading minus where applicable"],
-    "normalization_rule": "normalize decimal comma to point for comparison; trim whitespace; do not accept expressions, fractions or units as short answer",
-    "scoring": "exact normalized numeric value per official answer table; 1 point each"
-  },
-  "extended_answer": {
-    "tasks": [13, 19],
-    "required_control": "textarea",
-    "scoring": "no automatic content score; after completion user self-assesses against official 2025 criteria",
-    "max_scores": {"13": 2, "14": 3, "15": 2, "16": 2, "17": 3, "18": 4, "19": 4},
-    "separation": "self-assessment points are displayed separately from automatic 1–12 points until combined explicitly on result screen"
+  "status": "PASS_BROWSER_AUDIT",
+  "contracts": {
+    "1-1": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "1-2": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "1-3": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "1-4": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "2-1": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "2-2": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "3-1": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "3-2": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "3-3": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "4-1": {
+      "mode": "probability",
+      "hint": "Введите вероятность числом от 0 до 1 без единиц измерения."
+    },
+    "4-2": {
+      "mode": "probability",
+      "hint": "Введите вероятность числом от 0 до 1 без единиц измерения."
+    },
+    "5-1": {
+      "mode": "probability",
+      "hint": "Введите вероятность числом от 0 до 1 без единиц измерения."
+    },
+    "5-2": {
+      "mode": "probability",
+      "hint": "Введите вероятность числом от 0 до 1 без единиц измерения."
+    },
+    "6-1": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "6-2": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "6-3": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "6-4": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "7-1": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "7-2": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "7-3": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "8-1": {
+      "mode": "integer_nonnegative",
+      "hint": "Введите количество точек целым неотрицательным числом."
+    },
+    "8-2": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "9-1": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "10-1": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "10-2": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "10-3": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "11-1": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "12-1": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "12-2": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    },
+    "12-3": {
+      "mode": "number",
+      "hint": "Введите число без единиц измерения и пробелов."
+    }
   }
 }

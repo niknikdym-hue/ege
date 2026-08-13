@@ -4,11 +4,17 @@ EXAM: ЕГЭ
 SUBJECT: математика
 LEVEL: профильный
 SOURCE_YEAR: 2025
-PAGE_TYPE: archive interactive demo
-PACKAGE_VERSION: v1.0
-STATUS: SOURCE_GATE_PASS_BUILD_NEXT
-CURRENT_STAGE: source layer complete; runtime/T123 not built
-CANONICAL: https://eksamio.ru/ege/matematika-profil/demoversiya/2025/
-STORAGE_KEY: eksamio_ege_math_profile_demo_2025_v1_0
-DO_NOT_TOUCH: https://eksamio.ru/ege/matematika-profil/demoversiya/
-TECHNICAL_REFERENCE_ONLY: ege-matematika-profil-demoversiya-2026/
+PACKAGE_VERSION: 1.0
+SOURCE_GATE: PASS
+TEXT_TYPOGRAPHY_GATE: PASS
+FORMULA_GATE: PASS
+VISUAL_GATE: PASS
+INTERACTION_GATE: PASS — 37/37 official examples through real DOM controls
+SCORER_GATE: PASS — every short-answer example correct+wrong checked
+STATE_RESTORE_GATE: PASS — assigned variant, answers, mark and navigation survive reload
+EXTENDED_SELF_EVALUATION_GATE: PASS — 7/7 criteria assets and score buttons
+TILDA_SIZE_GATE: PASS — every T123 < 45000 bytes
+INDEPENDENT_AUDIT_GATE: PASS — source layer and separate browser audit
+FINAL_STATUS: READY_FOR_TILDA_UPLOAD
+PUBLISHED_SMOKE_STATUS: NOT_RUN_UNTIL_TILDA_PUBLICATION
+LIVE_GO: NO — requires Tilda publication + production smoke-test + manual student acceptance
