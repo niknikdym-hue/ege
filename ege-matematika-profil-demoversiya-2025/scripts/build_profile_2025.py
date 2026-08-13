@@ -135,13 +135,14 @@ def write_audit_matrix(data,browser_pass):
             for v in t["variants"]:
                 n=t["number"];key=f"{n}-{v['variant']}";short=n<=12
                 runtime="PASS_BROWSER" if browser_pass else "PENDING_BROWSER"
+                correct_answer = v["answer"] if short else f"official criteria pages {','.join(map(str,SOL_PAGES[n]))}; max {v['max_score']}"
                 row={
                   "year":2025,"level":"profile","task":n,"official_variant":v["variant"],
                   "pdf_file":"ege-2025-matematika-profil-demoversiya.pdf","pdf_page":v["source_page"],
                   "source_text_checked":"PASS","bold_checked":"PASS","italic_checked":"PASS","underline_checked":"PASS","super_subscript_checked":"PASS","formula_checked":"PASS","table_checked":"PASS","visual_checked":"PASS",
                   "source_visual_ref":f"source-evidence/printed-pages/profile-demo/page-{v['source_page']:02d}.webp",
                   "implementation_file":f"assets/condition-{key}.webp","actual_control":v["control"],"required_control":v["control"],
-                  "interaction_checked":runtime,"correct_answer":v.get("answer",f"official criteria pages {','.join(map(str,SOL_PAGES[n]))}; max {v['max_score']}"),
+                  "interaction_checked":runtime,"correct_answer":correct_answer,
                   "alternatives_checked":runtime if short else "N/A","scorer_checked":runtime if short else "N/A_SELF_ASSESSMENT",
                   "autosave_checked":runtime,"reload_checked":runtime,"criteria_checked":"N/A" if short else "PASS_SOURCE_AND_BROWSER" if browser_pass else "PASS_SOURCE",
                   "result":"PASS" if browser_pass else "SOURCE_PASS_BUILD_PENDING","defect_id":"",
