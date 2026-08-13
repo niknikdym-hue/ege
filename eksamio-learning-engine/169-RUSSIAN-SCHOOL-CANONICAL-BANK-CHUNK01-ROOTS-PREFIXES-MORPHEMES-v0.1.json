@@ -1,0 +1,184 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CANONICAL_BANK_CHUNK01_WORKING_ADMITTED",
+  "domain_scope":"roots_prefixes_morphemic_specials",
+  "refs":[
+    "159-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-SPEC.txt",
+    "160-RUSSIAN-SCHOOL-DENOMINATOR-CROSS-GRADE-MERGE-PASS1-v0.1.json",
+    "166-RUSSIAN-SCHOOL-DENOMINATOR-CURRENT-NORM-PASS5-ROOTS-PREPRI-v0.1.json",
+    "167-RUSSIAN-SCHOOL-DENOMINATOR-PREPRI-DICTIONARY-CLOSURE-v0.1.json",
+    "168-RUSSIAN-SCHOOL-DENOMINATOR-CURRENT-NORM-PASS6-MORPHEMIC-SPECIALS-v0.1.json"
+  ],
+  "production_integration":"HOLD",
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "canonical_units":[
+    {
+      "unit_id":"school-gor-gar-rare-exception-set",
+      "domain":"orthography_roots",
+      "unit_type":"lexical_exception_family",
+      "canonical_label":"ГАР/ГОР: безударные А-исключения",
+      "grade_routes":[
+        {"grade":6,"role":"explicitly_taught_or_singled_out","source_member_scope":["изгарь","выгар","выгарь","пригарь"]},
+        {"grade":10,"role":"explicitly_taught_or_singled_out","source_member_scope":["пригарь"]}
+      ],
+      "current_norm_scope":{"core_source_members_confirmed":["изгарь","выгар","выгарь","пригарь"],"current_additional_members_parked_for_completeness":["выгарки","гаревой"]},
+      "norm_status":"current_confirmed_family",
+      "canonicalization_status":"admitted_working",
+      "mastery_granularity_candidate":"family_with_member_practice",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-skak-skoch-exception-set",
+      "domain":"orthography_roots",
+      "unit_type":"structured_form_boundary",
+      "canonical_label":"СКАК–СКОК–СКАЧ–СКОЧ: выбор гласной по форме и типу глагола",
+      "aliases":["old school shortcut: скачок, скачу as isolated exceptions"],
+      "grade_routes":[
+        {"grade":6,"role":"explicitly_taught_or_singled_out","source_member_scope":["скачок","скачу"]},
+        {"grade":10,"role":"explicitly_taught_or_singled_out","source_member_scope":["скачок","скачу"]}
+      ],
+      "branches":["-скак- before к in unstressed position","-скач- in forms of скакать and derivatives","скачок / скачкообразный","prefixed -скочить verbs"],
+      "norm_status":"current_confirmed_with_reclassification",
+      "canonicalization_status":"admitted_working",
+      "mastery_granularity_candidate":"one_decision_engine_with_branch_diagnostics",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-plav-plov-exception-set",
+      "domain":"orthography_roots",
+      "unit_type":"traditional_lexical_exception",
+      "canonical_label":"ПЛАВ/ПЛОВ: пловец, пловчиха",
+      "canonical_members":["пловец","пловчиха"],
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "norm_status":"current_confirmed_traditional",
+      "canonicalization_status":"admitted_working",
+      "learner_rationale_policy":"traditional spelling only; no invented modern semantic explanation",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-tvar-tvor-utvar-exception",
+      "domain":"orthography_roots_morphemics",
+      "unit_type":"traditional_special_case",
+      "canonical_label":"УТВАРЬ: традиционное А при историческом -твар-",
+      "canonical_members":["утварь"],
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "norm_status":"current_confirmed_with_historical_morpheme_note",
+      "canonicalization_status":"admitted_working",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-ravn-rovn-exception-set",
+      "domain":"orthography_roots_semantics",
+      "unit_type":"semantic_dictionary_boundary",
+      "canonical_label":"РАВН/РОВН: значение + современные исключения",
+      "grade_routes":[
+        {"grade":6,"role":"explicitly_taught_or_singled_out","source_member_scope":["равнина","ровесник","уровень","поровну"]},
+        {"grade":10,"role":"repeated_or_reviewed","source_member_scope":["равнина","ровесник","уровень","поровну"]}
+      ],
+      "current_exception_core":["равнина","поровну","выровнять(ся)"],
+      "source_presence_not_current_exception_core":["ровесник","уровень"],
+      "branches":["РАВН: equality/comparison","РОВН: smooth/straight/stable","dictionary/double-motivation cases","current exceptions"],
+      "norm_status":"current_confirmed_source_reclassified",
+      "canonicalization_status":"admitted_working",
+      "mastery_granularity_candidate":"one_semantic_dictionary_decision_engine",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-rast-rashch-ros-exception-set",
+      "domain":"orthography_roots",
+      "unit_type":"exception_family_with_scope_drift",
+      "canonical_label":"РАСТ/РАЩ/РОС: специальный нормативный список при старом школьном scope",
+      "grade_routes":[
+        {"grade":5,"role":"explicitly_taught_or_singled_out","source_member_scope":["росток","Ростислав","Ростов","ростовщик","отрасль","на вырост"]},
+        {"grade":6,"role":"repeated_or_reviewed","source_member_scope":["росток","Ростислав","Ростов","ростовщик","отрасль","на вырост"]},
+        {"grade":10,"role":"explicitly_taught_or_singled_out","source_member_scope":["росток","Ростислав","Ростов","ростовщик","на вырост","отрасль"]}
+      ],
+      "current_normative_scope_examples":["росток","ростовщик","отрасль","ростовой","вырост","выростной","выросток","заросток","прорость","подростковый"],
+      "norm_status":"current_confirmed_school_scope_incomplete",
+      "canonicalization_status":"admitted_working_with_completeness_extension_pending",
+      "counting_note":"current-only members remain outside school-source metric until completeness phase",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-pre-pri-lexical-contrast-family",
+      "domain":"orthography_prefixes_lexicon",
+      "unit_type":"parent_with_pair_branches",
+      "canonical_label":"ПРЕ-/ПРИ-: близкие по звучанию словарные контрасты",
+      "aliases":["school-pre-pri-phonetic-twins"],
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "pair_branches":[
+        "пребывать—прибывать","преклонить/преклоняться—приклонить(ся)","преступить—приступить","претворить—притворить/притвориться","предать—придать","предание—придание","предел—придел","преемник—приёмник","преходящий—приходящий","превратный—привратник","презирать—призреть","непреложный—приложить","непременный—применить/применимый"
+      ],
+      "norm_status":"current_pair_set_confirmed",
+      "canonicalization_status":"admitted_working",
+      "mastery_granularity_candidate":"pair_level_under_noncounted_parent",
+      "learner_rationale_policy":"meaning/dictionary contrast; no pseudo-etymology",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-chet-chit-sochetat-sochetanie",
+      "domain":"orthography_roots_morphemics",
+      "unit_type":"traditional_special_spelling",
+      "canonical_label":"сочетать, сочетание: Е как отдельное традиционное написание",
+      "canonical_members":["сочетать","сочетание"],
+      "grade_routes":[{"grade":5,"role":"explicitly_taught_or_singled_out"},{"grade":6,"role":"repeated_or_reviewed"},{"grade":10,"role":"repeated_or_reviewed"}],
+      "norm_status":"current_confirmed_with_reclassification",
+      "canonicalization_status":"admitted_working",
+      "learner_rationale_policy":"not a fictitious simple ЧЕТ/ЧИТ cognate exception",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-i-y-after-prefix-vzimat-exception",
+      "domain":"orthography_prefixes",
+      "unit_type":"lexical_special_case",
+      "canonical_label":"ВЗИМАТЬ: И после ВЗ-",
+      "canonical_members":["взимать"],
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "norm_status":"current_confirmed",
+      "canonicalization_status":"admitted_working",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-i-y-after-prefix-retain-i-boundary",
+      "domain":"orthography_prefixes_wordformation",
+      "unit_type":"structured_boundary",
+      "canonical_label":"И сохраняется после СВЕРХ-/МЕЖ-, иноязычных приставок и первых частей сложных слов",
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "branches":["сверх-","меж-","borrowed prefixes","compound/abbreviation first parts"],
+      "norm_status":"current_confirmed",
+      "canonicalization_status":"admitted_working",
+      "mastery_granularity_candidate":"one_boundary_with_branches",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-pol-polu-writing-boundary",
+      "domain":"orthography_compounds",
+      "unit_type":"structured_boundary",
+      "canonical_label":"ПОЛ-/ПОЛУ-: слитно, дефис, раздельно и словарные случаи",
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "branches":["ПОЛ solid default","hyphen before vowel","hyphen before capital","hyphen before Л","ПОЛ + multiword phrase separate","ПОЛУ solid default","ПОЛУ + proper-name/hyphen structure","dictionary specials"],
+      "norm_status":"current_confirmed_expanded",
+      "canonicalization_status":"admitted_working",
+      "mastery_granularity_candidate":"one_rule_engine_with_branch_diagnostics",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-lag-lozh-polog-exception",
+      "domain":"orthography_roots_morphemics",
+      "unit_type":"traditional_special_case",
+      "canonical_label":"ПОЛОГ: специальное О, но современный -лог- не выделяется",
+      "canonical_members":["полог"],
+      "grade_routes":[{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "norm_status":"current_confirmed_with_morphemic_rewording",
+      "canonicalization_status":"admitted_working",
+      "exam_routes":[]
+    }
+  ],
+  "counts":{"canonical_units_materialized":12,"units_with_exam_routes":0,"production_units_published":0},
+  "count_warning":"12 is only the size of this admitted domain chunk. It is not a denominator and must never be converted to learner coverage percentage.",
+  "next_chunk_candidates":["suffixes and N/NN","NE/NI","pronouns/numerals","adverbs","derivative prepositions/conjunction spelling","syntax/government","punctuation boundaries"],
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false
+}
