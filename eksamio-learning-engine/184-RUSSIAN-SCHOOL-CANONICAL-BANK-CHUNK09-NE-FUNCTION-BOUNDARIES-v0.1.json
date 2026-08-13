@@ -1,0 +1,49 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CANONICAL_BANK_CHUNK09_WORKING_ADMITTED",
+  "scope":"resolved_NE_function_and_spelling_boundaries",
+  "refs":["163-RUSSIAN-SCHOOL-DENOMINATOR-CURRENT-NORM-HOLD-RESOLUTION-PASS2-NE-MORPHOLOGY-v0.1.json","161-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-PASS2-v0.1.json"],
+  "production_integration":"HOLD",
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "count_assertion":{"declared_canonical_units":4,"old_source_bucket_counted":0,"duplicate_generic_adverb_ownership":0},
+  "canonical_units":[
+    {
+      "unit_id":"school-ne-dictionary-fixed-short-adjective-predicative-forms",
+      "label":"НЕ раздельно в словарно закреплённых кратких/предикативных формах",
+      "members":["не рад","не готов","не должен","не намерен","не обязан"],
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"repeated_or_reviewed"}],
+      "norm":"current_confirmed",
+      "learner_policy":"Teach the fixed separate spelling; do not force one part-of-speech label onto every member."
+    },
+    {
+      "unit_id":"school-ne-soglasen-spelling-boundary",
+      "label":"НЕ СОГЛАСЕН: отдельное написание как нормативный учебный ориентир",
+      "members":["не согласен","не согласна"],
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"repeated_or_reviewed"}],
+      "norm":"current_with_context_note",
+      "learner_policy":"Use separate spelling as the current dictionary-backed learner default; do not infer a universal rule from the old textbook category label."
+    },
+    {
+      "unit_id":"school-ne-nado-zhal-predicative-separate",
+      "label":"НЕ НАДО, НЕ ЖАЛЬ: раздельно",
+      "members":["не надо","не жаль"],
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"repeated_or_reviewed"}],
+      "norm":"current_confirmed",
+      "learner_policy":"Do not label these forms as short adjectives."
+    },
+    {
+      "unit_id":"school-ne-nuzhno-function-spelling-boundary",
+      "label":"НЕ НУЖНО / НЕНУЖНО: написание зависит от функции",
+      "members":["не нужно"],
+      "contrast_members":["ненужно много"],
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"repeated_or_reviewed"}],
+      "norm":"current_confirmed_with_function_split",
+      "learner_policy":"In necessity/predicate meaning use НЕ НУЖНО separately. Do not ask the isolated string without syntax/meaning context."
+    }
+  ],
+  "ownership_rule":"The old mixed source bucket school-ne-short-predicative-separate-set is not counted. Generic school-ne-adverbs-special-boundaries must not duplicate ownership of НЕ ЖАЛЬ, НЕ НАДО or predicate НЕ НУЖНО; provenance may remain, mastery identity does not.",
+  "exam_routes":[],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
