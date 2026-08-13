@@ -1,0 +1,29 @@
+TASK 27 HOTFIX — LOCAL TEST RESULT
+
+UNIT:
+PASS task27 hotfix unit tests: 17 assertions
+
+Проверено:
+- K7–K10: 0 / 1–2 / 3–4 / 5+ подтверждённых ошибок;
+- missing confirmed data => null / не оценено;
+- possible errors не снижают балл;
+- официальный максимум = 22;
+- учебная нормированная шкала: 22 -> 24;
+- зависимость К1=0 => К2=0 и К3=0;
+- подтверждённый порог 149 слов или меньше => 0;
+- без подтверждения eligibility итог не вычисляется.
+
+BROWSER SMOKE:
+PASS browser task27: modes, transfer, 149/150 threshold, scoring, possible-vs-confirmed persistence
+
+Проверено:
+- переключение «бумага / демо-ввод»;
+- paper mode скрывает демо-textarea;
+- отметка рукописного ответа сохраняется через исходный core state;
+- постэкзаменационный перенос текста;
+- граница 149/150;
+- отдельные confirmed / possible errors;
+- K1–K6 + K7–K10 = 22 при максимуме;
+- возможные ошибки не уменьшают 22;
+- локальное сохранение перенесённого текста и review-state;
+- исправленный MutationObserver не зацикливается.
