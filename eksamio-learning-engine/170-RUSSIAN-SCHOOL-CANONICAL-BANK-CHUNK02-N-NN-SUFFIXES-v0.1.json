@@ -1,0 +1,274 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-13",
+  "status": "CANONICAL_BANK_CHUNK02_WORKING_ADMITTED",
+  "domain_scope": "n_nn_and_adjective_suffix_specials",
+  "refs": [
+    "159-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-SPEC.txt",
+    "164-RUSSIAN-SCHOOL-DENOMINATOR-CURRENT-NORM-HOLD-RESOLUTION-PASS3-N-NN-v0.1.json",
+    "169-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK01-ROOTS-PREFIXES-MORPHEMES-v0.1.json"
+  ],
+  "production_integration": "HOLD",
+  "metric_status": "NOT_FINAL_DENOMINATOR",
+  "count_assertion": {
+    "declared_canonical_units": 16,
+    "excluded_source_buckets": 1,
+    "rule": "declared_canonical_units MUST equal canonical_units array length; excluded source buckets are provenance only and MUST NOT be counted"
+  },
+  "canonical_units": [
+    {
+      "unit_id": "school-nn-an-yan-exception-triad",
+      "domain": "orthography_adjective_suffixes",
+      "unit_type": "traditional_exception_set",
+      "canonical_label": "ДЕРЕВЯННЫЙ, ОЛОВЯННЫЙ, СТЕКЛЯННЫЙ: НН при -янн-",
+      "canonical_members": ["деревянный", "оловянный", "стеклянный"],
+      "grade_routes": [
+        {"grade": 6, "role": "explicitly_taught_or_singled_out"},
+        {"grade": 10, "role": "explicitly_taught_or_singled_out"}
+      ],
+      "norm_status": "current_confirmed",
+      "canonicalization_status": "admitted_working",
+      "learner_rationale_policy": "Treat as the traditional three-word exception set; do not invent a pseudo-etymological mnemonic.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-nn-vetreny-boundary",
+      "domain": "orthography_adjective_suffixes",
+      "unit_type": "exception_and_word_family_boundary",
+      "canonical_label": "ВЕТРЕНЫЙ / БЕЗВЕТРЕННЫЙ / ВЕТРЯНОЙ",
+      "canonical_members": ["ветреный", "безветренный", "обветренный", "подветренный", "ветряной"],
+      "grade_routes": [
+        {"grade": 6, "role": "explicitly_taught_or_singled_out", "source_member_scope": ["ветреный", "безветренный", "ветряной"]},
+        {"grade": 10, "role": "explicitly_taught_or_singled_out", "source_member_scope": ["ветреный", "безветренный", "ветряной"]}
+      ],
+      "current_norm_model": {
+        "one_n": ["ветреный"],
+        "two_n_prefixed_family": ["безветренный", "обветренный", "подветренный"],
+        "separate_suffix_semantic_form": ["ветряной"]
+      },
+      "norm_status": "current_confirmed_with_family_expansion",
+      "canonicalization_status": "admitted_working",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-one-n-difficult-adjectives",
+      "domain": "orthography_adjective_suffixes",
+      "unit_type": "practice_parent_with_explanatory_branches",
+      "canonical_label": "Трудные прилагательные с одной Н: не одна морфологическая модель",
+      "canonical_members": ["единый", "зелёный", "багряный", "румяный", "юный", "свиной", "пряный", "пьяный", "бараний"],
+      "grade_routes": [
+        {"grade": 6, "role": "explicitly_taught_or_singled_out", "source_member_scope": ["единый", "зелёный", "багряный", "румяный", "юный", "свиной"]},
+        {"grade": 10, "role": "explicitly_taught_or_singled_out", "source_member_scope": ["единый", "зелёный", "румяный", "пряный", "юный", "свиной", "пьяный", "бараний"]}
+      ],
+      "branches": [
+        {"branch_id": "memorized_or_nonproductive", "members": ["багряный", "зелёный", "пряный", "румяный", "юный"]},
+        {"branch_id": "formed_without_suffix_n", "members": ["свиной", "бараний"]},
+        {"branch_id": "dictionary_route_specific", "members": ["единый", "пьяный"]}
+      ],
+      "norm_status": "current_spelling_confirmed_with_structured_explanation",
+      "canonicalization_status": "admitted_working",
+      "counting_policy": "Count the canonical parent once unless later mastery-granularity design explicitly switches to mutually exclusive child units; never count parent plus branches.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-nn-current-memorized-lexical-exception-core",
+      "domain": "orthography_verb_derived_adjectives",
+      "unit_type": "current_memorized_exception_core",
+      "canonical_label": "НН: подтверждённое современное ядро словарно запоминаемых форм из школьного списка",
+      "canonical_members": ["невиданный", "неслыханный", "негаданный", "нежданный", "нечаянный", "желанный", "медленный", "неожиданный", "священный"],
+      "grade_routes": [
+        {"grade": 7, "role": "explicitly_taught_or_singled_out"},
+        {"grade": 10, "role": "repeated_or_reviewed"}
+      ],
+      "norm_status": "current_confirmed_core",
+      "canonicalization_status": "admitted_working",
+      "scope_policy": "This is the intersection of the school-source bucket with current authoritative memorized-exception guidance, not yet the full modern completeness list.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-nn-dictionary-lexical-adjectives-grade7",
+      "domain": "orthography_lexical_adjectives",
+      "unit_type": "dictionary_practice_group",
+      "canonical_label": "НН: словарные прилагательные из 7-классного источника с разными основаниями образования",
+      "canonical_members": ["окаянный", "отчаянный", "чванный", "чеканный"],
+      "grade_routes": [{"grade": 7, "role": "explicitly_taught_or_singled_out"}],
+      "norm_status": "current_spelling_confirmed_explanatory_grouping_not_uniform",
+      "canonicalization_status": "admitted_working",
+      "learner_rationale_policy": "May be practised as a dictionary group, but never claim one shared derivational exception rule for all members.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-schitany-schitanny-context-boundary",
+      "domain": "orthography_morphology_semantics",
+      "unit_type": "context_boundary",
+      "canonical_label": "СЧИТАНЫЙ / СЧИТАННЫЙ: мало vs действие счёта",
+      "canonical_members": ["считаные минуты", "считаные часы"],
+      "contrast_members": ["считанные кем-либо предметы", "считанные контролёром билеты"],
+      "grade_routes": [{"grade": 7, "role": "explicitly_taught_or_singled_out"}],
+      "norm_status": "current_confirmed_source_correction",
+      "source_conflict": "The older grade-7 memorization bucket gives считанный without the modern semantic/context split.",
+      "learner_policy": "Never teach считанные минуты as the current norm for the meaning 'very few'.",
+      "canonicalization_status": "admitted_working",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-raneny-ranenny-context-boundary",
+      "domain": "orthography_morphology_semantics",
+      "unit_type": "context_boundary",
+      "canonical_label": "РАНЕНЫЙ / РАНЕННЫЙ: lexicalized adjective vs participial context",
+      "canonical_members": ["раненый солдат"],
+      "contrast_members": ["раненный в ногу солдат", "раненный в бою солдат"],
+      "grade_routes": [{"grade": 7, "role": "explicitly_taught_or_singled_out"}],
+      "norm_status": "current_confirmed",
+      "canonicalization_status": "admitted_working",
+      "learner_rationale_policy": "Use contextual/morphological distinction, not a blanket rule that any dependent word automatically doubles Н in every verb-derived adjective.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-nazvany-posazhony-koncheny-fixed-combinations",
+      "domain": "orthography_lexicalized_adjectives",
+      "unit_type": "fixed_combination_contrast_set",
+      "canonical_label": "НАЗВАНЫЙ / ПОСАЖЁНЫЙ / КОНЧЕНЫЙ: устойчивые значения с одной Н и причастные контрасты",
+      "canonical_members": ["названый брат", "названая сестра", "посажёный отец", "посажёная мать", "конченый человек"],
+      "contrast_members": ["названный кем-либо", "посаженные деревья", "конченная в срок работа"],
+      "grade_routes": [{"grade": 7, "role": "explicitly_taught_or_singled_out"}],
+      "norm_status": "current_confirmed",
+      "canonicalization_status": "admitted_working",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-smyshlyony-one-n",
+      "domain": "orthography_lexical_adjectives",
+      "unit_type": "lexical_special_case",
+      "canonical_label": "СМЫШЛЁНЫЙ: одна Н",
+      "canonical_members": ["смышлёный"],
+      "grade_routes": [{"grade": 7, "role": "explicitly_taught_or_singled_out"}],
+      "norm_status": "current_confirmed",
+      "canonicalization_status": "admitted_working",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-besheny-one-n-lexical-adjective",
+      "domain": "orthography_verb_derived_adjectives",
+      "unit_type": "regular_rule_high_risk_lexeme",
+      "canonical_label": "БЕШЕНЫЙ: одна Н без ложной маркировки как исключения",
+      "canonical_members": ["бешеный", "бешеный взгляд"],
+      "grade_routes": [{"grade": 7, "role": "explicitly_taught_or_singled_out"}],
+      "norm_status": "current_confirmed_reclassified",
+      "canonicalization_status": "admitted_working",
+      "learner_rationale_policy": "Keep because the source singles it out and it is error-prone, but explain by the current verb-derived adjective rule rather than calling it an exception.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-kovany-zhovany-adjective-participle-boundary",
+      "domain": "orthography_morphology",
+      "unit_type": "part_of_speech_context_boundary",
+      "canonical_label": "КОВАНЫЙ / КОВАННЫЙ; ЖЁВАНЫЙ / ЖЁВАННЫЙ",
+      "canonical_members": ["кованый", "кованая мебель", "жёваный", "жёваный хлеб"],
+      "contrast_members": ["кованный", "жёванный"],
+      "grade_routes": [
+        {"grade": 7, "role": "explicitly_taught_or_singled_out"},
+        {"grade": 10, "role": "explicitly_taught_or_singled_out"}
+      ],
+      "current_norm_model": {
+        "one_n": "dictionary adjective",
+        "two_n": "passive participle when the form is genuinely participial in context"
+      },
+      "norm_status": "current_confirmed_with_morphological_reclassification",
+      "canonicalization_status": "admitted_working",
+      "learner_rationale_policy": "Do not teach the obsolete shortcut that -ов-/-ев- is simply 'part of the root' and therefore one Н regardless of morphology.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-short-participle-vs-short-verb-adjective-n-nn",
+      "domain": "orthography_morphology_syntax",
+      "unit_type": "decision_boundary",
+      "canonical_label": "Краткое страдательное причастие vs краткое отглагольное прилагательное: Н / НН",
+      "canonical_members": ["статья отредактирована", "семена рассеяны", "претензии обоснованы"],
+      "contrast_members": ["девочка рассеянна", "претензии необоснованны", "она воспитанна"],
+      "grade_routes": [{"grade": 7, "role": "explicitly_taught_or_singled_out"}],
+      "current_norm_model": {
+        "short_passive_participle": "one Н",
+        "short_verb_derived_adjective": "normally preserves adjective spelling, but current dictionaries contain lexical restrictions and individual recommendations that override naive mechanical transfer"
+      },
+      "norm_status": "current_confirmed_with_dictionary_caution",
+      "canonicalization_status": "admitted_working",
+      "learner_rationale_policy": "Use meaning/syntax plus dictionary control for unstable lexical cases; do not teach a blind full-form transformation as sufficient in every case.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-adverb-n-nn-source-word-inheritance",
+      "domain": "orthography_word_formation",
+      "unit_type": "derived_form_rule_boundary",
+      "canonical_label": "Н/НН в наречиях на -о: написание мотивирующего прилагательного",
+      "canonical_members": ["ветрено", "юно", "организованно", "удивлённо"],
+      "contrast_members": ["пронумеровано как краткое причастие", "скомкано как краткое причастие — скомканно как наречие"],
+      "grade_routes": [{"grade": 7, "role": "explicitly_taught_or_singled_out"}],
+      "norm_status": "current_confirmed_with_part_of_speech_boundary",
+      "canonicalization_status": "admitted_working",
+      "learner_rationale_policy": "First determine that the form is an adverb; only then inherit N/NN from the motivating adjective/participle-derived adjective.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-nn-repeated-compound-second-part-one-n",
+      "domain": "orthography_compound_repetition",
+      "unit_type": "special_repetition_rule",
+      "canonical_label": "Усилительные повторы с ПЕРЕ-: вторая часть сохраняет Н/НН первой",
+      "canonical_members": ["глаженый-переглаженый", "ношеный-переношеный", "стираный-перестираный", "штопаный-перештопаный"],
+      "grade_routes": [{"grade": 10, "role": "explicitly_taught_or_singled_out"}],
+      "norm_status": "current_confirmed",
+      "canonicalization_status": "admitted_working",
+      "current_norm_model": "In emphatic repetition compounds with пере- in the second component, the second component is spelled with the same Н/НН pattern as the first; this is not the ordinary prefixed-participle rule.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-adjective-iv-ev-milostivy-yurodivy",
+      "domain": "orthography_adjective_suffixes",
+      "unit_type": "suffix_exception_pair",
+      "canonical_label": "МИЛОСТИВЫЙ, ЮРОДИВЫЙ: безударный -ИВ-",
+      "canonical_members": ["милостивый", "юродивый"],
+      "grade_routes": [{"grade": 10, "role": "explicitly_taught_or_singled_out"}],
+      "norm_status": "current_confirmed",
+      "canonicalization_status": "admitted_working",
+      "learner_rationale_policy": "Teach as the traditional exception pair against the school -ив-/-ев- stress shortcut; no invented etymology.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-adjective-doshchaty-special",
+      "domain": "orthography_adjective_suffixes",
+      "unit_type": "dictionary_special_spelling",
+      "canonical_label": "ДОЩАТЫЙ: специальное написание",
+      "canonical_members": ["дощатый"],
+      "grade_routes": [{"grade": 10, "role": "explicitly_taught_or_singled_out"}],
+      "norm_status": "current_dictionary_confirmed",
+      "canonicalization_status": "admitted_working",
+      "learner_rationale_policy": "Treat as a dictionary/special spelling in this bank until the later Rosenthal completeness and morphemic explanation pass; do not invent a mnemonic rule.",
+      "exam_routes": []
+    }
+  ],
+  "excluded_source_buckets": [
+    {
+      "source_bucket_id": "school-nn-regular-participial-forms-source-misgrouped",
+      "source_members": ["обещанный", "данный", "слушанный", "слышанный"],
+      "grade_routes": [{"grade": 7, "role": "presence_confirmed_role_unclear"}],
+      "decision": "EXCLUDE_AS_SEPARATE_EXCEPTION_IDENTITIES",
+      "reason": "The forms exist in current norm, but their presence in the old memorization table does not make them independent lexical exceptions; they are owned by ordinary participial/derivational rules unless a later completeness pass finds a separate special boundary."
+    }
+  ],
+  "current_authoritative_sources": [
+    {"source": "Gramota.ru current N/NN rule for denominative adjectives", "url": "https://gramota.ru/uchebnik/pravila/bukvy-n-i-nn-v-otymennykh-prilagatelnykh-i-obrazovannykh-ot-nikh-narechiyakh-i-sushchestvitelnykh"},
+    {"source": "Gramota.ru academic rule for participles and correlated adjectives", "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/dvoynoe-n-i-odno-n-v-suffiksakh-stradatelnykh-prichastiy-proshedshego-vremeni-i-sootnositelnykh-s-nimi-prilagatelnykh"},
+    {"source": "Gramota.ru current dictionaries: жёваный / жёванный; кованый", "urls": ["https://gramota.ru/meta/zhevanyy", "https://gramota.ru/meta/zhevannyy", "https://gramota.ru/poisk?mode=slovari&query=%D0%BA%D0%BE%D0%B2%D0%B0%D0%BD%D1%8B%D0%B9"]},
+    {"source": "Gramota.ru current dictionary/rule evidence for emphatic repetition compounds", "urls": ["https://gramota.ru/poisk?mode=slovari&query=%D0%B3%D0%BB%D0%B0%D0%B6%D0%B5%D0%BD%D1%8B%D0%B9-%D0%BF%D0%B5%D1%80%D0%B5%D0%B3%D0%BB%D0%B0%D0%B6%D0%B5%D0%BD%D1%8B%D0%B9", "https://gramota.ru/poisk?mode=all&query=%D1%88%D1%82%D0%BE%D0%BF%D0%B0%D0%BD%D1%8B%D0%B9-%D0%BF%D0%B5%D1%80%D0%B5%D1%88%D1%82%D0%BE%D0%BF%D0%B0%D0%BD%D1%8B%D0%B9"]},
+    {"source": "Gramota.ru suffix rule for -ив-/-ев- and dictionary confirmation of дощатый", "urls": ["https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/osobennosti-napisaniya-otdelnykh-suffiksov", "https://gramota.ru/meta/doshchatyy"]}
+  ],
+  "bank_notes": [
+    "This chunk materializes only already source-routed and current-norm-resolved special units; it is not a claim of complete N/NN curriculum coverage.",
+    "School-source grouping and current normative grouping are stored separately wherever an older mnemonic bucket mixes several modern categories.",
+    "No FIPI exam routes are assigned in this phase.",
+    "No learner progress percentage may be calculated from chunk01 + chunk02.",
+    "No production/Tilda/runtime/scoring/localStorage content is changed."
+  ],
+  "production_files_changed": false,
+  "tilda_changed": false
+}
