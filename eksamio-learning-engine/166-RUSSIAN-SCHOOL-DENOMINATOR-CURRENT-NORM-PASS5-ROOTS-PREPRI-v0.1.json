@@ -1,0 +1,114 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CURRENT_NORM_PASS5_ROOTS_PREPRI_COMPLETE",
+  "production_integration":"HOLD",
+  "purpose":"Normalize high-value root/prefix source units before canonical-bank materialization. Preserve school source scopes separately from current normative scopes.",
+  "authoritative_sources":[
+    {"source":"Gramota.ru Учебник — корни, зависящие от ударения","url":"https://gramota.ru/uchebnik/pravila/korni-s-cheredovaniem-glasnykh-vybor-kotorykh-zavisit-ot-udareniya"},
+    {"source":"Gramota.ru Полные правила §35 — особенности написания отдельных корней","url":"https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/osobennosti-napisaniya-otdelnykh-korney"},
+    {"source":"Gramota.ru Учебник — корни, зависящие от последующих согласных","url":"https://gramota.ru/uchebnik/pravila/korni-s-cheredovaniem-glasnykh-vybor-kotorykh-zavisit-ot-sleduyushchikh-za-nimi-soglasnykh"},
+    {"source":"Gramota.ru Учебник — ПРЕ-/ПРИ-","url":"https://gramota.ru/uchebnik/pravila/glasnye-v-pristavkakh-pre-i-pri"},
+    {"source":"Gramota.ru Полные правила — безударные гласные в приставках","url":"https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/bezudarnye-glasnye-v-pristavkakh"}
+  ],
+  "decisions":[
+    {
+      "unit_id":"school-gor-gar-rare-exception-set",
+      "operation":"KEEP_CANONICAL_FAMILY_WITH_ROUTE_SCOPE_AND_CURRENT_SCOPE",
+      "grade_route_scopes":{
+        "6":["изгарь","выгар","выгарь","пригарь"],
+        "10":["пригарь"]
+      },
+      "current_norm_core":"In unstressed -гар-/-гор-, О is regular; traditional unstressed А exceptions include at least `выгарки`, `изгарь`, `пригарь`, `гаревой`, while current educational material also records `выгар`, `выгарь` in the extended list.",
+      "norm_status":"current_confirmed_family",
+      "completeness_policy":"Do not add current-only members to the school denominator count merely because Gramota lists them. Park them for Rosenthal/authoritative completeness phase; attach them to normative scope if admitted later.",
+      "source_member_loss":0
+    },
+    {
+      "unit_id":"school-plav-plov-exception-set",
+      "operation":"KEEP_AS_TRADITIONAL_LEXICAL_EXCEPTION_FAMILY",
+      "canonical_members":["пловец","пловчиха"],
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "norm_status":"current_confirmed",
+      "norm_note":"Current Gramota explicitly states the О spelling is traditional and is not explained by facts of the modern language.",
+      "learner_policy":"Do not invent a modern semantic or mnemonic explanation for О."
+    },
+    {
+      "unit_id":"school-skak-skoch-exception-set",
+      "operation":"RECLASSIFY_FROM_TINY_EXCEPTION_LIST_TO_FORM_ALLOMORPH_BOUNDARY",
+      "canonical_label":"СКАК–СКОК–СКАЧ–СКОЧ: формы СКАКАТЬ и приставочные -СКОЧИТЬ",
+      "source_members":["скачок","скачу"],
+      "current_branches":[
+        {"branch":"-скак- before к in unstressed position","examples":["скакать","прискакать","скакун"]},
+        {"branch":"forms of скакать and derivatives with -скач-","examples":["скачу","скачи","прискачу","доскачи"]},
+        {"branch":"скачок","examples":["скачок","скачкообразный"]},
+        {"branch":"prefixed verbs in -скочить with -скоч-","examples":["вскочить","выскочить","подскочить","проскочить"]}
+      ],
+      "norm_status":"current_confirmed_with_reclassification",
+      "counting_policy":"one structured root decision unit, not separate denominator identities for `скачок` and `скачу`",
+      "learner_policy":"The old two-word 'exceptions' shortcut may be a memory aid, but final explanation should not make forms like `перескочу` look anomalous."
+    },
+    {
+      "unit_id":"school-tvar-tvor-utvar-exception",
+      "operation":"KEEP_TRADITIONAL_SPECIAL_CASE_WITH_MORPHEMIC_NOTE",
+      "canonical_members":["утварь"],
+      "norm_status":"current_confirmed_with_historical_morpheme_note",
+      "norm_note":"Current educational rule retains `утварь` traditionally with А but notes that the root -твар- is identified in this word only historically.",
+      "learner_policy":"Do not overstate the modern morphemic analysis."
+    },
+    {
+      "unit_id":"school-ravn-rovn-exception-set",
+      "operation":"REPLACE_OLD_FOUR_WORD_EXCEPTION_BUCKET_WITH_CURRENT_SEMANTIC_RULE_PLUS_EXCEPTIONS",
+      "old_source_members":["равнина","ровесник","уровень","поровну"],
+      "current_exception_core":["равнина","поровну","выровнять(ся)"],
+      "source_members_not_current_exception_core":["ровесник","уровень"],
+      "norm_status":"current_confirmed_source_reclassification",
+      "current_rule_summary":"РАВН is used for equality/comparison meanings; РОВН for smooth/straight/stable meanings. Other or doubly motivated words are dictionary-governed. Current exception list includes `равнина`, `поровну`, `выровнять(ся)`.",
+      "provenance_policy":"Keep `ровесник` and `уровень` as grade-6/10 source-presence evidence only; do not call them modern exceptions unless a later exact dictionary/morphemic review gives a separate special unit.",
+      "counting_policy":"canonical mastery identity is the semantic/dictionary boundary with current exceptions, not the obsolete four-item school list"
+    },
+    {
+      "unit_id":"school-rast-rashch-ros-exception-set",
+      "operation":"KEEP_SCHOOL_ROUTE_SCOPE_SEPARATE_FROM_CURRENT_NORMATIVE_SCOPE",
+      "old_school_route_members":["росток","Ростислав","Ростов","ростовщик","отрасль","на вырост"],
+      "current_normative_scope_examples":["росток","ростовщик","отрасль","ростовой","вырост","выростной","выросток","заросток","прорость","подростковый"],
+      "norm_status":"current_confirmed_school_scope_incomplete",
+      "notes":[
+        "Current Gramota explicitly expands the exception/special list beyond the familiar old mnemonic.",
+        "Proper names `Ростов`, `Ростислав` remain source-route members but should be handled as dictionary/proper-name spellings rather than silently treated as the complete current rule.",
+        "Do not add current-only scope to denominator metrics until the later completeness-control phase."
+      ]
+    },
+    {
+      "unit_id":"school-pre-pri-lexical-contrast-family",
+      "operation":"KEEP_PARENT_WITH_PAIR_LEVEL_BRANCHES",
+      "grade_routes":[{"grade":6,"role":"explicitly_taught_or_singled_out"},{"grade":10,"role":"explicitly_taught_or_singled_out"}],
+      "current_confirmed_pairs":[
+        "пребывать—прибывать",
+        "преклонить/преклоняться—приклонить(ся)",
+        "преступить—приступить",
+        "претворить—притворить/притвориться",
+        "предать—придать",
+        "предел—придел",
+        "преемник—приёмник",
+        "преходящий—приходящий",
+        "непреложный—приложить",
+        "непременный—применимый/применить"
+      ],
+      "source_pairs_requiring_dictionary_member_review_before_learner_examples":["презирать—призреть","превратный—привратник","предание—придание"],
+      "norm_status":"current_core_confirmed_remaining_pairs_pending_dictionary_example_review",
+      "counting_policy":"pair-level mastery under one organizational parent; parent itself does not add an extra mastered item",
+      "learner_policy":"Meaning determines spelling for true contrast pairs; words whose modern morphemic relation to productive ПРЕ-/ПРИ- is opaque should be presented as dictionary contrasts, not pseudo-etymologized."
+    }
+  ],
+  "source_corrections":[
+    "Do not use `равнина, ровесник, уровень, поровну` as the current complete RAVN/ROVN exception list.",
+    "Do not reduce SKAK/SKOCH to only two anomalous words without showing the form-based distinction.",
+    "Do not present the old RAST mnemonic as the complete current list.",
+    "Do not invent a modern rule explaining traditional `пловец / пловчиха`."
+  ],
+  "counts":{"canonical_families_reviewed":7,"fully_current_confirmed_or_reclassified":6,"family_with_remaining_pair_level_dictionary_review":1},
+  "exam_routes_created":0,
+  "production_files_changed":false,
+  "tilda_changed":false
+}
