@@ -1,0 +1,103 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-13",
+  "status":"CANONICAL_BANK_CHUNK12_WORKING_ADMITTED",
+  "scope":"grade11_dash_generalizing_and_contextual_introductory_units",
+  "refs":[
+    "155-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE11-v0.1.json",
+    "162-RUSSIAN-SCHOOL-DENOMINATOR-CURRENT-NORM-CONFLICT-RESOLUTION-PASS1-v0.1.json",
+    "161-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-PASS2-v0.1.json",
+    "177-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE8-SOURCE-ACCESS-GATE-v0.1.json"
+  ],
+  "production_integration":"HOLD",
+  "metric_status":"NOT_FINAL_DENOMINATOR",
+  "count_assertion":{"declared_canonical_units":7,"organizational_parents_counted":0},
+  "canonical_units":[
+    {
+      "unit_id":"school-dash-subject-predicate-closing-comma-boundary",
+      "domain":"punctuation_syntax",
+      "unit_type":"interaction_boundary",
+      "label":"Закрывающая запятая + тире между подлежащим и сказуемым",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "current_model":"If a participial/relative/subordinate construction inserted after the subject must be closed by a comma and the main clause independently requires a dash between subject and predicate, both punctuation requirements are preserved: the comma closes the inserted construction and the dash marks the subject-predicate boundary.",
+      "norm":"current_academic_rule_confirmed",
+      "learner_policy":"Do not treat comma+dash as one decorative combined sign; each mark has its own syntactic basis.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-dash-subject-predicate-no-dash-boundaries",
+      "domain":"punctuation_syntax",
+      "unit_type":"context_boundary",
+      "label":"Когда тире между подлежащим и именным сказуемым обычно не ставится — и когда возможно вопреки базовой схеме",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "core_no_dash_contexts":["личное местоимение в роли подлежащего без специального логического выделения","НЕ перед именной частью сказуемого","сравнительный союз КАК / БУДТО / СЛОВНО и т. п. перед сказуемым","вставленный компонент между подлежащим и сказуемым при обычной нейтральной структуре","обратный порядок главных членов в типовой нейтральной конструкции","краткое прилагательное как сказуемое"],
+      "current_context_overlays":["Dash may appear with a personal-pronoun subject under contrast or emphatic/logical stress.","Several textbook no-dash contexts allow intonational or structural variation; the source ten-case table must not be taught as a list of absolute prohibitions."],
+      "norm":"current_academic_rule_confirmed_with_intonational_variation",
+      "learner_policy":"Use the school table as a default-context map, not as ten NEVER rules.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-generalizing-word-insertion-punctuation-boundary",
+      "domain":"punctuation_syntax",
+      "unit_type":"structured_punctuation_boundary",
+      "label":"Обобщающее слово + А ИМЕННО / НАПРИМЕР / КАК-ТО; итоговое вводное слово после перечисления",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "canonical_patterns":["О, а именно: о, о, о","О, например: о, о, о","О, как-то: о, о, о","о, о, о — словом, О","о, о, о — одним словом, О","о, о, о — короче говоря, О"],
+      "norm":"current_academic_rule_confirmed",
+      "learner_policy":"Identify the syntactic pattern first; punctuation variation in other clarifying/appositional constructions must not be collapsed into this one template.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-odnako-function-context",
+      "parent_id":"school-introductory-function-context-family",
+      "domain":"punctuation_morphology",
+      "unit_type":"function_boundary",
+      "label":"ОДНАКО: союз / вводное слово / междометное употребление по функции",
+      "grade_routes":[{"grade":8,"role":"practised_or_tested","evidence_level":"same_edition_exact_sample"},{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "current_model":["At clause linkage/start where ОДНАКО functions like НО, it is a conjunction and is not followed by a comma merely for being ОДНАКО.","In parenthetical introductory use it is isolated.","Interjectional/emotional use is a separate contextual function."],
+      "norm":"current_punctuation_dictionary_confirmed",
+      "canonicalization":"single cross-grade identity; count once",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-znachit-function-context",
+      "parent_id":"school-introductory-function-context-family",
+      "domain":"punctuation_morphology_syntax",
+      "unit_type":"function_boundary",
+      "label":"ЗНАЧИТ: вводное / союзное / связочное или смысловое употребление",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "current_model":["Introductory ЗНАЧИТ in the sense of СЛЕДОВАТЕЛЬНО / СТАЛО БЫТЬ is isolated.","ЗНАЧИТ meaning ОЗНАЧАЕТ or functioning as part of the predicative/linking structure is not introductory.","Other conjunction-like contextual uses must be classified from the sentence rather than from the word alone."],
+      "norm":"current_punctuation_dictionary_confirmed",
+      "learner_policy":"Do not classify ЗНАЧИТ globally as either introductory or non-introductory.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-nakonets-function-context",
+      "parent_id":"school-introductory-function-context-family",
+      "domain":"punctuation_morphology",
+      "unit_type":"function_boundary",
+      "label":"НАКОНЕЦ: вводное завершение перечисления vs обстоятельственное значение",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "current_model":["Introductory when it marks the final point/link in an enumeration or sequence of thoughts.","Not introductory when it means 'под конец, после всего, в результате усилий' as an ordinary adverbial circumstance.","НАКОНЕЦ-ТО is a useful contextual signal of ordinary adverbial meaning but is not a substitute for syntactic analysis."],
+      "norm":"current_punctuation_dictionary_confirmed",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-voobshche-function-context",
+      "parent_id":"school-introductory-function-context-family",
+      "domain":"punctuation_morphology",
+      "unit_type":"source_conflict_corrected_function_boundary",
+      "label":"ВООБЩЕ: вводное / наречие / частица по контексту",
+      "grade_routes":[{"grade":11,"role":"explicitly_taught_or_singled_out"}],
+      "current_model":["ВООБЩЕ may be introductory in the meaning/function close to ВООБЩЕ ГОВОРЯ.","It may be an adverb or particle in ordinary lexical/contextual uses and then is not isolated as an introductory word."],
+      "norm":"current_punctuation_dictionary_confirmed_source_correction",
+      "rejected_source_rule":"ВООБЩЕ никогда не бывает вводным",
+      "learner_policy":"Never reproduce the 2018 blanket non-introductory rule.",
+      "exam_routes":[]
+    }
+  ],
+  "organizational_parent":{"unit_id":"school-introductory-function-context-family","counted":false},
+  "notes":["No FIPI routes are created here.","No learner coverage percentage is calculated.","No production/Tilda/runtime/scoring/localStorage changes."],
+  "production_files_changed":false,
+  "tilda_changed":false
+}
