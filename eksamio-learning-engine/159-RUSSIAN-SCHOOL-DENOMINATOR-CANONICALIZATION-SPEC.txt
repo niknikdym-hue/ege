@@ -1,0 +1,141 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN SCHOOL DENOMINATOR
+CROSS-GRADE CANONICALIZATION / DEDUPE SPEC v0.1
+DATE: 2026-08-13
+STATUS: ACTIVE
+PRODUCTION_INTEGRATION: HOLD
+
+INPUT
+First-pass Drabkina/Subbotin vertical status: `158-RUSSIAN-SCHOOL-DENOMINATOR-VERTICAL-FIRST-PASS-STATUS.txt`.
+
+GOAL
+Convert raw per-grade candidate/route records into one canonical linguistic-unit graph without losing grade provenance, source evidence, norm conflicts or pedagogically meaningful sub-branches.
+
+CORE RULE
+Deduplicate linguistic identity, NOT text strings and NOT textbook chapters.
+
+A canonical unit answers one stable learner decision/problem.
+A grade route answers where that unit is evidenced in the school vertical.
+A source member set answers which examples/forms the source used in that grade.
+These are three different layers and must not be collapsed.
+
+CANONICALIZATION OPERATIONS
+
+1. EXACT_MERGE
+Use when records represent the same linguistic decision and essentially the same member set.
+Result: one canonical unit; union grade routes and provenance.
+
+2. MERGE_EXPAND
+Use when a later grade/source gives the same unit but a broader member set.
+Result: one canonical unit with canonical member set + per-route `source_member_scope`.
+Do NOT let a broader grade silently rewrite what an earlier grade actually evidenced.
+
+3. MERGE_TO_PARENT_WITH_BRANCHES
+Use when several records share a stable parent decision but require different internal branches.
+Result: one parent unit plus branch IDs or structured contrasts.
+Example: broad `КАК` punctuation decision has many branches but should not become 15 unrelated denominator units.
+
+4. SPLIT_BY_LINGUISTIC_FUNCTION
+Use when the same surface string serves different learner decisions.
+Examples:
+- `несмотря на` orthographic/morphological contrast vs punctuation of a concessive circumstance;
+- `в конце концов` spelling/adverbial phrase vs introductory/non-introductory function;
+- government with `согласно` vs punctuation of a circumstance headed by `согласно`.
+Surface identity is NOT enough to merge.
+
+5. ABSORB_NARROWER_UNIT
+Use when an earlier provisional unit is fully contained in a later, better-defined canonical identity.
+The earlier ID becomes an alias; its provenance is preserved.
+
+6. KEEP_SEPARATE_SIBLINGS
+Use where units share a parent rule but train materially different decisions.
+Example: N/NN noun-derived adjective exception triad vs verb-derived participle/adjective boundary.
+
+7. HOLD_CONFLICT
+If source disagreement/current-norm uncertainty affects identity or membership, do not finalize merge. Keep explicit HOLD/needs_review.
+
+GRADE ROUTE RULE
+Canonical unit stores every evidenced grade route independently.
+Do not infer chronology or `first_taught_grade`.
+An earlier proven grade is not automatically historical first introduction.
+
+ROUTE MEMBER SCOPE
+When grade sources teach different subsets under one canonical identity, preserve:
+- grade;
+- role;
+- source path/url/locator;
+- source_member_scope;
+- evidence level.
+
+Example:
+Canonical `school-gor-gar-rare-exception-set` may retain the full grade-6 rare set while grade 10 proves only `пригарь` in its visible exception scope.
+
+ALIASES
+Deprecated/provisional IDs remain aliases, never independent denominator units.
+Apply `136-RUSSIAN-SCHOOL-DENOMINATOR-CANONICAL-ID-MAP-v0.1.json` to all grade-5 `school-g5-*` provisional IDs.
+
+BROAD/NARROW MERGE RULE
+If a later source expands a list, merge only when the same underlying learner decision governs all members.
+If members require materially different rules despite being listed together pedagogically, split or parent-branch them after norm review.
+
+CURRENT-NORM RULE
+Canonicalization does not make pending norm current.
+Each canonical unit retains a norm state:
+- `pending`
+- `current_confirmed`
+- `current_with_rewording`
+- `obsolete_source_form_excluded`
+- `source_conflict_needs_review`
+- `mixed_members_need_item_review`
+
+Obsolete source-only forms are not canonical learner members.
+Example already established: `зоревать` remains provenance only; current `заревать` is the norm form.
+
+PEDAGOGY RULE
+Mnemonic verses/stories/metaphors do not define canonical identities.
+Canonical identity comes from the linguistic decision/rule/contrast.
+
+EXAM ROUTE RULE
+No canonical school merge operation may create OGE/EGE routes.
+Exam routes remain empty until separate current FIPI pass.
+
+CURRENT BANK RULE
+Do not use current 127-unit bank to decide canonical identity or membership.
+Bank comparison occurs after school canonicalization stabilizes.
+
+CANONICAL UNIT MINIMUM FIELDS
+- `unit_id`
+- `domain`
+- `unit_type`
+- `canonical_label`
+- `canonical_members` or structured branches
+- `aliases[]`
+- `grade_routes[]`
+- `source_evidence[]`
+- `norm_status`
+- `canonicalization_status`
+- `parent_unit_id` if applicable
+- `notes`
+
+MACHINE GATES FOR FUTURE BUILDER
+- unique canonical `unit_id`;
+- no unresolved grade-prefixed canonical IDs;
+- alias target exists and is unique;
+- no identical alias mapped to two canonical units;
+- every admitted unit has at least one evidenced grade route;
+- pending grade-8 navigation topics are excluded from canonical denominator records until exact route evidence exists;
+- excluded obsolete source forms cannot appear in `canonical_members`;
+- each grade route has provenance/evidence level;
+- raw source route count can be reconstructed from canonical grade routes without inventing routes;
+- declared counts equal actual arrays;
+- no FIPI route exists without separate FIPI provenance.
+
+PASS ORDER
+PASS 1: obvious exact/repeat/expand merges across grades.
+PASS 2: broad/narrow/parent-branch decisions.
+PASS 3: current-norm-dependent identities and source conflicts.
+PASS 4: compare canonical school denominator to recovered current bank.
+PASS 5: completeness control with Rosenthal/other authoritative project sources.
+PASS 6: separate FIPI OGE/EGE routing.
+
+PRODUCTION_FILES_CHANGED: NO
