@@ -1,32 +1,24 @@
-TASK 27 CONTENT NO-GO REMEDIATION — TEST RESULT
+TASK 27 — FINAL TEST / AUDIT RESULT
+DATE: 2026-08-14
+STATUS: PASS — GO FOR TILDA UPLOAD
 
-UNIT:
-PASS task27 v4.2 unit tests: 49 assertions
+TASK 27 UNIT:
+PASS — 49 assertions
 
 Проверено:
 - соседние одинаковые слова не создают confirmed K10;
 - possible K10 не создаёт hard cap;
-- допустимые/стилистические/ключевые повторы не становятся confirmed;
-- повтор между абзацами не агрегируется;
+- стилистические/ключевые/контекстные повторы не становятся confirmed;
+- повторы между абзацами не агрегируются;
 - пробел перед знаком — technical, не K8;
-- встроенный предварительный анализатор не создаёт confirmed;
+- встроенный preliminary analyzer не создаёт confirmed;
 - validated confirmed hard caps: 1–2→2, 3–4→1, 5+→0;
-- tampered score выше cap отклоняется;
+- значение выше cap отклоняется;
 - отсутствие findings не выдаёт 3 автоматически;
 - шкала 0–24 отсутствует.
 
 REAL-PREVIEW BROWSER REGRESSION:
-PASS real-preview task27 browser: T123-01...06, language aids off, frozen demo essay, preliminary findings, technical notes, verified hard caps
-
-Проверено:
-- точный PREVIEW содержит неизменённые T123-01…T123-05 и подключает T123-06;
-- языковые подсказки отключены;
-- frozen demo essay и paper-only transfer сохранены;
-- заголовок «Предварительная автоматическая проверка» и ограничения применимости видимы;
-- «Это это…» остаётся possible K10 без cap и допускает 22/22 при самостоятельной оценке;
-- отдельно валидированный confirmed K10 создаёт cap и отклоняет значение выше него;
-- пробел перед запятой показывается отдельным technical finding и не снижает K8;
-- console/page errors отсутствуют.
+PASS — T123-01…06, language aids off, frozen demo essay, paper transfer, preliminary findings, technical notes, verified hard caps.
 
 FULL DEMO REGRESSION:
 - PASS data/regression: 204 checks, 35 task-variant positives, 28/28;
@@ -34,6 +26,14 @@ FULL DEMO REGRESSION:
 - PASS visual contract: 27 checks;
 - PASS old browser regression, включая reload и responsive widths.
 
-MANIFEST-SHA256: обновляется последним и проверяется перед commit.
-RELEASE STATUS: NO-GO FOR TILDA до повторного независимого содержательного аудита.
-Tilda не обновлялась.
+INDEPENDENT RESET EDGE-CASE REGRESSION:
+PASS task27 reset guard: 6 assertions
+- missing core clears stale review;
+- idle core clears stale review;
+- corrupt core clears stale review;
+- running core keeps review;
+- finished core keeps review;
+- missing review stays missing.
+
+Финальный независимый содержательный аудит: PASS.
+Пакет разрешён к загрузке в Tilda. LIVE GO только после полного post-publish checklist.
