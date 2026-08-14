@@ -1,84 +1,49 @@
 EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2024
-FINAL TILDA HANDOFF
-Дата: 2026-08-13
+RELEASE STATUS / TILDA HANDOFF
+Дата обновления: 2026-08-14
 
-STATUS: READY_FOR_TILDA_UPLOAD
+STATUS: NO_GO_SOURCE_VISUALS_REQUIRED
 LIVE_GO: NO
 
-FINAL PACKAGE
-- filename: ege-matematika-baza-demoversiya-2024-v1.0-INDEPENDENT-AUDITED.zip
-- SHA256: 7326b0322c36adaf7df2412113de5a2399e6fbff490863f22a18e9df51627e3f
-- page URL: /ege/matematika-baza/demoversiya/2024/
-- T123: 8 blocks, T123-01 through T123-08 strictly in order
-- maximum T123: 40851 bytes
-- header/footer: separate, not included
+ВАЖНО: ранее выданные пакеты 2024, включая ege-matematika-baza-demoversiya-2024-v1.0-INDEPENDENT-AUDITED.zip, ОТОЗВАНЫ И НЕ ДОЛЖНЫ ЗАГРУЖАТЬСЯ В TILDA.
+Причина: в них присутствуют реконструированные визуалы. С 2026-08-14 это запрещено независимо от качества реконструкции и результата scorer.
 
-EXAM LOCK
+ОБЯЗАТЕЛЬНОЕ ПРАВИЛО
+- если официальный PDF содержит рисунок, график, схему, карту, чертёж, диаграмму или иной визуал, демоверсия использует только изображение, полученное непосредственно из официального первоисточника;
+- SVG/Canvas/HTML-реконструкция, ручная перерисовка, восстановление «по смыслу» или по официальному ответу запрещены;
+- допустимы только render/crop официального PDF, поворот, безопасный resize и техническая конвертация без изменения содержания;
+- печатную строку ФИПИ «Ответ: ______» и линию ответа в интерактивную демоверсию НЕ переносить; crop должен исключать только эту строку/линию, не затрагивая условие или визуал;
+- системное поле ответа Эксамио остаётся отдельным интерактивным контролом;
+- если точный source crop получить нельзя, VISUAL_GATE = FAIL и пакет не выдаётся.
+
+ТОЧНОСТЬ
+Требуется 100% соответствие первоисточнику. Формулировки «по смыслу», «математически эквивалентно», «визуально похоже», «ответ получается тот же» не являются доказательством соответствия.
+Любое сомнение, неполная сверка или невозможность доказать происхождение элемента = NO GO.
+
+SOURCE LOCK
+Для Base Math 2024 визуальным первоисточником является только:
+matematika-source-2024/ege-2024-matematika-baza-demoversiya.pdf
+
+EXAM LOCK, который не меняется:
 - source year: 2024
 - 21 tasks
 - 180 minutes
-- max primary score 21
+- max primary score: 21
 - 52 official FIPI examples
 - all tasks short-answer
 
-FINAL GATES
-- source gate: PASS
-- source text gate: PASS_AFTER_CORRECTION
-- formula gate: PASS — 11/11
-- visual semantic gate: PASS_RECONSTRUCTED_SOURCE_FIDELITY — 17/17
-- interaction/scorer gate: PASS — 52/52 official examples, correct+wrong through real DOM controls
-- visible official-example source tag: PASS 52/52
-- full-correct attempt: 21/21
-- state restore: PASS
-- result review: PASS — 21/21 rows, own answer and official accepted answer shown
-- references: 4/4 PASS
-- responsive: 1280/768/390/360/320 PASS, overflow 0
-- JS errors: 0
-- console errors: 0
-- clean unpacked final ZIP browser rerun: PASS
-- internal second source/content review: PASS
-- SEPARATE INDEPENDENT FINAL AUDIT: PASS — performed after build on clean final ZIP; internal PASS flags were not accepted as evidence
-- independent answer/task/control/contract static audit: PASS
-- independent formula recomputation: 11/11 PASS
-- independent visual review: 17/17 PASS
-- independent real-DOM browser/scorer rerun: 52/52 correct+wrong PASS
-- no __pycache__ / .pyc
+ЧТО НУЖНО СДЕЛАТЬ ДО НОВОГО READY_FOR_TILDA
+1. Заменить все реконструированные визуалы на source crops из официального PDF ФИПИ 2024.
+2. Для каждого visual asset зафиксировать source filename, source SHA/identifier, страницу и crop evidence.
+3. Исключить из crop печатную строку «Ответ: ______» и линию ответа.
+4. Пройти four-edge/readability audit desktop/mobile для каждого source visual.
+5. Повторить полный 52/52 browser/scorer/state regression на чистом ZIP.
+6. Повторить formula/text/source gates.
+7. Провести отдельный независимый финальный аудит НОВОГО чистого ZIP.
+8. Только после всех PASS вернуть READY_FOR_TILDA.
 
-INDEPENDENT AUDIT NOTE
-For tasks 6 and 8 the source map enumerates equivalent permutations while data stores a canonical order with order_ignored=true. Independent audit verified accepted sets are identical; this is not a product defect and no scorer/content change was made.
+ОТОЗВАННЫЙ ТОЧЕЧНЫЙ ФАЙЛ
+Ранее выданный ege-matematika-baza-demoversiya-2024-T123-02.txt с ручной правкой рисунка 7.1 считать ОТОЗВАННЫМ И НЕ ИСПОЛЬЗОВАТЬ.
 
-IMPORTANT PRE-RELEASE CORRECTIONS
-- corrected task/example boundary: task 14 has 2 examples; task 15 has 3; agricultural-land item = 15.3, answer 9;
-- restored missing/shortened official task wording before final build;
-- did not duplicate printed FIPI «Ответ: ____» where Eksamio has its own answer field;
-- corrected 9.1 reconstructed lake scale to preserve official answer 3;
-- corrected 10.2 clock to 16:00, official answer 120°;
-- corrected 320 px grid overflow without changing task/scorer/state logic.
-
-VISUAL POLICY
-Use the already accepted base-math policy: direct source crops are preferred where practical; reconstructed visuals are permitted only after per-example source-fidelity/semantic audit. For 2024 this audit is PASS 17/17. Do not describe reconstructions as official source crops.
-
-MANDATORY PROCESS RULE FOR FUTURE WORK
-A build-time audit and an internal second pass are not sufficient by themselves. Before any future demo package is handed to Tilda, a separate independent final audit must be run against the clean final ZIP. If code/content/T123/scorer/assets/exam data changes after that audit, audit the new final ZIP again. This rule is mandatory for every future subject and year.
-
-TILDA INSTALL ORDER
-1. ege-matematika-baza-demoversiya-2024-T123-01.txt
-2. ege-matematika-baza-demoversiya-2024-T123-02.txt
-3. ege-matematika-baza-demoversiya-2024-T123-03.txt
-4. ege-matematika-baza-demoversiya-2024-T123-04.txt
-5. ege-matematika-baza-demoversiya-2024-T123-05.txt
-6. ege-matematika-baza-demoversiya-2024-T123-06.txt
-7. ege-matematika-baza-demoversiya-2024-T123-07.txt
-8. ege-matematika-baza-demoversiya-2024-T123-08.txt
-
-AFTER PUBLICATION
-1. production smoke on the published URL;
-2. manual student acceptance;
-3. only then set LIVE_GO: YES.
-
-Read first if a new chat starts:
-- 00-BASE-2024-WORK-RULES-AND-HANDOFF.txt
-- 01-BASE-2024-SOURCE-GATE-STATUS.txt
-- 02-BASE-2024-CURRENT-CHECKPOINT.txt
-- 03-BASE-2024-EXAMPLE-MAP-A.txt
-- 04-BASE-2024-READY-FOR-TILDA.txt
+ПРИОРИТЕТ
+Этот статус отменяет все прежние PASS/READY-флаги 2024, основанные на reconstructed source visuals.
