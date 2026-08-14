@@ -1,0 +1,113 @@
+EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2024
+FULL RECHECK — FINAL REPORT
+Дата: 2026-08-14
+
+FINAL STATUS
+FULL_RECHECK: PASS
+READY_FOR_TILDA: YES
+LIVE_GO: NO — до production smoke и ручной ученической приёмки опубликованной страницы.
+PREVIOUS_PACKAGES: WITHDRAWN / DO NOT USE
+
+1. ЦЕЛЬ ПОВТОРНОЙ ПРОВЕРКИ
+Проверка выполнена заново без доверия прежним PASS/READY. Старые сборки 2024 с reconstructed SVG/HTML visuals не использовались как доказательство соответствия источнику и остаются отозванными.
+
+2. АВТОРИТЕТНЫЕ ИСТОЧНИКИ
+Использованы только официальные BASE 2024 файлы из matematika-source-2024/:
+- ege-2024-matematika-baza-demoversiya.pdf
+  SHA256: 7e7111654239dbf17c73786bccc9109f2f0f05d80039cfdeca114e83f67f5546
+- ege-2024-matematika-baza-specifikatsiya.pdf
+  SHA256: df70f8fa0496b4f9ff28c419dfc01106d3f76b1bbef79981c9027074560f447a
+- ege-2024-matematika-kodifikator.pdf
+  SHA256: 2f636e03007a998e8d733b0e51f177e83eef345f6edc26dba49adfed3a9a655f
+
+3. EXAM LOCK
+- 21 задание с кратким ответом;
+- 180 минут;
+- максимум 21 первичный балл;
+- 52 официальных примера;
+- число примеров по заданиям 1–21:
+  3,2,3,2,2,3,3,2,2,2,2,1,3,2,3,4,3,2,3,2,3.
+
+4. SOURCE / TEXT / FORMULA GATES
+- TEXT_TRACE_GATE: PASS 52/52;
+- FORMULA_GATE: PASS;
+- SPEC_CODIFIER_GATE: PASS;
+- официальный PDF демоверсии разложен в однозначную цепочку 13 физических двухполосных листов -> 26 печатных страниц;
+- печатная строка ФИПИ «Ответ: ______» и линия ответа в интерактивные условия не переносятся;
+- в примере 13.2 знак √17 не доверен PDF text extraction: визуально значимый формульный фрагмент берётся прямым source crop из официального PDF.
+
+5. ZERO-TOLERANCE VISUAL GATE
+- meaningful reconstructed source visuals: 0;
+- 41/41 существенных визуальных/табличных/формульных assets получены direct contiguous crop/render из официального PDF;
+- 41/41 crop pixel-identical своему исходному прямоугольнику;
+- VISUAL_GATE: PASS_41_OF_41_DIRECT_SOURCE_CROPS.
+
+6. ANSWERS / CONTROLS / SCORER
+- 52/52 официальных answer contracts перепроверены;
+- №2, №7, №18: четыре реальные select;
+- №8: реальные checkbox;
+- №6: set scorer, порядок игнорируется только для официально допустимых множеств;
+- №19: сохранены все официально принимаемые альтернативные числовые ответы;
+- format validation отделена от correctness;
+- итоговый экран показывает «Ваш ответ», официально принимаемый ответ и начисленный балл.
+
+7. ДОКУМЕНТИРОВАННАЯ АНОМАЛИЯ ОФИЦИАЛЬНОГО ИСТОЧНИКА
+ANSWER-TABLE-15.3:
+- на печатной странице 21 у задания 14 — 2 примера, у задания 15 — 3 примера;
+- 15.3 — задача про 24 га и отношение зерновые:овощи = 5:3; ответ = 9;
+- в таблице ответов на печатной странице 26 число 9 визуально стоит в строке 14 / пример 3, хотя у задания 14 третьего примера нет.
+В Эксамио источник не переписывается задним числом: task 14 = 2, task 15 = 3, task 15.3 = 9; аномалия явно сохранена в audit record.
+
+8. BROWSER / STATE / RESPONSIVE
+Полный browser gate выполнен через реальные DOM-controls:
+- correct + wrong: PASS 52/52 вариантов;
+- full correct attempt: PASS 21/21;
+- reload persistence: PASS;
+- results review: PASS;
+- reference materials: PASS;
+- widths 1280/768/390/360/320: PASS;
+- horizontal overflow: PASS;
+- screenshot gate: PASS.
+
+9. PACKAGE / ZIP GATES
+- JavaScript syntax: PASS;
+- package integrity: PASS;
+- independent audit: PASS;
+- frozen ZIP integrity: PASS;
+- clean ZIP extraction regression: PASS;
+- вся gate-chain повторно выполнена из чистой распаковки frozen ZIP.
+
+10. TILDA PACKAGE
+- 18 последовательных T123-блоков: T123-01 ... T123-18;
+- max T123 size: 40 896 bytes (< 42 500 package gate);
+- между T123 не вставлять другие блоки;
+- шапка и футер подключаются отдельно.
+
+11. АВТОРИТЕТНЫЙ ФИНАЛЬНЫЙ ZIP
+Filename: ege-matematika-baza-demoversiya-2024-v1.0.zip
+SHA256: 9d050eb4eb9e9bce5990345654e0efb9f7f3d924905f2bbd55b53911dd77a341
+Size: 4 815 546 bytes
+GitHub Actions workflow: build-base-math-2024-full-recheck
+Workflow run: 31822909411 — SUCCESS
+Run head SHA: bfe81dfa2b7fc06dfdb7d5e2568ff55a364d396b
+Artifact: ege-matematika-baza-demoversiya-2024-v1.0-FULL-RECHECK
+Artifact ID: 9227693678
+
+12. ВОСПРОИЗВОДИМАЯ СБОРКА В MAIN
+- .github/workflows/build-base-math-2024-full-recheck.yml
+- matematika-source-2024/scripts/build_canonical_base_2024.py
+- matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-00 ... part-04
+- matematika-source-2024/scripts/finalize_verified_base_2024_release.py
+- matematika-source-2024/templates/base-2024-shell.html
+
+13. РЕШЕНИЕ
+READY_FOR_TILDA: YES — только для авторитетного full-recheck ZIP выше.
+LIVE_GO: NO.
+После загрузки в Tilda обязательны production smoke и ручная ученическая приёмка. Только после них можно менять LIVE_GO на YES.
+
+Связанные документы:
+- 01-BASE-2024-SOURCE-GATE-STATUS.txt
+- 02-BASE-2024-CURRENT-CHECKPOINT.txt
+- 03-BASE-2024-EXAMPLE-MAP-A.txt
+- 04-BASE-2024-READY-FOR-TILDA.txt
+- 05-BASE-2024-NEW-CHAT-HANDOFF-FULL-RECHECK.txt
