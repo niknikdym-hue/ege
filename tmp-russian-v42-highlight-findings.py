@@ -32,3 +32,4 @@ t.write_text(q,encoding='utf-8')
 # Update manifest.
 m=base/'MANIFEST-SHA256.txt'; ms=m.read_text(encoding='utf-8'); fn=p.name; h=hashlib.sha256(p.read_bytes()).hexdigest(); ms=re.sub(r'^[0-9a-f]{64}  '+re.escape(fn)+r'$',h+'  '+fn,ms,flags=re.M); m.write_text(ms,encoding='utf-8')
 print('PATCH READY')
+# trigger
