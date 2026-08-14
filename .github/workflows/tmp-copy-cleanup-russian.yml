@@ -1,0 +1,150 @@
+name: Temporary Russian student copy cleanup
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/tmp-copy-cleanup-russian.yml']
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply student-facing copy cleanup
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import hashlib, re
+          base=Path('ege-russkiy-demoversiya-2026-v4.2')
+          p1=base/'ege-russkiy-demoversiya-T123-01.txt'
+          p6=base/'ege-russkiy-demoversiya-T123-06.txt'
+          preview=base/'ege-russkiy-demoversiya-PREVIEW.html'
+          old1=p1.read_text(encoding='utf-8')
+          s=old1
+          pairs=[
+          ('''              <p>Экзаменационная работа состоит из двух частей. Часть 1 содержит 26 заданий с кратким ответом, часть 2 — сочинение по прочитанному тексту.</p>\n              <p>На выполнение работы отводится <strong>3 часа 30 минут</strong>. Ответы сохраняются в браузере. После завершения задания 1–26 проверяются автоматически. Сочинение не получает автоматический балл: система формирует confirmed и possible findings по К7–К10, после чего пользователь выполняет самооценку по критериям К1–К10.</p>\n              <p>На позициях, где ФИПИ приводит несколько примеров через «ИЛИ», при начале попытки выбирается <strong>один официальный пример</strong>. Он закрепляется за попыткой и не меняется после перезагрузки страницы — так же, как в реальном варианте на каждой позиции предлагается только одно задание.</p>''','''              <p>В демоверсии 27 заданий: 26 заданий с кратким ответом и сочинение.</p>\n              <p>На работу даётся <strong>3 часа 30 минут</strong>. Ответы сохраняются автоматически — можно переходить между заданиями и возвращаться к ним позже. После завершения экзамена задания 1–26 проверятся автоматически. Сочинение можно будет отдельно проверить и оценить по критериям.</p>\n              <p>Если у задания есть несколько вариантов, в начале попытки вам выпадет один из них. Он останется тем же до конца экзамена.</p>'''),
+          ('''                <div class="edemo-score-card"><div class="edemo-score-value"><span id="edemo-essay-score">—</span>/22</div><p>Сочинение по самооценке</p><p class="edemo-mini" id="edemo-essay-status">Не оценено</p></div>\n                <div class="edemo-score-card edemo-score-card--official"><div class="edemo-score-value"><span id="edemo-total-score">—</span>/50</div><p>Официальный общий результат</p><p class="edemo-mini" id="edemo-total-status">Требуется экспертная проверка сочинения</p></div>''','''                <div class="edemo-score-card"><div class="edemo-score-value"><span id="edemo-essay-score">—</span>/22</div><p>Сочинение</p><p class="edemo-mini" id="edemo-essay-status">Ещё не оценено</p></div>\n                <div class="edemo-score-card edemo-score-card--official"><div class="edemo-score-value"><span id="edemo-total-score">—</span>/50</div><p>Общий результат</p><p class="edemo-mini" id="edemo-total-status">После оценки сочинения</p></div>'''),
+          ('''                <h3 class="ep-section-title">Самооценка сочинения по К1–К10</h3>\n                <p>Самооценка является учебной и не заменяет проверку эксперта. Она показывается отдельно и не прибавляется к официальному результату заданий 1–26.</p>\n                <p><strong>Технический счётчик:</strong> <span class="edemo-word-count" id="edemo-result-word-count">0</span> слов. Значение ориентировочное и не определяет официальный порог автоматически.</p>''','''                <h3 class="ep-section-title">Проверка и оценка сочинения</h3>\n                <p>Проверьте сочинение по критериям и поставьте баллы.</p>\n                <p><strong>Количество слов:</strong> <span class="edemo-word-count" id="edemo-result-word-count">0</span>.</p>'''),
+          ('''              <p><strong>Источник:</strong> официальный демонстрационный вариант КИМ ЕГЭ по русскому языку 2026 года, опубликованный ФГБНУ «ФИПИ».</p>\n              <p>Задания и критерии приведены по официальному демонстрационному варианту. Интерактивная оболочка и пояснения подготовлены Эксамио. Эксамио не является официальным ресурсом ФИПИ или Рособрнадзора.</p>\n              <p><a href="https://fipi.ru/ege/demoversii-specifikacii-kodifikatory" target="_blank" rel="noopener noreferrer">Открыть официальный источник ФИПИ ↗</a></p>''','''              <p>Демоверсия создана на основе материалов ЕГЭ по русскому языку 2026 года. Интерактивный формат подготовлен Эксамио.</p>\n              <p><a href="https://fipi.ru/ege/demoversii-specifikacii-kodifikatory" target="_blank" rel="noopener noreferrer">Источник заданий ↗</a></p>''')]
+          for a,b in pairs:
+              if a not in s: raise SystemExit('T123-01 expected text not found')
+              s=s.replace(a,b,1)
+          p1.write_text(s,encoding='utf-8')
+          pv=preview.read_text(encoding='utf-8')
+          if old1 not in pv: raise SystemExit('PREVIEW does not contain exact old T123-01')
+          preview.write_text(pv.replace(old1,s,1),encoding='utf-8')
+
+          hp=base/'ege-russkiy-demoversiya-HEAD.txt'; h=hp.read_text(encoding='utf-8')
+          h=re.sub(r'<script id="edemo-task27-reset-guard">[\s\S]*?</script>\n?','',h,count=1)
+          hp.write_text(h,encoding='utf-8')
+
+          s=p6.read_text(encoding='utf-8')
+          simple={
+          'Официальный подсчёт подтвердил: в сочинении 149 слов или меньше.':'В сочинении меньше 150 слов.',
+          'Сочинение написано без опоры на исходный текст.':'Сочинение не опирается на исходный текст.',
+          'Работа представляет собой полностью переписанный или пересказанный исходный текст без собственных комментариев.':'Сочинение полностью переписывает или пересказывает исходный текст вместо собственного ответа.',
+          'Проверьте написание «вообщем» с учётом цитирования и контекста.':'Проверьте написание «вообщем».',
+          'Проверьте написание «вобщем» с учётом цитирования и контекста.':'Проверьте написание «вобщем».',
+          'Проверьте написание «какбудто» с учётом цитирования и контекста.':'Проверьте написание «какбудто».',
+          'Проверьте написание «изза» с учётом цитирования и контекста.':'Проверьте написание «изза».',
+          'Кандидат требует проверки по нормативному словарю и в контексте':'Возможно, здесь есть орфографическая ошибка.',
+          'Техническое оформление, не finding К8 и не hard cap':'Не влияет на оценку.',
+          'Проверьте форму местоимения «ихний» с учётом цитирования, передачи чужой речи и контекста.':'Проверьте форму «ихний».',
+          'Кандидат требует контекстной проверки грамматической нормы':'Возможно, здесь есть грамматическая ошибка.',
+          'Требуется проверить оправданность, ключевую лексику и возможность эквивалентной замены':'Проверьте, не повторяется ли слово слишком часто.',
+          'Требуется ручная проверка':'Проверьте это место.',
+          'Требуется проверка контекста':'Проверьте, нужны ли здесь повторяющиеся знаки.',
+          'Текст зафиксирован в момент завершения экзамена и доступен только для чтения.':'Это текст, который вы отправили. После завершения экзамена его уже нельзя изменить.',
+          'Перенос рукописного сочинения после экзамена':'Перенесите сочинение с бумаги',
+          'Добавьте фото или скан как локальный референс и перенесите текст. Редактируемое поле доступно только для режима «На бумаге».':'Можно добавить фото или скан рядом и набрать текст в поле для проверки.',
+          'Выберите фото/скан. Для изображения появится предпросмотр.':'Выберите фото или скан.',
+          '<strong>Перенесённый текст</strong>':'<strong>Текст сочинения</strong>',
+          '✓ Текст сохранён; предварительная автоматическая проверка обновлена.':'✓ Текст сохранён. Проверка обновлена.',
+          ' — выше hard cap':' — недоступно при найденных ошибках',
+          'Самооценка не завершена':'Оценка не завершена',
+          '0 баллов: подтверждено основание полного нуля':'Сочинение оценивается в 0 баллов',
+          'Самооценка задания 27 по шкале 0–22 заполнена':'Оценка по критериям заполнена',
+          'Официальный общий балл требует экспертной проверки задания 27':'После оценки сочинения'}
+          for a,b in simple.items(): s=s.replace(a,b)
+          s=s.replace('"Абзац "+(paragraphIndex+1)+"; требуется проверить функцию повтора и контекст"','"Проверьте, нужен ли повтор в этом месте."')
+          s=s.replace("box.innerHTML=low?'<p><strong>Технический счётчик: '+count+' слов.</strong> Если официальный подсчёт подтвердит 149 слов или меньше, задание оценивается 0 баллов.</p>':'<p><strong>Технический счётчик: '+count+' слов.</strong> Порог 150 достигнут по техническому подсчёту; окончательный подсчёт выполняется по правилам ФИПИ.</p>';", "box.innerHTML=low?'<p><strong>Примерно '+count+' слов.</strong> Для оценки сочинения нужно не меньше 150 слов.</p>':'<p><strong>Примерно '+count+' слов.</strong></p>';")
+          s=s.replace('<strong>Как вы выполняете сочинение?</strong><p class="edemo-mini">На реальном ЕГЭ ответ пишется от руки. В демо-поле отключены браузерные языковые подсказки.</p>','<strong>Как вы будете писать сочинение?</strong><p class="edemo-mini">На экзамене сочинение пишут от руки. Здесь можно написать на бумаге или ввести текст на сайте.</p>')
+          s=s.replace('> На бумаге — как на экзамене</label>','> Написать на бумаге</label>').replace('> Демо-ввод в браузере</label>','> Написать на сайте</label>')
+          s=s.replace("+(dep?' · при К1 = 0 автоматически 0':'')", "+(dep?' · если К1 = 0, здесь тоже 0':'')")
+          old='''var analysisIntro=document.createElement("div");analysisIntro.className="ep-panel";analysisIntro.innerHTML='<p><strong>К7–К10. Предварительная автоматическая проверка</strong></p><ul class="edemo-findings"><li>Автоматическая проверка не заменяет экспертную проверку и может не обнаружить часть ошибок.</li><li>Possible findings требуют самостоятельной проверки контекста и не влияют на hard cap.</li><li>Отсутствие findings не означает отсутствия ошибок и не выставляет автоматически 3 балла.</li><li>Hard cap применяется только к confirmed findings, однозначно подтверждённым отдельной проверкой.</li></ul>';'''
+          new='''var analysisIntro=document.createElement("div");analysisIntro.className="ep-panel";analysisIntro.innerHTML='<p><strong>Проверка ошибок</strong></p><p>Эксамио предварительно проверит орфографию, пунктуацию, грамматику и речь.</p><ul class="edemo-findings"><li>Спорные места будут отмечены — их нужно проверить самостоятельно.</li><li>Автоматическая проверка может заметить не все ошибки.</li></ul>';'''
+          if old not in s: raise SystemExit('analysis intro text not found')
+          s=s.replace(old,new,1)
+          s=s.replace("gate.innerHTML='<p><strong>Шаг 1. Проверьте общие основания полного нуля</strong></p><p class=\"edemo-mini\">Технический счётчик не обнуляет работу автоматически.</p>';", "gate.innerHTML='<p><strong>Перед оцениванием</strong></p><p class=\"edemo-mini\">Отметьте пункт, только если он относится к вашему сочинению.</p>';")
+          s=s.replace('<span><strong>Подтверждаю:</strong> официальный объём проверен, работа опирается на исходный текст и не является полным переписыванием/пересказом.</span>','<span><strong>Можно оценивать:</strong> ни один из пунктов выше к моей работе не относится.</span>')
+          s=s.replace('<p><strong>Отмечено основание полного нуля.</strong> Самооценка К1–К10: 0/22.</p>','<p><strong>По выбранному условию сочинение оценивается в 0 баллов.</strong></p>')
+          s=s.replace('<p>Критерии откроются после подтверждения общих условий оценивания.</p>','<p>Подтвердите условие выше, чтобы открыть критерии.</p>')
+          s=s.replace('<p><strong>Предварительная автоматическая проверка К7–К10 ещё не сформирована.</strong> Итоговая самооценка остаётся незавершённой.</p>','<p><strong>Проверка текста ещё не готова.</strong></p>')
+          oldrow='''<p class="edemo-mini">Confirmed: '+confirmed.length+' · hard cap: '+(cap===null?'не установлен':cap+'/3')+' · Possible: '+possible.length+'</p><div><strong>Confirmed findings</strong>'+findingList(confirmed,'Подтверждённых находок нет. Это не доказывает отсутствие ошибок.','')+'</div><div><strong>Possible findings</strong>'+findingList(possible,'Возможных находок нет. Это не доказывает отсутствие ошибок.','edemo-findings--possible')+'</div><label><strong>Самооценка</strong>'''
+          newrow='''<p class="edemo-mini">Найдено: '+confirmed.length+' · стоит проверить: '+possible.length+'</p><div><strong>Найдены ошибки</strong>'+findingList(confirmed,'Система не отметила однозначных ошибок.','')+'</div><div><strong>Стоит проверить</strong>'+findingList(possible,'Спорных мест не отмечено.','edemo-findings--possible')+'</div><label><strong>Ваш балл</strong>'''
+          if oldrow not in s: raise SystemExit('criteria row text not found')
+          s=s.replace(oldrow,newrow,1)
+          s=s.replace('<p><strong>Технические замечания интерфейса</strong></p><p class="edemo-mini">Не относятся к К7–К10, не являются ошибками по критериям и не влияют на балл или hard cap.</p>','<p><strong>Оформление текста</strong></p><p class="edemo-mini">Эти замечания не влияют на балл.</p>')
+          marker='// TASK27_RESET_GUARD_START'
+          if marker not in s:
+              anchor='''  var ZERO_REASONS=[\n    {id:"under150",label:"В сочинении меньше 150 слов."},\n    {id:"noTextSupport",label:"Сочинение не опирается на исходный текст."},\n    {id:"copiedOrRetold",label:"Сочинение полностью переписывает или пересказывает исходный текст вместо собственного ответа."}\n  ];\n'''
+              guard='''\n  // TASK27_RESET_GUARD_START\n  (function(){\n    try{\n      var raw=localStorage.getItem(CORE_STORAGE_KEY),keep=false;\n      if(raw){try{var core=JSON.parse(raw);keep=!!core&&(core.status==="running"||core.status==="finished");}catch(parseError){}}\n      if(!keep)localStorage.removeItem(REVIEW_STORAGE_KEY);\n    }catch(storageError){}\n  })();\n  // TASK27_RESET_GUARD_END\n'''
+              if anchor not in s: raise SystemExit('reset guard anchor not found')
+              s=s.replace(anchor,anchor+guard,1)
+          p6.write_text(s,encoding='utf-8')
+
+          tp=base/'test-russian-task27-browser.py'; t=tp.read_text(encoding='utf-8')
+          t=t.replace("page.get_by_text('Предварительная автоматическая проверка',exact=False).count()>=1,'preliminary-analysis label shown'","page.get_by_text('Проверка ошибок',exact=False).count()>=1,'student-friendly analysis label shown'")
+          t=t.replace("page.get_by_text('не заменяет экспертную проверку',exact=False).count()>=1,'expert-review disclaimer shown'","page.get_by_text('может заметить не все ошибки',exact=False).count()>=1,'automatic-check limitation shown'")
+          t=t.replace("page.get_by_text('не влияют на балл или hard cap',exact=False).count()>=1,'technical note has no scoring effect'","page.get_by_text('не влияют на балл',exact=False).count()>=1,'technical note has no scoring effect'")
+          tp.write_text(t,encoding='utf-8')
+          rp=base/'test-russian-task27-reset-guard.js'; r=rp.read_text(encoding='utf-8')
+          r=r.replace("path.join(__dirname,'ege-russkiy-demoversiya-HEAD.txt')","path.join(__dirname,'ege-russkiy-demoversiya-T123-06.txt')")
+          r=r.replace('const m=src.match(/<script id="edemo-task27-reset-guard">([\\s\\S]*?)<\\/script>/);','const m=src.match(/\\/\\/ TASK27_RESET_GUARD_START([\\s\\S]*?)\\/\\/ TASK27_RESET_GUARD_END/);')
+          r=r.replace("if(!m)throw new Error('reset guard script not found');","if(!m)throw new Error('reset guard block not found');")
+          r=r.replace('vm.runInNewContext(m[1],{localStorage,JSON});',"vm.runInNewContext(m[1],{localStorage,JSON,CORE_STORAGE_KEY:'eksamio_ege_russian_demo_2026_v4_1',REVIEW_STORAGE_KEY:'eksamio_ege_russian_demo_2026_v4_2_task27_review'});")
+          rp.write_text(r,encoding='utf-8')
+
+          docs={
+          'ege-russkiy-demoversiya-INSTALLATION.txt':[('HEAD обязателен: помимо canonical/OG/JSON-LD он содержит reset-guard задания 27, очищающий stale review-state при новой попытке.','HEAD использовать целиком для canonical/OG/JSON-LD. Reset-guard задания 27 находится в T123-06.')],
+          'TASK27-HOTFIX-INSTALLATION.txt':[('HEAD обязателен: содержит Task 27 reset-guard.','Reset-guard задания 27 находится в T123-06.')],
+          'TASK27-HOTFIX-README.txt':[('актуальный HEAD обязателен: он содержит reset-guard для отдельного Task 27 review-state;','reset-guard для отдельного Task 27 review-state находится в T123-06;')],
+          'LOCAL-TEST-RESULT.txt':[('Добавлен ранний reset-guard в HEAD.','Reset-guard размещён в T123-06, чтобы HEAD оставался evergreen.')],
+          'ege-russkiy-demoversiya-AUDIT.txt':[('Edge case закрыт ранним reset-guard в HEAD','Edge case закрыт reset-guard в T123-06')],
+          'ege-russkiy-demoversiya-INDEPENDENT-AUDIT-FINAL.txt':[('Дефект закрыт ранним reset-guard в HEAD:','Дефект закрыт reset-guard в T123-06:')],
+          'TASK27-HOTFIX-CHANGELOG.txt':[('добавлен reset-guard в актуальный HEAD;','reset-guard размещён в T123-06, чтобы HEAD оставался evergreen;')]}
+          for fn,reps in docs.items():
+              p=base/fn; x=p.read_text(encoding='utf-8')
+              for a,b in reps: x=x.replace(a,b)
+              p.write_text(x,encoding='utf-8')
+          sp=base/'SUBJECT-PROFILE-RUSSIAN.json'; x=sp.read_text(encoding='utf-8').replace('"required_head_behaviour": ["task27 review-state reset guard before page engine initialization"]','"required_runtime_behaviour": ["task27 review-state reset guard in T123-06"]'); sp.write_text(x,encoding='utf-8')
+          cp=base/'CHANGELOG.txt'; x=cp.read_text(encoding='utf-8')
+          entry='''v4.2 — STUDENT-FACING COPY CLEANUP\n- Убран служебный и технический язык из экрана старта и проверки сочинения.\n- В интерфейсе больше не показываются термины confirmed / possible / findings / hard cap.\n- Упрощены счётчик слов, условия допуска к оцениванию, подписи К7–К10 и блок источника.\n- Reset-guard задания 27 перенесён из HEAD в T123-06, чтобы HEAD оставался evergreen.\n- Механика проверки и scoring не изменялась.\n\n'''
+          if 'v4.2 — STUDENT-FACING COPY CLEANUP' not in x: x=x.replace('ЕГЭ РУССКИЙ ЯЗЫК 2026 — CHANGELOG\n\n','ЕГЭ РУССКИЙ ЯЗЫК 2026 — CHANGELOG\n\n'+entry)
+          cp.write_text(x,encoding='utf-8')
+          runtime=['ege-russkiy-demoversiya-HEAD.txt','ege-russkiy-demoversiya-SEO.txt','ege-russkiy-demoversiya-T123-01.txt','ege-russkiy-demoversiya-T123-02.txt','ege-russkiy-demoversiya-T123-03.txt','ege-russkiy-demoversiya-T123-04.txt','ege-russkiy-demoversiya-T123-05.txt','ege-russkiy-demoversiya-T123-06.txt']
+          lines=['SHA-256 MANIFEST — TILDA RUNTIME PACKAGE ONLY','ЕГЭ РУССКИЙ ЯЗЫК 2026 — v4.2','FINAL INDEPENDENT AUDIT: PASS — GO FOR TILDA UPLOAD','','Этот manifest фиксирует только файлы, которые реально используются при загрузке страницы в Tilda. Audit/test/status/preview-файлы намеренно не входят в runtime manifest.','']
+          for fn in runtime: lines.append(f"{hashlib.sha256((base/fn).read_bytes()).hexdigest()}  {fn}")
+          lines+=['','Порядок T123 в Tilda: 01 → 02 → 03 → 04 → 05 → 06.','Reset-guard задания 27 находится в T123-06.','']
+          (base/'MANIFEST-SHA256.txt').write_text('\n'.join(lines),encoding='utf-8')
+          PY
+      - name: Regression tests
+        working-directory: ege-russkiy-demoversiya-2026-v4.2
+        run: |
+          node test-russian-data.js
+          node test-russian-v4.js
+          python3 visual-contract-audit.py
+          node test-russian-task27-v4.2.js
+          node test-russian-task27-reset-guard.js
+          python3 test-russian-task27-browser.py
+          python3 test-browser.py
+      - name: Commit cleanup
+        run: |
+          git config user.name "niknikdym-hue"
+          git config user.email "niknikdym@gmail.com"
+          git add ege-russkiy-demoversiya-2026-v4.2
+          git commit -m "Simplify Russian demo student-facing copy"
+          git push origin main
