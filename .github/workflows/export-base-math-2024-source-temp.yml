@@ -1,0 +1,23 @@
+name: export-base-math-2024-source-temp
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - ".github/workflows/export-base-math-2024-source-temp.yml"
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify official 2024 source PDFs
+        run: |
+          test -f matematika-source-2024/ege-2024-matematika-baza-demoversiya.pdf
+          test -f matematika-source-2024/ege-2024-matematika-baza-specifikatsiya.pdf
+          test -f matematika-source-2024/ege-2024-matematika-kodifikator.pdf
+          sha256sum matematika-source-2024/*.pdf
+      - name: Upload official 2024 source set
+        uses: actions/upload-artifact@v4
+        with:
+          name: matematika-source-2024-official-temp
+          path: matematika-source-2024
+          retention-days: 1
