@@ -1,15 +1,15 @@
 const fs=require('fs'),vm=require('vm'),path=require('path');
-const file=process.argv[2]||path.join(__dirname,'ege-russkiy-demoversiya-HEAD.txt');
+const file=process.argv[2]||path.join(__dirname,'ege-russkiy-demoversiya-T123-06.txt');
 const src=fs.readFileSync(file,'utf8');
-const m=src.match(/<script id="edemo-task27-reset-guard">([\s\S]*?)<\/script>/);
-if(!m)throw new Error('reset guard script not found');
+const m=src.match(/\/\/ TASK27_RESET_GUARD_START([\s\S]*?)\/\/ TASK27_RESET_GUARD_END/);
+if(!m)throw new Error('reset guard block not found');
 let checks=0,fails=[];
 function run(coreRaw,reviewRaw){
   const data={};
   if(coreRaw!==null)data['eksamio_ege_russian_demo_2026_v4_1']=coreRaw;
   if(reviewRaw!==null)data['eksamio_ege_russian_demo_2026_v4_2_task27_review']=reviewRaw;
   const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(data,k)?data[k]:null,removeItem:k=>{delete data[k];}};
-  vm.runInNewContext(m[1],{localStorage,JSON});
+  vm.runInNewContext(m[1],{localStorage,JSON,CORE_STORAGE_KEY:'eksamio_ege_russian_demo_2026_v4_1',REVIEW_STORAGE_KEY:'eksamio_ege_russian_demo_2026_v4_2_task27_review'});
   return data;
 }
 function eq(name,got,want){checks++;if(got!==want)fails.push(`${name}: got ${got}, want ${want}`)}

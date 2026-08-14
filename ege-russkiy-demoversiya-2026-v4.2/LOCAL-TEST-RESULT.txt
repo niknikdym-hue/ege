@@ -32,7 +32,7 @@ TILDA: NOT UPDATED / NOT PUBLISHED
 - шкала 0–24 отсутствует, самооценка только 0–22.
 
 Дополнительный независимый edge-case audit:
-Обнаружено, что штатный core reset удалял только основной storage key и мог оставлять Task 27 review-state. Добавлен ранний reset-guard в HEAD.
+Обнаружено, что штатный core reset удалял только основной storage key и мог оставлять Task 27 review-state. Reset-guard размещён в T123-06, чтобы HEAD оставался evergreen.
 
 RESET-GUARD REGRESSION:
 PASS task27 reset guard: 6 assertions

@@ -17,7 +17,7 @@ FINAL STATUS: PASS — GO FOR TILDA UPLOAD
 Архитектура пакета:
 - обязательны T123-01 … T123-06;
 - T123-06 непосредственно после T123-05;
-- актуальный HEAD обязателен: он содержит reset-guard для отдельного Task 27 review-state;
+- reset-guard для отдельного Task 27 review-state находится в T123-06;
 - основной state key: eksamio_ege_russian_demo_2026_v4_1;
 - review key: eksamio_ege_russian_demo_2026_v4_2_task27_review.
 

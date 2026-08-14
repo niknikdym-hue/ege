@@ -22,7 +22,7 @@ STATUS: PASS — GO FOR TILDA UPLOAD
 Этап 3 — повторный независимый аудит:
 - содержательная модель подтверждена;
 - найден edge case новой попытки: core reset мог оставлять Task 27 review-state;
-- добавлен reset-guard в актуальный HEAD;
+- reset-guard размещён в T123-06, чтобы HEAD оставался evergreen;
 - regression reset guard: PASS 6/6 assertions;
 - финальный независимый audit: PASS;
 - пакет разрешён к загрузке в Tilda.

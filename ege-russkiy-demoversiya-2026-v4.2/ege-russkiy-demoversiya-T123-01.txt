@@ -186,9 +186,9 @@
           <div class="ep-stack">
             <section class="ep-panel ep-section edemo-start-panel">
               <h2 class="ep-section-title">Перед началом</h2>
-              <p>Экзаменационная работа состоит из двух частей. Часть 1 содержит 26 заданий с кратким ответом, часть 2 — сочинение по прочитанному тексту.</p>
-              <p>На выполнение работы отводится <strong>3 часа 30 минут</strong>. Ответы сохраняются в браузере. После завершения задания 1–26 проверяются автоматически. Сочинение не получает автоматический балл: система формирует confirmed и possible findings по К7–К10, после чего пользователь выполняет самооценку по критериям К1–К10.</p>
-              <p>На позициях, где ФИПИ приводит несколько примеров через «ИЛИ», при начале попытки выбирается <strong>один официальный пример</strong>. Он закрепляется за попыткой и не меняется после перезагрузки страницы — так же, как в реальном варианте на каждой позиции предлагается только одно задание.</p>
+              <p>В демоверсии 27 заданий: 26 заданий с кратким ответом и сочинение.</p>
+              <p>На работу даётся <strong>3 часа 30 минут</strong>. Ответы сохраняются автоматически — можно переходить между заданиями и возвращаться к ним позже. После завершения экзамена задания 1–26 проверятся автоматически. Сочинение можно будет отдельно проверить и оценить по критериям.</p>
+              <p>Если у задания есть несколько вариантов, в начале попытки вам выпадет один из них. Он останется тем же до конца экзамена.</p>
               <div class="edemo-notice" role="note"><p><strong>Важно:</strong> во время попытки правильные ответы и объяснения не показываются. Таймер продолжает идти после закрытия страницы.</p></div>
               <div class="ep-actions edemo-start-actions">
                 <button class="ep-button" type="button" id="edemo-start">Начать экзамен</button>
@@ -219,14 +219,14 @@
               <h2 class="ep-section-title">Результат</h2>
               <div class="edemo-score-grid">
                 <div class="edemo-score-card"><div class="edemo-score-value"><span id="edemo-short-score">0</span>/28</div><p>Задания 1–26</p></div>
-                <div class="edemo-score-card"><div class="edemo-score-value"><span id="edemo-essay-score">—</span>/22</div><p>Сочинение по самооценке</p><p class="edemo-mini" id="edemo-essay-status">Не оценено</p></div>
-                <div class="edemo-score-card edemo-score-card--official"><div class="edemo-score-value"><span id="edemo-total-score">—</span>/50</div><p>Официальный общий результат</p><p class="edemo-mini" id="edemo-total-status">Требуется экспертная проверка сочинения</p></div>
+                <div class="edemo-score-card"><div class="edemo-score-value"><span id="edemo-essay-score">—</span>/22</div><p>Сочинение</p><p class="edemo-mini" id="edemo-essay-status">Ещё не оценено</p></div>
+                <div class="edemo-score-card edemo-score-card--official"><div class="edemo-score-value"><span id="edemo-total-score">—</span>/50</div><p>Общий результат</p><p class="edemo-mini" id="edemo-total-status">После оценки сочинения</p></div>
               </div>
 
               <section class="ep-panel ep-section">
-                <h3 class="ep-section-title">Самооценка сочинения по К1–К10</h3>
-                <p>Самооценка является учебной и не заменяет проверку эксперта. Она показывается отдельно и не прибавляется к официальному результату заданий 1–26.</p>
-                <p><strong>Технический счётчик:</strong> <span class="edemo-word-count" id="edemo-result-word-count">0</span> слов. Значение ориентировочное и не определяет официальный порог автоматически.</p>
+                <h3 class="ep-section-title">Проверка и оценка сочинения</h3>
+                <p>Проверьте сочинение по критериям и поставьте баллы.</p>
+                <p><strong>Количество слов:</strong> <span class="edemo-word-count" id="edemo-result-word-count">0</span>.</p>
                 <div class="edemo-criteria" id="edemo-criteria"></div>
               </section>
 
@@ -235,9 +235,8 @@
             </section>
 
             <section class="ep-panel ep-section edemo-source-credit">
-              <p><strong>Источник:</strong> официальный демонстрационный вариант КИМ ЕГЭ по русскому языку 2026 года, опубликованный ФГБНУ «ФИПИ».</p>
-              <p>Задания и критерии приведены по официальному демонстрационному варианту. Интерактивная оболочка и пояснения подготовлены Эксамио. Эксамио не является официальным ресурсом ФИПИ или Рособрнадзора.</p>
-              <p><a href="https://fipi.ru/ege/demoversii-specifikacii-kodifikatory" target="_blank" rel="noopener noreferrer">Открыть официальный источник ФИПИ ↗</a></p>
+              <p>Демоверсия создана на основе материалов ЕГЭ по русскому языку 2026 года. Интерактивный формат подготовлен Эксамио.</p>
+              <p><a href="https://fipi.ru/ege/demoversii-specifikacii-kodifikatory" target="_blank" rel="noopener noreferrer">Источник заданий ↗</a></p>
             </section>
           </div>
         </main>

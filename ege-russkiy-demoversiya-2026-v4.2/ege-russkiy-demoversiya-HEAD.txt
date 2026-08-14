@@ -7,23 +7,6 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Демоверсия ЕГЭ по русскому языку онлайн">
 <meta name="twitter:description" content="Полный вариант ЕГЭ по русскому языку в интерактивном формате.">
-<script id="edemo-task27-reset-guard">
-(function(){
-  "use strict";
-  var CORE_STORAGE_KEY="eksamio_ege_russian_demo_2026_v4_1";
-  var REVIEW_STORAGE_KEY="eksamio_ege_russian_demo_2026_v4_2_task27_review";
-  try{
-    var raw=localStorage.getItem(CORE_STORAGE_KEY),keep=false;
-    if(raw){
-      try{
-        var core=JSON.parse(raw);
-        keep=!!core&&(core.status==="running"||core.status==="finished");
-      }catch(parseError){}
-    }
-    if(!keep)localStorage.removeItem(REVIEW_STORAGE_KEY);
-  }catch(storageError){}
-})();
-</script>
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
