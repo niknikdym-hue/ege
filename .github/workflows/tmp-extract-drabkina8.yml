@@ -1,4 +1,4 @@
-name: Temporary extract Grade 8 Drabkina text
+name: Temporary OCR Grade 8 Drabkina evidence
 
 on:
   push:
@@ -6,32 +6,32 @@ on:
       - '.github/workflows/tmp-extract-drabkina8.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   extract:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Extract PDF text layer
+      - name: OCR exact 2018 source and print targeted evidence
         run: |
           set -euo pipefail
           SRC='eksamio-learning-engine/russkiy-knigi/1400_Russkiy_yaz._8kl._Prakt._po_orfogr._Drabkina_2018_120s.pdf'
-          OUT='eksamio-learning-engine/178-DRABKINA-GRADE8-2018-PDF-TEXT-EXTRACT.txt'
           sudo apt-get update -qq
-          sudo apt-get install -y -qq poppler-utils
+          sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-rus
+          mkdir -p /tmp/dr8/img /tmp/dr8/txt
           pdfinfo "$SRC" | sed -n '1,25p'
-          pdftotext -layout -enc UTF-8 "$SRC" "$OUT"
-          test -s "$OUT"
-          printf '\nEXTRACT_BYTES='; wc -c < "$OUT"
-          printf 'EXTRACT_LINES='; wc -l < "$OUT"
-      - name: Commit extracted source text
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add eksamio-learning-engine/178-DRABKINA-GRADE8-2018-PDF-TEXT-EXTRACT.txt
-          git commit -m 'Extract Grade 8 Drabkina 2018 PDF text for source audit'
-          git push
+          pdftoppm -jpeg -r 180 "$SRC" /tmp/dr8/img/page >/dev/null 2>&1
+          for f in /tmp/dr8/img/page-*.jpg; do
+            b=$(basename "$f" .jpg)
+            tesseract "$f" "/tmp/dr8/txt/$b" -l rus --psm 6 >/dev/null 2>&1 || true
+          done
+          echo '=== OCR PAGE COUNT ==='
+          find /tmp/dr8/txt -name 'page-*.txt' | wc -l
+          echo '=== TARGETED EVIDENCE HITS ==='
+          grep -Hni -E -C 2 'тире.{0,50}(подлежащ|сказуем)|подлежащ.{0,50}сказуем|однородн|неоднородн|обобщающ|несогласованн.{0,30}определ|обособленн.{0,30}(определ|прилож)|приложени|вводн|обращени|междомети|слова.{0,15}(да|нет)|всё-таки|все-таки|несмотря|однако' /tmp/dr8/txt/page-*.txt | head -n 1200 || true
+          echo '=== CANDIDATE CONTENTS / EARLY PAGES ==='
+          for f in $(find /tmp/dr8/txt -name 'page-*.txt' | sort | head -n 15); do
+            echo "--- $(basename "$f") ---"
+            sed -n '1,120p' "$f"
+          done
