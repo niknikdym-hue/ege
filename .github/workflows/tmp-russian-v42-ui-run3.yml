@@ -1,0 +1,67 @@
+name: Temporary Russian v4.2 essay review UX run 3
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tmp-russian-v42-ui-run3.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply corrected patch
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tmp-russian-v42-ui-patch.py')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace("if old6 not in pv: raise SystemExit('PREVIEW old T123-06 missing')\npv=pv.replace(old6,s,1)\n","")
+          p.write_text(s,encoding='utf-8')
+          PY
+          python3 tmp-russian-v42-ui-patch.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('ege-russkiy-demoversiya-2026-v4.2/test-russian-task27-v4.2.js')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace("check(/shortScore\\+score/.test(hotfix),'displayed demo total formula');","eq('displayed demo total formula',/shortScore\\+score/.test(code),true);")
+          s=s.replace("check(/criterionHelp\\(c\\.id\\)/.test(hotfix)&&/criterionHelp\\(k\\)/.test(hotfix),'K1-K10 optional scoring help wired');","eq('K1-K10 optional scoring help wired',/criterionHelp\\(c\\.id\\)/.test(code)&&/criterionHelp\\(k\\)/.test(code),true);")
+          p.write_text(s,encoding='utf-8')
+          p=Path('ege-russkiy-demoversiya-2026-v4.2/test-russian-task27-browser.py')
+          s=p.read_text(encoding='utf-8')
+          a="    check(page.locator('#edemo-essay-score').inner_text()=='22','possible K10 does not create hard cap')\n"
+          b=a+"    check(page.locator('#edemo-total-score').inner_text()=='22','whole demo result includes essay self-assessment')\n    check('Задания 1–26: 0 + сочинение: 22' in page.locator('#edemo-total-status').inner_text(),'whole-result breakdown is clear')\n"
+          if a not in s: raise SystemExit('total browser anchor missing')
+          p.write_text(s.replace(a,b,1),encoding='utf-8')
+          PY
+      - name: Install browser
+        run: |
+          python3 -m pip install playwright
+          python3 -m playwright install chromium
+          PW_CHROMIUM=$(python3 - <<'PY'
+          from playwright.sync_api import sync_playwright
+          p=sync_playwright().start();print(p.chromium.executable_path);p.stop()
+          PY
+          )
+          sudo ln -sf "$PW_CHROMIUM" /usr/bin/chromium
+          /usr/bin/chromium --version
+      - name: Full regression
+        working-directory: ege-russkiy-demoversiya-2026-v4.2
+        run: |
+          node test-russian-data.js
+          node test-russian-v4.js
+          python3 visual-contract-audit.py
+          node test-russian-task27-v4.2.js
+          node test-russian-task27-reset-guard.js
+          python3 test-russian-task27-browser.py
+          python3 test-browser.py
+      - name: Commit changes
+        run: |
+          git config user.name "niknikdym-hue"
+          git config user.email "niknikdym@gmail.com"
+          git add ege-russkiy-demoversiya-2026-v4.2
+          git commit -m "Improve Russian essay review guidance and result"
+          git push origin main
