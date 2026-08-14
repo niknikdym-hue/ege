@@ -1,0 +1,106 @@
+name: build-base-math-2024-full-recheck
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'matematika-source-2024/ege-2024-matematika-baza-demoversiya.pdf'
+      - 'matematika-source-2024/ege-2024-matematika-baza-specifikatsiya.pdf'
+      - 'matematika-source-2024/ege-2024-matematika-kodifikator.pdf'
+      - 'matematika-source-2024/scripts/build_canonical_base_2024.py'
+      - 'matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-*'
+      - 'matematika-source-2024/scripts/finalize_verified_base_2024_release.py'
+      - 'matematika-source-2024/templates/base-2024-shell.html'
+      - '.github/workflows/build-base-math-2024-full-recheck.yml'
+
+jobs:
+  full-recheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BASE2024_OUTPUT_DIR: ${{ runner.temp }}/base2024-release
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install audit dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow playwright
+
+      - name: Show browser runtime
+        run: |
+          command -v google-chrome || command -v chromium || command -v chromium-browser
+          (google-chrome --version || chromium --version || chromium-browser --version) 2>/dev/null
+
+      - name: Build canonical official-source pages
+        run: python matematika-source-2024/scripts/build_canonical_base_2024.py
+
+      - name: Restore verified package builder
+        shell: bash
+        run: |
+          cat matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-* \
+            | base64 -d | gzip -dc > matematika-source-2024/scripts/build_verified_base_2024_package.py
+          python -m py_compile matematika-source-2024/scripts/build_verified_base_2024_package.py
+
+      - name: Build 2024 package from official sources
+        run: python matematika-source-2024/scripts/build_verified_base_2024_package.py
+
+      - name: Full pre-release gate chain
+        working-directory: ${{ env.BASE2024_OUTPUT_DIR }}/ege-matematika-baza-demoversiya-2024
+        run: |
+          node --check script.js
+          python precheck.py
+          python index_integrity_test.py
+          python gate_acceptance_test.py
+          python source_traceability_test.py
+          python codifier_coverage_test.py
+          python formula_gate_test.py
+          python visual_regression_test.py
+          python visual_fidelity_test.py
+          python independent_audit.py
+          python package_integrity_test.py
+          python screenshot_test.py
+          python browser_interaction_test.py
+
+      - name: Freeze final ZIP
+        run: python matematika-source-2024/scripts/finalize_verified_base_2024_release.py
+
+      - name: Frozen package and ZIP gates
+        working-directory: ${{ env.BASE2024_OUTPUT_DIR }}/ege-matematika-baza-demoversiya-2024
+        run: |
+          python package_integrity_test.py
+          python zip_release_test.py
+
+      - name: Full regression from clean ZIP extraction
+        shell: bash
+        run: |
+          set -euo pipefail
+          CLEAN="${RUNNER_TEMP}/base2024-clean"
+          rm -rf "$CLEAN"
+          mkdir -p "$CLEAN"
+          unzip -q "${BASE2024_OUTPUT_DIR}/ege-matematika-baza-demoversiya-2024-v1.0.zip" -d "$CLEAN"
+          cd "$CLEAN/ege-matematika-baza-demoversiya-2024"
+          node --check script.js
+          python precheck.py
+          python index_integrity_test.py
+          python gate_acceptance_test.py
+          python source_traceability_test.py
+          python codifier_coverage_test.py
+          python formula_gate_test.py
+          python visual_regression_test.py
+          python visual_fidelity_test.py
+          python independent_audit.py
+          python package_integrity_test.py
+          python screenshot_test.py
+          python browser_interaction_test.py
+          sha256sum "${BASE2024_OUTPUT_DIR}/ege-matematika-baza-demoversiya-2024-v1.0.zip"
+
+      - name: Upload verified release
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-matematika-baza-demoversiya-2024-v1.0-FULL-RECHECK
+          path: ${{ env.BASE2024_OUTPUT_DIR }}/ege-matematika-baza-demoversiya-2024-v1.0.zip
+          retention-days: 30
