@@ -1,0 +1,37 @@
+name: Temporary extract Grade 8 Drabkina text
+
+on:
+  push:
+    paths:
+      - '.github/workflows/tmp-extract-drabkina8.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract PDF text layer
+        run: |
+          set -euo pipefail
+          SRC='eksamio-learning-engine/russkiy-knigi/1400_Russkiy_yaz._8kl._Prakt._po_orfogr._Drabkina_2018_120s.pdf'
+          OUT='eksamio-learning-engine/178-DRABKINA-GRADE8-2018-PDF-TEXT-EXTRACT.txt'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          pdfinfo "$SRC" | sed -n '1,25p'
+          pdftotext -layout -enc UTF-8 "$SRC" "$OUT"
+          test -s "$OUT"
+          printf '\nEXTRACT_BYTES='; wc -c < "$OUT"
+          printf 'EXTRACT_LINES='; wc -l < "$OUT"
+      - name: Commit extracted source text
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add eksamio-learning-engine/178-DRABKINA-GRADE8-2018-PDF-TEXT-EXTRACT.txt
+          git commit -m 'Extract Grade 8 Drabkina 2018 PDF text for source audit'
+          git push
