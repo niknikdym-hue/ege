@@ -1,49 +1,58 @@
 EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2024
-RELEASE STATUS / TILDA HANDOFF
+RELEASE STATUS / TILDA HANDOFF — FULL RECHECK
 Дата обновления: 2026-08-14
 
-STATUS: NO_GO_SOURCE_VISUALS_REQUIRED
+STATUS: READY_FOR_TILDA_FULL_RECHECK
+READY_FOR_TILDA: YES
 LIVE_GO: NO
 
-ВАЖНО: ранее выданные пакеты 2024, включая ege-matematika-baza-demoversiya-2024-v1.0-INDEPENDENT-AUDITED.zip, ОТОЗВАНЫ И НЕ ДОЛЖНЫ ЗАГРУЖАТЬСЯ В TILDA.
-Причина: в них присутствуют реконструированные визуалы. С 2026-08-14 это запрещено независимо от качества реконструкции и результата scorer.
+ВАЖНО
+Все прежние пакеты 2024, основанные на reconstructed SVG/HTML visuals, остаются ОТОЗВАННЫМИ.
+Разрешён к загрузке только новый пакет полного recheck:
+ege-matematika-baza-demoversiya-2024-v1.0.zip
+SHA256: 9d050eb4eb9e9bce5990345654e0efb9f7f3d924905f2bbd55b53911dd77a341
+GitHub Actions run: 31822909411 — SUCCESS
+Artifact ID: 9227693678
 
-ОБЯЗАТЕЛЬНОЕ ПРАВИЛО
-- если официальный PDF содержит рисунок, график, схему, карту, чертёж, диаграмму или иной визуал, демоверсия использует только изображение, полученное непосредственно из официального первоисточника;
-- SVG/Canvas/HTML-реконструкция, ручная перерисовка, восстановление «по смыслу» или по официальному ответу запрещены;
-- допустимы только render/crop официального PDF, поворот, безопасный resize и техническая конвертация без изменения содержания;
-- печатную строку ФИПИ «Ответ: ______» и линию ответа в интерактивную демоверсию НЕ переносить; crop должен исключать только эту строку/линию, не затрагивая условие или визуал;
-- системное поле ответа Эксамио остаётся отдельным интерактивным контролом;
-- если точный source crop получить нельзя, VISUAL_GATE = FAIL и пакет не выдаётся.
+SOURCE / VISUAL LOCK
+- 21 заданий, 180 минут, максимум 21 первичный балл, 52 официальных примера;
+- 52/52 text/source trace PASS;
+- 41/41 meaningful visual/table/formula assets — прямые source crops/renders официального PDF;
+- 41/41 pixel fidelity PASS;
+- meaningful reconstructed source visuals = 0;
+- строка ФИПИ «Ответ: ______» и линия ответа в условия не переносятся;
+- системное поле ответа Эксамио остаётся отдельным интерактивным control.
 
-ТОЧНОСТЬ
-Требуется 100% соответствие первоисточнику. Формулировки «по смыслу», «математически эквивалентно», «визуально похоже», «ответ получается тот же» не являются доказательством соответствия.
-Любое сомнение, неполная сверка или невозможность доказать происхождение элемента = NO GO.
+ANSWER SOURCE ANOMALY
+В официальной таблице ответов есть документированная аномалия 15.3: число 9 визуально стоит в строке 14 / пример 3, которого у задания 14 нет. По самой печатной странице с условиями task 14 имеет 2 примера, task 15 — 3; задача 15.3 про 24 га и отношение 5:3 имеет ответ 9. Аномалия сохранена в audit record и не замаскирована.
 
-SOURCE LOCK
-Для Base Math 2024 визуальным первоисточником является только:
-matematika-source-2024/ege-2024-matematika-baza-demoversiya.pdf
+TILDA INSTALLATION
+1. Использовать SEO и HEAD из одноимённых файлов пакета.
+2. Создать 18 блоков T123.
+3. Вставить строго по порядку T123-01 ... T123-18.
+4. Между этими T123 не вставлять другие блоки.
+5. Шапка и футер подключаются отдельно.
+6. Ничего не «улучшать» и не перерисовывать после gate.
 
-EXAM LOCK, который не меняется:
-- source year: 2024
-- 21 tasks
-- 180 minutes
-- max primary score: 21
-- 52 official FIPI examples
-- all tasks short-answer
+ПРОВЕРКИ ФИНАЛЬНОГО ПАКЕТА
+- full source-only rebuild from current main — PASS;
+- browser correct+wrong 52/52 — PASS;
+- full attempt 21/21 — PASS;
+- reload persistence — PASS;
+- own answer + accepted answer + score in results — PASS;
+- responsive 1280/768/390/360/320 — PASS;
+- formula/text/codifier/source gates — PASS;
+- visual regression/fidelity — PASS;
+- independent audit — PASS;
+- frozen ZIP integrity — PASS;
+- full regression after clean ZIP extraction — PASS.
 
-ЧТО НУЖНО СДЕЛАТЬ ДО НОВОГО READY_FOR_TILDA
-1. Заменить все реконструированные визуалы на source crops из официального PDF ФИПИ 2024.
-2. Для каждого visual asset зафиксировать source filename, source SHA/identifier, страницу и crop evidence.
-3. Исключить из crop печатную строку «Ответ: ______» и линию ответа.
-4. Пройти four-edge/readability audit desktop/mobile для каждого source visual.
-5. Повторить полный 52/52 browser/scorer/state regression на чистом ZIP.
-6. Повторить formula/text/source gates.
-7. Провести отдельный независимый финальный аудит НОВОГО чистого ZIP.
-8. Только после всех PASS вернуть READY_FOR_TILDA.
+ПОСЛЕ ПУБЛИКАЦИИ
+Обязательны:
+- production smoke на реальной странице Tilda;
+- ручная ученическая приёмка.
+Только после этого LIVE_GO может быть изменён на YES.
 
-ОТОЗВАННЫЙ ТОЧЕЧНЫЙ ФАЙЛ
-Ранее выданный ege-matematika-baza-demoversiya-2024-T123-02.txt с ручной правкой рисунка 7.1 считать ОТОЗВАННЫМ И НЕ ИСПОЛЬЗОВАТЬ.
-
-ПРИОРИТЕТ
-Этот статус отменяет все прежние PASS/READY-флаги 2024, основанные на reconstructed source visuals.
+SOURCE GATE: 01-BASE-2024-SOURCE-GATE-STATUS.txt
+CURRENT CHECKPOINT: 02-BASE-2024-CURRENT-CHECKPOINT.txt
+FINAL REPORT: 06-BASE-2024-FULL-RECHECK-FINAL-REPORT.txt
