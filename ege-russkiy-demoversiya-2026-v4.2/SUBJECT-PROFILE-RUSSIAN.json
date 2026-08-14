@@ -29,10 +29,21 @@
       "no findings never auto-award 3",
       "new attempt must clear stale task27 review state when core state is missing, idle or invalid"
     ],
-    "required_t123_blocks": ["T123-01", "T123-02", "T123-03", "T123-04", "T123-05", "T123-06"],
-    "required_runtime_behaviour": ["task27 review-state reset guard in T123-06"],
+    "required_t123_blocks": [
+      "T123-01",
+      "T123-02",
+      "T123-03",
+      "T123-04",
+      "T123-05",
+      "T123-06"
+    ],
+    "required_runtime_behaviour": [
+      "task27 review-state reset guard in T123-06"
+    ],
     "essay_self_assessment_scale": "0-22 only",
-    "official_total": "must remain unavailable until expert assessment; user self-assessment is never added to official score"
+    "official_total": "official expert assessment remains conceptually distinct from the displayed demo result",
+    "essay_criterion_help": "optional expandable student-facing guidance for K1-K10, aligned to 2026 criteria",
+    "displayed_demo_total": "after essay self-assessment: tasks 1-26 score + essay self-assessment, out of 50; clearly labeled as based on user essay assessment"
   },
   "required_regression_tests": [
     "all official alternatives",

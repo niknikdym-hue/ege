@@ -77,4 +77,7 @@ eq('missing terminal punctuation is possible K8',noEnding.possible.K8.length,1);
 eq('missing terminal punctuation is not confirmed K8',noEnding.confirmed.K8.length,0);
 eq('normalized 0-24 API removed',Object.prototype.hasOwnProperty.call(api,'normalizedScore24'),false);
 if(fails.length){console.error(fails.join('\n'));process.exit(1)}
+
+eq('displayed demo total formula',/shortScore\+score/.test(code),true);
+eq('K1-K10 optional scoring help wired',/criterionHelp\(c\.id\)/.test(code)&&/criterionHelp\(k\)/.test(code),true);
 console.log(`PASS task27 v4.2 unit tests: ${checks} assertions`);
