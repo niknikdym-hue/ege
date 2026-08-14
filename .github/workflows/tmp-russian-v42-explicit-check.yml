@@ -1,0 +1,45 @@
+name: Temporary Russian v4.2 explicit essay check
+on:
+  push:
+    branches: [main]
+    paths:
+      - tmp-russian-v42-explicit-check.py
+      - .github/workflows/tmp-russian-v42-explicit-check.yml
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply patch
+        run: python3 tmp-russian-v42-explicit-check.py
+      - name: Install browser
+        run: |
+          python3 -m pip install playwright
+          python3 -m playwright install chromium
+          PW_CHROMIUM=$(python3 - <<'PY'
+          from playwright.sync_api import sync_playwright
+          p=sync_playwright().start();print(p.chromium.executable_path);p.stop()
+          PY
+          )
+          sudo ln -sf "$PW_CHROMIUM" /usr/bin/chromium
+      - name: Full regression
+        working-directory: ege-russkiy-demoversiya-2026-v4.2
+        run: |
+          node test-russian-data.js
+          node test-russian-v4.js
+          python3 visual-contract-audit.py
+          node test-russian-task27-v4.2.js
+          node test-russian-task27-reset-guard.js
+          python3 test-russian-task27-browser.py
+          python3 test-browser.py
+      - name: Commit changes
+        run: |
+          git config user.name "niknikdym-hue"
+          git config user.email "niknikdym@gmail.com"
+          git add ege-russkiy-demoversiya-2026-v4.2
+          git commit -m "Run essay check only on explicit button"
+          git push origin main
