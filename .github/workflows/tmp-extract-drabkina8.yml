@@ -1,4 +1,4 @@
-name: Temporary OCR Grade 8 Drabkina evidence
+name: Temporary OCR Grade 8 remaining evidence
 
 on:
   push:
@@ -13,25 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: OCR exact 2018 source and print targeted evidence
+      - name: OCR selected exact-source pages
         run: |
           set -euo pipefail
           SRC='eksamio-learning-engine/russkiy-knigi/1400_Russkiy_yaz._8kl._Prakt._po_orfogr._Drabkina_2018_120s.pdf'
           sudo apt-get update -qq
           sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-rus
-          mkdir -p /tmp/dr8/img /tmp/dr8/txt
-          pdfinfo "$SRC" | sed -n '1,25p'
-          pdftoppm -jpeg -r 180 "$SRC" /tmp/dr8/img/page >/dev/null 2>&1
-          for f in /tmp/dr8/img/page-*.jpg; do
-            b=$(basename "$f" .jpg)
-            tesseract "$f" "/tmp/dr8/txt/$b" -l rus --psm 6 >/dev/null 2>&1 || true
-          done
-          echo '=== OCR PAGE COUNT ==='
-          find /tmp/dr8/txt -name 'page-*.txt' | wc -l
-          echo '=== TARGETED EVIDENCE HITS ==='
-          grep -Hni -E -C 2 'тире.{0,50}(подлежащ|сказуем)|подлежащ.{0,50}сказуем|однородн|неоднородн|обобщающ|несогласованн.{0,30}определ|обособленн.{0,30}(определ|прилож)|приложени|вводн|обращени|междомети|слова.{0,15}(да|нет)|всё-таки|все-таки|несмотря|однако' /tmp/dr8/txt/page-*.txt | head -n 1200 || true
-          echo '=== CANDIDATE CONTENTS / EARLY PAGES ==='
-          for f in $(find /tmp/dr8/txt -name 'page-*.txt' | sort | head -n 15); do
-            echo "--- $(basename "$f") ---"
-            sed -n '1,120p' "$f"
+          mkdir -p /tmp/dr8
+          for p in $(seq 94 105) 121; do
+            pdftoppm -f "$p" -l "$p" -singlefile -jpeg -r 240 "$SRC" "/tmp/dr8/p$p" >/dev/null 2>&1
+            tesseract "/tmp/dr8/p$p.jpg" stdout -l rus --psm 6 2>/dev/null | sed "s/^/[PDF-$p] /"
           done
