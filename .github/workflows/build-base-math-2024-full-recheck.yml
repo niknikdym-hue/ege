@@ -1,7 +1,7 @@
 name: build-base-math-2024-full-recheck
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
   push:
     branches: [main]
     paths:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      BASE2024_OUTPUT_DIR: ${{ runner.temp }}/base2024-release
+      BASE2024_OUTPUT_DIR: /tmp/base2024-release
     steps:
       - uses: actions/checkout@v4
 
@@ -49,7 +49,7 @@ jobs:
         run: python matematika-source-2024/scripts/build_verified_base_2024_package.py
 
       - name: Full pre-release gate chain
-        working-directory: ${{ env.BASE2024_OUTPUT_DIR }}/ege-matematika-baza-demoversiya-2024
+        working-directory: /tmp/base2024-release/ege-matematika-baza-demoversiya-2024
         run: |
           node --check script.js
           python precheck.py
@@ -69,7 +69,7 @@ jobs:
         run: python matematika-source-2024/scripts/finalize_verified_base_2024_release.py
 
       - name: Frozen package and ZIP gates
-        working-directory: ${{ env.BASE2024_OUTPUT_DIR }}/ege-matematika-baza-demoversiya-2024
+        working-directory: /tmp/base2024-release/ege-matematika-baza-demoversiya-2024
         run: |
           python package_integrity_test.py
           python zip_release_test.py
@@ -102,7 +102,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ege-matematika-baza-demoversiya-2024-v1.0-FULL-RECHECK
-          path: ${{ env.BASE2024_OUTPUT_DIR }}/ege-matematika-baza-demoversiya-2024-v1.0.zip
+          path: /tmp/base2024-release/ege-matematika-baza-demoversiya-2024-v1.0.zip
           retention-days: 30
-
-# ci trigger through a merged pull request after the complete 2024 source-only rebuild
