@@ -8,7 +8,8 @@ for n in range(1,6):
     if block not in preview:
         raise SystemExit(f'FAIL real preview does not contain exact T123-{n:02d}')
 hotfix=(base/'ege-russkiy-demoversiya-T123-06.txt').read_text(encoding='utf-8')
-html=preview.replace('</body>',hotfix+'</body>')
+addon=(base/'ege-russkiy-demoversiya-T123-07.txt').read_text(encoding='utf-8')
+html=preview.replace('</body>',hotfix+addon+'</body>')
 
 browser_candidates=[
     os.environ.get('BROWSER_EXECUTABLE'),
@@ -43,6 +44,12 @@ with sync_playwright() as p:
     errors=[]
     page.on('console',lambda m:errors.append(f'console {m.type}: {m.text}') if m.type=='error' else None)
     page.on('pageerror',lambda e:errors.append(f'pageerror: {e}'))
+    from urllib.parse import urlparse,parse_qs
+    def speller_route(route):
+        q=parse_qs(urlparse(route.request.url).query);cb=q.get('callback',[''])[0]
+        body=f'{cb}([{json.dumps({"code":1,"pos":0,"row":0,"col":0,"len":6,"word":"карова","s":["корова"]},ensure_ascii=False)}]);'
+        route.fulfill(status=200,content_type='application/javascript; charset=utf-8',body=body)
+    page.route('https://speller.yandex.net/**',speller_route)
     page.evaluate("Object.defineProperty(window,'localStorage',{configurable:true,value:{_d:{},getItem(k){return Object.prototype.hasOwnProperty.call(this._d,k)?this._d[k]:null},setItem(k,v){this._d[k]=String(v)},removeItem(k){delete this._d[k]}}})")
 
     # Demo mode on the real PREVIEW composed from exact T123-01...T123-05 plus T123-06.
@@ -51,7 +58,7 @@ with sync_playwright() as p:
     essay=page.locator('#edemo-answer-input')
     for attr,want in [('spellcheck','false'),('autocomplete','off'),('autocorrect','off'),('autocapitalize','off'),('data-gramm','false'),('data-enable-grammarly','false'),('writingSuggestions','false')]:
         check(essay.get_attribute(attr)==want,f'demo textarea {attr}={want}')
-    original='Это это исходное сочинение без точки'
+    original='Карова. Это это исходное сочинение без точки'
     essay.fill(original)
     finish(page)
     check(page.locator('h3',has_text='Ваше сочинение').count()==1,'demo result has Ваше сочинение')
@@ -69,6 +76,12 @@ with sync_playwright() as p:
     check(page.get_by_text('Проверка ошибок',exact=False).count()>=1,'student-friendly analysis label shown')
     check(page.locator('details.edemo-criterion-help').count()==10,'all K1-K10 have optional scoring help')
     check(page.get_by_text('может заметить не все ошибки',exact=False).count()>=1,'automatic-check limitation shown')
+    check(page.locator('#edemo-run-text-check').count()==1,'explicit text-check button shown')
+    page.click('#edemo-run-text-check')
+    page.wait_for_function("JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_2_spelling_check')||'{}').status==='complete'")
+    check(page.get_by_text('Проверка завершена',exact=False).count()>=1,'spelling-check completion is visible')
+    checked=page.evaluate("JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_2_task27_review'))")
+    check(any('карова' in x['message'].lower() for x in checked['possibleFindings']['K7']),'external spelling candidate merged into K7')
     for k in ['K7','K8','K9','K10']:page.select_option(f'[data-review-score="{k}"]','3')
     check(page.locator('#edemo-essay-score').inner_text()=='22','possible K10 does not create hard cap')
     check(page.locator('#edemo-total-score').inner_text()=='22','whole demo result includes essay self-assessment')
@@ -90,8 +103,11 @@ with sync_playwright() as p:
     check(page.locator('#edemo-frozen-essay').count()==0,'paper result has no frozen demo block')
     check(page.locator('#edemo-transferred-essay').count()==1,'paper result has editable transferred text')
     scan_svg=b'<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1200"><rect width="800" height="1200" fill="white"/><path d="M80 140h640M80 220h640M80 300h640" stroke="black" stroke-width="8"/></svg>'
-    page.set_input_files('#edemo-essay-scan',files={'name':'essay-scan.svg','mimeType':'image/svg+xml','buffer':scan_svg})
-    check(page.locator('.edemo-scan-open').count()==1,'image preview has zoom opener')
+    check(page.locator('#edemo-essay-scan').get_attribute('multiple') is not None,'scan input supports multiple files')
+    check(page.locator('.edemo-file-pick').is_visible(),'highlighted add-files button visible')
+    page.set_input_files('#edemo-essay-scan',files=[{'name':'essay-page-1.svg','mimeType':'image/svg+xml','buffer':scan_svg},{'name':'essay-page-2.svg','mimeType':'image/svg+xml','buffer':scan_svg}])
+    page.wait_for_function("document.querySelectorAll('.edemo-scan-open').length===2")
+    check(page.locator('.edemo-scan-open').count()==2,'two essay pages previewed')
     page.click('.edemo-scan-open')
     check(page.locator('#edemo-scan-lightbox').count()==1,'scan lightbox opens')
     page.click('[data-scan-zoom="in"]')
@@ -115,4 +131,4 @@ with sync_playwright() as p:
 
 if fails:
     print('FAIL real-preview task27 browser regression:',len(fails));print('\n'.join(fails));sys.exit(1)
-print('PASS real-preview task27 browser: T123-01...06, language aids off, frozen demo essay, preliminary findings, technical notes, verified hard caps')
+print('PASS real-preview task27 browser: T123-01...07, language aids off, frozen demo essay, preliminary findings, technical notes, verified hard caps')

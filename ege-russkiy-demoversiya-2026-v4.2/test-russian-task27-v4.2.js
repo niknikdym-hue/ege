@@ -76,6 +76,11 @@ let noEnding=api.analyzeEssayText('Текст без завершающего з
 eq('missing terminal punctuation is possible K8',noEnding.possible.K8.length,1);
 eq('missing terminal punctuation is not confirmed K8',noEnding.confirmed.K8.length,0);
 eq('normalized 0-24 API removed',Object.prototype.hasOwnProperty.call(api,'normalizedScore24'),false);
+
+const addon=fs.readFileSync(path.join(__dirname,'ege-russkiy-demoversiya-T123-07.txt'),'utf8');
+eq('T123-07 multiple file input enhancement',/input\.multiple=true/.test(addon),true);
+eq('T123-07 explicit text check',/Проверить текст/.test(addon)&&/speller\.yandex\.net/.test(addon),true);
+eq('T123-07 does not auto-confirm speller findings',/possible\.K7\.push/.test(addon)&&!/confirmed\.K7\.push/.test(addon),true);
 if(fails.length){console.error(fails.join('\n'));process.exit(1)}
 
 eq('displayed demo total formula',/shortScore\+score/.test(code),true);
