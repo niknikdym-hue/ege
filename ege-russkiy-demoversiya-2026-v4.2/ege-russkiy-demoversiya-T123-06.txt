@@ -151,7 +151,8 @@
   }
   function essayForReview(){return reviewState.writingMode==="demo"?reviewState.frozenEssay:reviewState.transferredText;}
   function runSystemAnalysis(){reviewState=applyAnalysisResult(reviewState,analyzeEssayText(essayForReview()));saveReviewState();}
-  function freezeDemoEssay(){if(reviewState.writingMode!=="demo")return;if(!reviewState.demoEssayFrozen){var value=currentCoreEssay();reviewState.frozenEssay=value===PAPER_MARKER?"":value;reviewState.demoEssayFrozen=true;}if(reviewState.analysisStatus!=="complete")runSystemAnalysis();else saveReviewState();}
+  function markAnalysisPending(){reviewState.analysisStatus="pending";reviewState.analysisVersion="";reviewState.confirmedFindings=emptyFindingMap();reviewState.possibleFindings=emptyFindingMap();reviewState.technicalFindings=[];ERROR_CRITERIA.forEach(function(k){delete reviewState.essayScores[k];});}
+  function freezeDemoEssay(){if(reviewState.writingMode!=="demo")return;if(!reviewState.demoEssayFrozen){var value=currentCoreEssay();reviewState.frozenEssay=value===PAPER_MARKER?"":value;reviewState.demoEssayFrozen=true;markAnalysisPending();}saveReviewState();}
 
   var reviewState=loadReviewState(),root,observer,taskObserver;
 
@@ -228,7 +229,7 @@
       section.innerHTML='<h3 class="ep-section-title">Перенесите сочинение с бумаги</h3><p>Можно добавить фото или скан рядом и набрать текст в поле для проверки.</p><div class="edemo-transfer-grid"><div><label for="edemo-essay-scan"><strong>Фото или скан</strong></label><input id="edemo-essay-scan" type="file" accept="image/*,application/pdf"><div class="edemo-scan-preview" id="edemo-scan-preview">Выберите фото или скан.</div></div><div><label for="edemo-transferred-essay"><strong>Текст сочинения</strong></label><textarea class="edemo-transfer-text" id="edemo-transferred-essay" spellcheck="true">'+escapeHtml(reviewState.transferredText)+'</textarea><p id="edemo-transfer-save">Текст сохраняется автоматически.</p><div class="ep-panel edemo-threshold" id="edemo-threshold-box"></div></div></div>';
     }
     if(criteriaSection)result.insertBefore(section,criteriaSection);else result.appendChild(section);
-    var transferred=byId("edemo-transferred-essay");if(transferred){if(reviewState.analysisStatus!=="complete")runSystemAnalysis();transferred.addEventListener("input",function(e){reviewState.transferredText=e.target.value;runSystemAnalysis();byId("edemo-transfer-save").textContent="✓ Текст сохранён. Проверка обновлена.";updateWordStatus();renderCriteria();});}
+    var transferred=byId("edemo-transferred-essay");if(transferred){transferred.addEventListener("input",function(e){reviewState.transferredText=e.target.value;markAnalysisPending();saveReviewState();byId("edemo-transfer-save").textContent="✓ Текст сохранён. Нажмите «Проверить текст», когда закончите.";updateWordStatus();renderCriteria();updateResultScores();});}
     var scan=byId("edemo-essay-scan");if(scan)scan.addEventListener("change",function(e){var f=e.target.files&&e.target.files[0],preview=byId("edemo-scan-preview");if(!f)return;reviewState.sourceFileName=f.name;saveReviewState();if(/^image\//.test(f.type)){var reader=new FileReader();reader.onload=function(){preview.innerHTML='<button type="button" class="edemo-scan-open" aria-label="Увеличить фото сочинения"><img alt="Предпросмотр рукописного сочинения" src="'+reader.result+'"><span>Нажмите, чтобы увеличить</span></button>';var opener=preview.querySelector(".edemo-scan-open");if(opener)opener.addEventListener("click",function(){openScanZoom(reader.result,"Фото рукописного сочинения",opener);});};reader.readAsDataURL(f);}else preview.textContent="Выбран файл: "+f.name;});
     updateWordStatus();
   }
