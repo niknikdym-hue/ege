@@ -18,18 +18,10 @@ p6.write_text(s,encoding='utf-8')
 # T123-07: make explicit-check UX unambiguous.
 p7=base/'ege-russkiy-demoversiya-T123-07.txt'
 s=p7.read_text(encoding='utf-8')
-old3='''wrap.innerHTML='<button type="button" class="ep-button" id="edemo-run-text-check">Проверить текст</button><p class="edemo-check-status" id="edemo-check-status"></p><p>После завершения быстрая проверка уже выполнена. Кнопка выше дополнительно проверяет орфографию. Пунктуацию, грамматику и речь проверяйте также по подсказкам К8–К10.</p><p class="edemo-speller-credit">Проверка правописания: <a href="http://api.yandex.ru/speller/" target="_blank" rel="noopener">Яндекс.Спеллер</a></p>';
-'''
-new3='''wrap.innerHTML='<button type="button" class="ep-button" id="edemo-run-text-check">Проверить текст</button><p class="edemo-check-status" id="edemo-check-status"></p><p>Проверка запускается только по этой кнопке. Пока вы печатаете или исправляете текст, он только сохраняется. После нажатия система проверит орфографию и отметит некоторые места, которые стоит проверить по К8–К10.</p><p class="edemo-speller-credit">Проверка правописания: <a href="http://api.yandex.ru/speller/" target="_blank" rel="noopener">Яндекс.Спеллер</a></p>';
-'''
-if old3 not in s:
-    # current file keeps this inside one long function line; replace the unique sentence instead
-    old_phrase='После завершения быстрая проверка уже выполнена. Кнопка выше дополнительно проверяет орфографию. Пунктуацию, грамматику и речь проверяйте также по подсказкам К8–К10.'
-    new_phrase='Проверка запускается только по этой кнопке. Пока вы печатаете или исправляете текст, он только сохраняется. После нажатия система проверит орфографию и отметит некоторые места, которые стоит проверить по К8–К10.'
-    if old_phrase not in s: raise SystemExit('check intro anchor missing')
-    s=s.replace(old_phrase,new_phrase,1)
-else:
-    s=s.replace(old3,new3,1)
+old_phrase='После завершения быстрая проверка уже выполнена. Кнопка выше дополнительно проверяет орфографию. Пунктуацию, грамматику и речь проверяйте также по подсказкам К8–К10.'
+new_phrase='Проверка запускается только по этой кнопке. Пока вы печатаете или исправляете текст, он только сохраняется. После нажатия система проверит орфографию и отметит некоторые места, которые стоит проверить по К8–К10.'
+if old_phrase not in s: raise SystemExit('check intro anchor missing')
+s=s.replace(old_phrase,new_phrase,1)
 old_status='api&&essayText().trim()?"Быстрая проверка выполнена. Дополнительная проверка орфографии ещё не запускалась.":"Сначала введите текст сочинения."'
 new_status='api&&essayText().trim()?"Нажмите «Проверить текст», чтобы запустить проверку.":"Сначала введите текст сочинения."'
 if old_status not in s: raise SystemExit('status anchor missing')
@@ -43,8 +35,12 @@ old_block='''    check(saved['analysisStatus']=='complete','preliminary analysis
 new_block='''    check(saved['analysisStatus']=='pending','analysis stays pending after finish until explicit check')\n    check(sum(len(saved['confirmedFindings'][k])+len(saved['possibleFindings'][k]) for k in ['K7','K8','K9','K10'])==0,'no findings are produced before explicit check')\n'''
 if old_block not in q: raise SystemExit('demo precheck assertions anchor missing')
 q=q.replace(old_block,new_block,1)
+old_help="    check(page.locator('details.edemo-criterion-help').count()==10,'all K1-K10 have optional scoring help')\n"
+new_help="    check(page.locator('details.edemo-criterion-help').count()==6,'K1-K6 help is available before explicit text check')\n"
+if old_help not in q: raise SystemExit('help assertion anchor missing')
+q=q.replace(old_help,new_help,1)
 anchor="    checked=page.evaluate(\"JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_2_task27_review'))\")\n"
-insert=anchor+"    check(checked['analysisStatus']=='complete','explicit button completes analysis')\n    check(len(checked['confirmedFindings']['K10'])==0,'adjacent duplicate is not confirmed K10')\n    check(len(checked['possibleFindings']['K10'])==1,'adjacent duplicate is possible K10 after explicit check')\n    check(len(checked['possibleFindings']['K8'])==1,'K8 possible finding appears only after explicit check')\n"
+insert=anchor+"    check(checked['analysisStatus']=='complete','explicit button completes analysis')\n    check(page.locator('details.edemo-criterion-help').count()==10,'K1-K10 help is available after explicit text check')\n    check(len(checked['confirmedFindings']['K10'])==0,'adjacent duplicate is not confirmed K10')\n    check(len(checked['possibleFindings']['K10'])==1,'adjacent duplicate is possible K10 after explicit check')\n    check(len(checked['possibleFindings']['K8'])==1,'K8 possible finding appears only after explicit check')\n"
 if anchor not in q: raise SystemExit('checked anchor missing')
 q=q.replace(anchor,insert,1)
 old_paper='''    paper_saved=page.evaluate("JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_2_task27_review'))")\n    check(paper_saved['analysisStatus']=='complete','paper transfer triggers preliminary analysis')\n    check(len(paper_saved['confirmedFindings']['K8'])==0,'space before punctuation is not confirmed K8')\n    check(len(paper_saved['possibleFindings']['K8'])==0,'space before punctuation is not possible K8')\n    check(len(paper_saved['technicalFindings'])==1,'space before punctuation is technical note only')\n'''
