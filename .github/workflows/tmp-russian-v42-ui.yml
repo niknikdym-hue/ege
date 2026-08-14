@@ -1,0 +1,38 @@
+name: Temporary Russian v4.2 essay review UX
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tmp-russian-v42-ui.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply patch
+        run: python3 tmp-russian-v42-ui-patch.py
+      - name: Install browser tests
+        run: |
+          python3 -m pip install playwright
+          python3 -m playwright install chromium
+      - name: Full regression
+        working-directory: ege-russkiy-demoversiya-2026-v4.2
+        run: |
+          node test-russian-data.js
+          node test-russian-v4.js
+          python3 visual-contract-audit.py
+          node test-russian-task27-v4.2.js
+          node test-russian-task27-reset-guard.js
+          python3 test-russian-task27-browser.py
+          python3 test-browser.py
+      - name: Commit changes
+        run: |
+          git config user.name "niknikdym-hue"
+          git config user.email "niknikdym@gmail.com"
+          git add ege-russkiy-demoversiya-2026-v4.2
+          git commit -m "Improve Russian essay review guidance and result"
+          git push origin main
