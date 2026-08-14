@@ -19,7 +19,7 @@ p.write_text(s,encoding='utf-8')
 
 # Add browser assertions.
 t=base/'test-russian-task27-browser.py'; q=t.read_text(encoding='utf-8')
-a="    check(any('карова' in x['message'].lower() for x in checked['possibleFindings']['K7']),'speller candidate appears in K7 possible findings')\n"
+a="    check(any('карова' in x['message'].lower() for x in checked['possibleFindings']['K7']),'external spelling candidate merged into K7')\n"
 b=a+"    check(page.locator('.edemo-error-row').nth(0).locator('.edemo-finding-box--check-active').count()==1,'K7 Стоит проверить block highlighted when finding exists')\n"
 if a not in q: raise SystemExit('possible assertion anchor missing')
 q=q.replace(a,b,1)
@@ -32,4 +32,3 @@ t.write_text(q,encoding='utf-8')
 # Update manifest.
 m=base/'MANIFEST-SHA256.txt'; ms=m.read_text(encoding='utf-8'); fn=p.name; h=hashlib.sha256(p.read_bytes()).hexdigest(); ms=re.sub(r'^[0-9a-f]{64}  '+re.escape(fn)+r'$',h+'  '+fn,ms,flags=re.M); m.write_text(ms,encoding='utf-8')
 print('PATCH READY')
-# trigger
