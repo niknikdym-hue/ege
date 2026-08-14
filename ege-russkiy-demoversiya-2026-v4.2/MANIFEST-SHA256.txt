@@ -1,33 +1,17 @@
-561222c62ed4ef9317d368a8d4648209c5c2b6b478fa2fe787c73a5dc06afefe  AFTER-PUBLISH-CHECKLIST.txt
-0953da51998d13f33dfcb91dd49bd88990f277624b7848e69150ba118881e8d8  CHANGELOG.txt
-4d37dfa4b8b2ef0892026a2a05a96bb1f3b6e8d36cb9869853e55df87090138a  LOCAL-TEST-RESULT.txt
-0d86a83508521a9dd7bb83be81750965333b8069d292789f6fb88de5c3f75f85  SUBJECT-PROFILE-RUSSIAN.json
-4242713228ed9af77cc7132a40938e8de28fe539848723925529a60c521357d4  TASK27-ANALYSIS-RULE-AUDIT.txt
-0dccaa3ea63d8c38322870fed8b73612d44b179e1bfd72d4d78bbd755cd114f8  TASK27-HOTFIX-CHANGELOG.txt
-3e9842beeb1368c5a3ba029b3155f630b8deefa3cdd0461501acef5520601091  TASK27-HOTFIX-INSTALLATION.txt
-09a07394f2d03420f73c1cdf8c161676f8ce9334bce326e7b646ac036aef79b5  TASK27-HOTFIX-README.txt
-332fab7d12856e360e6e3c76f2980159b9d0b046b6b58cc3b0e5880064dcebd7  TASK27-HOTFIX-TEST-RESULT.txt
-d97cf90243481edf2cf7f6e5b81c8f1ea44fa616e0fa562d38cfcacc4d0358f9  VISUAL-AUDIT-CHECKLIST.txt
-7670e5f44118d47fa03ebe2f0b02cace3eb766bd6cfb5594f4e7a13ae7b2d091  YEAR-PASSPORT-2026.json
-7f456bbe01059771f8cebeb19be0f86c743979c442b87a4b53a35b1219743b9f  ege-russkiy-demoversiya-AUDIT.txt
-b471faf05b4dcd07a8827d757ca653500ea4be8b62606317957bd62073d982d1  ege-russkiy-demoversiya-HEAD.txt
-12310733097ca2f322624fc169e2cf30bf1f7e82928e0cfefc789567bd2a9b13  ege-russkiy-demoversiya-INDEPENDENT-AUDIT-FINAL.txt
-d485f1aa2199497d41d828f7db7d85bc7f0c352c11449e33e67470412b7337c0  ege-russkiy-demoversiya-INSTALLATION.txt
-72b5e5773db57ced699380b7dc24efce8aeffb493cf65cbc08ce9095ae166c24  ege-russkiy-demoversiya-INTERACTION-CONTRACT.json
-edd5b053a6f6e0374b66b76944757213f46ba303138871d2d81165d756fab0b6  ege-russkiy-demoversiya-PREVIEW.html
+SHA-256 MANIFEST — TILDA RUNTIME PACKAGE ONLY
+ЕГЭ РУССКИЙ ЯЗЫК 2026 — v4.2
+FINAL INDEPENDENT AUDIT: PASS — GO FOR TILDA UPLOAD
+
+Этот manifest фиксирует только файлы, которые реально используются при загрузке страницы в Tilda. Audit/test/status/preview-файлы намеренно не входят в runtime manifest.
+
+746f35e84e8ac07bd6c60bdb6835031c312dca786c9b7772bf1069620f87246a  ege-russkiy-demoversiya-HEAD.txt
 a3a61961efaf34e4586b889b084abf79cf159787ee7bf397847a7ed8c9898afb  ege-russkiy-demoversiya-SEO.txt
-d331543e165601c44a366175e42aaec2910beff11638178eb4f7ba6860c70ebf  ege-russkiy-demoversiya-SOURCE-AUDIT.txt
-2f121716e0d96662881832bdb7cea3b41f7d92fff025106e13e5f51ed4543649  ege-russkiy-demoversiya-SUBJECT-SPECIFICATION-2026.txt
 22f62590cf58d585dea6a37a5af56f6947241fe33f775d97981649d4a540c5f9  ege-russkiy-demoversiya-T123-01.txt
 5c3cfbdd991085831e343477fa9d91b58dc60cc3a4f4e0d296e3a056f22a2803  ege-russkiy-demoversiya-T123-02.txt
 aea682035f624b2abfffddd7a2734fb5ecd673bd7566b03cc3fb82da680d59c0  ege-russkiy-demoversiya-T123-03.txt
 c653e7136fbbd6ced1aa38791d05bddc573f18acdfba2b100cff781f9157418d  ege-russkiy-demoversiya-T123-04.txt
 3e858d14b3404d76edc24b52e3b70d24ca30c218947eeba8447d67be9d52c9e2  ege-russkiy-demoversiya-T123-05.txt
 6903f0972133fae2cae7a0c7789afcfa1169a8e285f2af2b2b03d799b1c04f23  ege-russkiy-demoversiya-T123-06.txt
-19ac88197f35e7b8c1a254cd19f20de98754cb0850ff3590516e8f5dc0675ae6  render-all-tasks.py
-43ff4d5ffceb6633878f4e684574ac505d48feae759d3023b59c2af90ea69a22  test-browser.py
-402807f35a27ff2984a9d96103f07930ecf0b86638d098f60071d724d5075f00  test-russian-data.js
-46b4a86a62e04c7075d38482ba8c671bb1106713108f96e0ed7ffb8e55338d7b  test-russian-task27-browser.py
-8fe84a4e7676ac43f1514049e39d599ecaea9f8f981b6d0d184c99393cb55cc3  test-russian-task27-v4.2.js
-5f0efa08860b0362792d2d963442adf690b2de065ea22a1f2387428896b89cd9  test-russian-v4.js
-3870281c3ed735421f0af5d4918536a5dcccb239ae6c538f9863a48f182d57fb  visual-contract-audit.py
+
+Порядок T123 в Tilda: 01 → 02 → 03 → 04 → 05 → 06.
+HEAD обязателен из этого же manifest: он содержит Task 27 reset-guard.
