@@ -2,7 +2,9 @@ name: Temporary Russian v4.2 multifile spellcheck
 on:
   push:
     branches: [main]
-    paths: [tmp-russian-v42-multifile-spellcheck.py]
+    paths:
+      - tmp-russian-v42-multifile-spellcheck.py
+      - .github/workflows/tmp-russian-v42-multifile-spellcheck.yml
 permissions:
   contents: write
 jobs:
