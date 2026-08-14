@@ -16,6 +16,29 @@ jobs:
           fetch-depth: 0
       - name: Apply patch
         run: python3 tmp-russian-v42-multifile-spellcheck.py
+      - name: Fix addon observer loop
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('ege-russkiy-demoversiya-2026-v4.2/ege-russkiy-demoversiya-T123-07.txt')
+          s=p.read_text(encoding='utf-8')
+          old='if(btn){btn.disabled=state.status==="checking";btn.textContent=state.status==="checking"?"Проверяю…":(state.status==="complete"?"Проверить ещё раз":"Проверить текст");}if(st)st.textContent=state.message||(api&&essayText().trim()?"Быстрая проверка выполнена. Дополнительная проверка орфографии ещё не запускалась.":"Сначала введите текст сочинения.");'
+          new='var wantText=state.status==="checking"?"Проверяю…":(state.status==="complete"?"Проверить ещё раз":"Проверить текст");if(btn){btn.disabled=state.status==="checking";if(btn.textContent!==wantText)btn.textContent=wantText;}var wantStatus=state.message||(api&&essayText().trim()?"Быстрая проверка выполнена. Дополнительная проверка орфографии ещё не запускалась.":"Сначала введите текст сочинения.");if(st&&st.textContent!==wantStatus)st.textContent=wantStatus;'
+          if old not in s: raise SystemExit('observer-loop anchor missing')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Refresh manifest after addon fix
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          b=Path('ege-russkiy-demoversiya-2026-v4.2')
+          p=b/'MANIFEST-SHA256.txt';s=p.read_text(encoding='utf-8')
+          f='ege-russkiy-demoversiya-T123-07.txt';h=hashlib.sha256((b/f).read_bytes()).hexdigest()
+          import re
+          s=re.sub(r'^[0-9a-f]{64}  '+re.escape(f)+r'$',h+'  '+f,s,flags=re.M)
+          p.write_text(s,encoding='utf-8')
+          PY
       - name: Install browser
         run: |
           python3 -m pip install playwright
