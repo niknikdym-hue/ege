@@ -1,0 +1,95 @@
+name: tmp-count-russian-school-canonical
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tmp-count-russian-school-canonical.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Count materialized canonical bank
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, collections
+          root = pathlib.Path('eksamio-learning-engine')
+          all_json = []
+          bank_files = []
+          bank_records = []
+          files_with_canonical_units = []
+          parse_errors = []
+          for p in sorted(root.glob('*.json')):
+              m = re.match(r'^(\d+)-', p.name)
+              if not m:
+                  continue
+              n = int(m.group(1))
+              if not (159 <= n <= 214):
+                  continue
+              try:
+                  data = json.loads(p.read_text(encoding='utf-8'))
+              except Exception as e:
+                  parse_errors.append({'file': p.name, 'error': str(e)})
+                  continue
+              all_json.append(p.name)
+              cu = data.get('canonical_units')
+              if not isinstance(cu, list):
+                  continue
+              rec = {
+                  'file': p.name,
+                  'number': n,
+                  'status': data.get('status'),
+                  'metric_status': data.get('metric_status'),
+                  'count': len(cu),
+                  'unit_ids': [u.get('unit_id') for u in cu if isinstance(u, dict)],
+                  'filename_marks_bank': 'CANONICAL-BANK' in p.name
+              }
+              files_with_canonical_units.append(rec)
+              if rec['filename_marks_bank']:
+                  bank_files.append(rec)
+                  for u in cu:
+                      if isinstance(u, dict):
+                          bank_records.append({'unit_id': u.get('unit_id'), 'file': p.name, 'status': data.get('status')})
+
+          by_id = collections.defaultdict(list)
+          missing_ids = []
+          for r in bank_records:
+              if r['unit_id']:
+                  by_id[r['unit_id']].append(r['file'])
+              else:
+                  missing_ids.append(r)
+          duplicates = {k:v for k,v in sorted(by_id.items()) if len(v)>1}
+          report = {
+              'schema_version':'0.1.0',
+              'scope':'eksamio-learning-engine numeric JSON 159..214; materialized bank selected by CANONICAL-BANK in filename',
+              'json_files_scanned': len(all_json),
+              'parse_errors': parse_errors,
+              'files_with_canonical_units': files_with_canonical_units,
+              'materialized_bank_files': bank_files,
+              'materialized_bank_file_count': len(bank_files),
+              'materialized_record_count_before_dedupe': len(bank_records),
+              'materialized_unique_unit_id_count': len(by_id),
+              'duplicate_unit_ids': duplicates,
+              'duplicate_unit_id_count': len(duplicates),
+              'records_missing_unit_id': missing_ids,
+              'unique_unit_ids': sorted(by_id),
+          }
+          pathlib.Path('canonical-bank-audit.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
+          print(json.dumps({k: report[k] for k in ['json_files_scanned','materialized_bank_file_count','materialized_record_count_before_dedupe','materialized_unique_unit_id_count','duplicate_unit_id_count']}, ensure_ascii=False, indent=2))
+          for f in bank_files:
+              print(f"{f['file']}\t{f['count']}\t{f['status']}")
+          if duplicates:
+              print('DUPLICATES')
+              print(json.dumps(duplicates, ensure_ascii=False, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: russian-school-canonical-bank-audit
+          path: canonical-bank-audit.json
+          retention-days: 3
