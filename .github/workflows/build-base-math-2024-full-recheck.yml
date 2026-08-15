@@ -11,6 +11,7 @@ on:
       - 'matematika-source-2024/scripts/build_canonical_base_2024.py'
       - 'matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-*'
       - 'matematika-source-2024/scripts/finalize_verified_base_2024_release.py'
+      - 'matematika-source-2024/scripts/audit_visual_source_chain_2024.py'
       - 'matematika-source-2024/templates/base-2024-shell.html'
       - '.github/workflows/build-base-math-2024-full-recheck.yml'
 
@@ -60,6 +61,7 @@ jobs:
           python formula_gate_test.py
           python visual_regression_test.py
           python visual_fidelity_test.py
+          python "$GITHUB_WORKSPACE/matematika-source-2024/scripts/audit_visual_source_chain_2024.py" . "$GITHUB_WORKSPACE/matematika-source-2024/ege-2024-matematika-baza-demoversiya.pdf"
           python independent_audit.py
           python package_integrity_test.py
           python screenshot_test.py
@@ -92,6 +94,7 @@ jobs:
           python formula_gate_test.py
           python visual_regression_test.py
           python visual_fidelity_test.py
+          python "$GITHUB_WORKSPACE/matematika-source-2024/scripts/audit_visual_source_chain_2024.py" . "$GITHUB_WORKSPACE/matematika-source-2024/ege-2024-matematika-baza-demoversiya.pdf"
           python independent_audit.py
           python package_integrity_test.py
           python screenshot_test.py
