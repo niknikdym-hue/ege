@@ -15,81 +15,93 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Count materialized canonical bank
+      - name: Audit unmaterialized canonical references and holds
         run: |
           python - <<'PY'
           import json, pathlib, re, collections
           root = pathlib.Path('eksamio-learning-engine')
-          all_json = []
-          bank_files = []
-          bank_records = []
-          files_with_canonical_units = []
-          parse_errors = []
+          files = []
+          parsed = {}
           for p in sorted(root.glob('*.json')):
               m = re.match(r'^(\d+)-', p.name)
-              if not m:
-                  continue
+              if not m: continue
               n = int(m.group(1))
-              if not (159 <= n <= 214):
-                  continue
+              if not (159 <= n <= 215): continue
               try:
-                  data = json.loads(p.read_text(encoding='utf-8'))
-              except Exception as e:
-                  parse_errors.append({'file': p.name, 'error': str(e)})
-                  continue
-              all_json.append(p.name)
-              cu = data.get('canonical_units')
-              if not isinstance(cu, list):
-                  continue
-              rec = {
-                  'file': p.name,
-                  'number': n,
-                  'status': data.get('status'),
-                  'metric_status': data.get('metric_status'),
-                  'count': len(cu),
-                  'unit_ids': [u.get('unit_id') for u in cu if isinstance(u, dict)],
-                  'filename_marks_bank': 'CANONICAL-BANK' in p.name
-              }
-              files_with_canonical_units.append(rec)
-              if rec['filename_marks_bank']:
-                  bank_files.append(rec)
-                  for u in cu:
-                      if isinstance(u, dict):
-                          bank_records.append({'unit_id': u.get('unit_id'), 'file': p.name, 'status': data.get('status')})
+                  parsed[p.name] = json.loads(p.read_text(encoding='utf-8'))
+                  files.append(p.name)
+              except Exception:
+                  pass
 
-          by_id = collections.defaultdict(list)
-          missing_ids = []
-          for r in bank_records:
-              if r['unit_id']:
-                  by_id[r['unit_id']].append(r['file'])
-              else:
-                  missing_ids.append(r)
-          duplicates = {k:v for k,v in sorted(by_id.items()) if len(v)>1}
-          report = {
+          bank_ids = set()
+          bank_sources = collections.defaultdict(list)
+          for fn,d in parsed.items():
+              if 'CANONICAL-BANK' not in fn: continue
+              cu = d.get('canonical_units')
+              if not isinstance(cu,list): continue
+              for u in cu:
+                  if isinstance(u,dict) and isinstance(u.get('unit_id'),str):
+                      bank_ids.add(u['unit_id']); bank_sources[u['unit_id']].append(fn)
+
+          ref_occ = collections.defaultdict(list)
+          operation_records = []
+          hold_records = []
+          idre = re.compile(r'^school-[a-z0-9][a-z0-9-]*$')
+          id_keys = {'unit_id','candidate','candidate_id','canonical_target','target','canonical_parent_id','canonical_id','canonical_unit_id','parent_id','source_candidate_id'}
+          op_keys = ['operation','decision','resolution','action','status','canonicalization_status']
+
+          def walk(x, fn, path='$'):
+              if isinstance(x, dict):
+                  local_ops = {k:x.get(k) for k in op_keys if isinstance(x.get(k),str)}
+                  local_ids = {}
+                  for k,v in x.items():
+                      if k in id_keys and isinstance(v,str) and idre.match(v):
+                          local_ids[k]=v
+                      elif k in ('candidate_ids','existing','new_candidate','new_candidates','aliases') and isinstance(v,list):
+                          vals=[s for s in v if isinstance(s,str) and idre.match(s)]
+                          if vals: local_ids[k]=vals
+                  if local_ops and local_ids:
+                      rec={'file':fn,'path':path,'ops':local_ops,'ids':local_ids}
+                      operation_records.append(rec)
+                      if any('HOLD' in str(v).upper() for v in local_ops.values()):
+                          hold_records.append(rec)
+                  for k,v in x.items():
+                      walk(v, fn, f'{path}.{k}')
+              elif isinstance(x,list):
+                  for i,v in enumerate(x): walk(v,fn,f'{path}[{i}]')
+              elif isinstance(x,str) and idre.match(x):
+                  ref_occ[x].append({'file':fn,'path':path})
+
+          for fn,d in parsed.items():
+              if 'CANONICAL-BANK' in fn or fn.startswith('215-'):
+                  continue
+              walk(d,fn)
+
+          unmaterialized = {uid:occ for uid,occ in sorted(ref_occ.items()) if uid not in bank_ids}
+          referenced_bank = {uid:occ for uid,occ in sorted(ref_occ.items()) if uid in bank_ids}
+          report={
               'schema_version':'0.1.0',
-              'scope':'eksamio-learning-engine numeric JSON 159..214; materialized bank selected by CANONICAL-BANK in filename',
-              'json_files_scanned': len(all_json),
-              'parse_errors': parse_errors,
-              'files_with_canonical_units': files_with_canonical_units,
-              'materialized_bank_files': bank_files,
-              'materialized_bank_file_count': len(bank_files),
-              'materialized_record_count_before_dedupe': len(bank_records),
-              'materialized_unique_unit_id_count': len(by_id),
-              'duplicate_unit_ids': duplicates,
-              'duplicate_unit_id_count': len(duplicates),
-              'records_missing_unit_id': missing_ids,
-              'unique_unit_ids': sorted(by_id),
+              'scope':'numeric JSON 159..215; bank IDs from CANONICAL-BANK files; references scanned only outside bank files and 215 count report',
+              'parsed_files':files,
+              'bank_unique_ids':len(bank_ids),
+              'referenced_id_count_outside_bank':len(ref_occ),
+              'referenced_existing_bank_id_count':len(referenced_bank),
+              'unmaterialized_referenced_id_count':len(unmaterialized),
+              'unmaterialized_references':unmaterialized,
+              'operation_records':operation_records,
+              'hold_operation_records':hold_records,
+              'hold_operation_record_count':len(hold_records)
           }
-          pathlib.Path('canonical-bank-audit.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
-          print(json.dumps({k: report[k] for k in ['json_files_scanned','materialized_bank_file_count','materialized_record_count_before_dedupe','materialized_unique_unit_id_count','duplicate_unit_id_count']}, ensure_ascii=False, indent=2))
-          for f in bank_files:
-              print(f"{f['file']}\t{f['count']}\t{f['status']}")
-          if duplicates:
-              print('DUPLICATES')
-              print(json.dumps(duplicates, ensure_ascii=False, indent=2))
+          pathlib.Path('canonical-unmaterialized-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+          print(json.dumps({k:report[k] for k in ['bank_unique_ids','referenced_id_count_outside_bank','referenced_existing_bank_id_count','unmaterialized_referenced_id_count','hold_operation_record_count']},ensure_ascii=False,indent=2))
+          print('UNMATERIALIZED IDS')
+          for uid,occ in unmaterialized.items():
+              print(uid, '=>', sorted({o['file'] for o in occ}))
+          print('HOLD OPERATION RECORDS')
+          print(json.dumps(hold_records,ensure_ascii=False,indent=2))
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: russian-school-canonical-bank-audit
-          path: canonical-bank-audit.json
+          name: russian-school-canonical-unmaterialized-audit
+          path: canonical-unmaterialized-audit.json
           retention-days: 3
