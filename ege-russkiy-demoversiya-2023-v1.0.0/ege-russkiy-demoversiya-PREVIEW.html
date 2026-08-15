@@ -1,0 +1,510 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Интерактивная демоверсия ЕГЭ по русскому языку 2023</title></head><body><div class="ep-root ep-russian-index" id="ege-demo-2023">
+  <style>
+    #ege-demo-2023 .edemo-breadcrumbs{font-size:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    #ege-demo-2023 .edemo-breadcrumbs a{color:inherit}
+    #ege-demo-2023 .edemo-exam-shell{display:none}
+    #ege-demo-2023[data-state="running"] .edemo-start-panel{display:none}
+    #ege-demo-2023[data-state="running"] .edemo-exam-shell{display:block}
+    #ege-demo-2023[data-state="finished"] .edemo-start-panel,#ege-demo-2023[data-state="finished"] .edemo-exam-shell{display:none}
+    #ege-demo-2023 .edemo-toolbar{position:sticky;top:10px;z-index:12;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+    #ege-demo-2023 .edemo-timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:20px;white-space:nowrap}
+    #ege-demo-2023 .edemo-progress{height:10px;border-radius:999px;background:#eef1f5;overflow:hidden}
+    #ege-demo-2023 .edemo-progress>span{display:block;height:100%;width:0;background:currentColor;transition:width .2s ease}
+    #ege-demo-2023 .edemo-nav-grid{display:grid;grid-template-columns:repeat(9,minmax(36px,1fr));gap:7px}
+    #ege-demo-2023 .edemo-nav-btn{min-height:38px;border:1px solid #d9dee7;border-radius:10px;background:#fff;font-weight:700;cursor:pointer}
+    #ege-demo-2023 .edemo-nav-btn[aria-current="true"]{outline:3px solid rgba(49,96,181,.18);border-color:#315fb5}
+    #ege-demo-2023 .edemo-nav-btn[data-filled="true"]{background:#eef6ff}
+    #ege-demo-2023 .edemo-nav-btn[data-flagged="true"]{box-shadow:inset 0 -4px 0 #b9891c}
+    #ege-demo-2023 .edemo-task-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    #ege-demo-2023 .edemo-task-number{font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+    #ege-demo-2023 .edemo-task-prompt{font-size:17px;line-height:1.62}
+    #ege-demo-2023 .edemo-task-prompt ol{padding-left:24px}
+    #ege-demo-2023 .edemo-task-prompt li{margin:0 0 10px}
+    #ege-demo-2023 .edemo-source{margin:16px 0;padding:18px;border:1px solid #dfe4eb;border-radius:14px;max-height:52vh;overflow:auto;background:#fff}
+    #ege-demo-2023 .edemo-source p{margin:0 0 12px;line-height:1.58}
+    #ege-demo-2023 .edemo-source-author,#ege-demo-2023 .edemo-source-note{font-size:14px}
+    #ege-demo-2023 .edemo-answer{margin-top:20px}
+    #ege-demo-2023 .edemo-answer label{display:block;font-weight:750;margin-bottom:8px}
+    #ege-demo-2023 .edemo-input,#ege-demo-2023 .edemo-essay{width:100%;box-sizing:border-box;border:1px solid #cdd4df;border-radius:12px;background:#fff;padding:14px 15px;font:inherit}
+    #ege-demo-2023 .edemo-input{max-width:460px;font-size:18px}
+    #ege-demo-2023 .edemo-essay{min-height:440px;resize:vertical;line-height:1.55}
+    #ege-demo-2023 .edemo-answer-help{font-size:13px;margin-top:7px;opacity:.72}
+    #ege-demo-2023 .edemo-save-status{font-size:14px;margin:8px 0 0;font-weight:750;opacity:1}
+    #ege-demo-2023 .edemo-action-note{font-size:13px;margin:12px 0 0;opacity:.78}
+    #ege-demo-2023 .edemo-task-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-top:20px}
+    #ege-demo-2023 .edemo-task-actions__group{display:flex;gap:10px;flex-wrap:wrap}
+    #ege-demo-2023 .edemo-task-actions .ep-button--secondary{
+      position:relative!important;
+      isolation:isolate!important;
+      appearance:none!important;
+      -webkit-appearance:none!important;
+      background:#fff!important;
+      background-image:none!important;
+      color:#17324d!important;
+      -webkit-text-fill-color:#17324d!important;
+      border:1px solid #c9d3df!important;
+      box-shadow:none!important;
+      text-shadow:none!important;
+      filter:none!important;
+      opacity:1!important;
+      overflow:visible!important;
+    }
+    #ege-demo-2023 .edemo-task-actions .ep-button--secondary::before,
+    #ege-demo-2023 .edemo-task-actions .ep-button--secondary::after{
+      content:none!important;
+      display:none!important;
+      background:none!important;
+      box-shadow:none!important;
+    }
+    #ege-demo-2023 .edemo-task-actions .ep-button--secondary:hover{
+      background:#f4f7fb!important;
+      color:#17324d!important;
+      -webkit-text-fill-color:#17324d!important;
+    }
+    #ege-demo-2023 .edemo-task-actions .ep-button--secondary:disabled{
+      background:#f4f5f7!important;
+      color:#7b8794!important;
+      -webkit-text-fill-color:#7b8794!important;
+      border-color:#d9dee5!important;
+      opacity:1!important;
+      cursor:not-allowed!important;
+    }
+    #ege-demo-2023 .edemo-word-count{font-weight:700}
+    #ege-demo-2023 .edemo-result{display:none}
+    #ege-demo-2023[data-state="finished"] .edemo-result{display:block}
+    #ege-demo-2023 .edemo-score-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    #ege-demo-2023 .edemo-score-card{border:1px solid #dfe4eb;border-radius:14px;padding:16px;background:#fff}
+    #ege-demo-2023 .edemo-score-value{font-size:30px;font-weight:850;line-height:1}
+    #ege-demo-2023 .edemo-review-list{display:grid;gap:10px}
+    #ege-demo-2023 .edemo-review-item{border:1px solid #dfe4eb;border-radius:12px;padding:14px;background:#fff}
+    #ege-demo-2023 .edemo-review-item[data-correct="true"]{border-left:5px solid #2f8a58}
+    #ege-demo-2023 .edemo-review-item[data-correct="false"]{border-left:5px solid #b84e4e}
+    #ege-demo-2023 .edemo-criteria{display:grid;gap:10px;width:100%;min-width:0}
+    #ege-demo-2023 .edemo-criterion{display:grid;grid-template-columns:1fr minmax(120px,180px);gap:12px;align-items:center;border:1px solid #dfe4eb;border-radius:12px;padding:12px;width:100%;min-width:0}
+    #ege-demo-2023 .edemo-result{width:100%;max-width:100%;min-width:0;overflow:hidden}
+    #ege-demo-2023 .edemo-result>.ep-panel{width:100%;max-width:100%;min-width:0;margin-left:0!important;margin-right:0!important}
+    #ege-demo-2023 .edemo-result .edemo-warning,#ege-demo-2023 .edemo-result .edemo-danger{width:100%;max-width:100%;min-width:0;margin-left:0!important;margin-right:0!important}
+    #ege-demo-2023 .edemo-criterion select{width:100%;padding:10px;border:1px solid #cdd4df;border-radius:10px;background:#fff}
+    #ege-demo-2023,#ege-demo-2023 *{box-sizing:border-box}
+    #ege-demo-2023 .ep-page,#ege-demo-2023 .ep-layout,#ege-demo-2023 .ep-layout__main,#ege-demo-2023 .ep-stack{min-width:0;max-width:100%}
+    #ege-demo-2023 .edemo-start-panel>.ep-section-title{margin-bottom:18px}
+    #ege-demo-2023 .edemo-start-panel>p{margin:0 0 16px;line-height:1.62}
+    #ege-demo-2023 .edemo-start-panel>p:last-of-type{margin-bottom:0}
+    #ege-demo-2023 .edemo-notice{margin-top:24px;padding:16px 18px;border:1px solid #ead7a2;border-left:5px solid #b9891c;border-radius:12px;background:#fff8e8}
+    #ege-demo-2023 .edemo-notice p{margin:0;line-height:1.55}
+    #ege-demo-2023 .edemo-start-actions{margin-top:24px}
+    #ege-demo-2023 .edemo-source-credit{overflow-wrap:anywhere}
+    #ege-demo-2023 .edemo-source-credit p{margin-top:0;margin-bottom:14px;line-height:1.58}
+    #ege-demo-2023 .edemo-source-credit p:last-child{margin-bottom:0}
+    #ege-demo-2023 .edemo-warning{border-left:5px solid #b9891c}
+    #ege-demo-2023 .edemo-danger{border-left:5px solid #b84e4e}
+    #ege-demo-2023 .edemo-match{display:grid;gap:8px;padding:12px;border-radius:12px;background:#f6f8fb;margin:12px 0}
+    #ege-demo-2023 .edemo-plain-list{list-style:none;padding:0}
+    #ege-demo-2023 .edemo-quotes{padding:12px;border-radius:12px;background:#f6f8fb}
+    #ege-demo-2023 .edemo-mini{font-size:13px;opacity:.75}
+
+    #ege-demo-2023 .edemo-choice-fieldset{border:0;padding:0;margin:20px 0 0;min-width:0}
+    #ege-demo-2023 .edemo-choice-fieldset legend{font-weight:750;margin-bottom:10px}
+    #ege-demo-2023 .edemo-choice-grid{display:flex;flex-wrap:wrap;gap:10px}
+    #ege-demo-2023 .edemo-choice{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:48px;min-height:46px;border:1px solid #cdd4df;border-radius:12px;background:#fff;font-weight:800;cursor:pointer;user-select:none}
+    #ege-demo-2023 .edemo-choice input{position:absolute;opacity:0;pointer-events:none}
+    #ege-demo-2023 .edemo-choice:has(input:checked){border-color:#315fb5;background:#eef6ff;box-shadow:0 0 0 2px rgba(49,96,181,.12)}
+    #ege-demo-2023 .edemo-choice:focus-within{outline:3px solid rgba(49,96,181,.18);outline-offset:2px}
+    #ege-demo-2023 .edemo-match-inputs{display:grid;gap:10px;margin-top:20px;max-width:620px}
+    #ege-demo-2023 .edemo-match-row{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;align-items:center}
+    #ege-demo-2023 .edemo-match-row label{font-weight:850;text-align:center}
+    #ege-demo-2023 .edemo-match-row select{width:100%;padding:12px 14px;border:1px solid #cdd4df;border-radius:12px;background:#fff;font:inherit}
+    #ege-demo-2023 .edemo-storage-warning{display:none;margin:0 0 16px;padding:14px 16px;border:1px solid #e4b1b1;border-left:5px solid #b84e4e;border-radius:12px;background:#fff4f4}
+    #ege-demo-2023 .edemo-storage-warning[data-show="true"]{display:block}
+    #ege-demo-2023 .edemo-zero-gate{display:grid;gap:10px}
+    #ege-demo-2023 .edemo-zero-option,#ege-demo-2023 .edemo-confirm-option{display:flex;gap:10px;align-items:flex-start;padding:10px 0}
+    #ege-demo-2023 .edemo-zero-option input,#ege-demo-2023 .edemo-confirm-option input{margin-top:4px;flex:0 0 auto}
+    #ege-demo-2023 .edemo-criterion details{margin-top:7px}
+    #ege-demo-2023 .edemo-criterion details ul{margin:8px 0 0;padding-left:20px}
+    #ege-demo-2023 .edemo-criterion details li{margin:5px 0;line-height:1.45}
+    #ege-demo-2023 .edemo-score-card--official{background:#f7f8fa}
+    #ege-demo-2023 .edemo-score-card--official .edemo-score-value{font-size:25px}
+    #ege-demo-2023 .edemo-variant-badge{white-space:nowrap}
+    #ege-demo-2023 .edemo-hidden{display:none!important}
+    @media(max-width:900px){
+      #ege-demo-2023 .edemo-toolbar{grid-template-columns:1fr auto}
+      #ege-demo-2023 .edemo-toolbar .edemo-progress{grid-column:1/-1}
+      #ege-demo-2023 .edemo-nav-grid{grid-template-columns:repeat(6,minmax(36px,1fr))}
+      #ege-demo-2023 .edemo-score-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:560px){
+      #ege-demo-2023{overflow-x:hidden}
+      #ege-demo-2023 .ep-page{width:100%;padding-left:16px;padding-right:16px}
+      #ege-demo-2023 .ep-layout,#ege-demo-2023 .ep-layout__main,#ege-demo-2023 .ep-panel{width:100%;max-width:100%}
+      #ege-demo-2023 .edemo-nav-grid{grid-template-columns:repeat(5,minmax(36px,1fr))}
+      #ege-demo-2023 .edemo-criterion{grid-template-columns:1fr}
+      #ege-demo-2023 .edemo-task-actions{display:block}
+      #ege-demo-2023 .edemo-task-actions__group{margin-top:10px}
+      #ege-demo-2023 .edemo-start-panel{padding:20px 18px}
+      #ege-demo-2023 .edemo-notice{margin-top:22px;padding:15px 16px}
+      #ege-demo-2023 .edemo-start-actions{margin-top:22px}
+      #ege-demo-2023 .edemo-start-actions .ep-button{width:100%;justify-content:center}
+      #ege-demo-2023 .edemo-result{padding:20px 18px!important}
+      #ege-demo-2023 .edemo-result>.ep-panel{margin-top:20px!important;padding:18px 16px!important}
+      #ege-demo-2023 .edemo-result .edemo-criteria{margin:0!important;padding:0!important}
+      #ege-demo-2023 .edemo-result .edemo-warning,#ege-demo-2023 .edemo-result .edemo-danger{padding:15px 16px!important}
+      #ege-demo-2023 .edemo-result .edemo-criterion{margin:0!important;padding:14px 15px!important}
+      #ege-demo-2023 .edemo-result .ep-actions{margin-top:22px}
+      #ege-demo-2023 .edemo-source-credit{padding:20px 18px}
+    }
+  </style>
+
+  <div class="ep-page">
+    <div class="ep-stack">
+      <div class="edemo-breadcrumbs">
+        <a href="https://eksamio.ru/">Главная</a><span aria-hidden="true">→</span>
+        <span>Интерактивная демоверсия ЕГЭ</span>
+      </div>
+
+      <section class="ep-hero ep-hero--compact">
+        <div class="ep-hero__inner">
+          <div class="ep-meta">
+            <span class="ep-pill ep-pill--blue">ЕГЭ 2023</span>
+            <span class="ep-pill">27 заданий</span>
+            <span class="ep-pill">210 минут</span>
+            <span class="ep-pill">54 первичных балла</span>
+          </div>
+          <h1 class="ep-title">Интерактивная демоверсия ЕГЭ по русскому языку</h1>
+          <p class="ep-lead">Официальные задания демонстрационного варианта в экзаменационном режиме: без подсказок до завершения, с таймером, сохранением ответов и подсчётом первичных баллов за задания 1–26.</p>
+        </div>
+      </section>
+
+      <div class="ep-layout ep-layout--ads">
+        <aside class="ep-layout__side ep-no-print">
+          <div class="ep-ad-stack">
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side" data-ad-place="ege-demo-desktop-left-top" aria-label="Рекламный блок"></div>
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side-compact" data-ad-place="ege-demo-desktop-left-middle" aria-label="Рекламный блок"></div>
+          </div>
+        </aside>
+
+        <main class="ep-layout__main">
+          <div class="ep-stack">
+            <section class="ep-panel ep-section edemo-start-panel">
+              <h2 class="ep-section-title">Перед началом</h2>
+              <p>Экзаменационная работа состоит из двух частей. Часть 1 содержит 26 заданий с кратким ответом, часть 2 — сочинение по прочитанному тексту.</p>
+              <p>На выполнение работы отводится <strong>3 часа 30 минут</strong>. Ответы сохраняются в браузере. После завершения задания 1–26 проверяются автоматически. Сочинение не проверяется автоматически: после завершения доступна только учебная самооценка по критериям К1–К12.</p>
+              <p>На позициях, где ФИПИ приводит несколько примеров через «ИЛИ», при начале попытки выбирается <strong>один официальный пример</strong>. Он закрепляется за попыткой и не меняется после перезагрузки страницы — так же, как в реальном варианте на каждой позиции предлагается только одно задание.</p>
+              <div class="edemo-notice" role="note"><p><strong>Важно:</strong> во время попытки правильные ответы и объяснения не показываются. Таймер продолжает идти после закрытия страницы.</p></div>
+              <div class="ep-actions edemo-start-actions">
+                <button class="ep-button" type="button" id="edemo-start">Начать экзамен</button>
+                <button class="ep-button ep-button--secondary edemo-hidden" type="button" id="edemo-resume">Продолжить попытку</button>
+                <button class="ep-button ep-button--secondary edemo-hidden" type="button" id="edemo-reset-start">Начать заново</button>
+              </div>
+            </section>
+
+            <div class="edemo-exam-shell">
+              <div class="edemo-storage-warning" id="edemo-storage-warning" role="alert"><strong>Не удалось сохранить попытку в браузере.</strong> Не закрывайте и не перезагружайте страницу: ответы могут быть потеряны.</div>
+              <section class="ep-panel ep-section edemo-toolbar ep-no-print">
+                <div><div class="edemo-timer" id="edemo-timer">03:30:00</div><div class="edemo-mini">Оставшееся время</div></div>
+                <div class="edemo-progress" aria-label="Прогресс выполнения"><span id="edemo-progress-bar"></span></div>
+                <button class="ep-button ep-button--small ep-button--secondary" type="button" id="edemo-finish-top">Завершить</button>
+              </section>
+
+              <section class="ep-panel ep-section ep-no-print">
+                <h2 class="ep-section-title">Навигация по заданиям</h2>
+                <div class="edemo-nav-grid" id="edemo-nav"></div>
+                <p class="edemo-mini">Голубой фон — ответ заполнен. Нижняя отметка — к заданию нужно вернуться позже.</p>
+              </section>
+
+              <section class="ep-panel ep-section" id="edemo-task-stage" aria-live="polite"></section>
+            </div>
+
+            <section class="ep-panel ep-section edemo-result" id="edemo-result">
+              <div class="ep-meta"><span class="ep-pill ep-pill--green">Попытка завершена</span><span class="ep-pill" id="edemo-result-date"></span></div>
+              <h2 class="ep-section-title">Результат</h2>
+              <div class="edemo-score-grid">
+                <div class="edemo-score-card"><div class="edemo-score-value"><span id="edemo-short-score">0</span>/30</div><p>Задания 1–26</p></div>
+                <div class="edemo-score-card"><div class="edemo-score-value"><span id="edemo-essay-score">—</span>/24</div><p>Сочинение по самооценке</p><p class="edemo-mini" id="edemo-essay-status">Не оценено</p></div>
+                <div class="edemo-score-card edemo-score-card--official"><div class="edemo-score-value"><span id="edemo-total-score">—</span>/54</div><p>Официальный общий результат</p><p class="edemo-mini" id="edemo-total-status">Требуется экспертная проверка сочинения</p></div>
+              </div>
+
+              <section class="ep-panel ep-section">
+                <h3 class="ep-section-title">Самооценка сочинения по К1–К12</h3>
+                <p>Самооценка является учебной и не заменяет проверку эксперта. Она показывается отдельно и не прибавляется к официальному результату заданий 1–26.</p>
+                <p><strong>Технический счётчик:</strong> <span class="edemo-word-count" id="edemo-result-word-count">0</span> слов. Значение ориентировочное и не определяет официальный порог автоматически.</p>
+                <div class="edemo-criteria" id="edemo-criteria"></div>
+              </section>
+
+              <section class="ep-panel ep-section"><h3 class="ep-section-title">Разбор заданий 1–26</h3><div class="edemo-review-list" id="edemo-review"></div></section>
+              <div class="ep-actions"><button class="ep-button" type="button" id="edemo-restart">Пройти заново</button></div>
+            </section>
+
+            <section class="ep-panel ep-section edemo-source-credit">
+              <p><strong>Источник:</strong> официальный демонстрационный вариант КИМ ЕГЭ по русскому языку 2023 года, опубликованный ФГБНУ «ФИПИ».</p>
+              <p>Задания и критерии приведены по официальному демонстрационному варианту. Интерактивная оболочка и пояснения подготовлены Эксамио. Эксамио не является официальным ресурсом ФИПИ или Рособрнадзора.</p>
+              <p><a href="https://fipi.ru/ege/demoversii-specifikacii-kodifikatory" target="_blank" rel="noopener noreferrer">Открыть официальный источник ФИПИ ↗</a></p>
+            </section>
+          </div>
+        </main>
+
+        <aside class="ep-layout__side ep-no-print">
+          <div class="ep-ad-stack">
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side" data-ad-place="ege-demo-desktop-right-top" aria-label="Рекламный блок"></div>
+            <div class="ad-slot ep-ad-slot ep-ad-slot--side-compact" data-ad-place="ege-demo-desktop-right-middle" aria-label="Рекламный блок"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="application/json" id="edemo-data-1">{"sources":{"text-1-3":{"title":"Текст к заданиям 1–3","html":"<p>Экология – это наука о взаимодействии <strong>живых</strong> организмов и их сообществ между собой и со <strong>средой</strong>, в которой они обитают. Эти взаимоотношения изучают самые разные науки: биология и химия, астрономия и космология, математика и философия. &lt;…&gt; они вносят свой вклад в экологию, которая сегодня разделилась на ряд самостоятельных дисциплин: общую экологию, агроэкологию, гидроэкологию, экологию человека и т.д.</p><p>Активно формируется в наши дни экология культуры, или духовная экология. Конечно, между экологией природы и экологией культуры не может быть непроходимой пропасти, вместе с тем между ними есть большое различие. Утраты в природе до известных пределов восстановимы. Иное дело – ценности культурные и нравственные. Они или восстанавливаются с большим трудом, или вовсе исчезают, как, скажем, разрушенные памятники, сгоревшие книги, рукописи…</p><p>Если культура – это совокупность достижений общества в области науки, просвещения, искусства, то закрепляются эти достижения, как правило, в языке, в Слове. Возникнув на определённом историческом этапе, литературный язык сам по себе служит свидетельством уровня духовного развития народа, общества. Как всякое живое на Земле не может <strong>мириться</strong> со своей смертью, так и живая нация не может смириться с деградацией своего языка. Ведь язык – это и <strong>основа</strong> национальной памяти, и <strong>ключ</strong> к пониманию духовного мира, своего и чужого.</p><p class=\"edemo-source-author\">(По Л.И. Скворцову)</p>"}},"tasks":[{"number":1,"title":"Средство связи","promptHtml":"<p>Самостоятельно подберите определительное местоимение, которое должно стоять на месте пропуска в третьем (3) предложении текста. Запишите это местоимение.</p>","answer":"все","kind":"word","maxScore":1,"sourceId":"text-1-3","altAnswers":[],"explanation":"Ответ: «все».","category":"Работа с текстом"},{"number":2,"title":"Лексическое значение слова","promptHtml":"<p>В тексте выделено пять слов. Укажите варианты ответов, в которых лексическое значение выделенного слова соответствует его значению в данном тексте. Запишите номера ответов.</p><ol><li><strong>ЖИВОЙ</strong>. Лёгкий, занимательный, выразительный. Живое изложение.</li><li><strong>СРЕДА</strong>. Окружающие социально-бытовые условия, обстановка. Из рабочей среды.</li><li><strong>МИРИТЬСЯ</strong>. Терпимо относиться к чему-нибудь. Мириться с неудобствами.</li><li><strong>ОСНОВА</strong>. Источник; главное, на чём строится что-нибудь, что является сущностью чего-нибудь. Экономическая основа общества.</li><li><strong>КЛЮЧ</strong>. Металлический стержень с особой комбинацией вырезов для отпирания и запирания замка. Открыть дверь ключом.</li></ol>","answer":"34","kind":"unordered_digits","maxScore":1,"sourceId":"text-1-3","altAnswers":[],"explanation":"","category":"Работа с текстом"},{"number":3,"title":"Характеристики текста","promptHtml":"<p>Укажите варианты ответов, в которых даны верные характеристики фрагмента текста. Запишите номера ответов.</p><ol><li>Наряду с общеупотребительной лексикой в тексте используются термины (экология, агроэкология, гидроэкология и др.). В тексте можно выделить тематическую группу слов (культура, природа, ценности, памятники, исторический этап, литературный язык, нация, память, духовный мир и др.).</li><li>Использование метафор («между экологией природы и экологией культуры не может быть непроходимой пропасти»; «ключ к пониманию духовного мира»), антонимов (свой — чужой), сравнения («Как всякое живое на Земле не может мириться со своей смертью, так и живая нация не может смириться с деградацией своего языка») способствует эмоциональности, выразительности изложения, помогает передать авторскую оценку описываемым явлениям.</li><li>Текст имеет грамматические особенности, характерные для книжной речи: отглагольные имена существительные (взаимодействие, вклад, утраты, различие, достижения и др.), конструкции с именами существительными в родительном падеже (между экологией природы и экологией культуры, свидетельством уровня духовного развития народа, к пониманию духовного мира и др.).</li><li>Выразительность текста обеспечивается синтаксическими средствами, среди которых — ряды однородных членов предложения, вводные слова.</li><li>Текст относится к научному стилю, так как основные цели автора — сообщить информацию, имеющую практическое значение, и дать чёткие инструкции.</li></ol>","answer":"1234","kind":"unordered_digits","maxScore":1,"sourceId":"text-1-3","altAnswers":[],"explanation":"","category":"Работа с текстом"},{"number":4,"title":"Орфоэпические нормы","promptHtml":"<p>Укажите варианты, в которых верно выделена буква, обозначающая ударный гласный.</p><ol><li>туфлЯ</li><li>понЯв</li><li>дОнельзя</li><li>корЫсть</li><li>Оптовый</li></ol>","answer":"24","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Орфоэпия"},{"number":5,"title":"Паронимы","promptHtml":"<p>В одном из приведённых ниже предложений НЕВЕРНО употреблено выделенное слово. Исправьте лексическую ошибку, подобрав к выделенному слову пароним. Запишите подобранное слово.</p><p>Самый обычный обед можно превратить в <strong>ПРАЗДНЫЙ</strong>, если правильно украсить стол.</p><p>Предварительное изучение <strong>ЛЕДОВОЙ</strong> обстановки в северных морях помогает избежать многих проблем в районе Крайнего Севера.</p><p>За годы пребывания в Италии композитор создал ряд оперных произведений, имевших у <strong>ПРИЗНАТЕЛЬНЫХ</strong> слушателей большой успех.</p><p><strong>ОТБОРОЧНЫЙ</strong> тур чемпионата Европы по футболу прошёл в столице Великобритании — родине этого вида спорта.</p><p>В <strong>ПРОДУКТОВОЙ</strong> корзине жителя современного мегаполиса обязательно должны быть овощи и фрукты.</p>","answer":"праздничный","kind":"word","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Лексика"},{"number":6,"title":"Лексическая ошибка","promptHtml":"<p>Отредактируйте предложение: исправьте лексическую ошибку, исключив лишнее слово. Выпишите это слово.</p><p>Посев семян хвойных пород необходимо проводить в <strong>очень оптимальные</strong> сроки, когда почва влажная и температура её верхних слоёв достигает 6–8 °С для кедра и 8–10 °С для ели и пихты.</p>","answer":"очень","kind":"word","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Лексика"},{"number":7,"title":"Морфологические нормы","promptHtml":"<p>Исправьте ошибку в образовании формы слова и запишите слово правильно.</p><ul class=\"edemo-plain-list\"><li>урожай ПОМИДОРОВ</li><li>БЛИЖАЙШАЯ станция</li><li>у наших ВОРОТ</li><li>нет ПОЛТОРАСТА рублей</li><li>детские ДОКТОРА</li></ul>","answer":"полутораста","kind":"word","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Грамматика"},{"number":8,"title":"Грамматические ошибки","promptHtml":"<p>Установите соответствие между грамматическими ошибками и предложениями.</p><div class=\"edemo-match\"><div><strong>А)</strong> неправильное употребление падежной формы существительного с предлогом</div><div><strong>Б)</strong> неправильное построение предложения с косвенной речью</div><div><strong>В)</strong> нарушение в построении предложения с несогласованным приложением</div><div><strong>Г)</strong> неправильное построение предложения с деепричастным оборотом</div><div><strong>Д)</strong> ошибка в построении предложения с однородными членами</div></div><ol><li>Сразу по приезде в губернский город Чичиков попытался установить деловые связи с местными чиновниками.</li><li>Возвращаясь в родные места, мне вспомнились детские впечатления от впервые увиденной грозы.</li><li>Через неделю после венчания А.С. Пушкин сообщает другу П.А. Плетнёву, что «я женат и счастлив».</li><li>Установить направление движения древних материковых оледенений можно благодаря изучения состава и строения валунов.</li><li>Слова, по мнению Платона, лишены исторического развития и являются результатом постановления «законодателей».</li><li>Сверхпроводники — это материалы, не имеющие электрического сопротивления при сильном охлаждении.</li><li>Сегодня молодые люди воспринимают и думают о жизни иначе, чем предыдущие поколения.</li><li>В пьесе А.П. Чехова «Вишнёвом саде» мысли о будущем России выражены в монологах Пети Трофимова.</li><li>Благодаря комментариям Ю.М. Лотмана к «Евгению Онегину» читатель лучше понимает эпоху А.С. Пушкина.</li></ol>","answer":"43827","kind":"ordered_sequence","maxScore":3,"sourceId":null,"altAnswers":[],"explanation":"А–4, Б–3, В–8, Г–2, Д–7.","category":"Грамматика"},{"number":9,"title":"Правописание корней","promptHtml":"<p>Укажите варианты ответов, в которых во всех словах одного ряда пропущена одна и та же буква. Запишите номера ответов.</p><ol><li>заг..релый, непром..каемый, к..мендант</li><li>оп..раться, см..нать (траву), поч..татель (таланта)</li><li>укр..титель (тигров), благосл..вить, симп..тичный</li><li>посв..щение (другу), недос..гаемый, у..звить</li><li>бл..стеть, с..дина (в волосах), прим..рять (поссорившихся)</li></ol>","answer":"124","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Орфография"},{"number":10,"title":"Правописание приставок","promptHtml":"<p>Укажите варианты ответов, в которых во всех словах одного ряда пропущена одна и та же буква. Запишите номера ответов.</p><ol><li>без..нициативный, вз..скать, роз..грыш</li><li>обе..доленный, чере..чур, не..держанный</li><li>пр..бить (гвоздь), пр..клеить (на бумагу), пр..брежный</li><li>арх..важный, ант..художественный, д..сквалификация</li><li>поз..прошлый (год), с..путствовать, р..зослать (письма)</li></ol>","answer":"134","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Орфография"},{"number":11,"title":"Правописание суффиксов","promptHtml":"<p>Укажите варианты ответов, в которых в обоих словах одного ряда пропущена одна и та же буква. Запишите номера ответов.</p><ol><li>затм..вать, подароч..к</li><li>усидч..вый, ненавид..ли</li><li>аплодир..вать, издавн..</li><li>никел..вый, наста..вать</li><li>солом..нка, разборч..вый</li></ol>","answer":"15","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Орфография"},{"number":12,"title":"Личные окончания и суффиксы","promptHtml":"<p>Укажите варианты ответов, в которых в обоих словах одного ряда пропущена одна и та же буква. Запишите номера ответов.</p><ol><li>намаж..шь, накле..вший</li><li>рассмотр..шь, оконч..вший</li><li>подремл..шь, определя..мый</li><li>подпрыгн..шь, невид..мый</li><li>кол..щийся (предмет), (льды) та..т</li></ol>","answer":"235","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Орфография"},{"number":13,"title":"Слитное и раздельное написание НЕ","promptHtml":"<p>Определите предложение, в котором НЕ с выделенным словом пишется СЛИТНО. Раскройте скобки и выпишите это слово.</p><ol><li>Сегодня, когда опреснение морской воды стало экономически затратным и <strong>(НЕ)ПОЗВОЛЯЕТ</strong> обеспечить питьевой водой все районы Земли, в качестве выхода предлагается проект получения воды при растапливании айсбергов.</li><li><strong>(НЕ)ОСОЗНАВАЯ</strong> до конца сути важнейших правил коммуникации, многие люди знакомы с ними на словах, забывая о том, что их необходимо использовать каждый день в общении с другими людьми.</li><li>Далеко <strong>(НЕ)ПРОСТО</strong> самостоятельно освоить технологию обработки металла и получить профессию кузнеца.</li><li>Я не любитель романтических комедий и лёгких мелодрам, поэтому фильм я так и <strong>(НЕ)ДОСМОТРЕЛ</strong> до конца.</li><li>Стоит выйти на крыльцо, как осень окружит тебя и начнёт настойчиво дышать в лицо холодноватою свежестью своих загадочных чёрных пространств, горьким запахом первого тонкого льда, сковавшего к ночи <strong>(НЕ)ПОДВИЖНЫЕ</strong> воды.</li></ol>","answer":"неподвижные","kind":"word","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Орфография"}]}</script>
+<script type="application/json" id="edemo-data-2">{"sources":{"text-22-27":{"title":"Текст к заданиям 22–27","html":"<p>(1)И вот опять родные места встретили меня сдержанным шёпотом ольшаника. (2)Вдали показались ветхие крыши старой моей деревни, вот и дом с потрескавшимися углами. (3)По этим углам залезал я когда-то под крышу, неутомимый в своём стремлении к высоте, и смотрел на синие зубчатые леса, прятал в щелях витых кряжей нехитрые мальчишеские богатства.</p><p>(4)Из этой сосновой крепости, из этих удивительных ворот уходил я когда-то в большой и грозный мир, наивно поклявшись никогда не возвращаться, но чем дальше и быстрей уходил, тем яростней тянуло меня обратно.</p><p>(5)Старый дом наш заколочен. (6)Я ставлю поклажу на крыльцо соседки и ступаю в солнечное поле, размышляя о прошлом. (7)Детство вписалось в мою жизнь далёким нервным маревом, раскрасило будущее яркими мечтательными мазками. (8)В тот день, когда я уходил из дому, так же, как и сегодня, вызванивали полевые кузнечики, так же лениво парил надо мной ястреб, и только сердце было молодым и не верящим в обратную дорогу.</p><p>(9)И вот опять уводит меня в лесную чащобу узкая тропинка, и снова слушаю я шум летнего леса. (10)Снова торжественно и мудро шумит надо мной старинный хвойный бор, и нет ему до меня никакого дела. (11)И над бором висит в синеве солнце. (12)Оно щедро, стремительно и бесшумно сыплет в лохматую прохладу мхов свои золотые брызги, а над мхами, словно сморённые за пряжей старухи, дремлют смолистые ели. (13)Они глухо шепчут порой, как будто возмущаясь щедростью солнца, а может быть, собственным долголетием. (14)Под елями древний запах папоротника. (15)Я иду чёрной лошадиной тропой, на лицо липнут невидимые нити паутины, с детским беззащитным писком вьются передо мной комары, хотя кусают они совсем не по-детски. (16)Мой взгляд останавливается на красных, в белых крапинках, шапках мухоморов. (17)Потом вижу, как дятел, опершись на растопыренный хвост, колотит своим неутомимым носом сухую древесину.</p><p>(18)В лицо мне хлещут ветки крушины, и вот уже я на сухом месте, и нога едет на скользких иглах. (19)Загудел в соснах ветер, и сосны отозвались беззащитным ропотом. (20)Мне кажется, что в их кронах вздыхает огромный богатырь-тугодум, который с наивностью младенца копит свою мощь не себе, а другим. (21)Под это добродушное дыхание, словно из древних веков, нечёткой белопарусной армадой выплывают облачные фрегаты.</p><p>(22)Мне кажется, что я слышу, как растёт на полях трава, я ощущаю каждую травинку, с маху сдёргиваю сапоги и босиком выбегаю на рыжий песчаный берег, снова стою над рекой и бросаю лесные шишки в синюю тугую воду, в эту прохладную русалочью постель, и смотрю, как расходятся и умирают водяные круги.</p><p>(23)Я сажусь у тёплого стога возле берёз, и мне чудится в их шелесте укор вечных свидетельниц человеческого горя и радости. (24)Веками роднились с нами эти деревья, дарили нашим предкам скрипучие лапти и жаркую, бездымную лучину, растили пахучие веники, розги, полозья, копили певучесть для пастушьих рожков.</p><p>(25)Я выхожу на зелёный откос и гляжу туда, где ещё совсем недавно было так много деревень, а теперь белеют одни берёзы. (26)Нет, в здешних местах пожары не часты, и лет пятьсот уже не было нашествий. (27)Может быть, так оно и надо? (28)Исчезают деревни, а взамен рождаются весёлые шумные города. (29)Я обнимаю родную землю, слышу теплоту родимой травы, и надо мной качаются купальницы с лютиками.</p><p>(30)Шумят невдалеке сосны, шелестят берёзы. (31)Тихая моя родина, ты всё так же не даёшь мне стареть и врачуешь душу своей зелёной тишиной.</p><p class=\"edemo-source-author\">(По В.И. Белову)</p>"}},"tasks":[{"number":14,"title":"Слитное, раздельное и дефисное написание","promptHtml":"<p>Определите предложение, в котором оба выделенных слова пишутся СЛИТНО. Раскройте скобки и выпишите эти два слова.</p><ol><li>Значение многозначного слова конкретизируется в тексте, <strong>(ПРИ)ЧЁМ</strong> некоторые слова только в данном тексте могут обозначать одно и <strong>ТО(ЖЕ)</strong> понятие.</li><li><strong>ЧТО(БЫ)</strong> ни утверждали критики, Л.Н. Толстой увидел в личности Наполеона проявление несвободы, <strong>ТАК(КАК)</strong> подлинная свобода, по мнению классика, предполагает добровольное подчинение «высшей цели».</li><li><strong>(НА)ВСТРЕЧУ</strong> медленно, тяжело громыхая, двигался гружёный состав, а <strong>(В)ДАЛИ</strong> тянулся ещё один.</li><li><strong>(НА)РЯДУ</strong> с картинами на современные темы большое место в творчестве И.Е. Репина занимает историческая живопись, к которой он периодически возвращался <strong>(В)ТЕЧЕНИЕ</strong> всей своей жизни.</li><li>Когда <strong>(НА)КОНЕЦ</strong> солнце в марте стало сильно пригревать, большие радужные капли начали падать с крыш, покрытых снегом, <strong>(КАК)БУДТО</strong> полились радостные весенние слёзы.</li></ol>","answer":"навстречу вдали","kind":"word_compact","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Орфография"},{"number":15,"title":"Н и НН","promptHtml":"<p>Укажите все цифры, на месте которых пишется НН.</p><p>Обстановка комнаты скромная: деревя(1)ая кровать; у окна – письме(2)ый стол для занятий; огромный сундук, обитый кожей и кова(3)ым железом, и удивительный ларчик, оклее(4)ый резной костью.</p>","answer":"124","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Орфография"},{"number":16,"title":"Знаки препинания в простом предложении","promptHtml":"<p>Расставьте знаки препинания. Укажите предложения, в которых нужно поставить ОДНУ запятую. Запишите номера этих предложений.</p><ol><li>Во всём мире любители музыки П.И. Чайковского восхищаются как операми композитора так и его симфоническими произведениями.</li><li>Точный простой и живописный язык произведений М.М. Пришвина надолго запоминается читателям.</li><li>Кое-где при дороге попадается угрюмая ракита или молодая берёзка с мелкими клейкими листьями.</li><li>В преемственности традиций народных мастеров и верности стилистике древнейшего промысла и содержится секрет успеха и популярности гжельской керамики в наше время.</li><li>Лес тихо отдыхает от жгучего дневного солнца и степь обдаёт путника накопившимися за день цветочными запахами.</li></ol>","answer":"125","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Пунктуация"},{"number":17,"title":"Обособленные члены предложения","promptHtml":"<p>Расставьте знаки препинания: укажите все цифры, на месте которых в предложении должны стоять запятые.</p><p>В 1878 году (1) показанная на VI передвижной выставке (2) картина «Московский дворик» принесла В.Д. Поленову славу (3) явив рождение в русской живописи нового жанра (4) названного «интимным» пейзажем.</p>","answer":"34","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Пунктуация"},{"number":18,"title":"Вводные слова и обращения","promptHtml":"<p>Расставьте все недостающие знаки препинания: укажите все цифры, на месте которых в предложениях должны стоять запятые.</p><p>Тогда (1) быть может (2) нас спасут<br>Ирония и жалость к людям,<br>Которым мы простим их суд,<br>А сами судьями не будем.<br>Но (3) ты (4) наверно (5) не продашь<br>И не отвергнешь (6) друг весенний (7)<br>Трудолюбивый опыт наш<br>В пылу повальных отречений.</p><p>(Д.С. Самойлов)</p>","answer":"124567","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Пунктуация"},{"number":19,"title":"Сложноподчинённое предложение","promptHtml":"<p>Расставьте знаки препинания: укажите все цифры, на месте которых в предложении должны стоять запятые.</p><p>Если (1) мне хотя бы в малой доле (2) удалось передать читателю представление о прекрасной сущности писательского труда (3) то я буду считать (4) что выполнил свой долг перед литературой.</p><p>(К.Г. Паустовский)</p>","answer":"34","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Пунктуация"},{"number":20,"title":"Сложное предложение","promptHtml":"<p>Расставьте знаки препинания: укажите все цифры, на месте которых в предложении должны стоять запятые.</p><p>Илюша был впечатлительным ребёнком (1) и очень любил слушать сказки (2) которые рассказывала ему няня (3) потому что в них было много чудесного (4) и (5) добро всегда побеждало зло.</p>","answer":"23","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Пунктуация"},{"number":21,"title":"Пунктуационный анализ","promptHtml":"<p>Найдите предложения, в которых тире ставится в соответствии с одним и тем же правилом пунктуации. Запишите номера этих предложений.</p><ol><li>Юрий Александрович Бычков – спецкор газеты «Советская культура», общественный деятель в области сохранения культурного наследия.</li><li>В 1967 году он оказался в Суздале.</li><li>Цель командировки – подготовить материал о том, как живут старинные российские города.</li><li>Когда материал был собран, Юрий Александрович решил вернуться в Москву не той дорогой, по которой ехал в Суздаль, а окружным путём – по ярославской трассе.</li><li>Владимир, Суздаль, Ярославль, Переславль-Залесский, Ростов Великий, Сергиев Посад, Кострому и Иваново – эти города посетил во время поездки Бычков.</li><li>По итогам командировки журналист Ю.А. Бычков опубликовал серию очерков под общим названием «Золотое кольцо».</li><li>В Москве он увидел, как блестят на солнце купола в Кремле, вспомнил очертания маршрута и то, как блестела рожь вдоль дорог, – так и родилось сочетание «Золотое кольцо».</li></ol>","answer":"13","kind":"unordered_digits","maxScore":1,"sourceId":null,"altAnswers":[],"explanation":"","category":"Пунктуация"},{"number":22,"title":"Смысловая цельность текста","promptHtml":"<p>Какие из высказываний соответствуют содержанию текста? Укажите номера ответов.</p><ol><li>Рассказчик каждый год летом приезжал в родную деревню.</li><li>Рассказчика постоянно тянуло на малую родину, несмотря на то что он поклялся никогда туда не возвращаться.</li><li>Знакомые с детства места вызывают у рассказчика тёплые воспоминания о времени, проведённом в родной деревне.</li><li>Приехав в родную деревню, рассказчик сразу же отправился навестить родственников.</li><li>По словам рассказчика, берёзы – свидетельницы человеческого горя и радости.</li></ol>","answer":"235","kind":"unordered_digits","maxScore":1,"sourceId":"text-22-27","altAnswers":[],"explanation":"","category":"Работа с текстом"}]}</script>
+<script type="application/json" id="edemo-data-3">{"sources":{},"tasks":[{"number":23,"title":"Функционально-смысловые типы речи","promptHtml":"<p>Какие из перечисленных утверждений являются верными? Укажите номера ответов.</p><ol><li>В предложениях 1, 2 представлено рассуждение.</li><li>Предложение 5 противопоставлено по содержанию предложению 6.</li><li>В предложениях 9, 10 содержатся элементы описания.</li><li>В предложениях 16, 17 представлено повествование с элементами описания.</li><li>В предложениях 26, 27 представлено рассуждение.</li></ol>","answer":"345","kind":"unordered_digits","maxScore":1,"sourceId":"text-22-27","altAnswers":[],"explanation":"","category":"Работа с текстом"},{"number":24,"title":"Фразеологизм","promptHtml":"<p>Из предложений 9–12 выпишите один фразеологизм.</p>","answer":"нет дела","kind":"word_compact","maxScore":1,"sourceId":"text-22-27","altAnswers":["дела нет","нет никакого дела","никакого дела нет"],"explanation":"","category":"Лексика"},{"number":25,"title":"Средства связи предложений","promptHtml":"<p>Среди предложений 15–22 найдите предложение, которое связано с предыдущим при помощи указательного местоимения и однокоренного слова. Запишите номер.</p>","answer":"21","kind":"unordered_digits","maxScore":1,"sourceId":"text-22-27","altAnswers":[],"explanation":"","category":"Работа с текстом"},{"number":26,"title":"Средства выразительности","promptHtml":"<p>Прочитайте фрагмент рецензии. Вставьте на места пропусков А, Б, В, Г цифры, соответствующие терминам из списка.</p><p>«Делясь с читателем своими чувствами и эмоциями от встречи с малой родиной, В.И. Белов использует различные средства выразительности, в том числе синтаксические: (А) ___ (в предложениях 12, 24) и (Б) ___ (в предложении 31). Передать состояние рассказчика, связанное с воспоминаниями о детстве, помогают тропы: (В) ___ («синие зубчатые леса» в предложении 3, «нервным маревом» в предложении 7, «древний запах» в предложении 14), а также (Г) ___ («укор… свидетельниц человеческого горя и радости» в предложении 23, «рождаются… города» в предложении 28)».</p><ol><li>обращение</li><li>анафора</li><li>противопоставление</li><li>эпитет</li><li>ряды однородных членов предложения</li><li>синтаксический параллелизм</li><li>вводная конструкция</li><li>сравнение</li><li>метафора</li></ol>","answer":"5149","kind":"ordered_sequence","maxScore":3,"sourceId":"text-22-27","altAnswers":[],"explanation":"А–5, Б–1, В–4, Г–9.","category":"Средства выразительности"},{"number":27,"title":"Сочинение","promptHtml":"<p>Напишите сочинение по прочитанному тексту.</p><p>Сформулируйте одну из проблем, поставленных автором текста.</p><p>Прокомментируйте сформулированную проблему. Включите в комментарий пояснения к двум примерам-иллюстрациям из прочитанного текста, которые важны для понимания проблемы исходного текста (избегайте чрезмерного цитирования). Проанализируйте указанную смысловую связь между примерами-иллюстрациями.</p><p>Сформулируйте позицию автора (рассказчика).</p><p>Сформулируйте и обоснуйте своё отношение к позиции автора (рассказчика) по проблеме исходного текста. Включите в обоснование пример-аргумент, опирающийся на жизненный, читательский или историко-культурный опыт.</p><p>Объём сочинения – не менее 150 слов. Работа, написанная без опоры на прочитанный текст (не по данному тексту), не оценивается. Если сочинение представляет собой полностью переписанный или пересказанный исходный текст без каких бы то ни было комментариев, то такая работа оценивается 0 баллов.</p>","answer":"","kind":"essay","maxScore":24,"sourceId":"text-22-27","altAnswers":[],"explanation":"Экспертная проверка по К1–К12.","category":"Сочинение"}]}</script>
+<script>
+(function(){
+  "use strict";
+
+  var ROOT_ID="ege-demo-2023";
+  var STORAGE_KEY="eksamio_ege_russian_demo_2023_v1_0_0";
+  var DURATION_MS=210*60*1000;
+  var LETTERS=["А","Б","В","Г","Д","Е","Ж","З"];
+  var TASK_SCHEMAS={25:{interaction:"sentence_numbers",options:["15","16","17","18","19","20","21","22"],answerTokens:["21"]}};
+
+  function byId(id){return document.getElementById(id);}
+  function parseData(id){var el=byId(id);if(!el)throw new Error("Не найден блок данных: "+id);return JSON.parse(el.textContent);}
+  function mergeData(){
+    var chunks=[parseData("edemo-data-1"),parseData("edemo-data-2"),parseData("edemo-data-3")],sources={},tasks=[];
+    chunks.forEach(function(c){Object.assign(sources,c.sources||{});tasks=tasks.concat(c.tasks||[]);});
+    tasks.sort(function(a,b){return a.number-b.number;});
+    return{sources:sources,tasks:tasks};
+  }
+  function freshState(){return{version:1,essayShortBand:false,status:"idle",current:1,answers:{},flagged:{},variantChoices:{},startedAt:null,endsAt:null,completedAt:null,shortScore:0,essayScores:{},essayZeroReasons:{},essayEligibilityConfirmed:false,essayScore:null};}
+  function normalizeState(raw){
+    var next=Object.assign(freshState(),raw||{});
+    next.answers=next.answers&&typeof next.answers==="object"?next.answers:{};
+    next.flagged=next.flagged&&typeof next.flagged==="object"?next.flagged:{};
+    next.variantChoices=next.variantChoices&&typeof next.variantChoices==="object"?next.variantChoices:{};
+    next.essayScores=next.essayScores&&typeof next.essayScores==="object"?next.essayScores:{};
+    next.essayZeroReasons=next.essayZeroReasons&&typeof next.essayZeroReasons==="object"?next.essayZeroReasons:{};
+    return next;
+  }
+  function loadState(){try{var raw=localStorage.getItem(STORAGE_KEY);return raw?normalizeState(JSON.parse(raw)):freshState();}catch(e){return freshState();}}
+  function showStorageWarning(){var x=byId("edemo-storage-warning");if(x)x.setAttribute("data-show","true");}
+  function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));return true;}catch(e){showStorageWarning();return false;}}
+  function escapeHtml(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function strictDigits(v){
+    if(Array.isArray(v)){if(!v.length||v.some(function(x){return !/^\d$/.test(String(x));}))return null;return v.join("");}
+    var raw=String(v==null?"":v).trim();return /^\d+$/.test(raw)?raw:null;
+  }
+  function strictSingleWord(v){
+    var raw=String(v==null?"":v).trim().toLowerCase();
+    if(!/^[а-яё]+$/i.test(raw))return null;
+    return raw.replace(/ё/g,"е");
+  }
+  function strictPhrase(v){
+    var raw=String(v==null?"":v).trim().toLowerCase();
+    if(!/^[а-яё]+(?: [а-яё]+)*$/i.test(raw))return null;
+    return raw.replace(/ё/g,"е");
+  }
+  function technicalWordCount(v){
+    var t=String(v||"").replace(/\u00A0/g," ");
+    t=t.replace(/(?:[А-ЯЁA-Z]\.\s*){1,2}[А-ЯЁA-Z][а-яёa-z-]+/g," ИМЯ ");
+    var m=t.match(/[А-ЯЁа-яёA-Za-z]+(?:-[А-ЯЁа-яёA-Za-z]+)*/g);return m?m.length:0;
+  }
+  function taskOptionValues(t){
+    if(TASK_SCHEMAS[t.number]&&TASK_SCHEMAS[t.number].options)return TASK_SCHEMAS[t.number].options.slice();
+    var html=String(t.promptHtml||""),li=html.match(/<li(?:\s[^>]*)?>/gi);
+    if(li&&li.length)return Array.from({length:li.length},function(_,i){return String(i+1);});
+    var markers=[],re=/\((\d+)\)/g,m;while((m=re.exec(html)))if(markers.indexOf(m[1])===-1)markers.push(m[1]);
+    if(markers.length)return markers.sort(function(a,b){return Number(a)-Number(b);});
+    var max=5;[t.answer].concat((t.variants||[]).map(function(v){return v.answer;})).forEach(function(a){String(a||"").split("").forEach(function(d){if(/\d/.test(d))max=Math.max(max,Number(d));});});
+    return Array.from({length:max},function(_,i){return String(i+1);});
+  }
+  function valueDisplay(v){return Array.isArray(v)?v.filter(Boolean).join(""):String(v==null?"":v);}
+  function isFilled(t,v){
+    if(t.kind==="ordered_sequence")return Array.isArray(v)&&v.length===String(t.answer).length&&v.every(function(x){return /^\d$/.test(String(x));});
+    if(t.kind==="unordered_digits")return Array.isArray(v)&&v.length>0;
+    return String(v==null?"":v).trim().length>0;
+  }
+  function resolvedTask(baseTask){
+    if(!baseTask.variants||!baseTask.variants.length)return baseTask;
+    var idx=Number(state.variantChoices[baseTask.number]);
+    if(!Number.isInteger(idx)||idx<0||idx>=baseTask.variants.length)idx=0;
+    return Object.assign({},baseTask,baseTask.variants[idx],{variantIndex:idx,variantCount:baseTask.variants.length});
+  }
+  function ensureVariantChoices(randomizeMissing){
+    tasks.forEach(function(t){
+      if(!t.variants||!t.variants.length)return;
+      var idx=Number(state.variantChoices[t.number]);
+      if(!Number.isInteger(idx)||idx<0||idx>=t.variants.length){state.variantChoices[t.number]=randomizeMissing?Math.floor(Math.random()*t.variants.length):0;}
+    });
+  }
+  function scoreTask(t,v){
+    if(t.kind==="essay")return 0;
+    if(t.kind==="word"){
+      var got=strictSingleWord(v);if(got===null)return 0;
+      var accepted=[t.answer].concat(t.altAnswers||[]).map(strictSingleWord);
+      return accepted.indexOf(got)!==-1?t.maxScore:0;
+    }
+    if(t.kind==="word_compact"){
+      var gotPhrase=strictPhrase(v);if(gotPhrase===null)return 0;
+      var acceptedPhrases=[t.answer].concat(t.altAnswers||[]).map(strictPhrase);
+      return acceptedPhrases.indexOf(gotPhrase)!==-1?t.maxScore:0;
+    }
+    if(t.kind==="ordered_sequence"){
+      var raw=strictDigits(v),expected=String(t.answer);if(raw===null)return 0;
+      if(raw===expected)return t.maxScore;if(raw.length!==expected.length)return 0;
+      var diff=0;for(var i=0;i<expected.length;i++)if(raw[i]!==expected[i])diff++;
+      if(t.number===26)return diff===1?2:(diff===2||diff===3?1:0);
+      if(t.number===8)return (diff===1||diff===2)?2:((diff===3||diff===4)?1:0);
+      return 0;
+    }
+    if(t.kind==="unordered_digits"){
+      var schema=TASK_SCHEMAS[t.number];
+      if(schema&&schema.interaction==="sentence_numbers"){
+        var gotTokens=Array.isArray(v)?v.map(String):(/^\d+$/.test(String(v==null?"":v).trim())?[String(v).trim()]:null);
+        if(!gotTokens)return 0;
+        var expectedTokens=schema.answerTokens.slice();
+        if(gotTokens.length!==expectedTokens.length||new Set(gotTokens).size!==gotTokens.length)return 0;
+        return gotTokens.slice().sort().join("|")===expectedTokens.slice().sort().join("|")?t.maxScore:0;
+      }
+      var rawSet=strictDigits(v),expectedSet=String(t.answer);if(rawSet===null||rawSet.length!==expectedSet.length)return 0;
+      if(new Set(rawSet.split("")).size!==rawSet.length)return 0;
+      return rawSet.split("").sort().join("")===expectedSet.split("").sort().join("")?t.maxScore:0;
+    }
+    return 0;
+  }
+  function correctDisplay(t){var all=[t.answer].concat(t.altAnswers||[]);return all.map(function(x){return t.number===25&&x==="всвоюочередь"?"в свою очередь":x;}).filter(function(x,i,a){return a.indexOf(x)===i;}).join("; ");}
+  function formatTime(ms){var total=Math.max(0,Math.floor(ms/1000)),h=Math.floor(total/3600),m=Math.floor(total%3600/60),s=total%60;return[h,m,s].map(function(x){return String(x).padStart(2,"0");}).join(":");}
+
+  var data,tasks,sources,state,root,timerHandle;
+  function currentBaseTask(){return tasks.find(function(t){return t.number===state.current;})||tasks[0];}
+  function currentTask(){return resolvedTask(currentBaseTask());}
+  function filledCount(){return tasks.filter(function(base){var t=resolvedTask(base);return isFilled(t,state.answers[t.number]);}).length;}
+  function updateRootState(){root.setAttribute("data-state",state.status==="running"?"running":state.status==="finished"?"finished":"idle");}
+  function updateStartControls(){
+    var start=byId("edemo-start"),resume=byId("edemo-resume"),reset=byId("edemo-reset-start");
+    [start,resume,reset].forEach(function(x){if(x)x.classList.add("edemo-hidden");});
+    if(state.status==="running"){resume.classList.remove("edemo-hidden");reset.classList.remove("edemo-hidden");}
+    else if(state.status==="finished"){reset.classList.remove("edemo-hidden");}
+    else start.classList.remove("edemo-hidden");
+  }
+  function buildNav(){
+    var nav=byId("edemo-nav");nav.innerHTML="";
+    tasks.forEach(function(t){var b=document.createElement("button");b.type="button";b.className="edemo-nav-btn";b.textContent=t.number;b.setAttribute("aria-label","Перейти к заданию "+t.number);b.addEventListener("click",function(){state.current=t.number;saveState();renderTask();});nav.appendChild(b);});
+  }
+  function updateNav(){
+    var bs=byId("edemo-nav").querySelectorAll(".edemo-nav-btn");
+    bs.forEach(function(b,i){var base=tasks[i],t=resolvedTask(base),n=base.number;b.setAttribute("aria-current",n===state.current?"true":"false");b.setAttribute("data-filled",isFilled(t,state.answers[n])?"true":"false");b.setAttribute("data-flagged",state.flagged[n]?"true":"false");});
+    byId("edemo-progress-bar").style.width=Math.round(filledCount()/tasks.length*100)+"%";
+  }
+  function answerField(t){
+    var v=state.answers[t.number];
+    if(t.kind==="essay")return '<div class="edemo-answer"><label for="edemo-answer-input">Текст сочинения</label><textarea class="edemo-essay" id="edemo-answer-input" spellcheck="true">'+escapeHtml(v||"")+'</textarea><p class="edemo-answer-help">Технический счётчик: <span class="edemo-word-count" id="edemo-live-word-count">'+technicalWordCount(v||"")+'</span>. Это ориентир, а не официальный подсчёт: сокращения не учитываются, а при частичном переписывании исходного текста считаются только собственные слова участника.</p><p class="edemo-save-status" id="edemo-save-status">Ответ сохраняется автоматически.</p></div>';
+    if(t.kind==="unordered_digits"){
+      var selected=Array.isArray(v)?v.map(String):[],values=taskOptionValues(t),html='<fieldset class="edemo-choice-fieldset"><legend>'+(t.number===25?'Выберите номер предложения':'Выберите все верные варианты')+'</legend><div class="edemo-choice-grid">';
+      values.forEach(function(n){html+='<label class="edemo-choice"><input type="checkbox" data-choice="'+n+'"'+(selected.indexOf(String(n))!==-1?' checked':'')+'><span>'+n+'</span></label>';});
+      return html+'</div><p class="edemo-answer-help">Порядок выбора не влияет на оценивание. Лишний или пропущенный номер делает ответ неверным.</p><p class="edemo-save-status" id="edemo-save-status">Ответ сохраняется автоматически.</p></fieldset>';
+    }
+    if(t.kind==="ordered_sequence"){
+      var arr=Array.isArray(v)?v.slice():[];var positions=String(t.answer).length,countOptions=taskOptionValues(t).length,rows='<div class="edemo-match-inputs" role="group" aria-label="Ответ по позициям">';
+      for(var j=0;j<positions;j++){var opts='<option value="">Выберите номер</option>';for(var k=1;k<=countOptions;k++)opts+='<option value="'+k+'"'+(String(arr[j]||"")===String(k)?' selected':'')+'>'+k+'</option>';rows+='<div class="edemo-match-row"><label for="edemo-match-'+j+'">'+LETTERS[j]+'</label><select id="edemo-match-'+j+'" data-match-index="'+j+'">'+opts+'</select></div>';}
+      return rows+'</div><p class="edemo-answer-help">Заполните каждую позицию А–Д. Порядок имеет значение.</p><p class="edemo-save-status" id="edemo-save-status">Ответ сохраняется автоматически.</p>';
+    }
+    return '<div class="edemo-answer"><label for="edemo-answer-input">Ответ</label><input class="edemo-input" id="edemo-answer-input" type="text" autocomplete="off" spellcheck="false" value="'+escapeHtml(v||"")+'"><p class="edemo-answer-help">Введите только требуемое слово или выражение. Знаки препинания, цифры и лишние внутренние пробелы не удаляются системой и делают ответ неверным.</p><p class="edemo-save-status" id="edemo-save-status">Ответ сохраняется автоматически.</p></div>';
+  }
+  function markSaved(){var x=byId("edemo-save-status");if(x)x.textContent="✓ Ответ сохранён автоматически";}
+  function bindAnswerControls(t){
+    if(t.kind==="unordered_digits"){
+      byId("edemo-task-stage").querySelectorAll("[data-choice]").forEach(function(box){box.addEventListener("change",function(){var chosen=[];byId("edemo-task-stage").querySelectorAll("[data-choice]:checked").forEach(function(x){chosen.push(x.getAttribute("data-choice"));});chosen.sort(function(a,b){return Number(a)-Number(b);});state.answers[t.number]=chosen;saveState();markSaved();updateNav();});});return;
+    }
+    if(t.kind==="ordered_sequence"){
+      byId("edemo-task-stage").querySelectorAll("[data-match-index]").forEach(function(sel){sel.addEventListener("change",function(){var arr=Array.isArray(state.answers[t.number])?state.answers[t.number].slice():Array(String(t.answer).length).fill("");arr[Number(sel.getAttribute("data-match-index"))]=sel.value;state.answers[t.number]=arr;saveState();markSaved();updateNav();});});return;
+    }
+    var input=byId("edemo-answer-input");input.addEventListener("input",function(){state.answers[t.number]=input.value;if(t.kind==="essay")byId("edemo-live-word-count").textContent=technicalWordCount(input.value);saveState();markSaved();updateNav();});
+  }
+  function renderTask(){
+    var t=currentTask(),src="";
+    if(t.sourceId&&sources[t.sourceId])src='<details class="edemo-source" open><summary><strong>'+escapeHtml(sources[t.sourceId].title)+'</strong></summary>'+sources[t.sourceId].html+'</details>';
+    var badge=t.variantCount?'<span class="ep-pill edemo-variant-badge">Официальный пример '+(t.variantIndex+1)+' из '+t.variantCount+'</span>':'';
+    byId("edemo-task-stage").innerHTML='<div class="edemo-task-head"><div><div class="edemo-task-number">Задание '+t.number+' из 27</div><h2 class="ep-section-title">'+escapeHtml(t.title)+'</h2></div><div class="ep-meta">'+badge+'<span class="ep-pill">'+t.maxScore+' '+(t.maxScore===1?'балл':'балла')+'</span></div></div>'+src+'<div class="edemo-task-prompt">'+t.promptHtml+'</div>'+answerField(t)+'<div class="edemo-task-actions"><div class="edemo-task-actions__group"><button class="ep-button ep-button--small ep-button--secondary" id="edemo-prev" type="button"'+(t.number===1?' disabled':'')+'>Предыдущее</button><button class="ep-button ep-button--small" id="edemo-next" type="button">'+(t.number===27?'Завершить экзамен':'Следующее')+'</button></div><div class="edemo-task-actions__group"><button class="ep-button ep-button--small ep-button--secondary" id="edemo-clear" type="button">Сбросить ответ</button><button class="ep-button ep-button--small ep-button--secondary" id="edemo-flag" type="button">'+(state.flagged[t.number]?'Снять отметку':'Отметить для возврата')+'</button></div></div>';
+    bindAnswerControls(t);
+    byId("edemo-prev").addEventListener("click",function(){if(t.number>1){state.current=t.number-1;saveState();renderTask();}});
+    byId("edemo-next").addEventListener("click",function(){if(t.number<27){state.current=t.number+1;saveState();renderTask();}else finishExam(false);});
+    byId("edemo-clear").addEventListener("click",function(){delete state.answers[t.number];saveState();renderTask();});
+    byId("edemo-flag").addEventListener("click",function(){state.flagged[t.number]=!state.flagged[t.number];saveState();renderTask();});
+    updateNav();window.scrollTo({top:Math.max(0,root.getBoundingClientRect().top+window.scrollY-20),behavior:"smooth"});
+  }
+  function startExam(){var now=Date.now();state=freshState();state.status="running";state.current=1;state.startedAt=now;state.endsAt=now+DURATION_MS;ensureVariantChoices(true);saveState();updateRootState();updateStartControls();buildNav();renderTask();startTimer();}
+  function resumeExam(){ensureVariantChoices(false);if(!state.endsAt||state.endsAt<=Date.now()){finishExam(true);return;}updateRootState();updateStartControls();buildNav();renderTask();startTimer();}
+  function startTimer(){clearInterval(timerHandle);function tick(){var left=(state.endsAt||0)-Date.now();byId("edemo-timer").textContent=formatTime(left);if(left<=0){clearInterval(timerHandle);finishExam(true);}}tick();timerHandle=setInterval(tick,1000);}
+  function calculateShortScore(){return tasks.filter(function(t){return t.number<=26;}).reduce(function(s,base){var t=resolvedTask(base);return s+scoreTask(t,state.answers[t.number]);},0);}
+
+  var criteria=[
+    {id:"K1",label:"К1. Формулировка проблемы исходного текста",max:1,html:"<p>Проблема сформулирована верно — 1; иначе 0. При К1=0 критерии К1–К4 оцениваются 0.</p>"},
+    {id:"K2",label:"К2. Комментарий к проблеме",max:5,html:"<p>До 5 баллов: два примера-иллюстрации из исходного текста, пояснение к каждому и анализ смысловой связи между примерами.</p>"},
+    {id:"K3",label:"К3. Позиция автора",max:1,html:"<p>Позиция автора сформулирована верно — 1; иначе 0. При К3=0 критерий К4 = 0.</p>"},
+    {id:"K4",label:"К4. Отношение к позиции автора",max:1,html:"<p>Отношение сформулировано и обосновано примером-аргументом — 1.</p>"},
+    {id:"K5",label:"К5. Смысловая цельность и связность",max:2,html:"<p>До 2 баллов за логику, связность и абзацное членение.</p>"},
+    {id:"K6",label:"К6. Точность и выразительность речи",max:2,html:"<p>2 — точность выражения мысли и разнообразие грамматического строя при максимальном К10; 1 — выполнено одно из условий; 0 — бедность словаря и однообразие строя.</p>"},
+    {id:"K7",label:"К7. Орфографические нормы",max:3,html:"<p>3 — ошибок нет; 2 — 1–2; 1 — 3–4; 0 — 5 и более.</p>"},
+    {id:"K8",label:"К8. Пунктуационные нормы",max:3,html:"<p>3 — ошибок нет; 2 — 1–2; 1 — 3–4; 0 — 5 и более.</p>"},
+    {id:"K9",label:"К9. Грамматические нормы",max:2,html:"<p>2 — ошибок нет; 1 — 1–2; 0 — 3 и более.</p>"},
+    {id:"K10",label:"К10. Речевые нормы",max:2,html:"<p>2 — не более одной ошибки; 1 — 2–3; 0 — 4 и более.</p>"},
+    {id:"K11",label:"К11. Этические нормы",max:1,html:"<p>Этических ошибок нет — 1.</p>"},
+    {id:"K12",label:"К12. Фактологическая точность",max:1,html:"<p>Фактических ошибок нет — 1.</p>"}
+  ];
+  var zeroReasons=[
+    {id:"under70",label:"После официального подсчёта в работе 69 слов или меньше."},
+    {id:"noTextSupport",label:"Сочинение написано без опоры на исходный текст."},
+    {id:"copiedOrRetold",label:"Работа представляет собой переписанный или пересказанный исходный текст без собственных комментариев."}
+  ];
+  function hasZeroReason(){return zeroReasons.some(function(r){return !!state.essayZeroReasons[r.id];});}
+  function essayAssessmentComplete(){return hasZeroReason()||(state.essayEligibilityConfirmed&&criteria.every(function(c){return Object.prototype.hasOwnProperty.call(state.essayScores,c.id);}));}
+  function computeEssayScore(){
+    if(hasZeroReason())return 0;
+    if(!state.essayEligibilityConfirmed)return null;
+    if(Object.prototype.hasOwnProperty.call(state.essayScores,"K1")&&Number(state.essayScores.K1)===0){state.essayScores.K2=0;state.essayScores.K3=0;state.essayScores.K4=0;}
+    if(Object.prototype.hasOwnProperty.call(state.essayScores,"K3")&&Number(state.essayScores.K3)===0){state.essayScores.K4=0;}
+    if(!criteria.every(function(c){return Object.prototype.hasOwnProperty.call(state.essayScores,c.id);}))return null;
+    return criteria.reduce(function(sum,c){var value=Number(state.essayScores[c.id]);if(Number(state.essayScores.K1)===0&&["K2","K3","K4"].indexOf(c.id)!==-1)value=0;if(Number(state.essayScores.K3)===0&&c.id==="K4")value=0;var caps={K7:2,K8:2,K9:1,K10:1,K11:0,K12:0};var cap=(state.essayShortBand&&Object.prototype.hasOwnProperty.call(caps,c.id))?caps[c.id]:c.max;if(c.id==="K6"&&Number(state.essayScores.K10)!==2)cap=Math.min(cap,1);return sum+Math.min(cap,Math.max(0,value));},0);
+  }
+  function buildCriteria(){
+    var w=byId("edemo-criteria");w.innerHTML="";
+    var gate=document.createElement("div");gate.className="ep-panel edemo-zero-gate";
+    gate.innerHTML='<p><strong>Шаг 1. Проверьте общие основания полного нуля</strong></p><p class="edemo-mini">Технический счётчик не принимает решение автоматически. При частичном переписывании исходного текста в объёме учитываются только собственные слова участника.</p>';
+    zeroReasons.forEach(function(r){var label=document.createElement("label");label.className="edemo-zero-option";label.innerHTML='<input type="checkbox" data-zero-reason="'+r.id+'"'+(state.essayZeroReasons[r.id]?' checked':'')+'><span>'+escapeHtml(r.label)+'</span>';gate.appendChild(label);});
+    var shortBand=document.createElement("label");shortBand.className="edemo-zero-option";shortBand.innerHTML='<input type="checkbox" id="edemo-short-band"'+(state.essayShortBand?' checked':'')+(hasZeroReason()?' disabled':'')+'><span>После официального подсчёта в работе 70–149 слов (для К7–К12 действует специальная сниженная шкала).</span>';gate.appendChild(shortBand);
+    var confirm=document.createElement("label");confirm.className="edemo-confirm-option";confirm.innerHTML='<input type="checkbox" id="edemo-eligibility-confirm"'+(state.essayEligibilityConfirmed?' checked':'')+(hasZeroReason()?' disabled':'')+'><span><strong>Подтверждаю:</strong> я проверил(а) объём по правилам ФИПИ, работу с исходным текстом и отсутствие полного пересказа; оснований полного нуля нет.</span>';gate.appendChild(confirm);w.appendChild(gate);
+    gate.querySelectorAll("[data-zero-reason]").forEach(function(box){box.addEventListener("change",function(){state.essayZeroReasons[box.getAttribute("data-zero-reason")]=box.checked;if(hasZeroReason()){state.essayEligibilityConfirmed=false;state.essayScores={};}state.essayScore=computeEssayScore();saveState();renderResultScores();buildCriteria();});});
+    var confirmBox=byId("edemo-eligibility-confirm");if(confirmBox)confirmBox.addEventListener("change",function(){state.essayEligibilityConfirmed=confirmBox.checked;state.essayScore=computeEssayScore();saveState();renderResultScores();buildCriteria();});
+    var shortBox=byId("edemo-short-band");if(shortBox)shortBox.addEventListener("change",function(){state.essayShortBand=shortBox.checked;state.essayScore=computeEssayScore();saveState();renderResultScores();buildCriteria();});
+    var blocked=hasZeroReason()||!state.essayEligibilityConfirmed;
+    if(hasZeroReason()){var danger=document.createElement("div");danger.className="ep-panel edemo-danger";danger.innerHTML="<p><strong>Отмечено основание полного нуля.</strong> Учебная самооценка сочинения равна 0/24; критерии заблокированы.</p>";w.appendChild(danger);}
+    else if(!state.essayEligibilityConfirmed){var note=document.createElement("div");note.className="ep-panel edemo-warning";note.innerHTML="<p>Критерии откроются после явного подтверждения проверки общих оснований нуля.</p>";w.appendChild(note);}
+    criteria.forEach(function(c){
+      var row=document.createElement("div"),has=Object.prototype.hasOwnProperty.call(state.essayScores,c.id),opts='<option value="">Не оценено</option>';
+      var caps={K7:2,K8:2,K9:1,K10:1,K11:0,K12:0};var rowMax=(state.essayShortBand&&Object.prototype.hasOwnProperty.call(caps,c.id))?caps[c.id]:c.max;if(c.id==="K6"&&Number(state.essayScores.K10)!==2)rowMax=Math.min(rowMax,1);for(var i=0;i<=rowMax;i++)opts+='<option value="'+i+'"'+(has&&Number(state.essayScores[c.id])===i?' selected':'')+'>'+i+'</option>';
+      var dependency=(["K2","K3","K4"].indexOf(c.id)!==-1&&Number(state.essayScores.K1)===0)||(c.id==="K4"&&Number(state.essayScores.K3)===0);
+      row.className="edemo-criterion";row.innerHTML='<div><label for="edemo-'+c.id+'"><strong>'+c.label+'</strong><br><span class="edemo-mini">Максимум: '+c.max+(dependency?' · зависимость от К1/К3':'')+'</span></label><details class="edemo-mini"><summary>Условия выставления баллов</summary>'+c.html+'</details></div><select id="edemo-'+c.id+'"'+(blocked||dependency?' disabled':'')+'>'+opts+'</select>';w.appendChild(row);
+      row.querySelector("select").addEventListener("change",function(e){if(e.target.value==="")delete state.essayScores[c.id];else state.essayScores[c.id]=Number(e.target.value);state.essayScore=computeEssayScore();saveState();renderResultScores();buildCriteria();});
+    });
+  }
+  function renderReview(){
+    var list=byId("edemo-review");list.innerHTML="";
+    tasks.filter(function(t){return t.number<=26;}).forEach(function(base){var t=resolvedTask(base),raw=state.answers[t.number],got=valueDisplay(raw)||"—",score=scoreTask(t,raw),ok=score===t.maxScore,item=document.createElement("div");item.className="edemo-review-item";item.setAttribute("data-correct",ok?"true":"false");item.innerHTML='<p><strong>Задание '+t.number+' · '+score+'/'+t.maxScore+'</strong>'+(t.variantCount?' <span class="edemo-mini">(пример '+(t.variantIndex+1)+' из '+t.variantCount+')</span>':'')+'</p><p>Ваш ответ: <strong>'+escapeHtml(got)+'</strong></p><p>Правильный ответ: <strong>'+escapeHtml(correctDisplay(t))+'</strong></p>'+(t.explanation?'<p>'+escapeHtml(t.explanation)+'</p>':'');list.appendChild(item);});
+  }
+  function renderResultScores(){
+    state.essayScore=computeEssayScore();byId("edemo-short-score").textContent=state.shortScore;byId("edemo-result-word-count").textContent=technicalWordCount(state.answers[27]||"");
+    if(state.essayScore===null){byId("edemo-essay-score").textContent="—";byId("edemo-essay-status").textContent="Самооценка не завершена";}
+    else{byId("edemo-essay-score").textContent=state.essayScore;byId("edemo-essay-status").textContent=hasZeroReason()?"0 баллов: отмечено основание полного нуля":"Учебная самооценка заполнена";}
+    byId("edemo-total-score").textContent="—";byId("edemo-total-status").textContent="Самооценка не формирует официальный общий балл";
+  }
+  function renderResult(){updateRootState();updateStartControls();byId("edemo-result-date").textContent=state.completedAt?new Date(state.completedAt).toLocaleString("ru-RU"):"";renderResultScores();buildCriteria();renderReview();window.scrollTo({top:Math.max(0,root.getBoundingClientRect().top+window.scrollY-20),behavior:"smooth"});}
+  function finishExam(auto){if(state.status!=="running"&&state.status!=="finished")return;if(!auto&&!window.confirm("Завершить попытку? После этого станут доступны правильные ответы."))return;clearInterval(timerHandle);state.status="finished";state.completedAt=state.completedAt||Date.now();state.shortScore=calculateShortScore();state.essayScore=computeEssayScore();saveState();renderResult();}
+  function resetState(){state=freshState();try{localStorage.removeItem(STORAGE_KEY);}catch(e){}window.location.reload();}
+  function init(){
+    root=byId(ROOT_ID);if(!root)return;data=mergeData();tasks=data.tasks;sources=data.sources;state=loadState();ensureVariantChoices(false);updateRootState();updateStartControls();
+    byId("edemo-start").addEventListener("click",startExam);byId("edemo-resume").addEventListener("click",resumeExam);byId("edemo-reset-start").addEventListener("click",function(){if(window.confirm("Удалить сохранённые ответы и начать заново?"))resetState();});byId("edemo-finish-top").addEventListener("click",function(){finishExam(false);});byId("edemo-restart").addEventListener("click",function(){if(window.confirm("Удалить результат и пройти заново?"))resetState();});
+    if(state.status==="running")resumeExam();else if(state.status==="finished")renderResult();
+  }
+  window.__edemoRussian2023v100={strictDigits:strictDigits,strictSingleWord:strictSingleWord,strictPhrase:strictPhrase,technicalWordCount:technicalWordCount,scoreTask:scoreTask,computeEssayScore:function(input){var old=state;state=normalizeState(input);var result=computeEssayScore();state=old;return result;},storageKey:STORAGE_KEY};
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
+</body></html>

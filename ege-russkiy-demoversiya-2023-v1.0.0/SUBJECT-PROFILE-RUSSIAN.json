@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "subject": "russian_language",
+  "exam": "EGE",
+  "purpose": "Reusable subject engine constraints for yearly official demo variants",
+  "invariants": {
+    "automatic_and_expert_results_separated": true,
+    "technical_word_counter": "advisory_only",
+    "variant_or_examples": "selected_once_at_attempt_start_and_persisted",
+    "universal_answer_normalizer_forbidden": true,
+    "answer_controls": {
+      "single_word": "strict text input: Cyrillic letters only, outer trim, case-insensitive, ё=е",
+      "phrase": "strict text input: Cyrillic words with exact single spaces or confirmed compact alternative",
+      "unordered_digits": "checkboxes; scorer accepts exact unique digit set only",
+      "matching_sequence": "one select per lettered position; positional partial scoring only where year passport confirms",
+      "essay": "textarea; expert-only official scoring"
+    },
+    "essay_gate": [
+      "year-specific official word-count band must be confirmed by user/expert",
+      "source-text reliance",
+      "not a copied/retold source without own commentary"
+    ],
+    "dependencies": [
+      "K1=0 forces K2=0 and K3=0 in both UI and scorer"
+    ],
+    "official_total": "must remain unavailable until expert assessment; user self-assessment is never added to official score"
+  },
+  "required_regression_tests": [
+    "all official alternatives",
+    "every OR variant",
+    "leading/trailing/internal whitespace",
+    "punctuation in digital answers",
+    "letters in digits",
+    "duplicate/missing/extra digit",
+    "all partial-score branches",
+    "all essay zero reasons",
+    "criterion dependency tampering",
+    "reload persistence",
+    "storage failure",
+    "mobile widths 320/360/390/768/1280"
+  ]
+}
