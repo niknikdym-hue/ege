@@ -1,0 +1,48 @@
+EKSAMIO LEARNING ENGINE — SAFE PAUSE CHECKPOINT
+DATE: 2026-08-15
+STATUS: SAFE_TO_PAUSE
+PRODUCTION / TILDA / RUNTIME: NOT TOUCHED
+
+WHAT IS CLOSED
+1. Deterministic baseline from file 215: 133 physical unique canonical units, 0 duplicate unit_id.
+2. Exact machine audit list: 39 referenced-but-not-materialized school-* IDs.
+3. File 216 assigns a terminal semantic disposition to all 39/39; unclassified = 0.
+4. Four genuine physical gaps are materialized in file 217:
+   - school-ne-adjectives-negative-intensifier-boundary
+   - school-o-after-sibilants-lexical-o-set
+   - school-tsy-exception-family
+   - school-zhog-zheg-part-of-speech-contrast
+5. Local deterministic post-add audit: 137 physical records, 137 unique unit_id, duplicates = 0.
+   sorted unit_id SHA-256: 805a5e5656459e5a7023c6c18d8d6eac245aba18c7e836efb02d6a5af612a6d9
+
+WHY 39 DID NOT BECOME +39
+The historical 39 contained aliases, organizational parents, legacy IDs replaced by later splits/renames, excluded source buckets, resolved obsolete conflicts, and HOLD candidates. Old pass files are immutable provenance; a naive raw-reference scan can still see those historical IDs. File 216 is the semantic closure authority and prevents reopening already decided references.
+
+LIVE HOLDS CARRIED FORWARD
+- school-deystvitelno-function-context — Grade-8 source presence confirmed; current-norm functional wording unresolved.
+- school-ni-fixed-idioms — PASS2 branch remains pending branch-by-branch review.
+Neither is counted in 137.
+
+PODYACHIY DECISION
+- school-podyachiy-separating-sign-conflict is NOT counted.
+- Current norm was already resolved in file 162: подьячий; подъячий is invalid provenance.
+- The conflict record is not converted into a new mastery unit without an exact independent source-route locator. This avoids inventing a denominator identity merely because a source error existed.
+
+CHECKPOINT METRIC
+WORKING DRABKINA-DERIVED PHYSICAL CANONICAL BANK = 137 UNIQUE UNITS.
+This is NOT yet the final Russian-school course denominator and NOT a readiness percentage.
+
+DO NOT DO AFTER RESUME
+- Do not rerun or reopen the 39-reference audit as if the 39 were missing units.
+- Do not count aliases, parents, old IDs, exclusions or HOLDs.
+- Do not mix FIPI routes into the school denominator.
+- Do not update Tilda/current trainer yet.
+
+EXACT NEXT ACTION AFTER RESUME
+Start completeness + current-norm audit of the 137-unit checkpoint against Rozenthal and the other authoritative internal Russian-language books. Carry the two HOLDs above as an explicit register. Add/reshape canonical identities only from source evidence. After that, create a separate current official FIPI OGE/EGE overlay, compute the exact final denominator, compare current trainer coverage, and only then move to implementation.
+
+FILES THAT DEFINE THIS PAUSE POINT
+- 215-RUSSIAN-SCHOOL-CANONICAL-BANK-MATERIALIZED-COUNT-5-11-v0.1.json
+- 216-RUSSIAN-SCHOOL-CANONICAL-UNMATERIALIZED-39-CLOSURE-REGISTER-v0.1.json
+- 217-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK33-MATERIALIZED-GAPS-v0.1.json
+- 218-RUSSIAN-SCHOOL-CANONICAL-DENOMINATOR-CHECKPOINT-HANDOFF.txt
