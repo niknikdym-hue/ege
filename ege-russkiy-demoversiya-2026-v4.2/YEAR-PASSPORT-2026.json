@@ -15,92 +15,26 @@
   "essay_max_score": 22,
   "total_max_score": 50,
   "partial_scoring": {
-    "8": {
-      "max": 2,
-      "one_or_two_wrong_positions": 1
-    },
-    "22": {
-      "max": 2,
-      "one_or_two_wrong_positions": 1
-    }
+    "8": {"max": 2, "one_or_two_wrong_positions": 1},
+    "22": {"max": 2, "one_or_two_wrong_positions": 1}
   },
-  "order_insensitive_tasks": [
-    2,
-    3,
-    4,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    23,
-    24,
-    26
-  ],
-  "ordered_tasks": [
-    8,
-    22
-  ],
-  "or_variant_tasks": {
-    "6": 2,
-    "13": 2,
-    "14": 3,
-    "15": 2,
-    "21": 3,
-    "23": 2,
-    "24": 2
-  },
-  "essay_criteria": {
-    "K1": 1,
-    "K2": 3,
-    "K3": 2,
-    "K4": 1,
-    "K5": 2,
-    "K6": 1,
-    "K7": 3,
-    "K8": 3,
-    "K9": 3,
-    "K10": 3
-  },
-  "required_t123_blocks": [
-    "T123-01",
-    "T123-02",
-    "T123-03",
-    "T123-04",
-    "T123-05",
-    "T123-06",
-    "T123-07"
-  ],
+  "order_insensitive_tasks": [2,3,4,9,10,11,12,13,14,15,16,17,18,19,20,21,23,24,26],
+  "ordered_tasks": [8,22],
+  "or_variant_tasks": {"6":2,"13":2,"14":3,"15":2,"21":3,"23":2,"24":2},
+  "essay_criteria": {"K1":1,"K2":3,"K3":2,"K4":1,"K5":2,"K6":1,"K7":3,"K8":3,"K9":3,"K10":3},
+  "required_t123_blocks": ["T123-01","T123-02","T123-03","T123-04","T123-05","T123-06","T123-07"],
   "task27_review": {
-    "modes": [
-      "paper",
-      "demo"
-    ],
+    "modes": ["paper","demo"],
     "demo_after_finish": "frozen_read_only",
     "paper_after_finish": "editable_transfer",
     "language_assistance": "disabled_in_demo",
-    "analysis_label": "preliminary_automatic_check",
-    "findings": [
-      "confirmed",
-      "possible",
-      "technical"
-    ],
+    "analysis_label": "student_facing_preliminary_check",
+    "internal_findings": ["confirmed","possible","technical"],
+    "student_visible_internal_terms": false,
     "built_in_context_dependent_findings": "possible_only",
     "built_in_confirmed_policy": "none_without_separate_unambiguous_validation",
     "technical_spacing_is_k8": false,
-    "confirmed_hard_caps": {
-      "1-2": 2,
-      "3-4": 1,
-      "5+": 0
-    },
+    "confirmed_hard_caps": {"1-2":2,"3-4":1,"5+":0},
     "possible_changes_cap": false,
     "zero_findings_auto_score": false,
     "self_assessment_scale": "0-22",
@@ -109,70 +43,30 @@
     "criterion_help": "expandable guidance for K1-K10",
     "displayed_demo_total": "short score + essay self-assessment, max 50, labeled as based on user assessment",
     "multiple_scan_files": true,
+    "scan_zoom": true,
+    "scan_persistence": "local session only; reattach after reload",
     "explicit_post_exam_text_check": true,
-    "spelling_check": "Yandex Speller on explicit user action; candidates remain possible only"
+    "check_trigger": "explicit_button_only_after_finish",
+    "typing_behavior": "save_text_and_update_word_count_only; do_not_analyze",
+    "analysis_invalidated_on_edit": true,
+    "spelling_check": "Yandex Speller on explicit user action; candidates remain possible only",
+    "spelling_state_key": "eksamio_ege_russian_demo_2026_v4_2_spelling_check",
+    "spelling_state_scope": "current_attempt_startedAt_token",
+    "finding_highlight": "red for non-empty confirmed/error block; amber for non-empty advisory/check block; neutral when empty",
+    "check_summary": "combined attention count across local advisory findings, technical notices and spelling candidates; no no-errors guarantee",
+    "external_check_disclosure": "essay text is sent to Yandex Speller only after explicit button; photo/scan files are not sent"
   },
   "storage_key": "eksamio_ege_russian_demo_2026_v4_1",
   "task_schemas": {
-    "26": {
-      "interaction": "sentence_number_set",
-      "options": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25
-      ],
-      "answer_tokens": [
-        21
-      ]
-    }
+    "26": {"interaction":"sentence_number_set","options":[17,18,19,20,21,22,23,24,25],"answer_tokens":[21]}
   },
   "interaction_map": {
-    "single_word": [
-      1,
-      5,
-      6,
-      7
-    ],
-    "multiple_choice_set": [
-      2,
-      3,
-      4,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      16,
-      21,
-      23,
-      24
-    ],
-    "matching_sequence": [
-      8,
-      22
-    ],
-    "punctuation_position_set": [
-      15,
-      17,
-      18,
-      19,
-      20
-    ],
-    "strict_phrase": [
-      25
-    ],
-    "sentence_number_set": [
-      26
-    ],
-    "essay_expert_only": [
-      27
-    ]
+    "single_word": [1,5,6,7],
+    "multiple_choice_set": [2,3,4,9,10,11,12,13,14,16,21,23,24],
+    "matching_sequence": [8,22],
+    "punctuation_position_set": [15,17,18,19,20],
+    "strict_phrase": [25],
+    "sentence_number_set": [26],
+    "essay_expert_only": [27]
   }
 }
