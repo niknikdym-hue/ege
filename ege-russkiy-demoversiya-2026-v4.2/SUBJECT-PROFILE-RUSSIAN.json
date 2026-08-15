@@ -43,10 +43,18 @@
     ],
     "essay_self_assessment_scale": "0-22 only",
     "official_total": "official expert assessment remains conceptually distinct from the displayed demo result",
-    "essay_criterion_help": "optional expandable student-facing guidance for K1-K10, aligned to 2026 criteria",
-    "displayed_demo_total": "after essay self-assessment: tasks 1-26 score + essay self-assessment, out of 50; clearly labeled as based on user essay assessment",
+    "essay_criterion_help": "optional expandable student-facing guidance for K1-K10, aligned to the current year's criteria",
+    "displayed_demo_total": "after essay self-assessment: short-part score + essay self-assessment, out of the current year's total; clearly labeled as based on user essay assessment",
     "task27_multiple_scan_files": true,
-    "task27_spelling_check": "explicit user action; spelling candidates are advisory and never auto-confirmed"
+    "task27_spelling_check": "explicit user action; spelling candidates are advisory and never auto-confirmed",
+    "student_facing_copy": "plain Russian; no internal analyzer terms such as confirmed/possible/findings/hard cap in student UI",
+    "task27_check_trigger": "explicit button only; typing/editing saves text and updates word count but performs no analysis",
+    "task27_analysis_invalidation": "any edit after a check resets analysis/results for K7-K10 until the button is pressed again",
+    "task27_check_state_scope": "spelling-check status is bound to the current attempt startedAt token and must not leak into a new attempt",
+    "task27_external_check_disclosure": "before/near the check button state that essay text is sent to Yandex Speller for spelling; images/scans are not sent",
+    "task27_findings_visual_state": "confirmed-error block highlighted red only when non-empty; advisory/check block highlighted amber only when non-empty",
+    "task27_scan_files": "multiple images/PDFs; images can be enlarged; files remain local and are not persisted across reload",
+    "task27_check_summary": "count all attention items produced by the combined local/advisory layer, not only external spelling rows; never claim that no errors exist"
   },
   "required_regression_tests": [
     "all official alternatives",
@@ -61,11 +69,18 @@
     "reload persistence",
     "storage failure",
     "mobile widths 320/360/390/768/1280",
-    "real PREVIEW plus T123-06",
+    "real PREVIEW plus current Task27 T123 blocks",
     "K7-K10 hard cap tampering",
-    "adjacent and context-dependent repetitions remain possible, never confirmed",
+    "adjacent and context-dependent repetitions remain advisory, never auto-confirmed",
     "space before punctuation remains technical and creates no K8 cap",
     "demo frozen essay versus paper transferred text",
-    "new attempt clears stale task27 review state while running/finished reload preserves it"
+    "new attempt clears stale task27 review state while running/finished reload preserves it",
+    "typing/transferring essay produces zero findings until explicit check button",
+    "editing after check invalidates K7-K10 analysis and requires re-check",
+    "new attempt cannot inherit spelling-check completion/status from previous attempt",
+    "combined check status counts local K8-K10/technical notices together with spelling candidates",
+    "multiple scan pages and per-page zoom",
+    "student UI hides internal analyzer terminology while internal scoring invariants remain enforced",
+    "whole-result card equals short-part score plus completed essay self-assessment and is labeled as user assessment"
   ]
 }
