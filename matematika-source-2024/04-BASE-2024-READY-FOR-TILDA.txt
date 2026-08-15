@@ -1,27 +1,44 @@
 EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2024
-RELEASE STATUS / TILDA HANDOFF — FULL RECHECK
-Дата обновления: 2026-08-14
+RELEASE STATUS / TILDA HANDOFF — SOURCE-LOCKED FULL RECHECK
+Дата обновления: 2026-08-15
 
-STATUS: READY_FOR_TILDA_FULL_RECHECK
+STATUS: READY_FOR_TILDA_SOURCE_LOCKED_FULL_RECHECK
 READY_FOR_TILDA: YES
 LIVE_GO: NO
 
 ВАЖНО
 Все прежние пакеты 2024, основанные на reconstructed SVG/HTML visuals, остаются ОТОЗВАННЫМИ.
-Разрешён к загрузке только новый пакет полного recheck:
+После дополнительного независимого visual-source аудита актуальным считается только новый source-locked пакет:
 ege-matematika-baza-demoversiya-2024-v1.0.zip
-SHA256: 9d050eb4eb9e9bce5990345654e0efb9f7f3d924905f2bbd55b53911dd77a341
-GitHub Actions run: 31822909411 — SUCCESS
-Artifact ID: 9227693678
+SHA256: 280f72d4ae3ca4a108d1882d62958a8bd907afaad5faaa0bc106a0dd599a44d5
+GitHub Actions run: 31900360657 — SUCCESS
+Artifact ID: 9250912054
+Run head SHA: b1bd73343bdc7cff686311eaf97bb0cf8b936a51
+
+OFFICIAL SOURCE LOCK
+Источник визуалов и условий:
+matematika-source-2024/ege-2024-matematika-baza-demoversiya.pdf
+SHA256: 7e7111654239dbf17c73786bccc9109f2f0f05d80039cfdeca114e83f67f5546
 
 SOURCE / VISUAL LOCK
 - 21 заданий, 180 минут, максимум 21 первичный балл, 52 официальных примера;
 - 52/52 text/source trace PASS;
-- 41/41 meaningful visual/table/formula assets — прямые source crops/renders официального PDF;
+- 23/23 используемых printed source-evidence pages заново отрендерены из указанного PDF и совпали точно;
+- 41/41 meaningful visual/table/formula/diagram assets — точные прямые crop официального PDF;
 - 41/41 pixel fidelity PASS;
-- meaningful reconstructed source visuals = 0;
+- 41/41 изображений, реально встроенных в T123, byte-identical соответствующим проверенным source-crop assets;
+- 4/4 справочных страницы — прямые source renders и byte-identical в T123;
+- reconstructed SVG/Canvas source visuals = 0;
+- никакой ручной перерисовки, HTML/SVG/Canvas-реконструкции или визуального «улучшения» официального содержания не допускается;
 - строка ФИПИ «Ответ: ______» и линия ответа в условия не переносятся;
 - системное поле ответа Эксамио остаётся отдельным интерактивным control.
+
+НОВЫЙ ОБЯЗАТЕЛЬНЫЙ CI GATE
+matematika-source-2024/scripts/audit_visual_source_chain_2024.py
+Проверяет цепочку:
+repository PDF -> fresh source render -> exact crop -> package asset -> T123 embedded bytes -> task reference.
+Gate запускается до freeze и повторно после чистой распаковки frozen ZIP.
+Любое несовпадение = FAIL / пакет не выдаётся.
 
 ANSWER SOURCE ANOMALY
 В официальной таблице ответов есть документированная аномалия 15.3: число 9 визуально стоит в строке 14 / пример 3, которого у задания 14 нет. По самой печатной странице с условиями task 14 имеет 2 примера, task 15 — 3; задача 15.3 про 24 га и отношение 5:3 имеет ответ 9. Аномалия сохранена в audit record и не замаскирована.
@@ -32,10 +49,12 @@ TILDA INSTALLATION
 3. Вставить строго по порядку T123-01 ... T123-18.
 4. Между этими T123 не вставлять другие блоки.
 5. Шапка и футер подключаются отдельно.
-6. Ничего не «улучшать» и не перерисовывать после gate.
+6. Картинки отдельно в Tilda загружать НЕ нужно: проверенные source-crop WEBP уже встроены в T123 как base64.
+7. Ничего не «улучшать», не дорисовывать и не перерисовывать после gate.
 
 ПРОВЕРКИ ФИНАЛЬНОГО ПАКЕТА
 - full source-only rebuild from current main — PASS;
+- strict visual source chain before freeze — PASS;
 - browser correct+wrong 52/52 — PASS;
 - full attempt 21/21 — PASS;
 - reload persistence — PASS;
@@ -45,6 +64,7 @@ TILDA INSTALLATION
 - visual regression/fidelity — PASS;
 - independent audit — PASS;
 - frozen ZIP integrity — PASS;
+- strict visual source chain after clean ZIP extraction — PASS;
 - full regression after clean ZIP extraction — PASS.
 
 ПОСЛЕ ПУБЛИКАЦИИ
@@ -56,3 +76,4 @@ TILDA INSTALLATION
 SOURCE GATE: 01-BASE-2024-SOURCE-GATE-STATUS.txt
 CURRENT CHECKPOINT: 02-BASE-2024-CURRENT-CHECKPOINT.txt
 FINAL REPORT: 06-BASE-2024-FULL-RECHECK-FINAL-REPORT.txt
+VISUAL SOURCE AUDIT SCRIPT: scripts/audit_visual_source_chain_2024.py
