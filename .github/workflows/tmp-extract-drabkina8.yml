@@ -20,16 +20,17 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-rus
           mkdir -p /tmp/dr8-quality/images /tmp/dr8-quality/ocr
-          # Representative pages: title/bibliography + first rule page of every major Grade-8 block
-          PAGES='2 3 10 19 27 30 34 44 46 50 51 52 58 67 69 72 79 87 91 94 98 99 104 107 121'
+          # Exact source pages used for Grade-8 route evidence and quality control.
+          # Includes first and continuation rule pages for every major block, plus title/TOC.
+          PAGES='2 3 10 19 20 27 30 32 33 34 36 37 38 40 41 42 44 45 46 48 50 51 52 54 55 58 62 67 68 69 72 73 74 75 76 77 79 84 87 90 91 92 93 94 96 98 99 100 103 104 105 107 108 121'
           for p in $PAGES; do
             pdftoppm -f "$p" -l "$p" -singlefile -png -r 300 "$SRC" "/tmp/dr8-quality/images/p$p" >/dev/null 2>&1
             tesseract "/tmp/dr8-quality/images/p$p.png" "/tmp/dr8-quality/ocr/p${p}-psm6" -l rus --psm 6 >/dev/null 2>&1 || true
             tesseract "/tmp/dr8-quality/images/p$p.png" "/tmp/dr8-quality/ocr/p${p}-psm3" -l rus --psm 3 >/dev/null 2>&1 || true
             echo "===== PDF-$p / PSM6 ====="
-            sed -n '1,180p' "/tmp/dr8-quality/ocr/p${p}-psm6.txt" || true
+            sed -n '1,220p' "/tmp/dr8-quality/ocr/p${p}-psm6.txt" || true
             echo "===== PDF-$p / PSM3 ====="
-            sed -n '1,180p' "/tmp/dr8-quality/ocr/p${p}-psm3.txt" || true
+            sed -n '1,220p' "/tmp/dr8-quality/ocr/p${p}-psm3.txt" || true
           done
       - name: Upload exact-page evidence for visual audit
         uses: actions/upload-artifact@v4
