@@ -1,0 +1,29 @@
+FINAL ALGORITHM AUDIT — EGE RUSSIAN 2026 v4.2
+DATE: 2026-08-15
+STATUS: PASS (LOCAL RUNTIME)
+
+FLOW VERIFIED
+A. Start: fresh state, one OR variant per position, 210-minute timer.
+B. Running: autosave, reload persistence, no answers/explanations shown.
+C. Finish: 1–26 score automatically; Task27 handled separately.
+D1. Demo essay: frozen read-only after finish; no analysis until explicit check.
+D2. Paper essay: multipage local scans + manual transfer; typing does not analyze.
+E. Check button: local advisory analyzer + Yandex Speller spelling; external transfer disclosed.
+F. Findings: red confirmed/error, amber advisory; technical separate; no automatic perfect K7–K10.
+G. Edit after check: analysis invalidated, K7–K10 must be checked again.
+H. Criteria: K1–K10 help; zero-reason gate; K1→K2/K3 dependency; 2026 caps.
+I. Result: essay 0–22; whole displayed result 0–50 = 1–26 + essay self-assessment.
+J. New attempt: core/review/spelling status cannot leak from prior attempt.
+K. Responsive/browser: regression PASS.
+
+TESTS
+204 data + 24 scorer + 27 visual + 54 Task27 unit + 6 reset + Task27 browser + general browser = PASS.
+
+ARCHITECTURAL FIXES FOUND BY THIS AUDIT
+- spelling-check UI state now scoped to current startedAt token;
+- check completion message now aggregates local advisory/technical plus spelling candidates and never claims the essay is error-free.
+
+RULE TRANSFER
+Permanent cross-year rules are stored in root file:
+RUSSKIY-EGE-DEMOVERSII-REGLAMENT-SOCHINENIYA-I-PROVERKI.md
+Each new year must re-verify official task count, duration, score maxima, zero gates, K1–K10 wording/scales/dependencies and source texts. UX/state/privacy invariants may be reused only after that year gate.
