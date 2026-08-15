@@ -1,0 +1,247 @@
+<script>
+(function(){
+  "use strict";
+
+  var ROOT_ID="ege-demo-2025";
+  var STORAGE_KEY="eksamio_ege_russian_demo_2025_v1_0_0";
+  var DURATION_MS=210*60*1000;
+  var LETTERS=["А","Б","В","Г","Д","Е","Ж","З"];
+  var TASK_SCHEMAS={26:{interaction:"sentence_numbers",options:["33","34","35","36","37","38","39","40","41"],answerTokens:["35"]}};
+
+  function byId(id){return document.getElementById(id);}
+  function parseData(id){var el=byId(id);if(!el)throw new Error("Не найден блок данных: "+id);return JSON.parse(el.textContent);}
+  function mergeData(){
+    var chunks=[parseData("edemo-data-1"),parseData("edemo-data-2"),parseData("edemo-data-3")],sources={},tasks=[];
+    chunks.forEach(function(c){Object.assign(sources,c.sources||{});tasks=tasks.concat(c.tasks||[]);});
+    tasks.sort(function(a,b){return a.number-b.number;});
+    return{sources:sources,tasks:tasks};
+  }
+  function freshState(){return{version:1,essayShortBand:false,status:"idle",current:1,answers:{},flagged:{},variantChoices:{},startedAt:null,endsAt:null,completedAt:null,shortScore:0,essayScores:{},essayZeroReasons:{},essayEligibilityConfirmed:false,essayScore:null};}
+  function normalizeState(raw){
+    var next=Object.assign(freshState(),raw||{});
+    next.answers=next.answers&&typeof next.answers==="object"?next.answers:{};
+    next.flagged=next.flagged&&typeof next.flagged==="object"?next.flagged:{};
+    next.variantChoices=next.variantChoices&&typeof next.variantChoices==="object"?next.variantChoices:{};
+    next.essayScores=next.essayScores&&typeof next.essayScores==="object"?next.essayScores:{};
+    next.essayZeroReasons=next.essayZeroReasons&&typeof next.essayZeroReasons==="object"?next.essayZeroReasons:{};
+    return next;
+  }
+  function loadState(){try{var raw=localStorage.getItem(STORAGE_KEY);return raw?normalizeState(JSON.parse(raw)):freshState();}catch(e){return freshState();}}
+  function showStorageWarning(){var x=byId("edemo-storage-warning");if(x)x.setAttribute("data-show","true");}
+  function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));return true;}catch(e){showStorageWarning();return false;}}
+  function escapeHtml(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function strictDigits(v){
+    if(Array.isArray(v)){if(!v.length||v.some(function(x){return !/^\d$/.test(String(x));}))return null;return v.join("");}
+    var raw=String(v==null?"":v).trim();return /^\d+$/.test(raw)?raw:null;
+  }
+  function strictSingleWord(v){
+    var raw=String(v==null?"":v).trim().toLowerCase();
+    if(!/^[а-яё]+$/i.test(raw))return null;
+    return raw.replace(/ё/g,"е");
+  }
+  function strictPhrase(v){
+    var raw=String(v==null?"":v).trim().toLowerCase();
+    if(!/^[а-яё]+(?: [а-яё]+)*$/i.test(raw))return null;
+    return raw.replace(/ё/g,"е");
+  }
+  function technicalWordCount(v){
+    var t=String(v||"").replace(/\u00A0/g," ");
+    t=t.replace(/(?:[А-ЯЁA-Z]\.\s*){1,2}[А-ЯЁA-Z][а-яёa-z-]+/g," ИМЯ ");
+    var m=t.match(/[А-ЯЁа-яёA-Za-z]+(?:-[А-ЯЁа-яёA-Za-z]+)*/g);return m?m.length:0;
+  }
+  function taskOptionValues(t){
+    if(TASK_SCHEMAS[t.number]&&TASK_SCHEMAS[t.number].options)return TASK_SCHEMAS[t.number].options.slice();
+    var html=String(t.promptHtml||""),li=html.match(/<li(?:\s[^>]*)?>/gi);
+    if(li&&li.length)return Array.from({length:li.length},function(_,i){return String(i+1);});
+    var markers=[],re=/\((\d+)\)/g,m;while((m=re.exec(html)))if(markers.indexOf(m[1])===-1)markers.push(m[1]);
+    if(markers.length)return markers.sort(function(a,b){return Number(a)-Number(b);});
+    var max=5;[t.answer].concat((t.variants||[]).map(function(v){return v.answer;})).forEach(function(a){String(a||"").split("").forEach(function(d){if(/\d/.test(d))max=Math.max(max,Number(d));});});
+    return Array.from({length:max},function(_,i){return String(i+1);});
+  }
+  function valueDisplay(v){return Array.isArray(v)?v.filter(Boolean).join(""):String(v==null?"":v);}
+  function isFilled(t,v){
+    if(t.kind==="ordered_sequence")return Array.isArray(v)&&v.length===String(t.answer).length&&v.every(function(x){return /^\d$/.test(String(x));});
+    if(t.kind==="unordered_digits")return Array.isArray(v)&&v.length>0;
+    return String(v==null?"":v).trim().length>0;
+  }
+  function resolvedTask(baseTask){
+    if(!baseTask.variants||!baseTask.variants.length)return baseTask;
+    var idx=Number(state.variantChoices[baseTask.number]);
+    if(!Number.isInteger(idx)||idx<0||idx>=baseTask.variants.length)idx=0;
+    return Object.assign({},baseTask,baseTask.variants[idx],{variantIndex:idx,variantCount:baseTask.variants.length});
+  }
+  function ensureVariantChoices(randomizeMissing){
+    tasks.forEach(function(t){
+      if(!t.variants||!t.variants.length)return;
+      var idx=Number(state.variantChoices[t.number]);
+      if(!Number.isInteger(idx)||idx<0||idx>=t.variants.length){state.variantChoices[t.number]=randomizeMissing?Math.floor(Math.random()*t.variants.length):0;}
+    });
+  }
+  function scoreTask(t,v){
+    if(t.kind==="essay")return 0;
+    if(t.kind==="word"){
+      var got=strictSingleWord(v);if(got===null)return 0;
+      var accepted=[t.answer].concat(t.altAnswers||[]).map(strictSingleWord);
+      return accepted.indexOf(got)!==-1?t.maxScore:0;
+    }
+    if(t.kind==="word_compact"){
+      var gotPhrase=strictPhrase(v);if(gotPhrase===null)return 0;
+      var acceptedPhrases=[t.answer].concat(t.altAnswers||[]).map(strictPhrase);
+      return acceptedPhrases.indexOf(gotPhrase)!==-1?t.maxScore:0;
+    }
+    if(t.kind==="ordered_sequence"){
+      var raw=strictDigits(v),expected=String(t.answer);if(raw===null)return 0;
+      if(raw===expected)return t.maxScore;if(raw.length!==expected.length)return 0;
+      var diff=0;for(var i=0;i<expected.length;i++)if(raw[i]!==expected[i])diff++;
+      return diff===1||diff===2?1:0;
+    }
+    if(t.kind==="unordered_digits"){
+      var schema=TASK_SCHEMAS[t.number];
+      if(schema&&schema.interaction==="sentence_numbers"){
+        var gotTokens=Array.isArray(v)?v.map(String):(/^\d+$/.test(String(v==null?"":v).trim())?[String(v).trim()]:null);
+        if(!gotTokens)return 0;
+        var expectedTokens=schema.answerTokens.slice();
+        if(gotTokens.length!==expectedTokens.length||new Set(gotTokens).size!==gotTokens.length)return 0;
+        return gotTokens.slice().sort().join("|")===expectedTokens.slice().sort().join("|")?t.maxScore:0;
+      }
+      var rawSet=strictDigits(v),expectedSet=String(t.answer);if(rawSet===null||rawSet.length!==expectedSet.length)return 0;
+      if(new Set(rawSet.split("")).size!==rawSet.length)return 0;
+      return rawSet.split("").sort().join("")===expectedSet.split("").sort().join("")?t.maxScore:0;
+    }
+    return 0;
+  }
+  function correctDisplay(t){var all=[t.answer].concat(t.altAnswers||[]);return all.map(function(x){return t.number===25&&x==="всвоюочередь"?"в свою очередь":x;}).filter(function(x,i,a){return a.indexOf(x)===i;}).join("; ");}
+  function formatTime(ms){var total=Math.max(0,Math.floor(ms/1000)),h=Math.floor(total/3600),m=Math.floor(total%3600/60),s=total%60;return[h,m,s].map(function(x){return String(x).padStart(2,"0");}).join(":");}
+
+  var data,tasks,sources,state,root,timerHandle;
+  function currentBaseTask(){return tasks.find(function(t){return t.number===state.current;})||tasks[0];}
+  function currentTask(){return resolvedTask(currentBaseTask());}
+  function filledCount(){return tasks.filter(function(base){var t=resolvedTask(base);return isFilled(t,state.answers[t.number]);}).length;}
+  function updateRootState(){root.setAttribute("data-state",state.status==="running"?"running":state.status==="finished"?"finished":"idle");}
+  function updateStartControls(){
+    var start=byId("edemo-start"),resume=byId("edemo-resume"),reset=byId("edemo-reset-start");
+    [start,resume,reset].forEach(function(x){if(x)x.classList.add("edemo-hidden");});
+    if(state.status==="running"){resume.classList.remove("edemo-hidden");reset.classList.remove("edemo-hidden");}
+    else if(state.status==="finished"){reset.classList.remove("edemo-hidden");}
+    else start.classList.remove("edemo-hidden");
+  }
+  function buildNav(){
+    var nav=byId("edemo-nav");nav.innerHTML="";
+    tasks.forEach(function(t){var b=document.createElement("button");b.type="button";b.className="edemo-nav-btn";b.textContent=t.number;b.setAttribute("aria-label","Перейти к заданию "+t.number);b.addEventListener("click",function(){state.current=t.number;saveState();renderTask();});nav.appendChild(b);});
+  }
+  function updateNav(){
+    var bs=byId("edemo-nav").querySelectorAll(".edemo-nav-btn");
+    bs.forEach(function(b,i){var base=tasks[i],t=resolvedTask(base),n=base.number;b.setAttribute("aria-current",n===state.current?"true":"false");b.setAttribute("data-filled",isFilled(t,state.answers[n])?"true":"false");b.setAttribute("data-flagged",state.flagged[n]?"true":"false");});
+    byId("edemo-progress-bar").style.width=Math.round(filledCount()/tasks.length*100)+"%";
+  }
+  function answerField(t){
+    var v=state.answers[t.number];
+    if(t.kind==="essay")return '<div class="edemo-answer"><label for="edemo-answer-input">Текст сочинения</label><textarea class="edemo-essay" id="edemo-answer-input" spellcheck="true">'+escapeHtml(v||"")+'</textarea><p class="edemo-answer-help">Технический счётчик: <span class="edemo-word-count" id="edemo-live-word-count">'+technicalWordCount(v||"")+'</span>. Это ориентир, а не официальный подсчёт: сокращения не учитываются, а при частичном переписывании исходного текста считаются только собственные слова участника.</p><p class="edemo-save-status" id="edemo-save-status">Ответ сохраняется автоматически.</p></div>';
+    if(t.kind==="unordered_digits"){
+      var selected=Array.isArray(v)?v.map(String):[],values=taskOptionValues(t),html='<fieldset class="edemo-choice-fieldset"><legend>'+(t.number===26?'Выберите номер предложения':'Выберите все верные варианты')+'</legend><div class="edemo-choice-grid">';
+      values.forEach(function(n){html+='<label class="edemo-choice"><input type="checkbox" data-choice="'+n+'"'+(selected.indexOf(String(n))!==-1?' checked':'')+'><span>'+n+'</span></label>';});
+      return html+'</div><p class="edemo-answer-help">Порядок выбора не влияет на оценивание. Лишний или пропущенный номер делает ответ неверным.</p><p class="edemo-save-status" id="edemo-save-status">Ответ сохраняется автоматически.</p></fieldset>';
+    }
+    if(t.kind==="ordered_sequence"){
+      var arr=Array.isArray(v)?v.slice():[];var positions=String(t.answer).length,countOptions=taskOptionValues(t).length,rows='<div class="edemo-match-inputs" role="group" aria-label="Ответ по позициям">';
+      for(var j=0;j<positions;j++){var opts='<option value="">Выберите номер</option>';for(var k=1;k<=countOptions;k++)opts+='<option value="'+k+'"'+(String(arr[j]||"")===String(k)?' selected':'')+'>'+k+'</option>';rows+='<div class="edemo-match-row"><label for="edemo-match-'+j+'">'+LETTERS[j]+'</label><select id="edemo-match-'+j+'" data-match-index="'+j+'">'+opts+'</select></div>';}
+      return rows+'</div><p class="edemo-answer-help">Заполните каждую позицию А–Д. Порядок имеет значение.</p><p class="edemo-save-status" id="edemo-save-status">Ответ сохраняется автоматически.</p>';
+    }
+    return '<div class="edemo-answer"><label for="edemo-answer-input">Ответ</label><input class="edemo-input" id="edemo-answer-input" type="text" autocomplete="off" spellcheck="false" value="'+escapeHtml(v||"")+'"><p class="edemo-answer-help">Введите только требуемое слово или выражение. Знаки препинания, цифры и лишние внутренние пробелы не удаляются системой и делают ответ неверным.</p><p class="edemo-save-status" id="edemo-save-status">Ответ сохраняется автоматически.</p></div>';
+  }
+  function markSaved(){var x=byId("edemo-save-status");if(x)x.textContent="✓ Ответ сохранён автоматически";}
+  function bindAnswerControls(t){
+    if(t.kind==="unordered_digits"){
+      byId("edemo-task-stage").querySelectorAll("[data-choice]").forEach(function(box){box.addEventListener("change",function(){var chosen=[];byId("edemo-task-stage").querySelectorAll("[data-choice]:checked").forEach(function(x){chosen.push(x.getAttribute("data-choice"));});chosen.sort(function(a,b){return Number(a)-Number(b);});state.answers[t.number]=chosen;saveState();markSaved();updateNav();});});return;
+    }
+    if(t.kind==="ordered_sequence"){
+      byId("edemo-task-stage").querySelectorAll("[data-match-index]").forEach(function(sel){sel.addEventListener("change",function(){var arr=Array.isArray(state.answers[t.number])?state.answers[t.number].slice():Array(String(t.answer).length).fill("");arr[Number(sel.getAttribute("data-match-index"))]=sel.value;state.answers[t.number]=arr;saveState();markSaved();updateNav();});});return;
+    }
+    var input=byId("edemo-answer-input");input.addEventListener("input",function(){state.answers[t.number]=input.value;if(t.kind==="essay")byId("edemo-live-word-count").textContent=technicalWordCount(input.value);saveState();markSaved();updateNav();});
+  }
+  function renderTask(){
+    var t=currentTask(),src="";
+    if(t.sourceId&&sources[t.sourceId])src='<details class="edemo-source" open><summary><strong>'+escapeHtml(sources[t.sourceId].title)+'</strong></summary>'+sources[t.sourceId].html+'</details>';
+    var badge=t.variantCount?'<span class="ep-pill edemo-variant-badge">Официальный пример '+(t.variantIndex+1)+' из '+t.variantCount+'</span>':'';
+    byId("edemo-task-stage").innerHTML='<div class="edemo-task-head"><div><div class="edemo-task-number">Задание '+t.number+' из 27</div><h2 class="ep-section-title">'+escapeHtml(t.title)+'</h2></div><div class="ep-meta">'+badge+'<span class="ep-pill">'+t.maxScore+' '+(t.maxScore===1?'балл':'балла')+'</span></div></div>'+src+'<div class="edemo-task-prompt">'+t.promptHtml+'</div>'+answerField(t)+'<div class="edemo-task-actions"><div class="edemo-task-actions__group"><button class="ep-button ep-button--small ep-button--secondary" id="edemo-prev" type="button"'+(t.number===1?' disabled':'')+'>Предыдущее</button><button class="ep-button ep-button--small" id="edemo-next" type="button">'+(t.number===27?'Завершить экзамен':'Следующее')+'</button></div><div class="edemo-task-actions__group"><button class="ep-button ep-button--small ep-button--secondary" id="edemo-clear" type="button">Сбросить ответ</button><button class="ep-button ep-button--small ep-button--secondary" id="edemo-flag" type="button">'+(state.flagged[t.number]?'Снять отметку':'Отметить для возврата')+'</button></div></div>';
+    bindAnswerControls(t);
+    byId("edemo-prev").addEventListener("click",function(){if(t.number>1){state.current=t.number-1;saveState();renderTask();}});
+    byId("edemo-next").addEventListener("click",function(){if(t.number<27){state.current=t.number+1;saveState();renderTask();}else finishExam(false);});
+    byId("edemo-clear").addEventListener("click",function(){delete state.answers[t.number];saveState();renderTask();});
+    byId("edemo-flag").addEventListener("click",function(){state.flagged[t.number]=!state.flagged[t.number];saveState();renderTask();});
+    updateNav();window.scrollTo({top:Math.max(0,root.getBoundingClientRect().top+window.scrollY-20),behavior:"smooth"});
+  }
+  function startExam(){var now=Date.now();state=freshState();state.status="running";state.current=1;state.startedAt=now;state.endsAt=now+DURATION_MS;ensureVariantChoices(true);saveState();updateRootState();updateStartControls();buildNav();renderTask();startTimer();}
+  function resumeExam(){ensureVariantChoices(false);if(!state.endsAt||state.endsAt<=Date.now()){finishExam(true);return;}updateRootState();updateStartControls();buildNav();renderTask();startTimer();}
+  function startTimer(){clearInterval(timerHandle);function tick(){var left=(state.endsAt||0)-Date.now();byId("edemo-timer").textContent=formatTime(left);if(left<=0){clearInterval(timerHandle);finishExam(true);}}tick();timerHandle=setInterval(tick,1000);}
+  function calculateShortScore(){return tasks.filter(function(t){return t.number<=26;}).reduce(function(s,base){var t=resolvedTask(base);return s+scoreTask(t,state.answers[t.number]);},0);}
+
+  var criteria=[
+    {id:"K1",label:"К1. Позиция автора",max:1,html:"<ul><li><strong>1:</strong> позиция автора по поставленной проблеме сформулирована верно.</li><li><strong>0:</strong> позиция не сформулирована или сформулирована неверно. При К1 = 0 значения К2 и К3 принудительно равны 0.</li></ul>"},
+    {id:"K2",label:"К2. Комментарий к позиции автора",max:3,html:"<ul><li><strong>3:</strong> приведены два примера-иллюстрации из текста, пояснён каждый пример, указана и пояснена смысловая связь между ними.</li><li><strong>2:</strong> два примера и пояснение каждого есть, но смысловая связь не указана, указана неверно или не пояснена.</li><li><strong>1:</strong> приведён и пояснён один пример-иллюстрация.</li><li><strong>0:</strong> пример дан без пояснения; примеров нет; комментарий не опирается на текст; вместо комментария дан пересказ или большой фрагмент цитаты. Пример без пояснения при подсчёте не учитывается; фактические ошибки комментария учитываются также по К4.</li></ul>"},
+    {id:"K3",label:"К3. Собственное отношение и обоснование",max:2,html:"<ul><li><strong>2:</strong> отношение к позиции автора сформулировано и обосновано, приведён пример-аргумент из читательского, историко-культурного или жизненного опыта.</li><li><strong>1:</strong> отношение сформулировано и обосновано, но пример-аргумент отсутствует; либо пример есть, но отношение заявлено только формально.</li><li><strong>0:</strong> дано только формальное согласие/несогласие; нет обоснования; ответ не соответствует поставленной проблеме. Комикс, аниме, манга, фанфик, графический роман и компьютерная игра не принимаются как содержательная основа примера-аргумента.</li></ul>"},
+    {id:"K4",label:"К4. Фактическая точность речи",max:1,html:"<ul><li><strong>1:</strong> фактических ошибок нет.</li><li><strong>0:</strong> допущена одна фактическая ошибка или более.</li></ul>"},
+    {id:"K5",label:"К5. Логичность речи",max:2,html:"<ul><li><strong>2:</strong> логических ошибок нет.</li><li><strong>1:</strong> допущена одна или две логические ошибки.</li><li><strong>0:</strong> допущено три логические ошибки или более.</li></ul>"},
+    {id:"K6",label:"К6. Соблюдение этических норм",max:1,html:"<ul><li><strong>1:</strong> этических ошибок нет.</li><li><strong>0:</strong> используются экстремистские или иные запрещённые для несовершеннолетних материалы, примеры социально неприемлемого поведения, высказывания, нарушающие законодательство, нецензурная брань либо неоправданные иностранные слова, имеющие общеупотребительные русские аналоги и не закреплённые нормативными словарями.</li></ul>"},
+    {id:"K7",label:"К7. Орфографические нормы",max:3,html:"<ul><li><strong>3:</strong> ошибок нет.</li><li><strong>2:</strong> одна-две ошибки.</li><li><strong>1:</strong> три-четыре ошибки.</li><li><strong>0:</strong> пять ошибок или более.</li></ul>"},
+    {id:"K8",label:"К8. Пунктуационные нормы",max:3,html:"<ul><li><strong>3:</strong> ошибок нет.</li><li><strong>2:</strong> одна-две ошибки.</li><li><strong>1:</strong> три-четыре ошибки.</li><li><strong>0:</strong> пять ошибок или более.</li></ul>"},
+    {id:"K9",label:"К9. Грамматические нормы",max:3,html:"<ul><li><strong>3:</strong> ошибок нет.</li><li><strong>2:</strong> одна-две ошибки.</li><li><strong>1:</strong> три-четыре ошибки.</li><li><strong>0:</strong> пять ошибок или более.</li></ul>"},
+    {id:"K10",label:"К10. Речевые нормы",max:3,html:"<ul><li><strong>3:</strong> ошибок нет.</li><li><strong>2:</strong> одна-две ошибки.</li><li><strong>1:</strong> три-четыре ошибки.</li><li><strong>0:</strong> пять ошибок или более.</li></ul>"}
+  ];
+  var zeroReasons=[
+    {id:"under100",label:"После официального подсчёта в работе 99 слов или меньше."},
+    {id:"noTextSupport",label:"Сочинение написано без опоры на исходный текст."},
+    {id:"copiedOrRetold",label:"Работа представляет собой переписанный или пересказанный исходный текст без собственных комментариев."}
+  ];
+  function hasZeroReason(){return zeroReasons.some(function(r){return !!state.essayZeroReasons[r.id];});}
+  function essayAssessmentComplete(){return hasZeroReason()||(state.essayEligibilityConfirmed&&criteria.every(function(c){return Object.prototype.hasOwnProperty.call(state.essayScores,c.id);}));}
+  function computeEssayScore(){
+    if(hasZeroReason())return 0;
+    if(!state.essayEligibilityConfirmed)return null;
+    if(Object.prototype.hasOwnProperty.call(state.essayScores,"K1")&&Number(state.essayScores.K1)===0){state.essayScores.K2=0;state.essayScores.K3=0;}
+    if(!criteria.every(function(c){return Object.prototype.hasOwnProperty.call(state.essayScores,c.id);}))return null;
+    return criteria.reduce(function(sum,c){var value=Number(state.essayScores[c.id]);if(c.id==="K2"||c.id==="K3"){if(Number(state.essayScores.K1)===0)value=0;}var cap=(state.essayShortBand&&["K7","K8","K9","K10"].indexOf(c.id)!==-1)?2:c.max;return sum+Math.min(cap,Math.max(0,value));},0);
+  }
+  function buildCriteria(){
+    var w=byId("edemo-criteria");w.innerHTML="";
+    var gate=document.createElement("div");gate.className="ep-panel edemo-zero-gate";
+    gate.innerHTML='<p><strong>Шаг 1. Проверьте общие основания полного нуля</strong></p><p class="edemo-mini">Технический счётчик не принимает решение автоматически. При частичном переписывании исходного текста в объёме учитываются только собственные слова участника.</p>';
+    zeroReasons.forEach(function(r){var label=document.createElement("label");label.className="edemo-zero-option";label.innerHTML='<input type="checkbox" data-zero-reason="'+r.id+'"'+(state.essayZeroReasons[r.id]?' checked':'')+'><span>'+escapeHtml(r.label)+'</span>';gate.appendChild(label);});
+    var shortBand=document.createElement("label");shortBand.className="edemo-zero-option";shortBand.innerHTML='<input type="checkbox" id="edemo-short-band"'+(state.essayShortBand?' checked':'')+(hasZeroReason()?' disabled':'')+'><span>После официального подсчёта в работе 100–149 слов (для К7–К10 действует сниженная шкала: максимум 2 балла).</span>';gate.appendChild(shortBand);
+    var confirm=document.createElement("label");confirm.className="edemo-confirm-option";confirm.innerHTML='<input type="checkbox" id="edemo-eligibility-confirm"'+(state.essayEligibilityConfirmed?' checked':'')+(hasZeroReason()?' disabled':'')+'><span><strong>Подтверждаю:</strong> я проверил(а) объём по правилам ФИПИ, работу с исходным текстом и отсутствие полного пересказа; оснований полного нуля нет.</span>';gate.appendChild(confirm);w.appendChild(gate);
+    gate.querySelectorAll("[data-zero-reason]").forEach(function(box){box.addEventListener("change",function(){state.essayZeroReasons[box.getAttribute("data-zero-reason")]=box.checked;if(hasZeroReason()){state.essayEligibilityConfirmed=false;state.essayScores={};}state.essayScore=computeEssayScore();saveState();renderResultScores();buildCriteria();});});
+    var confirmBox=byId("edemo-eligibility-confirm");if(confirmBox)confirmBox.addEventListener("change",function(){state.essayEligibilityConfirmed=confirmBox.checked;state.essayScore=computeEssayScore();saveState();renderResultScores();buildCriteria();});
+    var shortBox=byId("edemo-short-band");if(shortBox)shortBox.addEventListener("change",function(){state.essayShortBand=shortBox.checked;state.essayScore=computeEssayScore();saveState();renderResultScores();buildCriteria();});
+    var blocked=hasZeroReason()||!state.essayEligibilityConfirmed;
+    if(hasZeroReason()){var danger=document.createElement("div");danger.className="ep-panel edemo-danger";danger.innerHTML="<p><strong>Отмечено основание полного нуля.</strong> Учебная самооценка сочинения равна 0/22; критерии заблокированы.</p>";w.appendChild(danger);}
+    else if(!state.essayEligibilityConfirmed){var note=document.createElement("div");note.className="ep-panel edemo-warning";note.innerHTML="<p>Критерии откроются после явного подтверждения проверки общих оснований нуля.</p>";w.appendChild(note);}
+    criteria.forEach(function(c){
+      var row=document.createElement("div"),has=Object.prototype.hasOwnProperty.call(state.essayScores,c.id),opts='<option value="">Не оценено</option>';
+      var rowMax=(state.essayShortBand&&["K7","K8","K9","K10"].indexOf(c.id)!==-1)?2:c.max;for(var i=0;i<=rowMax;i++)opts+='<option value="'+i+'"'+(has&&Number(state.essayScores[c.id])===i?' selected':'')+'>'+i+'</option>';
+      var dependency=(c.id==="K2"||c.id==="K3")&&Number(state.essayScores.K1)===0;
+      row.className="edemo-criterion";row.innerHTML='<div><label for="edemo-'+c.id+'"><strong>'+c.label+'</strong><br><span class="edemo-mini">Максимум: '+c.max+(dependency?' · автоматически 0 при К1 = 0':'')+'</span></label><details class="edemo-mini"><summary>Условия выставления баллов</summary>'+c.html+'</details></div><select id="edemo-'+c.id+'"'+(blocked||dependency?' disabled':'')+'>'+opts+'</select>';w.appendChild(row);
+      row.querySelector("select").addEventListener("change",function(e){if(e.target.value==="")delete state.essayScores[c.id];else state.essayScores[c.id]=Number(e.target.value);state.essayScore=computeEssayScore();saveState();renderResultScores();buildCriteria();});
+    });
+  }
+  function renderReview(){
+    var list=byId("edemo-review");list.innerHTML="";
+    tasks.filter(function(t){return t.number<=26;}).forEach(function(base){var t=resolvedTask(base),raw=state.answers[t.number],got=valueDisplay(raw)||"—",score=scoreTask(t,raw),ok=score===t.maxScore,item=document.createElement("div");item.className="edemo-review-item";item.setAttribute("data-correct",ok?"true":"false");item.innerHTML='<p><strong>Задание '+t.number+' · '+score+'/'+t.maxScore+'</strong>'+(t.variantCount?' <span class="edemo-mini">(пример '+(t.variantIndex+1)+' из '+t.variantCount+')</span>':'')+'</p><p>Ваш ответ: <strong>'+escapeHtml(got)+'</strong></p><p>Правильный ответ: <strong>'+escapeHtml(correctDisplay(t))+'</strong></p>'+(t.explanation?'<p>'+escapeHtml(t.explanation)+'</p>':'');list.appendChild(item);});
+  }
+  function renderResultScores(){
+    state.essayScore=computeEssayScore();byId("edemo-short-score").textContent=state.shortScore;byId("edemo-result-word-count").textContent=technicalWordCount(state.answers[27]||"");
+    if(state.essayScore===null){byId("edemo-essay-score").textContent="—";byId("edemo-essay-status").textContent="Самооценка не завершена";}
+    else{byId("edemo-essay-score").textContent=state.essayScore;byId("edemo-essay-status").textContent=hasZeroReason()?"0 баллов: отмечено основание полного нуля":"Учебная самооценка заполнена";}
+    byId("edemo-total-score").textContent="—";byId("edemo-total-status").textContent="Самооценка не формирует официальный общий балл";
+  }
+  function renderResult(){updateRootState();updateStartControls();byId("edemo-result-date").textContent=state.completedAt?new Date(state.completedAt).toLocaleString("ru-RU"):"";renderResultScores();buildCriteria();renderReview();window.scrollTo({top:Math.max(0,root.getBoundingClientRect().top+window.scrollY-20),behavior:"smooth"});}
+  function finishExam(auto){if(state.status!=="running"&&state.status!=="finished")return;if(!auto&&!window.confirm("Завершить попытку? После этого станут доступны правильные ответы."))return;clearInterval(timerHandle);state.status="finished";state.completedAt=state.completedAt||Date.now();state.shortScore=calculateShortScore();state.essayScore=computeEssayScore();saveState();renderResult();}
+  function resetState(){state=freshState();try{localStorage.removeItem(STORAGE_KEY);}catch(e){}window.location.reload();}
+  function init(){
+    root=byId(ROOT_ID);if(!root)return;data=mergeData();tasks=data.tasks;sources=data.sources;state=loadState();ensureVariantChoices(false);updateRootState();updateStartControls();
+    byId("edemo-start").addEventListener("click",startExam);byId("edemo-resume").addEventListener("click",resumeExam);byId("edemo-reset-start").addEventListener("click",function(){if(window.confirm("Удалить сохранённые ответы и начать заново?"))resetState();});byId("edemo-finish-top").addEventListener("click",function(){finishExam(false);});byId("edemo-restart").addEventListener("click",function(){if(window.confirm("Удалить результат и пройти заново?"))resetState();});
+    if(state.status==="running")resumeExam();else if(state.status==="finished")renderResult();
+  }
+  window.__edemoRussian2025v100={strictDigits:strictDigits,strictSingleWord:strictSingleWord,strictPhrase:strictPhrase,technicalWordCount:technicalWordCount,scoreTask:scoreTask,computeEssayScore:function(input){var old=state;state=normalizeState(input);var result=computeEssayScore();state=old;return result;},storageKey:STORAGE_KEY};
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>

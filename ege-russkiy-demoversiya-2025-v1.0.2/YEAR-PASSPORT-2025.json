@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0",
+  "subject": "russian_language",
+  "exam": "EGE",
+  "source_year": 2025,
+  "public_url": "/ege/russkiy/demoversiya/2025/",
+  "visible_year_in_interface": true,
+  "official_source": "FIPI demo/specification/codifier package for EGE Russian 2025",
+  "official_archive_url": "https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2025/ru_11_2025.zip",
+  "tasks": 27,
+  "duration_minutes": 210,
+  "short_tasks": "1-26",
+  "essay_task": 27,
+  "short_max_score": 28,
+  "essay_max_score": 22,
+  "total_max_score": 50,
+  "partial_scoring": {
+    "8": {
+      "max": 2,
+      "one_or_two_wrong_positions": 1
+    },
+    "22": {
+      "max": 2,
+      "one_or_two_wrong_positions": 1
+    }
+  },
+  "or_variant_tasks": {
+    "6": 2,
+    "13": 2,
+    "14": 3,
+    "15": 2,
+    "21": 3,
+    "23": 2,
+    "24": 2
+  },
+  "essay_word_rules": {
+    "99_or_less": "0/22",
+    "100_149": "K7-K10 reduced, max 2 each; 2 only with no errors, 1 with no more than two errors",
+    "150_or_more": "standard criteria"
+  },
+  "essay_criteria": {
+    "K1": 1,
+    "K2": 3,
+    "K3": 2,
+    "K4": 1,
+    "K5": 2,
+    "K6": 1,
+    "K7": 3,
+    "K8": 3,
+    "K9": 3,
+    "K10": 3
+  },
+  "storage_key": "eksamio_ege_russian_demo_2025_v1_0_0",
+  "task_schemas": {
+    "26": {
+      "interaction": "sentence_number_set",
+      "options": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "answer_tokens": [
+        35
+      ]
+    }
+  },
+  "interaction_map": {
+    "single_word": [
+      1,
+      5,
+      6,
+      7
+    ],
+    "multiple_choice_set": [
+      2,
+      3,
+      4,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      16,
+      21,
+      23,
+      24
+    ],
+    "matching_sequence": [
+      8,
+      22
+    ],
+    "punctuation_position_set": [
+      15,
+      17,
+      18,
+      19,
+      20
+    ],
+    "strict_phrase": [
+      25
+    ],
+    "sentence_number_set": [
+      26
+    ],
+    "essay_expert_only": [
+      27
+    ]
+  }
+}
