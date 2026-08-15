@@ -1,4 +1,4 @@
-name: Temporary OCR Grade 8 remaining evidence
+name: Temporary OCR Grade 8 evidence quality gate
 
 on:
   push:
@@ -13,14 +13,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: OCR selected exact-source pages
+      - name: Render and OCR representative exact-source pages
         run: |
           set -euo pipefail
           SRC='eksamio-learning-engine/russkiy-knigi/1400_Russkiy_yaz._8kl._Prakt._po_orfogr._Drabkina_2018_120s.pdf'
           sudo apt-get update -qq
           sudo apt-get install -y -qq poppler-utils tesseract-ocr tesseract-ocr-rus
-          mkdir -p /tmp/dr8
-          for p in $(seq 94 105) 121; do
-            pdftoppm -f "$p" -l "$p" -singlefile -jpeg -r 240 "$SRC" "/tmp/dr8/p$p" >/dev/null 2>&1
-            tesseract "/tmp/dr8/p$p.jpg" stdout -l rus --psm 6 2>/dev/null | sed "s/^/[PDF-$p] /"
+          mkdir -p /tmp/dr8-quality/images /tmp/dr8-quality/ocr
+          # Representative pages: title/bibliography + first rule page of every major Grade-8 block
+          PAGES='2 3 10 19 27 30 34 44 46 50 51 52 58 67 69 72 79 87 91 94 98 99 104 107 121'
+          for p in $PAGES; do
+            pdftoppm -f "$p" -l "$p" -singlefile -png -r 300 "$SRC" "/tmp/dr8-quality/images/p$p" >/dev/null 2>&1
+            tesseract "/tmp/dr8-quality/images/p$p.png" "/tmp/dr8-quality/ocr/p${p}-psm6" -l rus --psm 6 >/dev/null 2>&1 || true
+            tesseract "/tmp/dr8-quality/images/p$p.png" "/tmp/dr8-quality/ocr/p${p}-psm3" -l rus --psm 3 >/dev/null 2>&1 || true
+            echo "===== PDF-$p / PSM6 ====="
+            sed -n '1,180p' "/tmp/dr8-quality/ocr/p${p}-psm6.txt" || true
+            echo "===== PDF-$p / PSM3 ====="
+            sed -n '1,180p' "/tmp/dr8-quality/ocr/p${p}-psm3.txt" || true
           done
+      - name: Upload exact-page evidence for visual audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: drabkina8-quality-evidence
+          path: /tmp/dr8-quality
+          retention-days: 3
