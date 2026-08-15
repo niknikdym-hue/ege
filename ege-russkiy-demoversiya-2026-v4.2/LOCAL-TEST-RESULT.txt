@@ -1,46 +1,23 @@
-ЛОКАЛЬНЫЙ RELEASE-GATE — ЕГЭ РУССКИЙ ЯЗЫК 2026, ВЕРСИЯ 4.2
-ФИНАЛЬНЫЙ НЕЗАВИСИМЫЙ АУДИТ 2026-08-14
+LOCAL TEST RESULT — ЕГЭ РУССКИЙ ЯЗЫК 2026 v4.2
+Дата: 2026-08-15
+STATUS: PASS
 
-LOCAL RELEASE-GATE: PASS
-INDEPENDENT CONTENT AUDIT: PASS
-PACKAGE STATUS: GO FOR TILDA UPLOAD
-LIVE GO: только после post-publish checklist
-TILDA: NOT UPDATED / NOT PUBLISHED
+node test-russian-data.js → PASS 204 checks, 35 variant positives, total 28/28
+node test-russian-v4.js → PASS 24 assertions
+python3 visual-contract-audit.py → PASS 27 checks
+node test-russian-task27-v4.2.js → PASS 54 assertions
+node test-russian-task27-reset-guard.js → PASS 6 assertions
+python3 test-russian-task27-browser.py → PASS
+python3 test-browser.py → PASS
 
-Обязательный состав страницы:
-- актуальный HEAD текущего пакета;
-- T123-01 … T123-06 строго последовательно.
-
-Полный ранее зафиксированный regression gate:
-- PASS data/regression: 204 checks, 35 task-variant positives, total 28/28;
-- PASS unit scorer: 24 assertions;
-- PASS visual contract: 27 checks;
-- PASS общий browser regression: typed fields, OR persistence, reload, result separation, essay dependency, responsive widths;
-- PASS Task 27 unit: 49 assertions;
-- PASS Task 27 real-PREVIEW browser regression: T123-01…06, language aids off, frozen demo essay, paper transfer, preliminary findings, technical notes, verified hard caps.
-
-Содержательные regressions Task 27:
-- «Это это было важно» → confirmed K10 = 0; possible K10 допустим; hard cap отсутствует;
-- контекстные, стилистические и ключевые повторы не становятся confirmed автоматически;
-- повторы между абзацами не агрегируются;
-- «Это пример , текста.» → confirmed/possible K8 = 0; только technical finding;
-- встроенные regex-правила не создают confirmed;
-- externally validated confirmed: 1–2 → cap 2; 3–4 → cap 1; 5+ → cap 0;
-- программное значение выше cap отклоняется;
-- possible и technical не меняют cap;
-- отсутствие findings не выдаёт auto-3;
-- шкала 0–24 отсутствует, самооценка только 0–22.
-
-Дополнительный независимый edge-case audit:
-Обнаружено, что штатный core reset удалял только основной storage key и мог оставлять Task 27 review-state. Reset-guard размещён в T123-06, чтобы HEAD оставался evergreen.
-
-RESET-GUARD REGRESSION:
-PASS task27 reset guard: 6 assertions
-- missing core → stale review удаляется;
-- idle core → stale review удаляется;
-- corrupt core → stale review удаляется;
-- running core → review сохраняется;
-- finished core → review сохраняется;
-- отсутствующий review остаётся отсутствующим.
-
-Решение: пакет разрешён к загрузке в Tilda. После публикации обязателен AFTER-PUBLISH-CHECKLIST.txt; только его полный PASS даёт LIVE GO.
+Дополнительно browser regression проверяет:
+- explicit check only;
+- no findings while typing;
+- combined attention count;
+- stale spelling status does not cross into a new attempt;
+- multipage scan/zoom;
+- red/amber finding highlighting;
+- whole result /50;
+- frozen demo essay;
+- paper transfer;
+- K1–K10 dependencies/caps.
