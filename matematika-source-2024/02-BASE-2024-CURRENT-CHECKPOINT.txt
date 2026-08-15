@@ -1,35 +1,41 @@
 EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2024
-FINAL CURRENT CHECKPOINT — FULL RECHECK
-Дата: 2026-08-14
+FINAL CURRENT CHECKPOINT — SOURCE-LOCKED FULL RECHECK
+Дата: 2026-08-15
 
-STATUS: READY_FOR_TILDA_FULL_RECHECK
+STATUS: READY_FOR_TILDA_SOURCE_LOCKED_FULL_RECHECK
 READY_FOR_TILDA: YES
 LIVE_GO: NO — до публикации, production smoke и ручной ученической приёмки.
 PREVIOUS_READY_PACKAGES: WITHDRAWN / DO NOT USE
 
 1. ИСТОЧНИК И СТРУКТУРА
-- Использованы только три официальных BASE 2024 PDF из matematika-source-2024/.
-- 21 задание.
-- 180 минут.
-- Максимум 21 первичный балл.
-- 52 официальных примера.
+- Источник демоверсии: matematika-source-2024/ege-2024-matematika-baza-demoversiya.pdf
+- SHA256 official demo PDF: 7e7111654239dbf17c73786bccc9109f2f0f05d80039cfdeca114e83f67f5546
+- Использованы только официальные BASE 2024 demo/spec/codifier из matematika-source-2024/.
+- 21 задание; 180 минут; максимум 21 первичный балл; 52 официальных примера.
 - Раскладка примеров 1–21: 3,2,3,2,2,3,3,2,2,2,2,1,3,2,3,4,3,2,3,2,3.
 
-2. ГЛАВНОЕ ИСПРАВЛЕНИЕ ПОЛНОГО RECHECK
-Старые reconstructed SVG/HTML visuals полностью исключены как источник содержания.
-Новая сборка использует только прямые source crops/renders официального PDF для всех существенных рисунков, графиков, схем, таблиц и визуально значимых формульных блоков.
-- VISUAL_GATE: PASS 41/41 direct source crops;
-- pixel fidelity: 41/41;
-- meaningful source reconstructions: 0.
+2. ZERO-TOLERANCE VISUAL SOURCE CHAIN
+Никакие reconstructed SVG/Canvas/HTML visuals официального содержания не допускаются.
+Проверенная цепочка:
+repository PDF -> fresh source render -> exact crop -> package WEBP -> T123 embedded bytes -> task reference.
+
+Результат дополнительного независимого аудита 2026-08-15:
+- 23/23 используемых printed source-evidence pages — точные свежие renders из repository PDF;
+- 41/41 meaningful visual/table/formula/diagram assets — exact direct crops официального PDF;
+- 41/41 pixel fidelity PASS;
+- 41/41 фактически встроенных в T123 изображений byte-identical source-crop assets;
+- 4/4 reference pages — exact source renders и byte-identical в T123;
+- reconstructed SVG/Canvas source visuals: 0;
+- пропущенных/лишних/неизвестных source visual IDs: 0.
 
 3. ТЕКСТ / ФОРМУЛЫ / ОТВЕТЫ
 - TEXT_TRACE_GATE: PASS 52/52;
 - FORMULA_GATE: PASS;
-- ANSWER_GATE: PASS 52/52 с отдельно документированной аномалией официальной таблицы ответов 15.3;
+- ANSWER_GATE: PASS 52/52 с документированной аномалией официальной таблицы ответов 15.3;
 - task 14 = 2 официальных примера;
 - task 15 = 3 официальных примера;
 - agricultural-land item = 15.3, answer 9;
-- в 13.2 знак √17 не доверен текстовому extractor: соответствующий формульный фрагмент берётся прямым source crop из PDF.
+- в 13.2 знак √17 не доверен text extractor: соответствующий фрагмент берётся прямым source crop из PDF.
 
 4. CONTROLS / SCORER / STATE
 - №2, №7, №18: четыре реальные select;
@@ -38,13 +44,14 @@ PREVIOUS_READY_PACKAGES: WITHDRAWN / DO NOT USE
 - №19: все официально принимаемые альтернативы;
 - format validation отделена от correctness;
 - назначенный официальный пример сохраняется после reload;
-- результаты после завершения показывают «Ваш ответ», официально принимаемый ответ и балл.
+- результаты показывают «Ваш ответ», официально принимаемый ответ и балл.
 
 5. BROWSER / PACKAGE GATES
-GitHub Actions full-recheck run 31822909411: SUCCESS.
-Проверено на чистой сборке из main и ещё раз после чистой распаковки frozen ZIP:
-- 52/52 вариантов: correct + wrong through real DOM controls — PASS;
-- full correct attempt: 21/21 — PASS;
+GitHub Actions source-locked full-recheck run 31900360657: SUCCESS.
+Gate-chain выполнена до freeze и повторно после чистой распаковки frozen ZIP:
+- strict visual source chain — PASS;
+- 52/52 вариантов correct + wrong through real DOM — PASS;
+- full correct attempt 21/21 — PASS;
 - reload persistence — PASS;
 - results review — PASS;
 - reference materials — PASS;
@@ -62,18 +69,24 @@ GitHub Actions full-recheck run 31822909411: SUCCESS.
 - 18 последовательных T123-блоков: T123-01 ... T123-18;
 - max T123 size: 40 896 bytes;
 - между T123 не вставлять другие блоки;
-- шапка и футер подключаются отдельно.
+- шапка и футер подключаются отдельно;
+- source-crop изображения уже встроены в T123 как base64; отдельно загружать их не нужно.
 
-7. АВТОРИТЕТНЫЙ ФИНАЛЬНЫЙ ПАКЕТ
+7. ЕДИНСТВЕННЫЙ АВТОРИТЕТНЫЙ ПАКЕТ
 Filename: ege-matematika-baza-demoversiya-2024-v1.0.zip
 Source: GitHub Actions artifact ege-matematika-baza-demoversiya-2024-v1.0-FULL-RECHECK
-Workflow run: 31822909411
-Artifact ID: 9227693678
-ZIP SHA256: 9d050eb4eb9e9bce5990345654e0efb9f7f3d924905f2bbd55b53911dd77a341
-ZIP size: 4 815 546 bytes
+Workflow run: 31900360657
+Run head SHA: b1bd73343bdc7cff686311eaf97bb0cf8b936a51
+Artifact ID: 9250912054
+ZIP SHA256: 280f72d4ae3ca4a108d1882d62958a8bd907afaad5faaa0bc106a0dd599a44d5
+ZIP size: 4 816 444 bytes
 
-8. СЛЕДУЮЩИЙ ШАГ
-Этот пакет разрешён для загрузки в Tilda.
+8. НОВЫЙ ОБЯЗАТЕЛЬНЫЙ GATE
+matematika-source-2024/scripts/audit_visual_source_chain_2024.py
+Любое несовпадение source PDF / render / crop / T123 embedded bytes = FAIL и снимает READY_FOR_TILDA.
+
+9. СЛЕДУЮЩИЙ ШАГ
+Разрешён для загрузки в Tilda только пакет с SHA256 280f72d4....
 После публикации обязательны production smoke и ручная ученическая приёмка. Только после них можно установить LIVE_GO: YES.
 
 Source gate: 01-BASE-2024-SOURCE-GATE-STATUS.txt
