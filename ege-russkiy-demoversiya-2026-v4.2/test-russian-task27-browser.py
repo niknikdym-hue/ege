@@ -52,7 +52,6 @@ with sync_playwright() as p:
     page.route('https://speller.yandex.net/**',speller_route)
     page.evaluate("Object.defineProperty(window,'localStorage',{configurable:true,value:{_d:{},getItem(k){return Object.prototype.hasOwnProperty.call(this._d,k)?this._d[k]:null},setItem(k,v){this._d[k]=String(v)},removeItem(k){delete this._d[k]}}})")
 
-    # Demo mode on the real PREVIEW composed from exact T123-01...T123-05 plus T123-06.
     load_real(page);go_task27(page)
     page.check('input[name="edemo-writing-mode"][value="demo"]')
     essay=page.locator('#edemo-answer-input')
@@ -78,6 +77,7 @@ with sync_playwright() as p:
     page.click('#edemo-run-text-check')
     page.wait_for_function("JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_2_spelling_check')||'{}').status==='complete'")
     check(page.get_by_text('Проверка завершена',exact=False).count()>=1,'spelling-check completion is visible')
+    check('Отмечено мест для внимания: 3.' in page.locator('#edemo-check-status').inner_text(),'check status counts local K8/K10 plus spelling candidate')
     checked=page.evaluate("JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_2_task27_review'))")
     check(checked['analysisStatus']=='complete','explicit button completes analysis')
     check(page.locator('details.edemo-criterion-help').count()==10,'K1-K10 help is available after explicit text check')
@@ -90,7 +90,6 @@ with sync_playwright() as p:
     check(page.locator('#edemo-essay-score').inner_text()=='22','possible K10 does not create hard cap')
     check(page.locator('#edemo-total-score').inner_text()=='22','whole demo result includes essay self-assessment')
     check('Задания 1–26: 0 + сочинение: 22' in page.locator('#edemo-total-status').inner_text(),'whole-result breakdown is clear')
-    # A separately validated confirmed finding applies the official hard cap.
     page.evaluate("window.__edemoRussian2026Task27Review.submitAnalysis({version:'browser-validated-test',confirmed:{K10:[{id:'validated-k10',message:'Подтверждённая речевая ошибка'}]},possible:{}})")
     page.wait_for_timeout(50)
     check(page.locator('.edemo-error-row').nth(3).locator('.edemo-finding-box--error-active').count()==1,'K10 Найдены ошибки block highlighted when confirmed finding exists')
@@ -98,14 +97,13 @@ with sync_playwright() as p:
     check(page.locator('#edemo-essay-score').inner_text()=='21','confirmed K10 hard cap limits max to 21')
     page.eval_on_selector('[data-review-score="K10"]',"el=>{el.value='3';el.dispatchEvent(new Event('change',{bubbles:true}))}")
     check(page.locator('[data-review-score="K10"]').input_value()=='2','programmatic score above cap rejected in UI')
-    # Core answer changes after finish must not mutate the frozen essay.
     page.evaluate("let s=JSON.parse(localStorage.getItem('eksamio_ege_russian_demo_2026_v4_1'));s.answers[27]='ИЗМЕНЕНО ПОСЛЕ ФИНИША';localStorage.setItem('eksamio_ege_russian_demo_2026_v4_1',JSON.stringify(s))")
     load_real(page)
     check(page.locator('#edemo-frozen-essay').inner_text()==original,'frozen demo essay survives reload and core mutation')
 
-    # Paper mode alone gets editable transferred text; analysis updates automatically.
     reset_storage(page);load_real(page);go_task27(page)
     page.check('#edemo-paper-complete');finish(page)
+    check('Проверка завершена' not in page.locator('#edemo-check-status').inner_text(),'new attempt does not inherit stale spelling-check status')
     check(page.locator('#edemo-frozen-essay').count()==0,'paper result has no frozen demo block')
     check(page.locator('#edemo-transferred-essay').count()==1,'paper result has editable transferred text')
     scan_svg=b'<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1200"><rect width="800" height="1200" fill="white"/><path d="M80 140h640M80 220h640M80 300h640" stroke="black" stroke-width="8"/></svg>'
