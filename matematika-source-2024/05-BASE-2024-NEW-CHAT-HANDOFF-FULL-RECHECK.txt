@@ -1,16 +1,19 @@
 EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2024
-NEW CHAT HANDOFF — FULL RECHECK COMPLETED
-Дата: 2026-08-14
+NEW CHAT HANDOFF — SOURCE-LOCKED FULL RECHECK COMPLETED
+Дата: 2026-08-15
 
 СТАТУС
-FULL_RECHECK_COMPLETED
+SOURCE_LOCKED_FULL_RECHECK_COMPLETED
 READY_FOR_TILDA: YES
 LIVE_GO: NO — только после production smoke и ручной ученической приёмки опубликованной страницы.
 
 ВАЖНО
-Этот файл заменяет прежний handoff NO_GO_SOURCE_VISUALS_REQUIRED.
-Прежние PASS/READY действительно не принимались на веру: вся демоверсия 2024 была повторно проверена и пересобрана с нуля по официальным PDF.
-Старые пакеты с reconstructed SVG/HTML visuals остаются ОТОЗВАННЫМИ.
+Прежние PASS/READY не принимались на веру. Визуальная часть дополнительно независимо проверена именно против файла в main:
+matematika-source-2024/ege-2024-matematika-baza-demoversiya.pdf
+SHA256: 7e7111654239dbf17c73786bccc9109f2f0f05d80039cfdeca114e83f67f5546
+
+Старые пакеты с reconstructed SVG/HTML/Canvas visuals остаются ОТОЗВАННЫМИ.
+Никакие рисунки, графики, схемы, таблицы, геометрические чертежи или визуально значимые формулы нельзя перерисовывать или реконструировать.
 
 ОБЯЗАТЕЛЬНО ПРОЧИТАТЬ ПРИ ПРОДОЛЖЕНИИ
 1. /00-SOURCE-FIDELITY-ZERO-TOLERANCE.md
@@ -30,67 +33,64 @@ LIVE_GO: NO — только после production smoke и ручной уче�
 - matematika-source-2024/ege-2024-matematika-baza-specifikatsiya.pdf
 - matematika-source-2024/ege-2024-matematika-kodifikator.pdf
 
-НЕЛЬЗЯ ИСПОЛЬЗОВАТЬ КАК ИСТОЧНИК СОДЕРЖАНИЯ
-- старые ZIP 2024;
-- прежнюю JavaScript-сборку;
-- 2025/2026;
-- сторонние сайты;
-- память/старые ответы.
-
-ЧТО ЗАКРЫТО ПОЛНЫМ RECHECK
+ЧТО ЗАКРЫТО
 - 21/21 заданий;
 - 52/52 официальных примера;
-- текст, числа, единицы, формулы, controls, input contracts, answers, scorer, state, result rows;
-- 41/41 meaningful source visual/table/formula crops — только direct official PDF source crops/renders;
-- meaningful reconstructed source visuals = 0;
-- 52/52 correct+wrong browser interaction;
+- text/source trace 52/52;
+- 23/23 используемых printed source-evidence pages — exact fresh renders official repository PDF;
+- 41/41 official task visual/table/formula/diagram assets — exact direct source crops;
+- 41/41 T123 embedded task images — byte-identical verified source crops;
+- 4/4 reference pages — exact direct source renders and byte-identical in T123;
+- missing/extra/unknown visual IDs = 0;
+- reconstructed SVG/Canvas source visuals = 0;
+- correct+wrong browser interaction 52/52;
 - full attempt 21/21;
 - reload persistence;
-- results: «Ваш ответ» + официально принимаемый ответ + балл;
+- results review;
 - responsive 1280/768/390/360/320;
 - independent audit;
-- frozen ZIP and clean-extraction regression.
+- frozen ZIP + clean-extraction regression.
+
+НОВЫЙ ОБЯЗАТЕЛЬНЫЙ VISUAL SOURCE GATE
+matematika-source-2024/scripts/audit_visual_source_chain_2024.py
+Проверяет:
+repository PDF -> fresh render -> exact crop -> package asset -> T123 embedded bytes -> task reference.
+Запускается до freeze и повторно после clean ZIP extraction. Любое несовпадение = FAIL.
 
 ОСОБЫЕ ФИКСЫ
-1. Старые reconstructed visuals полностью исключены.
-2. В 13.2 формула с √17 не полагается на потерявший радикал PDF text extraction — визуально значимый фрагмент берётся из source crop.
-3. Итоговый экран исправлен: ученик видит свой ответ и официально принимаемый ответ, а не только 1/1.
-4. Подтверждена аномалия официальной таблицы ответов:
-   - task 14 = 2 примера;
-   - task 15 = 3 примера;
-   - agricultural-land item = 15.3;
-   - answer 9;
-   - в официальной таблице page 26 число 9 визуально стоит в несуществующем row 14 / example 3. Это явно документировано, не замаскировано.
+1. Официальные visuals — только source crops, никакой перерисовки.
+2. В 13.2 фрагмент с √17 берётся из source crop, поскольку PDF text extraction теряет радикал.
+3. Итоговый экран показывает свой ответ + официально принимаемый ответ + балл.
+4. Аномалия official answer table 15.3 явно документирована.
 
-АВТОРИТЕТНЫЙ ПАКЕТ
+ЕДИНСТВЕННЫЙ АВТОРИТЕТНЫЙ ПАКЕТ
 Filename: ege-matematika-baza-demoversiya-2024-v1.0.zip
-SHA256: 9d050eb4eb9e9bce5990345654e0efb9f7f3d924905f2bbd55b53911dd77a341
-Size: 4 815 546 bytes
+SHA256: 280f72d4ae3ca4a108d1882d62958a8bd907afaad5faaa0bc106a0dd599a44d5
+Size: 4 816 444 bytes
 T123: 18 blocks, T123-01 ... T123-18
 Max T123: 40 896 bytes
-GitHub Actions run: 31822909411 — SUCCESS
-Artifact ID: 9227693678
+GitHub Actions run: 31900360657 — SUCCESS
+Run head SHA: b1bd73343bdc7cff686311eaf97bb0cf8b936a51
+Artifact ID: 9250912054
 
 ВОСПРОИЗВОДИМАЯ СБОРКА В MAIN
 Workflow:
 .github/workflows/build-base-math-2024-full-recheck.yml
-
+Strict visual audit:
+matematika-source-2024/scripts/audit_visual_source_chain_2024.py
 Builder payload:
 matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-00 ... part-04
-
 Release finalizer:
 matematika-source-2024/scripts/finalize_verified_base_2024_release.py
-
 Tilda shell:
 matematika-source-2024/templates/base-2024-shell.html
 
 ЧТО ДЕЛАТЬ ДАЛЬШЕ
-Если пакет ещё не опубликован — загружать в Tilda только авторитетный ZIP выше, 18 T123 строго по порядку.
-После публикации выполнить production smoke и ручную ученическую приёмку.
-Только после этого менять LIVE_GO на YES.
+Если пакет ещё не опубликован — загружать в Tilda только ZIP с SHA256 280f72d4..., все 18 T123 строго по порядку. Source-crop images уже embedded как base64, отдельно загружать картинки не нужно.
+После публикации выполнить production smoke и ручную ученическую приёмку. Только после этого LIVE_GO = YES.
 
 НЕ ТРОГАТЬ
-Base Math 2025/2026 в ходе этой работы не менялись и при продолжении 2024 не должны меняться без отдельного задания.
+Base Math 2025/2026 в ходе этой работы не менялись и без отдельного задания не меняются.
 
 ФРАЗА ДЛЯ СТАРТА СЛЕДУЮЩЕГО ЧАТА
-«Продолжаем ЕГЭ базовая математика 2024 после завершённого full recheck. Прочитай matematika-source-2024/05-BASE-2024-NEW-CHAT-HANDOFF-FULL-RECHECK.txt и 06-BASE-2024-FULL-RECHECK-FINAL-REPORT.txt. Авторитетный пакет уже READY_FOR_TILDA; следующий этап — только Tilda production smoke/ученическая приёмка либо отдельные явно заданные изменения. Старые реконструированные пакеты не использовать.»
+«Продолжаем ЕГЭ базовая математика 2024 после source-locked full recheck. Прочитай 05-BASE-2024-NEW-CHAT-HANDOFF-FULL-RECHECK.txt и 06-BASE-2024-FULL-RECHECK-FINAL-REPORT.txt. Для любого официального visual допускается только exact direct source crop из matematika-source-2024/ege-2024-matematika-baza-demoversiya.pdf; никаких SVG/Canvas/HTML/manual redraws. Авторитетный пакет SHA256 280f72d4ae3ca4a108d1882d62958a8bd907afaad5faaa0bc106a0dd599a44d5.»
