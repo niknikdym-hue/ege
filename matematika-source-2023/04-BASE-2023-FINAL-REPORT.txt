@@ -1,0 +1,90 @@
+EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2023
+FINAL VERIFIED REPORT
+Дата: 2026-08-17
+
+FINAL STATUS
+READY_FOR_TILDA_SOURCE_LOCKED_UI_CROP_AUDIT
+READY_FOR_TILDA: YES
+LIVE_GO: NO
+
+AUTHORITATIVE RELEASE
+GitHub Actions run: 32061983559 — SUCCESS
+Build head SHA: 7bd76952a1c8de806ba410cb46e77296d58d2466
+Artifact ID: 9298494545
+Artifact: ege-matematika-baza-demoversiya-2023-v1.0-SOURCE-LOCKED
+ZIP: ege-matematika-baza-demoversiya-2023-v1.0.zip
+ZIP SHA256: 935fe8e6c83454c0265fa327b4932242c945ef10708b8808cfbd0b7bf50892c1
+ZIP bytes: 5625856
+
+OFFICIAL SOURCE LOCK
+Demo SHA256: a43815ea02387b0c6df15d474c73e3f51f2ee7b0741d37ed4a6efa76d84371ab
+Specification SHA256: c886dcfc9c4307d01053f4012b87e0c0486e6fcd650ac9236728a03a3123a29f
+Codifier SHA256: e75a596e2d1b8e76f99d2cf717f1269a247725a40cfac9e6bf305d8bb131c087
+Demo physical pages: 13
+Demo printed pages: 26
+
+EXAM LOCK
+Tasks: 21
+Official examples: 52
+Duration: 180 minutes
+Max primary score: 21
+Example counts task 1..21: 3,2,3,2,2,3,3,2,2,2,2,1,3,2,3,4,3,2,3,2,3
+
+CONTENT / CONTROL / SCORER
+- source traceability: PASS for all 52 official examples
+- index integrity: 52/52
+- task controls correspond to actual official action, including matching/multiple selection
+- scorer contracts and official alternatives: PASS
+- source anomaly ANSWER-TABLE-15.3 documented and handled without inventing an example
+
+FORMULAS
+FORMULA GATE: PASS.
+11 official formula examples plus task 19.2 source expression crop verified. Task 13.2 source condition uses direct source crop so the radical in √17 cannot be lost by text extraction.
+
+VISUAL SOURCE CHAIN
+- fresh source-evidence printed pages: 23/23 exact
+- official task visual assets: 41/41 exact direct contiguous crops
+- T123 embedded task visual bytes: 41/41 byte-identical to verified assets
+- reference pages 4/4: exact official source renders and byte-identical T123 embedding
+- missing visual assets: 0
+- extra visual assets: 0
+- SVG/Canvas/manual redraw of official source visuals: 0
+
+VISUAL UI CROP AUDIT
+Every visual asset was inspected individually for its actual task/official example. The audit covers crop edges, axes, axis labels, ticks, numbers, units, legends, point/vertex/dimension labels, meaningful-content completeness, accidental neighboring content, desktop/mobile sizing and zoom requirement. Rough 2024-style mechanical cropping was not reused.
+
+VISUAL ZOOM
+41/41 task visual assets open correctly in the interface. Zoom in / zoom out / reset PASS. Mobile zoom PASS. Responsive widths 1280/768/390/360/320 PASS.
+
+T123
+Count: 17
+Sequence: 01..17
+Max bytes: 40200
+Project limit: <42500
+Standalone atomic validation: 17/17 PASS
+No unfinished script/style/string/base64 continuation across block boundaries.
+T123 manifest contains file size and SHA256 for every block.
+
+BROWSER
+52/52 official examples passed correct+wrong interaction through real DOM controls.
+Full attempt: 21/21 PASS.
+Autosave/reload/assigned-variant persistence/results/reference materials/responsive checks: PASS.
+
+CLEAN ZIP
+The authoritative ZIP was frozen, extracted to a new clean directory, and the complete gate chain was repeated. Clean extraction regression: PASS.
+Independent audit: PASS.
+Package integrity: PASS.
+
+PACKAGE CONTRACT
+archive URL: https://eksamio.ru/ege/matematika-baza/demoversiya/2023/
+storage key: eksamio_ege_math_base_demo_2023_v1_0_source_locked
+content version: 2023.1-source-locked-ui-crop-audit
+header/footer included: NO
+separate image upload: NO
+
+TILDA HANDOFF
+Use HEAD from this ZIP, then all 17 T123 files strictly 01..17, then SEO settings from this ZIP. Replace any previous BASE 2023 custom-code set completely; do not mix builds. Do not touch global header/footer. No separate image upload.
+
+LIVE RULE
+READY_FOR_TILDA = YES.
+LIVE_GO remains NO until the Tilda page is published, production smoke passes on the public archive URL, and manual student acceptance is confirmed.
