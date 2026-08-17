@@ -41,9 +41,9 @@ jobs:
         run: |
           python matematika-source-2024/scripts/build_canonical_base_2024.py
           cat matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-* \
-            | base64 -d | gzip -dc > /tmp/build_verified_base_2024_package.py
-          python -m py_compile /tmp/build_verified_base_2024_package.py
-          python /tmp/build_verified_base_2024_package.py
+            | base64 -d | gzip -dc > matematika-source-2024/scripts/build_verified_base_2024_package.py
+          python -m py_compile matematika-source-2024/scripts/build_verified_base_2024_package.py
+          python matematika-source-2024/scripts/build_verified_base_2024_package.py
 
       - name: Analyze and lock official BASE 2023 sources
         shell: bash
