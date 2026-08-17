@@ -1,0 +1,60 @@
+EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2023
+PRESTART GATE BEFORE ANY BUILD
+Дата: 2026-08-17
+
+STATUS: READY_FOR_SOURCE_LOCK_ONLY
+READY_FOR_CONTENT_EXTRACTION: NO — до SHA256/source/exam lock
+READY_FOR_BUILD: NO
+READY_FOR_TILDA: NO
+
+ЦЕЛЬ
+Не переносить в 2023 ошибки и допущения соседних лет. Работа начинается заново по официальному комплекту 2023. Пакеты/код/визуалы 2024/2025/2026 не являются источником содержания.
+
+ОБЯЗАТЕЛЬНО ПРОЧИТАТЬ ДО НАЧАЛА
+1. /00-SOURCE-FIDELITY-ZERO-TOLERANCE.md
+2. /00-READ-FIRST-EGE-DEMOVERSII-MASTER.md
+3. /demo-production-standard/README.md
+4. /MATEMATIKA-EGE-DEMOVERSII-REGLAMENT-SOZDANIYA-I-PROVERKI.md — редакция 2026-08-17 или новее
+5. /demo-production-standard/VISUAL-UI-CROP-AUDIT-TEMPLATE.md
+6. /demo-production-standard/scripts/validate_t123_atomicity.py
+
+BASE 2023 SOURCE FILES — НАЛИЧИЕ В MAIN ПОДТВЕРЖДЕНО
+- matematika-source-2023/ege-2023-matematika-baza-demoversiya.pdf
+  Git blob: 4648f60c47d3b2029bbd11ac9f129bf5bec282f4
+- matematika-source-2023/ege-2023-matematika-baza-specifikatsiya.pdf
+  Git blob: 620c395bb8aaf6361ba476f6596a708d8869030c
+- matematika-source-2023/ege-2023-matematika-kodifikator.pdf
+  Git blob: 789b6bd3af38658a641b32e736a4d62bda0adcf3
+
+ПРОФИЛЬНЫЕ PDF В ЭТОЙ ЖЕ ПАПКЕ НЕ ИСПОЛЬЗОВАТЬ КАК ИСТОЧНИК BASE 2023.
+
+SOURCE LOCK — ПЕРВЫЙ ОБЯЗАТЕЛЬНЫЙ ШАГ
+До любого package build:
+- вычислить SHA256 каждого из трёх BASE PDF;
+- записать hashes в year source register;
+- определить physical PDF pages / printed pages / halves;
+- зафиксировать структуру экзамена по демоверсии + спецификации;
+- зафиксировать число заданий и официальных примеров по каждому заданию;
+- зафиксировать время и максимальный первичный балл;
+- зафиксировать справочные материалы/ответы/критерии именно 2023.
+
+NO CROSS-YEAR CONTENT
+Разрешено использовать технический каркас другого года только после source lock 2023. Нельзя копировать из другого года как доказательство тексты, формулы, ответы, counts, controls, source images/crops, reference pages, source page mapping или scorer alternatives.
+
+VISUAL SOURCE GATE
+Каждый рисунок/график/схема/чертёж/табличный visual/значимая формула — только direct render/crop официального BASE 2023 PDF. Никакой SVG/Canvas/HTML/manual reconstruction. Фиксируются source PDF SHA256 + page + crop rectangle + source proof; embedded bytes в T123 сверяются с asset.
+
+VISUAL UI CROP GATE — ПОШТУЧНО
+Для каждого visual asset и официального варианта отдельно проверить четыре края, оси и подписи, деления/числа/единицы, легенду, точки/вершины/размеры/обозначения, отсутствие смыслового обрезания и случайно захваченных соседних характеристик/таблиц/текста. Решение «один crop / несколько source crops / exact HTML source structure» принимается индивидуально по заданию. Проверяются desktop/mobile размер и zoom in/out/reset + mobile, если zoom required.
+
+T123 ATOMIC GATE
+Запрещён механический byte split готового HTML/JS/base64. Каждый T123 обязан быть самостоятельным валидным фрагментом: закрыты script/style/HTML constructs; нет продолжения строки/base64 между файлами; split только по безопасным границам; длинный base64 делится на самостоятельные закрытые script chunks; sequence 01..N; размер < 42500 bytes; обязательный validator `demo-production-standard/scripts/validate_t123_atomicity.py`; обязательный T123 manifest filename+bytes+SHA256; отдельно проверяется склейка 01..N.
+
+CLEAN ZIP / BROWSER GATE
+Перед выдачей freeze ZIP → новая чистая распаковка → повтор source/text/formula/visual-source/visual-ui-crop/T123 atomic/package integrity gates → browser correct+wrong каждого официального примера через реальные DOM-controls → full attempt → autosave/reload/variant persistence → results → reference materials → widths 1280/768/390/360/320 → zoom → independent final audit.
+
+READY RULE
+Любой UNVERIFIED / ASSUMED / TODO / FAIL = NO GO. READY_FOR_TILDA только после полного clean-ZIP PASS. LIVE_GO только после публикации, production smoke и ручной ученической приёмки.
+
+СЛЕДУЮЩИЙ ШАГ ДЛЯ BASE 2023
+Только SOURCE LOCK трёх BASE 2023 PDF и построение year-specific source/exam map. Не начинать package build до закрытия этого шага.

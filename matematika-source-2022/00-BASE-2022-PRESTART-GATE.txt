@@ -1,0 +1,50 @@
+EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2022
+PRESTART GATE BEFORE ANY BUILD
+Дата: 2026-08-17
+
+STATUS: READY_FOR_SOURCE_LOCK_ONLY
+READY_FOR_CONTENT_EXTRACTION: NO — до SHA256/source/exam lock
+READY_FOR_BUILD: NO
+READY_FOR_TILDA: NO
+
+ЦЕЛЬ
+Работа 2022 начинается заново по официальному комплекту 2022. Ни 2023, ни 2024/2025/2026 не являются источником содержания. Технический каркас разрешён только после year-specific source lock.
+
+ОБЯЗАТЕЛЬНО ПРОЧИТАТЬ ДО НАЧАЛА
+1. /00-SOURCE-FIDELITY-ZERO-TOLERANCE.md
+2. /00-READ-FIRST-EGE-DEMOVERSII-MASTER.md
+3. /demo-production-standard/README.md
+4. /MATEMATIKA-EGE-DEMOVERSII-REGLAMENT-SOZDANIYA-I-PROVERKI.md — редакция 2026-08-17 или новее
+5. /demo-production-standard/VISUAL-UI-CROP-AUDIT-TEMPLATE.md
+6. /demo-production-standard/scripts/validate_t123_atomicity.py
+
+BASE 2022 SOURCE FILES — НАЛИЧИЕ В MAIN ПОДТВЕРЖДЕНО
+- matematika-source-2022/ege-2022-matematika-baza-demoversiya.pdf
+  Git blob: 68cfae74abf51990cce40958953349a96f28072d
+- matematika-source-2022/ege-2022-matematika-baza-specifikatsiya.pdf
+  Git blob: f852ff234018432a1c28f8a19a4c9af7b6ac43cc
+- matematika-source-2022/ege-2022-matematika-kodifikator.pdf
+  Git blob: 1a446ad66764ed108f120e95d113f6722d030648
+
+ПРОФИЛЬНЫЕ PDF В ЭТОЙ ЖЕ ПАПКЕ НЕ ИСПОЛЬЗОВАТЬ КАК ИСТОЧНИК BASE 2022.
+
+SOURCE LOCK — ПЕРВЫЙ ОБЯЗАТЕЛЬНЫЙ ШАГ
+До package build вычислить SHA256 трёх BASE PDF, построить page map, зафиксировать структуру экзамена, число заданий/официальных примеров, время, максимальный балл, справочные материалы, ответы и критерии именно 2022.
+
+VISUAL SOURCE + UI CROP
+Каждый существенный visual — только direct source render/crop официального PDF 2022, без SVG/Canvas/HTML/manual reconstruction. На каждый asset отдельная audit-record: source SHA/page/crop, four-edge completeness, оси/подписи/деления/единицы/легенда/геометрические обозначения, отсутствие лишнего соседнего содержания, desktop/mobile sizing, zoom decision и zoom tests при необходимости.
+
+T123 ATOMIC GATE
+Никакого механического byte split. Каждый T123 самостоятельно закрыт и валиден; длинный base64 делится только на отдельные закрытые script chunks; sequence 01..N; <42500 bytes; обязательный `validate_t123_atomicity.py`; T123 manifest с bytes+SHA256; ordered-paste simulation 01..N.
+
+CLEAN ZIP / BROWSER GATE
+Freeze → clean extraction → повтор всех source/formula/visual/T123/package gates → real DOM correct+wrong всех официальных примеров → full attempt → state/reload → results → references → 1280/768/390/360/320 → zoom → independent final audit.
+
+READY RULE
+Любой UNVERIFIED / ASSUMED / TODO / FAIL = NO GO. READY_FOR_TILDA только после clean-ZIP PASS. LIVE_GO только после Tilda production smoke и ручной ученической приёмки.
+
+ПОРЯДОК
+Base 2022 не наследует content bank 2023. После завершения 2023 разрешено переиспользовать только технический каркас/проверенные общие функции; весь official content и visual mapping 2022 строятся заново по 2022 source lock.
+
+СЛЕДУЮЩИЙ ШАГ ДЛЯ BASE 2022
+Когда дойдём до 2022 — начать только с SHA256/source/exam lock. Не переносить структуру 2023 автоматически.
