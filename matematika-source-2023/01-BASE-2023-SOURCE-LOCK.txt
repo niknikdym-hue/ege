@@ -1,0 +1,45 @@
+EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2023
+SOURCE LOCK
+Дата: 2026-08-17
+STATUS: PASS
+
+OFFICIAL BASE 2023 SOURCES
+1. matematika-source-2023/ege-2023-matematika-baza-demoversiya.pdf
+   SHA256: a43815ea02387b0c6df15d474c73e3f51f2ee7b0741d37ed4a6efa76d84371ab
+   bytes: 1092060
+   physical PDF pages: 13
+   printed pages: 26
+
+2. matematika-source-2023/ege-2023-matematika-baza-specifikatsiya.pdf
+   SHA256: c886dcfc9c4307d01053f4012b87e0c0486e6fcd650ac9236728a03a3123a29f
+   bytes: 802148
+   physical PDF pages: 5
+
+3. matematika-source-2023/ege-2023-matematika-kodifikator.pdf
+   SHA256: e75a596e2d1b8e76f99d2cf717f1269a247725a40cfac9e6bf305d8bb131c087
+   bytes: 1000016
+   physical PDF pages: 21
+
+PROFILE PDF FILES IN THE SAME FOLDER ARE NOT BASE SOURCES.
+
+EXAM LOCK
+- level: базовый
+- task count: 21
+- official examples: 52
+- duration: 180 minutes
+- max primary score: 21
+- official example counts by task 1..21:
+  3,2,3,2,2,3,3,2,2,2,2,1,3,2,3,4,3,2,3,2,3
+
+SOURCE PAGE MAPPING
+The demo is a two-up landscape document: 13 physical PDF pages map to 26 printed pages. Canonical mapping is generated rotation-aware from the locked PDF before content/visual extraction.
+
+SOURCE ANOMALY
+ANSWER-TABLE-15.3: official task 15.3 gives 24 ha split grain:vegetables 5:3, therefore answer 9. The printed answer table visually places 9 under a nonexistent task 14 example 3. Eksamio preserves the actual official task structure: task 14 has 2 examples, task 15 has 3; task 15.3 answer = 9. Anomaly is documented in the package.
+
+SOURCE POLICY
+All significant visuals are direct contiguous render/crops from the locked official 2023 demo PDF. No SVG/Canvas/HTML/manual reconstruction. Text/formulas/controls/scorer are traced to the 2023 official package, not copied as evidence from another year.
+
+SOURCE ANALYSIS WORKFLOW
+GitHub Actions source-analysis run: 32059949633 — SUCCESS
+Artifact: 9297772206
