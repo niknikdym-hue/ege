@@ -46,7 +46,6 @@ def extract_pdf(label: str, pdf_path: Path, render: bool) -> dict:
     printed_counter = 0
 
     for physical_index, page in enumerate(doc, 1):
-        matrix = page.rotation_matrix
         rect = page.rect
         words_raw = page.get_text("words", sort=False)
         pix = page.get_pixmap(matrix=fitz.Matrix(2, 2), alpha=False) if render else None
@@ -57,13 +56,16 @@ def extract_pdf(label: str, pdf_path: Path, render: bool) -> dict:
         for half in halves:
             if half == "full":
                 x0, x1 = 0.0, rect.width
-                rx0, rx1 = 0, raster.width if raster else 0
+                rx0 = 0
+                rx1 = raster.width if raster else None
             elif half == "left":
                 x0, x1 = 0.0, rect.width / 2
-                rx0, rx1 = 0, raster.width // 2
+                rx0 = 0
+                rx1 = raster.width // 2 if raster else None
             else:
                 x0, x1 = rect.width / 2, rect.width
-                rx0, rx1 = raster.width // 2, raster.width
+                rx0 = raster.width // 2 if raster else None
+                rx1 = raster.width if raster else None
 
             selected = []
             for w in words_raw:
@@ -86,9 +88,7 @@ def extract_pdf(label: str, pdf_path: Path, render: bool) -> dict:
                 continue
             printed_counter += 1
             text = "\n".join(group_words(selected)).strip() + "\n"
-            txt_name = f"page-{printed_counter:02d}.txt"
-            (dest / txt_name).write_text(text, encoding="utf-8")
-            coord_name = f"page-{printed_counter:02d}.json"
+            (dest / f"page-{printed_counter:02d}.txt").write_text(text, encoding="utf-8")
             record = {
                 "printed_page": printed_counter,
                 "physical_pdf_page": physical_index,
@@ -98,7 +98,7 @@ def extract_pdf(label: str, pdf_path: Path, render: bool) -> dict:
                 "word_count": len(selected),
                 "words": selected,
             }
-            (dest / coord_name).write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            (dest / f"page-{printed_counter:02d}.json").write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             if raster:
                 crop = raster if half == "full" else raster.crop((rx0, 0, rx1, raster.height))
                 crop.save(dest / f"page-{printed_counter:02d}.webp", "WEBP", lossless=True, method=6)
