@@ -1,0 +1,32 @@
+name: analyze-base-math-2023-sources
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'matematika-source-2023/ege-2023-matematika-baza-demoversiya.pdf'
+      - 'matematika-source-2023/ege-2023-matematika-baza-specifikatsiya.pdf'
+      - 'matematika-source-2023/ege-2023-matematika-kodifikator.pdf'
+      - 'matematika-source-2023/scripts/analyze_base_2023_sources.py'
+      - '.github/workflows/analyze-base-math-2023-sources.yml'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF analysis dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
+      - name: Analyze official BASE 2023 sources
+        run: python matematika-source-2023/scripts/analyze_base_2023_sources.py
+      - name: Upload source analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: base-math-2023-source-analysis
+          path: /tmp/base2023-source-analysis
+          retention-days: 30
