@@ -1,0 +1,132 @@
+name: build-base-math-2023-source-locked
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'matematika-source-2023/ege-2023-matematika-baza-demoversiya.pdf'
+      - 'matematika-source-2023/ege-2023-matematika-baza-specifikatsiya.pdf'
+      - 'matematika-source-2023/ege-2023-matematika-kodifikator.pdf'
+      - 'matematika-source-2023/scripts/**'
+      - 'demo-production-standard/scripts/validate_t123_atomicity.py'
+      - 'MATEMATIKA-EGE-DEMOVERSII-REGLAMENT-SOZDANIYA-I-PROVERKI.md'
+      - '00-SOURCE-FIDELITY-ZERO-TOLERANCE.md'
+      - 'matematika-source-2024/scripts/build_canonical_base_2024.py'
+      - 'matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-*'
+      - 'matematika-source-2024/templates/base-2024-shell.html'
+      - '.github/workflows/build-base-math-2023-source-locked.yml'
+
+jobs:
+  full-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      BASE2024_OUTPUT_DIR: /tmp/base2024-scaffold
+      BASE2023_OUTPUT_DIR: /tmp/base2023-release
+      BASE2023_ANALYSIS_DIR: /tmp/base2023-source-analysis
+      BASE2023_SCAFFOLD_DIR: /tmp/base2024-scaffold/ege-matematika-baza-demoversiya-2024
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build and browser dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow playwright
+
+      - name: Build verified technical BASE scaffold
+        shell: bash
+        run: |
+          python matematika-source-2024/scripts/build_canonical_base_2024.py
+          cat matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-* \
+            | base64 -d | gzip -dc > /tmp/build_verified_base_2024_package.py
+          python -m py_compile /tmp/build_verified_base_2024_package.py
+          python /tmp/build_verified_base_2024_package.py
+
+      - name: Analyze and lock official BASE 2023 sources
+        shell: bash
+        run: |
+          rm -rf "${BASE2023_ANALYSIS_DIR}"
+          python matematika-source-2023/scripts/analyze_base_2023_sources.py
+          mkdir -p "${BASE2023_ANALYSIS_DIR}/official-pdf"
+          cp matematika-source-2023/ege-2023-matematika-baza-demoversiya.pdf "${BASE2023_ANALYSIS_DIR}/official-pdf/"
+          cp matematika-source-2023/ege-2023-matematika-baza-specifikatsiya.pdf "${BASE2023_ANALYSIS_DIR}/official-pdf/"
+          cp matematika-source-2023/ege-2023-matematika-kodifikator.pdf "${BASE2023_ANALYSIS_DIR}/official-pdf/"
+
+      - name: Restore verified BASE 2023 builder
+        shell: bash
+        run: |
+          cat matematika-source-2023/scripts/build_verified_base_2023_package.py.gz.b64.part-* \
+            | base64 -d | gzip -dc > /tmp/build_verified_base_2023_package.py
+          python -m py_compile /tmp/build_verified_base_2023_package.py
+
+      - name: Build BASE 2023 from locked sources
+        env:
+          BASE2023_VISUAL_AUDIT_SCRIPT: ${{ github.workspace }}/matematika-source-2023/scripts/audit_visual_source_chain_2023.py
+          BASE2023_ZOOM_TEST: ${{ github.workspace }}/matematika-source-2023/scripts/visual_ui_zoom_test_2023.py
+        run: python /tmp/build_verified_base_2023_package.py
+
+      - name: Full pre-release gate chain
+        working-directory: /tmp/base2023-release/ege-matematika-baza-demoversiya-2023
+        run: |
+          node --check script.js
+          python precheck.py
+          python index_integrity_test.py
+          python gate_acceptance_test.py
+          python source_traceability_test.py
+          python codifier_coverage_test.py
+          python formula_gate_test.py
+          python visual_regression_test.py
+          python visual_fidelity_test.py
+          python audit_visual_source_chain_2023.py
+          python "$GITHUB_WORKSPACE/demo-production-standard/scripts/validate_t123_atomicity.py" . --max-bytes 42500
+          python independent_audit.py
+          python package_integrity_test.py
+          python screenshot_test.py
+          python browser_interaction_test.py
+          python visual_ui_zoom_test.py
+
+      - name: Freeze final ZIP
+        run: python matematika-source-2023/scripts/finalize_verified_base_2023_release.py
+
+      - name: Frozen package and ZIP gates
+        working-directory: /tmp/base2023-release/ege-matematika-baza-demoversiya-2023
+        run: |
+          python package_integrity_test.py
+          python zip_release_test.py
+
+      - name: Full regression from clean ZIP extraction
+        shell: bash
+        run: |
+          set -euo pipefail
+          CLEAN="${RUNNER_TEMP}/base2023-clean"
+          rm -rf "$CLEAN"
+          mkdir -p "$CLEAN"
+          unzip -q "${BASE2023_OUTPUT_DIR}/ege-matematika-baza-demoversiya-2023-v1.0.zip" -d "$CLEAN"
+          cd "$CLEAN/ege-matematika-baza-demoversiya-2023"
+          node --check script.js
+          python precheck.py
+          python index_integrity_test.py
+          python gate_acceptance_test.py
+          python source_traceability_test.py
+          python codifier_coverage_test.py
+          python formula_gate_test.py
+          python visual_regression_test.py
+          python visual_fidelity_test.py
+          python audit_visual_source_chain_2023.py
+          python "$GITHUB_WORKSPACE/demo-production-standard/scripts/validate_t123_atomicity.py" . --max-bytes 42500
+          python independent_audit.py
+          python package_integrity_test.py
+          python screenshot_test.py
+          python browser_interaction_test.py
+          python visual_ui_zoom_test.py
+          sha256sum "${BASE2023_OUTPUT_DIR}/ege-matematika-baza-demoversiya-2023-v1.0.zip"
+
+      - name: Upload verified release
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-matematika-baza-demoversiya-2023-v1.0-SOURCE-LOCKED
+          path: /tmp/base2023-release/ege-matematika-baza-demoversiya-2023-v1.0.zip
+          retention-days: 30
