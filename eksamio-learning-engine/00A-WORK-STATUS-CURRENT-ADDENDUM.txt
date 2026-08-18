@@ -106,3 +106,30 @@ It fixes the accepted engineering workflow:
 - secrets stay outside GitHub and are injected only where required;
 - no paid persistent remote devbox until Codex Cloud demonstrates a real technical or economic need;
 - production runtime remains separate from development workflow infrastructure.
+
+MULTI-YEAR DEMO PRODUCT DECISION — 2026-08-18
+
+The demo contour remains active and continues in parallel with PEIS/Tutor work.
+See section 11 of:
+- `267-EKSAMIO-PEIS-PRODUCT-ARCHITECTURE-DECISIONS-v0.1.txt`
+
+Fixed direction:
+- every declared Eksamio exam subject is intended to receive interactive demo coverage for 2022, 2023, 2024, 2025 and 2026;
+- Russian and Basic Mathematics are the current implemented directions, with part of Basic Mathematics still not publicly published;
+- remaining subjects will be built under the same 2022-2026 multi-year model;
+- each demo preserves its exact source-year exam truth while mapping results into shared semantic/learner evidence through adapters.
+
+SOURCE LIBRARY DECISION — 2026-08-18
+
+See:
+- `269-EKSAMIO-SOURCE-LIBRARY-CONTRACT-v0.1.txt`
+
+Fixed direction:
+- one subject-agnostic private Source Library for textbooks, references, official source files and future subject corpora;
+- raw large PDFs/books/scans live outside normal Git history, with Yandex Object Storage as the current economical storage direction;
+- GitHub stores source manifests, provenance, normalized structured knowledge, semantic mappings, builders, tests and review/result artifacts;
+- every admitted source receives stable source identity and manifest metadata rather than being identified only by a filename;
+- the normal pipeline is raw source -> manifest -> extraction -> source-anchored normalization -> validation -> semantic mapping -> Subject Knowledge Pack;
+- Codex Cloud accesses private source material only through controlled credentials/network policy and writes durable reviewed results back to GitHub;
+- learner uploads are stored separately from canonical educational sources;
+- new subjects reuse the same Source Library and provenance contract rather than inventing separate storage systems.
