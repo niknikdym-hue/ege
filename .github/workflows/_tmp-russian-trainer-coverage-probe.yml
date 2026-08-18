@@ -1,13 +1,10 @@
 name: Temporary Russian trainer coverage probe
 on:
-  push:
+  pull_request:
     branches: [main]
-    paths:
-      - 'eksamio-learning-engine/_tmp_russian_trainer_coverage_probe.py'
-      - '.github/workflows/_tmp-russian-trainer-coverage-probe.yml'
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -18,10 +15,8 @@ jobs:
           python-version: '3.12'
       - name: Build probe
         run: python eksamio-learning-engine/_tmp_russian_trainer_coverage_probe.py
-      - name: Commit probe
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add eksamio-learning-engine/267-RUSSIAN-SCHOOL-TRAINER-COVERAGE-PROBE-v0.1.json
-          git diff --cached --quiet || git commit -m 'Generate Russian trainer coverage probe'
-          git push
+      - name: Upload probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-trainer-coverage-probe
+          path: eksamio-learning-engine/267-RUSSIAN-SCHOOL-TRAINER-COVERAGE-PROBE-v0.1.json
