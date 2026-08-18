@@ -1,0 +1,132 @@
+{
+  "year": 2022,
+  "source": "ege-2022-matematika-baza-demoversiya.pdf",
+  "answer_table_printed_page": 25,
+  "status": "LOCKED_WITH_ONE_DOCUMENTED_SOURCE_ANOMALY",
+  "normalization": {
+    "decimal_separator": "comma_or_dot_input_normalized",
+    "ignore_spaces_in_numeric_answers": true,
+    "matching_sequences": "order_significant",
+    "set_selection": "order_ignored_when_task_semantics_are_set_selection"
+  },
+  "tasks": {
+    "1": [
+      {"variant": "1.1", "type": "numeric", "accepted": ["8,4"]},
+      {"variant": "1.2", "type": "numeric", "accepted": ["3"]}
+    ],
+    "2": [
+      {"variant": "2.1", "type": "numeric", "accepted": ["6"]},
+      {"variant": "2.2", "type": "numeric", "accepted": ["36"]},
+      {"variant": "2.3", "type": "numeric", "accepted": ["11"]}
+    ],
+    "3": [
+      {"variant": "3.1", "type": "matching_sequence", "accepted": ["4312"]},
+      {"variant": "3.2", "type": "matching_sequence", "accepted": ["3142"]}
+    ],
+    "4": [
+      {"variant": "4.1", "type": "numeric", "accepted": ["7"]},
+      {"variant": "4.2", "type": "numeric", "accepted": ["6559"]},
+      {"variant": "4.3", "type": "numeric", "accepted": ["-3"]}
+    ],
+    "5": [
+      {"variant": "5.1", "type": "numeric", "accepted": ["3"]},
+      {"variant": "5.2", "type": "numeric", "accepted": ["12"]}
+    ],
+    "6": [
+      {"variant": "6.1", "type": "numeric", "accepted": ["17400"], "official_table_display": "17 400"},
+      {"variant": "6.2", "type": "numeric", "accepted": ["50"]},
+      {"variant": "6.3", "type": "numeric", "accepted": ["9"], "source_anomaly": "ANSWER-TABLE-6.3"}
+    ],
+    "7": [
+      {"variant": "7.1", "type": "numeric", "accepted": ["28"]},
+      {"variant": "7.2", "type": "numeric", "accepted": ["-0,6"]},
+      {"variant": "7.3", "type": "numeric", "accepted": ["51"]},
+      {"variant": "7.4", "type": "numeric", "accepted": ["2"]}
+    ],
+    "8": [
+      {"variant": "8.1", "type": "numeric", "accepted": ["245"]},
+      {"variant": "8.2", "type": "numeric", "accepted": ["15"]}
+    ],
+    "9": [
+      {"variant": "9.1", "type": "numeric", "accepted": ["7"]},
+      {"variant": "9.2", "type": "numeric", "accepted": ["67"]},
+      {"variant": "9.3", "type": "numeric", "accepted": ["-2"]}
+    ],
+    "10": [
+      {"variant": "10.1", "type": "numeric", "accepted": ["135"]},
+      {"variant": "10.2", "type": "numeric", "accepted": ["120"]}
+    ],
+    "11": [
+      {"variant": "11.1", "type": "numeric", "accepted": ["0,2"]},
+      {"variant": "11.2", "type": "numeric", "accepted": ["0,97"]}
+    ],
+    "12": [
+      {
+        "variant": "12.1",
+        "type": "set_selection",
+        "accepted_sets": [["1", "3", "5"], ["2", "5", "6"]],
+        "official_table_strings": ["135", "153", "315", "351", "513", "531", "256", "265", "526", "562", "625", "652"]
+      },
+      {
+        "variant": "12.2",
+        "type": "set_selection",
+        "accepted_sets": [["1", "5"]],
+        "official_table_strings": ["15", "51"]
+      },
+      {"variant": "12.3", "type": "numeric", "accepted": ["192000"], "official_table_display": "192 000"}
+    ],
+    "13": [
+      {"variant": "13.1", "type": "numeric", "accepted": ["5"]},
+      {"variant": "13.2", "type": "numeric", "accepted": ["14"]}
+    ],
+    "14": [
+      {"variant": "14.1", "type": "matching_sequence", "accepted": ["2143"]},
+      {"variant": "14.2", "type": "matching_sequence", "accepted": ["4132"]},
+      {"variant": "14.3", "type": "matching_sequence", "accepted": ["4132"]}
+    ],
+    "15": [
+      {"variant": "15.1", "type": "numeric", "accepted": ["12"]}
+    ],
+    "16": [
+      {"variant": "16.1", "type": "numeric", "accepted": ["180"]},
+      {"variant": "16.2", "type": "numeric", "accepted": ["16"]},
+      {"variant": "16.3", "type": "numeric", "accepted": ["9"]}
+    ],
+    "17": [
+      {"variant": "17.1", "type": "matching_sequence", "accepted": ["4213"]},
+      {"variant": "17.2", "type": "matching_sequence", "accepted": ["4321"]}
+    ],
+    "18": [
+      {
+        "variant": "18.1",
+        "type": "set_selection",
+        "accepted_sets": [["2", "4"]],
+        "official_table_strings": ["24", "42"]
+      },
+      {
+        "variant": "18.2",
+        "type": "set_selection",
+        "accepted_sets": [["1", "4"]],
+        "official_table_strings": ["14", "41"]
+      }
+    ],
+    "19": [
+      {"variant": "19.1", "type": "numeric_alternatives", "accepted": ["578", "587", "758", "785", "857", "875"]},
+      {"variant": "19.2", "type": "numeric_alternatives", "accepted": ["390", "570", "750"]},
+      {"variant": "19.3", "type": "numeric_alternatives", "accepted": ["51576", "75156", "75576"]}
+    ],
+    "20": [
+      {"variant": "20.1", "type": "numeric", "accepted": ["70"]},
+      {"variant": "20.2", "type": "numeric", "accepted": ["20"]}
+    ],
+    "21": [
+      {"variant": "21.1", "type": "numeric", "accepted": ["144"]},
+      {"variant": "21.2", "type": "numeric", "accepted": ["12"]},
+      {"variant": "21.3", "type": "numeric", "accepted": ["22"]}
+    ]
+  },
+  "source_anomaly": {
+    "id": "ANSWER-TABLE-6.3",
+    "rule": "Не создавать вариант 1.3. Значение 9 из строки 1/Пример 3 относится к фактически существующему варианту 6.3; строка задания 6 в таблице ответов не содержит третьей ячейки."
+  }
+}
