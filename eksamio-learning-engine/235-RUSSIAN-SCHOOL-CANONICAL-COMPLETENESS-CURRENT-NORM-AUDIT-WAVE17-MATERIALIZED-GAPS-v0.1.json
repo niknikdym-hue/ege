@@ -1,0 +1,98 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"COMPLETENESS_CURRENT_NORM_AUDIT_WAVE17_MATERIALIZED_GAPS_COMPLETE",
+  "metric_status":"ALL_137_PHYSICAL_CHECKPOINT_RECORDS_AUDITED_WORKING_SEMANTIC_136_PENDING_HOLDS_AND_CONSOLIDATION",
+  "production_integration":"HOLD",
+  "scope":{
+    "bank_ref":"217-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK33-MATERIALIZED-GAPS-v0.1.json",
+    "canonical_units_reviewed":4,
+    "purpose":"Current-norm/completeness audit of the four genuine physical gaps materialized after the original 133-record bank. This completes record-by-record audit coverage of the 137-record checkpoint."
+  },
+  "source_basis":{
+    "current_academic_crosscheck":[
+      {"source":"Gramota.ru — НЕ with adjectives","url":"https://gramota.ru/uchebnik/pravila/ne-s-prilagatelnymi"},
+      {"source":"Gramota.ru — academic rule for solid/separate НЕ","url":"https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/slitnoerazdelnoe-napisanie-ne"},
+      {"source":"Gramota.ru — academic О/Ё/Е after sibilants","url":"https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/bukvy-o-e-e-posle-shipyashchikh"},
+      {"source":"Gramota.ru — Ы/И after Ц","url":"https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/bukvy-i-y-2146"},
+      {"source":"Gramota.ru — school/current rule Ы/И after Ц","url":"https://gramota.ru/uchebnik/pravila/bukvy-y-i-i-posle-ts"}
+    ]
+  },
+  "decisions":[
+    {
+      "unit_id":"school-ne-adjectives-negative-intensifier-boundary",
+      "disposition":"CONFIRMED_CURRENT_NEGATIVE_CONTEXT_BOUNDARY_NO_COUNT_CHANGE",
+      "count_effect":0,
+      "keep_identity":true,
+      "current_negative_intensifiers":["далеко не","отнюдь не","ничуть не","нисколько не","вовсе не in unstressed negative-strengthening use","совсем не in negative-strengthening use"],
+      "current_negative_pronominal_context_examples":["никак не","никому не","никем не","никакой не","ничем не"],
+      "important_context_note":"ВОвсе and СОВСЕМ are not magical immutable spelling triggers in every context; the unit must test whether they actually strengthen negation. The source list is a route, not a bag of automatic magnets.",
+      "patch_policy":"Keep the identity and make semantic strengthening of negation the learner rule."
+    },
+    {
+      "unit_id":"school-o-after-sibilants-lexical-o-set",
+      "disposition":"CONFIRMED_CURRENT_RULE_FAMILY_WITH_INTERNAL_SUBGROUPS_NO_COUNT_CHANGE",
+      "count_effect":0,
+      "keep_identity":true,
+      "school_source_union":["шоколад","шофёр","крыжовник","шов","шоссе","обжора","шорник","капюшон","жокей","чащоба","шорох","чопорный","трущоба","жонглёр","чокаться","трещотка","прожорливый","шомпол","мажордом","шовинизм"],
+      "current_norm_subgroups":{
+        "native_or_structurally_explained_o":["обжора","крыжовник","шов","чащоба","шорох","чопорный","трущоба","чокаться","трещотка","прожорливый","шорник"],
+        "borrowed_or_lexical_o":["капюшон","шомпол","жокей","жонглёр","мажордом","шовинизм","шоколад","шоссе","шофёр"]
+      },
+      "current_norm_note":"The current academic rule explicitly distinguishes native structural cases and borrowed/lexical spellings. The school source may still practise them as one high-risk О-after-sibilants dictionary family, but the learner rationale must not pretend they all share one etymological exception mechanism.",
+      "patch_policy":"Keep one denominator practice family; store normative subgroup metadata and use item-level dictionary control in exercises."
+    },
+    {
+      "unit_id":"school-tsy-exception-family",
+      "disposition":"CONFIRMED_CURRENT_TRADITIONAL_FAMILY_WITH_DERIVATIVES_NO_COUNT_CHANGE",
+      "count_effect":0,
+      "keep_identity":true,
+      "current_core_roots_and_forms":["цыган","цыплёнок","цыпка","цыпки","на цыпочки","на цыпочках","цып-цып","цыц","цыкать","цыкнуть","цыркать"],
+      "school_source_scope":["цыган","цыц","цыплёнок","цыпочки","на цыпочках","цыкнуть","цыпка"],
+      "excluded_obsolete_source_member":"шахтцы",
+      "current_norm_note":"Current academic rules confirm a traditional lexical/root family and its derivatives. The denominator remains one family; surface derivatives are not separate knowledge identities.",
+      "patch_policy":"Broaden normative scope to the current academic family without inventing new grade routes. Preserve the explicit exclusion of obsolete source material."
+    },
+    {
+      "unit_id":"school-zhog-zheg-part-of-speech-contrast",
+      "disposition":"CONFIRMED_CURRENT_MORPHOLOGICAL_SPELLING_CONTRAST_NO_COUNT_CHANGE",
+      "count_effect":0,
+      "keep_identity":true,
+      "noun_o_forms":["ожог","поджог","пережог","изжога"],
+      "verb_e_yo_contrast_core":["ожёг","поджёг","сжёг","изжёг"],
+      "school_core_pairs":["ожог — ожёг","поджог — поджёг"],
+      "current_rule":"The noun/root spellings with О and corresponding past-tense verb forms with Ё/Е belong to different morphological spelling patterns; part of speech/form is the decisive learner diagnostic.",
+      "patch_policy":"Keep the source pairs as grade anchors and use the broader current family only as normative scope."
+    }
+  ],
+  "wave_summary":{
+    "units_reviewed":4,
+    "identities_kept":4,
+    "new_canonical_identities_admitted":0,
+    "semantic_deduplications":0,
+    "semantic_denominator_effect":0
+  },
+  "cumulative_audit_progress":{
+    "physical_records_reviewed_in_waves_1_17":137,
+    "physical_checkpoint_total":137,
+    "physical_checkpoint_records_unreviewed":0,
+    "semantic_distinct_records_after_confirmed_dedupe":136,
+    "working_semantic_checkpoint_total":136,
+    "record_level_audit_status":"COMPLETE",
+    "note":"136 is not yet declared final: two live HOLDs and one source-gated completeness candidate remain unresolved, and the one confirmed semantic absorption has not yet been consolidated into an active-manifest artifact."
+  },
+  "live_holds_carried_forward":[
+    {"unit_id":"school-deystvitelno-function-context","status":"HOLD","counted":false},
+    {"unit_id":"school-ni-fixed-idioms","status":"HOLD","counted":false}
+  ],
+  "completeness_candidates_carried_forward":[
+    {"candidate_id":"school-imperative-soft-sign-before-sya-te-boundary","status":"PENDING_EXACT_INTERNAL_SOURCE_LOCATOR","counted":false}
+  ],
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "physical_canonical_bank_changed":false,
+  "next":"Resolve school-deystvitelno-function-context and school-ni-fixed-idioms from exact source provenance plus current norm. Separately search the repository for an exact internal locator for the imperative-soft-sign candidate. Then build a semantic consolidation manifest that absorbs the confirmed N/NN duplicate and states the working/final denominator without rewriting historical provenance files."
+}
