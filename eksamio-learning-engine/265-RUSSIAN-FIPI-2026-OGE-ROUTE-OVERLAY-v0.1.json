@@ -1,0 +1,66 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"OGE_2026_FIPI_ROUTE_OVERLAY_COMPLETE / ZERO_SCHOOL_REOPEN_CANDIDATES",
+  "production_integration":"HOLD",
+  "school_baseline_for_overlay":185,
+  "official_sources":["FIPI MR_rus_yaz_oge_2026.pdf","FIPI 2026 OGE orthography navigator","FIPI 2026 OGE punctuation navigator","official OGE 2026 demo/specification/codifier package ru_9_2026.zip"],
+  "exam_task_map":[
+    {"task":1,"official_route":"compressed exposition","classification":"OUTSIDE_SCHOOL_DENOMINATOR"},
+    {"tasks":"2-3","official_route":"syntactic analysis","classification":"PARTIAL_SCHOOL_OVERLAP","note":"Some active syntax classification skills can support these tasks, but the official syntactic-analysis domain is broader than the frozen orthography/punctuation denominator and does not alter it."},
+    {"tasks":"4-5","official_route":"punctuation analysis","classification":"EXAM_ONLY_COMPOSITE","school_identity_families":["all applicable active punctuation identities mapped below"]},
+    {"tasks":"6-7","official_route":"orthographic analysis","classification":"EXAM_ONLY_COMPOSITE","school_identity_families":["all applicable active orthography identities mapped below"]},
+    {"tasks":"8-9","official_route":"current Russian literary norms","classification":"PARTIAL_SCHOOL_OVERLAP","note":"Includes grammatical, morphological, syntactic and speech norms. Some active school identities overlap, but the official norm domain is broader and remains a separate exam/norm layer."},
+    {"task":10,"official_route":"text content analysis","classification":"OUTSIDE_SCHOOL_DENOMINATOR"},
+    {"task":11,"official_route":"expressive means","classification":"OUTSIDE_SCHOOL_DENOMINATOR"},
+    {"task":12,"official_route":"lexical analysis","classification":"OUTSIDE_SCHOOL_DENOMINATOR"},
+    {"tasks":"13.1/13.2/13.3","official_route":"essay options","classification":"OUTSIDE_SCHOOL_DENOMINATOR"}
+  ],
+  "orthography_codifier_overlay":[
+    {"position":"6.1","topic":"concept of orthogram / orthographic analysis premise","classification":"EXAM_ONLY_COMPOSITE","note":"Meta-operation over rules; not a new spelling identity."},
+    {"position":"6.2","topic":"root spelling: checked/uncheckable/alternating vowels, consonants, O/YO after sibilants, I/Y after TS, selected doubles","classification":"SCHOOL_IDENTITY_ROUTE","owners":["school-root-vowel-stress-verification","school-root-vowel-dictionary-unverifiable","alternating-root families from file 248","school-root-o-yo-after-sibilants-base","school-root-i-y-after-ts-base","school-root-voiced-voiceless-consonant-verification","school-unpronounceable-consonant-verification","double-consonant root systems from file 249"]},
+    {"position":"6.3","topic":"prefixes including invariable prefixes, Z/S, PRE/PRI","classification":"SCHOOL_IDENTITY_ROUTE","owners":["school-invariable-prefix-spelling-base","school-prefix-z-s-selection","school-pre-pri-semantic-base","school-pre-pri-lexical-contrast-family"]},
+    {"position":"6.4","topic":"Ъ and Ь including separating signs","classification":"SCHOOL_IDENTITY_ROUTE","owners":["school-separating-hard-soft-sign-boundary","school-verb-soft-sign-forms","other active lexical/form soft-sign owners where applicable"]},
+    {"position":"6.5","topic":"Ы/И after prefixes","classification":"SCHOOL_IDENTITY_ROUTE","owners":["school-i-y-after-russian-prefix-base","school-i-y-after-prefix-vzimat-exception","school-i-y-after-prefix-retain-i-boundary"]},
+    {"position":"6.6","topic":"suffix spelling across parts of speech","classification":"EXAM_ONLY_COMPOSITE","owners":["school-unstressed-suffix-vowel-verification-fixed-patterns","noun suffix families from file 252","adjective suffix families from file 252","school-verb-suffix-ova-eva-yva-iva-base","school-verb-stressed-va-boundary","school-verb-enet-derived-from-noun","school-verb-infinitive-past-nonfinite-stem-vowel","school-participle-vowel-suffix-conjugation-base","school-gerund-forming-suffix-system","school-adverb-final-vowel-a-o","school-o-e-after-sibilants-suffix-ending","school-vowels-after-ts-suffix-ending"]},
+    {"position":"6.7","topic":"endings of nouns, adjectives, verbs, numerals, participles","classification":"EXAM_ONLY_COMPOSITE","owners":["school-noun-case-ending-base","special noun-ending families from file 252","school-adjective-ending-inflection-and-special-forms with participle scope expansion from file 263","school-verb-personal-ending-conjugation-base","school-numeral-case-ending-inflection-base","special numeral paradigm identities"]},
+    {"position":"6.8","topic":"solid/hyphen/separate spelling across parts of speech","classification":"EXAM_ONLY_COMPOSITE","owners":["compound noun/adjective systems","school-pol-polu-writing-boundary","school-numeral-orthography-base","negative/indefinite pronoun owners","school-adverb-solid-hyphen-separate-system","school-preposition-solid-hyphen-separate-base","school-conjunction-solid-separate-spelling-base","school-nonnegative-particle-separate-hyphen-spelling-base"]},
+    {"position":"6.9","topic":"НЕ/НИ","classification":"EXAM_ONLY_COMPOSITE","owners":["active НЕ spelling systems","active NI semantic/spelling systems","school-ni-fixed-idioms"]},
+    {"position":"6.10","topic":"Н/НН","classification":"EXAM_ONLY_COMPOSITE","owners":["school-denominal-adjective-n-nn-base","school-participle-verbal-adjective-n-nn-base","school-nn-derived-noun-adverb-inheritance"]},
+    {"position":"6.11","topic":"spelling of service words","classification":"EXAM_ONLY_COMPOSITE","owners":["school-preposition-solid-hyphen-separate-base","school-conjunction-solid-separate-spelling-base","school-nonnegative-particle-separate-hyphen-spelling-base","service-word homonym/function branches"]},
+    {"position":"6.12","topic":"proper names / capitalization","classification":"EXAM_ONLY_COMPOSITE","owners":["capitalization mastery families from file 250"]},
+    {"position":"6.13","topic":"compound and abbreviated words","classification":"EXAM_ONLY_COMPOSITE","owners":["school-compound-linking-vowel","school-compound-first-part-without-linking-vowel-system","school-compound-noun-solid-hyphen-system","school-compound-adjective-solid-hyphen-separate-system","school-abbreviations-capitalization-formation"]},
+    {"position":"6.14","topic":"orthographic analysis","classification":"EXAM_ONLY_COMPOSITE","owners":["all applicable active orthography identities"],"note":"Rule identification/application over existing skills; zero school-count effect."}
+  ],
+  "punctuation_overlay":{
+    "status":"ALL_OFFICIAL_OGE_2026_PUNCTUATION_FAMILIES_OWNED_OR_COMPOSITE",
+    "families":[
+      {"topic":"dash between subject and predicate","owners":["school-dash-subject-predicate-basic-placement","school-dash-subject-predicate-no-dash-boundaries","school-dash-subject-predicate-closing-comma-boundary"]},
+      {"topic":"dash in incomplete sentence","owners":["school-dash-incomplete-sentence"]},
+      {"topic":"homogeneous members / single/repeated/paired conjunctions / generalizing words","owners":["homogeneous-member systems from files 187/214/256"]},
+      {"topic":"isolated definitions, appositions, circumstances, additions, clarifying/explanatory/joining constructions","owners":["active isolation/apposition/gerund/addition/clarification/joining identities"]},
+      {"topic":"comparative constructions","owners":["school-kak-comma-functional-boundary"]},
+      {"topic":"introductory/parenthetical constructions, addresses, interjections","owners":["introductory systems and function-context units","school-address-punctuation-boundary","school-interjection-particle-punctuation"]},
+      {"topic":"SSP","owners":["school-ssp-comma-base","school-ssp-semicolon-boundary","school-ssp-dash-boundary"]},
+      {"topic":"SPP","owners":["school-spp-main-subordinate-comma-base","school-spp-complex-subordinator-comma-boundary","school-spp-multiple-subordinate-punctuation","school-spp-special-signs-family","school-semantically-integral-expression-comma-boundary"]},
+      {"topic":"BSP","owners":["school-bsp-comma-semicolon-base","school-colon-bsp-vs-generalizing-word","school-bsp-dash-boundary","school-bsp-comma-dash-boundary"]},
+      {"topic":"complex sentences with different types of connection","classification":"EXAM_ONLY_COMPOSITE","owners":["SSP/SPP/BSP systems"]},
+      {"topic":"direct/indirect speech, citation, dialogue","owners":["school-direct-speech-base-formatting","school-direct-speech-adjacent-author-words-system","school-direct-speech-author-words-middle-system","school-direct-speech-inside-author-words","school-citation-punctuation-formatting","school-dialogue-replica-punctuation"],"note":"Indirect-speech punctuation routes through ordinary SPP/sentence punctuation; no separate special-sign identity is needed."},
+      {"topic":"punctuation analysis","classification":"EXAM_ONLY_COMPOSITE","owners":["all applicable active punctuation identities"]}
+    ]
+  },
+  "second_pass_result":{
+    "official_oge_orthography_positions_reviewed":"6.1-6.14",
+    "official_oge_punctuation_scope_reviewed":"complete 2026 navigator range",
+    "school_reopen_candidates":0,
+    "unowned_official_school_orthography_topics":0,
+    "unowned_official_school_punctuation_topics":0,
+    "school_count_effect":0
+  },
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"With EGE and OGE second passes both at zero SCHOOL_REOPEN_CANDIDATE, re-freeze the school denominator at 185 and close the FIPI overlay; then begin trainer coverage audit."
+}
