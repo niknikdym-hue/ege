@@ -1,0 +1,129 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"PRIMARY_COMPLETENESS_WAVE_F_P13_P23_MATERIALIZED",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_176_NOT_FINAL",
+  "production_integration":"HOLD",
+  "primary_source":"rosenthal/rozental.doc",
+  "primary_scope":"Rosenthal punctuation §§30–46 excluding already-owned §36 and §44 branches as normalized below",
+  "current_norm_gate":"Full Academic Guide under V. V. Lopatin §§112–130 and §87 for semantically integral expressions",
+  "semantic_before_wave_F":168,
+  "normalization_rule":"A complex-sentence engine owns its normal sign plus structural exceptions that are inseparable from the same parse. Old high-risk cards are retained physically as provenance/routes but are semantically absorbed when the full parent now owns the decision.",
+  "P13_ssp_comma":{
+    "unit_id":"school-ssp-comma-base",
+    "canonical_label":"ССП: запятая между предикативными частями и нормативные условия её отсутствия",
+    "source":"Rosenthal §30",
+    "current_norm":"Lopatin §112",
+    "branches":["comma between coordinated predicative parts under connecting/adversative/disjunctive/joining/explanatory relations","no comma with a genuine common secondary member, common subordinate clause, common introductory/detached component or other source-established structural commonality","no comma in source-established interrogative/exclamatory/imperative or structurally homogeneous special configurations","distinguish a single conjunction joining homogeneous members from the same conjunction joining predicative clauses"],
+    "absorbs":["school-ssp-no-comma-common-element-boundary","school-single-i-homogeneous-vs-clause-boundary"],
+    "cross_owner":"The homogeneous-member half of school-single-i-homogeneous-vs-clause-boundary is now owned by school-homogeneous-single-conjunction-punctuation-base from file 256; the clause half is owned here. The historical cross-boundary record therefore has no independent semantic count.",
+    "new_parent_count":1,
+    "absorptions":-2,
+    "net_count_effect":-1
+  },
+  "P14_ssp_semicolon":{
+    "unit_id":"school-ssp-semicolon-boundary",
+    "canonical_label":"ССП: точка с запятой между распространёнными или относительно самостоятельными частями",
+    "source":"Rosenthal §31",
+    "current_norm":"Current academic SSP semicolon rule; choose semicolon when clause complexity/independence requires a stronger enumerative boundary than comma without turning the parts into separate sentences.",
+    "count_effect":1
+  },
+  "P15_ssp_dash":{
+    "unit_id":"school-ssp-dash-boundary",
+    "canonical_label":"ССП: тире при резком результате, противопоставлении, быстром следовании или структурно-интонационном переломе",
+    "source":"Rosenthal §32",
+    "current_norm":"Current academic SSP dash rule",
+    "decision_model":"Do not choose dash merely because a coordinating conjunction is present; parse the semantic relation and intonational break between predicative parts.",
+    "count_effect":1
+  },
+  "P16_spp_base":{
+    "unit_id":"school-spp-main-subordinate-comma-base",
+    "canonical_label":"СПП: отделение придаточной части от главной запятой",
+    "source":"Rosenthal §§33–34 base scope",
+    "current_norm":"Lopatin §115",
+    "branches":["subordinate after main clause","subordinate before main clause","subordinate inserted inside main clause and isolated on both sides","source-established cases where a surface conjunction/relative word does not introduce a full subordinate clause and therefore does not trigger the ordinary comma"],
+    "ownership_boundary":"Classification of союз vs союзное слово remains owned by school-subordinator-vs-relative-word-what-when-how; this unit owns punctuation after the syntactic status is established.",
+    "count_effect":1
+  },
+  "P17_complex_subordinator":{
+    "unit_id":"school-spp-complex-subordinator-comma-boundary",
+    "canonical_label":"СПП со сложным подчинительным союзом: союз целиком или расчленён, место запятой",
+    "source":"Rosenthal §34 complex-conjunction scope",
+    "current_norm":"Lopatin §§116–118",
+    "branches":["whole conjunction enters subordinate clause and comma precedes its first component","conjunction is split and comma falls inside the conjunction under semantic/intonational/contextual conditions","current non-splitting patterns and obligatory/strongly preferred boundaries","particles/intensifiers before a simple subordinate conjunction move the comma before the intensifier where the current rule requires"],
+    "cross_link":"Orthographic spelling of conjunctions remains owned by school-conjunction-solid-separate-spelling-base; this unit owns punctuation/segmentation in the sentence.",
+    "count_effect":1
+  },
+  "P18_multiple_subordinates":{
+    "unit_id":"school-spp-multiple-subordinate-punctuation",
+    "canonical_label":"СПП с несколькими придаточными: однородное, неоднородное и последовательное подчинение; стык союзов",
+    "source":["Rosenthal §35","Rosenthal §36"],
+    "current_norm":"Lopatin §§119–123",
+    "branches":["homogeneous subordinate clauses punctuated by homogeneous-member principles","sequential subordination with separation of subordinate parts","several main parts with one common subordinate part","junction of two subordinate conjunctions or coordinating+subordinating conjunctions","presence/absence of a correlating ТО/ТАК or other second component controls whether the conjunction junction is split"],
+    "absorbs":["school-junction-of-conjunctions-to-no-boundary"],
+    "new_parent_count":1,
+    "absorptions":-1,
+    "net_count_effect":0
+  },
+  "P19_spp_special_signs":{
+    "unit_id":"school-spp-special-signs-family",
+    "canonical_label":"СПП: специальные знаки вместо базовой запятой или в дополнение к ней",
+    "source":"Rosenthal §§37–40",
+    "current_norm":"Lopatin §§124–126 and current multi-part sentence rules",
+    "branches":["semicolon between sufficiently independent/extended subordinate blocks where a stronger boundary is warranted","dash between subordinate and main parts for emphatic, interrogative, parallel, generalizing or clarifying structure","colon before a subordinate part when the main part contains a warning/predictive component or the subordinate expresses an indirect question/explanation under the current rule","comma+dash in source-established period/structural combinations; do not treat the pair as decorative"],
+    "counting_policy":"One structured non-basic-sign family. The signs are branches chosen after the SPP structure is parsed, not four unrelated denominator parents.",
+    "count_effect":1
+  },
+  "P20_integral_expressions":{
+    "unit_id":"school-semantically-integral-expression-comma-boundary",
+    "canonical_label":"Цельное по смыслу сочетание с союзным/местоименным словом или обычная придаточная конструкция",
+    "source":"Rosenthal §41",
+    "current_norm":"Lopatin §87",
+    "branches":["lexicalized/semantically integral combinations such as как следует, во что бы то ни стало, кто во что горазд and analogous source/current constructions without internal comma","particle constructions such as не то чтобы, не иначе как in their integral use","pronominal/adverbial combinations типа неизвестно кто/где in integral use","same surface sequence becomes a genuine subordinate clause in a different syntax and is then punctuated by the ordinary SPP rule"],
+    "cross_link":"Fixed NI spelling inside members such as во что бы то ни стало remains orthographically owned by school-ni-fixed-idioms; this identity owns the comma/no-comma syntactic boundary.",
+    "count_effect":1
+  },
+  "P21_bsp_comma_semicolon":{
+    "unit_id":"school-bsp-comma-semicolon-base",
+    "canonical_label":"БСП при перечислении: запятая или точка с запятой по тесноте связи и распространённости частей",
+    "source":"Rosenthal §43",
+    "current_norm":"Lopatin §§127–128",
+    "branches":["comma between closely related enumerative parts","semicolon between more independent or internally complicated parts","internal complexity of each part does not remove the BSP relation"],
+    "count_effect":1
+  },
+  "P22_bsp_dash":{
+    "unit_id":"school-bsp-dash-boundary",
+    "canonical_label":"БСП: тире по смысловым отношениям между частями",
+    "source":"Rosenthal §45",
+    "current_norm":"Lopatin §130",
+    "branches":["contrast/comparison","result/consequence or rapid event transition","conditional/temporal relation in source-established structures","comparison and other current semantic branches"],
+    "ownership_boundary":"school-colon-bsp-vs-generalizing-word remains independent because it owns the colon-vs-simple-sentence classification and Rosenthal §44/current §129 explanatory/causal relations.",
+    "count_effect":1
+  },
+  "P23_bsp_comma_dash":{
+    "unit_id":"school-bsp-comma-dash-boundary",
+    "canonical_label":"БСП: запятая и тире в специальных структурно-смысловых конфигурациях",
+    "source":"Rosenthal §46",
+    "current_norm":"Current academic BSP/complex-construction interaction rules",
+    "learner_policy":"Do not treat comma+dash as a generic stronger dash. Establish the syntactic closure/completion requiring the comma and the independent semantic/intonational boundary requiring the dash.",
+    "count_effect":1
+  },
+  "count_assertion":{
+    "source_candidates_P13_P23":11,
+    "new_physical_canonical_records":11,
+    "semantic_absorptions":3,
+    "net_semantic_effect":8,
+    "semantic_before_wave_F":168,
+    "interim_active_semantic_after_wave_F":176,
+    "physical_canonical_records_before_wave_F":226,
+    "physical_canonical_records_after_wave_F":237,
+    "warning":"176 is not final. Wave G direct speech/citations/quotation marks remains open; final primary-source closure must follow Wave G."
+  },
+  "wave_F_status":"CLOSED",
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Proceed immediately to Wave G P24-P29. Re-audit Rosenthal §50 existing three author-words-middle cards for semantic consolidation under one structured middle-author-words engine, then materialize direct-speech base/author-before/author-after/inside-author/citation/quotation systems."
+}
