@@ -1,0 +1,467 @@
+EKSAMIO / PEIS
+RUSSIAN UNIFIED SEMANTIC IDENTITY REGISTRY CONTRACT
+VERSION: v1.0
+DATE: 2026-08-19
+STATUS: ACTIVE ARCHITECTURE CONTRACT / MATERIALIZATION PENDING
+
+PURPOSE
+
+Define one stable semantic identity layer for the Russian-language subject across school learning, EGE/OGE, demos, trainers, explanations, exceptions, practice, homework and AI Tutor.
+
+This contract does NOT replace existing canonical IDs. It defines how existing semantic assets are preserved, related and extended without duplicating meaning.
+
+======================================================================
+1. CORE PRINCIPLE
+======================================================================
+
+Semantic identity answers:
+WHAT EXACT KNOWLEDGE / SKILL / DECISION MUST THE LEARNER KNOW OR BE ABLE TO PERFORM?
+
+It does NOT answer:
+- which product the learner used;
+- which concrete exercise was shown;
+- which explanation was displayed;
+- which exception-bank record was used;
+- which exam year/task contained it;
+- whether a learner has mastered it.
+
+Those are separate layers.
+
+======================================================================
+2. CURRENT AUTHORITIES THAT MUST BE PRESERVED
+======================================================================
+
+A. SCHOOL CANONICAL DENOMINATOR
+
+Current authority:
+`266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json`
+
+Fixed facts:
+- active school denominator = 185;
+- it covers canonical school orthography, punctuation and established school-rule decisions admitted through the Rosenthal/current-norm/FIPI backstop process;
+- existing `school-*` identities are canonical for their meanings;
+- FIPI exam tasks/codifier positions are routes/composites, not extra school identities;
+- do not recreate these meanings under a new namespace.
+
+B. EGE RUSSIAN SKILL GRAPH
+
+Current authority:
+`03-RUSSIAN-SKILL-GRAPH.json`
+
+Role:
+- exam-oriented taxonomy for current EGE Russian breadth;
+- contains high-level skills/subskills linked to task numbers and trainer/demo evidence;
+- includes semantic domains that are broader than the 185 school denominator, including lexical/text/style/orthoepy/morphology/syntax and other EGE-relevant areas.
+
+The EGE Skill Graph must remain a valid exam/product taxonomy.
+It must NOT be promoted unchanged into the universal subject identity registry.
+
+======================================================================
+3. WHY A UNIFIED REGISTRY IS REQUIRED
+======================================================================
+
+Neither existing layer is sufficient alone:
+
+185 school identities:
+- precise/canonical for the covered school-rule denominator;
+- not the whole Russian subject;
+- does not by itself fully represent orthoepy, lexical/paronym/phraseology, text/style, expressive means, essay competencies and all morphology/syntax competencies.
+
+EGE Skill Graph:
+- broad exam-oriented taxonomy;
+- granularity and purpose differ from canonical school decisions;
+- exam task taxonomy must not own semantic truth for homework/school/OGE/future products.
+
+Therefore build an upper subject registry that:
+1. REUSES canonical school identities where meaning already exists;
+2. ADDS only genuinely missing Russian-language semantic identities;
+3. MAPS EGE/OGE taxonomies and product objects onto those identities;
+4. remains stable across exam-year changes.
+
+======================================================================
+4. REGISTRY SCOPE
+======================================================================
+
+The Russian Unified Semantic Identity Registry must eventually cover the Russian-language learning domain required by Eksamio for grades 5-11 and EGE/OGE/homework use.
+
+At minimum the registry must be able to represent:
+- orthography;
+- punctuation;
+- established school rule decisions;
+- orthoepy;
+- lexical norms and semantics;
+- paronyms;
+- phraseology;
+- morphology / morphological norms;
+- syntax / syntactic norms;
+- text cohesion and text analysis;
+- functional stylistics;
+- expressive language means;
+- speech norms where applicable;
+- essay/written-response competencies and subskills;
+- prerequisite relations across these domains where verified.
+
+No final identity count is to be invented in advance.
+The count is an output of source-backed canonicalization, not a target number.
+
+======================================================================
+5. NAMESPACE POLICY
+======================================================================
+
+Existing canonical `school-*` IDs remain unchanged.
+
+New subject-level identities must use a stable namespace distinct from:
+- exam task IDs;
+- trainer IDs;
+- explanation IDs;
+- exception IDs;
+- practice IDs.
+
+Recommended logical form for new identities:
+
+`ru-<domain>-<stable-slug>`
+
+Examples in this document are illustrative only and do not authorize creation of specific IDs without source review.
+
+Never create a new `ru-*` identity when an existing `school-*` identity already expresses the same canonical decision.
+
+======================================================================
+6. IDENTITY TYPES
+======================================================================
+
+Registry may contain semantic entity types such as:
+
+KNOWLEDGE_RULE
+- learner must know/apply a rule or normative decision.
+
+RECOGNITION_SKILL
+- learner must identify a relevant linguistic/textual feature.
+
+PROCEDURAL_SKILL
+- learner must perform an analysis/transformation/selection procedure.
+
+DISCRIMINATION_SKILL
+- learner must distinguish commonly confused cases.
+
+PRODUCTION_SKILL
+- learner must produce a written/oral response satisfying a competency.
+
+COMPOSITE_COMPETENCY
+- higher-level competency that references smaller canonical identities but must not replace them.
+
+Identity type does not change canonical meaning.
+
+======================================================================
+7. MINIMUM REGISTRY ENTRY CONTRACT
+======================================================================
+
+Each semantic identity must support fields equivalent to:
+
+semantic_id
+subject_id = russian
+entity_type
+canonical_label_ru
+canonical_definition_ru
+domain
+subdomain
+parent_ids[]
+prerequisite_ids[]
+aliases[]
+status
+source_authority_refs[]
+source_provenance_refs[]
+school_grade_scope[] where verified
+exam_relevance_flags
+legacy_refs[]
+supersedes[]
+superseded_by[]
+notes / review_status
+
+Optional fields may include:
+- misconception taxonomy refs;
+- production/recognition distinction;
+- normative validity period if genuinely time-dependent;
+- tool capability refs.
+
+======================================================================
+8. MAPPING / CROSSWALK CONTRACT
+======================================================================
+
+Do not mutate every product object just to insert new IDs immediately.
+Use versioned crosswalk mappings.
+
+Minimum mapping record:
+
+mapping_id
+source_system
+source_object_type
+source_id
+semantic_id
+relation
+weight/confidence where justified
+evidence_level
+mapping_version
+valid_from
+valid_to
+review_status
+provenance
+
+Allowed relation examples:
+- ASSESSES
+- PRACTICES
+- EXPLAINS
+- IS_EXCEPTION_OF
+- REQUIRES
+- DEMONSTRATES
+- ROUTES_TO
+- CONTRIBUTES_TO
+- PARTIAL_ASSESSMENT
+
+Relation must be explicit; do not assume all mappings mean "assesses mastery".
+
+======================================================================
+9. PRODUCT OBJECTS THAT MUST MAP INTO THE REGISTRY
+======================================================================
+
+A. EGE Skill Graph nodes
+B. EGE trainer items (`trainer_item_id`)
+C. EGE/OGE demo task/subtask evidence across 2022-2026
+D. explanation objects (`explanation_id`)
+E. exception objects (`exception_id`)
+F. practice items (`practice_item_id`)
+G. essay criteria/competency components
+H. thematic trainer objects
+I. future homework tasks/recognized homework concepts
+J. AI Tutor current semantic targets
+
+These source IDs remain stable in their own systems.
+The registry maps them; it does not replace them.
+
+======================================================================
+10. EXAM OVERLAY POLICY
+======================================================================
+
+EGE and OGE remain versioned route overlays onto semantic truth.
+
+Exam year/task metadata may change without changing semantic identity.
+
+Example concept:
+
+semantic identity
+  -> EGE 2026 task route
+  -> EGE 2025 task route
+  -> OGE 2026 route
+  -> school/homework route
+
+If a future FIPI cycle proves a genuinely new school/subject semantic decision, use an explicit reopen/admission gate.
+Do not create semantic identities merely because exam numbering or codifier wording changes.
+
+======================================================================
+11. ALIAS / SUPERSESSION / MERGE POLICY
+======================================================================
+
+Semantic IDs must be stable once published.
+
+If two candidate IDs later prove to be the same meaning:
+- select one canonical ID;
+- preserve the other as alias/absorbed legacy reference;
+- do not silently delete historical references.
+
+If a concept genuinely changes normative meaning over time:
+- do not rewrite history;
+- version/supersede explicitly with validity metadata.
+
+Historic learner evidence must remain interpretable under the mapping version active at event time.
+
+======================================================================
+12. DUPLICATE PREVENTION GATE
+======================================================================
+
+Before creating any new identity, check:
+1. existing 185 `school-*` identities;
+2. existing subject-level registry candidates;
+3. absorbed/historical aliases;
+4. EGE Skill Graph nodes/subskills;
+5. relevant source material/provenance.
+
+New identity requires evidence that the meaning is genuinely not already owned.
+
+"Different wording" is not sufficient reason for a new identity.
+"Different exam task" is not sufficient reason for a new identity.
+"Different product" is not sufficient reason for a new identity.
+
+======================================================================
+13. GRANULARITY RULE
+======================================================================
+
+Identity granularity should reflect independently learnable/assessable meaning.
+
+Avoid:
+- identity so broad that learner state is meaningless;
+- identity so microscopic that no reliable evidence can assess it;
+- splitting solely because examples differ;
+- combining unrelated decisions solely because one exam task scores them together.
+
+Mixed all-or-nothing exam items may map partially to multiple semantic identities without pretending the exact learner weakness is known.
+
+======================================================================
+14. LEARNER EVIDENCE CONSEQUENCE
+======================================================================
+
+Future evidence events must reference:
+- stable source item ID;
+- semantic IDs resolved through a specific mapping/registry version;
+- evidence relation/quality.
+
+Mastery is derived per learner x semantic_id.
+
+Do not key generalized learner mastery directly to:
+- trainer item ID;
+- exception ID;
+- practice item ID;
+- explanation ID;
+- exam task number.
+
+Those are evidence sources, not learner-knowledge identities.
+
+======================================================================
+15. AI TUTOR CONSEQUENCE
+======================================================================
+
+Tutor Core consumes semantic identity as the central knowledge address.
+
+Tutor context should be able to resolve:
+semantic_id
+-> approved rule/knowledge
+-> source provenance
+-> learner mastery/confidence
+-> prerequisite state
+-> relevant examples/explanations
+-> current product/task evidence
+
+Tutor must not infer canonical identity from free text alone when deterministic mapping is available.
+
+======================================================================
+16. HOMEWORK CONSEQUENCE
+======================================================================
+
+Homework recognition pipeline:
+
+raw homework input
+-> task extraction
+-> subject/topic classification
+-> semantic mapping
+-> Tutor/solution assistance
+-> learner evidence
+
+Homework does not create a parallel skill system.
+
+If a school exercise involves a meaning already owned by `school-*`, use that identity.
+If it involves a broader Russian competency not covered by the school denominator, use the unified subject registry identity.
+
+======================================================================
+17. SOURCE LIBRARY CONSEQUENCE
+======================================================================
+
+New semantic identities must be source-backed.
+
+Raw textbooks/reference materials live in Eksamio Source Library.
+GitHub stores:
+- source manifests;
+- provenance;
+- normalized semantic definitions;
+- crosswalks;
+- validation/audit artifacts.
+
+A language model may assist extraction/canonicalization but must not create unsupported subject truth.
+
+======================================================================
+18. BUILD ARTIFACTS — TARGET
+======================================================================
+
+Future canonical materialization should produce artifacts equivalent to:
+
+`build/RUSSIAN-SEMANTIC-IDENTITY-REGISTRY-CANONICAL.json`
+`build/RUSSIAN-SEMANTIC-CROSSWALK-CANONICAL.json`
+`audits/RUSSIAN-SEMANTIC-IDENTITY-VALIDATION.txt`
+
+Builder/validator must check at minimum:
+- valid JSON/schema;
+- unique semantic_id;
+- no illegal duplicate/supersession state;
+- all parent/prerequisite refs resolve;
+- all mapping semantic refs resolve;
+- no unknown source object references where source registries are available;
+- canonical `school-*` preservation;
+- registry version declared;
+- mapping version declared;
+- no production mutation.
+
+======================================================================
+19. MATERIALIZATION PHASES
+======================================================================
+
+PHASE 1 — INVENTORY / CROSSWALK
+- inventory 185 active school identities;
+- inventory EGE Skill Graph skills/subskills;
+- inventory current semantic refs in explanations/exceptions/practice/learner-state/handoff layers;
+- classify same-meaning / parent-child / partial-overlap / missing-domain relations.
+
+PHASE 2 — GAP CANONICALIZATION
+- identify genuinely missing Russian subject semantic domains;
+- source-review each candidate;
+- add only source-backed new identities;
+- do not target a predetermined count.
+
+PHASE 3 — VERSIONED CROSSWALKS
+- map product/source IDs into semantic identities;
+- preserve existing IDs;
+- record evidence quality and partial mappings.
+
+PHASE 4 — BUILDER / VALIDATION
+- canonical registry builder;
+- crosswalk builder;
+- referential-integrity validator;
+- duplicate/supersession validator.
+
+PHASE 5 — LEARNER EVIDENCE ADAPTER
+- generalized evidence events resolve through registry;
+- existing product learner state remains backward-compatible during migration.
+
+PHASE 6 — TUTOR/HOMEWORK CONSUMPTION
+- Tutor Core and Homework use registry as semantic address;
+- no production trainer/demo mutation required for initial adapter-based integration.
+
+======================================================================
+20. CURRENT NON-GOALS
+======================================================================
+
+Do NOT now:
+- rename the existing 185 school IDs;
+- replace EGE Skill Graph IDs;
+- rewrite frozen demo/trainer packages;
+- attach guessed prerequisites;
+- invent new semantic counts;
+- collapse explanation/exception/practice IDs into semantic IDs;
+- migrate production localStorage before generalized evidence design is reviewed;
+- let AI auto-approve new canonical identities.
+
+======================================================================
+21. CURRENT ARCHITECTURE DECISION
+======================================================================
+
+The Russian Unified Semantic Identity Registry becomes the semantic backbone consumed by:
+- learner evidence/mastery;
+- Next Best Action;
+- Tutor Core;
+- Homework;
+- EGE/OGE adapters;
+- thematic trainers;
+- future Russian school products.
+
+Existing semantic truth is preserved; the registry unifies and extends it.
+
+NEXT:
+Create the inventory/crosswalk materialization task and validator plan. Start from the frozen 185 school denominator and current EGE Skill Graph, then inspect explanation/exceptions/practice/handoff semantic references before admitting any new identities.
+
+END OF DOCUMENT
