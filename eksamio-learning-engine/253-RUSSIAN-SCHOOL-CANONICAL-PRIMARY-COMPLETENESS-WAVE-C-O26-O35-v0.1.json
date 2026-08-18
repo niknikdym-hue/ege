@@ -1,0 +1,58 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"PRIMARY_COMPLETENESS_WAVE_C_O26_O35_MATERIALIZED",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_176_NOT_FINAL",
+  "production_integration":"HOLD",
+  "primary_source":"rosenthal/rozental.doc",
+  "primary_scope":"Rosenthal orthography §§44–54",
+  "current_norm_gate":"Full Academic Guide under V. V. Lopatin plus current Russian Orthographic Dictionary/Gramota for lexicalized cases",
+  "semantic_before_wave_C":187,
+  "normalization_rule":"One counted decision engine owns its productive branches and lexical exceptions. Existing special cards are absorbed when the new base engine fully owns their decision; historical physical records remain provenance.",
+  "O26_verb_personal_endings":{
+    "new_unit":{"unit_id":"school-verb-personal-ending-conjugation-base","canonical_label":"Личные окончания глаголов: определение спряжения и выбор окончания","source":"Rosenthal §44","current_norm":"current academic conjugation/endings rules","absorbs":["school-conjugation-i-exception-family","school-conjugation-ii-exception-eleven"],"new_parent_count":1,"absorptions":-2,"net_count_effect":-1},
+    "note":"The two old exception lists are branches needed to determine conjugation; they are not separate denominator skills once the full engine exists."
+  },
+  "O27_verb_soft_sign":{
+    "new_unit":{"unit_id":"school-verb-soft-sign-forms","canonical_label":"Ь в глагольных формах: инфинитив, 2-е лицо, повелительное наклонение, возвратные формы","source":"Rosenthal §45","current_norm":"Lopatin §§32, 80","branches":["infinitive -ть/-чь including -ться","2nd person singular -шь","imperative after consonant including preservation before -те/-ся; ляг/лягте exception","reflexive -сь after vowel","-ться vs -тся grammatical-form boundary"],"count_effect":1},
+    "prior_candidate_resolution":"school-imperative-soft-sign-before-sya-te-boundary remains non-independent and is now explicitly owned as a branch here."
+  },
+  "O28_verb_suffixes":{
+    "new_units":[
+      {"unit_id":"school-verb-suffix-ova-eva-yva-iva-base","canonical_label":"-ОВА-/-ЕВА- или -ЫВА-/-ИВА- по форме 1-го лица","source":"Rosenthal §46 p.1","current_norm":"Lopatin §61","count_effect":1},
+      {"unit_id":"school-verb-enet-derived-from-noun","canonical_label":"-ЕНЕТЬ в группе глаголов, образованных от существительных","source":"Rosenthal §46 p.3","current_norm":"Lopatin §63","count_effect":1}
+    ],
+    "existing_owner_scope_update":{"owner":"school-verb-stressed-va-boundary","new_scope":"stressed -ВА- vowel restoration plus current exception branch","source":"Rosenthal §46 p.2","current_norm":"Lopatin §62","absorbs":"school-verb-eva-memorized-set","count_effect":-1},
+    "net_semantic_effect":1
+  },
+  "O29_participle_vowels":{
+    "new_unit":{"unit_id":"school-participle-vowel-suffix-conjugation-base","canonical_label":"Гласные в суффиксах причастий: спряжение, инфинитивная основа и тип причастия","source":"Rosenthal §47","current_norm":"Lopatin §§58–60, 76","branches":["-ущ-/-ющ- vs -ащ-/-ящ-","-ем- vs -им-","past passive -енн-/-ённ-/-анн-/-янн- selection and lexical boundaries"],"count_effect":1}
+  },
+  "O30_participle_verbal_adjective_n_nn":{
+    "new_unit":{"unit_id":"school-participle-verbal-adjective-n-nn-base","canonical_label":"Н / НН в причастиях и отглагольных прилагательных: полный decision-engine","source":"Rosenthal §48","current_norm":"Lopatin §§97–102","branches":["full passive participles and correlated adjectives","aspect/prefix/dependent-word/semantic distinction under current academic rules","-ованный/-ёванный/-еванный and кованый/жёваный boundary","lexicalized one-N and NN adjective groups","fixed combinations such as названый брат / посажёный отец / конченый человек","считаный/считанный and раненый/раненный context boundaries","short participle vs short adjective N/NN","repeat compounds with пере-","dictionary-controlled lexical exceptions"],"absorbs":["school-nn-current-memorized-lexical-exception-core","school-nn-dictionary-lexical-adjectives-grade7","school-schitany-schitanny-context-boundary","school-raneny-ranenny-context-boundary","school-nazvany-posazhony-koncheny-fixed-combinations","school-smyshlyony-one-n","school-besheny-one-n-lexical-adjective","school-kovany-zhovany-adjective-participle-boundary","school-short-participle-vs-short-verb-adjective-n-nn","school-nn-repeated-compound-second-part-one-n"],"new_parent_count":1,"absorptions":-10,"net_count_effect":-9},
+    "not_absorbed":"school-nn-derived-noun-adverb-inheritance remains separate because it owns derivational N/NN inheritance in adverbs/nouns, not the participle/adjective decision itself."
+  },
+  "O31_adverb_final_a_o":{
+    "new_unit":{"unit_id":"school-adverb-final-vowel-a-o","canonical_label":"А / О на конце наречий от кратких прилагательных по приставке","source":"Rosenthal §49","current_norm":"Lopatin §42","branches":["в-/за-/на- -> -о","до-/из-/с- -> -а with current lexical/word-formation boundaries"],"count_effect":1}
+  },
+  "O32_adverb_final_soft_sign":{
+    "new_unit":{"unit_id":"school-adverb-final-soft-sign-after-sibilant-base","canonical_label":"Ь на конце наречий после шипящих","source":"Rosenthal §50","current_norm":"Lopatin §32","absorbs":"school-adverb-soft-sign-exceptions-uzh-zamuzh-nevterpezh","new_parent_count":1,"absorption":-1,"net_count_effect":0},
+    "exception_branch":["уж","замуж","невтерпёж"]
+  },
+  "O33_negative_adverbs":{
+    "new_unit":{"unit_id":"school-negative-adverbs-ne-ni-spelling","canonical_label":"НЕ- / НИ- в отрицательных наречиях и местоименных словах по ударению","source":"Rosenthal §52","current_norm":"Lopatin §134","branches":["stressed не-: некогда, негде, некуда, неоткуда","unstressed ни-: никогда, нигде, никуда, ниоткуда, никак"],"ownership_boundary":"Negative-pronoun forms with prepositions remain owned by school-negative-pronouns-ne-ni-stress-preposition-boundary.","count_effect":1}
+  },
+  "O34_O35_adverb_spelling":{
+    "decision":"MERGE_TWO_SOURCE_CANDIDATES_INTO_ONE_THREE_WAY_ENGINE",
+    "new_unit":{"unit_id":"school-adverb-solid-hyphen-separate-system","canonical_label":"Наречия и наречные сочетания: слитно, через дефис или раздельно","source":"Rosenthal §§53–54","current_norm":"Lopatin §§136–137 plus §118/related hyphen rules and current orthographic dictionary","branches":["productive prefix/adverb and prefix/noun models","по- + adjectival/pronominal forms","repeated/correlative adverb structures","numeral-derived adverbs","adverb vs preposition+noun phrase distinction","lexical solid and separate spelling sets","dictionary fallback where productive diagnostics are insufficient"],"absorbs":["school-soft-sign-toch-v-toch","school-adverb-po-hyphen-vs-preposition-boundary","school-adverb-repeat-hyphen-vs-noun-expression-boundary","school-adverbs-uju-separate-exception-set","school-adverbs-ah-solid-exception-set","school-collective-numeral-adverb-writing-boundary","school-adverbs-solid-lexical-set-grade7"],"new_parent_count":1,"absorptions":-7,"net_count_effect":-6},
+    "cross_link_note":"ТОЧЬ-В-ТОЧЬ remains available as a practice member and cross-links to the soft-sign rule, but is not a separate denominator identity after this consolidation."
+  },
+  "count_assertion":{"new_physical_canonical_records":10,"semantic_absorptions":21,"net_semantic_effect":-11,"interim_active_semantic_after_wave_C":176,"physical_records_before_wave_C":197,"physical_records_after_wave_C":207,"warning":"176 is not final. Waves D–G remain open."},
+  "wave_C_status":"CLOSED",
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Wave D O36–O45: prepositions, conjunctions, nonnegative particles, НЕ with noun/adjective/numeral-pronoun/verb/adverb, NI fixed idioms already admitted, interjection/onomatopoeia spelling. Deduplicate against current homonym contrast and NE function-boundary units."
+}
