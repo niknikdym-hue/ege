@@ -1,0 +1,147 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"PRIMARY_COMPLETENESS_WAVE_A2_ALTERNATING_ROOTS_NORMALIZED",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_155_NOT_FINAL",
+  "production_integration":"HOLD",
+  "refs":[
+    "169-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK01-ROOTS-PREFIXES-MORPHEMES-v0.1.json",
+    "239-RUSSIAN-SCHOOL-CANONICAL-SEMANTIC-CONSOLIDATION-AFTER-CURRENT-NORM-AUDIT-v0.1.json",
+    "246-RUSSIAN-SCHOOL-PRIMARY-COMPLETENESS-WAVE-A1-FOUNDATIONAL-ORTHOGRAPHY-O01-O16-v0.1.json",
+    "247-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A1-MATERIALIZATION-v0.1.json"
+  ],
+  "primary_source_locator":"rosenthal/rozental.doc — Орфография, §3",
+  "current_norm_locators":["Лопатин, §35","Лопатин, §36 for the current reanalysis of the И/Е verb-root group"],
+  "normalization_principle":"Count a root family as one learner decision engine when its base selection and its lexical exceptions are inseparable parts of the same choice. Do not count a generic organizational parent plus each exception family again.",
+  "existing_id_scope_expansions":[
+    {
+      "unit_id":"school-gor-gar-rare-exception-set",
+      "old_scope":"rare unstressed GAR exception family",
+      "new_semantic_scope":"GAR/GOR full stress-conditioned family with rare unstressed GAR exception branch",
+      "count_effect":0,
+      "reason":"Primary §3 supplies the missing productive base; current §35 confirms it. Keep the historical ID but treat its exception members as branches of the whole family."
+    },
+    {
+      "unit_id":"school-lag-lozh-polog-exception",
+      "old_scope":"ПОЛОГ special case",
+      "new_semantic_scope":"LAG/LOG/LOZH full following-consonant family with ПОЛОГ lexical/morphemic boundary",
+      "count_effect":0
+    },
+    {
+      "unit_id":"school-plav-plov-exception-set",
+      "old_scope":"ПЛОВЕЦ/ПЛОВЧИХА exception pair",
+      "new_semantic_scope":"PLAV/PLOV full traditional family with PLOV exception branch and current separation of ПЛЫВУН as derived from ПЛЫТЬ",
+      "count_effect":0
+    },
+    {
+      "unit_id":"school-rast-rashch-ros-exception-set",
+      "old_scope":"exception list",
+      "new_semantic_scope":"RAST/RASHCH/ROS full following-consonant family plus current exception branch",
+      "count_effect":0
+    },
+    {
+      "unit_id":"school-tvar-tvor-utvar-exception",
+      "old_scope":"УТВАРЬ special case",
+      "new_semantic_scope":"TVAR/TVOR full stress-conditioned family with УТВАРЬ lexicalized historical boundary",
+      "count_effect":0
+    }
+  ],
+  "already_whole_existing_owners":[
+    {
+      "source_branch":"РАВН/РОВН",
+      "owner":"school-ravn-rovn-exception-set",
+      "note":"Despite the old ID suffix 'exception-set', the active record already owns the full semantic/dictionary decision engine; no new identity."
+    },
+    {
+      "source_branch":"СКАК/СКОК/СКАЧ/СКОЧ",
+      "owner":"school-skak-skoch-exception-set",
+      "note":"Active record already owns the full form/type decision engine; no new identity."
+    }
+  ],
+  "new_canonical_units":[
+    {
+      "unit_id":"school-zar-zor-stress-alternation",
+      "domain":"orthography_roots",
+      "unit_type":"alternating_root_family",
+      "canonical_label":"ЗАР/ЗОР: без ударения А, под ударением по произношению",
+      "source_branch":"Розенталь §3 п.2",
+      "current_norm":"Лопатин §35",
+      "count_effect":1
+    },
+    {
+      "unit_id":"school-kas-kos-a-suffix-alternation",
+      "domain":"orthography_roots",
+      "unit_type":"alternating_root_family",
+      "canonical_label":"КАС/КОС: А при последующем суффиксе -А-, иначе О",
+      "source_branch":"Розенталь §3 п.3",
+      "current_norm":"Лопатин §35; current formulation uses following -А- rather than a superficial N-only shortcut",
+      "count_effect":1
+    },
+    {
+      "unit_id":"school-klan-klon-stress-alternation",
+      "domain":"orthography_roots",
+      "unit_type":"alternating_root_family",
+      "canonical_label":"КЛАН/КЛОН: без ударения О, под ударением по произношению",
+      "source_branch":"Розенталь §3 п.4",
+      "current_norm":"Лопатин §35",
+      "count_effect":1
+    },
+    {
+      "unit_id":"school-mak-mok-moch-semantic-alternation",
+      "domain":"orthography_roots_semantics",
+      "unit_type":"alternating_root_semantic_family",
+      "canonical_label":"МАК/МОК/МОЧ: выбор по значению и позиции",
+      "source_branch":"Розенталь §3 п.6",
+      "current_norm":"Лопатин §35",
+      "branches":["МАК: погружать в жидкость","МОК: становиться мокрым / пропускать или впитывать влагу according to current lexical model","МОЧ before Ч in the relevant family"],
+      "count_effect":1
+    },
+    {
+      "unit_id":"school-i-e-alternating-verb-roots-stressed-a",
+      "domain":"orthography_roots_wordformation",
+      "unit_type":"structured_alternating_root_family",
+      "canonical_label":"И/Е в группе глагольных корней при последующем ударном -А-",
+      "source_branch":"Розенталь §3 п.12: БЕР/БИР, ДЕР/ДИР, МЕР/МИР, ПЕР/ПИР, ТЕР/ТИР, БЛЕСТ/БЛИСТ, ЖЕГ/ЖИГ, СТЕЛ/СТИЛ, ЧЕТ/ЧИТ",
+      "current_norm":"Лопатин §36 reclassifies this as a structured group of verb roots with a mobile/begly vowel; use the current academic formulation rather than the obsolete oversimplified mnemonic",
+      "absorbs_semantic_id":"school-chet-chit-sochetat-sochetanie",
+      "absorbed_branch":"СОЧЕТАТЬ, СОЧЕТАНИЕ remain a traditional special spelling inside this structured family",
+      "count_effect_new_parent":1,
+      "count_effect_absorption":-1,
+      "net_count_effect":0
+    },
+    {
+      "unit_id":"school-im-in-alternating-root-family",
+      "domain":"orthography_roots_wordformation",
+      "unit_type":"structured_alternating_root_family",
+      "canonical_label":"А(Я) / ИМ, ИН в глагольных корнях: современная морфемно-видовая граница",
+      "source_branch":"Розенталь §3 п.13",
+      "current_norm":"Лопатин §§35-36 and current notes on -НИМАТЬ/-НЯТЬ families; retain only source-established school scope while using current academic analysis",
+      "count_effect":1
+    }
+  ],
+  "source_branch_accounting":{
+    "rosenthal_branches":13,
+    "existing_ids_expanded_without_new_count":5,
+    "existing_whole_owners":2,
+    "new_records_created":6,
+    "old_semantic_id_absorbed":1,
+    "net_new_semantic_identities":5,
+    "all_13_primary_source_branches_owned_after_this_file":true
+  },
+  "count_assertion":{
+    "semantic_before_this_file":150,
+    "new_records":6,
+    "semantic_absorption":-1,
+    "net_semantic_effect":5,
+    "interim_active_semantic_after":155,
+    "physical_records_before_this_file":151,
+    "physical_records_after_this_file":157,
+    "warning":"155 is not final. O06/O08/O10 and Waves B-G remain unresolved."
+  },
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Resolve O06 and O08 scope/granularity, then capitalization O10; after Wave A closes, continue nominal/compound morphology Wave B."
+}
