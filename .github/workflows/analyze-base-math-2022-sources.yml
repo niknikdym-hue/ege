@@ -9,6 +9,7 @@ on:
       - 'matematika-source-2022/ege-2022-matematika-baza-specifikatsiya.pdf'
       - 'matematika-source-2022/ege-2022-matematika-kodifikator.pdf'
       - 'matematika-source-2022/scripts/analyze_base_2022_sources.py'
+      - 'matematika-source-2022/scripts/inspect_base_2022_visual_geometry.py'
       - 'matematika-source-2022/scripts/validate_base_2022_source_lock.py'
       - 'matematika-source-2022/source-lock/EXAM-LOCK.json'
       - 'matematika-source-2022/source-lock/ANSWER-LOCK.json'
@@ -33,6 +34,8 @@ jobs:
         run: python -m pip install --disable-pip-version-check pymupdf pillow
       - name: Analyze official BASE 2022 sources
         run: python matematika-source-2022/scripts/analyze_base_2022_sources.py
+      - name: Inspect visual geometry
+        run: python matematika-source-2022/scripts/inspect_base_2022_visual_geometry.py
       - name: Strict source/exam/answer/visual lock gate
         run: python matematika-source-2022/scripts/validate_base_2022_source_lock.py --analysis-dir /tmp/base2022-source-analysis
       - name: Add locked PDFs to artifact
@@ -47,7 +50,6 @@ jobs:
         run: |
           set -euo pipefail
           DEST=matematika-source-2022/source-lock
-          # Preserve the hand-audited machine locks while replacing generated evidence.
           cp "$DEST/EXAM-LOCK.json" /tmp/EXAM-LOCK.json
           cp "$DEST/ANSWER-LOCK.json" /tmp/ANSWER-LOCK.json
           cp "$DEST/VISUAL-INVENTORY.json" /tmp/VISUAL-INVENTORY.json
@@ -58,6 +60,7 @@ jobs:
           cp /tmp/VISUAL-INVENTORY.json "$DEST/VISUAL-INVENTORY.json"
           cp /tmp/base2022-source-analysis/SOURCE-LOCK.txt "$DEST/"
           cp /tmp/base2022-source-analysis/SOURCE-LOCK.json "$DEST/"
+          cp /tmp/base2022-source-analysis/VISUAL-GEOMETRY.json "$DEST/"
           for section in demo spec cod; do
             cp "/tmp/base2022-source-analysis/$section/PAGE-MAP.json" "$DEST/$section/"
             for f in /tmp/base2022-source-analysis/$section/page-*.txt; do cp "$f" "$DEST/$section/"; done
