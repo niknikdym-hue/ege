@@ -1,0 +1,88 @@
+{
+  "schema_version":"1.0.0",
+  "date":"2026-08-18",
+  "status":"FINAL_SCHOOL_DENOMINATOR_REFROZEN_AT_185 / FIPI_2026_EGE_OGE_OVERLAY_CLOSED / READY_FOR_TRAINER_COVERAGE_AUDIT",
+  "production_integration":"HOLD",
+  "final_school_canonical_denominator":185,
+  "supersedes_school_count_authority":"259-RUSSIAN-SCHOOL-ROSENTHAL-PRIMARY-COMPLETENESS-FINAL-FREEZE-v1.0.json count=179",
+  "reason_for_reopen":"The primary Rosenthal pass was complete for its own corpus, but official FIPI 2026 school orthography content exposed six genuine productive school decisions absent from the 179. They were explicitly audited and admitted rather than being hidden as exam-only metadata.",
+  "authority_chain":[
+    "259-RUSSIAN-SCHOOL-ROSENTHAL-PRIMARY-COMPLETENESS-FINAL-FREEZE-v1.0.json",
+    "260-RUSSIAN-SCHOOL-CANONICAL-DENOMINATOR-FINAL-HANDOFF.txt",
+    "261-RUSSIAN-FIPI-2026-OFFICIAL-SOURCE-GATE.txt",
+    "262-RUSSIAN-FIPI-2026-SCHOOL-REOPEN-GAP-AUDIT-v0.1.json",
+    "263-RUSSIAN-SCHOOL-FIPI-REOPEN-MATERIALIZATION-v0.1.json",
+    "264-RUSSIAN-FIPI-2026-EGE-ROUTE-OVERLAY-v0.1.json",
+    "265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json",
+    "266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+  ],
+  "count_walk":{
+    "rosenthal_current_norm_freeze":179,
+    "fipi_proven_new_school_identities":6,
+    "fipi_reopen_absorptions":0,
+    "scope_only_expansions":2,
+    "final_school_denominator":185
+  },
+  "fipi_proven_admissions":[
+    "school-invariable-prefix-spelling-base",
+    "school-unstressed-suffix-vowel-verification-fixed-patterns",
+    "school-verb-infinitive-past-nonfinite-stem-vowel",
+    "school-gerund-forming-suffix-system",
+    "school-noun-case-ending-base",
+    "school-numeral-case-ending-inflection-base"
+  ],
+  "scope_expansions_zero_count":[
+    "school-adjective-ending-inflection-and-special-forms now explicitly owns participle case endings as the same adjective-type inflectional decision",
+    "school-o-e-after-sibilants-suffix-ending explicitly includes applicable adverbial branches"
+  ],
+  "final_source_closure":{
+    "rosenthal_source_topics":143,
+    "rosenthal_unresolved_after_259":0,
+    "fipi_pre_reopen_school_gaps":6,
+    "fipi_gaps_materialized":6,
+    "ege_2026_second_pass_school_reopen_candidates":0,
+    "oge_2026_second_pass_school_reopen_candidates":0,
+    "final_unowned_official_school_orthography_topics":0,
+    "final_unowned_official_school_punctuation_topics":0,
+    "open_holds":0
+  },
+  "fipi_overlay_count_policy":{
+    "school_count_effect_after_reopen":0,
+    "rule":"Exam tasks/codifier positions are route metadata and composites, not school identities.",
+    "classifications":["SCHOOL_IDENTITY_ROUTE","EXAM_ONLY_COMPOSITE","OUTSIDE_SCHOOL_DENOMINATOR","PARTIAL_SCHOOL_OVERLAP"],
+    "reopen_gate":"SCHOOL_REOPEN_CANDIDATE is now empty for official FIPI 2026 EGE/OGE orthography and punctuation."
+  },
+  "ege_2026_overlay_summary":{
+    "orthography_tasks":"9-15",
+    "punctuation_tasks":"16-21",
+    "school_reopen_candidates":0,
+    "current_cycle_specific_note":"FIPI 2026 states root consonants are not included in the current EGE task-9 language material; those school identities remain active because the school layer is broader and OGE/current school routes still use them."
+  },
+  "oge_2026_overlay_summary":{
+    "punctuation_analysis_tasks":"4-5",
+    "orthographic_analysis_tasks":"6-7",
+    "language_norm_tasks":"8-9 partial school overlap",
+    "orthography_codifier_positions_reviewed":"6.1-6.14",
+    "school_reopen_candidates":0
+  },
+  "important_interpretation":{
+    "185_meaning":"185 is the final active semantic school orthography/punctuation-and-established-school-decision denominator after primary Rosenthal completeness, current-norm normalization and official FIPI 2026 backstop audit.",
+    "not_exam_task_count":"185 is not the number of EGE/OGE tasks, codifier positions or exercise types.",
+    "not_physical_file_count":"Historical/absorbed provenance records remain physically present and are not forced to equal 185.",
+    "future_cycle_policy":"When FIPI 2027 is officially published, re-run only the exam overlay delta. Do not reopen the whole Rosenthal audit unless the new official material proves a genuinely new school decision."
+  },
+  "do_not_do":[
+    "Do not return to 137 or 179 as the current school denominator.",
+    "Do not re-run the 143-topic Rosenthal pass.",
+    "Do not count FIPI tasks or codifier lines as additional school identities.",
+    "Do not revive absorbed historical cards as active denominator units.",
+    "Do not use derivative verification-basis.",
+    "Do not touch Tilda/current trainer/runtime/scoring/localStorage before coverage audit is complete."
+  ],
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Audit the current Russian trainer content against the active 185 semantic identities and the separate EGE/OGE 2026 route overlays. Produce identity-level COVERED / PARTIALLY_COVERED / NOT_COVERED and exam-route coverage before any implementation changes."
+}
