@@ -8,13 +8,16 @@ The GitHub repository is the durable source of truth for this direction. Do not 
 
 Before every task in this direction, read in this order:
 
-1. `00-WORK-STATUS.txt`
-2. `COMMUNICATION-PROTOCOL.md`
-3. `02-CODEX-BUILD-INDEX.txt`
-4. the exact task file named by the user in `tasks/` or another explicitly named task file in this directory
-5. any source/provenance files referenced by that task
+1. `../00-EKSAMIO-PRODUCT-MASTERPLAN.md` — product target, architecture boundaries and implementation priorities;
+2. `00-WORK-STATUS.txt` — current Learning Engine work checkpoint;
+3. `COMMUNICATION-PROTOCOL.md`;
+4. `02-CODEX-BUILD-INDEX.txt`;
+5. the exact task file named by the user in `tasks/` or another explicitly named task file in this directory;
+6. any source/provenance/current-authority files referenced by that task.
 
-If instructions conflict, the more specific current task wins, but safety constraints and explicit NO-DESTRUCTIVE/ADD-ONLY rules must never be relaxed implicitly.
+Product/architecture decisions from the root masterplan must not be silently overridden by an older historical checkpoint. Current subject/source authority files may supersede older subject counts or source checkpoints when they explicitly declare that supersession. A specific task may refine implementation details but must not silently change product architecture, official exam truth or active source authority.
+
+If instructions conflict materially, record the contradiction and stop the conflicting part instead of resolving it from memory. Safety constraints and explicit NO-DESTRUCTIVE/ADD-ONLY rules must never be relaxed implicitly.
 
 ## Safety
 
@@ -49,6 +52,16 @@ Rules:
 - whenever possible, separate `rule`, `short_rule`, `algorithm`, `examples`, `common_traps`, and `error_explanation`, so one verified rule can serve many trainer items without duplicating text.
 
 The product principle is: do not invent the wheel; build a better learning interface around verified knowledge.
+
+## Unified learning-system rule
+
+Demonstrations, exam trainers, standalone thematic trainers and the full Russian program are not separate competing learning systems.
+
+They must converge on one stable semantic/skill identity layer and one Student Model. Do not introduce a second independent skill ontology for a new course, AI feature or trainer when the existing/current canonical subject layer can be mapped or extended through an explicit reviewed authority process.
+
+The current Russian denominator/count must always come from the latest explicit current/final authority file, not from an older checkpoint copied into another document.
+
+AI must consume structured learner evidence and verified knowledge; AI must not become the owner of official scoring, exam facts or canonical skill identity.
 
 ## Change workflow
 
@@ -96,6 +109,6 @@ Do not infer approval from silence.
 
 The base Eksamio learning loop remains free:
 
-`diagnose -> find weakness -> practice -> verify -> retain -> reassess`
+`diagnose -> model -> prioritize -> practice/help -> verify -> retain -> reassess -> replan`
 
-Premium features may add deep personalized computation/AI but must not be implemented by degrading or paywalling the base loop unless a future explicit product decision changes this rule.
+Premium features may add deep personalized computation/AI but must not be implemented by degrading or paywalling the base loop unless a future explicit product decision changes this rule through the product authority chain.
