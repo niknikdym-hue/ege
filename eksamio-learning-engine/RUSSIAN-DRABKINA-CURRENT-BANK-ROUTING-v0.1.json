@@ -1,0 +1,235 @@
+{
+  "schema_version": "0.1.0",
+  "subject": "russian",
+  "purpose": "current_exceptions_bank_to_drabkina_class_routing_first_pass",
+  "status": "category_level_mapping_in_progress",
+  "date": "2026-08-12",
+  "source_manifest": "118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json",
+  "master_map": "RUSSIAN-DRABKINA-5-11-MASTER-MAP-v0.1.json",
+  "rules": [
+    "first_studied_class must come from Drabkina vertical, not current EGE task number",
+    "later Drabkina repetition goes to reinforcement_classes",
+    "do not map unresolved lexical/morphological/orthoepic cases by intuition",
+    "OGE/EGE relevance is a separate route layer and does not redefine school first-study class",
+    "practice cards do not change programme denominator"
+  ],
+  "module_mappings": [
+    {
+      "module_id": "alt_roots_lag_lozh",
+      "topic": "Орфография",
+      "current_bank_sources": ["35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json"],
+      "first_studied_class": 5,
+      "reinforcement_classes": [6, 10],
+      "drabkina_basis": ["5: ЛАГ-/ЛОЖ-", "6: система корней с чередованием / повторение", "10: чередующиеся гласные в корнях"],
+      "status": "verified_route_family"
+    },
+    {
+      "module_id": "alt_roots_rast_rash_ros",
+      "topic": "Орфография",
+      "current_bank_sources": ["35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json"],
+      "first_studied_class": 5,
+      "reinforcement_classes": [6, 10],
+      "drabkina_basis": ["5: РАСТ-/РАЩ-/РОС-", "6: система корней с чередованием / повторение", "10: чередующиеся гласные в корнях"],
+      "status": "verified_route_family"
+    },
+    {
+      "module_id": "alt_roots_e_i_family",
+      "topic": "Орфография",
+      "current_bank_sources": ["35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json"],
+      "first_studied_class": 5,
+      "reinforcement_classes": [6, 10],
+      "drabkina_basis": ["5: Е/И в корнях с чередованием", "6: система корней с чередованием", "10: чередующиеся гласные в корнях"],
+      "status": "verified_route_family"
+    },
+    {
+      "module_id": "alt_roots_kas_kos",
+      "topic": "Орфография",
+      "current_bank_sources": ["35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json"],
+      "first_studied_class": 6,
+      "reinforcement_classes": [10],
+      "drabkina_basis": ["6: КАС-/КОС-", "10: чередующиеся гласные в корнях"],
+      "status": "verified_route_family"
+    },
+    {
+      "module_id": "alt_roots_gor_gar",
+      "topic": "Орфография",
+      "current_bank_sources": ["35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json", "132-RUSSIAN-EXCEPTIONS-CURRENT-NORM-CORRECTIONS-v0.1.json"],
+      "first_studied_class": 6,
+      "reinforcement_classes": [10],
+      "drabkina_basis": ["6: ГОР-/ГАР-", "10: чередующиеся гласные в корнях"],
+      "status": "verified_route_family",
+      "norm_note": "Current form ЗАРЕВАТЬ must remain current-norm override; do not revive obsolete ЗОРЕВАТЬ."
+    },
+    {
+      "module_id": "prefix_pre_pri",
+      "topic": "Орфография",
+      "current_bank_sources": ["35-RUSSIAN-EXCEPTIONS-ROOTS-PREFIXES-v0.1.json"],
+      "first_studied_class": 6,
+      "reinforcement_classes": [10],
+      "drabkina_basis": ["6: ПРЕ-/ПРИ-", "10: ПРЕ-/ПРИ-"],
+      "status": "verified_route_family"
+    },
+    {
+      "module_id": "n_nn_denominal_adjectives",
+      "topic": "Орфография",
+      "current_bank_sources": ["33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json"],
+      "first_studied_class": 6,
+      "reinforcement_classes": [7, 10],
+      "drabkina_basis": ["6: Н/НН в суффиксах отымённых прилагательных", "7: повторение/различение Н/НН отымённых прилагательных", "10: Н/НН в отымённых прилагательных"],
+      "status": "verified_route_family",
+      "examples_current": ["деревянный", "оловянный", "стеклянный", "ветреный/безветренный"]
+    },
+    {
+      "module_id": "n_nn_participles_deverbal_adjectives",
+      "topic": "Орфография",
+      "current_bank_sources": ["33-RUSSIAN-EXCEPTIONS-BANK-v0.1.json"],
+      "first_studied_class": 7,
+      "reinforcement_classes": [10],
+      "drabkina_basis": ["7: Н/НН в причастиях и отглагольных прилагательных", "10: Н/НН в причастиях и отглагольных прилагательных"],
+      "status": "verified_route_family",
+      "examples_current": ["кованый / кованный кузнецом", "жёваный / жёванный ребёнком", "раненый / раненный осколком", "названый брат", "посажёный отец"]
+    },
+    {
+      "module_id": "ne_nouns_adjectives",
+      "topic": "Орфография",
+      "current_bank_sources": ["39-RUSSIAN-EXCEPTIONS-NE-NI-SOLID-v0.1.json", "85-RUSSIAN-EXCEPTIONS-NE-NI-HIGH-RISK-v0.1.json"],
+      "first_studied_class": 6,
+      "reinforcement_classes": [7, 10],
+      "drabkina_basis": ["6: НЕ с существительными; НЕ с прилагательными", "7: НЕ/НИ с разными частями речи", "10: НЕ с разными частями речи"],
+      "status": "verified_route_family",
+      "mapping_note": "Item-level split is required; not all NE/NI items belong to grade 6."
+    },
+    {
+      "module_id": "ne_participles_gerunds_adverbs_and_ni",
+      "topic": "Орфография",
+      "current_bank_sources": ["39-RUSSIAN-EXCEPTIONS-NE-NI-SOLID-v0.1.json", "85-RUSSIAN-EXCEPTIONS-NE-NI-HIGH-RISK-v0.1.json"],
+      "first_studied_class": 7,
+      "reinforcement_classes": [10],
+      "drabkina_basis": ["7: НЕ с причастиями; НЕ с деепричастиями; НЕ с наречиями; НЕ/НИ; различение НЕ и НИ", "10: соответствующее систематизирующее повторение"],
+      "status": "verified_route_family"
+    },
+    {
+      "module_id": "adverbs_solid_separate_hyphen",
+      "topic": "Орфография",
+      "current_bank_sources": ["39-RUSSIAN-EXCEPTIONS-NE-NI-SOLID-v0.1.json", "86-RUSSIAN-EXCEPTIONS-SOLID-SEPARATE-HIGH-RISK-v0.1.json"],
+      "first_studied_class": 7,
+      "reinforcement_classes": [10],
+      "drabkina_basis": ["7: дефисное, слитное/раздельное написание наречий и наречных сочетаний", "10: систематизирующее повторение наречий"],
+      "status": "verified_route_family"
+    },
+    {
+      "module_id": "derived_prepositions",
+      "topic": "Орфография",
+      "current_bank_sources": ["86-RUSSIAN-EXCEPTIONS-SOLID-SEPARATE-HIGH-RISK-v0.1.json"],
+      "first_studied_class": 7,
+      "reinforcement_classes": [10],
+      "drabkina_basis": ["7: производные предлоги", "10: производные предлоги"],
+      "status": "verified_route_family",
+      "examples_current": ["ввиду / в виду", "вследствие / в следствие", "насчёт / на счёт", "вроде / в роде"]
+    },
+    {
+      "module_id": "conjunctions_vs_homonymous_combinations",
+      "topic": "Орфография",
+      "current_bank_sources": ["86-RUSSIAN-EXCEPTIONS-SOLID-SEPARATE-HIGH-RISK-v0.1.json"],
+      "first_studied_class": 7,
+      "reinforcement_classes": [10],
+      "drabkina_basis": ["7: союзы и омонимичные сочетания", "10: союзы и омонимичные сочетания"],
+      "status": "verified_route_family",
+      "examples_current": ["чтобы / что бы", "тоже / то же", "также / так же", "причём / при чём", "притом / при том", "зато / за то", "итак / и так"]
+    },
+    {
+      "module_id": "introductory_words_contextual",
+      "topic": "Пунктуация",
+      "current_bank_sources": ["42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json", "84-RUSSIAN-EXCEPTIONS-INTRODUCTORY-WORDS-v0.1.json"],
+      "first_studied_class": 8,
+      "reinforcement_classes": [11],
+      "drabkina_basis": ["8: вводные слова — grade-8 Drabkina scope confirmed", "11: вводные слова — systematic EGE review"],
+      "status": "provisional_until_exact_grade8_project_toc",
+      "norm_note": "Context-dependent cases such as «в конце концов», «конечно», «вообще» must not be taught as universal labels."
+    },
+    {
+      "module_id": "homogeneous_members_and_generalizing_words",
+      "topic": "Пунктуация",
+      "current_bank_sources": ["42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json"],
+      "first_studied_class": 5,
+      "reinforcement_classes": [8, 11],
+      "drabkina_basis": ["5: однородные члены + обобщающие слова", "8: grade-8 syntax/punctuation reinforcement", "11: EGE systematization"],
+      "status": "verified_first_study_partial_later_detail",
+      "mapping_note": "Advanced punctuation subcases must be mapped item-by-item because grade 8/11 add complexity beyond grade-5 basics."
+    },
+    {
+      "module_id": "isolated_members",
+      "topic": "Пунктуация",
+      "current_bank_sources": ["42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json"],
+      "first_studied_class": 8,
+      "reinforcement_classes": [11],
+      "drabkina_basis": ["8: обособленные члены — grade-8 Drabkina scope confirmed", "11: definitions, apposition, circumstances, complements"],
+      "status": "provisional_until_exact_grade8_project_toc"
+    },
+    {
+      "module_id": "complex_subordinate_sentences",
+      "topic": "Пунктуация",
+      "current_bank_sources": ["42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json"],
+      "first_studied_class": 9,
+      "reinforcement_classes": [11],
+      "drabkina_basis": ["9: СПП and subordinate types", "11: EGE systematization of СПП"],
+      "status": "verified_route_family"
+    },
+    {
+      "module_id": "asyndetic_complex_sentence_colon_dash",
+      "topic": "Пунктуация",
+      "current_bank_sources": ["42-RUSSIAN-PUNCTUATION-CONTRAST-BANK-v0.1.json"],
+      "first_studied_class": 9,
+      "reinforcement_classes": [11],
+      "drabkina_basis": ["9: БСП + тире", "11: БСП + двоеточие/тире"],
+      "status": "verified_route_family",
+      "mapping_note": "Colon details require checking whether first-study evidence is present in the exact grade-9 project source; do not automatically assign every БСП colon card before item review."
+    },
+    {
+      "module_id": "morphological_difficult_forms",
+      "topic": "Морфология",
+      "current_bank_sources": ["48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json", "87-RUSSIAN-EXCEPTIONS-MORPHOLOGY-TASK7-v0.1.json"],
+      "first_studied_class": null,
+      "reinforcement_classes": [],
+      "status": "requires_item_level_drabkina_locator",
+      "mapping_note": "Do not assign ДОКТОРА/ПОМИДОРОВ/ВОРОТ etc. to a class by EGE task number or intuition. Locate each form/family in the Drabkina vertical or another explicit school-stage source."
+    },
+    {
+      "module_id": "syntax_government_and_construction_norms",
+      "topic": "Синтаксис",
+      "current_bank_sources": ["48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json", "88-RUSSIAN-EXCEPTIONS-SYNTAX-TASK8-v0.1.json"],
+      "first_studied_class": null,
+      "reinforcement_classes": [11],
+      "status": "requires_item_level_drabkina_locator",
+      "mapping_note": "Grade 11 explicitly repeats connection types including government, but individual school first-study stages must be verified before routing."
+    },
+    {
+      "module_id": "paronyms_and_lexical_norms",
+      "topic": "Лексические нормы",
+      "current_bank_sources": ["48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json", "89-RUSSIAN-EXCEPTIONS-PARONYMS-HIGH-VALUE-v0.1.json"],
+      "first_studied_class": null,
+      "reinforcement_classes": [],
+      "status": "requires_explicit_drabkina_vertical_locator",
+      "mapping_note": "Current Drabkina method is valid for teaching the contrasts, but class routing is not yet evidenced for every pair."
+    },
+    {
+      "module_id": "orthoepy_difficult_cases",
+      "topic": "Орфоэпия",
+      "current_bank_sources": ["48-RUSSIAN-EXCEPTIONS-WAVE2-NORMS-v0.1.json"],
+      "first_studied_class": null,
+      "reinforcement_classes": [],
+      "status": "requires_explicit_drabkina_vertical_locator",
+      "mapping_note": "Do not infer class from EGE task 4. A separate class-stage source mapping is required."
+    }
+  ],
+  "next_required_work": [
+    "verify exact grade-8 project practicum TOC",
+    "flatten current 127 source items",
+    "assign every current knowledge item to a route family",
+    "resolve unassigned morphology/syntax/paronym/orthoepy class routing",
+    "deduplicate repeated grade-10/11 systematization from earlier first-study classes",
+    "run Rosenthal completeness pass after Drabkina vertical itemization",
+    "only then compute class-mode and whole-base denominators"
+  ],
+  "progress_claim_allowed": false
+}

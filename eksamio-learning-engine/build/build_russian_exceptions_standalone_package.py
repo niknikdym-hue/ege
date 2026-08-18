@@ -3,7 +3,8 @@
 
 Consumes only reviewed standalone source modules plus generated validated runtime chunks.
 Writes reproducible T123 text files and a local preview under build/. Does not publish
-or modify any existing Tilda/current-trainer source.
+or modify any existing Tilda/current-trainer source. A custom runtime-manifest path may
+be supplied for isolated candidate builds; defaults preserve the current package path.
 """
 from __future__ import annotations
 
@@ -40,10 +41,11 @@ def sha(raw: bytes) -> str:
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser()
+    parser.add_argument("--runtime-manifest", type=Path, default=root / "build" / "RUSSIAN-EXCEPTIONS-T123-CHUNKS-MANIFEST.json")
     parser.add_argument("--output-dir", type=Path, default=root / "build" / "standalone-exceptions-tilda")
     args = parser.parse_args()
     try:
-        runtime_manifest = json.loads(read(root / "build" / "RUSSIAN-EXCEPTIONS-T123-CHUNKS-MANIFEST.json"))
+        runtime_manifest = json.loads(read(args.runtime_manifest))
         source = root / "standalone-exceptions-trainer"
         shell = read(source / "ui" / "rex-shell.html").rstrip()
         css = read(source / "ui" / "rex.css").rstrip()
@@ -142,6 +144,7 @@ def main() -> int:
             "seo_file":f"{PREFIX}-SEO.txt",
             "head_file":f"{PREFIX}-HEAD.txt",
             "installation_file":f"{PREFIX}-INSTALLATION.txt",
+            "source_runtime_manifest":str(args.runtime_manifest),
             "publication":"HOLD",
         }
         (out / f"{PREFIX}-PACKAGE-MANIFEST.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")

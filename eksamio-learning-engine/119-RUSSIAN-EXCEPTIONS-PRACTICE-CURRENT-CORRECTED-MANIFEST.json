@@ -1,11 +1,11 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.2.0",
   "subject": "russian",
   "exam": "ege",
   "purpose": "current_corrected_exceptions_practice_manifest",
   "integration_status": "not_connected_to_production",
   "supersedes_for_current_build": "99-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-MANIFEST.json",
-  "history_note": "Manifest 99 remains the 72-card pre-correction checkpoint. Current build disables one superseded wave-2 practice item, adds one corrected replacement, and adds the 8-card P0-closure wave 4, leaving 80 active cards.",
+  "history_note": "The original 80-card set received a full 80/80 linguistic audit, two unsafe items were replaced, 30 audited FIX patches and 8 learner-feedback polish patches were applied. Reviewed Wave 5 added 13 P0 transfer cards. Reviewed Wave 6 then added 28 bidirectional solid/separate homonym cards across 14 pairs. Wave 6 passed source audit 14/14, manual review 28/28 with three explicit editorial fixes, isolated 121-card build/coverage/runtime/T123/Chromium gate, and generated-artifact inspection before promotion. Raw 123 minus two superseded historical cards leaves exactly 121 current active cards. Production/Tilda remains HOLD.",
   "schema": "91-RUSSIAN-EXCEPTIONS-PRACTICE-SCHEMA.json",
   "source_exceptions_manifest": "118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json",
   "practice_banks": [
@@ -17,37 +17,56 @@
     },
     {
       "path": "96-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE2-v0.1.json",
-      "scope": "wave 2 high-value contrast expansion",
+      "scope": "wave 2 high-value contrast expansion; old v-kontse-kontsov item retained only as superseded history",
       "expected_items": 24,
       "status": "source_verified_wave"
     },
     {
       "path": "98-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE3-v0.1.json",
-      "scope": "wave 3 recall and transfer",
+      "scope": "wave 3 recall and transfer; obsolete zorevat item retained only as superseded history",
       "expected_items": 24,
       "status": "source_verified_wave"
-    },
-    {
-      "path": "117-RUSSIAN-EXCEPTIONS-PRACTICE-CORRECTIONS-v0.1.json",
-      "scope": "current correction replacement for «в конце концов»",
-      "expected_items": 1,
-      "status": "source_verified_correction"
     },
     {
       "path": "123-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE4-P0-CLOSURE-v0.1.json",
       "scope": "wave 4 P0 closure and transfer coverage",
       "expected_items": 8,
       "status": "source_verified_wave"
+    },
+    {
+      "path": "133-RUSSIAN-EXCEPTIONS-PRACTICE-CONTENT-CORRECTIONS-v0.1.json",
+      "scope": "80-card reaudit replacements for context-dependent v-kontse-kontsov and current zarevat",
+      "expected_items": 2,
+      "status": "source_verified_reaudit_correction"
+    },
+    {
+      "path": "140-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE5-P0-TRANSFER-v1.0.json",
+      "scope": "reviewed P0 coverage closure and independent-context/transfer expansion",
+      "expected_items": 13,
+      "status": "source_verified_wave"
+    },
+    {
+      "path": "142-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-SOLID-SEPARATE-DRAFT-v0.1.json",
+      "scope": "historical Wave 6 draft; exactly 28 items become active only through reviewed overlay 145",
+      "expected_items": 28,
+      "status": "reviewed_via_overlay_145"
     }
   ],
   "disabled_practice_item_ids": [
-    "ex-practice-end-finally-001"
+    "ex-practice-end-finally-001",
+    "ex-practice-zorevat-001"
   ],
-  "expected_total_items_raw": 81,
-  "expected_active_items": 80,
-  "builder": "build/build_russian_exceptions_practice_current_corrected.py",
+  "expected_total_items_raw": 123,
+  "expected_active_items": 121,
+  "feedback_overlay": "131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json",
+  "feedback_polish_overlay": "136-RUSSIAN-EXCEPTIONS-LEARNER-FEEDBACK-POLISH-v0.1.json",
+  "wave5_manual_review": "138-RUSSIAN-EXCEPTIONS-WAVE5-MANUAL-CONTENT-REVIEW.txt",
+  "wave6_source_audit": "141-RUSSIAN-EXCEPTIONS-WAVE6-SOLID-SEPARATE-SOURCE-AUDIT.txt",
+  "wave6_manual_review": "144-RUSSIAN-EXCEPTIONS-WAVE6-MANUAL-CONTENT-REVIEW.txt",
+  "wave6_review_overlay": "145-RUSSIAN-EXCEPTIONS-WAVE6-REVIEWED-OVERLAY-v0.1.json",
+  "builder": "build/build_russian_exceptions_practice_course_grade.py",
   "canonical_output": "build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json",
   "validation_output": "audits/RUSSIAN-EXCEPTIONS-PRACTICE-VALIDATION.txt",
-  "current_status": "80_active_cards_p0_closure_ready_for_machine_validation",
+  "current_status": "121_active_cards_course_grade_wave6_promoted_ready_for_full_current_gate",
   "production_integration": "HOLD"
 }

@@ -1,0 +1,259 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS — WAVE 6
+SOLID / SEPARATE HOMONYM CONTRASTS — SOURCE AUDIT
+DATE: 2026-08-12
+STATUS: SOURCE GATE PASS 14/14 / PRACTICE NOT YET PROMOTED / TILDA HOLD
+
+PURPOSE
+
+Build a course-grade rule/table layer before generating Wave 6 learner cards.
+The topic is not «remember spaces». The topic is grammatical/semantic diagnosis of homonymous constructions.
+
+METHOD
+
+Drabkina/Subbotin method baseline:
+RULE/THEORY -> TABLE/SCHEME -> DIAGNOSTIC ALGORITHM -> APPLICATION -> CONTRAST -> TRAP -> INDEPENDENT CHECK.
+
+Project Drabkina corpus is used for method and lesson architecture, including the 7-class orthography practical workbook and the 10-class EGE orthography book.
+Exact PDF page/section locators are NOT claimed here because they have not been independently established in this audit pass.
+
+Normative/source bank basis:
+- 39-RUSSIAN-EXCEPTIONS-NE-NI-SOLID-v0.1.json;
+- 86-RUSSIAN-EXCEPTIONS-SOLID-SEPARATE-HIGH-RISK-v0.1.json where adjacent analogous contrasts are needed;
+- 38-RUSSIAN-EXPLANATION-ORTHOGRAPHY-13-14-v0.1.json;
+- 62-RUSSIAN-EXPLANATION-TASK14-WRITING-SPLITS-v0.1.json;
+- project Rosenthal orthography reference for exact verified spelling contrasts recorded by those source banks.
+
+IMPORTANT
+
+A replacement/test below is a diagnostic aid, not a mechanical universal rule. The sentence meaning and construction type always come first.
+
+SOURCE-GATE RESULTS — 14/14
+
+A. СОЮЗ VS САМОСТОЯТЕЛЬНЫЕ СЛОВА
+
+01. ЧТОБЫ / ЧТО БЫ — PASS
+SOURCE ID: chtoby_vs_chto_by
+NORM:
+- ЧТОБЫ — цельный союз;
+- ЧТО БЫ — местоимение ЧТО + частица БЫ.
+DIAGNOSTIC:
+- in ЧТО БЫ the pronoun keeps its own semantic/syntactic role;
+- БЫ can often be moved without destroying that role: Что бы мне выбрать? -> Что мне бы выбрать?
+- in purpose/subordinate conjunction use, ЧТОБЫ functions as one service word: Чтобы успеть, выйдем раньше.
+TRAP:
+Do not split every ЧТОБЫ merely because БЫ is audible; do not join every ЧТО БЫ merely because the words are adjacent.
+COURSE PAIR:
+Чтобы понять правило, сравним примеры. / Что бы ещё сравнить?
+
+02. ТОЖЕ / ТО ЖЕ — PASS
+SOURCE ID: tozhe_vs_to_zhe
+NORM:
+- ТОЖЕ in joining/additive meaning often corresponds to И;
+- ТО ЖЕ = pronoun ТО + particle ЖЕ; ТО retains meaning.
+DIAGNOSTIC:
+- ТО ЖЕ often allows ТО ЖЕ САМОЕ / ТО ЖЕ, ЧТО...;
+- ТОЖЕ in additive use often can be rephrased with И.
+TRAP:
+The presence of ЖЕ alone does not determine separate spelling.
+COURSE PAIR:
+Он тоже решил задачу. / Он решил то же упражнение.
+
+03. ТАКЖЕ / ТАК ЖЕ — PASS
+SOURCE ID: takzhe_vs_tak_zhe
+NORM:
+- ТАКЖЕ in additive/joining function often corresponds to И;
+- ТАК ЖЕ preserves adverb ТАК + particle ЖЕ, usually meaning «the same way».
+DIAGNOSTIC:
+- ТАК ЖЕ commonly correlates with КАК: сделать так же, как в образце;
+- ТАКЖЕ often adds another fact/participant.
+TRAP:
+Do not use the mere presence/absence of КАК as a universal formal test; confirm the meaning.
+COURSE PAIR:
+Она также проверила ответ. / Она оформила решение так же, как в образце.
+
+04. ПРИЧЁМ / ПРИ ЧЁМ — PASS
+SOURCE ID: prichem_vs_pri_chem
+NORM:
+- ПРИЧЁМ — joining word/conjunctional adverbial use meaning addition/connection («к тому же» etc.);
+- ПРИ ЧЁМ — preposition ПРИ + pronoun ЧТО in a free/question construction.
+DIAGNOSTIC:
+- for ПРИЧЁМ test whole additive/linking meaning;
+- for ПРИ ЧЁМ the pronoun retains independent meaning/question function: При чём здесь погода?
+TRAP:
+Do not join the interrogative/free pronoun construction.
+COURSE PAIR:
+Он согласился, причём сразу. / При чём здесь этот пример?
+
+05. ПРИТОМ / ПРИ ТОМ — PASS
+SOURCE ID: pritom_vs_pri_tom
+NORM:
+- ПРИТОМ — joining/additive service-word use;
+- ПРИ ТОМ — preposition + pronoun where ТО remains independent.
+DIAGNOSTIC:
+- identify whether the construction adds a fact as a whole or points to a specific condition/object/statement with ТО.
+TRAP:
+Do not rely only on pronunciation.
+COURSE PAIR:
+Он устал, притом сильно. / При том условии решение возможно.
+
+06. ЗАТО / ЗА ТО — PASS
+SOURCE ID: zato_vs_za_to
+NORM:
+- ЗАТО — conjunction, commonly close to НО in adversative-compensatory meaning;
+- ЗА ТО — preposition ЗА + pronoun ТО.
+DIAGNOSTIC:
+- if ЗАТО can be replaced by НО while preserving relation, solid spelling is expected;
+- in ЗА ТО the pronoun has its own object/reference: благодарить за то решение.
+TRAP:
+Replacement by НО is pair-specific diagnostic support, not a universal spelling test.
+COURSE PAIR:
+Задача трудная, зато полезная. / Я благодарен за то объяснение.
+
+07. ИТАК / И ТАК — PASS
+SOURCE ID: itak_vs_i_tak
+NORM:
+- ИТАК — discourse/conclusion word close to «следовательно, таким образом»;
+- И ТАК — conjunction И + independent ТАК.
+DIAGNOSTIC:
+- ИТАК organizes/concludes reasoning;
+- И ТАК preserves the meaning of ТАК: Он и так всё понял.
+TRAP:
+Do not join any sequence И + ТАК at sentence start or after a pause.
+COURSE PAIR:
+Итак, подведём итог. / Он и так знает правило.
+
+B. ПРОИЗВОДНЫЙ ПРЕДЛОГ VS СУЩЕСТВИТЕЛЬНОЕ С ПРЕДЛОГОМ
+
+08. ВВИДУ / В ВИДУ — PASS
+SOURCE ID: vvidu_vs_v_vidu
+NORM:
+- ВВИДУ — derived preposition, commonly = ИЗ-ЗА / because of;
+- В ВИДУ — separate combination with noun ВИД; especially fixed ИМЕТЬ В ВИДУ.
+DIAGNOSTIC:
+- causal relation allows ИЗ-ЗА replacement for ВВИДУ;
+- separate form preserves lexical noun/idiom meaning.
+TRAP:
+Do not teach «в виду is only three-word phrase иметь в виду» as an exhaustive rule; determine the construction.
+COURSE PAIR:
+Ввиду непогоды поездку отложили. / Имейте в виду это условие.
+
+09. ВСЛЕДСТВИЕ / В СЛЕДСТВИЕ — PASS
+SOURCE ID: vsledstvie_vs_v_sledstvie
+NORM:
+- ВСЛЕДСТВИЕ — derived preposition in causal meaning = ИЗ-ЗА;
+- В СЛЕДСТВИЕ — preposition В + noun СЛЕДСТВИЕ where the noun retains lexical meaning.
+DIAGNOSTIC:
+- causal replacement -> ВСЛЕДСТВИЕ;
+- noun can receive modifiers / refer to investigation or consequence as noun -> separate.
+TRAP:
+Do not confuse with ВПОСЛЕДСТВИИ, a different adverb and spelling model.
+COURSE PAIR:
+Вследствие ошибки расчёт повторили. / В следствие по делу внесли новые материалы.
+
+10. НАСЧЁТ / НА СЧЁТ — PASS
+SOURCE ID: naschet_vs_na_schet
+NORM:
+- НАСЧЁТ — derived preposition = О / относительно;
+- НА СЧЁТ — preposition НА + noun СЧЁТ.
+DIAGNOSTIC:
+- topic/relation «о чём?» -> НАСЧЁТ;
+- bank/account/calculation noun meaning -> НА СЧЁТ.
+TRAP:
+Do not decide from stress/pronunciation alone.
+COURSE PAIR:
+Поговорим насчёт поездки. / Деньги поступили на счёт школы.
+
+11. ВРОДЕ / В РОДЕ — PASS
+SOURCE ID: vrode_vs_v_rode
+NORM:
+- ВРОДЕ — derived preposition/particle-like comparative relation «подобно, наподобие»;
+- В РОДЕ — preposition В + noun РОД where the noun has its own lexical meaning.
+DIAGNOSTIC:
+- comparative meaning -> ВРОДЕ;
+- grammatical/biological/genealogical noun РОД -> separate.
+TRAP:
+Do not force every occurrence into the frequent service-word form ВРОДЕ.
+COURSE PAIR:
+Домик вроде башни стоял у реки. / В этом роде существительных есть особенности.
+
+C. НАРЕЧИЕ VS ПРЕДЛОЖНО-ИМЕННОЕ СОЧЕТАНИЕ
+
+12. ВНАЧАЛЕ / В НАЧАЛЕ — PASS
+SOURCE ID: vnachale_vs_v_nachale
+NORM:
+- ВНАЧАЛЕ — adverb = СНАЧАЛА, СПЕРВА;
+- В НАЧАЛЕ — preposition В + noun НАЧАЛО, commonly with dependent word.
+DIAGNOSTIC:
+- replacement by СНАЧАЛА/SPERВА supports adverb;
+- noun can be specified: в начале главы, в начале урока.
+TRAP:
+A time meaning alone does not automatically imply solid spelling.
+COURSE PAIR:
+Вначале было трудно. / В начале главы дано определение.
+
+13. СНАЧАЛА / С НАЧАЛА — PASS
+SOURCE ID: snachala_vs_s_nachala
+NORM:
+- СНАЧАЛА — adverb = СПЕРВА;
+- С НАЧАЛА — preposition С + noun НАЧАЛО.
+DIAGNOSTIC:
+- adverb can be replaced by СПЕРВА;
+- separate noun can take dependent word: с начала недели, с начала главы.
+TRAP:
+Do not write separately merely because the sentence refers to a time starting point; identify whether НАЧАЛО is an actual noun.
+COURSE PAIR:
+Сначала прочитайте условие. / С начала недели шли дожди.
+
+14. НАЗАВТРА / НА ЗАВТРА — PASS
+SOURCE ID: nazavtra_vs_na_zavtra
+NORM:
+- НАЗАВТРА — adverb «на следующий день»;
+- НА ЗАВТРА — separate combination when assigning/planning for tomorrow as a term/date.
+DIAGNOSTIC:
+- narrative next-day adverbial meaning -> НАЗАВТРА;
+- schedule/assignment «на когда?» as planned term -> НА ЗАВТРА.
+TRAP:
+This pair requires semantic context; do not replace all «на следующий день/tomorrow» expressions mechanically.
+COURSE PAIR:
+Назавтра погода изменилась. / Задание перенесли на завтра.
+
+SOURCE-GATE SUMMARY
+
+PAIRS REVIEWED: 14/14
+PASS: 14
+FIX: 0
+HOLD: 0
+REPLACE: 0
+
+All 14 source IDs are already registered as source_verified in the current exception source bank and point to the appropriate internal Task-14 explanation branch.
+No Wave 6 practice card has been added to current manifest 119 yet.
+
+COURSE TABLE CONTRACT
+
+Future reusable table must have columns conceptually equivalent to:
+
+PAIR | WHAT IS THE SOLID FORM? | WHAT IS THE SEPARATE FORM? | DIAGNOSTIC QUESTION/REPLACEMENT | NORMAL EXAMPLE | CONTRAST EXAMPLE | COMMON TRAP
+
+Do not expose internal source references to learners.
+
+PRACTICE CONTRACT
+
+For every one of 14 pairs create two original contexts:
+- solid-form direction;
+- separate-form direction.
+
+28 cards total.
+At least one card per pair must have independent_context/transfer level.
+Feedback:
+EXACT APPLICATION -> SHORT RULE -> CONTRAST -> one useful trap where relevant.
+
+NEXT
+
+1. Build Wave 6 draft with 28 cards outside current manifest.
+2. Manual review 28/28.
+3. Candidate build from current 93 + Wave 6 => expected 121 active cards.
+4. Candidate runtime/T123/package/Chromium gate.
+5. Inspect generated learner payload.
+6. Promote only after all PASS.
+7. Tilda remains unchanged until explicit user decision.

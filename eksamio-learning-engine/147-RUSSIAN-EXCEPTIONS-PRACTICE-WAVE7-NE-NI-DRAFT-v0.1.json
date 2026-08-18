@@ -1,0 +1,161 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "exam": "ege",
+  "purpose": "practice_wave_7_ne_ni_meaning_contrasts_draft",
+  "integration_status": "review_only_not_in_current_121",
+  "source_audit_ref": "146-RUSSIAN-EXCEPTIONS-WAVE7-NE-NI-SOURCE-AUDIT.txt",
+  "method_policy": "Determine sentence meaning/construction before choosing НЕ/НИ. Feedback = exact application -> short diagnostic rule -> contrast/trap.",
+  "items": [
+    {
+      "practice_item_id": "ex-practice-ne-chto-inoe-w7-001",
+      "exception_id": "ne_chto_inoe_vs_nichto_inoe",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативную конструкцию: Этот сбой оказался ___ ошибкой в настройке.", "options": ["не чем иным, как", "ничем иным"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "не чем иным, как ошибкой в настройке", "why": "Здесь не отрицают сам факт, а точно называют, чем оказался сбой: это именно ошибка в настройке. В такой конструкции пишется НЕ раздельно: НЕ ЧЕМ ИНЫМ, КАК. Сравни отрицательное предложение: «Сбой нельзя объяснить ничем иным, кроме ошибки в настройке». ", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_ne_chem_inym_identification_error",
+      "transfer_level": "independent_context",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-nichto-inoe-w7-002",
+      "exception_id": "ne_chto_inoe_vs_nichto_inoe",
+      "mode": "contrast_normal_vs_exception",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативную конструкцию: ___ не могло объяснить внезапное изменение результата.", "options": ["Ничто иное", "Не что иное"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "Ничто иное не могло объяснить...", "why": "Предложение действительно отрицательное: НИЧТО ИНОЕ НЕ МОГЛО объяснить. Поэтому используется слитное отрицательное местоимение НИЧТО. Сравни утвердительное отождествление: «Это было не что иное, как ошибка». Конструкции «ни что иное, как» нет.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_nichto_inoe_negative_explanation",
+      "transfer_level": "transfer",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-ni-odin-w7-003",
+      "exception_id": "ni_odin_vs_ne_odin",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативное сочетание: ___ участник не пропустил инструктаж.", "options": ["Ни один", "Не один"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "Ни один участник не пропустил инструктаж", "why": "Здесь имеется в виду ноль пропусков: ни один участник не пропустил. НИ усиливает отрицание при сказуемом. Сравни: «Не один участник заметил ошибку» = ошибку заметили несколько человек.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_ni_odin_no_one_missed",
+      "transfer_level": "independent_context",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-ne-odin-w7-004",
+      "exception_id": "ni_odin_vs_ne_odin",
+      "mode": "contrast_normal_vs_exception",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативное сочетание: ___ участник заметил неточность ещё до проверки.", "options": ["Не один", "Ни один"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "Не один участник заметил неточность", "why": "НЕ ОДИН здесь означает «несколько, больше одного»: неточность заметили разные участники. Сравни: «Ни один участник не ошибся» = не ошибся никто.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_ne_odin_several_noticed",
+      "transfer_level": "transfer",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-ni-razu-w7-005",
+      "exception_id": "ni_razu_vs_ne_raz",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативное сочетание: За весь месяц он ___ не пропустил тренировку.", "options": ["ни разу", "не раз"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "ни разу не пропустил", "why": "НИ РАЗУ означает «ни одного раза»: за месяц не было ни одного пропуска. Сравни: «Он не раз возвращался к этой теме» = возвращался неоднократно.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_ni_razu_zero_missed",
+      "transfer_level": "independent_context",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-ne-raz-w7-006",
+      "exception_id": "ni_razu_vs_ne_raz",
+      "mode": "contrast_normal_vs_exception",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативное сочетание: Мы ___ возвращались к этой таблице во время подготовки.", "options": ["не раз", "ни разу"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "не раз возвращались", "why": "НЕ РАЗ означает «неоднократно, больше одного раза»: к таблице возвращались несколько раз. Сравни: «Мы ни разу не открыли таблицу» = ни одного раза.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_ne_raz_repeatedly_returned",
+      "transfer_level": "transfer",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-ni-s-chem-w7-007",
+      "exception_id": "ni_s_chem_ni_pri_chem",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативное написание: После долгого спора он ушёл ___.", "options": ["ни с чем", "нисчем"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "ушёл ни с чем", "why": "В отрицательном местоименном сочетании предлог С стоит внутри конструкции: НИ С ЧЕМ. Поэтому все три элемента пишутся раздельно. Сравни ту же модель: НИ ПРИ ЧЁМ.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_ni_s_chem_left_nothing",
+      "transfer_level": "independent_context",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-ni-pri-chem-w7-008",
+      "exception_id": "ni_s_chem_ni_pri_chem",
+      "mode": "recall_form",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативное написание: Я к этой ошибке ___.", "options": ["ни при чём", "нипричём"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "я ни при чём", "why": "Предлог ПРИ разделяет элементы отрицательного местоименного сочетания: НИ ПРИ ЧЁМ. Сравни: НИ С ЧЕМ. Не смешивайте это с присоединительным словом ПРИЧЁМ из другой орфографической темы.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_ni_pri_chem_not_involved",
+      "transfer_level": "transfer",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-vo-chto-by-to-ni-stalo-w7-009",
+      "exception_id": "ni_fixed_turnovers",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативную форму устойчивого оборота: Он решил ___ закончить работу сегодня.", "options": ["во что бы то ни стало", "во что бы то не стало"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "во что бы то ни стало", "why": "ВО ЧТО БЫ ТО НИ СТАЛО — устойчивый нормативный оборот со значением «при любых обстоятельствах». Здесь сохраняется НИ. Такие устойчивые конструкции нужно узнавать целиком, а не выводить из одной упрощённой формулы о НЕ и НИ.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_fixed_vo_chto_by_to_ni_stalo",
+      "transfer_level": "independent_context",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-kak-ni-v-chem-w7-010",
+      "exception_id": "ni_fixed_turnovers",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативную форму устойчивого оборота: После замечания он продолжил разговор ___.", "options": ["как ни в чём не бывало", "как не в чём ни бывало"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "как ни в чём не бывало", "why": "Устойчивый оборот имеет форму КАК НИ В ЧЁМ НЕ БЫВАЛО. НИ входит в местоименную часть, а НЕ относится к сказуемому БЫВАЛО. В таком обороте важно сохранять нормативную конструкцию целиком.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_fixed_kak_ni_v_chem_ne_byvalo",
+      "transfer_level": "transfer",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-otkuda-ni-vozmись-w7-011",
+      "exception_id": "ni_fixed_turnovers",
+      "mode": "recall_form",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативный оборот: И вдруг, ___, появился сильный ветер.", "options": ["откуда ни возьмись", "откуда не возьмись"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "откуда ни возьмись", "why": "ОТКУДА НИ ВОЗЬМИСЬ — закреплённый оборот со значением внезапного появления. В нормативной форме используется НИ. Запоминайте его как устойчивую конструкцию, а не как отдельный случай замены НЕ на НИ.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_fixed_otkuda_ni_vozmись_wind",
+      "transfer_level": "transfer",
+      "status": "source_verified_draft"
+    },
+    {
+      "practice_item_id": "ex-practice-ni-ryba-ni-myaso-w7-012",
+      "exception_id": "ni_fixed_turnovers",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {"text": "Выберите нормативную форму фразеологического оборота: Получился ответ ___.", "options": ["ни рыба ни мясо", "не рыба не мясо"]},
+      "answer": {"option_index": 0},
+      "feedback": {"correct_answer": "ни рыба ни мясо", "why": "НИ РЫБА НИ МЯСО — устойчивый оборот с повторяющимся НИ. Такая модель закреплена целиком. Сравни другие устойчивые пары с повторяющимся НИ: НИ ДАТЬ НИ ВЗЯТЬ, НИ ЖИВ НИ МЁРТВ.", "rule_ref": "ne_ni_spelling"},
+      "context_signature": "w7_fixed_ni_ryba_ni_myaso_answer",
+      "transfer_level": "transfer",
+      "status": "source_verified_draft"
+    }
+  ],
+  "draft_summary": {
+    "source_ids": 5,
+    "cards": 12,
+    "current_121_unchanged": true,
+    "requires_manual_review": true
+  }
+}

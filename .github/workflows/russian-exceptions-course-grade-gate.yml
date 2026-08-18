@@ -1,0 +1,212 @@
+name: Russian Exceptions Course-Grade Gate
+
+on:
+  push:
+    branches:
+      - agent/russian-exceptions-content-polish
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/**'
+      - '.github/workflows/russian-exceptions-course-grade-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install playwright
+          BROWSER="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          if [ -z "$BROWSER" ]; then
+            sudo apt-get update
+            sudo apt-get install -y chromium
+            BROWSER="$(command -v chromium)"
+          fi
+          test -n "$BROWSER"
+          echo "CHROMIUM_PATH=$BROWSER" >> "$GITHUB_ENV"
+          "$BROWSER" --version
+
+      - name: Build current canonical exception bank
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_exceptions_bank_current_v2.py
+
+      - name: Build Drabkina 5-11 class-route inventory
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_drabkina_class_routing_current.py
+
+      - name: Build current audited course-grade practice bank
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_exceptions_practice_course_grade.py
+
+      - name: Build launch priority
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_exceptions_launch_priority.py
+
+      - name: Audit current practice coverage
+        working-directory: eksamio-learning-engine
+        run: python build/audit_russian_exceptions_practice_coverage.py
+
+      - name: Verify current 121 cards, Wave 6 structure and coverage
+        working-directory: eksamio-learning-engine
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          manifest = json.loads(Path('119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json').read_text(encoding='utf-8'))
+          expected = manifest['expected_active_items']
+          assert expected == 121, expected
+
+          practice_path = Path('build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json')
+          data = json.loads(practice_path.read_text(encoding='utf-8'))
+          items = data.get('practice_items', data.get('items', []))
+          rows = list(items.values()) if isinstance(items, dict) else items
+          assert len(rows) == expected, f'expected {expected} active cards, got {len(rows)}'
+
+          ids = {r.get('practice_item_id') for r in rows}
+          assert 'ex-practice-zorevat-001' not in ids
+          assert 'ex-practice-end-finally-001' not in ids
+          assert 'ex-practice-zarevat-current-001' in ids
+          assert 'ex-practice-v-kontse-kontsov-context-002' in ids
+          assert 'ex-practice-priznatelnyi-context-001' in ids
+          assert 'ex-practice-priznannyi-context-002' in ids
+          assert 'ex-practice-skachu-transfer-002' in ids
+          assert 'ex-practice-po-okonchanii-transfer-002' in ids
+
+          for row in rows:
+              answer = row.get('answer', {})
+              feedback = row.get('feedback', {})
+              if isinstance(answer, dict):
+                  assert str(answer.get('text', '')).strip().lower() != 'зоревать', row.get('practice_item_id')
+              if isinstance(feedback, dict):
+                  assert str(feedback.get('correct_answer', '')).strip().lower() != 'зоревать', row.get('practice_item_id')
+
+          wave6_ids = [r['practice_item_id'] for r in rows if '-w6-' in r.get('practice_item_id', '')]
+          assert len(wave6_ids) == 28, len(wave6_ids)
+          assert len(set(wave6_ids)) == 28
+          wave6_rows = [r for r in rows if r.get('practice_item_id') in set(wave6_ids)]
+          assert all(r.get('status') == 'reviewed' for r in wave6_rows), {r.get('status') for r in wave6_rows}
+          assert len({r.get('context_signature') for r in wave6_rows}) == 28
+
+          wave6_targets = [
+              'chtoby_vs_chto_by', 'tozhe_vs_to_zhe', 'takzhe_vs_tak_zhe',
+              'prichem_vs_pri_chem', 'pritom_vs_pri_tom', 'zato_vs_za_to', 'itak_vs_i_tak',
+              'vvidu_vs_v_vidu', 'vsledstvie_vs_v_sledstvie', 'naschet_vs_na_schet', 'vrode_vs_v_rode',
+              'vnachale_vs_v_nachale', 'snachala_vs_s_nachala', 'nazavtra_vs_na_zavtra',
+          ]
+          counts = Counter(r['exception_id'] for r in wave6_rows)
+          assert set(counts) == set(wave6_targets), (set(counts), set(wave6_targets))
+          assert all(counts[eid] == 2 for eid in wave6_targets), counts
+          for eid in wave6_targets:
+              pair_rows = [r for r in wave6_rows if r['exception_id'] == eid]
+              assert {r['answer']['option_index'] for r in pair_rows} == {0, 1}, eid
+              assert {r['transfer_level'] for r in pair_rows} & {'independent_context', 'transfer'}, eid
+
+          text = practice_path.read_text(encoding='utf-8')
+          assert 'Я проголосовал ___ предложение, которое поддержала группа.' in text
+          assert 'Ошибка была ___ существительного: к слову подобрали неверную форму согласования.' in text
+          assert 'в его роде было несколько художников' not in text.lower()
+          assert 'В роде этого мастера было несколько известных художников' not in text
+          assert 'Ученика похвалили за то точное объяснение правила' not in text
+
+          coverage = json.loads(Path('audits/RUSSIAN-EXCEPTIONS-PRACTICE-COVERAGE.json').read_text(encoding='utf-8'))
+          assert coverage['practice_items_total'] == expected
+          assert coverage['exceptions_total'] == 127
+          assert coverage['exceptions_covered'] == 88
+          assert coverage['exceptions_uncovered'] == 39
+          assert coverage['p0_p1_uncovered_count'] == 0
+          assert coverage['priority_uncovered'] == {'P2': 39}, coverage['priority_uncovered']
+
+          p0_targets = [
+              'paronym_priznatelnyi_priznannyi',
+              'alt_root_skachok_skachu',
+              'alt_root_zarevat_current',
+              'morph_doktor_plural',
+              'morph_pomidor_genitive_plural',
+              'morph_vorota_genitive_plural',
+              'n_nn_chewed', 'n_nn_glass', 'n_nn_tin', 'n_nn_wooden',
+              'syntax_dative_prepositions_government', 'syntax_po_after_event_forms',
+          ]
+          coverage_rows = {r['exception_id']: r for r in coverage['rows']}
+          for eid in p0_targets:
+              levels = set(coverage_rows[eid].get('transfer_levels', {}))
+              assert levels & {'independent_context', 'transfer'}, (eid, levels)
+
+          print('PASS: current 121 cards; Wave 6=28 reviewed cards across 14 bidirectional pairs; coverage 88/127; P0/P1 uncovered=0')
+          PY
+
+      - name: Build runtime
+        working-directory: eksamio-learning-engine
+        run: python build/build_russian_exceptions_runtime.py
+
+      - name: Audit learner payload and reviewed Wave 6 text
+        working-directory: eksamio-learning-engine
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('build/RUSSIAN-EXCEPTIONS-RUNTIME.json')
+          text = path.read_text(encoding='utf-8')
+          low = text.lower()
+          forbidden = [
+              'розентал', 'rosenthal', 'gramota.ru', 'драбкин', 'drabkina',
+              'source_refs', 'source_path', 'provenance', 'rule_ref',
+              'russkiy-knigi/', '130-russian-exceptions-80-card',
+          ]
+          hits = [x for x in forbidden if x in low]
+          assert not hits, f'forbidden internal provenance leaked: {hits}'
+
+          runtime = json.loads(text)
+          assert len(runtime['practice_items']) == 121
+          wave6 = [v for k, v in runtime['practice_items'].items() if '-w6-' in k]
+          assert len(wave6) == 28
+          assert 'за то предложение' in low
+          assert 'в роде существительного' in low
+          assert 'ошибка в роде существительного' in low
+          assert 'в его роде было несколько художников' not in low
+          assert 'в роде этого мастера было несколько известных художников' not in low
+          assert 'ученика похвалили за то точное объяснение правила' not in low
+          print('PASS: learner runtime has 121 cards, all 28 Wave 6 cards, reviewed wording and no forbidden source leakage')
+          PY
+
+      - name: Run standalone core validation
+        working-directory: eksamio-learning-engine
+        run: python build/run_russian_exceptions_standalone_validation.py
+
+      - name: Run standalone Chromium preview validation
+        working-directory: eksamio-learning-engine
+        run: python build/run_russian_exceptions_standalone_preview_validation.py
+
+      - name: Runtime size audit
+        working-directory: eksamio-learning-engine
+        run: python build/audit_russian_runtime_sizes.py
+
+      - name: Upload generated gate outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-exceptions-course-grade-gate
+          if-no-files-found: warn
+          path: |
+            eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json
+            eksamio-learning-engine/build/RUSSIAN-CURRENT-127-DRABKINA-CLASS-ROUTING-v2.json
+            eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json
+            eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-LAUNCH-PRIORITY.json
+            eksamio-learning-engine/build/RUSSIAN-EXCEPTIONS-RUNTIME.json
+            eksamio-learning-engine/build/standalone-exceptions-tilda/**
+            eksamio-learning-engine/audits/**

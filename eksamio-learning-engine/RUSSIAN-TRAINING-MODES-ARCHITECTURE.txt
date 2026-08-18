@@ -1,0 +1,208 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN — TRAINING MODES / KNOWLEDGE BASE ARCHITECTURE
+DATE: 2026-08-12
+STATUS: FIXED PRODUCT ARCHITECTURE DECISION
+SCOPE: Russian difficult cases / exceptions trainer and future Russian course
+
+CORE DECISION
+
+There is ONE shared Russian knowledge base.
+There are MULTIPLE training modes that load different subsets/routes through the same knowledge base.
+The learner keeps ONE knowledge profile; knowledge is not duplicated between modes.
+
+MODES
+
+1. 5 класс
+2. 6 класс
+3. 7 класс
+4. 8 класс
+5. 9 класс
+6. 10 класс
+7. 11 класс
+8. ОГЭ
+9. ЕГЭ
+10. Вся база
+
+A learner may, for example:
+- prepare specifically for ЕГЭ;
+- train only difficult cases and exceptions of 5 class;
+- choose a class and then narrow the session by topic;
+- choose ОГЭ/ЕГЭ and train all relevant topics adaptively.
+
+CLASS SPLIT — MANDATORY SOURCE RULE
+
+The class split 5–11 MUST be based on the Drabkina/Subbotin school sequence in the project corpus.
+Do not assign a case to a class by intuition, by current card location, or by arbitrary project convenience.
+
+Primary class-routing corpus:
+- 5 class — project Drabkina 5-class practice book;
+- 6 class — project Drabkina 6-class practice book;
+- 7 class — project Drabkina 7-class practice book;
+- 8 class — project Drabkina 8-class practice book;
+- 9 class — project Drabkina 9-class practice book;
+- 10 class — project Drabkina 10-class EGE preparation book;
+- 11 class — project Drabkina 11-class EGE preparation book.
+
+Drabkina determines the SCHOOL LEARNING STAGE / CLASS ROUTING.
+Rosenthal is used as a COMPLETENESS / DIFFICULT-CASE CONTROL and not as the primary class-routing source.
+Current academic/dictionary norm overrides an outdated formulation when the norm has changed.
+FIPI is used for current OGE/EGE exam mapping and official exam scope, not for assigning the underlying school class unless explicitly supported.
+
+ONE KNOWLEDGE ITEM — MANY ROUTES
+
+A knowledge item is stored once and may have routing metadata such as:
+- topic;
+- subtopic;
+- rule / exception / difficult case / contrast;
+- first_studied_class;
+- route_classes;
+- reinforcement_classes;
+- oge_relevance;
+- ege_relevance;
+- difficulty;
+- prerequisite links;
+- current-norm status;
+- source provenance;
+- available practice variants.
+
+Cards/questions are evidence and practice for a knowledge item. They are NOT the denominator of programme coverage.
+One item may require two contexts; another may require five or more.
+
+FIRST-STUDIED CLASS VS CLASS-ROUTE MEMBERSHIP
+
+These are deliberately DIFFERENT fields.
+
+`first_studied_class` answers:
+- where this underlying school knowledge is first introduced in the verified Drabkina vertical, when that first-study point is established.
+
+`route_classes` answers:
+- in which Drabkina class routes this knowledge is actually taught, practised, repeated or systematized and therefore belongs to that class-mode training set.
+
+`reinforcement_classes` is the subset of later `route_classes` where the item is repeated/systematized after first study.
+
+Example principle:
+- a rule first studied in grade 6 can legitimately belong to the grade-10 Drabkina route because grade 10 systematizes it for EGE preparation;
+- grade-10 mode must therefore include that knowledge even though `first_studied_class = 6`;
+- do NOT create a duplicate grade-10 knowledge item.
+
+If the exact first-study class is not yet established but a specific Drabkina class book explicitly contains the case, keep:
+- `first_studied_class = null`;
+- the confirmed class in `route_classes`;
+- source status showing that earlier provenance is still pending.
+
+CLASS MODE
+
+When a learner selects a class, the system loads the knowledge route appropriate to that class according to Drabkina.
+The class-mode denominator is built from the verified `route_classes` membership for that selected class, after the full master map has been completed and deduplicated.
+It is NOT built only from `first_studied_class`.
+
+The route may use earlier-class material as prerequisites or spaced review when needed, but the selected class remains the visible goal/context.
+
+Example:
+Mode: 7 класс
+Topic: Орфография
+=> train the 7-class orthography route, with targeted earlier-class prerequisites only where needed.
+
+OGE / EGE MODES
+
+OGE and EGE are separate routes over the same knowledge base.
+Their content selection is based on current official exam scope plus the prerequisite school knowledge needed to solve it reliably.
+A case learned earlier is not reset when the learner switches to OGE/EGE; however a harder exam-context transfer check may be required.
+
+TOPIC FILTER
+
+Mode and topic are separate controls.
+
+MODE examples:
+5 класс / 7 класс / 9 класс / ОГЭ / ЕГЭ / Вся база
+
+TOPIC examples:
+Все темы / Орфография / Пунктуация / Морфология / Синтаксис / Лексические нормы / Орфоэпия
+
+Example combinations:
+- 5 класс + Все темы
+- 5 класс + Орфография
+- ЕГЭ + Все темы
+- ЕГЭ + Пунктуация
+
+PROGRESS — LEARNER-FACING PRINCIPLE
+
+Progress must always be understandable relative to the SELECTED MODE.
+Never show an unexplained generic percentage.
+Never infer whole-subject mastery from a small number of solved cards.
+
+Preferred learner-facing display:
+
+«5 класс · Орфография
+Освоено 64%
+Нужно повторить: 6
+Сегодня: 9 из 10»
+
+or
+
+«ЕГЭ · Все темы
+Освоено 27%
+Нужно повторить: 5
+Сегодня: 10 из 10»
+
+The denominator is the full knowledge set of the selected mode (and, when a topic filter is intentionally selected, the relevant route/filter context), NOT the number of cards already seen.
+
+For a class mode, the denominator is based on the full verified Drabkina route membership for that class (`route_classes`), not only on items first introduced in that class.
+
+Different modes can therefore legitimately show different progress for the same learner.
+Example:
+- 7 класс: 86%
+- ОГЭ: 54%
+- ЕГЭ: 31%
+- Вся база: 27%
+
+Do not show all mode percentages at once by default. Show the progress of the currently selected mode; keep the interface simple.
+
+INTERNAL MASTERY MODEL
+
+The learner-facing UI should stay simple, while the engine may internally track:
+- coverage;
+- correctness;
+- independent retrieval;
+- transfer to a new context;
+- error history;
+- delayed retention;
+- confidence / amount of evidence;
+- need for review.
+
+Correct answers may optionally expose «Правило и примеры» without forcing extra work.
+Incorrect answers follow a different learning route:
+error -> correct answer -> explanation / rule -> contrast/example -> system-provided new check -> delayed review.
+The learner must never be told to go find a new example elsewhere.
+
+If a learner answered correctly and only wants to look at the rule, show RULE + EXAMPLES and let the learner continue.
+Do not force a remediation task after an already-correct answer.
+
+100% BASE PRINCIPLE
+
+The difficult-cases / exceptions knowledge base is intended to grow toward 100% coverage of the school difficult cases, exceptions, lexicalized cases, norm traps, contrasts and boundary cases covered by the 5–11 school corpus.
+The completeness programme is driven by Drabkina 5–11 as the school vertical, with Rosenthal as a completeness/control layer and current academic norm as the final normative check.
+
+Do not equate:
+- number of cards;
+- number of source records;
+- number of solved questions;
+with 100% of the school programme.
+
+A complete source/master map must exist before any claim of 100% coverage.
+
+RELATION TO FUTURE RUSSIAN COURSE
+
+The Exceptions/Difficult Cases Trainer is the first interface over this shared knowledge base, not a dead-end standalone content pile.
+The same verified knowledge units should be reusable in:
+- short post-error explanations;
+- expanded work-on-errors;
+- class routes;
+- OGE routes;
+- EGE routes;
+- full future Russian course lessons.
+
+PUBLICATION SAFETY
+
+This file records architecture only.
+It does NOT authorize Tilda publication, EGE trainer integration, or changes to the current production trainer.

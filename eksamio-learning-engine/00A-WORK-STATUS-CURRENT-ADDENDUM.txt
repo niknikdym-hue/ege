@@ -74,3 +74,108 @@ NEXT ACTIVE WORK
 3. Continue source-bank/practice expansion only where it adds real coverage rather than duplicates.
 4. Run canonical explanation/exceptions/practice builders when local files become available.
 5. Only after machine PASS: implementation/integration design and regression plan.
+
+2026-08-12 ARCHITECTURE / SOURCE-MAP OVERRIDE
+
+The earlier `NEXT ACTIVE WORK` above is historical and is SUPERSEDED for current work.
+
+FIXED PRODUCT ARCHITECTURE:
+- one shared Russian knowledge base;
+- modes: 5 / 6 / 7 / 8 / 9 / 10 / 11 class, OGE, EGE, Whole base;
+- one learner knowledge profile across modes;
+- topic is a separate session filter;
+- progress is computed relative to the selected mode;
+- cards/questions are evidence, NOT the programme denominator.
+
+MANDATORY CLASS ROUTING:
+- class split 5–11 is based on the Drabkina/Subbotin school vertical;
+- Rosenthal is completeness/difficult-case control, not the primary class router;
+- current academic/dictionary norm overrides outdated teaching formulations;
+- FIPI supplies current OGE/EGE route scope.
+
+NEW DURABLE FILES:
+- `RUSSIAN-TRAINING-MODES-ARCHITECTURE.txt`
+- `RUSSIAN-DRABKINA-5-11-MASTER-MAP-v0.1.json`
+- `RUSSIAN-DRABKINA-CURRENT-BANK-ROUTING-v0.1.json`
+- `RUSSIAN-DRABKINA-5-11-COVERAGE-AUDIT-v0.1.txt`
+
+CURRENT DRABKINA MAP STATUS:
+- grade 5 structure: verified;
+- grade 6 structure: verified;
+- grade 7 structure: verified;
+- grade 8: partial; exact project-practicum section map still requires verification;
+- grade 9 structure: verified;
+- grade 10 structure: verified;
+- grade 11 structure: verified.
+
+KEY VERTICAL RULE:
+- grades 5–9 form the main first-study school progression;
+- grade 10 is primarily orthography reinforcement/systematization for EGE;
+- grade 11 is primarily syntax/punctuation reinforcement/systematization for EGE;
+- every item must distinguish `first_studied_class` from `reinforcement_classes`.
+
+CURRENT ACTIVE WORK — SUPERSEDING EARLIER CARD-COUNT EXPANSION
+
+1. Verify exact grade-8 Drabkina project structure.
+2. Itemize the full Drabkina 5–11 difficult-case / exception / contrast vertical.
+3. Deduplicate repeated material across grades.
+4. Flatten/map all current source items into the class vertical.
+5. Resolve morphology / syntax / paronym / orthoepy class provenance without guessing.
+6. Run Rosenthal completeness control.
+7. Run current-norm audit.
+8. Add current OGE/EGE route overlays from FIPI.
+9. Only after the full master map exists, calculate honest denominators/progress for each mode.
+10. Add practice only to close proven master-map gaps; do not expand by card-count target.
+
+PUBLICATION SAFETY REMAINS:
+- current EGE trainer unchanged;
+- Tilda preview/publication unchanged;
+- production integration HOLD.
+
+2026-08-12 CURRENT-127 ITEM-LEVEL ROUTING CHECKPOINT
+
+VERIFIED CANONICAL INPUT:
+- GitHub Actions run: 31629301470;
+- artifact: russian-exceptions-course-grade-gate / 9154402921;
+- canonical source items: 127;
+- current replacement `alt_root_zarevat_current`: present;
+- obsolete `alt_root_zorevat`: absent.
+
+NEW GENERATOR / AUDIT:
+- `build/build_russian_drabkina_class_routing.py`;
+- `audits/RUSSIAN-CURRENT-127-DRABKINA-CLASS-ROUTING.txt`.
+
+The generator was executed against the verified 127-item canonical artifact and classified every current item without an unknown fall-through.
+
+CURRENT FIRST-STUDY ROUTING COUNTS (NOT PROGRAMME PERCENTAGES):
+- 5 class: 15;
+- 6 class: 17;
+- 7 class: 43;
+- 8 class: 12 (provisional pending exact project-practicum structure);
+- 9 class: 6;
+- unassigned pending exact Drabkina locator: 34.
+
+ROUTE STATUS:
+- verified_class_route: 33;
+- family_route_verified_item_locator_pending: 39;
+- composite_verified_prerequisites: 9;
+- provisional_grade8_exact_toc_pending: 12;
+- requires_exact_drabkina_item_locator: 33;
+- legacy_exam_only_excluded: 1.
+
+DENOMINATOR SAFETY:
+- 93 current items are candidate school-base items with a class-family route;
+- 33 items remain pending exact school-stage source evidence;
+- 1 historical EGE task-25 synonym-format record is excluded from the future school-programme denominator;
+- these 127 items are still NOT the denominator of the school programme;
+- no learner progress percentage may be derived from these counts yet.
+
+COMPOSITE-ITEM RULE:
+Advanced contrast items may depend on knowledge first learned in more than one class. Such items carry `prerequisite_classes` and are not forced into the earliest elementary rule. Example families include punctuation contrasts combining grade-5 basics with grade-9 complex-sentence analysis.
+
+CURRENT NEXT SOURCE WORK:
+1. Verify exact grade-8 project practicum structure.
+2. Resolve the 33 `pending_source` items by exact Drabkina school-stage locator.
+3. Itemize Drabkina 5–11 beyond the current 127 to build the actual full-school denominator.
+4. Deduplicate grade-10/11 systematization from earlier first-study units.
+5. Run Rosenthal completeness and current-norm passes.

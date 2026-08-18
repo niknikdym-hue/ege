@@ -1,0 +1,138 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS — WAVE 5 P0 TRANSFER
+MANUAL CONTENT REVIEW
+DATE: 2026-08-12
+STATUS: PASS 13/13 / CANDIDATE TECHNICAL GATE PASS / TILDA UNCHANGED
+
+SCOPE
+
+Candidate source:
+137-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE5-P0-TRANSFER-DRAFT-v0.1.json
+
+Candidate manifest:
+139-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE5-CANDIDATE-MANIFEST.json
+
+Goal:
+close the remaining P0 coverage/transfer gaps without weakening the already audited course-grade content contract.
+
+REVIEW CONTRACT
+
+Every candidate was checked individually for:
+- exact prompt wording;
+- correct answer/option;
+- response_kind and permitted practice mode;
+- linked current exception_id;
+- rule boundary;
+- examples/contrast;
+- feedback explanation;
+- transfer_level;
+- absence of invented linguistic explanation;
+- suitability as a future-course reusable practice item.
+
+Current academic/dictionary norm overrides historical teaching simplifications.
+Drabkina/Subbotin methodology is used for the learner-facing logic: rule/application/contrast/trap rather than bare memorization.
+
+RESULTS — 13/13
+
+01. ex-practice-priznatelnyi-context-001 — PASS
+ANSWER: признательный пациент.
+WHY: ПРИЗНАТЕЛЬНЫЙ = испытывающий благодарность. Contrast with ПРИЗНАННЫЙ = пользующийся признанием/известный.
+NOTE: natural independent context; no overgeneralization.
+
+02. ex-practice-priznannyi-context-002 — PASS
+ANSWER: признанный специалист.
+WHY: public recognition/status, not gratitude.
+NOTE: completes both directions of the paronym pair.
+
+03. ex-practice-skachu-transfer-002 — PASS
+ANSWER: скачу.
+WHY: current pattern is СКАК-/СКОК-/СКАЧ-/СКОЧ-. Forms of СКАКАТЬ before Ч use А: скачу, поскачу; verbs on -СКОЧИТЬ use О: вскочить, выскочить, подскочить.
+NOTE: practice mode corrected from invalid context_choice to permitted recall_form; independent context retained.
+
+04. ex-practice-zareval-transfer-002 — PASS
+ANSWER: заревал.
+WHY: current normative infinitive ЗАРЕВАТЬ and past masculine form ЗАРЕВАЛ. Old ЗОРЕВАТЬ remains only historical contrast and is not accepted.
+NOTE: transfer tests an inflected form rather than repeating the infinitive.
+
+05. ex-practice-doktora-context-002 — PASS
+ANSWER: доктора.
+WHY: normative nominative plural of ДОКТОР is ДОКТОРА.
+NOTE: new context is natural and independent.
+
+06. ex-practice-pomidorov-transfer-002 — PASS
+ANSWER: помидоров.
+WHY: normative genitive plural is ПОМИДОРОВ.
+NOTE: production form rather than recognition.
+
+07. ex-practice-vorot-transfer-002 — PASS
+ANSWER: ворот.
+WHY: ВОРОТА is plural-only; genitive form ВОРОТ.
+NOTE: learner feedback explicitly rejects воротей without inventing a wider false rule.
+
+08. ex-practice-nn-chewed-participle-transfer-002 — PASS
+ANSWER: жёванный щенком.
+WHY: dictionary distinguishes adjective ЖЁВАНЫЙ and participle ЖЁВАННЫЙ. In the candidate context the form retains action meaning and the dependent word names the agent; this is participial use with НН.
+NOTE: strong transfer from adjective to participle; suitable for course contrast.
+
+09. ex-practice-nn-glass-contrast-002 — PASS
+ANSWER: кожаный ремень — стеклянная колба.
+WHY: КОЖАНЫЙ uses -АН- and one Н; СТЕКЛЯННЫЙ is one of the traditional -ЯН- exceptions with НН.
+NOTE: rule + exception in one contrast.
+
+10. ex-practice-nn-tin-contrast-002 — PASS
+ANSWER: серебряный браслет — оловянная фигурка.
+WHY: СЕРЕБРЯНЫЙ normally has one Н; ОЛОВЯННЫЙ belongs to ДЕРЕВЯННЫЙ / ОЛОВЯННЫЙ / СТЕКЛЯННЫЙ with НН.
+NOTE: rule + exception transfer.
+
+11. ex-practice-nn-wooden-contrast-002 — PASS
+ANSWER: глиняная чашка — деревянная полка.
+WHY: ГЛИНЯНЫЙ normally has one Н; ДЕРЕВЯННЫЙ is an exception with НН.
+NOTE: closes the third member of the exception trio with a normal-case contrast.
+
+12. ex-practice-vopreki-government-transfer-002 — PASS
+ANSWER: вопреки совету.
+WHY: ВОПРЕКИ requires dative; compare СОГЛАСНО ПРИКАЗУ, БЛАГОДАРЯ ПОМОЩИ.
+NOTE: transfers the government model rather than repeating СОГЛАСНО.
+
+13. ex-practice-po-okonchanii-transfer-002 — PASS
+ANSWER: по окончании экзамена.
+WHY: ПО in the meaning AFTER AN EVENT uses the prepositional form: по окончании, по прибытии, по приезде. Feedback preserves the important boundary that dative forms are not universally forbidden in every different meaning of ПО.
+NOTE: context-specific norm, no false universalization.
+
+CURRENT-NORM CROSS-CHECKS
+
+- ЗАРЕВАТЬ / ЗАРЕВАЛ: current Russian Orthographic Dictionary / current Gramota metadictionary; historical ЗОРЕВАТЬ is not current spelling.
+- СКАЧУ: current academic rule distinguishes СКАК-/СКОК-/СКАЧ-/СКОЧ- and the forms of СКАКАТЬ vs -СКОЧИТЬ.
+- ПРИЗНАТЕЛЬНЫЙ / ПРИЗНАННЫЙ: current dictionary meanings confirm gratitude vs public recognition/known status.
+- ДОКТОРА: current dictionary nominative plural.
+- ПОМИДОРОВ: current dictionary genitive plural.
+- ЖЁВАННЫЙ: current dictionary explicitly records the past passive participle with НН; adjective ЖЁВАНЫЙ remains the contrasting one-Н form.
+- ПО ОКОНЧАНИИ: current difficulty reference confirms the prepositional form in the meaning «после окончания».
+
+TECHNICAL CANDIDATE GATE
+
+Latest isolated candidate result before this review:
+- candidate practice build: PASS, 93 active cards;
+- schema/content validation: PASS;
+- coverage audit: PASS;
+- P0/P1 uncovered: 0;
+- all targeted P0 gaps have independent_context/transfer evidence: PASS;
+- learner-safe runtime: PASS;
+- T123 chunk build: PASS after generic relative-path normalization fix;
+- standalone candidate package: PASS;
+- Chromium candidate preview: PASS.
+
+CURRENT 80 SAFETY
+
+- current audited 80-card gate remained PASS on the same head before candidate execution;
+- candidate data was built in build/candidate and did not replace manifest 119;
+- Tilda was not changed;
+- current EGE Russian trainer was not changed.
+
+DECISION
+
+MANUAL CONTENT REVIEW 13/13: PASS
+CANDIDATE TECHNICAL/CHROMIUM GATE: PASS
+P0 COVERAGE AFTER CANDIDATE: COMPLETE
+READY FOR NON-PRODUCTION PROMOTION INTO THE NEXT CURRENT PRACTICE MANIFEST: YES
+TILDA/PUBLICATION: HOLD

@@ -48,7 +48,7 @@
     const panel=el('div','rex-screen rex-panel rex-hero');
     panel.append(el('p','rex-eyebrow','Русский язык · точечная практика'));
     const h=el('h1','', 'Тренажёр исключений'); h.id='rex-title'; panel.append(h);
-    panel.append(el('p','rex-lead','Исключения, трудные формы и случаи, где легко применить не то правило. Отвечайте без подсказки — сложные случаи вернутся в новых контекстах.'));
+    panel.append(el('p','rex-lead','Здесь собраны исключения, трудные формы и похожие случаи, которые легко перепутать. Решайте самостоятельно, а то, что оказалось сложным, позже встретится снова в новом контексте.'));
     const notice=makeNotice(app); if(notice) panel.append(notice);
     const actions=el('div','rex-actions');
     const start=button('Начать тренировку','rex-button-primary','start-all'); actions.append(start);
@@ -64,7 +64,7 @@
     const chips=el('div','rex-chips');
     const all=el('button','rex-chip','Все темы'); all.type='button'; all.dataset.topic=''; all.setAttribute('aria-pressed',String(!app.topicFilter)); chips.append(all);
     for(const t of app.runtime.topics){const c=el('button','rex-chip',t.label);c.type='button';c.dataset.topic=t.topic_id;c.setAttribute('aria-pressed',String(app.topicFilter===t.topic_id));chips.append(c);} tb.append(chips); panel.append(tb);
-    const method=el('div','rex-method');method.innerHTML='<strong>Как работает:</strong> не просто запоминаем список — различаем правило и особый случай, отвечаем самостоятельно и возвращаемся к трудным формам позже.';panel.append(method);
+    const method=el('div','rex-method');method.innerHTML='<strong>Как работает:</strong> сначала разбираемся, какое правило здесь действует, затем отвечаем самостоятельно. Сложные случаи и ошибки позже появятся снова — уже в других примерах.';panel.append(method);
     renderInto(app,panel);
   }
 

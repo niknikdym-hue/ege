@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "purpose": "current_source_content_overlay",
+  "integration_status": "not_connected_to_production",
+  "exception_patches": [
+    {
+      "exception_id": "alt_root_skachok_skachu",
+      "replace": {
+        "prompt_label": "СКАЧОК / СКАЧУ: СКАК-/СКОК-/СКАЧ-/СКОЧ-",
+        "canonical_form": "скачок; скачу",
+        "why_exception": "Современное правило рассматривает четыре варианта корня: СКАК-/СКОК-/СКАЧ-/СКОЧ-. Перед К в безударной позиции обычно А: скакать, скакун. При Ч буква зависит от глагольной модели: формы глагола СКАКАТЬ и производных имеют А (скачу, поскачу), как и СКАЧОК; приставочные глаголы на -СКОЧИТЬ имеют О: вскочить, выскочить, подскочить. Поэтому старой формулы «перед К — А, перед Ч — О, а скачок/скачу — исключения» недостаточно.",
+        "source_refs": [
+          {"source_type":"book","source_path":"eksamio-learning-engine/russkiy-knigi/Drabkina_S._Russkiy_yazik_10_klass_gotovimsya_k_EGE.pdf","purpose":"example_method","verification_status":"verified"},
+          {"source_type":"internal_verified_source","source_path":"Gramota.ru: ответ справочной службы № 319154","purpose":"current_rule_boundary","verification_status":"verified"},
+          {"source_type":"internal_verified_source","source_path":"130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt","purpose":"current_norm_crosscheck","verification_status":"verified"}
+        ]
+      }
+    }
+  ],
+  "review_notes": "Keeps historical source bank 35 intact while replacing outdated/oversimplified learner-rule content in the current canonical source build. Drabkina grade 10 is the orthography-method source for this rule."
+}
