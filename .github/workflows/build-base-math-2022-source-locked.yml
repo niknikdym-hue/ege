@@ -1,0 +1,178 @@
+name: build-base-math-2022-source-locked
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'matematika-source-2022/ege-2022-matematika-baza-demoversiya.pdf'
+      - 'matematika-source-2022/ege-2022-matematika-baza-specifikatsiya.pdf'
+      - 'matematika-source-2022/ege-2022-matematika-kodifikator.pdf'
+      - 'matematika-source-2022/scripts/build_verified_base_2022_package.py.gz.b64.part-*'
+      - 'matematika-source-2022/scripts/analyze_base_2022_sources.py'
+      - 'matematika-source-2022/scripts/validate_base_2022_source_lock.py'
+      - 'matematika-source-2022/source-lock/EXAM-LOCK.json'
+      - 'matematika-source-2022/source-lock/ANSWER-LOCK.json'
+      - 'demo-production-standard/scripts/validate_t123_atomicity.py'
+      - '.github/workflows/build-base-math-2022-source-locked.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  full-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      BASE2024_OUTPUT_DIR: /tmp/base2024-scaffold
+      BASE2023_OUTPUT_DIR: /tmp/base2023-release
+      BASE2023_ANALYSIS_DIR: /tmp/base2023-source-analysis
+      BASE2023_SCAFFOLD_DIR: /tmp/base2024-scaffold/ege-matematika-baza-demoversiya-2024
+      BASE2022_OUTPUT_DIR: /tmp/base2022-release
+      BASE2022_ANALYSIS_DIR: /tmp/base2022-source-analysis
+      BASE2023_PACKAGE_DIR: /tmp/base2023-release/ege-matematika-baza-demoversiya-2023
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build and browser dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow playwright
+
+      - name: Reproduce accepted technical BASE scaffold
+        shell: bash
+        run: |
+          python matematika-source-2024/scripts/build_canonical_base_2024.py
+          cat matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-* \
+            | base64 -d | gzip -dc > /tmp/build_verified_base_2024_package.py
+          python -m py_compile /tmp/build_verified_base_2024_package.py
+          python /tmp/build_verified_base_2024_package.py
+
+          rm -rf "${BASE2023_ANALYSIS_DIR}"
+          python matematika-source-2023/scripts/analyze_base_2023_sources.py
+          mkdir -p "${BASE2023_ANALYSIS_DIR}/official-pdf"
+          cp matematika-source-2023/ege-2023-matematika-baza-demoversiya.pdf "${BASE2023_ANALYSIS_DIR}/official-pdf/"
+          cp matematika-source-2023/ege-2023-matematika-baza-specifikatsiya.pdf "${BASE2023_ANALYSIS_DIR}/official-pdf/"
+          cp matematika-source-2023/ege-2023-matematika-kodifikator.pdf "${BASE2023_ANALYSIS_DIR}/official-pdf/"
+          cat matematika-source-2023/scripts/build_verified_base_2023_package.py.gz.b64.part-* \
+            | base64 -d | gzip -dc > /tmp/build_verified_base_2023_package.py
+          python -m py_compile /tmp/build_verified_base_2023_package.py
+          BASE2023_VISUAL_AUDIT_SCRIPT="${GITHUB_WORKSPACE}/matematika-source-2023/scripts/audit_visual_source_chain_2023.py" \
+          BASE2023_ZOOM_TEST="${GITHUB_WORKSPACE}/matematika-source-2023/scripts/visual_ui_zoom_test_2023.py" \
+            python /tmp/build_verified_base_2023_package.py
+
+      - name: Analyze and validate official BASE 2022 sources
+        shell: bash
+        run: |
+          rm -rf "${BASE2022_ANALYSIS_DIR}"
+          python matematika-source-2022/scripts/analyze_base_2022_sources.py
+          mkdir -p "${BASE2022_ANALYSIS_DIR}/official-pdf"
+          cp matematika-source-2022/ege-2022-matematika-baza-demoversiya.pdf "${BASE2022_ANALYSIS_DIR}/official-pdf/"
+          cp matematika-source-2022/ege-2022-matematika-baza-specifikatsiya.pdf "${BASE2022_ANALYSIS_DIR}/official-pdf/"
+          cp matematika-source-2022/ege-2022-matematika-kodifikator.pdf "${BASE2022_ANALYSIS_DIR}/official-pdf/"
+          python matematika-source-2022/scripts/validate_base_2022_source_lock.py --analysis-dir "${BASE2022_ANALYSIS_DIR}"
+
+      - name: Restore and run verified BASE 2022 builder
+        shell: bash
+        run: |
+          cat matematika-source-2022/scripts/build_verified_base_2022_package.py.gz.b64.part-* \
+            | base64 -d | gzip -dc > /tmp/build_verified_base_2022_package.py
+          python -m py_compile /tmp/build_verified_base_2022_package.py
+          python /tmp/build_verified_base_2022_package.py
+
+      - name: Full pre-release gate chain
+        working-directory: /tmp/base2022-release/ege-matematika-baza-demoversiya-2022
+        run: |
+          node --check script.js
+          python precheck.py
+          python index_integrity_test.py
+          python gate_acceptance_test.py
+          python source_traceability_test.py
+          python formula_gate_test.py
+          python visual_regression_test.py
+          python visual_fidelity_test.py
+          python audit_visual_source_chain_2022.py
+          python t123_atomicity_test.py
+          python "$GITHUB_WORKSPACE/demo-production-standard/scripts/validate_t123_atomicity.py" . --max-bytes 42500
+          python independent_audit.py
+          python package_integrity_test.py
+          python screenshot_test.py
+          python browser_interaction_test.py
+          python visual_ui_zoom_test.py
+
+      - name: Refresh manifest and freeze final ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${BASE2022_OUTPUT_DIR}/ege-matematika-baza-demoversiya-2022"
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          R=Path('.'); P='ege-matematika-baza-demoversiya-2022'; target=R/f'{P}-MANIFEST-SHA256.txt'; lines=[]
+          for fp in sorted(R.rglob('*')):
+              if fp.is_file() and fp!=target and '__pycache__' not in fp.parts and fp.suffix not in {'.pyc','.pyo'}:
+                  lines.append(f'{hashlib.sha256(fp.read_bytes()).hexdigest()}  {fp.as_posix()}')
+          target.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+          cd "${BASE2022_OUTPUT_DIR}"
+          rm -f ege-matematika-baza-demoversiya-2022-v1.0.zip
+          zip -qr ege-matematika-baza-demoversiya-2022-v1.0.zip ege-matematika-baza-demoversiya-2022
+          sha256sum ege-matematika-baza-demoversiya-2022-v1.0.zip
+
+      - name: Full regression from clean ZIP extraction
+        shell: bash
+        run: |
+          set -euo pipefail
+          CLEAN="${RUNNER_TEMP}/base2022-clean"
+          rm -rf "$CLEAN"
+          mkdir -p "$CLEAN"
+          unzip -q "${BASE2022_OUTPUT_DIR}/ege-matematika-baza-demoversiya-2022-v1.0.zip" -d "$CLEAN"
+          cd "$CLEAN/ege-matematika-baza-demoversiya-2022"
+          node --check script.js
+          python package_integrity_test.py
+          python precheck.py
+          python index_integrity_test.py
+          python gate_acceptance_test.py
+          python source_traceability_test.py
+          python formula_gate_test.py
+          python visual_regression_test.py
+          python visual_fidelity_test.py
+          python audit_visual_source_chain_2022.py
+          python t123_atomicity_test.py
+          python "$GITHUB_WORKSPACE/demo-production-standard/scripts/validate_t123_atomicity.py" . --max-bytes 42500
+          python independent_audit.py
+          python browser_interaction_test.py
+          python visual_ui_zoom_test.py
+          python screenshot_test.py
+
+      - name: Record successful build run
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="${BASE2022_OUTPUT_DIR}/ege-matematika-baza-demoversiya-2022-v1.0.zip"
+          HASH="$(sha256sum "$ZIP" | awk '{print $1}')"
+          BYTES="$(stat -c %s "$ZIP")"
+          cat > matematika-source-2022/06-BASE-2022-LATEST-BUILD-RUN.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Build head SHA: ${{ github.sha }}
+          ZIP: ege-matematika-baza-demoversiya-2022-v1.0.zip
+          ZIP SHA256: ${HASH}
+          ZIP bytes: ${BYTES}
+          Status: SUCCESS_CLEAN_ZIP_FULL_REGRESSION
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add matematika-source-2022/06-BASE-2022-LATEST-BUILD-RUN.txt
+          git commit -m "Record successful BASE 2022 build run" || true
+          git push origin HEAD:main
+
+      - name: Upload verified release
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-matematika-baza-demoversiya-2022-v1.0-SOURCE-LOCKED
+          path: /tmp/base2022-release/ege-matematika-baza-demoversiya-2022-v1.0.zip
+          retention-days: 30
