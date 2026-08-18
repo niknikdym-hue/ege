@@ -1,0 +1,212 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-18",
+  "status": "COMPLETENESS_CURRENT_NORM_AUDIT_WAVE1_ROOTS_PREFIXES_COMPLETE",
+  "metric_status": "WORKING_137_CHECKPOINT_NOT_FINAL_COMPLETENESS",
+  "production_integration": "HOLD",
+  "scope": {
+    "checkpoint_ref": "218-RUSSIAN-SCHOOL-CANONICAL-DENOMINATOR-CHECKPOINT-HANDOFF.txt",
+    "bank_ref": "169-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK01-ROOTS-PREFIXES-MORPHEMES-v0.1.json",
+    "prior_norm_refs": [
+      "166-RUSSIAN-SCHOOL-DENOMINATOR-CURRENT-NORM-PASS5-ROOTS-PREPRI-v0.1.json",
+      "167-RUSSIAN-SCHOOL-DENOMINATOR-PREPRI-DICTIONARY-CLOSURE-v0.1.json",
+      "168-RUSSIAN-SCHOOL-DENOMINATOR-CURRENT-NORM-PASS6-MORPHEMIC-SPECIALS-v0.1.json"
+    ],
+    "canonical_units_reviewed": 12,
+    "purpose": "First completeness + current-norm pass after the 137-unit safe-pause checkpoint. This file is an audit/overlay only; it does not duplicate canonical_units and therefore does not change the physical denominator."
+  },
+  "source_basis": {
+    "internal_rosenthal_reference": {
+      "path": "00-sources/rosenthal/rosenthal.docx",
+      "title": "Д. Э. Розенталь — Справочник по русскому языку: орфография и пунктуация",
+      "project_mapping_used": [
+        "orthography roots: section 1, §§1–5",
+        "prefixes: section 5, §§27–29",
+        "ПОЛ- / ПОЛУ-: section 10, §§40–41"
+      ],
+      "direct_reread_in_current_workspace": "NOT_AVAILABLE",
+      "evidence_note": "The project Library preserves a verified structure/mapping report, but the primary DOCX is not remounted in the current connected workspace. Do not claim a fresh line-by-line Rosenthal reread from this session."
+    },
+    "current_academic_crosscheck": [
+      {
+        "source": "Gramota.ru — Полные правила: особенности написания отдельных корней",
+        "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/osobennosti-napisaniya-otdelnykh-korney"
+      },
+      {
+        "source": "Gramota.ru — Учебник: корни с чередованием, зависящие от последующих согласных",
+        "url": "https://gramota.ru/uchebnik/pravila/korni-s-cheredovaniem-glasnykh-vybor-kotorykh-zavisit-ot-sleduyushchikh-za-nimi-soglasnykh"
+      },
+      {
+        "source": "Gramota.ru — Учебник: ПРЕ-/ПРИ-",
+        "url": "https://gramota.ru/uchebnik/pravila/glasnye-v-pristavkakh-pre-i-pri"
+      },
+      {
+        "source": "Gramota.ru — Полные правила: буквы И/Ы",
+        "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/bukvy-i-y"
+      },
+      {
+        "source": "Gramota.ru — Учебник: части ПОЛ- и ПОЛУ-",
+        "url": "https://gramota.ru/uchebnik/pravila/pol-polu"
+      },
+      {
+        "source": "Gramota.ru — Русский орфографический словарь / Метасловарь",
+        "url": "https://gramota.ru/poisk"
+      }
+    ],
+    "evidence_policy": [
+      "School-grade route scope and current normative scope remain separate.",
+      "Current-only members do not create new canonical identities when they belong to an existing decision engine.",
+      "Dictionary-valid source members are not automatically relabelled as members of an academic exception list.",
+      "No FIPI/exam routes are mixed into this school-denominator audit."
+    ]
+  },
+  "decisions": [
+    {
+      "unit_id": "school-gor-gar-rare-exception-set",
+      "disposition": "NORMATIVE_SCOPE_RESHAPE_REQUIRED_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "school_source_scope": {
+        "grade6": ["изгарь", "выгар", "выгарь", "пригарь"],
+        "grade10": ["пригарь"]
+      },
+      "current_academic_exception_core": ["выгарки", "изгарь", "пригарь", "гаревой"],
+      "current_variant": ["гаревый"],
+      "dictionary_confirmed_source_members_not_to_mislabel_as_exact_academic_core": ["выгар", "выгарь"],
+      "patch_policy": "In final consolidation, split source provenance from the current academic exception core. Attach current-only members to normative scope; denominator remains one family."
+    },
+    {
+      "unit_id": "school-skak-skoch-exception-set",
+      "disposition": "CONFIRMED_STRUCTURED_BOUNDARY_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_norm_note": "Keep the form/allomorph decision engine (-скак-/-скач-/-скоч-) rather than a tiny two-word exception mnemonic."
+    },
+    {
+      "unit_id": "school-plav-plov-exception-set",
+      "disposition": "CONFIRMED_TRADITIONAL_FAMILY_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["пловец", "пловчиха"],
+      "learner_policy": "Traditional spelling; do not invent a modern semantic explanation."
+    },
+    {
+      "unit_id": "school-tvar-tvor-utvar-exception",
+      "disposition": "CONFIRMED_WITH_MORPHEMIC_CAUTION_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["утварь"],
+      "patch_policy": "Retain traditional spelling evidence, but keep the historical/modern morphemic-analysis caveat explicit."
+    },
+    {
+      "unit_id": "school-ravn-rovn-exception-set",
+      "disposition": "SEMANTIC_DICTIONARY_RESHAPE_REQUIRED_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_rule_branches": [
+        "РАВН: equality/comparison meanings",
+        "РОВН: smooth/straight/stable meanings",
+        "explicit exceptions/special meanings: равнина, поровну, выровнять(ся) in the equal/identical meaning",
+        "dictionary/special cases whose spelling is not safely reducible to the simple semantic split"
+      ],
+      "source_member_reclassification": {
+        "ровесник": "current special/dictionary spelling with О; do not call it a regular modern exception list member merely from the old school bucket",
+        "уровень": "dictionary-governed / unclear direct correlation in the academic rule",
+        "равнина": "explicit current exception/special case",
+        "поровну": "explicit current exception/special case"
+      },
+      "patch_policy": "Preserve the one decision engine, add precise branch metadata, and do not inflate denominator by word-level cases."
+    },
+    {
+      "unit_id": "school-rast-rashch-ros-exception-set",
+      "disposition": "CURRENT_NORM_SCOPE_EXTENSION_REQUIRED_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "school_route_scope": ["росток", "Ростислав", "Ростов", "ростовщик", "отрасль", "на вырост"],
+      "current_normative_scope_examples": ["росток", "ростовщик", "отрасль", "ростовой", "вырост", "выростной", "выросток", "заросток", "прорость", "подростковый"],
+      "patch_policy": "Promote the parked current-norm extension into normative scope at final consolidation while leaving historical grade-route scope intact."
+    },
+    {
+      "unit_id": "school-pre-pri-lexical-contrast-family",
+      "disposition": "CONFIRMED_BRANCH_FAMILY_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_norm_note": "Keep productive PRE-/PRI- semantics separate from opaque lexical/dictionary contrast pairs. Prior file 167 closes the three dictionary-reviewed pairs.",
+      "patch_policy": "No new identity. Preserve pair-level diagnostics under the existing family."
+    },
+    {
+      "unit_id": "school-chet-chit-sochetat-sochetanie",
+      "disposition": "CONFIRMED_RECLASSIFIED_SPECIAL_SPELLING_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["сочетать", "сочетание"],
+      "learner_policy": "Do not teach a fictitious simple ЧЕТ/ЧИТ exception relationship."
+    },
+    {
+      "unit_id": "school-i-y-after-prefix-vzimat-exception",
+      "disposition": "CONFIRMED_LEXICAL_SPECIAL_CASE_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["взимать"],
+      "derivative_scope": ["взиматься", "взимание"],
+      "patch_policy": "Derivatives belong to the same spelling identity; no extra canonical units."
+    },
+    {
+      "unit_id": "school-i-y-after-prefix-retain-i-boundary",
+      "disposition": "CONFIRMED_STRUCTURED_BOUNDARY_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_branches": ["сверх-", "меж-", "иноязычные приставки", "первые части сложных и сложносокращённых слов"],
+      "verified_examples": ["сверхизысканный", "межинститутский", "дезинформация", "гиперинфляция", "пединститут", "спортинвентарь", "госимущество"],
+      "patch_policy": "One decision boundary with branches; do not split branch examples into denominator identities."
+    },
+    {
+      "unit_id": "school-pol-polu-writing-boundary",
+      "disposition": "CONFIRMED_WITH_SPECIAL_CASE_METADATA_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_branches": [
+        "ПОЛ- solid by default",
+        "hyphen before vowel",
+        "hyphen before capital letter",
+        "hyphen before Л",
+        "ПОЛ + multiword phrase separate",
+        "ПОЛУ- solid by default",
+        "ПОЛУ- + proper name or hyphenated second part: hyphenated structures"
+      ],
+      "dictionary_specials": ["поллитровка", "пол-йогурта"],
+      "special_case_note": "пол-йогурта is genuinely dictionary-fixed despite initial й; keep it as a special case, not as the ordinary 'before vowel letter' branch.",
+      "patch_policy": "Existing identity is correct; retain the special-case metadata."
+    },
+    {
+      "unit_id": "school-lag-lozh-polog-exception",
+      "disposition": "CONFIRMED_WITH_CURRENT_MORPHEMIC_REWORDING_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["полог"],
+      "learner_policy": "Preserve the spelling fact but do not claim that modern analysis transparently isolates -лог- in полог."
+    }
+  ],
+  "wave_summary": {
+    "units_reviewed": 12,
+    "confirmed_without_identity_change": 12,
+    "units_requiring_normative_metadata_reshape": 3,
+    "normative_scope_extensions_without_new_identity": 1,
+    "new_canonical_identities": 0,
+    "removed_canonical_identities": 0,
+    "duplicate_ids_created": 0,
+    "checkpoint_unique_units_before": 137,
+    "checkpoint_unique_units_after": 137,
+    "denominator_effect": 0
+  },
+  "live_holds_carried_forward": [
+    {"unit_id": "school-deystvitelno-function-context", "status": "HOLD", "counted": false},
+    {"unit_id": "school-ni-fixed-idioms", "status": "HOLD", "counted": false}
+  ],
+  "production_files_changed": false,
+  "tilda_changed": false,
+  "runtime_changed": false,
+  "scoring_changed": false,
+  "localStorage_changed": false,
+  "next": "Audit canonical bank chunk 170 (N/NN and suffixes) against the same completeness/current-norm standard. Keep the physical checkpoint at 137 until a genuinely new canonical identity is source-established."
+}
