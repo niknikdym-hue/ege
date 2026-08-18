@@ -1,0 +1,104 @@
+EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2022
+FINAL VERIFIED REPORT
+Дата: 2026-08-18
+
+FINAL STATUS
+READY_FOR_TILDA_SOURCE_LOCKED_UI_CROP_AUDIT
+READY_FOR_TILDA: YES
+LIVE_GO: NO
+
+AUTHORITATIVE RELEASE
+GitHub Actions run: 32150808198 — SUCCESS
+Build head SHA: 684d29461345b625c45c89e2b63980393a579262
+Artifact ID: 9329691643
+Artifact: ege-matematika-baza-demoversiya-2022-v1.0-SOURCE-LOCKED
+ZIP: ege-matematika-baza-demoversiya-2022-v1.0.zip
+ZIP SHA256: 5d0f2db6bb80984522ace542237ed765e8951876dcd8a884d162a0c8a49ff057
+ZIP bytes: 7166189
+
+OFFICIAL SOURCE LOCK
+Demo SHA256: 8b2c6fe0e36eb1d3a749af08cd035b142ea5e7099dbdf9a14e4ff1617470e207
+Specification SHA256: 6480c1fffd0c2a09e9447d21b44f3a683b83aaa251f5f8c55ceb21a00c92fe9b
+Codifier SHA256: 28888224281fd2178f600b959e652237f3d34f80afe5b2875a9d06a6b4804813
+Demo physical pages: 13
+Demo printed pages: 25
+
+EXAM LOCK
+Tasks: 21
+Official examples: 52
+Duration: 180 minutes
+Max primary score: 21
+Example counts task 1..21: 2,3,2,3,2,3,4,2,3,2,2,3,2,3,1,3,2,2,3,2,3
+
+2022-SPECIFIC SOURCE ANOMALY
+ANSWER-TABLE-6.3 is preserved and explicitly handled.
+Task 1 has exactly 2 examples; phantom 1.3 is forbidden.
+Task 6 has 3 examples; task 6.3 answer = 9.
+The official p25 answer-table placement is not silently rewritten.
+
+CONTENT / CONTROL / SCORER
+- source traceability: PASS for all 52 official examples
+- index integrity: 52/52
+- task controls correspond to the actual official action
+- scorer contracts and official alternatives: PASS
+- semantic set answers are order-independent where required by the source contract
+- every official alternative for task 19 is preserved
+
+FORMULAS
+FORMULA GATE: PASS.
+Source-sensitive fractions, radicals, logarithms, exponents and conditions use verified source-rendered crops where plain text extraction could lose mathematical structure.
+
+FINAL VISUAL SOURCE CHAIN
+- final task visual assets: 41/41 exact direct contiguous crops from the locked 2022 official PDF
+- T123 embedded task visual bytes: 41/41 byte-identical to verified assets
+- reference pages: 4/4 exact official source renders and byte-identical T123 embedding
+- missing final visual assets: 0
+- SVG/Canvas/manual redraw of official source visuals: 0
+
+The earlier 42-element PREBUILD inventory was a planning inventory only. The final authoritative implementation is the package ASSET-MAP: 41 task source crops plus 4 reference-page renders. Planned structured/table representations were retained as direct source crops where that removed reconstruction risk. No neighboring-year crop is used as source evidence.
+
+VISUAL UI CROP AUDIT
+Every final asset was reviewed for its actual 2022 task/variant. Checks include four crop edges, axes, tick labels, dates/times, units, legends, point/vertex/dimension labels, formula completeness, accidental neighboring content and readable desktop/mobile presentation.
+
+VISUAL ZOOM
+41/41 final task visual assets open correctly in the interface.
+Zoom in / zoom out / reset: PASS.
+Mobile zoom: PASS.
+Responsive widths 1280/768/390/360/320: PASS.
+
+T123
+Count: 19
+Sequence: 01..19
+Max bytes: 40273
+Project limit: <42500
+Standalone atomic validation: 19/19 PASS
+No unfinished script/style/JS string/base64 continuation crosses block boundaries.
+
+BROWSER
+52/52 official examples passed correct+wrong interaction through real DOM controls.
+Full attempt: 21/21 PASS.
+Autosave/reload/assigned-variant persistence/results/reference materials/responsive checks: PASS.
+
+CLEAN ZIP
+The authoritative ZIP was frozen, extracted into a new clean directory, and the complete gate chain was repeated in CI.
+Clean extraction regression: PASS.
+Independent audit: PASS.
+Package integrity: PASS.
+The downloaded CI ZIP was additionally rechecked locally: source/fidelity/T123/package gates PASS; browser 52/52 and zoom/mobile PASS.
+
+PACKAGE CONTRACT
+archive URL: https://eksamio.ru/ege/matematika-baza/demoversiya/2022/
+storage key: eksamio_ege_math_base_demo_2022_v1_0_source_locked
+content version: 2022.1-source-locked-ui-crop-audit
+header/footer included: NO
+separate image upload: NO
+
+TILDA HANDOFF
+Use HEAD from this ZIP, then all 19 T123 files strictly 01..19, then SEO settings from this ZIP.
+Replace any previous BASE 2022 custom-code set completely; do not mix builds.
+Do not touch global header/footer.
+No separate image upload.
+
+LIVE RULE
+READY_FOR_TILDA = YES.
+LIVE_GO remains NO until the Tilda page is published, production smoke passes on the public archive URL, and manual student acceptance is confirmed.
