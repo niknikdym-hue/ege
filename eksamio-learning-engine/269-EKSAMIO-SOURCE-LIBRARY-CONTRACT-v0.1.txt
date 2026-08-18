@@ -1,0 +1,196 @@
+EKSAMIO / PEIS
+SOURCE LIBRARY CONTRACT
+VERSION: v0.1
+DATE: 2026-08-18
+STATUS: ACTIVE ARCHITECTURE DECISION
+
+PURPOSE
+
+Define one durable source-library architecture for textbooks, reference books, official exam materials and other subject sources used to build Eksamio Knowledge Packs.
+
+The Source Library is NOT application runtime state and is NOT a substitute for GitHub source-of-truth artifacts.
+
+======================================================================
+1. ONE SOURCE LIBRARY FOR ALL SUBJECTS
+======================================================================
+
+Eksamio must have one subject-agnostic Source Library capable of holding raw educational sources for:
+- Russian language;
+- Mathematics;
+- Physics;
+- Social Studies;
+- all future subjects.
+
+Do not create isolated ad-hoc storage per subject or per Codex task.
+
+Conceptual structure:
+
+source-library/
+  russian/
+  mathematics/
+  physics/
+  social-studies/
+  <future-subject>/
+
+Each subject may contain:
+- textbooks;
+- reference books;
+- official FIPI/source documents;
+- teacher/reference materials;
+- source PDFs/DOCX/images where legally available for project use;
+- version/year-specific source material.
+
+======================================================================
+2. RAW SOURCES DO NOT BELONG IN NORMAL GITHUB HISTORY
+======================================================================
+
+Large binary textbooks/PDFs and other raw source files should not be stored in the normal Git repository merely to make them available to tooling.
+
+Target storage boundary:
+
+PRIVATE OBJECT STORAGE
+-> raw books, PDFs, scans, source documents, large binary assets
+
+GITHUB
+-> source manifests
+-> provenance
+-> normalized/extracted structured knowledge
+-> schemas
+-> semantic mappings
+-> builders
+-> tests
+-> validation reports
+-> task/result artifacts
+
+This keeps GitHub usable as the durable engineering/product source of truth without turning repository history into a binary archive.
+
+Raw source material must not be made public merely for convenience. Access must follow the rights/licensing status of the material.
+
+======================================================================
+3. CURRENT PRACTICAL STORAGE DIRECTION
+======================================================================
+
+Current economical direction:
+- Yandex Object Storage as the private raw-source library / large-file storage layer;
+- S3-compatible access so tooling is not locked to one custom file API;
+- lifecycle/storage-class rules may move rarely used raw sources to cheaper storage classes;
+- GitHub remains the durable source of truth for source indexes, provenance and reviewed outputs.
+
+Provider-specific storage access must be isolated behind a Source Library adapter so the object-storage provider can be replaced later.
+
+======================================================================
+4. REQUIRED SOURCE MANIFEST
+======================================================================
+
+Every source admitted to the learning build must have a manifest record, even when the raw binary itself is stored outside GitHub.
+
+Minimum fields should support:
+- source_id
+- subject
+- title
+- author / institution where applicable
+- edition / year
+- source_type
+- storage_object_key or controlled source locator
+- checksum
+- rights/access status
+- provenance status
+- ingestion status
+- extraction status
+- review status
+- notes / conflicts
+
+Do not let file names alone become source identity.
+
+======================================================================
+5. INGESTION PIPELINE
+======================================================================
+
+Target flow:
+
+RAW SOURCE
+  -> SOURCE MANIFEST
+  -> TEXT / STRUCTURE EXTRACTION
+  -> SOURCE-ANCHORED NORMALIZATION
+  -> HUMAN / RULE VALIDATION WHERE REQUIRED
+  -> SEMANTIC MAPPING
+  -> SUBJECT KNOWLEDGE PACK
+  -> TUTOR / PRACTICE / HOMEWORK / EXAM ROUTING
+
+The AI model is not allowed to silently turn an unverified raw document into canonical Eksamio truth.
+
+Each normalized rule/knowledge object must retain provenance back to its source(s).
+
+======================================================================
+6. CODEX CLOUD ACCESS
+======================================================================
+
+Codex Cloud is expected to operate from the GitHub repository and may process Source Library material only through an explicitly configured controlled access path.
+
+Preferred policy:
+- no raw storage credentials committed to GitHub;
+- environment secrets/temporary credentials where required;
+- network access restricted to trusted storage endpoints where possible;
+- least-privilege read access for source-processing tasks;
+- write access only for explicit ingestion/publishing workflows;
+- raw-source processing results are written back as durable GitHub artifacts / PRs.
+
+Codex work must continue to obey AGENTS.md and leave task/result evidence in the repository.
+
+======================================================================
+7. CHATGPT / ARCHITECTURE ACCESS BOUNDARY
+======================================================================
+
+The architecture must not require repeated manual copying of extracted textbook content through chat.
+
+Reviewed normalized source artifacts, provenance, mappings, conflicts and build outputs must live in GitHub so ChatGPT and Codex operate from the same durable project state.
+
+Where direct inspection of a raw private source is required, provide it through a controlled accessible source path/connector rather than copying large excerpts into chat as the normal workflow.
+
+The normal collaboration path remains:
+
+SOURCE LIBRARY -> ingestion/review -> GITHUB DURABLE ARTIFACTS -> ChatGPT/Codex
+
+======================================================================
+8. SEPARATION FROM USER DATA
+======================================================================
+
+Source Library storage must be logically separated from learner/user uploads.
+
+Do not mix:
+- canonical textbooks/reference sources;
+- student homework photos/PDFs;
+- learner personal data;
+- temporary AI/session assets.
+
+These have different retention, access, legal and lifecycle requirements.
+
+Recommended logical boundaries:
+- source-library: durable educational source corpus;
+- learner-uploads: temporary/private user materials;
+- build-artifacts: generated non-source assets where object storage is useful.
+
+======================================================================
+9. ECONOMY PRINCIPLE
+======================================================================
+
+Do not provision a file server or VM just to store books.
+
+Use object storage with pay-for-used-capacity economics and lifecycle/storage-tier controls.
+
+Do not introduce a vector database simply because textbooks exist. First build deterministic semantic/source indexing and only add vector retrieval where it demonstrates real value.
+
+======================================================================
+10. SUBJECT EXPANSION RULE
+======================================================================
+
+Russian is the first full subject pilot.
+
+Then:
+RUSSIAN -> MATHEMATICS -> PHYSICS -> OTHER SUBJECTS.
+
+Every new subject uses the same Source Library contract and the same ingestion/provenance framework.
+
+A new subject may introduce subject-specific parsers, validators and tools, but must not invent a separate storage/governance model.
+
+END OF DOCUMENT
