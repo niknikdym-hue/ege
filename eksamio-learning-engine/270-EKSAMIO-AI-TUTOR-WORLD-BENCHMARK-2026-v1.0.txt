@@ -1,0 +1,342 @@
+EKSAMIO / PEIS
+AI TUTOR WORLD BENCHMARK 2026
+VERSION: v1.0
+DATE: 2026-08-19
+STATUS: ARCHITECTURE INPUT / BENCHMARK COMPLETE
+
+PURPOSE
+
+Identify the strongest current AI-tutoring and adaptive-learning mechanisms worth reusing in Eksamio, separate mechanisms that are genuinely educationally useful from generic chatbot features, and define the design inputs for Eksamio AI Tutor Core.
+
+This document is an architecture benchmark. It does not authorize production changes.
+
+======================================================================
+1. BENCHMARK PRINCIPLE
+======================================================================
+
+Eksamio must not reinvent tutoring mechanics already demonstrated elsewhere.
+
+However, Eksamio must also not copy any single external product wholesale.
+
+The target is a composed model:
+- OpenAI: natural multimodal/voice interaction and study-mode tutoring behaviors;
+- Google Guided Learning / LearnLM / Study Notebooks: pedagogy-aware guided learning, grounding in learner materials, diagnostic-to-plan flow, multimodal teaching;
+- Khan Academy / Khanmigo: mastery-aware tutoring, prerequisite awareness, structured learner-history context, next-item-correctness measurement, embedded tutor inside the learning platform;
+- ALEKS: explicit knowledge-state/readiness model and learning at the boundary of what the learner is ready to learn next;
+- IXL: continuous diagnostic updates and automatically refreshed personalized skill recommendations.
+
+Eksamio's differentiator must be the integration of these ideas with:
+- verified Russian educational knowledge;
+- FIPI exam truth;
+- persistent semantic identity;
+- one learner evidence stream across demos, trainers, homework and tutor sessions;
+- Russian school curriculum + OGE/EGE + everyday homework;
+- provider-neutral AI and speech architecture.
+
+======================================================================
+2. OPENAI STUDY MODE / VOICE — WHAT IS STRONG
+======================================================================
+
+Verified current capabilities/behaviors:
+- step-by-step guidance rather than only final answers;
+- Socratic-style questions;
+- asks what the learner already knows and where they are stuck;
+- explanations in layers and adjustable difficulty;
+- active checks of understanding;
+- quizzes and practice questions;
+- work with uploaded notes, PDFs, worksheets, images and textbook excerpts;
+- Memory can personalize guidance;
+- Study Mode can be used through voice conversation;
+- current Realtime API supports low-latency speech-to-speech, image/audio/text input, tool/function use and interruptions.
+
+What Eksamio should reuse:
+- natural conversational UX;
+- interruption-friendly voice;
+- layered explanations;
+- explicit understanding checks;
+- open-ended learner responses;
+- learner explains concepts aloud;
+- multimodal intake;
+- tool-calling from the tutor rather than forcing the language model to do every calculation/check itself.
+
+What Eksamio must improve on:
+- generic chat memory is not a sufficient learner model;
+- Study Mode itself warns it can make mistakes;
+- uploaded documents and conversation context are not equivalent to a canonical subject knowledge graph;
+- direct-answer behavior can still occur;
+- generic Study Mode does not own a deterministic mastery/evidence engine tied to Russian school and exam semantics.
+
+Eksamio consequence:
+OPENAI-LIKE VOICE/CONVERSATION IS AN INTERFACE CAPABILITY, NOT THE SOURCE OF TRUTH.
+
+======================================================================
+3. GOOGLE GUIDED LEARNING / LEARNLM / STUDY NOTEBOOKS — WHAT IS STRONG
+======================================================================
+
+Verified current capabilities/behaviors:
+- Guided Learning is designed around active participation rather than immediate answers;
+- probing/open-ended questions;
+- step-by-step decomposition;
+- adaptive explanations;
+- multimodal teaching with images, diagrams, video and interactive quizzes;
+- LearnLM explicitly treats pedagogy as instruction-following behavior rather than generic answer generation;
+- Study Notebooks accept a goal and/or uploaded class material;
+- diagnostic quiz identifies focus areas;
+- system generates bite-sized interactive lessons;
+- lessons adapt automatically as quiz results and new materials arrive;
+- teacher-led experiences can be grounded in curriculum/class material;
+- NotebookLM linkage provides source-grounded study artifacts.
+
+What Eksamio should reuse:
+- pedagogical policy is explicit and configurable;
+- learning session has a goal, not merely a conversation;
+- diagnostic -> plan -> bite-size lesson -> quiz -> adaptation loop;
+- multimodal explanation assets;
+- material-grounded study spaces;
+- teacher-assigned grounded learning later.
+
+What Eksamio must improve on:
+- source grounding must be tied to stable source identities and provenance, not just uploaded context;
+- Eksamio needs persistent semantic learner state across all products, not only a notebook/session;
+- exam truth must remain deterministic and source-year specific;
+- recommendations must be explainable via learner evidence and semantic targets.
+
+======================================================================
+4. KHANMIGO — WHAT IS STRONGEST AND MEASURED
+======================================================================
+
+Current 2026 Khan Academy evidence is especially important because it reports measured tutoring outcomes rather than only feature claims.
+
+Verified findings:
+- Khanmigo is embedded inside trusted learning content rather than being a detached chatbot;
+- tutor support differs before vs after a learner attempt;
+- support adapts depending on first learning vs review;
+- tutor can receive skill mastery and prerequisite state;
+- prerequisite review is offered when needed;
+- Khan Academy measured next-item correctness after tutoring;
+- giving Khanmigo structured recent learning history improved next-item correctness;
+- Khan Academy reports a total 6.1% improvement from structured learning-history interventions across experiments;
+- unstructured/hard-to-parse extra data and extra examples did not necessarily improve outcomes;
+- tests covered millions of tutoring threads and changes were evaluated experimentally.
+
+Most important architectural lesson:
+STRUCTURED LEARNER SIGNALS BEAT RAW CHAT HISTORY.
+
+What Eksamio should reuse:
+- compact structured tutor context;
+- recent attempt pattern;
+- mastery + prerequisite status;
+- context before/after learner attempt;
+- next independent item after tutor help;
+- next-item correctness as a primary tutor metric;
+- A/B testing of tutor strategies;
+- discard changes that look clever but do not improve learning.
+
+What Eksamio can extend:
+- one learner evidence stream includes homework, demos, trainers and oral tutoring;
+- semantic identity is independent of exam task number;
+- retention and transfer are first-class metrics after next-item correctness;
+- grounded source trace can be recorded for every explanation path.
+
+======================================================================
+5. ALEKS — KNOWLEDGE STATE AND READINESS
+======================================================================
+
+Verified current model:
+- Knowledge Space Theory represents feasible learner knowledge states;
+- adaptive assessment identifies what a learner has mastered;
+- system identifies what the learner is ready to learn next;
+- learning is kept near the boundary between mastered and learnable material.
+
+What Eksamio should reuse:
+- explicit readiness/prerequisite layer;
+- do not select next content only by weakness severity;
+- avoid sending learner into a skill whose prerequisites are not ready;
+- represent "ready to learn" separately from "not mastered".
+
+Eksamio extension:
+readiness must also include:
+- exam value;
+- learner goal;
+- time until exam/control;
+- forgetting/retention due;
+- recent frustration/help intensity;
+- available session duration.
+
+======================================================================
+6. IXL — CONTINUOUS DIAGNOSTIC
+======================================================================
+
+Verified current model:
+- diagnostic state updates continuously while the learner practices;
+- recommendations refresh as evidence changes;
+- learner does not need to repeat a full standalone diagnostic every time;
+- precise next-skill recommendations are produced from current diagnostic state.
+
+What Eksamio should reuse:
+- background/continuous diagnosis;
+- every valid learning event may refine learner state;
+- explicit diagnostic sessions are optional additional evidence, not the only source of truth;
+- personalized recommendations must update automatically after new evidence.
+
+Eksamio extension:
+continuous diagnostic must consume evidence from:
+- EGE/OGE demos;
+- standard trainers;
+- thematic trainers;
+- homework;
+- AI tutor oral/text interactions;
+- independent verification;
+- retention checks.
+
+======================================================================
+7. WHAT NOT TO COPY
+======================================================================
+
+Do NOT build Eksamio around:
+- a generic chatbot window;
+- raw chat history as learner memory;
+- AI self-judging official exam facts;
+- AI inventing curriculum or scoring rules;
+- fixed Socratic questioning for every situation;
+- permanent refusal to give a full solution;
+- superficial gamification without learning effect;
+- giant prompts containing entire learner histories;
+- one expensive frontier model for every event;
+- a subject-specific Tutor Core hardcoded to Russian.
+
+======================================================================
+8. EKSAMIO COMPOSED MODEL
+======================================================================
+
+The target combines:
+
+OPENAI
+natural voice + multimodal conversation + interruption + tools
+
+GOOGLE / LEARNLM
+explicit pedagogical strategy + grounded learning materials + diagnostic/adaptive lesson flow
+
+KHANMIGO
+structured learner context + mastery/prerequisites + tutor embedded in learning + measurable next-item correctness
+
+ALEKS
+knowledge state + readiness / outer-fringe logic
+
+IXL
+continuous diagnostic + continuously refreshed recommendations
+
+PLUS EKSAMIO
+verified canonical subject knowledge + provenance + semantic identity + Russian school/EGE/OGE/homework unification + deterministic official scoring + retention/transfer + provider neutrality.
+
+======================================================================
+9. EKSAMIO TUTOR CAPABILITY TARGET
+======================================================================
+
+Tutor must be capable of:
+- text conversation;
+- natural voice conversation;
+- interruption and continuation;
+- image/PDF/homework input;
+- asking the learner to explain aloud;
+- detecting likely misconception/error type;
+- choosing a pedagogical strategy;
+- retrieving verified knowledge by semantic_id/source;
+- invoking deterministic subject tools;
+- giving layered hints;
+- deciding when a full solution is justified;
+- generating a new independent verification item only from approved generation policy/content pipeline;
+- writing learner evidence;
+- updating Tutor-relevant context after each meaningful event;
+- scheduling retention/retest through the platform engine;
+- explaining why a recommendation was made.
+
+======================================================================
+10. TUTOR QUALITY METRICS
+======================================================================
+
+Primary educational metrics:
+- next_item_correctness;
+- NIC-3 / short series correctness;
+- transfer correctness;
+- retention correctness after delay;
+- error recurrence rate;
+- mastery gain per unit time;
+- hint dependency reduction;
+- prerequisite repair success;
+- calibrated learner confidence;
+- independent explanation quality / learner can explain rule or method in own words.
+
+Operational metrics:
+- tutor latency;
+- AI cost per successful learning outcome;
+- voice minutes per useful outcome;
+- tool-call error rate;
+- hallucination/source-grounding violation rate;
+- fallback rate;
+- session abandonment.
+
+Do NOT optimize tutor quality primarily for:
+- number of messages;
+- chat length;
+- total voice minutes;
+- raw engagement without learning gain.
+
+======================================================================
+11. RUSSIAN-FIRST PILOT
+======================================================================
+
+Russian is the first full Subject Knowledge Pack because Eksamio already has:
+- EGE Skill Graph;
+- frozen school semantic denominator;
+- explanation content architecture;
+- exception banks;
+- practice banks;
+- essay criteria/self-check groundwork;
+- demo and trainer products;
+- source/provenance infrastructure.
+
+The first production-grade tutor should prove:
+1. source-grounded rule retrieval;
+2. semantic learner context;
+3. pedagogical strategy selection;
+4. voice/text parity at the Tutor Core level;
+5. post-help independent verification;
+6. learner evidence write-back;
+7. retention scheduling;
+8. measurable improvement.
+
+Before declaring Tutor Core universal, run a narrow Mathematics pilot to verify that the Core can delegate to different subject tools and is not secretly hardcoded to Russian-language pedagogy.
+
+======================================================================
+12. CURRENT SOURCE CHECK — 2026-08-19
+======================================================================
+
+Official / primary sources checked:
+
+OpenAI
+- https://openai.com/index/chatgpt-study-mode/
+- https://help.openai.com/en/articles/11780217-using-study-mode-in-chatgpt
+- https://openai.com/index/advancing-voice-intelligence-with-new-models-in-the-api/
+- https://platform.openai.com/docs/api-reference/realtime
+
+Google
+- https://blog.google/products-and-platforms/products/education/guided-learning/
+- https://blog.google/products-and-platforms/products/education/iste-students-2026/
+- https://blog.google/products-and-platforms/products/education/iste-2026-educator-updates/
+- LearnLM technical report: https://arxiv.org/abs/2412.16429
+
+Khan Academy
+- https://blog.khanacademy.org/how-khan-academy-is-building-a-better-ai-tutor-our-most-recent-learnings/
+- https://blog.khanacademy.org/learning-in-the-open-what-ai-is-and-isnt-changing/
+- https://blog.khanacademy.org/khan-academy-reimagined-for-districts-2026/
+
+ALEKS
+- https://www.aleks.com/about_aleks/research_behind
+- https://www.aleks.com/about_aleks/index
+
+IXL
+- https://www.ixl.com/diagnostic
+- https://blog.ixl.com/2017/08/31/introducing-the-ixl-diagnostic/
+
+END OF DOCUMENT
