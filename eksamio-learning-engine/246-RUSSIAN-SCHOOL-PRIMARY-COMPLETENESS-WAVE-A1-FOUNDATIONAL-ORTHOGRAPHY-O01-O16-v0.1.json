@@ -1,0 +1,154 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-18",
+  "status": "PRIMARY_COMPLETENESS_WAVE_A1_VALIDATED",
+  "scope": "O01-O16 from file 244",
+  "production_integration": "HOLD",
+  "primary_source": "rosenthal/rozental.doc",
+  "current_norm_authority": "Правила русской орфографии и пунктуации. Полный академический справочник / под ред. В. В. Лопатина",
+  "baseline": {
+    "semantic_after_245": 138,
+    "note": "138 is interim and not frozen"
+  },
+  "decisions": [
+    {
+      "candidate": "O01 school-root-vowel-stress-verification",
+      "source_locator": "Розенталь, Орфография, §1",
+      "current_locator": "Лопатин, §34",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "reason": "Productive learner operation: select an unstressed root vowel by a stressed cognate/form. No active 239 identity owns this base operation."
+    },
+    {
+      "candidate": "O02 school-root-vowel-dictionary-unverifiable",
+      "source_locator": "Розенталь, Орфография, §2",
+      "current_locator": "Лопатин, §34",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "reason": "Distinct learner route from O01: when stress verification is unavailable, spelling is dictionary-controlled."
+    },
+    {
+      "candidate": "O03 school-alternating-root-vowel-decision-engine",
+      "source_locator": "Розенталь, Орфография, §3",
+      "current_locator": "Лопатин, §35",
+      "decision": "DECOMPOSE_BEFORE_COUNT",
+      "reason": "The source/current academic rule contains multiple genuinely different decision mechanisms: stress-conditioned, suffix-conditioned, following-consonant-conditioned, semantic, and lexical root families. Existing active root units own several exception families but not the whole system. One counted mega-parent would hide mastery granularity; counting every source paragraph would inflate it. A dedicated child-family normalization pass is required."
+    },
+    {
+      "candidate": "O04 school-root-o-yo-after-sibilants-base",
+      "source_locator": "Розенталь, Орфография, §4",
+      "current_locator": "Лопатин, §§13-14, 17-19",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "ownership_boundary": "Productive base rule only. Existing school-o-after-sibilants-lexical-o-set owns its memorized lexical O set; school-zhog-zheg-part-of-speech-contrast owns the noun/verb contrast. Do not duplicate those members in the base count."
+    },
+    {
+      "candidate": "O05 school-root-i-y-after-ts-base",
+      "source_locator": "Розенталь, Орфография, §5",
+      "current_locator": "Лопатин, §§13, 15-16, 22",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "ownership_boundary": "Productive root spelling after Ц only. school-tsy-exception-family retains ownership of the traditional ЦЫ lexical exceptions and remains separately counted."
+    },
+    {
+      "candidate": "O06 school-root-e-e-yo-y-special-spelling",
+      "source_locator": "Розенталь, Орфография, §6",
+      "current_locator": "Лопатин, §§6-9, 26",
+      "decision": "SCOPE_NORMALIZATION_REQUIRED_BEFORE_COUNT",
+      "reason": "Source topic is a heterogeneous bundle dominated by positional and borrowed-word spelling. Current academic rules confirm the facts, but it is not yet proved that one school mastery identity is the right granularity."
+    },
+    {
+      "candidate": "O07 school-root-voiced-voiceless-consonant-verification",
+      "source_locator": "Розенталь, Орфография, §7",
+      "current_locator": "Лопатин, §§79-80",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "reason": "Stable productive verification operation; no active 239 owner."
+    },
+    {
+      "candidate": "O08 school-double-consonants-root-prefix-boundary",
+      "source_locator": "Розенталь, Орфография, §8",
+      "current_locator": "Лопатин, §§93-94, 106-110",
+      "decision": "DECOMPOSE_BEFORE_COUNT",
+      "reason": "The source section mixes lexical double consonants, morphemic junctions and borrowed-word behavior. Current academic rules separate these mechanisms; one counted bucket would be semantically coarse."
+    },
+    {
+      "candidate": "O09 school-unpronounceable-consonant-verification",
+      "source_locator": "Розенталь, Орфография, §9",
+      "current_locator": "Лопатин, §83",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "reason": "Stable productive verification operation plus dictionary exceptions; no active 239 owner."
+    },
+    {
+      "candidate": "O10 school-capitalization-and-proper-name-system",
+      "source_locator": "Розенталь, Орфография, §§10-26",
+      "current_locator": "Лопатин, section Правила употребления прописных и строчных букв",
+      "decision": "DECOMPOSE_BEFORE_COUNT",
+      "reason": "Seventeen Rosenthal paragraphs map to a modern capitalization system with multiple learner decisions. They must not become either one giant counted parent or seventeen automatic identities without mastery-level normalization."
+    },
+    {
+      "candidate": "O11 school-separating-hard-soft-sign-boundary",
+      "source_locator": "Розенталь, Орфография, Раздел 4",
+      "current_locator": "Лопатин, §§27-28",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "reason": "One productive boundary decision: when a separating sign is required, choose Ъ in the defined prefix/compound contexts and Ь in the remaining internal contexts."
+    },
+    {
+      "candidate": "O12 school-prefix-z-s-selection",
+      "source_locator": "Розенталь, Орфография, §27",
+      "current_locator": "Лопатин, §82 plus general consonant rules",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "reason": "Current academic rule preserves the productive Z/S prefix alternation; no active 239 owner."
+    },
+    {
+      "candidate": "O13 school-pre-pri-semantic-base",
+      "source_locator": "Розенталь, Орфография, §28",
+      "current_locator": "Лопатин, §39",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "ownership_boundary": "Productive semantic prefix selection only. Existing school-pre-pri-lexical-contrast-family continues to own lexical/homophonic contrast pairs and is not duplicated here."
+    },
+    {
+      "candidate": "O14 school-i-y-after-russian-prefix-base",
+      "source_locator": "Розенталь, Орфография, §29",
+      "current_locator": "Лопатин, §§11-12",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "ownership_boundary": "Productive Russian-prefix I→Y rule only. school-i-y-after-prefix-vzimat-exception and school-i-y-after-prefix-retain-i-boundary retain their exception/retention ownership."
+    },
+    {
+      "candidate": "O15 school-o-e-after-sibilants-suffix-ending",
+      "source_locator": "Розенталь, Орфография, §30",
+      "current_locator": "Лопатин, §§18-19",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "reason": "Suffix/ending choice is structurally distinct from root spelling O04 and has no active base owner."
+    },
+    {
+      "candidate": "O16 school-vowels-after-ts-suffix-ending",
+      "source_locator": "Розенталь, Орфография, §31",
+      "current_locator": "Лопатин, §§15, 22-24",
+      "decision": "ADMIT_INDEPENDENT_BASE_IDENTITY",
+      "reason": "Suffix/ending rule after Ц is distinct from root spelling O05 and has no active base owner."
+    }
+  ],
+  "wave_count": {
+    "candidates_reviewed": 16,
+    "admit_now": 12,
+    "decompose_before_count": 3,
+    "scope_normalization_before_count": 1,
+    "admit_ids": [
+      "school-root-vowel-stress-verification",
+      "school-root-vowel-dictionary-unverifiable",
+      "school-root-o-yo-after-sibilants-base",
+      "school-root-i-y-after-ts-base",
+      "school-root-voiced-voiceless-consonant-verification",
+      "school-unpronounceable-consonant-verification",
+      "school-separating-hard-soft-sign-boundary",
+      "school-prefix-z-s-selection",
+      "school-pre-pri-semantic-base",
+      "school-i-y-after-russian-prefix-base",
+      "school-o-e-after-sibilants-suffix-ending",
+      "school-vowels-after-ts-suffix-ending"
+    ]
+  },
+  "count_policy": "Only the 12 independent identities above may affect the semantic denominator in the companion materialization file. O03/O06/O08/O10 have zero count effect at this stage.",
+  "production_files_changed": false,
+  "tilda_changed": false,
+  "runtime_changed": false,
+  "scoring_changed": false,
+  "localStorage_changed": false,
+  "next": "Materialize the 12 admitted identities; then normalize O03/O06/O08/O10 before continuing Wave B."
+}
