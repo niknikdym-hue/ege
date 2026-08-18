@@ -1,0 +1,58 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"PRIMARY_SOURCE_COMPLETENESS_ADMISSION",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_138_NOT_FINAL",
+  "production_integration":"HOLD",
+  "primary_source":{
+    "repo_path":"rosenthal/rozental.doc",
+    "work":"D. E. Rosenthal — Справочник по русскому языку. Орфография и пунктуация",
+    "locator":"Орфография, §62, пункт 4: одиночная или повторяющаяся НИ входит в состав устойчивых оборотов",
+    "source_owned_members":["во что бы то ни стало","как ни в чём не бывало","откуда ни возьмись","ни рыба ни мясо","ни жив ни мёртв","ни два ни полтора","ни то ни сё","ни дать ни взять","ни много ни мало","ни больше ни меньше"]
+  },
+  "current_norm_gate":{
+    "status":"CONFIRMED",
+    "authority":"Полный академический справочник под ред. В. В. Лопатина, §78, пункт 4б",
+    "model":"Current academic rules independently retain fixed constructions with single and repeated НИ, including lexicalized idioms. The dedicated learner issue is recognition of fixed-expression membership and its fixed spelling/punctuation behaviour, not merely the productive generic function of НИ."
+  },
+  "reopens":{
+    "previous_record":"237-RUSSIAN-SCHOOL-CANONICAL-HOLD-RESOLUTION-NI-FIXED-IDIOMS-v0.1.json",
+    "previous_status":"CLOSED_NOT_ADMITTED_SOURCE_OWNERSHIP_UNPROVEN",
+    "new_evidence_event":"Primary Rosenthal §62 is now directly available and explicitly owns the fixed-idiom branch; the source-ownership blocker in file 237 no longer exists.",
+    "policy_compliance":"This is a new source-evidence resolution, not restoration merely because current dictionary examples exist."
+  },
+  "canonical_units":[
+    {
+      "unit_id":"school-ni-fixed-idioms",
+      "domain":"orthography_lexicon_function",
+      "unit_type":"fixed_expression_family",
+      "canonical_label":"Устойчивые сочетания с НИ",
+      "canonical_members":["во что бы то ни стало","как ни в чём не бывало","откуда ни возьмись","ни рыба ни мясо","ни жив ни мёртв","ни два ни полтора","ни то ни сё","ни дать ни взять","ни много ни мало","ни больше ни меньше"],
+      "decision_model":"First determine whether the wording is a conventional fixed expression. If it is, preserve its normative fixed НИ pattern instead of rebuilding the phrase mechanically from productive negative-pronoun or homogeneous-member rules.",
+      "ownership_boundary":{
+        "school-ni-particle-vs-repeating-conjunction":"owns productive functional distinction of reinforcing НИ vs repeated conjunction НИ…НИ; does not replace memorized fixed-expression membership",
+        "school-ne-ni-pronominal-exclamatory-vs-concessive-boundary":"owns productive НЕ/НИ clause contrast; fixed lexicalized expressions here are not recounted as subordinate-clause rules",
+        "school-pri-chem-ni-pri-chem-nipochem":"retains its dedicated lexical/functional contrast; overlapping surface phrase НИ ПРИ ЧЁМ is not added to this canonical member core",
+        "school-negative-pronouns-ne-ni-stress-preposition-boundary":"owns productive negative-pronoun spelling; compositional forms such as НИ С ЧЕМ are not used as the core of this fixed-idiom identity"
+      },
+      "counting_policy":"One lexicalized fixed-expression family. Individual idioms are practice members, not separate denominator identities.",
+      "norm":"primary_source_owned_and_current_academic_confirmed",
+      "exam_routes":[]
+    }
+  ],
+  "count_effect":{
+    "active_semantic_before":137,
+    "this_admission":1,
+    "interim_active_semantic_after":138,
+    "historical_physical_checkpoint_records":137,
+    "physical_after_deystvitelno_materialization":138,
+    "physical_after_this_materialization":139,
+    "warning":"138 is only an interim semantic count. Files 242–244 establish many primary-source base-rule gaps whose later parent/branch admissions and absorptions will change the total. Do not freeze 138."
+  },
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Begin current-norm validation/dedupe Wave A from file 244; materialize foundational orthography base decisions without double-counting existing exception branches."
+}
