@@ -1,0 +1,168 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"PRIMARY_COMPLETENESS_WAVE_A4_CAPITALIZATION_MATERIALIZED",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_172_NOT_FINAL",
+  "production_integration":"HOLD",
+  "primary_source":{
+    "repo_path":"rosenthal/rozental.doc",
+    "scope":"Орфография, §§10–26"
+  },
+  "current_norm_authority":{
+    "source":"Правила русской орфографии и пунктуации. Полный академический справочник / под ред. В. В. Лопатина",
+    "section":"Правила употребления прописных и строчных букв; аббревиатуры и производные от них слова",
+    "normalization_note":"Current academic organization groups several historically separate Rosenthal paragraphs into broader modern systems: personal names with derivatives; geographic/administrative names with derivatives; trademarks/brands/varieties; special stylistic capitalization; abbreviations. The denominator follows learner decisions, not the old paragraph count."
+  },
+  "source_to_mastery_normalization":[
+    {"rosenthal":"§10","owner":"school-capitalization-sentence-text-start"},
+    {"rosenthal":"§§11–12","owner":"school-capitalization-person-animal-name-and-derivatives"},
+    {"rosenthal":"§§13–14","owner":"school-capitalization-geographic-administrative-names"},
+    {"rosenthal":"§15","owner":"school-capitalization-astronomical-names"},
+    {"rosenthal":"§16","owner":"school-capitalization-organizations-authorities-institutions"},
+    {"rosenthal":"§17","owner":"school-capitalization-historical-calendar-public-events"},
+    {"rosenthal":"§18","owner":"school-capitalization-documents-works-media-objects"},
+    {"rosenthal":"§19","owner":"school-capitalization-positions-titles"},
+    {"rosenthal":"§20","owner":"school-capitalization-awards-orders-medals"},
+    {"rosenthal":"§21","owner":"school-capitalization-religious-names"},
+    {"rosenthal":"§§22–24","owner":"school-capitalization-trademarks-breeds-varieties-products"},
+    {"rosenthal":"§25","owner":"school-abbreviations-capitalization-formation"},
+    {"rosenthal":"§26","owner":"school-capitalization-conditional-special-proper-names"}
+  ],
+  "canonical_units":[
+    {
+      "unit_id":"school-capitalization-sentence-text-start",
+      "domain":"orthography_capitalization",
+      "unit_type":"base_text_boundary",
+      "canonical_label":"Прописная буква в начале текста и после знака, завершающего предложение",
+      "source_locator":"Розенталь §10",
+      "current_norm_scope":"General capitalization rule; distinguish a genuinely new sentence/text from punctuation that does not start a new independent sentence.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-person-animal-name-and-derivatives",
+      "domain":"orthography_capitalization_proper_names",
+      "unit_type":"structured_name_family",
+      "canonical_label":"Имена людей, клички животных, мифологические имена и производные от индивидуальных названий",
+      "source_locators":["Розенталь §11","Розенталь §12"],
+      "current_norm_scope":"One structured family with branches for personal names/pseudonyms/nicknames/animal names/mythological names and for derivatives whose capitalization depends on whether individual-name status is preserved or lexicalized/noun-like meaning has developed.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-geographic-administrative-names",
+      "domain":"orthography_capitalization_proper_names",
+      "unit_type":"structured_geographic_name_family",
+      "canonical_label":"Географические и административно-территориальные названия и производные от них слова",
+      "source_locators":["Розенталь §13","Розенталь §14"],
+      "current_norm_scope":"Determine which components belong to the individual geographic/administrative name and which are generic terms; handle derivatives by current proper-name status rather than a blanket all-words-capital rule.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-astronomical-names",
+      "domain":"orthography_capitalization_proper_names",
+      "unit_type":"astronomical_name_boundary",
+      "canonical_label":"Астрономические названия: собственное имя или нарицательное/обычное употребление",
+      "source_locator":"Розенталь §15",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-organizations-authorities-institutions",
+      "domain":"orthography_capitalization_names",
+      "unit_type":"institutional_name_structure",
+      "canonical_label":"Органы власти, учреждения, организации, общества, партии, предприятия: прописные по структуре официального названия",
+      "source_locator":"Розенталь §16",
+      "current_norm_scope":"Do not capitalize every content word mechanically; identify the official name, its first component, embedded proper names, conventional abbreviations and generic uses according to the current academic model.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-historical-calendar-public-events",
+      "domain":"orthography_capitalization_names",
+      "unit_type":"event_period_name_structure",
+      "canonical_label":"Исторические эпохи и события, календарные периоды, праздники и общественные мероприятия",
+      "source_locator":"Розенталь §17",
+      "current_norm_scope":"One modern family because current academic rules treat historical events together with calendar/holiday/public-event names; dictionary/official-name status controls edge cases.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-documents-works-media-objects",
+      "domain":"orthography_capitalization_names",
+      "unit_type":"title_name_structure",
+      "canonical_label":"Документы, памятники, предметы, произведения искусства, издания и информационные названия",
+      "source_locator":"Розенталь §18",
+      "ownership_boundary":"This unit owns capitalization inside the name. Quotation-mark placement is a separate punctuation/orthographic formatting decision and will be owned by P28/P29 families; do not double-count.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-positions-titles",
+      "domain":"orthography_capitalization_names",
+      "unit_type":"title_position_boundary",
+      "canonical_label":"Должности, звания и титулы: прописная или строчная по статусу и контексту",
+      "source_locator":"Розенталь §19",
+      "current_norm_scope":"Separate conventional official/high-title capitalization from ordinary generic job/title usage; avoid treating social importance alone as a rule.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-awards-orders-medals",
+      "domain":"orthography_capitalization_names",
+      "unit_type":"award_name_structure",
+      "canonical_label":"Ордена, медали, награды, знаки отличия и премии: оформление компонентов названия",
+      "source_locator":"Розенталь §20",
+      "ownership_boundary":"Quotation marks, when required in individual award names, are formatting branches outside the capitalization count.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-religious-names",
+      "domain":"orthography_capitalization_names",
+      "unit_type":"religious_name_system",
+      "canonical_label":"Названия, связанные с религией: имена, священные тексты, праздники, учреждения и употребления",
+      "source_locator":"Розенталь §21",
+      "current_norm_scope":"Use the current academic religious-name system rather than reproducing Soviet-era editorial simplifications from an older source edition.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-trademarks-breeds-varieties-products",
+      "domain":"orthography_capitalization_names",
+      "unit_type":"brand_variety_name_system",
+      "canonical_label":"Товарные знаки, марки изделий, породы, виды и сорта: собственное название или нарицательное обозначение",
+      "source_locators":["Розенталь §22","Розенталь §23","Розенталь §24"],
+      "current_norm_scope":"The modern academic section groups trademarks, product brands and varieties. The learner decision is proper/brand/variety-name status versus lexicalized generic use; individual product categories are branches, not separate denominator units.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-abbreviations-capitalization-formation",
+      "domain":"orthography_abbreviations",
+      "unit_type":"structured_abbreviation_system",
+      "canonical_label":"Аббревиатуры и сложносокращённые слова: прописные/строчные, звуковое чтение и производные формы",
+      "source_locator":"Розенталь §25",
+      "current_norm_scope":"Letter abbreviations are normally uppercase; sound abbreviations and lexicalized forms have current conventional patterns; inflectional endings and suffixal derivatives follow the current academic rules rather than a mechanical uppercase transfer.",
+      "exam_routes":[]
+    },
+    {
+      "unit_id":"school-capitalization-conditional-special-proper-names",
+      "domain":"orthography_capitalization_style_official",
+      "unit_type":"conditional_stylistic_boundary",
+      "canonical_label":"Условные и особые стилистические прописные: официальное или экспрессивное употребление",
+      "source_locator":"Розенталь §26",
+      "current_norm_scope":"Owns conventional official-document names such as role designations when used as contractual conventional names and special stylistic capitalization such as Родина/Отчизна in the sanctioned expressive use. This is context/style controlled, not a universal lexical uppercase rule.",
+      "exam_routes":[]
+    }
+  ],
+  "count_assertion":{
+    "rosenthal_source_paragraphs_normalized":17,
+    "new_independent_mastery_identities":13,
+    "existing_active_owners":0,
+    "absorptions":0,
+    "semantic_before_this_file":159,
+    "interim_active_semantic_after":172,
+    "physical_records_before_this_file":161,
+    "physical_records_after_this_file":174,
+    "warning":"172 is not final. Waves B-G remain unresolved; later parent/branch dedupe can change the semantic total."
+  },
+  "wave_A_status":"CLOSED",
+  "wave_A_unresolved_candidates":[],
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Create Wave A closure checkpoint, then validate Wave B O17-O25 (noun/adjective endings and suffixes, compound words, numeral orthography) with parent/branch dedupe against the existing special bank."
+}
