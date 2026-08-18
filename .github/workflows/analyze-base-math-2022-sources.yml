@@ -61,6 +61,7 @@ jobs:
           cp /tmp/base2022-source-analysis/SOURCE-LOCK.txt "$DEST/"
           cp /tmp/base2022-source-analysis/SOURCE-LOCK.json "$DEST/"
           cp /tmp/base2022-source-analysis/VISUAL-GEOMETRY.json "$DEST/"
+          cp /tmp/base2022-source-analysis/VISUAL-GEOMETRY-SUMMARY.json "$DEST/"
           for section in demo spec cod; do
             cp "/tmp/base2022-source-analysis/$section/PAGE-MAP.json" "$DEST/$section/"
             for f in /tmp/base2022-source-analysis/$section/page-*.txt; do cp "$f" "$DEST/$section/"; done
