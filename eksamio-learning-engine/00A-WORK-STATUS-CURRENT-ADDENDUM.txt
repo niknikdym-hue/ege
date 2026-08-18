@@ -90,3 +90,19 @@ It fixes the accepted direction for:
 - no routine manual receipt workflow;
 - Tilda/payment-provider integration with verified server-side payment confirmation before entitlement grant;
 - provider-specific payment logic isolated from PEIS learner/semantic architecture.
+
+REMOTE WORKSPACE / CODEX CLOUD DECISION — 2026-08-18
+
+See:
+- `268-EKSAMIO-REMOTE-WORKSPACE-CODEX-CLOUD-CONTRACT-v0.1.txt`
+
+It fixes the accepted engineering workflow:
+- GitHub is the shared durable project bus and source of truth;
+- Codex Cloud is the preferred execution environment for coding-heavy work;
+- the user's local Mac is optional and must not be the normal build/execution dependency;
+- Codex implementation work uses an isolated task branch/worktree, runs required tests/builders, writes a durable `results/` artifact and opens a PR;
+- ChatGPT reviews committed GitHub state/PRs directly instead of requiring manual transfer of Codex output;
+- no routine manual copy/paste of repository context, diffs, logs or result summaries between ChatGPT and Codex;
+- secrets stay outside GitHub and are injected only where required;
+- no paid persistent remote devbox until Codex Cloud demonstrates a real technical or economic need;
+- production runtime remains separate from development workflow infrastructure.
