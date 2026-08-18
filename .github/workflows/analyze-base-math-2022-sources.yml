@@ -48,6 +48,7 @@ jobs:
           for section in demo spec cod; do
             cp "/tmp/base2022-source-analysis/$section/PAGE-MAP.json" "$DEST/$section/"
             for f in /tmp/base2022-source-analysis/$section/page-*.txt; do cp "$f" "$DEST/$section/"; done
+            for f in /tmp/base2022-source-analysis/$section/page-*.json; do cp "$f" "$DEST/$section/"; done
             cat /tmp/base2022-source-analysis/$section/page-*.txt > "$DEST/$section/ALL-TEXT.txt"
           done
           git config user.name "github-actions[bot]"
