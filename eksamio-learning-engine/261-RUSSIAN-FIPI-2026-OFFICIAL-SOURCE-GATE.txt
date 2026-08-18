@@ -1,0 +1,118 @@
+EKSAMIO LEARNING ENGINE — RUSSIAN FIPI 2026 OFFICIAL SOURCE GATE
+DATE: 2026-08-18
+STATUS: FIPI_2026_SOURCE_GATE_PASSED / EGE_AND_OGE_OVERLAY_READY
+SCHOOL CANONICAL DENOMINATOR: FROZEN AT 179 — DO NOT MODIFY
+PRODUCTION / TILDA / RUNTIME / SCORING / LOCALSTORAGE: NOT TOUCHED
+
+PURPOSE
+This layer does NOT redefine the school denominator. It maps the current official FIPI exam routes onto the frozen 179 school canonical identities and separately identifies exam-only composite/text/norm/writing routes.
+
+CURRENT EXAM CYCLE
+As of 2026-08-18, the current approved FIPI demo/specification/codifier cycle published in the official EGE and OGE sections is 2026.
+The FIPI home publication dated 2025-11-12 announces the approved 2026 EGE/OGE/GVE demos, specifications and codifiers.
+No 2027 approved package is used at this gate.
+
+OFFICIAL FIPI ROOT SOURCES
+EGE approved docs page:
+https://fipi.ru/ege/demoversii-specifikacii-kodifikatory
+OGE approved docs page:
+https://fipi.ru/oge/demoversii-specifikacii-kodifikatory
+FIPI 2026 Russian EGE preparation navigator / official methodological recommendations:
+https://doc.fipi.ru/navigator-podgotovki/navigator-ege/MR_rus_yaz_ege_2026.pdf
+FIPI 2026 Russian OGE preparation navigator / official methodological recommendations:
+https://doc.fipi.ru/navigator-podgotovki/navigator-oge/MR_rus_yaz_oge_2026.pdf
+
+OFFICIAL APPROVED ZIP PACKAGES
+EGE Russian 2026:
+https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2026/ru_11_2026.zip
+OGE Russian 2026:
+https://doc.fipi.ru/oge/demoversii-specifikacii-kodifikatory/2026/ru_9_2026.zip
+
+LOCAL OFFICIAL EGE SOURCE MIRROR
+Repository: niknikdym-hue/ege-russkiy-demoversiya-1
+source/ege-2026-russkiy-demoversiya.pdf
+source/ege-2026-russkiy-kodifikator.pdf
+source/ege-2026-russkiy-specifikatsiya.pdf
+The existing SOURCE-AUDIT in that repository records the local files as official FIPI 2026 source documents and SOURCE_GATE_PASSED.
+
+EGE 2026 OFFICIAL ROUTE STRUCTURE
+Official FIPI 2026 recommendations identify:
+- tasks 1–3: text/lexical/stylistic analysis;
+- tasks 4–8: language literary norms;
+- tasks 9–15: orthography;
+- tasks 16–21: punctuation;
+- task 22: expressive means;
+- tasks 23–26: text/speech analysis;
+- task 27: extended written response.
+Exact orthography task routing is explicitly given by FIPI:
+9 root vowels/consonants;
+10 hard/soft signs, prefixes, Ы/И after prefixes;
+11 suffixes except participle/gerund suffixes;
+12 verb personal endings and participle/gerund suffixes;
+13 НЕ/НИ;
+14 solid/hyphen/separate spelling across parts of speech;
+15 Н/НН across parts of speech.
+Exact punctuation task routing:
+16 homogeneous members + complex sentence;
+17 isolation;
+18 introductory constructions, addresses, interjections;
+19 complex sentence;
+20 complex sentence with different types of connection;
+21 punctuation analysis.
+
+OGE 2026 OFFICIAL ROUTE STRUCTURE
+Official FIPI 2026 recommendations identify 13 tasks:
+- 1: compressed exposition;
+- 2–3: syntactic analysis;
+- 4–5: punctuation analysis;
+- 6–7: orthographic analysis;
+- 8–9: compliance with current Russian literary norms;
+- 10: text content analysis;
+- 11: expressive means;
+- 12: lexical analysis;
+- 13.1/13.2/13.3: essay options.
+FIPI states the work contains 2 orthography tasks and 2 punctuation tasks.
+
+OGE ORTHOGRAPHY CONTENT RANGE
+The official FIPI 2026 navigator includes, among the possible OGE content:
+- checked/uncheckable/alternating root vowels; consonants; O/YO after sibilants; I/Y after TS; selected double consonants;
+- prefixes, Z/S, PRE/PRI, hard/soft signs, I/Y after prefixes;
+- suffixes and endings across parts of speech;
+- solid/hyphen/separate spelling across parts of speech;
+- НЕ/НИ;
+- Н/НН;
+- spelling of service words;
+- proper names;
+- compound and abbreviated words;
+- orthographic analysis.
+
+OGE PUNCTUATION CONTENT RANGE
+The official FIPI 2026 navigator includes:
+- dash between subject/predicate and in incomplete sentence;
+- homogeneous members and generalizing words;
+- isolated definitions/appositions/circumstances/additions/clarifying/explanatory/joining constructions;
+- comparative constructions;
+- introductory/parenthetical constructions, addresses, interjections;
+- SSP, SPP, BSP and mixed-link complex sentences;
+- direct speech, citation, dialogue;
+- punctuation analysis.
+
+OVERLAY CLASSIFICATION CONTRACT
+For every official exam route use exactly one of:
+1. SCHOOL_IDENTITY_ROUTE — task/topic maps directly to one or more frozen 179 identities.
+2. EXAM_ONLY_COMPOSITE — the exam item requires simultaneous selection/application of several school identities; no new school identity is created.
+3. OUTSIDE_FROZEN_SCHOOL_DENOMINATOR — lexical/text/stylistic/writing or other exam ability that is not an orthography/punctuation mastery identity frozen from the school layer.
+4. PARTIAL_SCHOOL_OVERLAP — a language-norm route contains some historical/frozen morphology/syntax identities but extends beyond the Rosenthal completeness scope; it must not silently expand the school denominator.
+
+COUNTING RULE
+- Exam tasks are NOT denominator identities.
+- FIPI codifier positions are NOT automatically denominator identities.
+- A task can map to many of the 179 school identities.
+- One school identity can support OGE, EGE, both, or neither in the current cycle.
+- The school denominator remains exactly 179 throughout the FIPI overlay.
+
+NEXT
+1. Build EGE 2026 task-route overlay.
+2. Build OGE 2026 task-route overlay.
+3. Close combined FIPI overlay with zero school-count effect.
+4. Then audit actual trainer coverage against frozen 179 + exam-route coverage.
