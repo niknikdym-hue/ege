@@ -74,3 +74,19 @@ NEXT ACTIVE WORK
 3. Continue source-bank/practice expansion only where it adds real coverage rather than duplicates.
 4. Run canonical explanation/exceptions/practice builders when local files become available.
 5. Only after machine PASS: implementation/integration design and regression plan.
+
+CURRENT PRODUCT-ARCHITECTURE DECISIONS — 2026-08-18
+
+See:
+- `267-EKSAMIO-PEIS-PRODUCT-ARCHITECTURE-DECISIONS-v0.1.txt`
+
+It fixes the accepted direction for:
+- Homework as both one-off help and continuous "Homework with me" product direction;
+- only two authentication states: anonymous / authenticated;
+- learner profile, roles, purchases and entitlements as separate concerns rather than extra user states;
+- minimal checkout with email + amount + primary SBP action;
+- no mandatory classic registration before first value/payment transition;
+- strict payment responsibility boundary: Eksamio handles product/access/learning; payment operator handles money, SBP and automated tax/fiscal receipts;
+- no routine manual receipt workflow;
+- Tilda/payment-provider integration with verified server-side payment confirmation before entitlement grant;
+- provider-specific payment logic isolated from PEIS learner/semantic architecture.
