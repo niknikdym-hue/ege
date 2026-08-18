@@ -36,6 +36,20 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Record started build run
+        shell: bash
+        run: |
+          cat > matematika-source-2022/06-BASE-2022-LATEST-BUILD-RUN.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Build head SHA: ${{ github.sha }}
+          Status: STARTED
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add matematika-source-2022/06-BASE-2022-LATEST-BUILD-RUN.txt
+          git commit -m "Record started BASE 2022 build run"
+          git push origin HEAD:main
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -47,23 +61,18 @@ jobs:
         shell: bash
         run: |
           python matematika-source-2024/scripts/build_canonical_base_2024.py
-          cat matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-* \
-            | base64 -d | gzip -dc > /tmp/build_verified_base_2024_package.py
+          cat matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-* | base64 -d | gzip -dc > /tmp/build_verified_base_2024_package.py
           python -m py_compile /tmp/build_verified_base_2024_package.py
           python /tmp/build_verified_base_2024_package.py
-
           rm -rf "${BASE2023_ANALYSIS_DIR}"
           python matematika-source-2023/scripts/analyze_base_2023_sources.py
           mkdir -p "${BASE2023_ANALYSIS_DIR}/official-pdf"
           cp matematika-source-2023/ege-2023-matematika-baza-demoversiya.pdf "${BASE2023_ANALYSIS_DIR}/official-pdf/"
           cp matematika-source-2023/ege-2023-matematika-baza-specifikatsiya.pdf "${BASE2023_ANALYSIS_DIR}/official-pdf/"
           cp matematika-source-2023/ege-2023-matematika-kodifikator.pdf "${BASE2023_ANALYSIS_DIR}/official-pdf/"
-          cat matematika-source-2023/scripts/build_verified_base_2023_package.py.gz.b64.part-* \
-            | base64 -d | gzip -dc > /tmp/build_verified_base_2023_package.py
+          cat matematika-source-2023/scripts/build_verified_base_2023_package.py.gz.b64.part-* | base64 -d | gzip -dc > /tmp/build_verified_base_2023_package.py
           python -m py_compile /tmp/build_verified_base_2023_package.py
-          BASE2023_VISUAL_AUDIT_SCRIPT="${GITHUB_WORKSPACE}/matematika-source-2023/scripts/audit_visual_source_chain_2023.py" \
-          BASE2023_ZOOM_TEST="${GITHUB_WORKSPACE}/matematika-source-2023/scripts/visual_ui_zoom_test_2023.py" \
-            python /tmp/build_verified_base_2023_package.py
+          BASE2023_VISUAL_AUDIT_SCRIPT="${GITHUB_WORKSPACE}/matematika-source-2023/scripts/audit_visual_source_chain_2023.py" BASE2023_ZOOM_TEST="${GITHUB_WORKSPACE}/matematika-source-2023/scripts/visual_ui_zoom_test_2023.py" python /tmp/build_verified_base_2023_package.py
 
       - name: Analyze and validate official BASE 2022 sources
         shell: bash
@@ -79,8 +88,7 @@ jobs:
       - name: Restore and run verified BASE 2022 builder
         shell: bash
         run: |
-          cat matematika-source-2022/scripts/build_verified_base_2022_package.py.gz.b64.part-* \
-            | base64 -d | gzip -dc > /tmp/build_verified_base_2022_package.py
+          cat matematika-source-2022/scripts/build_verified_base_2022_package.py.gz.b64.part-* | base64 -d | gzip -dc > /tmp/build_verified_base_2022_package.py
           python -m py_compile /tmp/build_verified_base_2022_package.py
           python /tmp/build_verified_base_2022_package.py
 
@@ -128,8 +136,7 @@ jobs:
         run: |
           set -euo pipefail
           CLEAN="${RUNNER_TEMP}/base2022-clean"
-          rm -rf "$CLEAN"
-          mkdir -p "$CLEAN"
+          rm -rf "$CLEAN" && mkdir -p "$CLEAN"
           unzip -q "${BASE2022_OUTPUT_DIR}/ege-matematika-baza-demoversiya-2022-v1.0.zip" -d "$CLEAN"
           cd "$CLEAN/ege-matematika-baza-demoversiya-2022"
           node --check script.js
@@ -164,10 +171,8 @@ jobs:
           ZIP bytes: ${BYTES}
           Status: SUCCESS_CLEAN_ZIP_FULL_REGRESSION
           EOF
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add matematika-source-2022/06-BASE-2022-LATEST-BUILD-RUN.txt
-          git commit -m "Record successful BASE 2022 build run" || true
+          git commit -m "Record successful BASE 2022 build run"
           git push origin HEAD:main
 
       - name: Upload verified release
