@@ -1,0 +1,178 @@
+EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2022
+SOURCE / EXAM / ANSWER / VISUAL PREBUILD LOCK
+Дата: 2026-08-18
+
+STATUS: PASS_SOURCE_EXAM_ANSWER_VISUAL_PREBUILD_LOCK
+READY_FOR_CONTENT_EXTRACTION: YES
+READY_FOR_VERIFIED_BUILD: YES
+READY_FOR_TILDA: NO
+LIVE_GO: NO
+
+1. OFFICIAL SOURCE LOCK
+Demo:
+file=ege-2022-matematika-baza-demoversiya.pdf
+sha256=8b2c6fe0e36eb1d3a749af08cd035b142ea5e7099dbdf9a14e4ff1617470e207
+bytes=1822679
+physical_pdf_pages=13
+printed_pages=25
+
+Specification:
+file=ege-2022-matematika-baza-specifikatsiya.pdf
+sha256=6480c1fffd0c2a09e9447d21b44f3a683b83aaa251f5f8c55ceb21a00c92fe9b
+bytes=1546975
+physical_pdf_pages=4
+printed_pages=8
+
+Codifier:
+file=ege-2022-matematika-kodifikator.pdf
+sha256=28888224281fd2178f600b959e652237f3d34f80afe5b2875a9d06a6b4804813
+bytes=1734001
+physical_pdf_pages=22
+printed_pages=44
+
+Canonical page evidence:
+/matematika-source-2022/source-lock/SOURCE-LOCK.json
+/matematika-source-2022/source-lock/demo/PAGE-MAP.json
+/matematika-source-2022/source-lock/spec/PAGE-MAP.json
+/matematika-source-2022/source-lock/cod/PAGE-MAP.json
+All extracted text and word-coordinate JSON are persisted under source-lock/demo, source-lock/spec and source-lock/cod.
+
+2. EXAM LOCK
+Tasks: 21
+Official examples: 52
+Duration: 180 minutes
+Max primary score: 21
+Score per task: 1
+Reference material printed pages: 4,5,6,7
+Allowed equipment confirmed by specification: ruler
+Answer table printed page: 25
+
+Examples per task 1..21:
+2,3,2,3,2,3,4,2,3,2,2,3,2,3,1,3,2,2,3,2,3
+
+This distribution is year-specific and MUST NOT be replaced by 2023/2024/2025/2026 counts.
+Machine lock: /matematika-source-2022/source-lock/EXAM-LOCK.json
+
+3. TASK / VARIANT SOURCE PAGE LOCK
+1: p8 — 2 examples
+2: p8 — 3 examples
+3: p9 — 2 examples
+4: p10,p11 — 3 examples
+5: p11,p12 — 2 examples
+6: p12 — 3 examples
+7: p12,p13 — 4 examples
+8: p13 — 2 examples
+9: p13 — 3 examples
+10: p14 — 2 examples
+11: p14 — 2 examples
+12: p15,p16 — 3 examples
+13: p16 — 2 examples
+14: p17,p18,p19 — 3 examples
+15: p19 — 1 example
+16: p20 — 3 examples
+17: p21 — 2 examples
+18: p22 — 2 examples
+19: p23 — 3 examples
+20: p23 — 2 examples
+21: p24 — 3 examples
+
+All 52 individual variant->printed-page bindings are locked in EXAM-LOCK.json.
+
+4. ANSWER LOCK
+All 52 variant answer contracts are locked in /matematika-source-2022/source-lock/ANSWER-LOCK.json.
+The contract distinguishes:
+- numeric answers;
+- order-significant matching sequences;
+- semantic set selections where order is ignored;
+- official alternative numeric answers.
+
+Important scorer contracts:
+- 12.1 accepts semantic sets {1,3,5} OR {2,5,6}; order ignored;
+- 12.2 accepts set {1,5}; order ignored;
+- 18.1 accepts set {2,4}; order ignored;
+- 18.2 accepts set {1,4}; order ignored;
+- task 19 preserves every official alternative answer from FIPI.
+
+5. SOURCE ANOMALY LOCK
+ID: ANSWER-TABLE-6.3
+Evidence:
+- printed p8: task 1 has exactly 2 examples; task 2 has 3;
+- printed p12: task 6 has exactly 3 examples;
+- task 6.3: 24 ha split grain:vegetables = 5:3, so vegetables = 9 ha;
+- printed p25 answer table visually places 9 in task 1 / Example 3 while task 6 / Example 3 cell is empty.
+
+Mandatory handling:
+- task 1 count remains 2;
+- phantom 1.3 is FORBIDDEN;
+- task 6 count remains 3;
+- task 6.3 answer is locked to 9;
+- anomaly remains documented in package diagnostics; no source is silently rewritten.
+
+6. VISUAL PREBUILD INVENTORY
+Machine inventory: /matematika-source-2022/source-lock/VISUAL-INVENTORY.json
+Locked source elements: 42 total
+- 4 full reference-page renders;
+- 29 raster/formula candidates from official PDF;
+- 9 exact HTML structures for source-exact tables/characteristics where structured UI is preferable.
+
+Every visual has year-specific variant/page binding and a must-include crop/UI requirement before build. Final crop_px rectangles are intentionally NOT copied from another year and NOT guessed in this lock.
+
+Mandatory visual workflow:
+fresh official 2022 PDF render → identify actual visual boundaries → direct contiguous crop when raster is required → individual four-edge UI audit → desktop/mobile sizing → zoom decision → byte/source proof.
+
+No SVG/Canvas/manual redraw of official figures. Exact HTML structures are allowed only for source tables/characteristics when values and text are source-exact and independently traceable.
+
+7. AUTOMATIC LOCK GATE
+Analyzer:
+/matematika-source-2022/scripts/analyze_base_2022_sources.py
+Validator:
+/matematika-source-2022/scripts/validate_base_2022_source_lock.py
+Workflow:
+/.github/workflows/analyze-base-math-2022-sources.yml
+Validation evidence:
+/matematika-source-2022/source-lock/VALIDATION.txt
+
+Current validation result:
+BASE 2022 SOURCE LOCK PASS
+sources: 3/3 SHA locked
+exam: 21 tasks / 52 official examples / 180 min / max 21
+reference pages: 4/4 locked
+answers: 52/52 variants locked
+source anomaly: ANSWER-TABLE-6.3 locked; phantom 1.3 forbidden
+visual source elements: 42 inventoried
+
+8. BUILD BOUNDARY
+Allowed to reuse from accepted BASE 2023 only:
+- technical shell patterns;
+- verified generic UI/state/navigation/result functions;
+- atomic T123 packaging approach;
+- general automated test architecture.
+
+Forbidden to reuse from another year as content/source evidence:
+- task texts;
+- example counts;
+- answers/scorer alternatives;
+- formulas;
+- visual crops/assets;
+- reference pages;
+- task/page mapping;
+- year-specific controls unless independently verified against 2022.
+
+9. RELEASE GATES AFTER BUILD
+Before READY_FOR_TILDA:
+- source traceability 52/52;
+- formula gate;
+- visual source chain;
+- per-asset visual UI crop audit;
+- reference pages;
+- correct+wrong browser interaction 52/52 via real DOM controls;
+- full attempt 21/21;
+- autosave/reload/assigned variant/results;
+- responsive 1280/768/390/360/320;
+- zoom in/out/reset + mobile for required visuals;
+- T123 atomic validator, sequence, <42500 bytes, SHA manifest;
+- freeze ZIP;
+- clean extraction and complete repeat gate chain;
+- independent final audit.
+
+SOURCE LOCK COMPLETE. VERIFIED BUILD MAY START.
