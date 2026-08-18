@@ -1,0 +1,60 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-18",
+  "status": "COMPLETENESS_CURRENT_NORM_AUDIT_WAVE4_MORPHOLOGY_NUMERALS_COMPLETE_WITH_SOURCE_CANDIDATE",
+  "metric_status": "WORKING_137_CHECKPOINT_NOT_FINAL_COMPLETENESS",
+  "production_integration": "HOLD",
+  "scope": {
+    "checkpoint_ref": "218-RUSSIAN-SCHOOL-CANONICAL-DENOMINATOR-CHECKPOINT-HANDOFF.txt",
+    "bank_ref": "173-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK05-MORPHOLOGY-NUMERALS-GRADE6-10-v0.1.json",
+    "canonical_units_reviewed": 9,
+    "excluded_routes_reviewed": 1,
+    "purpose": "Completeness/current-norm audit overlay. No canonical bank records are materialized by this file."
+  },
+  "source_basis": {
+    "internal_rosenthal_reference": {
+      "path": "00-sources/rosenthal/rosenthal.docx",
+      "project_mapping_used": ["numerals: orthography section 10, §§40–41", "verbs: orthography section 12, §§44–46"],
+      "direct_reread_in_current_workspace": "NOT_AVAILABLE",
+      "evidence_note": "The current session can use the project's verified section mapping but cannot claim a fresh direct reread of the primary DOCX."
+    },
+    "current_academic_crosscheck": [
+      {"source": "Gramota.ru — Глагол / conjugation reference", "url": "https://gramota.ru/biblioteka/spravochniki/glagol"},
+      {"source": "Gramota.ru — school theoretical course: conjugation", "url": "https://gramota.ru/biblioteka/spravochniki/russkij-yazyk-kratkij-teoreticheskij-kurs-dlya-shkolnikov/spryazhenie"},
+      {"source": "Gramota.ru — academic rule: special suffix spellings", "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/osobennosti-napisaniya-otdelnykh-suffiksov"},
+      {"source": "Gramota.ru — academic rule: soft sign as sign of consonant softness", "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/bukva-kak-znak-myagkosti-soglasnogo"},
+      {"source": "Gramota.ru — academic rule: soft sign not after sibilants, §31", "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/bukva-ne-posle-shipyashchikh"},
+      {"source": "Gramota.ru — noun declension/current grammar answers", "url": "https://gramota.ru/poisk"},
+      {"source": "Gramota.ru — numeral grammar reference", "url": "https://gramota.ru/biblioteka/spravochniki/imya-chislitelnoe"},
+      {"source": "Gramota.ru — quantitative numeral grammar", "url": "https://gramota.ru/biblioteka/spravochniki/russkij-yazyk-kratkij-teoreticheskij-kurs-dlya-shkolnikov/grammaticheskie-priznaki-kolichestvennykh-chislitelnykh"}
+    ],
+    "evidence_policy": [
+      "Do not convert an ordinary current rule into a counted school canonical identity without exact source evidence establishing its denominator ownership.",
+      "A school mnemonic may remain a route aid while the current academic model is represented more precisely.",
+      "Current-only lexical members may extend normative scope but do not receive invented grade routes."
+    ]
+  },
+  "decisions": [
+    {"unit_id":"school-conjugation-i-exception-family","disposition":"CONFIRMED_WITH_SCHOOL_VS_ACADEMIC_SCOPE_SPLIT_NO_COUNT_CHANGE","count_effect":0,"keep_identity":true,"school_route_scope":["брить","стелить","зиждиться"],"current_academic_true_exception_core":["брить","зиждиться","зыбиться"],"school_methodology_special":["стелить"],"patch_policy":"Keep one learner decision engine; preserve the distinction between school handling of стелить and the current academic exception core. Зыбиться belongs to current normative scope without an invented grade route."},
+    {"unit_id":"school-conjugation-ii-exception-eleven","disposition":"CONFIRMED_ELEVEN_VERBS_NO_COUNT_CHANGE","count_effect":0,"keep_identity":true,"current_members":["гнать","держать","дышать","слышать","видеть","ненавидеть","обидеть","терпеть","зависеть","смотреть","вертеть"]},
+    {"unit_id":"school-heteroclitic-nouns-mya-put","disposition":"CONFIRMED_SCHOOL_GROUP_WITH_SCIENTIFIC_GRAMMAR_NOTE_NO_COUNT_CHANGE","count_effect":0,"keep_identity":true,"current_members":["бремя","время","вымя","знамя","имя","пламя","племя","семя","стремя","темя","путь"],"current_grammar_note":"School terminology 'разносклоняемые' is valid as a teaching route; scientific grammar can describe these as a special group within the third-declension system."},
+    {"unit_id":"school-sk-soft-sign-month-january-exception","disposition":"CONFIRMED_CURRENT_SOFT_SIGN_DISTRIBUTION_NO_COUNT_CHANGE","count_effect":0,"keep_identity":true,"soft_sign_month_adjectives":["июньский","сентябрьский","октябрьский","ноябрьский","декабрьский"],"no_soft_sign_exception":["январский"],"separate_general_rule_example":["апрельский"],"patch_policy":"Do not present апрельский as the same exception pattern: its ь follows the general rule after л."},
+    {"unit_id":"school-verb-stressed-va-boundary","disposition":"CONFIRMED_PRODUCTIVE_RULE_BOUNDARY_NO_COUNT_CHANGE","count_effect":0,"keep_identity":true,"current_rule":"For verbs with stressed -ва́-, the vowel before в is normally checked by the corresponding form/verb without -ва-.","school_anchors":["назревать—назреть","преодолевать—преодолеть","повелевать—повелеть","претерпевать—претерпеть"],"current_scope_examples":["одолевать—одолеть","запивать—запить","запевать—запеть","засевать—засеять","застывать—застыть"]},
+    {"unit_id":"school-verb-eva-memorized-set","disposition":"CONFIRMED_CURRENT_EVA_SCOPE_NO_COUNT_CHANGE","count_effect":0,"keep_identity":true,"school_members":["застревать","затмевать","продлевать"],"current_academic_extended_scope":["затмевать","продлевать","растлевать","застревать","встревать","обуревать","увещевать","намереваться","сомневаться"],"patch_policy":"Keep the expanded current list as normative scope only. The school mnemonic ЕВА is not a linguistic explanation and must not define separate identities."},
+    {"unit_id":"school-numerals-internal-soft-sign-50-80-500-900","disposition":"CONFIRMED_ACADEMIC_RULE_NO_COUNT_CHANGE","count_effect":0,"keep_identity":true,"current_members":["пятьдесят","шестьдесят","семьдесят","восемьдесят","пятьсот","шестьсот","семьсот","восемьсот","девятьсот"],"contrast_members":["пятнадцать","шестнадцать","семнадцать","восемнадцать","девятнадцать"]},
+    {"unit_id":"school-numerals-two-form-paradigm-40-90-100","disposition":"CONFIRMED_TWO_FORM_PARADIGM_NO_COUNT_CHANGE","count_effect":0,"keep_identity":true,"nominative_accusative":["сорок","девяносто","сто"],"other_cases":["сорока","девяноста","ста"]},
+    {"unit_id":"school-numerals-both-parts-decline-50-80-200-900","disposition":"CONFIRMED_BOTH_COMPONENTS_DECLINE_NO_COUNT_CHANGE","count_effect":0,"keep_identity":true,"current_scope":["50–80","200–900"],"verified_examples":["пятидесяти","пятьюдесятью","двухсот","двумстам","двумястами","пятисот","пятьюстами","о восьмистах"],"patch_policy":"Keep one structural declension decision; surface numbers and case forms are practice members, not denominator identities."}
+  ],
+  "completeness_candidates_not_admitted": [
+    {"candidate_id":"school-imperative-soft-sign-before-sya-te-boundary","source_route_from_173":"Правописание Ь в глаголах повелительного наклонения","current_norm_status":"CURRENT_RULE_CONFIRMED","current_rule_examples":["отправься","взвесься","сядьте","встаньте","бросьте","познакомьтесь"],"special_forms_of_interest":["ляг","лягте"],"admission_status":"PENDING_EXACT_INTERNAL_SOURCE_LOCATOR","count_effect":0,"reason":"The current academic rule is real, but file 173 explicitly lacked exact same-edition school route evidence for a special canonical unit. The completeness phase must not manufacture denominator ownership from current norm alone while the primary Rosenthal/internal book text is unavailable for direct reread.","next_evidence_needed":"Exact locator in Rosenthal or another authoritative internal Russian-language source establishing the learner decision and its scope; then decide whether it is a new canonical identity or part of a broader verb-soft-sign unit."}
+  ],
+  "wave_summary": {"units_reviewed":9,"identities_kept":9,"new_canonical_identities_admitted":0,"removed_canonical_identities":0,"completeness_candidates_pending_source_locator":1,"checkpoint_unique_units_before":137,"checkpoint_unique_units_after":137,"denominator_effect":0},
+  "cumulative_audit_progress": {"wave1_units":12,"wave2_units":16,"wave3_units":6,"wave4_units":9,"distinct_checkpoint_units_reviewed_in_waves_1_4":43,"checkpoint_total_units":137,"note":"Audit-work counter only; not a readiness percentage or learner-coverage metric."},
+  "live_holds_carried_forward": [{"unit_id":"school-deystvitelno-function-context","status":"HOLD","counted":false},{"unit_id":"school-ni-fixed-idioms","status":"HOLD","counted":false}],
+  "production_files_changed": false,
+  "tilda_changed": false,
+  "runtime_changed": false,
+  "scoring_changed": false,
+  "localStorage_changed": false,
+  "next": "Audit 174-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK06-GRADE6-COMPLEX-ADJECTIVE-SPECIALS-v0.1.json, then continue numerically through the remaining canonical bank files. Keep the imperative-soft-sign completeness candidate open until exact internal-source evidence is recovered."
+}
