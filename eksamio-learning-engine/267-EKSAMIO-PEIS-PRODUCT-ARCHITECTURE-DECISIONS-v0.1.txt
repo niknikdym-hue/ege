@@ -251,4 +251,33 @@ PAYMENT
 
 These layers must not be collapsed into one user status or one monolithic record.
 
+======================================================================
+11. MULTI-YEAR DEMO PRODUCT CONTINUITY
+======================================================================
+
+Interactive exam demos are a permanent first-class Eksamio product contour, not a temporary Russian-language pilot and not a disposable yearly artifact.
+
+TARGET COVERAGE:
+- all declared exam subjects on Eksamio;
+- historical/current demo years 2022, 2023, 2024, 2025 and 2026;
+- this multi-year coverage is intended to be implemented for every declared subject.
+
+CURRENT IMPLEMENTATION CHECKPOINT — 2026-08-18:
+- Russian language: multi-year demo direction is implemented / established in the project;
+- Basic Mathematics: implementation exists, with part of the product not yet published on the public site;
+- remaining declared subjects: to be implemented with the same 2022-2026 multi-year product model.
+
+PRODUCT / ARCHITECTURE RULES:
+- demo development continues in parallel with PEIS, AI Tutor, Homework and platform-core work;
+- historical demo years remain valuable learning and diagnostic content and must not be discarded merely because a newer year exists;
+- each demo year preserves its own official exam-source truth, answers, scoring/criteria and provenance appropriate to that year;
+- PEIS may read demo results through adapters and convert them into learner evidence / semantic evidence, but must not rewrite or silently alter frozen official demo packages;
+- AI Tutor and adaptive learning operate around and after the demo experience, not by corrupting the official demo itself;
+- the common semantic layer should allow equivalent skills/tasks across different demo years to contribute to one learner model while preserving exact source-year identity;
+- demo product identity and semantic knowledge identity remain separate;
+- evergreen subject/catalog URLs may coexist with year-specific demo content in the interface; architecture must not assume that only the latest year exists.
+
+The long-term demo contour is therefore:
+SUBJECT -> DEMO YEAR 2022 / 2023 / 2024 / 2025 / 2026 -> OFFICIAL ATTEMPT DATA -> SEMANTIC MAPPING -> LEARNER EVIDENCE -> PEIS RECOMMENDATION / TRAINING / TUTOR.
+
 END OF DOCUMENT
