@@ -1,0 +1,158 @@
+EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2022
+PREBUILD HANDOFF — VERIFIED BUILD ONLY
+Дата: 2026-08-18
+
+PURPOSE
+This file is the handoff/checkpoint for starting or resuming the full BASE 2022 build without relying on chat history and without repeating the 2024 failure pattern.
+
+CURRENT STATUS
+SOURCE / EXAM / ANSWER / VISUAL PREBUILD LOCK: PASS
+READY_FOR_VERIFIED_BUILD: YES
+READY_FOR_TILDA: NO
+LIVE_GO: NO
+
+MANDATORY READ ORDER
+1. /00-SOURCE-FIDELITY-ZERO-TOLERANCE.md
+2. /00-READ-FIRST-EGE-DEMOVERSII-MASTER.md
+3. /demo-production-standard/README.md
+4. /MATEMATIKA-EGE-DEMOVERSII-REGLAMENT-SOZDANIYA-I-PROVERKI.md
+5. /demo-production-standard/VISUAL-UI-CROP-AUDIT-TEMPLATE.md
+6. /demo-production-standard/scripts/validate_t123_atomicity.py
+7. /matematika-source-2022/00-BASE-2022-PRESTART-GATE.txt
+8. /matematika-source-2022/01-BASE-2022-SOURCE-LOCK.txt
+9. /matematika-source-2022/02-BASE-2022-CURRENT-CHECKPOINT.txt
+10. /matematika-source-2022/source-lock/EXAM-LOCK.json
+11. /matematika-source-2022/source-lock/ANSWER-LOCK.json
+12. /matematika-source-2022/source-lock/VISUAL-INVENTORY.json
+13. /matematika-source-2022/source-lock/VALIDATION.txt
+14. this file
+
+SOURCE OF TRUTH
+Only these 2022 BASE PDFs are content sources:
+- ege-2022-matematika-baza-demoversiya.pdf
+- ege-2022-matematika-baza-specifikatsiya.pdf
+- ege-2022-matematika-kodifikator.pdf
+Profile PDFs in the same directory are not BASE sources.
+No neighboring-year package is a content source.
+
+LOCKED HASHES
+Demo: 8b2c6fe0e36eb1d3a749af08cd035b142ea5e7099dbdf9a14e4ff1617470e207
+Spec: 6480c1fffd0c2a09e9447d21b44f3a683b83aaa251f5f8c55ceb21a00c92fe9b
+Codifier: 28888224281fd2178f600b959e652237f3d34f80afe5b2875a9d06a6b4804813
+
+LOCKED EXAM STRUCTURE
+21 tasks / 52 official examples / 180 minutes / max primary score 21.
+Examples task 1..21:
+2,3,2,3,2,3,4,2,3,2,2,3,2,3,1,3,2,2,3,2,3
+Reference pages: printed 4–7.
+Answer table: printed 25.
+Ruler allowed.
+
+SOURCE ANOMALY — NEVER LOSE THIS
+ANSWER-TABLE-6.3
+Actual source task counts prove task 1 has 2 examples and task 6 has 3 examples. The official answer table visually puts answer 9 in task 1 / Example 3 and leaves task 6 / Example 3 blank. The third task-6 problem is the 24-ha 5:3 problem and its answer is 9.
+Required behavior:
+- never create task 1.3;
+- task 1 stays 2 examples;
+- task 6 stays 3 examples;
+- 6.3 answer = 9;
+- retain anomaly evidence/reporting.
+
+FULL BUILD PROCEDURE
+A. TASK / CONTENT SOURCE GATE
+- Build all 52 official variants from 2022 printed-page evidence only.
+- Preserve exact meaning, numbers, conditions and source formulas.
+- For formulas/radicals/logs/exponents where text extraction can distort symbols, use source crop according to VISUAL-INVENTORY.json.
+- Independently compare each final variant against the source page before PASS.
+
+B. CONTROL GATE
+Choose control from the actual task action, not from neighboring years:
+- numeric field for numeric answers;
+- 4-position real matching controls where source requires correspondence;
+- real set/multiple-selection controls where source asks to choose all statements/items;
+- scorer must follow ANSWER-LOCK.json semantics.
+Format validation is separate from correctness.
+
+C. VISUAL SOURCE GATE
+- Render the exact locked 2022 demo fresh.
+- Raster official figures/formulas only by direct contiguous source crop.
+- No SVG/Canvas/manual redraw or invented diagram.
+- Exact HTML is permitted only for inventory items designated as source-exact table/characteristics structures; every cell/text/value must trace to 2022 source.
+- Asset bytes embedded in T123 must be byte-identical to verified asset files where raster assets are used.
+- Reference pages 4–7 must be exact direct renders from the locked source.
+
+D. VISUAL UI CROP GATE
+For every inventory item separately:
+- inspect left/right/top/bottom crop edges;
+- axes and axis names;
+- ticks/numbers/units;
+- legends;
+- point/vertex/dimension labels;
+- complete meaningful geometry;
+- no accidental neighboring task text/table/characteristics;
+- readable base size at desktop/mobile;
+- if zoom required, enlarge + zoom in/out/reset + mobile must work.
+No universal crop rectangle or mechanical margin preset.
+
+E. SCORER GATE
+Use ANSWER-LOCK.json.
+Especially:
+- 12.1 semantic sets {1,3,5} OR {2,5,6}, any order;
+- 12.2 set {1,5}, any order;
+- 18.1 set {2,4}, any order;
+- 18.2 set {1,4}, any order;
+- all official task-19 alternatives preserved;
+- 6.3 = 9 under documented source anomaly;
+- comma/dot and harmless numeric spaces normalized appropriately.
+
+F. UI / STATE GATE
+Keep verified Eksamio exam mechanics:
+- one assigned official example per task in an attempt;
+- 21-task navigation/state;
+- timer 180 min;
+- autosave and reload persistence;
+- mark-for-return state;
+- result screen with user answer, officially accepted answer and task score;
+- reference materials access;
+- reset/retry behavior;
+- no duplicate printed FIPI answer line inside interactive task.
+
+G. T123 ATOMIC GATE
+- safe pack only at complete HTML/script/style boundaries;
+- no byte slicing of completed fragment;
+- no script/string/base64 continuation across files;
+- each T123 standalone-valid;
+- sequence 01..N continuous;
+- each <42500 bytes;
+- run demo-production-standard/scripts/validate_t123_atomicity.py;
+- generate filename/bytes/SHA256 manifest;
+- simulate ordered paste 01..N.
+
+H. BROWSER / RESPONSIVE GATE
+- correct + wrong interaction for all 52 variants through real DOM controls;
+- full 21/21 attempt;
+- state/reload/assigned-variant persistence;
+- results and references;
+- widths 1280/768/390/360/320;
+- all zoom-required visuals desktop + mobile;
+- no meaningful horizontal overflow.
+
+I. FREEZE / CLEAN-ZIP GATE
+- only after complete pre-release PASS freeze final ZIP;
+- extract into brand-new empty directory;
+- repeat full gate chain from extracted ZIP;
+- independent final audit;
+- only then produce READY_FOR_TILDA file/status.
+
+TILDA TARGET
+URL: https://eksamio.ru/ege/matematika-baza/demoversiya/2022/
+Global header/footer separate and untouched.
+Package must contain HEAD + atomic T123 sequence + SEO/handoff/diagnostics.
+No old/new T123 mixing.
+No separate image upload if final verified base64 embedding is retained.
+
+STOP CONDITIONS
+Any source mismatch, missing variant, unexplained answer conflict, unclear formula, visual crop uncertainty, T123 atomic failure, browser failure or clean-ZIP regression means NO READY status. Fix and re-run; never waive a gate.
+
+NEXT ACTION
+Begin full verified BASE 2022 build at TASK MAP 52/52 using the locked 2022 sources and machine contracts. The source-lock stage does not need to be reconstructed from conversation history.
