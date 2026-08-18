@@ -24,12 +24,36 @@ jobs:
           if old not in s: raise SystemExit('patch target 1 not found')
           s=s.replace(old,new)
           old2="""    walk(d)\n    # de-duplicate records if a file repeats a materialized unit in an accounting section\n"""
-          new2="""    walk(d)\n    # Some wave files use semantic section names rather than canonical/new_unit containers.\n    # A positive count field identifies the materialized parent; old owners/absorptions have zero or negative effect.\n    def scan_positive(x):\n        if isinstance(x,dict):\n            uid=x.get('unit_id')\n            if isinstance(uid,str) and uid.startswith('school-') and any(x.get(k)==1 for k in ('count_effect','new_parent_count','count_effect_new_parent')):\n                out.append(x)\n            for v in x.values(): scan_positive(v)\n        elif isinstance(x,list):\n            for v in x: scan_positive(v)\n    scan_positive(d)\n    # de-duplicate records if a file repeats a materialized unit in an accounting section\n"""
+          new2="""    walk(d)\n    def scan_positive(x):\n        if isinstance(x,dict):\n            uid=x.get('unit_id')\n            if isinstance(uid,str) and uid.startswith('school-') and any(x.get(k)==1 for k in ('count_effect','new_parent_count','count_effect_new_parent')):\n                out.append(x)\n            for v in x.values(): scan_positive(v)\n        elif isinstance(x,list):\n            for v in x: scan_positive(v)\n    scan_positive(d)\n    # de-duplicate records if a file repeats a materialized unit in an accounting section\n"""
           if old2 not in s: raise SystemExit('patch target 2 not found')
           p.write_text(s.replace(old2,new2))
           PY
       - name: Build probe
         run: python eksamio-learning-engine/_tmp_russian_trainer_coverage_probe.py
+      - name: Append compact current card corpus
+        run: |
+          python - <<'PY'
+          import json,re,html
+          from pathlib import Path
+          root=Path('eksamio-learning-engine')
+          td=root/'russkiy-knigi'/'ege-russkiy-trenazher'
+          cards=[]; sources={}
+          for p in sorted(td.glob('ege-russkiy-trenazher-T123-0[2-9].txt')):
+              s=p.read_text()
+              m=re.search(r'<script[^>]*type="application/json"[^>]*>([\s\S]*?)</script>',s)
+              x=json.loads(m.group(1)); cards.extend(x.get('cards',[])); sources.update(x.get('sources',{}))
+          def plain(s):
+              return re.sub(r'\s+',' ',html.unescape(re.sub(r'<[^>]+>',' ',s or ''))).strip()
+          compact=[]
+          for c in cards:
+              compact.append({
+                'id':c.get('id'),'task':c.get('task'),'prompt':plain(c.get('promptHtml')),
+                'source':plain(sources.get(c.get('sourceKey')) or ''),'answer':c.get('answer'),
+                'options':c.get('options'),'accepted':c.get('accepted'),'explanation':plain(c.get('explanationHtml') or c.get('explanation') or '')
+              })
+          op=root/'267-RUSSIAN-SCHOOL-TRAINER-COVERAGE-PROBE-v0.1.json'
+          d=json.loads(op.read_text()); d['card_corpus']=compact; op.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+          PY
       - name: Upload probe
         uses: actions/upload-artifact@v4
         with:
