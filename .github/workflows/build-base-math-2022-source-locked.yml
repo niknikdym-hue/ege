@@ -61,9 +61,9 @@ jobs:
         shell: bash
         run: |
           python matematika-source-2024/scripts/build_canonical_base_2024.py
-          cat matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-* | base64 -d | gzip -dc > /tmp/build_verified_base_2024_package.py
-          python -m py_compile /tmp/build_verified_base_2024_package.py
-          python /tmp/build_verified_base_2024_package.py
+          cat matematika-source-2024/scripts/build_verified_base_2024_package.py.gz.b64.part-* | base64 -d | gzip -dc > matematika-source-2024/scripts/build_verified_base_2024_package.py
+          python -m py_compile matematika-source-2024/scripts/build_verified_base_2024_package.py
+          python matematika-source-2024/scripts/build_verified_base_2024_package.py
           rm -rf "${BASE2023_ANALYSIS_DIR}"
           python matematika-source-2023/scripts/analyze_base_2023_sources.py
           mkdir -p "${BASE2023_ANALYSIS_DIR}/official-pdf"
