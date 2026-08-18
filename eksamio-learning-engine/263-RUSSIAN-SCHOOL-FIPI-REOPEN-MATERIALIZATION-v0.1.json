@@ -1,0 +1,104 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"SCHOOL_LAYER_REOPENED_FROM_OFFICIAL_FIPI / SIX_IDENTITIES_MATERIALIZED / INTERIM_185",
+  "metric_status":"INTERIM_SCHOOL_DENOMINATOR_185_PENDING_SECOND_FIPI_PASS",
+  "production_integration":"HOLD",
+  "refs":["259-RUSSIAN-SCHOOL-ROSENTHAL-PRIMARY-COMPLETENESS-FINAL-FREEZE-v1.0.json","260-RUSSIAN-SCHOOL-CANONICAL-DENOMINATOR-FINAL-HANDOFF.txt","261-RUSSIAN-FIPI-2026-OFFICIAL-SOURCE-GATE.txt","262-RUSSIAN-FIPI-2026-SCHOOL-REOPEN-GAP-AUDIT-v0.1.json"],
+  "school_reopen_reason":"Official FIPI 2026 EGE/OGE school content exposed six productive orthographic decisions with no semantic owner in the Rosenthal-frozen 179. Per file 260 policy, they are admitted explicitly rather than hidden inside exam overlay metadata.",
+  "canonical_units":[
+    {
+      "unit_id":"school-invariable-prefix-spelling-base",
+      "domain":"orthography_prefixes",
+      "unit_type":"morphemic_stable_spelling_boundary",
+      "canonical_label":"Неизменяемые приставки: сохранять нормативный состав приставки и отличать приставку от корня/приставкоподобной части",
+      "fipi_routes":["EGE-2026-task10","OGE-2026-orthography-6.3"],
+      "decision_model":"Identify whether the segment is an ordinary invariant Russian prefix. Preserve its lexical/morphemic spelling despite pronunciation; route Z/S prefixes, PRE/PRI and I/Y-after-prefix cases to their dedicated engines; distinguish words where the apparent prefix belongs to the root or is a historical/borrowed element.",
+      "ownership_boundary":"school-prefix-z-s-selection, school-pre-pri-semantic-base, school-pre-pri-lexical-contrast-family, school-i-y-after-russian-prefix-base and school-separating-hard-soft-sign-boundary remain separate decisions.",
+      "norm":"official_FIPI_2026_school_route_plus_current_morphemic_norm",
+      "count_effect":1
+    },
+    {
+      "unit_id":"school-unstressed-suffix-vowel-verification-fixed-patterns",
+      "domain":"orthography_suffixes",
+      "unit_type":"general_suffix_vowel_decision",
+      "canonical_label":"Безударная гласная в суффиксе: проверяемый суффикс, устойчивый суффиксальный образец или словарный контроль",
+      "fipi_routes":["EGE-2026-task11","OGE-2026-orthography-6.6"],
+      "decision_model":"If a suffix vowel is not governed by a dedicated contrast engine, verify it with the same suffix under stress where possible; otherwise recognize a stable conventional suffix pattern or use dictionary control. Individual suffix spellings such as -ИНСТВ-/-ЕНСТВ-, stable noun/adjective suffixes and similar FIPI members are branches, not separate denominator identities.",
+      "ownership_boundary":"Specific productive contrast engines (-ЕК/-ИК, -ЕЦ/-ИЦ, -ЧИК/-ЩИК, -К/-СК, -ИВ/-ЕВ etc.) retain ownership and are not duplicated.",
+      "norm":"FIPI_2026_task11_explicit_plus_current_academic_general_suffix_rule",
+      "count_effect":1
+    },
+    {
+      "unit_id":"school-verb-infinitive-past-nonfinite-stem-vowel",
+      "domain":"orthography_verbal_forms",
+      "unit_type":"stem_vowel_preservation_semantic_boundary",
+      "canonical_label":"Гласная основы инфинитива в формах прошедшего времени, действительных причастиях и деепричастиях",
+      "fipi_routes":["EGE-2026-task11","EGE-2026-task12","OGE-2026-orthography-6.6"],
+      "decision_model":"Establish the infinitive/source verb and preserve the relevant stem vowel before -Л-, -ВШ-, -В-, -ВШИ; when paired infinitives differ lexically/semantically (-ЕТЬ/-ИТЬ type contrasts such as obessilet/obessilit), resolve the source verb/meaning first and then preserve its vowel.",
+      "cross_links":["school-participle-vowel-suffix-conjugation-base owns present/passive participle suffix selection","school-gerund-forming-suffix-system owns which gerund-forming suffix pattern is used; this unit owns the stem vowel before that suffix"],
+      "norm":"FIPI_2026_explicit_plus_current_Gramota_rule_for_vowels_before_l_vsh_v_vshi",
+      "count_effect":1
+    },
+    {
+      "unit_id":"school-gerund-forming-suffix-system",
+      "domain":"orthography_morphology_gerund",
+      "unit_type":"structured_form_building_spelling",
+      "canonical_label":"Суффиксы деепричастий: выбор нормативной модели по виду и основе глагола",
+      "fipi_routes":["EGE-2026-task12","OGE-2026-orthography-6.6"],
+      "branches":["imperfective -А/-Я from the present stem where the form is normative","perfective -В after a vowel stem","-ВШИ in reflexive and source-established variant contexts","-ШИ after a consonant stem","-УЧИ/-ЮЧИ and special/variant forms only in their current normative/stylistic scope"],
+      "ownership_boundary":"Gerund punctuation and НЕ with gerunds remain separate punctuation/orthography decisions; the preceding stem vowel before -В/-ВШИ is cross-owned by school-verb-infinitive-past-nonfinite-stem-vowel.",
+      "norm":"FIPI_2026_explicit_school_route_plus_current_school_grammar",
+      "count_effect":1
+    },
+    {
+      "unit_id":"school-noun-case-ending-base",
+      "domain":"orthography_noun_inflection",
+      "unit_type":"productive_case_ending_decision",
+      "canonical_label":"Безударные падежные окончания существительных: склонение, падеж, число и проверка тем же типом окончания",
+      "fipi_routes":["OGE-2026-orthography-6.7"],
+      "decision_model":"Determine noun declension/type, number and case; choose the regular unstressed ending or verify it by a form of the same inflectional type with a stressed ending. Route special -ИЙ/-ИЕ/-ИЯ/-ЬЕ, genitive-plural, proper-name instrumental and other difficult families to their active specialized identities.",
+      "norm":"FIPI_2026_explicit_plus_current_academic_§67_and_school_rule",
+      "count_effect":1
+    },
+    {
+      "unit_id":"school-numeral-case-ending-inflection-base",
+      "domain":"orthography_morphology_numerals",
+      "unit_type":"productive_inflection_routing",
+      "canonical_label":"Падежные формы и окончания числительных: базовый тип склонения и маршрут к специальным парадигмам",
+      "fipi_routes":["OGE-2026-orthography-6.7","OGE-2026-language-norms","EGE-2026-morphological-norms-partial"],
+      "decision_model":"Determine numeral structural type and case; apply ordinary case ending/inflection or route to the special paradigms for 40/90/100, -ДЕСЯТ/-СОТ compounds, collective and fractional forms and other current normative classes.",
+      "ownership_boundary":"school-numerals-two-form-paradigm-40-90-100 and school-numerals-both-parts-decline-50-80-200-900 remain separately counted difficult paradigms; school-numeral-orthography-base owns solid/separate spelling and internal-letter patterns, not case inflection.",
+      "norm":"FIPI_2026_explicit_plus_current_academic_and_Gramota_numeral_paradigms",
+      "count_effect":1
+    }
+  ],
+  "scope_expansions":[
+    {
+      "unit_id":"school-adjective-ending-inflection-and-special-forms",
+      "semantic_scope_after":"adjective and participle case endings",
+      "count_effect":0,
+      "reason":"Participle case endings use the adjective-type inflectional mechanism; FIPI OGE 6.7 supplies the explicit exam/school route."
+    },
+    {
+      "unit_id":"school-o-e-after-sibilants-suffix-ending",
+      "semantic_scope_after":"suffix/ending O/E after sibilants across applicable nominal, adjectival and adverbial positions",
+      "count_effect":0,
+      "reason":"OGE 6.6 includes the adverb branch; same orthographic stress/morpheme decision, no new identity."
+    }
+  ],
+  "count_assertion":{
+    "school_denominator_before_reopen":179,
+    "new_independent_school_identities":6,
+    "absorptions":0,
+    "scope_expansions":2,
+    "interim_school_denominator_after_reopen":185,
+    "warning":"185 is not final until the second full FIPI EGE/OGE route pass returns zero SCHOOL_REOPEN_CANDIDATE."
+  },
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Second-pass all official FIPI 2026 EGE/OGE orthography/punctuation routes against active 185; then build task overlays and final re-freeze only if unowned school topics = 0."
+}
