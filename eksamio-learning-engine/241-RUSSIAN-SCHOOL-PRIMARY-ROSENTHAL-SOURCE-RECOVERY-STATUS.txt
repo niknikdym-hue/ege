@@ -1,6 +1,6 @@
 EKSAMIO LEARNING ENGINE — RUSSIAN SCHOOL PRIMARY ROSENTHAL SOURCE RECOVERY STATUS
 DATE: 2026-08-18
-STATUS: PRIMARY_SOURCE_NOT_MOUNTED / FINAL_DENOMINATOR_FREEZE_BLOCKED
+STATUS: PRIMARY_SOURCE_PRESENT_IN_REPOSITORY / DIRECT_SOURCE_REVIEW_READY / FINAL_DENOMINATOR_NOT_YET_FROZEN
 PRODUCTION / TILDA / RUNTIME / SCORING / LOCALSTORAGE: NOT TOUCHED
 
 CURRENT CANONICAL CHECKPOINT
@@ -11,50 +11,48 @@ CURRENT CANONICAL CHECKPOINT
 - Open completeness candidates = 0.
 - This is NOT yet the final absolute school-course completeness freeze.
 
-PRIMARY-SOURCE PROVENANCE
-A Library copy of the 2026-07-15 project state report identifies the old checked local project path as:
-/Users/elenadymova/Documents/New project/exam-platform-tilda
+PRIMARY SOURCE NOW PRESENT
+On 2026-08-18 the primary Rosenthal source was added to the current repository by the project owner.
+Current repository path:
+rosenthal/rozental.doc
 
-That report explicitly states that the checked old project contained TWO Rosenthal source files:
-1. 00-sources/rosenthal/rosenthal.docx
-2. a direct text extraction/export of the same source.
+Repository:
+niknikdym-hue/ege
+Branch:
+main
 
-The report records the DOCX as:
-- D. E. Rosenthal, Russian language reference: orthography and punctuation;
-- 591 pages;
-- 104,615 words;
-- DOCX created 2014-10-10;
-- DOCX modified 2023-12-19;
-- exact book edition year / publisher / ISBN not established from the copy.
+The source file is now the working primary corpus for the final school-course completeness pass.
+The previous status PRIMARY_SOURCE_NOT_MOUNTED is obsolete and must not be used as a blocker.
+
+HISTORICAL PROVENANCE NOTE
+A 2026-07-15 project state report had previously recorded Rosenthal source material in the old local project under:
+/Users/elenadymova/Documents/New project/exam-platform-tilda/00-sources/rosenthal/
+
+That historical path is provenance only. The active source for this phase is the repository file:
+rosenthal/rozental.doc
 
 SOURCE POLICY FROM 2026-08-18
-- Work for the final school-course completeness pass ONLY from the primary Rosenthal source corpus: original DOCX or its direct text export.
-- Do not use derivative verification maps, summaries or previously prepared topic matrices as evidence of completeness.
+- Work for the final school-course completeness pass directly from rosental/rozental.doc? NO: canonical active path is exactly rosental? CORRECTION: use exactly `rosenthal/rozental.doc`.
+- Do not use derivative verification maps, summaries, topic matrices or previous source digests as evidence of completeness.
 - Any old derivative verification-basis is outside the active workflow and must not be consulted for source coverage decisions.
 - Modern disputed/changed cases may be checked separately against an appropriate current authoritative academic/dictionary source, with that check kept distinct from primary-source completeness.
 - FIPI remains a separate later OGE/EGE overlay and is not mixed into the school denominator.
-
-ACCESS CHECKS ON 2026-08-18
-- niknikdym-hue/ege: primary 00-sources/rosenthal source is not present in the current repository.
-- niknikdym-hue/ege-russkiy-demoversiya-1: no Rosenthal source located.
-- ChatGPT Library: no DOCX named Rosenthal/Rozental located among available DOCX files.
-- Google Drive mount is available; root and Shared-with-me listings do not contain the Rosenthal source.
+- Do not expose internal Rosenthal citations or source-path details in learner-facing public content.
 
 DO NOT DO
-- Do not re-audit the closed 137 historical records.
+- Do not re-audit the closed 137 historical records from scratch.
 - Do not use any derivative verification-basis as a substitute for the primary source.
-- Do not substitute a random public Rosenthal copy without explicitly establishing source equivalence/scope.
+- Do not substitute a random public Rosenthal copy.
 - Do not mix FIPI exam routes into the school denominator at this stage.
 - Do not modify Tilda/current trainer yet.
 
 EXACT NEXT ACTION
-1. Recover either the original DOCX or its direct text export from the old local project path / backup / archive.
-2. Mount or add that source to an accessible project/source location without exposing it in public learner files.
-3. Run SOURCE-TOPIC -> ACTIVE-IDENTITY completeness against file 239 directly from the primary source.
-4. Classify every source topic as COVERED / COVERED_BY_STRUCTURED_BRANCH / GENUINELY_MISSING_CANONICAL_DECISION / OUT_OF_SCOPE_OR_PROVENANCE_ONLY.
-5. Admit +1 only for a genuinely missing learner decision with an exact primary-source locator.
-6. If no source-established gaps remain, freeze the final school canonical denominator.
-7. Only after that build the separate current official FIPI OGE/EGE overlay and trainer-coverage metric.
+1. Read the primary source directly from `rosenthal/rozental.doc`.
+2. Run SOURCE-TOPIC -> ACTIVE-IDENTITY completeness against file 239.
+3. Classify every source topic as COVERED / COVERED_BY_STRUCTURED_BRANCH / GENUINELY_MISSING_CANONICAL_DECISION / OUT_OF_SCOPE_OR_PROVENANCE_ONLY.
+4. Admit +1 only for a genuinely missing learner decision with an exact primary-source locator.
+5. If no source-established gaps remain, freeze the final school canonical denominator.
+6. Only after that build the separate current official FIPI OGE/EGE overlay and trainer-coverage metric.
 
 CURRENT RESUME AUTHORITY
 240-RUSSIAN-SCHOOL-CANONICAL-CURRENT-NORM-AUDIT-CHECKPOINT-HANDOFF.txt
