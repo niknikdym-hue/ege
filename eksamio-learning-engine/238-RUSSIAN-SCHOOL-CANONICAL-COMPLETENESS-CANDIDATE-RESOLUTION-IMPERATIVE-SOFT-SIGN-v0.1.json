@@ -1,0 +1,48 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"CANDIDATE_CLOSED_NOT_ADMITTED_AS_SPECIAL_IDENTITY",
+  "metric_status":"WORKING_ACTIVE_SEMANTIC_TOTAL_137_UNCHANGED",
+  "production_integration":"HOLD",
+  "refs":[
+    "173-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK05-MORPHOLOGY-NUMERALS-GRADE6-10-v0.1.json",
+    "222-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE4-MORPHOLOGY-NUMERALS-v0.1.json",
+    "235-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE17-MATERIALIZED-GAPS-v0.1.json"
+  ],
+  "resolution":{
+    "candidate_id":"school-imperative-soft-sign-before-sya-te-boundary",
+    "previous_status":"PENDING_EXACT_INTERNAL_SOURCE_LOCATOR",
+    "new_status":"CLOSED_NOT_ADMITTED_AS_SPECIAL_IDENTITY",
+    "count_effect":0,
+    "current_norm_status":"CONFIRMED",
+    "school_route_status":"ORDINARY_GRADE6_ROUTE_EXISTS_BUT_SPECIAL_IDENTITY_NOT_SOURCE_ESTABLISHED",
+    "reason":"File 173 explicitly records the Grade-6 ordinary route 'Правописание Ь в глаголах повелительного наклонения' but also explicitly says DO_NOT_COUNT_AS_SPECIAL_UNIT_YET because no exact same-edition source evidence establishes ляг/лягте or the before -ся/-те edge behavior as a separately taught exception/mastery identity. The current academic rule confirms the general spelling and the special forms, but current norm cannot by itself turn an ordinary route plus a current edge case into an extra special denominator unit."
+  },
+  "current_norm_evidence":{
+    "source":"Gramota.ru — current reference answer 332321 / 332319, 2026-05-06",
+    "urls":[
+      "https://gramota.ru/poisk?mode=spravka&query=%D0%BB%D0%B8%D1%86%D0%B0",
+      "https://gramota.ru/spravka/vopros/332319"
+    ],
+    "general_rule":"Ь is written in 2nd-person singular and plural imperative forms, including before -те and -ся/-сь where the form requires it.",
+    "verified_examples":["верь","залезь","зажмурься","будьте","встаньте","сжальтесь","ешьте","назначьте","спрячьтесь"],
+    "special_forms":["ляг","лягте"],
+    "special_note":"ЛЯГ has no final Ь; ЛЯГТЕ preserves that base form before -те."
+  },
+  "source_gate":{
+    "file173_route":"Правописание Ь в глаголах повелительного наклонения",
+    "file173_status":"DO_NOT_COUNT_AS_SPECIAL_UNIT_YET",
+    "special_source_locator":"NOT_ESTABLISHED",
+    "admission_rule":"Do not count a special canonical identity until the school-source layer independently establishes the special learner decision."
+  },
+  "future_policy":"If direct primary-source completeness work later establishes a broad imperative-soft-sign decision as an independently missing canonical rule, canonicalize that broad rule from the source evidence and then attach ляг/лягте as a branch. Do not revive this special candidate as +1 merely from current normative examples.",
+  "live_holds_after_resolution":[],
+  "remaining_completeness_candidates":[],
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "physical_canonical_bank_changed":false,
+  "next":"Build the semantic consolidation manifest: absorb the confirmed N/NN duplicate, retain the newly admitted ДЕЙСТВИТЕЛЬНО identity, and state the active school canonical total under available source evidence."
+}
