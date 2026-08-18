@@ -1,0 +1,107 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"FIPI_SCHOOL_REOPEN_AUDIT_COMPLETE / SIX_GENUINE_SCHOOL_GAPS / ONE_SCOPE_EXPANSION",
+  "production_integration":"HOLD",
+  "entry_school_denominator":179,
+  "sources":{
+    "official_fipi_ege_2026_recommendations":"https://doc.fipi.ru/navigator-podgotovki/navigator-ege/MR_rus_yaz_ege_2026.pdf",
+    "official_fipi_ege_2026_orthography":"https://doc.fipi.ru/navigator-podgotovki/navigator-ege/2026/ru-5-orfografija.pdf",
+    "official_fipi_oge_2026_recommendations":"https://doc.fipi.ru/navigator-podgotovki/navigator-oge/MR_rus_yaz_oge_2026.pdf",
+    "current_norm_sources":["Gramota.ru current Rules / Full Academic Guide","Gramota.ru school theoretical course where morphology/form formation is required"]
+  },
+  "audit_principle":"FIPI task or codifier labels are not counted as identities. A school reopen candidate exists only when the official FIPI school content requires a productive orthographic decision with no active semantic owner in the 179. Broad exam analysis routes remain composites. Current normative confirmation is required before admission.",
+  "confirmed_reopen_candidates":[
+    {
+      "candidate_id":"school-invariable-prefix-spelling-base",
+      "fipi_evidence":["OGE 2026 orthography content explicitly includes invariable prefixes","EGE task 10 is spelling of hard/soft signs, prefixes and Ы/И after prefixes; FIPI task-10 notes include prefix and prefix-like material"],
+      "gap_reason":"The 179 contain Z/S prefixes, PRE/PRI, separating signs, I/Y after prefixes and lexical boundaries, but no base owner for the stable spelling of ordinary invariant prefixes and the morphemic-vs-root/pseudo-prefix boundary.",
+      "current_norm":"Current academic/school descriptions preserve stable prefix spelling under the morphemic principle; e.g. consonants in в-, над-, об-, от-, под-, с- are not changed by pronunciation, while Z/S prefixes are routed to their separate rule.",
+      "decision":"ADMIT",
+      "count_effect":1
+    },
+    {
+      "candidate_id":"school-unstressed-suffix-vowel-verification-fixed-patterns",
+      "fipi_evidence":["EGE task 11 official 2026 navigator explicitly lists stable noun/adjective suffix spellings and several suffix families beyond the already materialized contrast pairs","OGE 2026 orthography includes suffix spelling across parts of speech"],
+      "gap_reason":"Existing 179 own several productive suffix contrasts (-ЕК/-ИК, -ЧИК/-ЩИК, adjective suffix families, etc.) but lack the general route for an unstressed suffix vowel established by a stressed same-suffix form or a fixed conventional suffix pattern/dictionary fallback.",
+      "current_norm":"Full Academic Guide §42 states the general verification principle for unstressed suffix vowels and enumerates stable suffix spellings; current school rules separately list conventional noun/adjective suffix patterns.",
+      "decision":"ADMIT",
+      "count_effect":1
+    },
+    {
+      "candidate_id":"school-verb-infinitive-past-nonfinite-stem-vowel",
+      "fipi_evidence":["EGE 2026 task 11 navigator explicitly: vowel in infinitive and past-tense verb form, examples ненавидеть, таяли, обессилеть/обессилить","OGE 2026 suffix content explicitly includes the vowel before -л- in the past-tense verb form"],
+      "gap_reason":"The existing verb-suffix engine owns -ОВА/-ЕВА/-ЫВА/-ИВА and stressed -ВА-, while participle suffix engines own present/passive suffix choices. No active owner preserves/selects the infinitive stem vowel before -Л-, -ВШ-, -В, -ВШИ and related lexical -ЕТЬ/-ИТЬ contrasts.",
+      "current_norm":"Current Gramota rule groups vowels before past-form suffixes -л-, -вш-, -в, -вши: the infinitive stem vowel is preserved; current rule also confirms semantic/lexical contrasts such as обессилеть/обессилить and their derived forms.",
+      "decision":"ADMIT",
+      "count_effect":1
+    },
+    {
+      "candidate_id":"school-gerund-forming-suffix-system",
+      "fipi_evidence":["OGE 2026 orthography explicitly includes vowels in gerund suffixes","EGE task 12 official route includes participle/gerund suffixes"],
+      "gap_reason":"Existing 179 own gerund punctuation and НЕ with gerunds, but no orthographic/form-building owner for choosing standard gerund suffix patterns.",
+      "current_norm":"Current school grammar: imperfective gerunds use -а(-я) from the present stem where formation is possible; perfective gerunds normally use -в/-вши after vowel stems and -ши after consonant stems, with source-established variant/special forms.",
+      "decision":"ADMIT",
+      "count_effect":1
+    },
+    {
+      "candidate_id":"school-noun-case-ending-base",
+      "fipi_evidence":"OGE 2026 orthography explicitly includes spelling of unstressed noun case endings.",
+      "gap_reason":"Wave B materialized difficult/special noun-ending families, but the 179 do not contain the ordinary productive base: determine declension/case/number or verify with the same inflectional type to choose the unstressed ending.",
+      "current_norm":"Current Full Academic Guide §67 and Gramota school rule explicitly define verification and declension patterns for unstressed noun endings.",
+      "decision":"ADMIT",
+      "count_effect":1,
+      "ownership_boundary":"Existing special identities for -ИЙ/-ИЕ/-ИЯ/-ЬЕ, genitive plural, proper-name instrumental and special suffix/gender endings remain separate branches/families because they require additional classification or lexical control beyond the ordinary base rule."
+    },
+    {
+      "candidate_id":"school-numeral-case-ending-inflection-base",
+      "fipi_evidence":"OGE 2026 orthography explicitly includes spelling norms for numeral endings; OGE/EGE language-norm routes also depend on normative numeral forms.",
+      "gap_reason":"The 179 contain special numeral paradigms (40/90/100; both components of 50–80/200–900) and a separate orthographic solid/separate/internal-sign engine, but no base inflection owner for numeral case endings as a class, including ordinary and special paradigms.",
+      "current_norm":"Current academic §67 and Gramota numeral grammar provide the general/special case paradigms, including 11–20/30, -десят, -сот, 40/90/100, полтора and related forms.",
+      "decision":"ADMIT",
+      "count_effect":1,
+      "ownership_boundary":"Existing special numeral paradigm identities remain separately counted as difficult structured branches; this base owns the ordinary route and routing to those specials, not their full exception mastery."
+    }
+  ],
+  "scope_expansion_without_count":[
+    {
+      "active_unit":"school-adjective-ending-inflection-and-special-forms",
+      "new_scope":"adjective AND participle case endings",
+      "reason":"OGE 2026 explicitly includes participle endings. Participles decline by the adjective-type case/number/gender mechanism; this is the same ending-selection operation, not a new independent orthographic identity.",
+      "count_effect":0
+    },
+    {
+      "active_unit":"school-o-e-after-sibilants-suffix-ending",
+      "new_scope":"include adverbial suffix/ending branches where the current rule applies",
+      "reason":"OGE includes O/E after sibilants in adverbs; the active source rule already owns O/E after sibilants in suffix/ending position, so this is a POS scope clarification, not a new decision.",
+      "count_effect":0
+    }
+  ],
+  "exam_topics_checked_and_not_reopened":[
+    "root vowels and consonants — existing root engines; note EGE 2026 explicitly says root consonants are not tested in the current task-9 material",
+    "Z/S, PRE/PRI, I/Y after prefixes, hard/soft signs — existing owners",
+    "productive noun/adjective/verb/participle suffix contrasts — existing owners, with the general fixed-suffix route added above",
+    "adjective endings — existing owner; participles scope-expanded above",
+    "solid/hyphen/separate spelling — existing compound/adverb/service-word/pronoun/numeral systems",
+    "NE/NI — existing owners",
+    "N/NN — existing denominal and participle/verbal-adjective owners plus derived-adverb inheritance",
+    "service words — existing preposition/conjunction/particle owners",
+    "proper names/capitalization — existing capitalization systems",
+    "compound and abbreviated words — existing compound/abbreviation systems",
+    "all FIPI punctuation families — already owned or composite across the punctuation identities created in Waves E–G"
+  ],
+  "count_assertion":{
+    "entry":179,
+    "genuine_new_school_identities":6,
+    "scope_only_expansions":2,
+    "absorptions_at_this_gate":0,
+    "projected_school_denominator_after_admission":185,
+    "warning":"185 is not final until a dedicated admission/re-freeze file materializes these six and a second FIPI route pass confirms zero SCHOOL_REOPEN_CANDIDATE."
+  },
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Materialize the six school identities, apply the two scope expansions, re-freeze at 185 provisionally, then rerun EGE/OGE route coverage for zero unowned school orthography/punctuation topics."
+}
