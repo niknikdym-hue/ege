@@ -1,0 +1,269 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"PRIMARY_COMPLETENESS_WAVE_B_O17_O25_MATERIALIZED",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_187_NOT_FINAL",
+  "production_integration":"HOLD",
+  "primary_source":"rosenthal/rozental.doc",
+  "primary_scope":"Rosenthal orthography §§32–40",
+  "current_norm_gate":"Full Academic Guide under V. V. Lopatin plus current Russian Orthographic Dictionary/Gramota for lexical variants",
+  "refs":[
+    "239-RUSSIAN-SCHOOL-CANONICAL-SEMANTIC-CONSOLIDATION-AFTER-CURRENT-NORM-AUDIT-v0.1.json",
+    "244-RUSSIAN-SCHOOL-ROSENTHAL-PRIMARY-COMPLETENESS-CANDIDATE-REGISTER-v0.1.txt",
+    "251-RUSSIAN-SCHOOL-PRIMARY-COMPLETENESS-WAVE-A-CLOSURE-CHECKPOINT.txt"
+  ],
+  "normalization_rule":"Do not count Rosenthal subparagraphs 1:1. Count independent learner decisions; collapse related productive branches and absorb old special identities when the new primary-source base engine owns them.",
+  "O17_noun_endings":{
+    "source":"Rosenthal §32",
+    "current_gate":["Lopatin §§67, 70, 71, 73 and current dictionary forms"],
+    "new_units":[
+      {
+        "unit_id":"school-noun-case-ending-special-paradigms",
+        "canonical_label":"Особые падежные окончания существительных на -ий/-ие/-ия и -ье",
+        "branches":["-ий/-ие/-ия case-ending spelling","-ье/-ья positional case-ending boundary"],
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-noun-genitive-plural-ending-system",
+        "canonical_label":"Родительный множественного числа: -ий/-ей, нулевое окончание и конечный Ь в специальных группах",
+        "branches":["forms from -ья/-ье","-ня and related zero-ending/soft-sign boundary","dictionary exceptions"],
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-proper-name-instrumental-ending-boundary",
+        "canonical_label":"Творительный падеж фамилий и географических названий: -ым/-им или -ом/-ем",
+        "decision_model":"Distinguish Russian surname adjective-type declension from foreign surnames and place names whose instrumental ending follows the noun pattern.",
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-noun-special-suffix-gender-endings",
+        "canonical_label":"Окончания существительных с -ищ-, -ишк-/-ушк-/-юшк-/-ышк- и -л- по роду, одушевлённости и значению",
+        "current_norm":"Lopatin §70 structures these as one family of special unstressed noun endings.",
+        "count_effect":1
+      }
+    ],
+    "net_semantic_effect":4
+  },
+  "O18_noun_suffixes":{
+    "source":"Rosenthal §33",
+    "current_gate":["Lopatin §§47, 48, 50, 51, 52, 86–88, 108","current dictionary confirmation for -ние/-нье lexical-semantic pairs"],
+    "new_units":[
+      {
+        "unit_id":"school-noun-suffix-ek-ik-vowel-retention",
+        "canonical_label":"-ЕК- / -ИК-: беглая или сохраняемая гласная при склонении",
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-noun-suffix-ets-its-gender-stress",
+        "canonical_label":"-ЕЦ- / -ИЦ-: выбор по роду и ударению",
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-noun-diminutive-suffix-vowel-system",
+        "canonical_label":"Уменьшительные суффиксы -ИЧК-/-ЕЧК-, -ИНК-/-ЕНК-, -ОНЬК-/-ЕНЬК-",
+        "counting_policy":"One structured diminutive-suffix engine with three branches, not three denominator parents.",
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-noun-agent-suffix-chik-shchik-soft-sign",
+        "canonical_label":"-ЧИК- / -ЩИК- и Ь перед -ЩИК-",
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-verbal-noun-nie-nye-semantic-boundary",
+        "canonical_label":"-НИЕ / -НЬЕ в отглагольных существительных: лексическое и стилистическое различение",
+        "current_norm_note":"Do not teach a universal mechanical process/result rule. Current dictionaries confirm core contrast pairs such as варение/варенье and воскресение/воскресенье; lexical meaning and register control individual words.",
+        "count_effect":1
+      }
+    ],
+    "existing_scope_expansion":[
+      {
+        "owner":"school-double-consonants-borrowed-root-dictionary",
+        "new_scope":"borrowed roots AND conventional borrowed suffix spellings including -есс-/-ис-, -етт-; current academic §108",
+        "source_branch":"Rosenthal §33 p.8",
+        "count_effect":0
+      }
+    ],
+    "provenance_only":[
+      {
+        "source_branch":"Rosenthal §33 p.9 rare suffixes",
+        "reason":"The source itself sends individual rare forms to the orthographic dictionary. No stable productive learner decision beyond dictionary lookup is established, so no denominator identity is manufactured."
+      }
+    ],
+    "net_semantic_effect":5
+  },
+  "O19_adjective_endings":{
+    "source":"Rosenthal §34",
+    "current_gate":["Lopatin §§67–69","current Russian Orthographic Dictionary / Gramota for lexical variants"],
+    "new_units":[
+      {
+        "unit_id":"school-adjective-ending-inflection-and-special-forms",
+        "canonical_label":"Окончания прилагательных: падежная проверка и нормативные специальные формы",
+        "branches":[
+          "ordinary adjective endings by the same inflectional pattern as the corresponding question/pronominal adjective",
+          "hard/soft paradigm lexical boundaries: загородный/пригородный vs иногородний; both междугородный and междугородний are current",
+          "бескрайний and current variant бескрайный",
+          "short-form -оен/-оин lexical boundary including достоин"
+        ],
+        "learner_policy":"The productive case-ending check is primary; lexical paradigm variants are dictionary branches. Do not reproduce an old exclusive form when current dictionaries allow both variants.",
+        "count_effect":1
+      }
+    ],
+    "net_semantic_effect":1
+  },
+  "O20_adjective_suffixes":{
+    "source":"Rosenthal §35",
+    "current_gate":["Lopatin §§30, 43, 45, 46, 49, 55, 84–91, 95, 97 and current dictionary forms"],
+    "new_units":[
+      {
+        "unit_id":"school-adjective-iv-ev-liv-chiv-base",
+        "canonical_label":"-ИВ- / -ЕВ- / -ЛИВ- / -ЧИВ- в прилагательных",
+        "absorbs":"school-adjective-iv-ev-milostivy-yurodivy",
+        "absorbed_as":"exception branch милостивый, юродивый inside current §46 model",
+        "net_count_effect":0
+      },
+      {
+        "unit_id":"school-adjective-ov-ev-ovat-evat-ovit-evit",
+        "canonical_label":"-ОВ-/-ЕВ-, -ОВАТ-/-ЕВАТ-, -ОВИТ-/-ЕВИТ- по твёрдости/мягкости основы",
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-adjective-ch-shch-tch-morpheme-alternation",
+        "canonical_label":"Ч/Щ/ТЧ в производных прилагательных: морфемная позиция и чередование",
+        "absorbs":"school-adjective-doshchaty-special",
+        "absorbed_as":"ДОЩАТЫЙ is a branch of current ск→щ morphemic alternation, not a memorized standalone exception",
+        "net_count_effect":0
+      },
+      {
+        "unit_id":"school-adjective-k-sk-derivational-boundary",
+        "canonical_label":"-К- / -СК- и сохранение/изменение согласных в относительных и качественных прилагательных",
+        "source_scope":"Rosenthal §35 pp.6–9",
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-adjective-soft-sign-before-sk-base",
+        "canonical_label":"Ь перед -СК- в прилагательных",
+        "absorbs":"school-sk-soft-sign-month-january-exception",
+        "absorbed_as":"month forms and январский are an exception branch of the general base rule",
+        "net_count_effect":0
+      },
+      {
+        "unit_id":"school-adjective-ch-sh-before-n-boundary",
+        "canonical_label":"Ч / Ш перед -Н- в производных прилагательных и связанных существительных",
+        "source_scope":"Rosenthal §35 p.11",
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-denominal-adjective-n-nn-base",
+        "canonical_label":"Н / НН в прилагательных от существительных: -ОНН-/-ЕНН-, стык Н+Н, -АН-/-ЯН-/-ИН- и словарные ветви",
+        "absorbs":["school-nn-an-yan-exception-triad","school-nn-vetreny-boundary","school-one-n-difficult-adjectives"],
+        "absorbed_as":"traditional NN exceptions, ВЕТРЕНЫЙ family and difficult one-N lexical branches inside one current denominal-adjective N/NN engine",
+        "new_parent_count":1,
+        "absorptions":-3,
+        "net_count_effect":-2
+      },
+      {
+        "unit_id":"school-adjective-insk-ensk-derivational-boundary",
+        "canonical_label":"-ИНСК- / -ЕНСК- в производных и географических прилагательных",
+        "source_scope":"Rosenthal §35 pp.14–15",
+        "count_effect":1
+      }
+    ],
+    "provenance_only":[
+      {
+        "source_branch":"Rosenthal §35 p.16 collective numeral -ер- in derived adjectives",
+        "reason":"Primary source fact is real, but no independent current orthographic mastery unit is established; keep as a derivational/example branch for later trainer design, zero denominator effect."
+      }
+    ],
+    "new_physical_records":8,
+    "semantic_absorptions":6,
+    "net_semantic_effect":2
+  },
+  "O21_compound_linking_vowel":{
+    "new_units":[
+      {
+        "unit_id":"school-compound-linking-vowel",
+        "canonical_label":"Соединительные О / Е в сложных словах",
+        "source":"Rosenthal §36",
+        "current_norm":"Lopatin section on unstressed linking vowels",
+        "count_effect":1
+      }
+    ],
+    "net_semantic_effect":1
+  },
+  "O22_compounds_without_linking_vowel":{
+    "new_units":[
+      {
+        "unit_id":"school-compound-first-part-without-linking-vowel-system",
+        "canonical_label":"Сложные слова без соединительной гласной: форма первой части, числовые/международные компоненты и специальные структуры",
+        "source":"Rosenthal §37",
+        "current_norm":"Lopatin §117 and related general rules",
+        "ownership_boundary":"Owns the form/structure of the first component, not the separate solid-vs-hyphen decision owned by O23/O24.",
+        "count_effect":1
+      }
+    ],
+    "net_semantic_effect":1
+  },
+  "O23_compound_nouns":{
+    "new_units":[
+      {
+        "unit_id":"school-compound-noun-solid-hyphen-system",
+        "canonical_label":"Сложные существительные: слитное, дефисное написание и словарный fallback",
+        "source":"Rosenthal §38",
+        "current_norm":"Lopatin §§117, 119–123 with dictionary control for nonproductive classes",
+        "count_effect":1
+      }
+    ],
+    "net_semantic_effect":1
+  },
+  "O24_compound_adjectives":{
+    "new_units":[
+      {
+        "unit_id":"school-compound-adjective-solid-hyphen-separate-system",
+        "canonical_label":"Сложные прилагательные и сочетания наречие + прилагательное: слитно, через дефис или раздельно",
+        "source":"Rosenthal §39",
+        "current_norm":"Lopatin §§128–131; current system requires structural/lexical criteria and dictionary control, not only the old equal-vs-subordinate shortcut",
+        "absorbs":"school-complex-adjectives-grade6-memorized-four",
+        "absorbed_members":["вечнозелёный","общественно полезный","иссиня-чёрный","изжелта-красный"],
+        "new_parent_count":1,
+        "absorption":-1,
+        "net_count_effect":0
+      }
+    ],
+    "net_semantic_effect":0
+  },
+  "O25_numeral_orthography":{
+    "new_units":[
+      {
+        "unit_id":"school-numeral-orthography-base",
+        "canonical_label":"Правописание количественных, порядковых и дробных числительных",
+        "source":"Rosenthal §40",
+        "current_norm":"Lopatin §§31, 132–133 plus current dictionary for ноль/нуль lexical distribution",
+        "branches":["solid complex vs separate composite quantitative numerals","internal Ь in 50–80 and 500–900","ноль/нуль lexical distribution","compound/composite ordinal writing","fractional numeral writing"],
+        "absorbs":"school-numerals-internal-soft-sign-50-80-500-900",
+        "ownership_boundary":"school-numerals-two-form-paradigm-40-90-100 and school-numerals-both-parts-decline-50-80-200-900 are grammatical declension identities and remain independent; they are not absorbed by an orthographic spelling parent.",
+        "new_parent_count":1,
+        "absorption":-1,
+        "net_count_effect":0
+      }
+    ],
+    "net_semantic_effect":0
+  },
+  "count_assertion":{
+    "semantic_before_wave_B":172,
+    "new_physical_canonical_records":23,
+    "semantic_absorptions":8,
+    "net_new_semantic_identities":15,
+    "interim_active_semantic_after_wave_B":187,
+    "physical_records_before_wave_B":174,
+    "physical_records_after_wave_B":197,
+    "warning":"187 is not final. Waves C–G remain open and may add new parents and absorb existing specials."
+  },
+  "wave_B_status":"CLOSED",
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Wave C O26–O35: verb personal endings, verb soft sign, verb suffixes, participle vowels, N/NN participle/verbal-adjective base, adverb endings/soft sign, negative adverbs and adverb solid/hyphen/separate systems. Deduplicate heavily against existing conjugation, -ва-/-ева-, N/NN and adverb special units."
+}
