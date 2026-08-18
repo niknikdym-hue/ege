@@ -1,0 +1,119 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"PRIMARY_COMPLETENESS_WAVE_E_P01_P12_MATERIALIZED",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_168_NOT_FINAL",
+  "production_integration":"HOLD",
+  "primary_source":"rosenthal/rozental.doc",
+  "primary_scope":["Punctuation §§1–4, 6–9, 11–12, 16–17, 24, 28–29"],
+  "current_norm_gate":"Full Academic Guide under V. V. Lopatin: sentence-end punctuation; dash in incomplete/connecting functions; homogeneous members; repeated members; joining constructions; interjections/particles; affirmative/negative/question-exclamatory words",
+  "semantic_before_wave_E":158,
+  "normalization_rule":"Count mastery decisions, not source paragraphs. Merge cross-domain repetition punctuation/orthography when the learner must classify the same surface construction before choosing comma/dash/no mark versus a lexical hyphen.",
+  "P01_sentence_end":{
+    "unit_id":"school-sentence-end-punctuation-system",
+    "canonical_label":"Конец предложения и прерывание речи: точка, вопросительный, восклицательный знак, многоточие и допустимые сочетания",
+    "source":["Rosenthal §§1–4"],
+    "current_norm_scope":"One structured terminal-punctuation engine: communicative type, emotional/question intonation, incompleteness/interruption and combinations such as ?! or !.. where norm permits.",
+    "count_effect":1
+  },
+  "P02_dash_incomplete":{
+    "unit_id":"school-dash-incomplete-sentence",
+    "canonical_label":"Тире в неполном и эллиптическом предложении",
+    "source":"Rosenthal §6",
+    "current_norm_scope":"Dash marks a structurally recoverable omitted member / parallel ellipsis or a pause in defined elliptical constructions; absence of a pause or different structure may remove the dash.",
+    "ownership_boundary":"Does not replace the subject–predicate dash identities already active.",
+    "count_effect":1
+  },
+  "P03_intonational_dash":{
+    "unit_id":"school-intonational-dash-boundary",
+    "canonical_label":"Интонационное тире внутри предложения",
+    "source":"Rosenthal §7",
+    "current_norm_scope":"Owns the deliberate intonational/logical break where syntax alone does not create one of the already separately owned mandatory dash constructions. Variation is part of the decision, not a false absolute rule.",
+    "count_effect":1
+  },
+  "P04_connecting_dash":{
+    "unit_id":"school-connecting-dash-range-route",
+    "canonical_label":"Соединительное тире: пределы, маршруты и смысл «от — до»",
+    "source":"Rosenthal §8",
+    "current_norm_scope":"Owns the connecting dash between words/numerals denoting spatial, temporal, quantitative and analogous limits or endpoints; distinguish a dash from a hyphen inside one lexical unit.",
+    "count_effect":1
+  },
+  "P05_homogeneous_no_conjunction":{
+    "unit_id":"school-homogeneous-no-conjunction-punctuation-base",
+    "canonical_label":"Однородные члены без союзов: запятая, точка с запятой или тире по структуре и интонации",
+    "source":"Rosenthal §9",
+    "current_norm_scope":"Base comma for intonationally enumerated homogeneous members plus structured branches for semicolon with internally complex groups and dash for contrast/emphatic relation; fixed semantic wholes are excluded by prior classification.",
+    "count_effect":1
+  },
+  "P06_homogeneous_appositions":{
+    "unit_id":"school-homogeneous-vs-nonhomogeneous-appositions",
+    "canonical_label":"Однородные или неоднородные приложения: классификация и запятая",
+    "source":"Rosenthal §11",
+    "current_norm_scope":"Classify appositions by whether they characterize the same referent in a homogeneous enumeration or form a hierarchically/nonhomogeneously related naming chain; punctuation follows classification.",
+    "ownership_boundary":"Does not absorb school-apposition-basic-isolation-boundaries or school-apposition-hyphen-boundary: those answer different apposition questions.",
+    "count_effect":1
+  },
+  "P07_homogeneous_single_conjunction":{
+    "unit_id":"school-homogeneous-single-conjunction-punctuation-base",
+    "canonical_label":"Однородные члены с неповторяющимся союзом: запятая или отсутствие запятой",
+    "source":"Rosenthal §12",
+    "current_norm_scope":"Single connecting И/ДА=И normally joins homogeneous members without comma; adversative А/НО/ДА=НО and joining/additive uses require their source-established punctuation; classify the function before applying the sign.",
+    "absorbs":["school-homogeneous-adversative-conjunction-punctuation"],
+    "deferred_joint_absorption":"school-single-i-homogeneous-vs-clause-boundary is not absorbed yet because it also owns the simple-vs-compound-clause side; reevaluate jointly under Wave F P13 SSP base.",
+    "new_parent_count":1,
+    "absorptions":-1,
+    "net_count_effect":0
+  },
+  "P08_P09_repetition_boundary":{
+    "decision":"MERGE_TWO_SOURCE_TOPICS_INTO_ONE_CROSS_DOMAIN_IDENTITY",
+    "unit_id":"school-repeated-word-punctuation-vs-hyphen-boundary",
+    "canonical_label":"Повтор слов: синтаксический повтор со знаками препинания или единое повторное сочетание через дефис",
+    "source":["Rosenthal §16","Rosenthal §17"],
+    "current_norm":["Lopatin punctuation §§44–45","Lopatin orthography §118"],
+    "branches":["enumerative/emphatic syntactic repetition with comma or context-dependent dash","one predicate with repeated verb joined by И and no comma in the defined whole-predicate pattern","lexical/intensifying repetition forming one hyphenated complex: синий-синий, еле-еле, кто-кто etc.","special repeated-word constructions routed by current norm rather than punctuation by visual repetition alone"],
+    "historical_cross_links":"Former adverb-specific repeat cards remain historical/provenance branches already absorbed in Wave C; they are not reactivated here.",
+    "count_effect":1
+  },
+  "P10_joining_constructions":{
+    "unit_id":"school-joining-construction-punctuation",
+    "canonical_label":"Присоединительные конструкции: отделение добавочного сообщения запятой, тире или другим допустимым знаком",
+    "source":"Rosenthal §24",
+    "current_norm":"Lopatin §84 and related joining-construction rules",
+    "branches":["joining markers even/especially/in particular/in addition/etc.","И/ДА/ДА И/ПРИЧЁМ in joining function","strength of attachment and intonation controls comma vs stronger boundary where current norm permits"],
+    "count_effect":1
+  },
+  "P11_interjection_particle_punctuation":{
+    "unit_id":"school-interjection-particle-punctuation",
+    "canonical_label":"Междометие или омонимичная частица: обособлять или не обособлять",
+    "source":"Rosenthal §28",
+    "current_norm":"Lopatin §§107–109",
+    "decision_model":"First establish interjectional independent emotional function versus particle/function-word use; an interjection is separated by comma or stronger sign according to intonation, while the homonymous particle is not isolated merely by surface form.",
+    "count_effect":1
+  },
+  "P12_yes_no_question_exclamatory":{
+    "unit_id":"school-yes-no-interrogative-exclamatory-word-punctuation",
+    "canonical_label":"ДА / НЕТ и вопросительно-восклицательные слова: запятая, конечный знак или отсутствие отделения по функции",
+    "source":"Rosenthal §29",
+    "current_norm":"Lopatin §§110–111",
+    "branches":["да/нет as affirmative/negative words inside a sentence","да/нет as independent utterances with ! ? . … according to intonation","repeated да/нет constructions","what/how/well-like question-exclamatory words before a following explanatory utterance vs ordinary sentence member/particle use"],
+    "count_effect":1
+  },
+  "count_assertion":{
+    "source_candidates_P01_P12":12,
+    "new_physical_canonical_records":11,
+    "semantic_absorptions":1,
+    "net_semantic_effect":10,
+    "semantic_before_wave_E":158,
+    "interim_active_semantic_after_wave_E":168,
+    "physical_canonical_records_before_wave_E":215,
+    "physical_canonical_records_after_wave_E":226,
+    "warning":"168 is not final. Complex-sentence Wave F and direct-speech/citation Wave G remain open; both are expected to absorb existing narrow cards."
+  },
+  "wave_E_status":"CLOSED",
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Proceed immediately to Wave F P13-P23: SSP comma/semicolon/dash; SPP base, complex conjunctions, multiple subordinates and special signs; semantic-whole comma boundary; BSP comma/semicolon/dash/comma-dash. Jointly resolve school-single-i-homogeneous-vs-clause-boundary and existing SSP/BSP special units."
+}
