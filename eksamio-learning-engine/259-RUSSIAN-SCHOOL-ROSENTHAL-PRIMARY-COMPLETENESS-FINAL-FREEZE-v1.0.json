@@ -1,0 +1,99 @@
+{
+  "schema_version":"1.0.0",
+  "date":"2026-08-18",
+  "status":"SCHOOL_CANONICAL_DENOMINATOR_FROZEN / PRIMARY_ROSENTHAL_COMPLETENESS_CLOSED / CURRENT_NORM_GATE_CLOSED",
+  "production_integration":"HOLD",
+  "final_school_canonical_denominator":179,
+  "primary_source":{
+    "repository":"niknikdym-hue/ege",
+    "path":"rosenthal/rozental.doc",
+    "work":"D. E. Rosenthal — Справочник по русскому языку. Орфография и пунктуация",
+    "scope":"Orthography §§1–62 plus unnumbered orthographic sections; Punctuation §§1–72 plus unnumbered punctuation sections",
+    "policy":"Primary-source completeness was not frozen from derivative verification maps. The derivative verification-basis is outside the active workflow."
+  },
+  "current_norm_gate":{
+    "authority":"Правила русской орфографии и пунктуации. Полный академический справочник / под ред. В. В. Лопатина, with current Russian Orthographic Dictionary/Gramota checks for lexical and variant-sensitive cases",
+    "status":"COMPLETE_FOR_ALL_NEW_OR_RESCOPED_FAMILIES",
+    "principle":"Where Rosenthal wording conflicts with current norm or current lexical status, preserve source provenance but use the current academic/dictionary rule in the canonical learner model."
+  },
+  "source_topic_closure":{
+    "orthography_topics_classified":67,
+    "orthography_active_owned_after_waves_A_D":66,
+    "orthography_out_of_scope_or_provenance_only":1,
+    "orthography_unresolved":0,
+    "punctuation_topics_classified":76,
+    "punctuation_active_owned_or_branch_owned_after_waves_E_G":66,
+    "punctuation_out_of_scope_or_provenance_only":10,
+    "punctuation_unresolved":0,
+    "total_source_topics":143,
+    "total_active_owned_or_branch_owned":132,
+    "total_deliberately_excluded":11,
+    "total_unresolved":0,
+    "pre_dedupe_candidate_families":74,
+    "candidate_families_resolved":74,
+    "candidate_families_unresolved":0,
+    "open_holds":0
+  },
+  "deliberately_excluded_source_blocks":{
+    "orthography":[
+      "Rosenthal orthography Section 19: selected foreign-word spellings — dictionary/editorial lexical provenance without an independently stable school mastery identity from this gate alone"
+    ],
+    "punctuation":[
+      "Rosenthal punctuation Section 13: period as rhetorical/stylistic structure",
+      "§53: paragraph layout of direct speech beyond the active direct-speech/dialogue engines",
+      "§54: play/dramatic-text formatting",
+      "Section 16: newspaper/magazine headline punctuation as publishing practice",
+      "§69: footnote-reference sign placement",
+      "§70: facultative punctuation as meta-variation",
+      "§71: alternative punctuation as meta-variation",
+      "§72: variable punctuation as meta-variation",
+      "Section 20: authorial punctuation",
+      "Section 21: special punctuation of represented colloquial speech"
+    ],
+    "exclusion_principle":"These are not unreviewed gaps. They were directly classified and excluded because the frozen denominator models deterministic school mastery decisions, not publishing layout, authorial creativity or meta-description of optional variation."
+  },
+  "semantic_count_walk": [
+    {"authority":"239","semantic_total":137,"note":"post-current-norm semantic baseline before primary-source completeness"},
+    {"authority":"245","net_effect":1,"semantic_total":138,"note":"NI fixed idiom family admitted from exact Rosenthal §62 ownership"},
+    {"authority":"247","net_effect":12,"semantic_total":150,"note":"foundational orthography A1"},
+    {"authority":"248","net_effect":5,"semantic_total":155,"note":"alternating-root normalization"},
+    {"authority":"249","net_effect":4,"semantic_total":159,"note":"Э/Е/Й + double consonants"},
+    {"authority":"250","net_effect":13,"semantic_total":172,"note":"capitalization normalized from 17 paragraphs to 13 mastery families"},
+    {"authority":"252","net_effect":15,"semantic_total":187,"note":"Wave B nouns/adjectives/compounds/numerals; 23 new parents with 8 absorptions"},
+    {"authority":"253","net_effect":-11,"semantic_total":176,"note":"Wave C verbs/participles/adverbs; 10 new parents with 21 absorptions"},
+    {"authority":"254","net_effect":-1,"semantic_total":175,"note":"retro-dedupe ПО-...-У adverb card"},
+    {"authority":"255","net_effect":-17,"semantic_total":158,"note":"Wave D service words/НЕ/НИ/interjections; 8 new parents and 25 absorptions including one late cross-domain correction"},
+    {"authority":"256","net_effect":10,"semantic_total":168,"note":"Wave E basic punctuation; 11 new parents with 1 absorption"},
+    {"authority":"257","net_effect":8,"semantic_total":176,"note":"Wave F complex-sentence punctuation; 11 new parents with 3 absorptions"},
+    {"authority":"258","net_effect":3,"semantic_total":179,"note":"Wave G direct speech/citations/quotation marks; 6 new parents with 3 absorptions"}
+  ],
+  "delta_from_239":{
+    "new_canonical_records_materialized":105,
+    "old_semantic_identities_absorbed":63,
+    "net_semantic_change":42,
+    "calculation":"137 + 105 - 63 = 179",
+    "active_set_definition":"Take the active semantic set of file 239; add every canonical unit materialized in files 245, 247, 248, 249, 250, 252, 253, 255, 256, 257, 258; remove every absorbed semantic identity explicitly listed in files 248, 252, 253, 254, 255, 256, 257, 258. Scope-only expansions do not alter count.",
+    "physical_provenance_records_after_freeze":243,
+    "physical_vs_semantic_note":"Historical and absorbed physical records remain for provenance/grade routes. Physical record count must not be forced to equal the 179 active semantic identities."
+  },
+  "important_current_norm_refinements": [
+    "ДОЩАТЫЙ is owned by the productive current морфемное ск→щ branch, not a standalone memorized exception.",
+    "МЕЖДУГОРОДНЫЙ and МЕЖДУГОРОДНИЙ are both current normative variants; old exclusive wording is not taught.",
+    "ОТТОГО is primarily a pronominal adverb in the orthographic contrast ОТТОГО / ОТ ТОГО; the old conjunction-labeled card was absorbed by the adverb spelling system.",
+    "НЕ СОГЛАСЕН is modeled contextually within the current НЕ engine, not as a false context-free standalone spelling command.",
+    "ДЕРЖАТЬ В ВИДУ is not restored to the trusted learner core without current dictionary evidence; ИМЕТЬ В ВИДУ remains the stable fixed contrast.",
+    "The former imperative-soft-sign-before-СЯ/-ТЕ special candidate is not independent; it is a branch of school-verb-soft-sign-forms.",
+    "The old NI fixed-idiom HOLD is now resolved by exact Rosenthal §62 ownership and current academic confirmation.",
+    "BSP comma+dash remains a current possible sign but is low-productivity/declining in active use; teach it as a rare branch, not as an ordinary default sign."
+  ],
+  "frozen_authority_chain":["239","242","243","244","245","246","247","248","249","250","251","252","253","254","255","256","257","258","259"],
+  "do_not_do":[
+    "Do not return to 137 as the complete school denominator.",
+    "Do not add Rosenthal paragraphs 1:1 as denominator identities.",
+    "Do not revive absorbed exception/special cards as additional active identities; preserve them only as branches, aliases, routes or provenance.",
+    "Do not use derivative verification-basis as evidence.",
+    "Do not mix FIPI exam routes into the frozen school denominator.",
+    "Do not touch Tilda/current trainer/runtime/scoring/localStorage yet."
+  ],
+  "next":"Build a separate current official FIPI OGE/EGE overlay against the frozen 179 school identities; then compute trainer coverage against the frozen school denominator plus exam-route overlay; only after coverage design proceed to implementation."
+}
