@@ -1,0 +1,206 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-18",
+  "status": "COMPLETENESS_CURRENT_NORM_AUDIT_WAVE2_N_NN_SUFFIXES_COMPLETE",
+  "metric_status": "WORKING_137_CHECKPOINT_NOT_FINAL_COMPLETENESS",
+  "production_integration": "HOLD",
+  "scope": {
+    "checkpoint_ref": "218-RUSSIAN-SCHOOL-CANONICAL-DENOMINATOR-CHECKPOINT-HANDOFF.txt",
+    "wave1_ref": "219-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE1-ROOTS-PREFIXES-v0.1.json",
+    "bank_ref": "170-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK02-N-NN-SUFFIXES-v0.1.json",
+    "prior_norm_ref": "164-RUSSIAN-SCHOOL-DENOMINATOR-CURRENT-NORM-HOLD-RESOLUTION-PASS3-N-NN-v0.1.json",
+    "canonical_units_reviewed": 16,
+    "excluded_source_buckets_reviewed": 1,
+    "purpose": "Completeness/current-norm audit overlay. No top-level canonical_units array is emitted, so this audit does not create duplicate denominator records."
+  },
+  "source_basis": {
+    "internal_rosenthal_reference": {
+      "path": "00-sources/rosenthal/rosenthal.docx",
+      "project_mapping_used": [
+        "adjectives and N/NN: orthography section 8, §§34–35",
+        "participles / verb-derived adjectives: orthography section 13, §§47–48",
+        "adverbs: orthography section 14, §§49–54"
+      ],
+      "direct_reread_in_current_workspace": "NOT_AVAILABLE",
+      "evidence_note": "Use the verified project mapping as navigation/provenance only; do not claim a fresh direct DOCX reread in this session."
+    },
+    "current_academic_crosscheck": [
+      {"source": "Gramota.ru — N/NN in denominative adjectives", "url": "https://gramota.ru/uchebnik/pravila/bukvy-n-i-nn-v-otymennykh-prilagatelnykh-i-obrazovannykh-ot-nikh-narechiyakh-i-sushchestvitelnykh"},
+      {"source": "Gramota.ru — academic N/NN rule for past passive participles and correlated adjectives", "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/dvoynoe-n-i-odno-n-v-suffiksakh-stradatelnykh-prichastiy-proshedshego-vremeni-i-sootnositelnykh-s-nimi-prilagatelnykh"},
+      {"source": "Gramota.ru — current exception inventory, answer 329251 (2026-01-20)", "url": "https://gramota.ru/spravka/vopros/329251"},
+      {"source": "Gramota.ru — N/NN in words derived from adjectives/participles", "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/dvoynoe-n-i-odno-n-v-slovakh-obrazovannykh-ot-prilagatelnykh-i-prichastiy"},
+      {"source": "Gramota.ru — consonant groups at morpheme boundaries (доска → дощатый)", "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/gruppy-soglasnykh-na-styke-znachimykh-chastey-slova"},
+      {"source": "Gramota.ru — Russian Orthographic Dictionary / Metadictionary", "url": "https://gramota.ru/poisk"}
+    ],
+    "evidence_policy": [
+      "Current normative completeness may expand a unit's current scope without fabricating a new grade route.",
+      "A new counted identity requires a genuinely separate learner decision plus source evidence; new examples alone do not increase denominator.",
+      "When current academic rules subsume an old school mnemonic, retain school provenance but reshape the current explanation.",
+      "Short participle/adjective N/NN remains lexically sensitive; learner-facing examples must be dictionary-controlled."
+    ]
+  },
+  "decisions": [
+    {
+      "unit_id": "school-nn-an-yan-exception-triad",
+      "disposition": "CONFIRMED_TRADITIONAL_TRIAD_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["деревянный", "оловянный", "стеклянный"]
+    },
+    {
+      "unit_id": "school-nn-vetreny-boundary",
+      "disposition": "NORMATIVE_FAMILY_SCOPE_EXTENSION_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_one_n": ["ветреный"],
+      "current_two_n_prefixed_examples": ["безветренный", "обветренный", "наветренный", "подветренный"],
+      "separate_suffix_semantic_form": ["ветряной"],
+      "patch_policy": "Add current normative prefixed examples (notably наветренный) to normative scope while preserving narrower grade-source scopes."
+    },
+    {
+      "unit_id": "school-one-n-difficult-adjectives",
+      "disposition": "CONFIRMED_HETEROGENEOUS_PRACTICE_PARENT_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "patch_policy": "Keep explanatory branches; do not teach the source list as one derivational rule and do not count branches in addition to the parent."
+    },
+    {
+      "unit_id": "school-nn-current-memorized-lexical-exception-core",
+      "disposition": "CURRENT_EXCEPTION_SCOPE_COMPLETENESS_EXTENSION_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "school_source_intersection": ["невиданный", "неслыханный", "негаданный", "нежданный", "нечаянный", "желанный", "медленный", "неожиданный", "священный"],
+      "current_academic_exception_inventory_2026": ["блаженный", "виданный", "вожделенный", "доморощенный", "долгожданный", "жданный", "желанный", "лелеянный", "неведанный", "невиданный", "негаданный", "недреманный", "нежданный", "немедленный", "медленный", "неслыханный", "нечаянный", "Первозванный", "самонадеянный", "священный", "ветчинно-рубленный", "мыловаренный", "пивоваренный", "клееваренный", "смолокуренный", "винокуренный", "салотопенный"],
+      "source_member_note": "неожиданный remains school-source/current-dictionary spelling evidence but is not silently represented as a member of the exact 2026 answer-329251 exception inventory.",
+      "patch_policy": "Store the full current exception inventory as normative completeness scope under the existing decision family; do not create one denominator identity per lexeme."
+    },
+    {
+      "unit_id": "school-nn-dictionary-lexical-adjectives-grade7",
+      "disposition": "CONFIRMED_DICTIONARY_PRACTICE_GROUP_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["окаянный", "отчаянный", "чванный", "чеканный"],
+      "patch_policy": "Keep the nonuniform explanatory warning; spelling group ≠ one shared derivational exception rule."
+    },
+    {
+      "unit_id": "school-schitany-schitanny-context-boundary",
+      "disposition": "CONFIRMED_CONTEXT_BOUNDARY_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "adjective_one_n_examples": ["считаные минуты", "считаные часы"],
+      "participial_two_n_examples": ["считанные кем-либо предметы", "уже не раз считанные деньги"]
+    },
+    {
+      "unit_id": "school-raneny-ranenny-context-boundary",
+      "disposition": "BROADEN_CURRENT_NORM_BRANCHES_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "school_route_core": "раненый / раненный",
+      "current_parallel_context_families": ["контуженый / контуженный", "крещёный / крещённый", "раненый / раненный"],
+      "patch_policy": "At final consolidation, broaden the current-norm explanation to the parallel context-sensitive family while preserving the grade route specifically evidenced for раненый."
+    },
+    {
+      "unit_id": "school-nazvany-posazhony-koncheny-fixed-combinations",
+      "disposition": "FIXED_COMBINATION_SCOPE_EXTENSION_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_one_n_fixed_combinations": ["конченый человек", "названый брат", "названая сестра", "посажёный отец", "посажёная мать", "Прощёное воскресенье"],
+      "patch_policy": "Add Прощёное воскресенье to current normative scope; no new identity."
+    },
+    {
+      "unit_id": "school-smyshlyony-one-n",
+      "disposition": "CONFIRMED_LEXICAL_SPECIAL_CASE_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["смышлёный"]
+    },
+    {
+      "unit_id": "school-besheny-one-n-lexical-adjective",
+      "disposition": "CONFIRMED_HIGH_RISK_REGULAR_RULE_LEXEME_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "patch_policy": "Retain as a source-routed high-risk lexeme, but not as a lexical exception."
+    },
+    {
+      "unit_id": "school-kovany-zhovany-adjective-participle-boundary",
+      "disposition": "CONFIRMED_MORPHOLOGICAL_CONTEXT_BOUNDARY_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "one_n_adjectives": ["кованый", "жёваный"],
+      "two_n_participles": ["кованный", "жёванный"],
+      "patch_policy": "Keep morphology/context, not the obsolete 'ОВ/ЕВ is part of root' shortcut."
+    },
+    {
+      "unit_id": "school-short-participle-vs-short-verb-adjective-n-nn",
+      "disposition": "CONFIRMED_DECISION_IDENTITY_REWORD_DICTIONARY_CONTROL",
+      "count_effect": 0,
+      "keep_identity": true,
+      "stable_core_rule": "Short passive participles use one Н; traditional short verb-derived adjective contrasts may use НН in qualitative adjective readings.",
+      "current_norm_caution": "Modern academic commentary explicitly treats many short-form cases as lexically unstable and recommends dictionary control; a blind full-form transformation is not a safe universal learner algorithm.",
+      "verified_dictionary_example": "необоснованны is a current short plural adjective form of необоснованный",
+      "patch_policy": "Keep the decision boundary but strengthen dictionary-control and avoid presenting every ambiguous pair as mechanically decidable."
+    },
+    {
+      "unit_id": "school-adverb-n-nn-source-word-inheritance",
+      "disposition": "CONFIRMED_PART_OF_SPEECH_INHERITANCE_BOUNDARY_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_rule": "Adverbs in -о inherit N/NN from the motivating adjective once the form is correctly identified as an adverb.",
+      "verified_contrast": "скомкано (short participle) vs скомканно (adverb)"
+    },
+    {
+      "unit_id": "school-nn-repeated-compound-second-part-one-n",
+      "disposition": "CONFIRMED_SPECIAL_REPETITION_RULE_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "verified_examples": ["глаженый-переглаженый", "ношеный-переношеный", "стираный-перестираный", "штопаный-перештопаный"],
+      "current_rule": "In emphatic repetition formations with пере- in the second component, the second component mirrors the first component's N/NN spelling."
+    },
+    {
+      "unit_id": "school-adjective-iv-ev-milostivy-yurodivy",
+      "disposition": "CONFIRMED_SCHOOL_EXCEPTION_PAIR_WITH_ACADEMIC_SUFFIX_NOTE_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["милостивый", "юродивый"],
+      "patch_policy": "Keep as the traditional school exception pair to the stress shortcut, but phrase the current explanation through the academic -ив-/-ев- suffix distinction rather than invented etymology."
+    },
+    {
+      "unit_id": "school-adjective-doshchaty-special",
+      "disposition": "RECLASSIFY_FROM_DICTIONARY_SPECIAL_TO_MORPHEMIC_ALTERNATION_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["дощатый"],
+      "current_explanation": "The spelling щ is explained by the morphemic alternation ск → щ at the root/suffix boundary: доска → дощатый.",
+      "patch_policy": "In final consolidation change unit_type away from generic dictionary_special_spelling and replace the placeholder learner rationale with the current morphemic explanation."
+    }
+  ],
+  "excluded_source_bucket_decision": {
+    "source_bucket_id": "school-nn-regular-participial-forms-source-misgrouped",
+    "disposition": "EXCLUSION_CONFIRMED",
+    "count_effect": 0,
+    "source_members": ["обещанный", "данный", "слушанный", "слышанный"],
+    "reason": "These are not independent lexical exception identities merely because an old school table grouped them there; ordinary participial/derivational rules own them unless a later source establishes a distinct learner boundary."
+  },
+  "wave_summary": {
+    "units_reviewed": 16,
+    "identities_kept": 16,
+    "new_canonical_identities": 0,
+    "removed_canonical_identities": 0,
+    "normative_scope_extensions": 4,
+    "units_requiring_explanatory_or_type_reclassification": 2,
+    "excluded_source_buckets_confirmed": 1,
+    "checkpoint_unique_units_before": 137,
+    "checkpoint_unique_units_after": 137,
+    "denominator_effect": 0
+  },
+  "live_holds_carried_forward": [
+    {"unit_id": "school-deystvitelno-function-context", "status": "HOLD", "counted": false},
+    {"unit_id": "school-ni-fixed-idioms", "status": "HOLD", "counted": false}
+  ],
+  "production_files_changed": false,
+  "tilda_changed": false,
+  "runtime_changed": false,
+  "scoring_changed": false,
+  "localStorage_changed": false,
+  "next": "Audit chunk 172 (adverbs, pronouns, hyphen) and keep completeness/current-norm scope separate from historical grade-route scope."
+}
