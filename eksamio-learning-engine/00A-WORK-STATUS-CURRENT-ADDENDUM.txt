@@ -133,3 +133,13 @@ Fixed direction:
 - Codex Cloud accesses private source material only through controlled credentials/network policy and writes durable reviewed results back to GitHub;
 - learner uploads are stored separately from canonical educational sources;
 - new subjects reuse the same Source Library and provenance contract rather than inventing separate storage systems.
+
+YANDEX DEV RUNNER FALLBACK DECISION — 2026-08-18
+
+The remote-workspace contract now also fixes:
+- Codex Cloud remains the preferred AI coding executor when available;
+- an inexpensive Yandex Cloud Compute Linux VM may serve as the on-demand `Eksamio Dev Runner` when Codex quota/subscription is unavailable or a persistent/controlled environment is technically useful;
+- the runner follows START -> pull branch -> build/test/work -> push durable result -> STOP;
+- it is not a source of truth and must not remain powered on without need;
+- GitHub remains canonical regardless of which execution surface is used;
+- Eksamio development must survive temporary loss of Codex Cloud, the user's Mac, the Dev Runner, or any single AI coding assistant.
