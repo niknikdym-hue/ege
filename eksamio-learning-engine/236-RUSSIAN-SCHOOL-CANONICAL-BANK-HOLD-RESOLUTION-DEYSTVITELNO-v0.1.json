@@ -1,0 +1,75 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"CANONICAL_BANK_HOLD_RESOLUTION_ADMITTED",
+  "metric_status":"WORKING_SEMANTIC_CHECKPOINT_137_PHYSICAL_RECORDS_138_PENDING_CONSOLIDATION",
+  "production_integration":"HOLD",
+  "refs":[
+    "210-RUSSIAN-SCHOOL-DENOMINATOR-DRABKINA-GRADE8-FULL-SOURCE-LEDGER-v0.1.json",
+    "213-RUSSIAN-SCHOOL-CANONICALIZATION-GRADE8-CROSS-GRADE-DEDUPE-v0.1.json",
+    "216-RUSSIAN-SCHOOL-CANONICAL-UNMATERIALIZED-39-CLOSURE-REGISTER-v0.1.json",
+    "235-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE17-MATERIALIZED-GAPS-v0.1.json"
+  ],
+  "resolution":{
+    "source_id":"school-deystvitelno-function-context",
+    "previous_status":"HOLD",
+    "new_status":"MATERIALIZED_CANONICAL_IDENTITY",
+    "count_effect":1,
+    "reason":"The Grade-8 source ledger gives explicit curriculum/example evidence for ДЕЙСТВИТЕЛЬНО inside the introductory-word topic, while current normative references independently confirm the required contextual distinction between introductory and non-introductory use. The former HOLD was therefore an evidence-resolution issue, not a reason to discard the learner decision."
+  },
+  "canonical_units":[
+    {
+      "unit_id":"school-deystvitelno-function-context",
+      "domain":"syntax_punctuation",
+      "unit_type":"function_punctuation_boundary",
+      "canonical_label":"ДЕЙСТВИТЕЛЬНО: вводное слово или невводное употребление",
+      "grade_routes":[
+        {
+          "grade":8,
+          "role":"explicitly_taught_or_singled_out",
+          "source_ref":"210",
+          "locator":"Слова, грамматически не связанные с членами предложения: группа уверенности/подтверждения с ДЕЙСТВИТЕЛЬНО; source-ledger examples/exercises include Да, действительно, ..."
+        }
+      ],
+      "current_norm_model":{
+        "introductory":{
+          "function":"speaker confirmation/assurance or acknowledgement of the correctness of an earlier statement",
+          "punctuation":"isolated as an introductory word"
+        },
+        "non_introductory":{
+          "function":"adverbial/particle-like factual intensification such as 'на самом деле, подлинно'; syntactically attached to a word or the proposition rather than parenthetical",
+          "punctuation":"no introductory commas solely because the word ДЕЙСТВИТЕЛЬНО is present"
+        },
+        "contextual_variation":"Some sentences permit both readings. Punctuation follows the intended syntax/meaning/intonation rather than a word-list trigger."
+      },
+      "current_norm_refs":[
+        {
+          "source":"Gramota.ru — Справочник по пунктуации: Действительно",
+          "url":"https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/deystvitelno"
+        },
+        {
+          "source":"Gramota.ru — answer 330221, 2026-02-18",
+          "url":"https://gramota.ru/spravka/vopros/330221"
+        }
+      ],
+      "learner_policy":"Never decide commas from the isolated word. First determine whether ДЕЙСТВИТЕЛЬНО is a parenthetical confirmation/assurance or an integrated factual/adverbial modifier.",
+      "exam_routes":[]
+    }
+  ],
+  "count_assertion":{
+    "historical_physical_checkpoint_records":137,
+    "confirmed_semantic_absorption_from_wave9":-1,
+    "this_admission":1,
+    "working_active_semantic_total":137,
+    "physical_records_after_materialization":138,
+    "note":"The active semantic count returns to 137 for a different composition than the old physical checkpoint: one old duplicate is to be absorbed and ДЕЙСТВИТЕЛЬНО is newly admitted."
+  },
+  "live_holds_after_this_resolution":["school-ni-fixed-idioms"],
+  "completeness_candidates_after_this_resolution":["school-imperative-soft-sign-before-sya-te-boundary"],
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Close the remaining NI fixed-idiom HOLD and the imperative-soft-sign completeness candidate by source-ownership evidence, then build the active semantic consolidation manifest."
+}
