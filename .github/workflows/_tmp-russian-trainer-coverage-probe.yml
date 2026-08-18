@@ -13,14 +13,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Patch probe extractor for singular canonical_unit containers
+      - name: Patch probe extractor for singular unit containers
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('eksamio-learning-engine/_tmp_russian_trainer_coverage_probe.py')
           s=p.read_text()
           old="""                if k in {'canonical_units','new_canonical_units','new_units'} and isinstance(v,list):\n                    for item in v:\n                        if isinstance(item,dict) and isinstance(item.get('unit_id'),str) and item['unit_id'].startswith('school-'):\n                            out.append(item)\n                else:\n                    walk(v)\n"""
-          new="""                if k in {'canonical_units','new_canonical_units','new_units'} and isinstance(v,list):\n                    for item in v:\n                        if isinstance(item,dict) and isinstance(item.get('unit_id'),str) and item['unit_id'].startswith('school-'):\n                            out.append(item)\n                elif k in {'canonical_unit','new_canonical_unit'} and isinstance(v,dict) and isinstance(v.get('unit_id'),str) and v['unit_id'].startswith('school-'):\n                    out.append(v)\n                else:\n                    walk(v)\n"""
+          new="""                if k in {'canonical_units','new_canonical_units','new_units'} and isinstance(v,list):\n                    for item in v:\n                        if isinstance(item,dict) and isinstance(item.get('unit_id'),str) and item['unit_id'].startswith('school-'):\n                            out.append(item)\n                elif k in {'canonical_unit','new_canonical_unit','new_unit'} and isinstance(v,dict) and isinstance(v.get('unit_id'),str) and v['unit_id'].startswith('school-'):\n                    out.append(v)\n                else:\n                    walk(v)\n"""
           if old not in s: raise SystemExit('patch target not found')
           p.write_text(s.replace(old,new))
           PY
