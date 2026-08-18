@@ -143,3 +143,41 @@ The remote-workspace contract now also fixes:
 - it is not a source of truth and must not remain powered on without need;
 - GitHub remains canonical regardless of which execution surface is used;
 - Eksamio development must survive temporary loss of Codex Cloud, the user's Mac, the Dev Runner, or any single AI coding assistant.
+
+AI TUTOR WORLD BENCHMARK + CORE CONTRACT — 2026-08-19
+
+See:
+- `270-EKSAMIO-AI-TUTOR-WORLD-BENCHMARK-2026-v1.0.txt`
+- `271-EKSAMIO-AI-TUTOR-CORE-CONTRACT-v1.0.txt`
+
+Benchmark basis:
+- OpenAI Study Mode / Voice / Realtime;
+- Google Guided Learning / LearnLM / Study Notebooks;
+- Khan Academy / Khanmigo 2026 measured tutoring experiments;
+- ALEKS knowledge-state/readiness model;
+- IXL continuous diagnostic model.
+
+Fixed Tutor direction:
+- Tutor is a controlled tutoring orchestrator, not a generic chatbot;
+- verified knowledge + persistent learner state + current goal + deterministic subject tools + pedagogical strategy drive the session;
+- structured learner context is preferred over raw chat-history dumping;
+- text, voice and multimodal input are channels into the same Tutor Core;
+- Tutor Core is subject-agnostic; Russian/Math/Physics are replaceable Subject Knowledge Packs + subject tools;
+- AI providers and speech providers are replaceable adapters;
+- tutor help does not equal mastery; independent verification writes the strongest mastery evidence;
+- prerequisite/readiness state, next-item correctness, transfer and retention are first-class;
+- AI must not invent official FIPI facts, answers or criteria;
+- model routing and AI/voice budgets are mandatory cost controls;
+- tutor changes are evaluated on learning outcomes, not chat length/engagement alone;
+- Russian is the first full Tutor implementation subject;
+- a narrow Mathematics pack is the required second-subject architecture transfer test;
+- Physics is the third-subject architecture validation before broad scaling.
+
+NEXT PLATFORM-ARCHITECTURE STEP — 2026-08-19
+
+After Tutor Core closure, the next central platform step is the Unified Semantic Identity Registry for Russian:
+- preserve existing frozen `school-*` semantic identities rather than duplicating them;
+- preserve the EGE Skill Graph as exam/task taxonomy rather than pretending it is the universal semantic registry;
+- add missing semantic domains required for the full Russian subject;
+- provide versioned crosswalks from demos/trainers/exceptions/practice/explanations/homework/tutor to stable semantic identities;
+- establish alias/supersession/backward-compatibility rules before generalized learner evidence/state is implemented.
