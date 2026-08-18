@@ -1,0 +1,163 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-18",
+  "status": "PRIMARY_COMPLETENESS_WAVE_A1_MATERIALIZED",
+  "metric_status": "INTERIM_ACTIVE_SEMANTIC_TOTAL_150_NOT_FINAL",
+  "production_integration": "HOLD",
+  "refs": [
+    "239-RUSSIAN-SCHOOL-CANONICAL-SEMANTIC-CONSOLIDATION-AFTER-CURRENT-NORM-AUDIT-v0.1.json",
+    "242-RUSSIAN-SCHOOL-ROSENTHAL-DIRECT-COMPLETENESS-PASS-ORTHOGRAPHY-v0.1.txt",
+    "244-RUSSIAN-SCHOOL-ROSENTHAL-PRIMARY-COMPLETENESS-CANDIDATE-REGISTER-v0.1.txt",
+    "245-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-SOURCE-ADMISSION-NI-FIXED-IDIOMS-v0.1.json",
+    "246-RUSSIAN-SCHOOL-PRIMARY-COMPLETENESS-WAVE-A1-FOUNDATIONAL-ORTHOGRAPHY-O01-O16-v0.1.json"
+  ],
+  "primary_source": "rosenthal/rozental.doc",
+  "canonical_units": [
+    {
+      "unit_id": "school-root-vowel-stress-verification",
+      "domain": "orthography_roots",
+      "unit_type": "productive_verification_decision",
+      "canonical_label": "Проверяемая безударная гласная в корне: выбор проверочного слова или формы с ударением",
+      "source_locator": "Розенталь, Орфография, §1",
+      "current_norm_locator": "Лопатин, §34",
+      "decision_model": "If the unstressed root vowel is verifiable, choose a cognate/form in which the same root vowel is stressed; reject false phonetic lookalikes and invalid aspectual -ывать/-ивать checks where the academic rule excludes them.",
+      "ownership_boundary": "Does not own alternating-root rules or dictionary-unverifiable roots.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-root-vowel-dictionary-unverifiable",
+      "domain": "orthography_roots_lexicon",
+      "unit_type": "dictionary_control_decision",
+      "canonical_label": "Непроверяемая безударная гласная в корне: словарная проверка",
+      "source_locator": "Розенталь, Орфография, §2",
+      "current_norm_locator": "Лопатин, §34",
+      "decision_model": "When the root vowel cannot be established by a valid stressed cognate/form and is not governed by a special alternating-root rule, spelling is dictionary-controlled.",
+      "ownership_boundary": "Not a memorized list identity; individual lexical items may be exercise members without becoming denominator units.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-root-o-yo-after-sibilants-base",
+      "domain": "orthography_roots",
+      "unit_type": "productive_root_spelling_boundary",
+      "canonical_label": "Гласные после шипящих в корне: базовый выбор и проверяемое Ё/Е против словарного О",
+      "source_locator": "Розенталь, Орфография, §4",
+      "current_norm_locator": "Лопатин, §§13-14, 17-19",
+      "ownership_boundary": "school-o-after-sibilants-lexical-o-set retains its memorized lexical O members; school-zhog-zheg-part-of-speech-contrast retains noun/verb -ЖОГ-/-ЖЁГ-. Those identities are not duplicated here.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-root-i-y-after-ts-base",
+      "domain": "orthography_roots",
+      "unit_type": "productive_root_spelling_boundary",
+      "canonical_label": "Гласные после Ц в корне: базовое написание И/О и граница с традиционной группой ЦЫ",
+      "source_locator": "Розенталь, Орфография, §5",
+      "current_norm_locator": "Лопатин, §§13, 15-16, 22",
+      "ownership_boundary": "school-tsy-exception-family remains the counted lexical exception family; this unit owns the productive base decision and route to that exception set, not the exception members themselves.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-root-voiced-voiceless-consonant-verification",
+      "domain": "orthography_roots",
+      "unit_type": "productive_verification_decision",
+      "canonical_label": "Парная звонкая/глухая согласная в корне: проверка сильной позицией",
+      "source_locator": "Розенталь, Орфография, §7",
+      "current_norm_locator": "Лопатин, §§79-80",
+      "decision_model": "Verify a doubtful root consonant with a form/cognate where the consonant is followed by a vowel or another position that makes the consonant identity clear; dictionary-control nonverifiable cases remain separate.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-unpronounceable-consonant-verification",
+      "domain": "orthography_roots",
+      "unit_type": "productive_verification_decision",
+      "canonical_label": "Непроизносимая согласная в корне: проверка формой или однокоренным словом",
+      "source_locator": "Розенталь, Орфография, §9",
+      "current_norm_locator": "Лопатин, §83",
+      "decision_model": "For a doubtful consonant in a consonant cluster, use a form/cognate that reveals the consonant before a vowel; lexical nonverifiable spellings remain dictionary-controlled.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-separating-hard-soft-sign-boundary",
+      "domain": "orthography_letters_morphemes",
+      "unit_type": "structured_sign_selection",
+      "canonical_label": "Разделительные Ъ и Ь: выбор знака по морфемной позиции",
+      "source_locator": "Розенталь, Орфография, Раздел 4",
+      "current_norm_locator": "Лопатин, §§27-28",
+      "structured_branches": [
+        "Ъ after consonant-ending prefix/defined first component before е ё ю я",
+        "Ь in internal non-prefix separating position before е ё и ю я and specified borrowed patterns"
+      ],
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-prefix-z-s-selection",
+      "domain": "orthography_prefixes",
+      "unit_type": "productive_prefix_selection",
+      "canonical_label": "Приставки на З/С и неизменяемая приставка С-",
+      "source_locator": "Розенталь, Орфография, §27",
+      "current_norm_locator": "Лопатин, §82 plus general consonant rules",
+      "decision_model": "For prefixes with z/s alternation choose S before a voiceless consonant and Z otherwise under the academic rule; distinguish the invariant prefix С- and root-initial З in words where no such prefix exists.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-pre-pri-semantic-base",
+      "domain": "orthography_prefixes_semantics",
+      "unit_type": "productive_semantic_selection",
+      "canonical_label": "ПРЕ- / ПРИ-: базовый смысловой выбор приставки",
+      "source_locator": "Розенталь, Орфография, §28",
+      "current_norm_locator": "Лопатин, §39",
+      "ownership_boundary": "school-pre-pri-lexical-contrast-family retains lexicalized/homophonic contrast pairs where productive semantic decoding is insufficient.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-i-y-after-russian-prefix-base",
+      "domain": "orthography_prefixes_roots",
+      "unit_type": "productive_prefix_root_boundary",
+      "canonical_label": "И / Ы после приставок: базовое изменение И→Ы после русской приставки на согласную",
+      "source_locator": "Розенталь, Орфография, §29",
+      "current_norm_locator": "Лопатин, §§11-12",
+      "ownership_boundary": "school-i-y-after-prefix-vzimat-exception retains ВЗИМАТЬ; school-i-y-after-prefix-retain-i-boundary retains contexts where initial И is preserved after specified prefixes/components.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-o-e-after-sibilants-suffix-ending",
+      "domain": "orthography_suffixes_endings",
+      "unit_type": "productive_morpheme_spelling",
+      "canonical_label": "О / Е(Ё) после шипящих в суффиксах и окончаниях",
+      "source_locator": "Розенталь, Орфография, §30",
+      "current_norm_locator": "Лопатин, §§18-19",
+      "ownership_boundary": "Root spelling after sibilants belongs to school-root-o-yo-after-sibilants-base and its lexical special units, not here.",
+      "exam_routes": []
+    },
+    {
+      "unit_id": "school-vowels-after-ts-suffix-ending",
+      "domain": "orthography_suffixes_endings",
+      "unit_type": "productive_morpheme_spelling",
+      "canonical_label": "Гласные после Ц в суффиксах и окончаниях",
+      "source_locator": "Розенталь, Орфография, §31",
+      "current_norm_locator": "Лопатин, §§15, 22-24",
+      "decision_model": "Use the suffix/ending rules for stressed O vs unstressed E and the normative Ы writing in the relevant suffixes/endings; distinguish root spelling after Ц.",
+      "exam_routes": []
+    }
+  ],
+  "count_assertion": {
+    "semantic_before_this_file": 138,
+    "new_independent_identities": 12,
+    "absorptions_in_this_file": 0,
+    "interim_active_semantic_after": 150,
+    "physical_records_before_this_file": 139,
+    "physical_records_after_this_file": 151,
+    "warning": "150 is not final. O03/O06/O08/O10 and all later candidate waves remain unresolved; later parent/branch dedupe may change the semantic total."
+  },
+  "unresolved_from_wave_A1": [
+    "O03 school-alternating-root-vowel-decision-engine — decompose before count",
+    "O06 school-root-e-e-yo-y-special-spelling — school-scope normalization before count",
+    "O08 school-double-consonants-root-prefix-boundary — decompose before count",
+    "O10 school-capitalization-and-proper-name-system — mastery-level decomposition before count"
+  ],
+  "production_files_changed": false,
+  "tilda_changed": false,
+  "runtime_changed": false,
+  "scoring_changed": false,
+  "localStorage_changed": false,
+  "next": "Normalize O03 first because it can change ownership of multiple existing root identities; then resolve O06/O08/O10 and continue Wave B."
+}
