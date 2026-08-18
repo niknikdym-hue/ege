@@ -1,0 +1,100 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"PRIMARY_COMPLETENESS_WAVE_G_P24_P29_MATERIALIZED",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_179_READY_FOR_FINAL_SOURCE_CLOSURE",
+  "production_integration":"HOLD",
+  "primary_source":"rosenthal/rozental.doc",
+  "primary_scope":"Rosenthal punctuation §§47–63, with §§52–54 and covered/editorial branches treated according to files 243/244",
+  "current_norm_gate":"Full Academic Guide under V. V. Lopatin §§133–152 plus current orthographic §§192, 195, 197 and brand/name rules where quotation-mark use intersects official naming",
+  "semantic_before_wave_G":176,
+  "normalization_rule":"Direct-speech schemes are counted by structural decision engines, not by each punctuation symbol. Citation/quotation systems own their formatting decision while capitalization remains owned by the orthographic capitalization families from Wave A.",
+  "P24_direct_speech_base":{
+    "unit_id":"school-direct-speech-base-formatting",
+    "canonical_label":"Прямая речь: базовый способ оформления в строку или с абзаца",
+    "source":"Rosenthal §47",
+    "current_norm":"Lopatin §133",
+    "branches":["inline direct speech in quotation marks","paragraph direct speech introduced by dash without quotation marks","combined nesting when one person's direct speech includes another person's quoted speech"],
+    "ownership_boundary":"Detailed author-word placement belongs to sibling engines below; dialogue replica details remain owned by school-dialogue-replica-punctuation.",
+    "count_effect":1
+  },
+  "P25_P26_adjacent_author_words":{
+    "decision":"MERGE_MIRROR_SOURCE_CANDIDATES_INTO_ONE_STRUCTURED_ENGINE",
+    "unit_id":"school-direct-speech-adjacent-author-words-system",
+    "canonical_label":"Прямая речь и соседние слова автора: слова автора до или после прямой речи",
+    "source":["Rosenthal §48","Rosenthal §49"],
+    "current_norm":"Lopatin §134 treats both orientations in one rule system",
+    "branches":["author words before direct speech: colon before the quoted direct speech, capitalization and terminal signs by the direct-speech structure","direct speech before author words: comma+dash after declarative direct speech or preservation of ? ! … followed by dash; author words begin lowercase in the ordinary continuation pattern"],
+    "counting_policy":"One relative-position decision with two mirror branches. Do not count 'author before' and 'author after' as two denominator identities.",
+    "count_effect":1
+  },
+  "covered_section_50_reconsolidation":{
+    "unit_id":"school-direct-speech-author-words-middle-system",
+    "canonical_label":"Слова автора разрывают прямую речь: знак в месте разрыва и продолжение второй части",
+    "source":"Rosenthal §50",
+    "current_norm":"Lopatin §135",
+    "branches":["break at no sign/comma point","break at period/sentence boundary","break after question/exclamation/ellipsis","author words themselves split into two semantic parts where current §135 requires a different continuation scheme"],
+    "absorbs":["school-direct-speech-author-words-middle-comma-break","school-direct-speech-author-words-middle-period-break","school-direct-speech-author-words-middle-question-exclamation-break"],
+    "reason":"The three historical Grade-8 records are route/practice branches of one source/current decision engine. Their differing punctuation is the output branch, not three independent mastery identities.",
+    "new_parent_count":1,
+    "absorptions":-3,
+    "net_count_effect":-2
+  },
+  "P27_direct_speech_inside_author_words":{
+    "unit_id":"school-direct-speech-inside-author-words",
+    "canonical_label":"Прямая речь внутри слов автора",
+    "source":"Rosenthal §51",
+    "current_norm":"Lopatin §136",
+    "branches":["colon and opening quotation before the inserted direct speech","comma after closing quotation when required by the interrupted author sentence","dash after closing quotation when no comma is structurally required at the interruption point","terminal ? ! … interactions according to the current rule"],
+    "count_effect":1
+  },
+  "covered_dialogue":{
+    "owner":"school-dialogue-replica-punctuation",
+    "source":"Rosenthal §52",
+    "status":"KEEP_ACTIVE_SEPARATE",
+    "reason":"Dialogue/replica formatting is a distinct conversational layout decision and is already current-source owned; no new count."
+  },
+  "editorial_direct_speech_blocks":{
+    "source":["Rosenthal §53 paragraphing","Rosenthal §54 play formatting"],
+    "status":"OUT_OF_SCOPE_OR_PROVENANCE_ONLY",
+    "reason":"Editorial/dramatic layout details do not establish additional deterministic school mastery identities beyond the active direct-speech/dialogue engines."
+  },
+  "P28_citations":{
+    "unit_id":"school-citation-punctuation-formatting",
+    "canonical_label":"Цитата в авторском тексте: кавычки, многоточие, прописная/строчная и ссылка на источник",
+    "source":"Rosenthal §§55–58",
+    "current_norm":"Lopatin citation rules §§140–148",
+    "branches":["citation as independent quotation vs syntactically embedded fragment","quotation marks or block/verse formatting without quotation marks","ellipsis for omitted beginning/middle/end while preserving citation structure","capital/lowercase at citation start by syntactic integration and source text","author/source reference punctuation","citation nested inside direct speech or another quotation"],
+    "counting_policy":"One citation-formatting decision engine with structured branches, not four denominator identities for four source paragraphs.",
+    "count_effect":1
+  },
+  "P29_quotation_marks":{
+    "unit_id":"school-quotation-mark-usage-system",
+    "canonical_label":"Кавычки: чужое/условное слово и официальное название — ставить или не ставить",
+    "source":"Rosenthal §§59–63",
+    "current_norm":["Lopatin §§148–152 for quoted/alien/unusual/ironic/author-significant words","Lopatin orthographic §§192, 195, 197 and current trademark/product/variety name rules for official names"],
+    "branches":["unusual, conventional, ironic or alien word in author's text","title of literary/scientific/artistic/media work when current name structure requires quotation marks","organization/business/venue/product name with a nonsyntactically integrated proper designation","awards/orders/medals: quotation marks only for the current structural class, not mechanically for every award name","trademarks/product models/varieties/breeds under current official-name conventions","lexicalized generic use or an official name class that current norm writes without quotation marks"],
+    "ownership_boundary":"This unit owns quotation-mark presence. Capitalization inside the name remains owned by Wave-A capitalization families; direct-speech and citation quotation marks remain owned by P24/P28.",
+    "count_effect":1
+  },
+  "count_assertion":{
+    "pre_dedupe_candidates_P24_P29":6,
+    "candidate_merge_P25_P26":-1,
+    "new_reconsolidation_parent_for_covered_section_50":1,
+    "new_physical_canonical_records":6,
+    "semantic_absorptions":3,
+    "net_semantic_effect":3,
+    "semantic_before_wave_G":176,
+    "interim_active_semantic_after_wave_G":179,
+    "physical_canonical_records_before_wave_G":237,
+    "physical_canonical_records_after_wave_G":243,
+    "warning":"179 becomes final only after the explicit all-source-topic closure pass confirms that every 242/243 topic is owned, branch-owned, or deliberately excluded with no unresolved candidate/HOLD."
+  },
+  "wave_G_status":"CLOSED",
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Run final Rosenthal source-topic closure audit over files 242–258; assert no unresolved source-gap candidate, build deterministic semantic delta from file 239, and freeze the final school canonical denominator if closure succeeds."
+}
