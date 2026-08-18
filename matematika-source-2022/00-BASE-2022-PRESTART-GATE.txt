@@ -1,50 +1,96 @@
 EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2022
-PRESTART GATE BEFORE ANY BUILD
-Дата: 2026-08-17
+PRESTART GATE BEFORE VERIFIED BUILD
+Дата обновления: 2026-08-18
 
-STATUS: READY_FOR_SOURCE_LOCK_ONLY
-READY_FOR_CONTENT_EXTRACTION: NO — до SHA256/source/exam lock
-READY_FOR_BUILD: NO
+STATUS: SOURCE_EXAM_ANSWER_VISUAL_PREBUILD_LOCK_COMPLETE
+READY_FOR_CONTENT_EXTRACTION: YES
+READY_FOR_VERIFIED_BUILD: YES
 READY_FOR_TILDA: NO
+LIVE_GO: NO
 
 ЦЕЛЬ
-Работа 2022 начинается заново по официальному комплекту 2022. Ни 2023, ни 2024/2025/2026 не являются источником содержания. Технический каркас разрешён только после year-specific source lock.
+Работа 2022 ведётся только по официальному комплекту 2022. Ни 2023, ни 2024/2025/2026 не являются источником содержания. После закрытого year-specific source lock разрешено переиспользовать только проверенный технический каркас и общие функции интерфейса.
 
-ОБЯЗАТЕЛЬНО ПРОЧИТАТЬ ДО НАЧАЛА
+ОБЯЗАТЕЛЬНО ПРОЧИТАТЬ ДО BUILD
 1. /00-SOURCE-FIDELITY-ZERO-TOLERANCE.md
 2. /00-READ-FIRST-EGE-DEMOVERSII-MASTER.md
 3. /demo-production-standard/README.md
 4. /MATEMATIKA-EGE-DEMOVERSII-REGLAMENT-SOZDANIYA-I-PROVERKI.md — редакция 2026-08-17 или новее
 5. /demo-production-standard/VISUAL-UI-CROP-AUDIT-TEMPLATE.md
 6. /demo-production-standard/scripts/validate_t123_atomicity.py
+7. /matematika-source-2022/source-lock/EXAM-LOCK.json
+8. /matematika-source-2022/source-lock/ANSWER-LOCK.json
+9. /matematika-source-2022/source-lock/VISUAL-INVENTORY.json
+10. /matematika-source-2022/source-lock/VALIDATION.txt
+11. /matematika-source-2022/01-BASE-2022-SOURCE-LOCK.txt
+12. /matematika-source-2022/02-BASE-2022-CURRENT-CHECKPOINT.txt
+13. /matematika-source-2022/03-BASE-2022-PREBUILD-HANDOFF.txt
 
-BASE 2022 SOURCE FILES — НАЛИЧИЕ В MAIN ПОДТВЕРЖДЕНО
+BASE 2022 SOURCE FILES — LOCKED
 - matematika-source-2022/ege-2022-matematika-baza-demoversiya.pdf
+  SHA256: 8b2c6fe0e36eb1d3a749af08cd035b142ea5e7099dbdf9a14e4ff1617470e207
   Git blob: 68cfae74abf51990cce40958953349a96f28072d
 - matematika-source-2022/ege-2022-matematika-baza-specifikatsiya.pdf
+  SHA256: 6480c1fffd0c2a09e9447d21b44f3a683b83aaa251f5f8c55ceb21a00c92fe9b
   Git blob: f852ff234018432a1c28f8a19a4c9af7b6ac43cc
 - matematika-source-2022/ege-2022-matematika-kodifikator.pdf
+  SHA256: 28888224281fd2178f600b959e652237f3d34f80afe5b2875a9d06a6b4804813
   Git blob: 1a446ad66764ed108f120e95d113f6722d030648
 
 ПРОФИЛЬНЫЕ PDF В ЭТОЙ ЖЕ ПАПКЕ НЕ ИСПОЛЬЗОВАТЬ КАК ИСТОЧНИК BASE 2022.
 
-SOURCE LOCK — ПЕРВЫЙ ОБЯЗАТЕЛЬНЫЙ ШАГ
-До package build вычислить SHA256 трёх BASE PDF, построить page map, зафиксировать структуру экзамена, число заданий/официальных примеров, время, максимальный балл, справочные материалы, ответы и критерии именно 2022.
+SOURCE / PAGE LOCK — PASS
+Демоверсия: 13 physical PDF pages → 25 printed pages.
+Спецификация: 4 physical PDF pages → 8 printed pages.
+Кодификатор: 22 physical PDF pages → 44 printed pages.
+Canonical page mapping строится rotation-aware по page.rotation_matrix; blank half физической страницы 13 демоверсии не считается печатной страницей.
 
-VISUAL SOURCE + UI CROP
-Каждый существенный visual — только direct source render/crop официального PDF 2022, без SVG/Canvas/HTML/manual reconstruction. На каждый asset отдельная audit-record: source SHA/page/crop, four-edge completeness, оси/подписи/деления/единицы/легенда/геометрические обозначения, отсутствие лишнего соседнего содержания, desktop/mobile sizing, zoom decision и zoom tests при необходимости.
+EXAM LOCK — PASS
+- 21 задание;
+- 52 официальных примера;
+- 180 минут;
+- максимальный первичный балл 21;
+- каждый номер 1–21 = 1 первичный балл;
+- справочные материалы: printed pages 4–7;
+- разрешена линейка;
+- официальная таблица ответов: printed page 25;
+- examples per task 1..21: 2,3,2,3,2,3,4,2,3,2,2,3,2,3,1,3,2,2,3,2,3.
+
+ВАЖНО: ЭТА СТРУКТУРА НЕ СОВПАДАЕТ С 2023. Никаких counts/variants из 2023 автоматически не переносить.
+
+ANSWER LOCK — PASS
+Ответы и допустимые альтернативы зафиксированы для всех 52 вариантов в source-lock/ANSWER-LOCK.json. Matching-последовательности сохраняют порядок. В заданиях, где смысл ответа — множество выбранных номеров, порядок ввода не влияет на правильность. Числовой ввод нормализует запятую/точку и технические пробелы.
+
+SOURCE ANOMALY — LOCKED BEFORE BUILD
+ID: ANSWER-TABLE-6.3
+На printed page 25 значение 9 визуально стоит в строке задания 1 / «Пример 3», хотя на printed page 8 у задания 1 существует только 2 примера. У задания 6 на printed page 12 существует 3 примера; третий — задача про 24 га в отношении 5:3, её ответ равен 9, но третья ячейка строки 6 в таблице ответов пуста.
+Жёсткое правило: НЕ создавать несуществующий вариант 1.3; task 1 = 2 examples; task 6 = 3 examples; 6.3 = 9.
+
+VISUAL SOURCE + UI CROP — PREBUILD INVENTORY LOCKED
+Годовой visual inventory зафиксирован до build: 42 source elements, включая 4 полные страницы справочных материалов, 29 raster/formula candidates и 9 exact HTML structures.
+- рисунок/график/схема/геометрия/визуально значимая формула: только direct contiguous render/crop официального PDF 2022;
+- никакой SVG/Canvas/manual redraw;
+- таблица/характеристики могут быть вынесены в exact HTML structure только когда это лучше для интерфейса; значения/текст обязаны быть source-exact и traceable;
+- финальные crop rectangles не угадываются заранее: создаются на fresh official-PDF render по каждому варианту отдельно;
+- обязательный four-edge audit: оси, подписи, деления, числа, единицы, легенда, вершины/точки/размеры, отсутствие смысловой обрезки и случайно захваченного соседнего содержания;
+- large/dense visual → enlarge + zoom in/out/reset + mobile test.
 
 T123 ATOMIC GATE
-Никакого механического byte split. Каждый T123 самостоятельно закрыт и валиден; длинный base64 делится только на отдельные закрытые script chunks; sequence 01..N; <42500 bytes; обязательный `validate_t123_atomicity.py`; T123 manifest с bytes+SHA256; ordered-paste simulation 01..N.
+Никакого механического byte split. Каждый T123 самостоятельно закрыт и валиден; длинный base64 делится только на отдельные закрытые script chunks; sequence 01..N; каждый блок < 42500 bytes; обязательный validate_t123_atomicity.py; T123 manifest с filename+bytes+SHA256; ordered-paste simulation 01..N.
 
 CLEAN ZIP / BROWSER GATE
-Freeze → clean extraction → повтор всех source/formula/visual/T123/package gates → real DOM correct+wrong всех официальных примеров → full attempt → state/reload → results → references → 1280/768/390/360/320 → zoom → independent final audit.
+Freeze ZIP → новая чистая распаковка → повтор source/text/formula/visual-source/visual-UI-crop/T123/package gates → real DOM correct+wrong всех 52 официальных примеров → full attempt 21/21 → autosave/reload/assigned-variant persistence → results → reference materials → widths 1280/768/390/360/320 → zoom → independent final audit.
+
+AUTOMATIC SOURCE LOCK GUARD
+- analyzer: matematika-source-2022/scripts/analyze_base_2022_sources.py
+- validator: matematika-source-2022/scripts/validate_base_2022_source_lock.py
+- workflow: .github/workflows/analyze-base-math-2022-sources.yml
+- current validation: BASE 2022 SOURCE LOCK PASS
 
 READY RULE
-Любой UNVERIFIED / ASSUMED / TODO / FAIL = NO GO. READY_FOR_TILDA только после clean-ZIP PASS. LIVE_GO только после Tilda production smoke и ручной ученической приёмки.
+Любой UNVERIFIED / ASSUMED / TODO / FAIL = NO GO.
+READY_FOR_TILDA только после полного verified build + frozen clean-ZIP PASS.
+LIVE_GO только после Tilda publication + production smoke + ручной ученической приёмки.
 
-ПОРЯДОК
-Base 2022 не наследует content bank 2023. После завершения 2023 разрешено переиспользовать только технический каркас/проверенные общие функции; весь official content и visual mapping 2022 строятся заново по 2022 source lock.
-
-СЛЕДУЮЩИЙ ШАГ ДЛЯ BASE 2022
-Когда дойдём до 2022 — начать только с SHA256/source/exam lock. Не переносить структуру 2023 автоматически.
+СЛЕДУЮЩИЙ ШАГ
+Разрешён VERIFIED BUILD BASE 2022 строго из этого 2022 source lock. Сначала 52 source-exact variants/task map и fresh source visuals, затем controls/scorer/UI, gates, browser, T123 atomic, frozen clean ZIP. Не переносить content bank 2023.
