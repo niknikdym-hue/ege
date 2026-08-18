@@ -245,3 +245,53 @@ AI подключается только после прохождения пр�
 CORE NON-NEGOTIABLE RULE
 Базовый learning loop Эксамио остаётся бесплатным:
 Проверить -> найти проблему -> потренироваться -> проверить усвоение -> повторить.
+
+======================================================================
+CURRENT PLATFORM ARCHITECTURE — 2026-08-19
+======================================================================
+
+The historical numbered architecture list above remains useful as an early design index, but it is NOT the complete current platform plan.
+For new tasks, Codex must read current status and the explicit task contract, then use the current architecture documents below.
+
+CURRENT ARCHITECTURE AUTHORITIES
+- `267-EKSAMIO-PEIS-PRODUCT-ARCHITECTURE-DECISIONS-v0.1.txt`
+  Homework, identity/auth, checkout/payment boundary, multi-year demos, and the permanent per-subject `2022-2026 demos -> full subject trainer` pipeline.
+- `268-EKSAMIO-REMOTE-WORKSPACE-CODEX-CLOUD-CONTRACT-v0.1.txt`
+  GitHub/Codex Cloud/on-demand Yandex Dev Runner workflow.
+- `269-EKSAMIO-SOURCE-LIBRARY-CONTRACT-v0.1.txt`
+  Shared private Source Library for textbooks, reference materials and official corpora across subjects.
+- `270-EKSAMIO-AI-TUTOR-WORLD-BENCHMARK-2026-v1.0.txt`
+  Benchmark of OpenAI, Google/LearnLM, Khanmigo, ALEKS and IXL tutoring/adaptive mechanisms.
+- `271-EKSAMIO-AI-TUTOR-CORE-CONTRACT-v1.0.txt`
+  Subject-agnostic Tutor Core / Subject Knowledge Pack / tools / evidence / voice contract.
+- `272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt`
+  Russian semantic backbone contract preserving the frozen school identities and EGE taxonomy while building a unified crosswalk.
+
+PERMANENT SUBJECT PRODUCT PIPELINE
+
+For every declared exam subject:
+
+2022-2026 OFFICIAL FIPI/DEMO CORPUS
+-> source audit / provenance
+-> additional verified textbooks/reference literature through Source Library when needed
+-> subject knowledge/semantic layer
+-> FULL SUBJECT TRAINER
+-> learner evidence / PEIS / Tutor
+
+FIPI/demo source truth remains authoritative for exam-specific facts. Supplementary literature may expand subject explanations, prerequisite coverage and training content but may not override official FIPI truth.
+
+CURRENT READY CODEX TASK
+
+`tasks/TASK-003-russian-semantic-identity-inventory-crosswalk.md`
+
+TASK-003 is ADD_ONLY / AUDIT_ONLY / NO_PRODUCTION_INTEGRATION.
+It must:
+- inventory the active 185 school semantic identities;
+- inventory the current EGE Skill Graph and semantic references across explanations/exceptions/practice/handoff/learner-state layers;
+- produce a factual draft crosswalk;
+- identify source-backed missing Russian subject semantic candidates without creating final new IDs;
+- validate supersession/referential integrity;
+- create the required durable `results/RESULT-003-russian-semantic-identity-inventory-crosswalk.md`;
+- change NO production demos/trainers/Tilda/runtime/scoring/localStorage.
+
+After TASK-003 review, the next semantic step is source-backed canonicalization/materialization of genuinely missing Russian subject identities, followed by generalized Learner Evidence / Learner State architecture.
