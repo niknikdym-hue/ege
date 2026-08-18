@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-# temporary probe trigger 2026-08-19
-import json, re, html, glob
+import json, re, html
 from pathlib import Path
 from collections import Counter, defaultdict
 
@@ -17,31 +16,57 @@ def one(prefix):
     return xs[0]
 
 def units_from(path):
-    d=load(path)
-    return d.get('canonical_units',[])
+    return load(path).get('canonical_units',[])
+
+def new_units_from_doc(d):
+    """Collect unit records only from explicit materialization containers."""
+    out=[]
+    def walk(x):
+        if isinstance(x,dict):
+            for k,v in x.items():
+                if k in {'canonical_units','new_canonical_units','new_units'} and isinstance(v,list):
+                    for item in v:
+                        if isinstance(item,dict) and isinstance(item.get('unit_id'),str) and item['unit_id'].startswith('school-'):
+                            out.append(item)
+                else:
+                    walk(v)
+        elif isinstance(x,list):
+            for y in x: walk(y)
+    walk(d)
+    # de-duplicate records if a file repeats a materialized unit in an accounting section
+    by_id={}
+    for u in out: by_id[u['unit_id']]=u
+    return list(by_id.values())
+
+def school_ids(v):
+    out=set()
+    def walk(x):
+        if isinstance(x,str):
+            if x.startswith('school-'): out.add(x)
+        elif isinstance(x,list):
+            for y in x: walk(y)
+        elif isinstance(x,dict):
+            for y in x.values(): walk(y)
+    walk(v)
+    return out
 
 def absorption_ids(d):
+    """Collect only IDs explicitly placed in absorption/inactive fields."""
     out=set()
     def walk(x):
         if isinstance(x,dict):
             for k,v in x.items():
                 kl=k.lower()
-                if k in {'inactive_source_id','absorbed_unit_id','absorbed_old_unit_id','inactive_id'}:
-                    if isinstance(v,str) and v.startswith('school-'): out.add(v)
-                elif 'absorbed' in kl and isinstance(v,list):
-                    for item in v:
-                        if isinstance(item,str) and item.startswith('school-'): out.add(item)
-                        elif isinstance(item,dict):
-                            for kk,vv in item.items():
-                                kkl=kk.lower()
-                                if any(t in kkl for t in ('old','source','inactive')) and isinstance(vv,str) and vv.startswith('school-'):
-                                    out.add(vv)
+                if ('absorb' in kl or kl in {'inactive_source_id','inactive_id'}) and kl not in {'absorbed_as','absorbed_branch','absorbed_members'}:
+                    out.update(school_ids(v))
+                # still inspect nested structures for explicit absorption fields
                 walk(v)
         elif isinstance(x,list):
             for y in x: walk(y)
     walk(d)
     return out
 
+# Reconstruct the exact active school semantic set from the frozen authority chain.
 manifest215=load(ROOT/'215-RUSSIAN-SCHOOL-CANONICAL-BANK-MATERIALIZED-COUNT-5-11-v0.1.json')
 active={}; provenance={}
 for entry in manifest215['bank_files']:
@@ -52,17 +77,31 @@ for u in units_from(ROOT/'217-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK33-MATERIALIZED
 assert len(active)==137, len(active)
 active.pop('school-adverb-n-nn-source-word-inheritance',None)
 p236=one('236-')
-for u in units_from(p236): active[u['unit_id']]=u; provenance[u['unit_id']]=p236.name
+for u in new_units_from_doc(load(p236)) or units_from(p236): active[u['unit_id']]=u; provenance[u['unit_id']]=p236.name
 assert len(active)==137, len(active)
-for n in [245,247,248,249,250,252,253,254,255,256,257,258]:
+expected={245:138,247:150,248:155,249:159,250:172,252:187,253:176,254:175,255:158,256:168,257:176,258:179}
+for n,want in expected.items():
     p=one(str(n)+'-'); d=load(p)
-    for rid in absorption_ids(d): active.pop(rid,None)
-    for u in d.get('canonical_units',[]): active[u['unit_id']]=u; provenance[u['unit_id']]=p.name
-if len(active)!=179: raise SystemExit(f'179 reconstruction failed: {len(active)}')
+    adds=new_units_from_doc(d); removes=absorption_ids(d)
+    before=len(active)
+    removed=[]
+    for rid in sorted(removes):
+        if rid in active:
+            removed.append(rid); active.pop(rid)
+    added=[]
+    for u in adds:
+        uid=u['unit_id']
+        if uid not in active: added.append(uid)
+        active[uid]=u; provenance[uid]=p.name
+    after=len(active)
+    print(json.dumps({'wave':n,'before':before,'added':added,'removed':removed,'after':after,'expected':want},ensure_ascii=False))
+    if after!=want:
+        raise SystemExit(f'wave {n} reconstruction failed: {after} != {want}')
 p263=one('263-')
-for u in units_from(p263): active[u['unit_id']]=u; provenance[u['unit_id']]=p263.name
+for u in new_units_from_doc(load(p263)) or units_from(p263): active[u['unit_id']]=u; provenance[u['unit_id']]=p263.name
 if len(active)!=185: raise SystemExit(f'185 reconstruction failed: {len(active)}')
 
+# Extract the current 174-card trainer bank exactly from its T123 JSON payloads.
 cards=[]; sources={}
 for p in sorted(TRAINER.glob('ege-russkiy-trenazher-T123-0[2-9].txt')):
     s=p.read_text(encoding='utf-8')
@@ -80,6 +119,7 @@ card_text={c['id']:plain((c.get('promptHtml') or '')+' '+(sources.get(c.get('sou
 cards_by_task=defaultdict(list)
 for c in cards: cards_by_task[int(c['task'])].append(c)
 
+# Conservative EGE route inference. A task route alone can never yield COVERED.
 def candidate_tasks(uid,u):
     dom=(u.get('domain') or '').lower(); typ=(u.get('unit_type') or '').lower(); label=(u.get('canonical_label') or '').lower(); s=' '.join([uid,dom,typ,label]).lower()
     ts=set()
@@ -97,19 +137,19 @@ def candidate_tasks(uid,u):
     if any(x in s for x in ['introductory','address','interjection','yes-no','exclamatory-word']): ts.add(18)
     if any(x in s for x in ['ssp-','spp-','bsp-','complex-sentence','subordinate','junction','sentence-connection']): ts.update([19,20])
     if 'punct' in dom or any(x in s for x in ['comma','dash','colon','semicolon','quote','direct-speech','dialogue','sentence-punctuation','introductory','address','homogeneous','apposition','isolation','ssp-','spp-','bsp-']): ts.add(21)
-    if 'root' in s and 'consonant' in s: ts.discard(9)
+    if 'root' in s and 'consonant' in s: ts.discard(9)  # FIPI 2026 task 9 exclusion
     return sorted(t for t in ts if per_task.get(t,0)>0)
 
 def lexical_terms(u):
     vals=[]
-    def walk(x,k=''):
+    def walk(x):
         if isinstance(x,dict):
             for kk,v in x.items():
                 kl=kk.lower()
                 if any(t in kl for t in ['member','exception','pair_branch','canonical_members','source_member']): vals.append(v)
-                walk(v,kk)
+                walk(v)
         elif isinstance(x,list):
-            for y in x: walk(y,k)
+            for y in x: walk(y)
     walk(u)
     raw=[]
     def flatten(x):
@@ -137,12 +177,12 @@ for uid in sorted(active):
     if not tasks:
         status='NOT_COVERED'; reason='No current EGE trainer route requires this school identity as a target decision.'
     else:
-        status='PARTIALLY_COVERED'; reason='Current trainer exposes the identity only inside EGE task-number/composite cards; canonical identity is not tagged or independently diagnosed.'
+        status='PARTIALLY_COVERED'; reason='The current trainer exposes this identity only inside EGE task-number/composite cards; the canonical identity is not tagged or independently diagnosed.'
         if len(terms)==1 and direct:
             status='COVERED'; reason='Narrow lexical identity has direct valid-route card evidence for its sole explicit member.'
     coverage.append({'unit_id':uid,'canonical_label':u.get('canonical_label'),'domain':u.get('domain'),'unit_type':u.get('unit_type'),'provenance_file':provenance.get(uid),'status':status,'trainer_tasks':tasks,'task_card_counts':{str(t):per_task[t] for t in tasks},'direct_card_ids':sorted(set(direct)),'direct_lexical_terms':sorted(hit_terms),'reason':reason})
 summary=Counter(x['status'] for x in coverage)
 assert sum(summary.values())==185
-out={'schema_version':'0.1.0-probe','date':'2026-08-19','status':'PROBE_ONLY_NOT_AUTHORITY','canonical_authority':'266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json','canonical_total':185,'trainer_path':'eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/','trainer_cards_total':174,'trainer_cards_per_task':{str(k):per_task[k] for k in sorted(per_task)},'summary':dict(summary),'coverage':coverage}
+out={'schema_version':'0.2.0-probe','date':'2026-08-19','status':'PROBE_ONLY_NOT_AUTHORITY','canonical_authority':'266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json','canonical_total':185,'trainer_path':'eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/','trainer_cards_total':174,'trainer_cards_per_task':{str(k):per_task[k] for k in sorted(per_task)},'summary':dict(summary),'coverage':coverage}
 (ROOT/'267-RUSSIAN-SCHOOL-TRAINER-COVERAGE-PROBE-v0.1.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps({'active':len(active),'cards':len(cards),'summary':dict(summary)},ensure_ascii=False))
