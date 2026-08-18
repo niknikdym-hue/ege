@@ -2,10 +2,12 @@ EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2022
 CURRENT CHECKPOINT
 Дата: 2026-08-18
 
-STATUS: READY_FOR_TILDA_SOURCE_LOCKED_UI_CROP_AUDIT
+STATUS: ACCEPTED_BY_USER_PACKAGE_FROZEN
 READY_FOR_CONTENT_EXTRACTION: YES
 READY_FOR_BUILD: COMPLETE
 READY_FOR_TILDA: YES
+USER_ACCEPTED: YES
+PACKAGE_FROZEN: YES
 LIVE_GO: NO
 
 AUTHORITATIVE RELEASE
@@ -15,6 +17,11 @@ Artifact ID: 9329691643
 ZIP: ege-matematika-baza-demoversiya-2022-v1.0.zip
 ZIP SHA256: 5d0f2db6bb80984522ace542237ed765e8951876dcd8a884d162a0c8a49ff057
 ZIP bytes: 7166189
+
+USER ACCEPTANCE
+2026-08-18: пользователь подтвердил «Все хорошо фиксируй».
+Accepted record: 07-BASE-2022-ACCEPTED.txt
+Do not rebuild without a confirmed defect, official-source contradiction, explicit user request or required platform compatibility change.
 
 SOURCE HASHES
 Demo: 8b2c6fe0e36eb1d3a749af08cd035b142ea5e7099dbdf9a14e4ff1617470e207
@@ -63,8 +70,9 @@ Apply SEO from the ZIP.
 Do not mix files from another build or year.
 
 SAFE RESUME POINT
-For any later work, read 01-BASE-2022-SOURCE-LOCK.txt, 04-BASE-2022-FINAL-REPORT.txt and 05-BASE-2022-READY-FOR-TILDA.txt. Do not rebuild unless an actual defect or official-source contradiction is found.
+For any later work, read 01-BASE-2022-SOURCE-LOCK.txt, 04-BASE-2022-FINAL-REPORT.txt, 05-BASE-2022-READY-FOR-TILDA.txt and 07-BASE-2022-ACCEPTED.txt. The accepted package is frozen. Do not rebuild unless an actual defect or official-source contradiction is found, the user explicitly asks for a change, or platform compatibility requires it.
 
 LIVE RULE
 READY_FOR_TILDA = YES.
-LIVE_GO stays NO until publication, public production smoke and manual student acceptance.
+USER_ACCEPTED = YES.
+LIVE_GO stays NO until publication, public production smoke and manual student acceptance on the live page.
