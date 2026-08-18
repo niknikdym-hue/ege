@@ -1,0 +1,234 @@
+EKSAMIO / PEIS
+REMOTE WORKSPACE + CODEX CLOUD CONTRACT
+VERSION: v0.1
+DATE: 2026-08-18
+STATUS: ACTIVE ARCHITECTURE DECISION
+
+PURPOSE
+
+Remove the user's local Mac from the critical execution path of Eksamio development, eliminate routine manual transfer of project context between ChatGPT and Codex, and establish one durable shared engineering workflow.
+
+This document is ADD-ONLY architecture/governance. It does not authorize production changes.
+
+======================================================================
+1. CORE DECISION
+======================================================================
+
+GitHub repository `niknikdym-hue/ege` is the shared durable project bus and source of truth for Eksamio engineering.
+
+Preferred execution model:
+
+GitHub repository
+    -> Codex Cloud isolated task environment
+    -> dedicated branch/worktree
+    -> code/docs/tests/result artifact
+    -> GitHub Pull Request
+    -> review through the same GitHub repository
+
+The user's Mac is NOT the canonical workspace and must not be required for normal Codex implementation tasks.
+
+ChatGPT and Codex do not exchange project state through manual copy/paste. Durable handoff happens through GitHub files, commits, branches, PRs, test output recorded in result artifacts, and reviewed architecture/task documents.
+
+======================================================================
+2. ROLE BOUNDARIES
+======================================================================
+
+GITHUB
+- durable source of truth;
+- architecture documents;
+- task contracts;
+- subject knowledge sources that are permitted to be tracked;
+- schemas/builders/tests;
+- branches/commits/PRs;
+- durable result and review artifacts.
+
+CODEX CLOUD
+- implementation executor for coding-heavy tasks;
+- runs in an isolated cloud environment preloaded with the repository;
+- reads repository instructions including `eksamio-learning-engine/AGENTS.md`;
+- edits files;
+- runs tests, linters, builders and validators;
+- produces a durable `results/` artifact;
+- pushes work to a task branch and opens a PR for review when behavior can change.
+
+CHATGPT / ARCHITECTURE + REVIEW
+- reads the same connected GitHub repository;
+- audits current repository state before planning;
+- defines/updates architecture and task contracts;
+- reviews PRs/diffs/results through GitHub;
+- does not require the user to paste Codex output when the output is committed/pushed to GitHub.
+
+USER LOCAL MAC
+- optional convenience surface only;
+- may be used for local preview or exceptional tasks;
+- must not be required for routine builds, validation or Codex task execution.
+
+YANDEX CLOUD / PRODUCTION PLATFORM
+- runtime infrastructure for Eksamio Platform API, learner state, storage and production services;
+- NOT the primary Codex source-of-truth repository;
+- not to be confused with the Codex development workspace.
+
+======================================================================
+3. CODEX CLOUD ENVIRONMENT
+======================================================================
+
+Create one primary Codex Cloud environment for repository:
+
+`niknikdym-hue/ege`
+
+Primary working scope:
+
+`eksamio-learning-engine/`
+
+Codex must read before every Learning Engine task:
+1. `eksamio-learning-engine/00-WORK-STATUS.txt`
+2. `eksamio-learning-engine/COMMUNICATION-PROTOCOL.md`
+3. `eksamio-learning-engine/02-CODEX-BUILD-INDEX.txt`
+4. the explicit task contract
+5. referenced provenance/source files
+
+`eksamio-learning-engine/AGENTS.md` remains authoritative for Codex behavior inside this tree.
+
+Advanced environment configuration should be added only when a real task requires it. Do not build a complex dev environment pre-emptively.
+
+======================================================================
+4. HANDOFF CONTRACT: NO MANUAL COPY/PASTE
+======================================================================
+
+Every Codex implementation task must have a durable repository task contract.
+
+Suggested structure:
+
+`tasks/TASK-<id>-<name>.md|txt`
+
+Codex output must not live only in a Codex chat/thread.
+
+Every completed task must produce:
+
+`results/RESULT-<id>-<name>.md|txt`
+
+Minimum result content follows AGENTS.md and includes:
+- status DONE / PARTIAL / BLOCKED;
+- files created/modified/deleted;
+- checks/tests run;
+- unresolved issues;
+- branch;
+- commit;
+- PR;
+- confirmation whether production files changed.
+
+For implementation work:
+
+architecture/task contract
+    -> Codex Cloud
+    -> task branch
+    -> tests
+    -> result file
+    -> PR
+    -> ChatGPT/reviewer reads PR directly through GitHub
+
+The user should not need to transfer terminal logs, diffs, large prompts, source files or result summaries manually when they already exist in GitHub.
+
+======================================================================
+5. PR-FIRST INTEGRATION
+======================================================================
+
+Changes that can affect behavior must not be written directly to `main` by Codex.
+
+Required:
+- isolated task branch/worktree;
+- narrow task scope;
+- required checks;
+- durable result artifact;
+- Pull Request;
+- review before merge.
+
+Documentation-only ADD-ONLY architecture decisions may be added directly when explicitly authorized by the user and permitted by AGENTS.md.
+
+======================================================================
+6. SECRETS AND EXTERNAL SERVICES
+======================================================================
+
+Secrets must never be committed to GitHub.
+
+API keys, payment secrets, cloud credentials and other sensitive values must be injected through the relevant secure environment/secret mechanism.
+
+Codex task environments should receive only the minimum credentials required for the specific task.
+
+Production credentials are not to be exposed merely to run content builders or unit tests.
+
+Internet/network access should be enabled only when a task genuinely requires dependency installation or external access and should remain bounded by the task need.
+
+======================================================================
+7. WHEN A PERSISTENT REMOTE DEVBOX IS NEEDED
+======================================================================
+
+Do NOT rent a permanent remote development server initially.
+
+Use Codex Cloud as the default remote compute for repository tasks.
+
+A persistent remote devbox may be added later only if one or more verified blockers appear, for example:
+- a task requires a long-lived service that Codex Cloud cannot practically host;
+- very large local dependencies or datasets make repeated ephemeral setup uneconomical;
+- production-like integration testing requires a persistent environment;
+- a specific private network/resource must be reached from a controlled remote host.
+
+If this becomes necessary, prefer an inexpensive remote machine that can be stopped when idle rather than an always-on high-spec server. Codex may then work through supported remote-environment/SSH workflows while GitHub remains the source of truth.
+
+======================================================================
+8. COST RULE
+======================================================================
+
+Remote engineering infrastructure must follow the same Eksamio cost principle as runtime infrastructure:
+
+- no always-on server without measured need;
+- use Codex Cloud first;
+- GitHub remains central;
+- add persistent compute only after a real blocker or economic case exists;
+- avoid duplicate repositories/workspaces that create synchronization work;
+- do not use the user's Mac as a hidden production/build server.
+
+======================================================================
+9. RELATION TO EKSAMIO PLATFORM RUNTIME
+======================================================================
+
+Development/workflow architecture and production/runtime architecture are separate:
+
+DEVELOPMENT
+GitHub + Codex Cloud + PR/review
+
+PRODUCTION
+Tilda + Eksamio Platform API + serverless/data/storage + payment provider + AI/speech provider adapters
+
+Do not put production learner data into the Git repository.
+Do not use Codex task storage as production persistence.
+
+======================================================================
+10. CURRENT OPERATING DECISION
+======================================================================
+
+Effective immediately for new coding-heavy Eksamio Learning Engine work:
+
+1. GitHub is the shared state.
+2. Codex Cloud is the preferred execution environment.
+3. The user's Mac is optional, not required.
+4. Codex produces branch + result artifact + PR.
+5. ChatGPT reviews the committed GitHub state/PR directly.
+6. No routine manual transfer of project context between ChatGPT and Codex.
+7. No paid persistent remote devbox until Codex Cloud demonstrates a real limitation.
+
+======================================================================
+11. OFFICIAL CAPABILITY BASIS CHECKED 2026-08-18
+======================================================================
+
+OpenAI documentation confirms that Codex cloud tasks run in isolated environments with the repository preloaded; Codex can edit files, execute commands/tests and produce changes that can be reviewed and turned into GitHub pull requests.
+
+OpenAI also documents GitHub-connected Codex environments and recommends repository guidance through AGENTS.md.
+
+Remote SSH exists as a later fallback for managed remote development environments, but it is not required for the initial Eksamio workflow.
+
+Official references checked:
+- https://openai.com/index/introducing-codex/
+- https://help.openai.com/en/articles/11390924
+- https://openai.com/index/work-with-codex-from-anywhere/
+- https://openai.com/index/introducing-upgrades-to-codex/
