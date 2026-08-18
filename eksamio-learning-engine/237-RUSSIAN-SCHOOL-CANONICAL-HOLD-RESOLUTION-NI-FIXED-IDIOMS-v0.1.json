@@ -1,0 +1,47 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"HOLD_CLOSED_NOT_ADMITTED_SOURCE_OWNERSHIP_UNPROVEN",
+  "metric_status":"WORKING_ACTIVE_SEMANTIC_TOTAL_137_UNCHANGED",
+  "production_integration":"HOLD",
+  "refs":[
+    "161-RUSSIAN-SCHOOL-DENOMINATOR-CANONICALIZATION-PASS2-v0.1.json",
+    "216-RUSSIAN-SCHOOL-CANONICAL-UNMATERIALIZED-39-CLOSURE-REGISTER-v0.1.json",
+    "235-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE17-MATERIALIZED-GAPS-v0.1.json",
+    "236-RUSSIAN-SCHOOL-CANONICAL-BANK-HOLD-RESOLUTION-DEYSTVITELNO-v0.1.json"
+  ],
+  "resolution":{
+    "source_id":"school-ni-fixed-idioms",
+    "previous_status":"HOLD",
+    "new_status":"CLOSED_NOT_ADMITTED_SOURCE_OWNERSHIP_UNPROVEN",
+    "count_effect":0,
+    "current_norm_status":"CONFIRMED",
+    "source_ownership_status":"NOT_ESTABLISHED_FOR_SCHOOL_DENOMINATOR",
+    "reason":"Current Russian orthography clearly contains fixed constructions with single or repeated НИ. However, the canonical closure register itself points this HOLD only to PASS2, and the inspected Grade-7/Grade-10 source inventories do not provide an exact independent school route/locator owning a dedicated fixed-idiom mastery unit. Current norm alone is not sufficient to manufacture school-denominator ownership."
+  },
+  "current_norm_evidence":{
+    "source":"Gramota.ru — Безударные частицы НЕ и НИ / Различение частиц НЕ и НИ",
+    "urls":[
+      "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/bezudarnye-chastitsy-ne-i-ni",
+      "https://gramota.ru/uchebnik/pravila/razlichenie-chastits-ne-i-ni"
+    ],
+    "confirmed_examples":["ни дать ни взять","ни рыба ни мясо","ни два ни полтора","ни жив ни мёртв","ни слуху ни духу","ни с того ни с сего","ни так ни сяк"],
+    "norm_note":"The rule is real and current; the non-admission decision is about denominator provenance, not about denying the orthographic fact."
+  },
+  "source_gate":{
+    "pass2_status":"PENDING_SOURCE_OWNERSHIP_REVIEW",
+    "closure_register_decision_refs":["161"],
+    "exact_grade_route_locator":"NOT_RECORDED",
+    "admission_rule":"A dedicated canonical identity requires an independently evidenced learner decision/route in the school-source layer, not only a current normative list."
+  },
+  "future_policy":"If an exact internal source locator is later recovered showing that fixed НИ idioms are explicitly taught/practised as an independent mastery decision, reopen as a new evidence event and decide whether the content belongs in a dedicated identity or as members of an existing НИ functional unit. Do not restore this HOLD merely because more dictionary examples are found.",
+  "live_holds_after_resolution":[],
+  "remaining_completeness_candidates":["school-imperative-soft-sign-before-sya-te-boundary"],
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "physical_canonical_bank_changed":false,
+  "next":"Resolve the imperative-soft-sign completeness candidate, then build the active semantic consolidation manifest."
+}
