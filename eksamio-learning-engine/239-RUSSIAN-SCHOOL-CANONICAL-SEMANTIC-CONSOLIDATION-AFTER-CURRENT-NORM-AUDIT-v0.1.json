@@ -1,0 +1,127 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"SEMANTIC_CONSOLIDATION_COMPLETE_UNDER_AVAILABLE_SOURCE_EVIDENCE",
+  "metric_status":"ACTIVE_SCHOOL_CANONICAL_TOTAL_137_PRIMARY_ROSENTHAL_DIRECT_COMPLETENESS_REREAD_PENDING",
+  "production_integration":"HOLD",
+  "scope":{
+    "checkpoint_ref":"218-RUSSIAN-SCHOOL-CANONICAL-DENOMINATOR-CHECKPOINT-HANDOFF.txt",
+    "audit_wave_refs":[
+      "219-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE1-ROOTS-PREFIXES-v0.1.json",
+      "220-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE2-N-NN-SUFFIXES-v0.1.json",
+      "221-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE3-ADVERBS-PRONOUNS-HYPHEN-v0.1.json",
+      "222-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE4-MORPHOLOGY-NUMERALS-v0.1.json",
+      "223-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE5-COMPLEX-ADJECTIVES-v0.1.json",
+      "224-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE6-PREPOSITIONS-CONJUNCTIONS-v0.1.json",
+      "225-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE7-NORMATIVE-FORMS-v0.1.json",
+      "226-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE8-NE-FUNCTION-BOUNDARIES-v0.1.json",
+      "227-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE9-GRADE10-MIXED-SPECIALS-v0.1.json",
+      "228-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE10-DASH-INTRODUCTORY-v0.1.json",
+      "229-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE11-DEFINITIONS-APPOSITIONS-GERUNDS-v0.1.json",
+      "230-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE12-GRADE9-SYNTAX-FUNCTION-v0.1.json",
+      "231-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE13-GRADE10-CONTRASTS-v0.1.json",
+      "232-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE14-GRADE11-GOVERNMENT-PREPOSITION-GERUND-PUNCTUATION-v0.1.json",
+      "233-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE15-GRADE7-ADVERBS-NE-NI-v0.1.json",
+      "234-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE16-GRADE8-CROSS-GRADE-v0.1.json",
+      "235-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE17-MATERIALIZED-GAPS-v0.1.json"
+    ],
+    "resolution_refs":[
+      "236-RUSSIAN-SCHOOL-CANONICAL-BANK-HOLD-RESOLUTION-DEYSTVITELNO-v0.1.json",
+      "237-RUSSIAN-SCHOOL-CANONICAL-HOLD-RESOLUTION-NI-FIXED-IDIOMS-v0.1.json",
+      "238-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CANDIDATE-RESOLUTION-IMPERATIVE-SOFT-SIGN-v0.1.json"
+    ]
+  },
+  "audit_completion":{
+    "historical_checkpoint_physical_records":137,
+    "historical_checkpoint_records_reviewed":137,
+    "historical_checkpoint_records_unreviewed":0,
+    "record_level_current_norm_audit":"COMPLETE",
+    "open_holds":0,
+    "open_completeness_candidates":0
+  },
+  "active_set_definition":{
+    "base":"All canonical identities physically materialized in the historical 137-record checkpoint defined by files 169–217 and counted by file 215/218, subject to the semantic transformations below.",
+    "transformations":[
+      {
+        "action":"ABSORB",
+        "inactive_source_id":"school-adverb-n-nn-source-word-inheritance",
+        "surviving_target_id":"school-nn-derived-noun-adverb-inheritance",
+        "count_effect":-1,
+        "reason":"Grade-7 and Grade-10 source records encode the same derivational N/NN inheritance learner decision; Grade-10 explicitly marks merge_or_parent_of_grade7_adverb_n_nn_unit and PASS2 already describes the parent/child restructure.",
+        "source_ref":"227-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE9-GRADE10-MIXED-SPECIALS-v0.1.json"
+      },
+      {
+        "action":"ADMIT",
+        "active_id":"school-deystvitelno-function-context",
+        "count_effect":1,
+        "reason":"Exact Grade-8 source ownership plus independently confirmed current functional/punctuation boundary resolved the former HOLD.",
+        "source_ref":"236-RUSSIAN-SCHOOL-CANONICAL-BANK-HOLD-RESOLUTION-DEYSTVITELNO-v0.1.json"
+      },
+      {
+        "action":"DO_NOT_ADMIT",
+        "candidate_id":"school-ni-fixed-idioms",
+        "count_effect":0,
+        "reason":"Current norm confirmed, but dedicated school-source ownership was not established.",
+        "source_ref":"237-RUSSIAN-SCHOOL-CANONICAL-HOLD-RESOLUTION-NI-FIXED-IDIOMS-v0.1.json"
+      },
+      {
+        "action":"DO_NOT_ADMIT_AS_SPECIAL_IDENTITY",
+        "candidate_id":"school-imperative-soft-sign-before-sya-te-boundary",
+        "count_effect":0,
+        "reason":"Ordinary Grade-6 imperative-soft-sign route exists, but no exact source evidence establishes the proposed special ляг/лягте/before-ся-те mastery identity as an additional canonical unit.",
+        "source_ref":"238-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CANDIDATE-RESOLUTION-IMPERATIVE-SOFT-SIGN-v0.1.json"
+      }
+    ]
+  },
+  "count_arithmetic":{
+    "historical_checkpoint":137,
+    "confirmed_semantic_absorption":-1,
+    "resolved_hold_admission":1,
+    "ni_fixed_idioms":0,
+    "imperative_special_candidate":0,
+    "active_school_canonical_total":137
+  },
+  "physical_vs_semantic":{
+    "historical_checkpoint_physical_records":137,
+    "new_materialized_deystvitelno_record":1,
+    "physical_canonical_records_in_provenance_files_after_resolution":138,
+    "active_semantic_identities":137,
+    "inactive_physical_duplicate_retained_for_provenance":"school-adverb-n-nn-source-word-inheritance",
+    "surviving_identity":"school-nn-derived-noun-adverb-inheritance",
+    "policy":"Do not delete or rewrite historical canonical-bank provenance files merely to make physical record count equal semantic active count. Consumers must use this consolidation layer as the active-set authority until a future normalized manifest/file set is generated."
+  },
+  "quality_changes_from_audit":{
+    "count_changes":{
+      "absorptions":1,
+      "admissions_from_hold":1,
+      "net_effect":0
+    },
+    "notable_noncounting_repairs":[
+      "GAR/GOR source list separated from current academic exception core without new identity",
+      "RAVN/ROVN branch semantics and dictionary cases reshaped without word-level inflation",
+      "ДОЩАТЫЙ reclassified from generic dictionary special to morphemic alternation explanation",
+      "НЕ СОГЛАСЕН reshaped from absolute separate spelling to contextual short-adjective boundary",
+      "НЕ СЕГОДНЯ ЗАВТРА fixed to current three-word spelling",
+      "ОТТОГО function metadata corrected toward pronominal-adverb ownership",
+      "Grade-8 one-member sentence normative scope extended with назывное without inventing a source route",
+      "introductory sentence vs insertion punctuation separated inside one source-backed classification engine"
+    ]
+  },
+  "authority_and_limit":{
+    "active_authority":"This file is the semantic active-set authority after the completed record-level audit and the explicit HOLD/candidate resolutions above.",
+    "working_denominator":"137 active school canonical identities under currently available internal source evidence and current-norm crosschecks.",
+    "not_yet_claimed":"Absolute final completeness against a fresh direct reread of the primary Rosenthal DOCX and every other authoritative internal Russian-language book.",
+    "reason":"The expected primary Rosenthal file 00-sources/rosenthal/rosenthal.docx has not been directly remounted/readable in the current connected workspace. Existing verified project mappings were used as provenance/navigation only, while current norm was independently crosschecked against current academic/reference materials.",
+    "not_a_readiness_percentage":true,
+    "fipi_overlay_included":false
+  },
+  "next_gate":{
+    "action":"Recover/directly mount the primary Rosenthal/internal authoritative source set and run a topic-to-active-identity completeness pass against these 137 active identities. Admit a new identity only when a genuinely missing learner decision has exact source evidence; otherwise leave 137 unchanged.",
+    "after_pass":"Freeze the school canonical denominator, then build a separate current official FIPI OGE/EGE overlay, compare trainer coverage, and only after that move to implementation/Tilda."
+  },
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false
+}
