@@ -1,0 +1,254 @@
+EKSAMIO / PEIS
+PRODUCT ARCHITECTURE DECISIONS
+VERSION: v0.1
+DATE: 2026-08-18
+STATUS: ACTIVE ARCHITECTURE DECISIONS
+
+PURPOSE
+
+This document fixes product and architecture decisions already accepted for the future Eksamio / PEIS platform layer. It does not authorize changes to frozen production trainers or demo packages.
+
+======================================================================
+1. HOMEWORK PRODUCT DIRECTION
+======================================================================
+
+Homework is a first-class future Eksamio product direction, not merely a small feature inside EGE preparation.
+
+Two user scenarios must be supported by one underlying architecture:
+
+A. ONE-OFF HOMEWORK HELP
+- User can arrive for a single homework task without prior registration.
+- The platform helps the learner solve the task, explains errors and may provide escalating hints up to a full worked solution when appropriate.
+- Product principle: help the learner do the homework, not merely generate an answer for copying.
+
+B. CONTINUOUS "HOMEWORK WITH ME" MODE
+- Persistent learner profile.
+- Uses current homework together with known learner weaknesses, previous mistakes, mastered topics and revision needs.
+- Homework becomes another learner-evidence source for the Personal Exam Intelligence System.
+
+Target loop:
+HOMEWORK -> DETECT GAP -> EXPLAIN -> PRACTICE -> VERIFY -> SAVE EVIDENCE -> UPDATE LEARNER STATE -> NEXT RECOMMENDATION
+
+Homework content must reference existing learning/practice objects and semantic identities rather than duplicating them.
+
+Future assignment model may support system-generated, self-selected and teacher-assigned work, but a teacher cabinet is NOT required for the first implementation.
+
+======================================================================
+2. USER IDENTITY: ONLY TWO AUTHENTICATION STATES
+======================================================================
+
+Do NOT create separate user states such as CUSTOMER / LEARNER / BUYER.
+
+Only two authentication states are required:
+
+- anonymous
+- authenticated
+
+Everything else is modeled separately.
+
+Separate concerns:
+- learner profile = learner_profile
+- purchased access = entitlement / subscription / purchase
+- roles = learner / parent / teacher when needed
+- payment records = order/payment entities
+
+Core identifiers:
+- anonymous_id: temporary identity before authentication
+- user_id: stable internal authenticated account identifier
+- learner_profile_id: learning history and learner state
+
+The stable account identifier must be internal and must not be the email address itself.
+
+When an anonymous user authenticates or pays and an account is created/linked, the prior anonymous activity must be attachable to the persistent user/learner profile without losing history.
+
+The semantic Identity Model is independent from authentication.
+
+Semantic identity answers:
+WHAT MUST BE KNOWN / DONE.
+
+Learner state answers:
+WHAT THIS LEARNER CURRENTLY KNOWS / CAN DO.
+
+======================================================================
+3. REGISTRATION POLICY
+======================================================================
+
+Eksamio must not require classic registration before the user receives initial value.
+
+Preferred flow:
+
+anonymous visit -> first useful action -> purchase/save-progress moment -> minimal identity capture -> authenticated account
+
+No forced password creation during checkout.
+
+Preferred later login mechanisms may include one-time code or magic link.
+
+The user should experience the transition to an account as naturally as possible and should not have to complete a long registration form before payment.
+
+======================================================================
+4. CHECKOUT UX
+======================================================================
+
+Checkout must be deliberately minimal.
+
+Preferred base screen:
+
+YOUR EMAIL
+[email field]
+
+TO PAY: <amount>
+
+[ PAY VIA SBP ]
+
+Optional secondary action:
+OTHER PAYMENT METHOD
+
+Do NOT require unnecessary checkout fields such as full name, postal address, city, date of birth, account password, repeated password or other nonessential data.
+
+Do NOT place "BUYING FOR MYSELF / AS A GIFT" before payment unless a future legal or product requirement makes it necessary.
+
+For the common case where a parent pays and a child studies, use a post-payment action such as:
+TRANSFER ACCESS TO LEARNER
+
+This keeps checkout short and avoids forcing the payer to classify the purchase before paying.
+
+======================================================================
+5. PAYMENT / FISCALIZATION RESPONSIBILITY BOUNDARY
+======================================================================
+
+FIXED PRINCIPLE:
+
+EKSAMIO HANDLES THE PRODUCT, ACCESS AND LEARNING.
+THE PAYMENT OPERATOR HANDLES MONEY, SBP AND TAX RECEIPTS.
+
+"Everyone does their own job."
+
+Eksamio must NOT build its own payment-processing or fiscalization subsystem when these responsibilities can be delegated to the payment operator.
+
+The payment operator must be responsible for:
+- payment acceptance;
+- SBP payment mechanics;
+- payment-provider interaction;
+- fiscal/tax receipt automation required for the selected self-employed setup;
+- automatic interaction with the relevant tax/fiscal channel supported by the operator;
+- payment status delivery to Eksamio;
+- payment-side refund mechanics when invoked through the operator.
+
+Eksamio is responsible for:
+- product_id / offer selected by the user;
+- order_id;
+- expected amount/currency;
+- user or anonymous identity linkage;
+- receiving a verified successful-payment status;
+- granting/revoking entitlement according to business rules;
+- storing the access and learning history;
+- showing the user the correct post-payment product state.
+
+Manual receipt creation is NOT an acceptable production workflow.
+Manual recording of ordinary successful payments in tax/fiscal systems is NOT an acceptable production workflow.
+
+For the owner operating as a self-employed taxpayer, the selected payment provider/integration must support an automatic self-employed receipt/fiscal flow suitable for production use. If a provider requires routine manual receipt work, it is not suitable for the target Eksamio architecture.
+
+======================================================================
+6. TILDA / PAYMENT INTEGRATION BOUNDARY
+======================================================================
+
+Tilda remains suitable as the public storefront / checkout entry layer provided the selected payment integration supports the required automated flow.
+
+Target interaction:
+
+TILDA / EKSAMIO CHECKOUT
+        -> PAYMENT OPERATOR
+        -> SBP / OTHER PAYMENT METHOD
+        -> VERIFIED PAYMENT RESULT
+        -> EKSAMIO BACKEND
+        -> ENTITLEMENT GRANTED
+        -> USER CONTINUES PRODUCT
+
+A browser return/thank-you page alone must never be treated as authoritative proof of payment.
+Paid access must be granted from a verified server-side payment status/callback/webhook or equivalent trusted provider confirmation.
+
+Entitlement processing must be idempotent: repeated provider callbacks must not create duplicate access, duplicate purchases or duplicate learner records.
+
+======================================================================
+7. MINIMUM COMMERCE DATA INSIDE EKSAMIO
+======================================================================
+
+Eksamio should store only what it needs to operate the product and reconcile access, for example:
+
+order_id
+user_id or anonymous_id
+product_id
+amount
+currency
+payment_provider
+external_payment_id
+payment_status
+created_at
+paid_at
+entitlement_id
+
+Sensitive bank/card credentials are not part of the Eksamio product data model and must remain inside the payment-provider boundary.
+
+Email may be captured where needed for account recovery/access and payment/receipt delivery, subject to the chosen integration and legal requirements.
+
+======================================================================
+8. CURRENT IMPLEMENTATION DIRECTION
+======================================================================
+
+The product architecture is PROVIDER-AGNOSTIC.
+
+Current practical direction under consideration:
+- Tilda as storefront/public checkout entry;
+- SBP as the primary visible payment method;
+- another payment method available as a secondary fallback where useful;
+- payment operator with automatic support appropriate for a self-employed taxpayer;
+- automatic post-payment entitlement activation in Eksamio.
+
+The payment provider may be replaced later without changing the core learner identity, semantic identity, homework, entitlement or PEIS models.
+
+Therefore provider-specific IDs and rules must be isolated in the payment integration adapter rather than embedded throughout the learning system.
+
+======================================================================
+9. NON-GOALS FOR THE FIRST IMPLEMENTATION
+======================================================================
+
+Do NOT initially build:
+- a custom payment gateway;
+- a custom fiscalization system;
+- manual receipt operations;
+- a mandatory pre-use registration funnel;
+- a large parent/teacher cabinet solely to support the first Homework launch;
+- separate CUSTOMER and LEARNER authentication states;
+- duplicated homework content banks where existing Eksamio learning objects can be referenced.
+
+======================================================================
+10. ARCHITECTURAL CONSEQUENCE FOR PEIS
+======================================================================
+
+The future PEIS core must treat the following as separate but connected layers:
+
+SEMANTIC IDENTITY
+-> what knowledge/skill is involved
+
+CONTENT / TASK IDENTITY
+-> concrete trainer/demo/homework/practice object
+
+LEARNER EVIDENCE
+-> observation of learner performance
+
+LEARNER STATE
+-> inferred current mastery
+
+USER IDENTITY
+-> anonymous/authenticated person/account linkage
+
+ENTITLEMENT
+-> what paid or free product access is available
+
+PAYMENT
+-> external commerce event handled through the payment-operator boundary
+
+These layers must not be collapsed into one user status or one monolithic record.
+
+END OF DOCUMENT
