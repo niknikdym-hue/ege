@@ -1,0 +1,81 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"PRIMARY_COMPLETENESS_WAVE_A3_MATERIALIZED",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_159_NOT_FINAL",
+  "production_integration":"HOLD",
+  "primary_source":"rosenthal/rozental.doc",
+  "source_scopes":["Орфография §6","Орфография §8"],
+  "current_norm_authority":"Полный академический справочник под ред. В. В. Лопатина",
+  "resolution_O06":{
+    "candidate":"school-root-e-e-yo-y-special-spelling",
+    "decision":"ADMIT_AS_ONE_STRUCTURED_POSITIONAL_LEXICAL_IDENTITY",
+    "reason":"The Rosenthal branches share one learner task: choose Э/Е/Й in borrowed/root contexts from position and word structure, with dictionary control for lexical exceptions. Current academic §§6-9 and 26 preserve the same positional architecture, so splitting every subcase would inflate the denominator.",
+    "canonical_unit":{
+      "unit_id":"school-e-e-y-borrowed-root-positional-system",
+      "domain":"orthography_roots_borrowings",
+      "unit_type":"structured_positional_lexical_boundary",
+      "canonical_label":"Э / Е / Й в корне и заимствованных словах: позиционный выбор и словарные исключения",
+      "source_locator":"Розенталь §6",
+      "current_norm_locators":["Лопатин §§6-9","Лопатин §26"],
+      "branches":[
+        "preserve Э after a consonant-ending prefix / first compound component where the normative pattern requires it",
+        "choose Е/Э in borrowed words after consonants and after vowels by the current positional rule plus dictionary exceptions",
+        "distinguish initial ЙО from separate ИО in the normative borrowed-word pattern"
+      ],
+      "count_effect":1
+    }
+  },
+  "resolution_O08":{
+    "candidate":"school-double-consonants-root-prefix-boundary",
+    "decision":"DECOMPOSE_INTO_THREE_INDEPENDENT_MASTERY_IDENTITIES",
+    "reason":"Rosenthal §8 and current academic §§93-94, 106-110 separate three different learner operations: lexical Russian-root spelling, productive morpheme-junction preservation/doubling, and dictionary-controlled borrowed roots. One mega-unit would hide the distinction; six source paragraphs would overcount it.",
+    "canonical_units":[
+      {
+        "unit_id":"school-double-consonants-russian-root-lexical",
+        "domain":"orthography_roots_lexicon",
+        "unit_type":"lexical_family_system",
+        "canonical_label":"Двойные согласные в русских корнях: нормативные семейства и чередования",
+        "source_locator":"Розенталь §8 пп.1-2",
+        "current_norm_locator":"Лопатин, double-consonant rules for Russian roots",
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-double-consonants-morpheme-junction",
+        "domain":"orthography_morpheme_boundaries",
+        "unit_type":"productive_boundary_system",
+        "canonical_label":"Двойная согласная на стыке морфем и частей слова",
+        "source_locator":"Розенталь §8 пп.3-5",
+        "current_norm_locators":["Лопатин §§93-95","Лопатин §§109-110"],
+        "branches":["prefix + root","stem + suffix","abbreviation/compound-part junction where identical consonants meet"],
+        "ownership_boundary":"Does not own N/NN suffix morphology; that remains in dedicated N/NN canonical families.",
+        "count_effect":1
+      },
+      {
+        "unit_id":"school-double-consonants-borrowed-root-dictionary",
+        "domain":"orthography_roots_borrowings",
+        "unit_type":"dictionary_control_family",
+        "canonical_label":"Одна или две согласные в заимствованных корнях: словарная норма",
+        "source_locator":"Розенталь §8 п.6",
+        "current_norm_locator":"Лопатин, rules for double consonants in borrowed roots/suffixes",
+        "counting_policy":"The dictionary route is one mastery identity; individual words are practice members, not denominator identities.",
+        "count_effect":1
+      }
+    ]
+  },
+  "count_assertion":{
+    "semantic_before_this_file":155,
+    "new_independent_identities":4,
+    "absorptions":0,
+    "interim_active_semantic_after":159,
+    "physical_records_before_this_file":157,
+    "physical_records_after_this_file":161,
+    "warning":"159 is interim. Capitalization O10 and Waves B-G remain unresolved."
+  },
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Normalize capitalization O10 at mastery-family granularity and close Wave A."
+}
