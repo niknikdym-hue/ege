@@ -2,15 +2,19 @@ EKSAMIO — ЕГЭ БАЗОВАЯ МАТЕМАТИКА 2022
 CURRENT CHECKPOINT
 Дата: 2026-08-18
 
-STATUS: READY_FOR_VERIFIED_BUILD_FROM_2022_SOURCE_LOCK
+STATUS: READY_FOR_TILDA_SOURCE_LOCKED_UI_CROP_AUDIT
 READY_FOR_CONTENT_EXTRACTION: YES
-READY_FOR_BUILD: YES
-READY_FOR_TILDA: NO
+READY_FOR_BUILD: COMPLETE
+READY_FOR_TILDA: YES
 LIVE_GO: NO
 
-AUTHORITATIVE START STATE
-2022 SOURCE / EXAM / ANSWER / VISUAL PREBUILD LOCK is complete and automatically validated.
-Do not reopen source assumptions unless an official-source contradiction is found.
+AUTHORITATIVE RELEASE
+GitHub Actions run: 32150808198 — SUCCESS
+Build head SHA: 684d29461345b625c45c89e2b63980393a579262
+Artifact ID: 9329691643
+ZIP: ege-matematika-baza-demoversiya-2022-v1.0.zip
+ZIP SHA256: 5d0f2db6bb80984522ace542237ed765e8951876dcd8a884d162a0c8a49ff057
+ZIP bytes: 7166189
 
 SOURCE HASHES
 Demo: 8b2c6fe0e36eb1d3a749af08cd035b142ea5e7099dbdf9a14e4ff1617470e207
@@ -22,57 +26,45 @@ EXAM CONTRACT
 - 52 official examples
 - 180 minutes
 - max primary score 21
-- references printed pages 4–7
-- answer table printed page 25
 - examples/task: 2,3,2,3,2,3,4,2,3,2,2,3,2,3,1,3,2,2,3,2,3
 
-CRITICAL 2022-SPECIFIC SOURCE ANOMALY
-ANSWER-TABLE-6.3 is locked.
-Do not create 1.3.
-Task 1 has 2 variants.
-Task 6 has 3 variants.
-6.3 answer = 9.
+CRITICAL 2022 SOURCE ANOMALY
+ANSWER-TABLE-6.3 remains locked.
+Phantom 1.3 is forbidden.
+Task 6.3 answer = 9.
 
-MACHINE LOCKS
-- source-lock/SOURCE-LOCK.json
-- source-lock/EXAM-LOCK.json
-- source-lock/ANSWER-LOCK.json
-- source-lock/VISUAL-INVENTORY.json
-- source-lock/VALIDATION.txt
+FINAL VERIFIED BUILD
+- source traceability 52/52 PASS
+- formula gate PASS
+- 41/41 final task visuals exact direct source crops
+- 4/4 exact source reference pages
+- visual UI crop audit PASS
+- zoom in/out/reset and mobile PASS for 41/41 final visuals
+- T123 19/19 standalone atomic PASS; max 40273 bytes
+- browser correct+wrong 52/52 PASS
+- full attempt 21/21 PASS
+- autosave/reload/results/responsive 1280/768/390/360/320 PASS
+- clean ZIP full repeat regression PASS
+- independent audit PASS
+- downloaded CI ZIP independently rechecked locally PASS
 
-NEXT BUILD SEQUENCE
-1. Build source-exact TASK MAP for all 52 official variants from 2022 page evidence.
-2. Preserve year-specific task/input semantics; do not infer controls from 2023.
-3. Re-render the locked 2022 demo from the exact SHA source.
-4. Create each raster/formula crop independently from fresh 2022 render.
-5. Build exact HTML structures only for inventory items explicitly designated as source-exact tables/characteristics, verifying every value/text against source.
-6. Run per-asset VISUAL_UI_CROP_GATE before embedding.
-7. Build scorer from ANSWER-LOCK.json; preserve alternatives and set-selection semantics.
-8. Integrate references pages 4–7 from exact source render.
-9. Add zoom for all inventory items marked zoom=true and test mobile.
-10. Build T123 only on atomic safe boundaries; never mechanical byte-split.
-11. Full local/CI gates and browser correct+wrong 52/52.
-12. Freeze ZIP, clean extraction, full repeat regression, independent audit.
-13. Only then set READY_FOR_TILDA=YES.
-
-TECHNICAL FRAMEWORK REUSE
-The accepted BASE 2023 implementation may be used as a technical framework only after stripping all 2023 content/assets/year-specific maps. Generic tested functions may be retained if their behavior remains correct for the 2022 source contract.
-
-NO CROSS-YEAR CONTENT
-No 2023/2024/2025/2026 task text, answer, count, formula, visual asset/crop, reference page, task map, scorer alternative or source page mapping may be accepted as evidence for 2022.
-
-VISUAL QUALITY RULE
-Correct source bytes alone are insufficient. Every final image must also be correctly framed for its particular task: axes/labels/ticks/units/legend/geometry labels complete; irrelevant adjacent content excluded; readable at desktop/mobile; large/dense material has working enlarge + zoom in/out/reset.
-
-T123 RULE
-Every final T123 must pass standalone atomic validation. No unfinished <script>, <style>, JS string or base64 continuation may cross a file boundary. Count is determined by safe packing, not by copying the number of blocks from 2023.
-
-TARGET PACKAGE CONTRACT
+PACKAGE CONTRACT
 Archive URL: https://eksamio.ru/ege/matematika-baza/demoversiya/2022/
+Storage key: eksamio_ege_math_base_demo_2022_v1_0_source_locked
+Content version: 2022.1-source-locked-ui-crop-audit
 Header/footer included: NO
 Global header/footer: do not touch
-Separate image upload: expected NO if verified base64 embedding is retained
-Storage key/version: must be year-specific 2022 and must not collide with any other year
+Separate image upload: NO
+
+TILDA HANDOFF
+Use HEAD from the authoritative ZIP.
+Paste all 19 T123 blocks strictly 01 -> 19.
+Apply SEO from the ZIP.
+Do not mix files from another build or year.
 
 SAFE RESUME POINT
-Read 00-BASE-2022-PRESTART-GATE.txt, 01-BASE-2022-SOURCE-LOCK.txt, this checkpoint, 03-BASE-2022-PREBUILD-HANDOFF.txt and machine locks. Then begin verified build at TASK MAP 52/52. No source-lock reconstruction from chat history is necessary.
+For any later work, read 01-BASE-2022-SOURCE-LOCK.txt, 04-BASE-2022-FINAL-REPORT.txt and 05-BASE-2022-READY-FOR-TILDA.txt. Do not rebuild unless an actual defect or official-source contradiction is found.
+
+LIVE RULE
+READY_FOR_TILDA = YES.
+LIVE_GO stays NO until publication, public production smoke and manual student acceptance.
