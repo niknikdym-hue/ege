@@ -1,11 +1,11 @@
 EKSAMIO LEARNING ENGINE — RUSSIAN FIPI 2026 OFFICIAL SOURCE GATE
 DATE: 2026-08-18
-STATUS: FIPI_2026_SOURCE_GATE_PASSED / EGE_AND_OGE_OVERLAY_READY
-SCHOOL CANONICAL DENOMINATOR: FROZEN AT 179 — DO NOT MODIFY
+STATUS: FIPI_2026_SOURCE_GATE_PASSED / EGE_AND_OGE_OVERLAY_READY / SCHOOL_REOPEN_GATE_ARMED
+SCHOOL CANONICAL BASELINE ENTERING FIPI: 179
 PRODUCTION / TILDA / RUNTIME / SCORING / LOCALSTORAGE: NOT TOUCHED
 
 PURPOSE
-This layer does NOT redefine the school denominator. It maps the current official FIPI exam routes onto the frozen 179 school canonical identities and separately identifies exam-only composite/text/norm/writing routes.
+This layer maps current official FIPI exam routes onto the 179 school identities frozen after the Rosenthal pass. It does not change that baseline silently. If FIPI explicitly exposes a genuine school orthography/punctuation decision that has no owner in the 179, the item must be classified SCHOOL_REOPEN_CANDIDATE and resolved through an explicit school-layer reopening file before the final denominator is re-frozen.
 
 CURRENT EXAM CYCLE
 As of 2026-08-18, the current approved FIPI demo/specification/codifier cycle published in the official EGE and OGE sections is 2026.
@@ -19,6 +19,8 @@ OGE approved docs page:
 https://fipi.ru/oge/demoversii-specifikacii-kodifikatory
 FIPI 2026 Russian EGE preparation navigator / official methodological recommendations:
 https://doc.fipi.ru/navigator-podgotovki/navigator-ege/MR_rus_yaz_ege_2026.pdf
+FIPI 2026 Russian EGE orthography navigator:
+https://doc.fipi.ru/navigator-podgotovki/navigator-ege/2026/ru-5-orfografija.pdf
 FIPI 2026 Russian OGE preparation navigator / official methodological recommendations:
 https://doc.fipi.ru/navigator-podgotovki/navigator-oge/MR_rus_yaz_oge_2026.pdf
 
@@ -60,6 +62,13 @@ Exact punctuation task routing:
 20 complex sentence with different types of connection;
 21 punctuation analysis.
 
+EGE FIPI DETAIL THAT MUST BE SOURCE-GATED AGAINST 179
+The official 2026 orthography navigator explicitly includes, among task-11 material:
+- the vowel of the infinitive stem and past-tense form before -л- (e.g. ненавидеть, таяли);
+- stable noun/adjective suffix spellings beyond the small productive suffix sets;
+and task 10 includes spelling of prefixes broadly, including invariable prefix material and graphically similar historical elements.
+These are NOT presumed covered merely because nearby prefix/suffix identities exist.
+
 OGE 2026 OFFICIAL ROUTE STRUCTURE
 Official FIPI 2026 recommendations identify 13 tasks:
 - 1: compressed exposition;
@@ -76,8 +85,8 @@ FIPI states the work contains 2 orthography tasks and 2 punctuation tasks.
 OGE ORTHOGRAPHY CONTENT RANGE
 The official FIPI 2026 navigator includes, among the possible OGE content:
 - checked/uncheckable/alternating root vowels; consonants; O/YO after sibilants; I/Y after TS; selected double consonants;
-- prefixes, Z/S, PRE/PRI, hard/soft signs, I/Y after prefixes;
-- suffixes and endings across parts of speech;
+- invariable prefixes, Z/S, PRE/PRI, hard/soft signs, I/Y after prefixes;
+- suffixes and endings across parts of speech, explicitly including the vowel before -л- in past-tense verbs and vowels in gerund suffixes;
 - solid/hyphen/separate spelling across parts of speech;
 - НЕ/НИ;
 - Н/НН;
@@ -98,21 +107,26 @@ The official FIPI 2026 navigator includes:
 - punctuation analysis.
 
 OVERLAY CLASSIFICATION CONTRACT
-For every official exam route use exactly one of:
-1. SCHOOL_IDENTITY_ROUTE — task/topic maps directly to one or more frozen 179 identities.
-2. EXAM_ONLY_COMPOSITE — the exam item requires simultaneous selection/application of several school identities; no new school identity is created.
-3. OUTSIDE_FROZEN_SCHOOL_DENOMINATOR — lexical/text/stylistic/writing or other exam ability that is not an orthography/punctuation mastery identity frozen from the school layer.
-4. PARTIAL_SCHOOL_OVERLAP — a language-norm route contains some historical/frozen morphology/syntax identities but extends beyond the Rosenthal completeness scope; it must not silently expand the school denominator.
+For every official exam route/topic use exactly one of:
+1. SCHOOL_IDENTITY_ROUTE — maps directly to one or more active school identities.
+2. EXAM_ONLY_COMPOSITE — exam item requires simultaneous selection/application of several school identities; no new school identity is created.
+3. OUTSIDE_SCHOOL_DENOMINATOR — lexical/text/stylistic/writing or another exam ability outside the orthography/punctuation school mastery layer.
+4. PARTIAL_SCHOOL_OVERLAP — a language-norm route contains some active morphology/syntax identities but extends beyond the Rosenthal completeness scope; it must not silently expand the school denominator.
+5. SCHOOL_REOPEN_CANDIDATE — official FIPI identifies a genuine school orthography/punctuation decision that has no semantic owner in the current active set. This requires exact FIPI locator + current normative confirmation + explicit school-layer admission/re-freeze.
 
 COUNTING RULE
 - Exam tasks are NOT denominator identities.
 - FIPI codifier positions are NOT automatically denominator identities.
-- A task can map to many of the 179 school identities.
+- A task can map to many school identities.
 - One school identity can support OGE, EGE, both, or neither in the current cycle.
-- The school denominator remains exactly 179 throughout the FIPI overlay.
+- 179 is the entry baseline for FIPI audit, not an untouchable final number if official FIPI proves a genuine missing school rule.
+- Any denominator change must occur only in a dedicated school-reopen record and then a new final freeze.
 
 NEXT
-1. Build EGE 2026 task-route overlay.
-2. Build OGE 2026 task-route overlay.
-3. Close combined FIPI overlay with zero school-count effect.
-4. Then audit actual trainer coverage against frozen 179 + exam-route coverage.
+1. Run EGE and OGE orthography/punctuation route audit against active 179.
+2. Resolve every SCHOOL_REOPEN_CANDIDATE before calling the overlay closed.
+3. Build EGE 2026 task-route overlay.
+4. Build OGE 2026 task-route overlay.
+5. Re-freeze school denominator if needed.
+6. Close combined FIPI overlay.
+7. Then audit actual trainer coverage; only after that touch implementation.
