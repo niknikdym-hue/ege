@@ -1,0 +1,152 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-18",
+  "status": "COMPLETENESS_CURRENT_NORM_AUDIT_WAVE3_ADVERBS_PRONOUNS_HYPHEN_COMPLETE",
+  "metric_status": "WORKING_137_CHECKPOINT_NOT_FINAL_COMPLETENESS",
+  "production_integration": "HOLD",
+  "scope": {
+    "checkpoint_ref": "218-RUSSIAN-SCHOOL-CANONICAL-DENOMINATOR-CHECKPOINT-HANDOFF.txt",
+    "wave1_ref": "219-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE1-ROOTS-PREFIXES-v0.1.json",
+    "wave2_ref": "220-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE2-N-NN-SUFFIXES-v0.1.json",
+    "bank_ref": "172-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK04-ADVERBS-PRONOUNS-HYPHEN-v0.1.json",
+    "canonical_units_reviewed": 6,
+    "purpose": "Completeness/current-norm audit overlay only. It contains no top-level canonical_units array and does not create denominator records."
+  },
+  "source_basis": {
+    "internal_rosenthal_reference": {
+      "path": "00-sources/rosenthal/rosenthal.docx",
+      "project_mapping_used": [
+        "pronouns: orthography section 11, §§42–43",
+        "adverbs: orthography section 14, §§49–54"
+      ],
+      "direct_reread_in_current_workspace": "NOT_AVAILABLE",
+      "evidence_note": "Verified project mapping is navigation/provenance only; no fresh line-by-line Rosenthal reread is claimed in this session."
+    },
+    "current_academic_crosscheck": [
+      {
+        "source": "Gramota.ru — current academic rules §134–135, pronoun words",
+        "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/mestoimennye-slova"
+      },
+      {
+        "source": "Gramota.ru — current academic rules §138, adverbs",
+        "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/narechiya-2203"
+      },
+      {
+        "source": "Gramota.ru — school/reference rule for adverbs with ПО-",
+        "url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoj-orfografii-i-punktuacii/narechiya"
+      },
+      {
+        "source": "Gramota.ru answer 329692 (2026) — current explanation of ПО- adverbs",
+        "url": "https://gramota.ru/spravka/vopros/329692"
+      },
+      {
+        "source": "Gramota.ru — Russian Orthographic Dictionary / Metadictionary",
+        "url": "https://gramota.ru/poisk"
+      }
+    ],
+    "evidence_policy": [
+      "A current rule may broaden normative branch coverage without adding a new counted identity.",
+      "Part-of-speech boundaries are preserved: similar spellings in particles/prepositions do not get absorbed into an adverb unit merely for list completeness.",
+      "Grade routes remain source-evidenced; current-only examples are normative scope only."
+    ]
+  },
+  "decisions": [
+    {
+      "unit_id": "school-soft-sign-toch-v-toch",
+      "disposition": "CONFIRMED_TRADITIONAL_ADVERB_SPELLING_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_member": "точь-в-точь",
+      "current_explanation": "Current academic rules explicitly preserve точь-в-точь as a traditional two-hyphen spelling; it should not be generalized from ordinary prepositional repeated combinations.",
+      "contrast_scope_examples": ["один в один", "бок о бок", "лицом к лицу"],
+      "patch_policy": "Strengthen the learner rationale as a traditional spelling boundary; do not invent a productive two-hyphen template."
+    },
+    {
+      "unit_id": "school-adverb-o-e-sibilants-eshche-exception",
+      "disposition": "CONFIRMED_CURRENT_LEXICAL_SPELLING_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_member": "ещё",
+      "patch_policy": "Keep the identity but avoid wording that makes it look like a suffix-only exception; treat ЕЩЁ as a current lexical spelling case within the broader О/Ё/Е-after-sibilants system."
+    },
+    {
+      "unit_id": "school-adverb-soft-sign-exceptions-uzh-zamuzh-nevterpezh",
+      "disposition": "CONFIRMED_ADVERB_EXCEPTION_TRIAD_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_members": ["уж", "замуж", "невтерпёж"],
+      "part_of_speech_boundary_note": "Other no-soft-sign words after a final sibilant such as аж and меж belong to other parts of speech and are not absorbed into this adverb identity.",
+      "patch_policy": "Keep the adverb triad exact; completeness is not achieved by mixing unrelated parts of speech into one exception set."
+    },
+    {
+      "unit_id": "school-adverb-po-hyphen-vs-preposition-boundary",
+      "disposition": "EXPAND_CURRENT_RULE_BRANCHES_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "school_source_examples": ["по-моему", "по-летнему", "по-домашнему", "по-прежнему"],
+      "current_productive_hyphen_branches": [
+        "ПО- + adjective/pronominal-adjective adverb ending -ому/-ему",
+        "ПО- + adjective-derived adverb ending -ски/-цки",
+        "ПО- + adjective-derived adverb ending -ьи"
+      ],
+      "current_scope_examples": ["по-новому", "по-прежнему", "по-моему", "по-вашему", "по-русски", "по-немецки", "по-казацки", "по-лисьи", "по-собачьи"],
+      "contrast_model": "Hyphenated adverb must be distinguished from preposition ПО + declined adjective/pronoun + noun, e.g. по моему мнению, по прежнему плану.",
+      "special_current_notes": ["по-латыни is also hyphenated by special rule", "по-его, по-её, по-их are hyphenated adverbs in the current academic rule"],
+      "patch_policy": "Expand normative branch metadata under the existing decision engine; do not create separate identities for each suffix pattern or example."
+    },
+    {
+      "unit_id": "school-indefinite-pronouns-hyphen-koe-preposition-boundary",
+      "disposition": "CONFIRMED_AND_NORMATIVE_SCOPE_BROADENED_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_rule": "Pronoun words with initial кое-/кой- and final -то/-либо/-нибудь are hyphenated; when a preposition intervenes after кое-, forms are written separately.",
+      "school_source_examples": ["кое-кто", "кое-что", "кто-то", "кто-либо", "кто-нибудь", "кое-как", "кое-где", "кое у кого", "кое с кем", "кое о чём", "кое в чём"],
+      "current_scope_note": "The same orthographic decision extends to the corresponding pronominal adverbs (кое-когда, кое-куда, где-либо, как-нибудь, etc.) without creating a new identity.",
+      "patch_policy": "Broaden normative examples only; preserve source-grade scopes exactly."
+    },
+    {
+      "unit_id": "school-negative-pronouns-ne-ni-stress-preposition-boundary",
+      "disposition": "CONFIRMED_CURRENT_RULE_NO_COUNT_CHANGE",
+      "count_effect": 0,
+      "keep_identity": true,
+      "current_model": [
+        "не- under stress in negative pronoun/pronominal forms",
+        "ни- without stress",
+        "without a preposition: solid spelling",
+        "with a preposition: separate multiword spelling"
+      ],
+      "current_scope_examples": ["не́кого", "не́чего", "никого́", "ничего́", "не у кого", "не с чем", "ни о ком", "ни в каком", "ни при чём"],
+      "current_scope_note": "Current academic rules also cover the corresponding pronominal adverbs (некогда, негде, никогда, нигде, etc.) within the same НЕ-/НИ- orthographic system.",
+      "patch_policy": "No identity split. Keep stress choice and preposition separation in one structured learner decision."
+    }
+  ],
+  "wave_summary": {
+    "units_reviewed": 6,
+    "identities_kept": 6,
+    "new_canonical_identities": 0,
+    "removed_canonical_identities": 0,
+    "normative_scope_extensions": 3,
+    "explanatory_rewordings": 2,
+    "checkpoint_unique_units_before": 137,
+    "checkpoint_unique_units_after": 137,
+    "denominator_effect": 0
+  },
+  "cumulative_audit_progress": {
+    "wave1_units": 12,
+    "wave2_units": 16,
+    "wave3_units": 6,
+    "distinct_checkpoint_units_reviewed_in_waves_1_3": 34,
+    "checkpoint_total_units": 137,
+    "note": "This is an audit-work counter only, not a readiness percentage and not a learner-coverage metric."
+  },
+  "live_holds_carried_forward": [
+    {"unit_id": "school-deystvitelno-function-context", "status": "HOLD", "counted": false},
+    {"unit_id": "school-ni-fixed-idioms", "status": "HOLD", "counted": false}
+  ],
+  "production_files_changed": false,
+  "tilda_changed": false,
+  "runtime_changed": false,
+  "scoring_changed": false,
+  "localStorage_changed": false,
+  "next": "Audit 173-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK05-MORPHOLOGY-NUMERALS-GRADE6-10-v0.1.json."
+}
