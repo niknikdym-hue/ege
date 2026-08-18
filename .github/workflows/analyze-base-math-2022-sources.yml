@@ -9,6 +9,10 @@ on:
       - 'matematika-source-2022/ege-2022-matematika-baza-specifikatsiya.pdf'
       - 'matematika-source-2022/ege-2022-matematika-kodifikator.pdf'
       - 'matematika-source-2022/scripts/analyze_base_2022_sources.py'
+      - 'matematika-source-2022/scripts/validate_base_2022_source_lock.py'
+      - 'matematika-source-2022/source-lock/EXAM-LOCK.json'
+      - 'matematika-source-2022/source-lock/ANSWER-LOCK.json'
+      - 'matematika-source-2022/source-lock/VISUAL-INVENTORY.json'
       - '.github/workflows/analyze-base-math-2022-sources.yml'
 
 permissions:
@@ -29,6 +33,8 @@ jobs:
         run: python -m pip install --disable-pip-version-check pymupdf pillow
       - name: Analyze official BASE 2022 sources
         run: python matematika-source-2022/scripts/analyze_base_2022_sources.py
+      - name: Strict source/exam/answer/visual lock gate
+        run: python matematika-source-2022/scripts/validate_base_2022_source_lock.py --analysis-dir /tmp/base2022-source-analysis
       - name: Add locked PDFs to artifact
         shell: bash
         run: |
@@ -41,8 +47,15 @@ jobs:
         run: |
           set -euo pipefail
           DEST=matematika-source-2022/source-lock
+          # Preserve the hand-audited machine locks while replacing generated evidence.
+          cp "$DEST/EXAM-LOCK.json" /tmp/EXAM-LOCK.json
+          cp "$DEST/ANSWER-LOCK.json" /tmp/ANSWER-LOCK.json
+          cp "$DEST/VISUAL-INVENTORY.json" /tmp/VISUAL-INVENTORY.json
           rm -rf "$DEST"
           mkdir -p "$DEST/demo" "$DEST/spec" "$DEST/cod"
+          cp /tmp/EXAM-LOCK.json "$DEST/EXAM-LOCK.json"
+          cp /tmp/ANSWER-LOCK.json "$DEST/ANSWER-LOCK.json"
+          cp /tmp/VISUAL-INVENTORY.json "$DEST/VISUAL-INVENTORY.json"
           cp /tmp/base2022-source-analysis/SOURCE-LOCK.txt "$DEST/"
           cp /tmp/base2022-source-analysis/SOURCE-LOCK.json "$DEST/"
           for section in demo spec cod; do
@@ -51,6 +64,7 @@ jobs:
             for f in /tmp/base2022-source-analysis/$section/page-*.json; do cp "$f" "$DEST/$section/"; done
             cat /tmp/base2022-source-analysis/$section/page-*.txt > "$DEST/$section/ALL-TEXT.txt"
           done
+          python matematika-source-2022/scripts/validate_base_2022_source_lock.py --analysis-dir /tmp/base2022-source-analysis | tee "$DEST/VALIDATION.txt"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$DEST"
