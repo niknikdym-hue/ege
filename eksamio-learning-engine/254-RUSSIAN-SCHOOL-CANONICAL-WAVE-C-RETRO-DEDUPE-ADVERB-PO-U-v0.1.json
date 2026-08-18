@@ -1,0 +1,31 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"RETROACTIVE_SEMANTIC_DEDUPE_CORRECTION",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_175_NOT_FINAL",
+  "production_integration":"HOLD",
+  "refs":[
+    "185-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK10-GRADE10-MIXED-SPECIALS-v0.1.json",
+    "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json"
+  ],
+  "correction":{
+    "absorbed_unit":"school-adverb-po-solid-u-model",
+    "owner":"school-adverb-solid-hyphen-separate-system",
+    "reason":"The Wave C parent created in file 253 explicitly owns productive and lexical solid/separate/hyphen adverb spelling models. The ПО- + adverbial stem + -У forms ПОНЕМНОГУ, ПОМНОГУ, ПОДОЛГУ are a structured practice branch inside that owner, not an independent denominator identity.",
+    "practice_members":["понемногу","помногу","подолгу"],
+    "physical_record_policy":"Do not delete the historical source record; retain it as provenance/grade-route evidence and mark it semantically absorbed."
+  },
+  "count_assertion":{
+    "previous_interim_semantic_total":176,
+    "semantic_absorption":-1,
+    "corrected_interim_semantic_total":175,
+    "physical_records_unchanged":207,
+    "warning":"175 is not final. Waves D-G remain open."
+  },
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Run Wave D O36-O45 from corrected semantic baseline 175."
+}
