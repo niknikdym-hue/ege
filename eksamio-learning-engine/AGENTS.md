@@ -6,16 +6,18 @@ These instructions apply to the entire `eksamio-learning-engine/` directory tree
 
 The GitHub repository is the durable source of truth for this direction. Do not rely on memory from prior chats when repository files provide current instructions.
 
+`eksamio-learning-engine/` is the root of the new Eksamio learning system inside the shared `ege` repository.
+
 Before every task in this direction, read in this order:
 
-1. `../00-EKSAMIO-PRODUCT-MASTERPLAN.md` — product target, architecture boundaries and implementation priorities;
+1. `00-PRODUCT-MASTERPLAN.md` — product target, architecture boundaries and implementation priorities;
 2. `00-WORK-STATUS.txt` — current Learning Engine work checkpoint;
 3. `COMMUNICATION-PROTOCOL.md`;
 4. `02-CODEX-BUILD-INDEX.txt`;
 5. the exact task file named by the user in `tasks/` or another explicitly named task file in this directory;
 6. any source/provenance/current-authority files referenced by that task.
 
-Product/architecture decisions from the root masterplan must not be silently overridden by an older historical checkpoint. Current subject/source authority files may supersede older subject counts or source checkpoints when they explicitly declare that supersession. A specific task may refine implementation details but must not silently change product architecture, official exam truth or active source authority.
+Product/architecture decisions from `00-PRODUCT-MASTERPLAN.md` must not be silently overridden by an older historical checkpoint. Current subject/source authority files may supersede older subject counts or source checkpoints when they explicitly declare that supersession. A specific task may refine implementation details but must not silently change product architecture, official exam truth or active source authority.
 
 If instructions conflict materially, record the contradiction and stop the conflicting part instead of resolving it from memory. Safety constraints and explicit NO-DESTRUCTIVE/ADD-ONLY rules must never be relaxed implicitly.
 
