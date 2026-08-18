@@ -1,0 +1,146 @@
+{
+  "schema_version":"0.1.0",
+  "date":"2026-08-18",
+  "status":"PRIMARY_COMPLETENESS_WAVE_D_O36_O45_MATERIALIZED",
+  "metric_status":"INTERIM_ACTIVE_SEMANTIC_TOTAL_158_NOT_FINAL",
+  "production_integration":"HOLD",
+  "primary_source":"rosenthal/rozental.doc",
+  "primary_scope":["Rosenthal orthography Sections 15–18","§§55–59, 61–62"],
+  "current_norm_gate":"Full Academic Guide under V. V. Lopatin §§140–148, current orthographic dictionary/Gramota for lexical and functional boundaries",
+  "semantic_before_wave_D":175,
+  "normalization_rule":"Service-word and НЕ spelling is normalized by current learner decision engines, not by old textbook lists or source paragraph count. Function/homonym examples become branches of the productive owner unless they retain an independent semantic decision not covered by that owner.",
+  "pre_wave_cross_domain_correction":{
+    "absorbed_unit":"school-conjunction-ottogo-ot-togo",
+    "correct_owner":"school-adverb-solid-hyphen-separate-system",
+    "reason":"The old Grade-7 label grouped ОТТОГО with conjunction contrasts, but current normative analysis treats ОТТОГО primarily as a pronominal adverb; the orthographic contrast ОТТОГО / ОТ ТОГО is owned by the adverb solid-vs-separate engine. The multiword conjunction-like sequence ОТТОГО ЧТО belongs later to complex-subordinator syntax/punctuation, not to a separately counted orthographic conjunction identity.",
+    "semantic_effect":-1
+  },
+  "O36_prepositions":{
+    "new_unit":{
+      "unit_id":"school-preposition-solid-hyphen-separate-base",
+      "canonical_label":"Предлоги: слитное, дефисное и раздельное написание; производный предлог vs свободное сочетание",
+      "source":"Rosenthal Section 15",
+      "current_norm":"Lopatin §§140–142",
+      "branches":["hyphenated complex prepositions such as из-за, из-под","solid derived prepositions such as ввиду, вместо, вроде, вследствие, наподобие, насчёт","separate multiword prepositions such as в виде, в связи с, в продолжение, в течение, в заключение","functional distinction of derived preposition from preposition+noun / other free combination"],
+      "absorbs":["school-v-techenie-v-techenii","school-v-prodolzhenie-v-prodolzhenii","school-v-zaklyuchenie-v-zaklyuchenii","school-vsledstvie-v-sledstvii-vposledstvii","school-naschet-na-schet","school-vvidu-v-vide-imet-v-vidu","school-poseredine-vmesto-homonym-boundaries","school-nesmotrya-vs-ne-smotrya","school-navstrechu-vs-na-vstrechu","school-napodobie-vs-na-podobie"],
+      "current_scope_corrections":["Do not retain ДЕРЖАТЬ В ВИДУ as a trusted core merely because it appeared in old project material; ИМЕТЬ В ВИДУ is the stable fixed contrast used for the active branch.","НАВСТРЕЧУ may be adverb or preposition; the spelling branch is still owned here by the service-word/free-noun-combination boundary."],
+      "new_parent_count":1,
+      "absorptions":-10,
+      "net_count_effect":-9
+    }
+  },
+  "O37_conjunctions":{
+    "new_unit":{
+      "unit_id":"school-conjunction-solid-separate-spelling-base",
+      "canonical_label":"Союзы и союзные сочетания: слитное или раздельное написание и омонимическая граница",
+      "source":"Rosenthal Section 16",
+      "current_norm":"Lopatin §§140, 142",
+      "branches":["чтобы / что бы","тоже / то же","также / так же","причём / при чём","притом / при том","зато / за то","итак / и так","то есть, то бишь","compound conjunctions because/so that/type sequences written separately, including потому что, так как, так что, для того чтобы, тогда как","как будто and related separate combinations"],
+      "absorbs":["school-conjunction-chtoby-chto-by","school-conjunction-tozhe-to-zhe","school-conjunction-takzhe-tak-zhe","school-conjunction-zato-za-to","school-conjunction-pritom-pri-tom","school-conjunction-prichyom-pri-chyom","school-kak-budto-separate-spelling","school-itak-vs-i-tak"],
+      "not_absorbed":["school-pri-chem-ni-pri-chem-nipochem — retains the independent three-way lexical/NI decision ПРИ ЧЁМ / НИ ПРИ ЧЁМ / НИПОЧЁМ","school-ne-kto-inoy-vs-nikto-inoy — a НЕ/НИ pronoun construction, not conjunction spelling"],
+      "new_parent_count":1,
+      "absorptions":-8,
+      "net_count_effect":-7
+    }
+  },
+  "O38_nonnegative_particles":{
+    "new_unit":{
+      "unit_id":"school-nonnegative-particle-separate-hyphen-spelling-base",
+      "canonical_label":"Неотрицательные частицы: раздельное и дефисное написание",
+      "source":"Rosenthal §55",
+      "current_norm":"Lopatin §§142–143 plus §135 for pronominal words with кое-/-то/-либо/-нибудь",
+      "branches":["бы/б, же/ж, ли/ль and other free particles separately","-де, -ка, -те, -то, -с and related particles by hyphen","-таки position-dependent hyphen/separate behavior","кое-/кой-, -то, -либо, -нибудь with pronominal words","preposition inserted after кое-/кой- breaks the hyphenated form: кое у кого, кое с кем"],
+      "absorbs":["school-indefinite-pronouns-hyphen-koe-preposition-boundary"],
+      "new_parent_count":1,
+      "absorptions":-1,
+      "net_count_effect":0
+    }
+  },
+  "O39_O40_O43_ne_nominal_adjectival_adverbial":{
+    "decision":"MERGE_ROSENTHAL_POS_PARAGRAPHS_BY_CURRENT_ACADEMIC_ENGINE",
+    "new_units":[
+      {
+        "unit_id":"school-ne-noun-adjective-o-adverb-spelling-system",
+        "canonical_label":"НЕ с существительными, прилагательными и наречиями на -о: слитно или раздельно по значению и контексту",
+        "source":["Rosenthal §56","Rosenthal §57","Rosenthal §61 branches for -о adverbs"],
+        "current_norm":"Lopatin §§145, 147–148 explicitly treats nouns, adjectives and -о adverbs in one shared spelling mechanism",
+        "branches":["lexicalized words not used without не","affirmed negative quality/meaning vs simple negation","explicit opposition","вовсе не / далеко не / отнюдь не and negative-pronoun intensifiers","degree words that support fused spelling","short adjective contextual spelling and dictionary-bound lexical cases","comparative-degree boundaries"],
+        "absorbs":["school-ne-adjectives-negative-intensifier-boundary","school-ne-dictionary-fixed-short-adjective-predicative-forms","school-ne-soglasen-spelling-boundary"],
+        "current_correction":"НЕ СОГЛАСЕН is the learner default in ordinary negation and is required with an explicit intensifier such as категорически; do not convert the old card into a false context-free universal for every possible lexicalized use.",
+        "new_parent_count":1,
+        "absorptions":-3,
+        "net_count_effect":-2
+      },
+      {
+        "unit_id":"school-ne-non-o-adverb-predicative-separate-system",
+        "canonical_label":"НЕ с ненаречиями на -о, неизменяемыми словами и предикативами: базовое раздельное написание и функциональные исключения",
+        "source":"Rosenthal §61 non--о/predicative branches",
+        "current_norm":"Lopatin §146 p.5",
+        "branches":["не жаль, не надо and other predicate/non--о adverbial words written separately","НЕ НУЖНО when НУЖНО is predicative necessity","dictionary/current exceptions and cases where a formally similar -о word is an ordinary adverb/adjective-derived form and routes to the shared §§147–148 engine"],
+        "absorbs":["school-ne-nado-zhal-predicative-separate","school-ne-nuzhno-function-spelling-boundary"],
+        "new_parent_count":1,
+        "absorptions":-2,
+        "net_count_effect":-1
+      }
+    ],
+    "net_semantic_effect":-3
+  },
+  "O41_ne_numerals_pronouns":{
+    "new_unit":{
+      "unit_id":"school-ne-numeral-pronoun-spelling-base",
+      "canonical_label":"НЕ с числительными и местоименными словами: базовое раздельное написание и граница с отрицательными/неопределёнными формами",
+      "source":"Rosenthal §58",
+      "current_norm":"Lopatin §146 pp.2–3 plus §§134, 156 for не-/ни- pronominal words and preposition insertion",
+      "branches":["не + numeral separately","не + ordinary pronominal word separately","negative/indefinite pronominal word with stressed не- is a different lexical/morphemic route","with a preposition: не с кем, etc."],
+      "not_absorbed":["school-negative-pronouns-ne-ni-stress-preposition-boundary — retains the independent НЕ-/НИ- selection inside negative pronominal words","school-ne-kto-inoy-vs-nikto-inoy — retains its affirmative-identification vs negative-pronoun construction","school-ne-ni-ni-odin-ne-odin-ni-razu-ne-raz — retains whole-construction semantic choice"],
+      "count_effect":1
+    }
+  },
+  "O42_ne_verbs":{
+    "new_unit":{
+      "unit_id":"school-ne-verb-gerund-spelling-base",
+      "canonical_label":"НЕ с глаголами и деепричастиями: раздельно, лексикализованные НЕ-/НЕДО- формы слитно",
+      "source":"Rosenthal §59",
+      "current_norm":"Lopatin §§145–146",
+      "branches":["ordinary verb/infinitive/gerund with НЕ separately","words not used without НЕ","НЕДО- meaning insufficiency/incompleteness vs НЕ ДО- / ordinary negation of completed action","functional boundary НЕ СМОТРЯ vs НЕСМОТРЯ НА cross-links to preposition owner O36"],
+      "not_absorbed":"school-ne-double-negation-affirmative-boundary — retains the independent semantic НЕ/НИ choice inside НЕ МОГ НЕ... constructions; it is not merely orthographic attachment to a verb.",
+      "count_effect":1
+    }
+  },
+  "O44_ni_fixed_idioms":{
+    "owner":"school-ni-fixed-idioms",
+    "status":"ALREADY_ADMITTED_IN_245",
+    "count_effect":0
+  },
+  "ni_system_not_recounted":["school-ni-particle-vs-repeating-conjunction","school-ne-ni-pronominal-exclamatory-vs-concessive-boundary","school-ne-ni-ni-odin-ne-odin-ni-razu-ne-raz","school-ne-kto-inoy-vs-nikto-inoy","school-pri-chem-ni-pri-chem-nipochem"],
+  "O45_interjections_onomatopoeia":{
+    "new_unit":{
+      "unit_id":"school-interjection-onomatopoeia-solid-hyphen-system",
+      "canonical_label":"Междометия и звукоподражания: слитное, дефисное и раздельное оформление",
+      "source":"Rosenthal Section 18",
+      "current_norm":"Lopatin §§140–141",
+      "branches":["single lexicalized interjections written solid","repeated/compound interjections and onomatopoeia by hyphen","distinguish a real pronoun form те in expressions such as вот те раз from the hyphenated particle -те"],
+      "count_effect":1
+    }
+  },
+  "count_assertion":{
+    "semantic_before_wave_D":175,
+    "late_cross_domain_absorption":-1,
+    "new_physical_canonical_records":8,
+    "wave_D_semantic_absorptions":24,
+    "total_semantic_absorptions_including_late_correction":25,
+    "net_semantic_effect_from_175":-17,
+    "interim_active_semantic_after_wave_D":158,
+    "physical_canonical_records_before_wave_D":207,
+    "physical_canonical_records_after_wave_D":215,
+    "warning":"158 is not final. Punctuation Waves E–G remain open; their base parents will also absorb existing narrow punctuation cards."
+  },
+  "wave_D_status":"CLOSED",
+  "orthography_primary_completeness_waves_A_D_status":"SOURCE_TOPICS_NORMALIZED_AND_MATERIALIZED",
+  "production_files_changed":false,
+  "tilda_changed":false,
+  "runtime_changed":false,
+  "scoring_changed":false,
+  "localStorage_changed":false,
+  "next":"Proceed immediately to punctuation Wave E P01–P12 from interim semantic baseline 158. Deduplicate sentence-end signs, dash families, homogeneous-member base rules and repeated-word punctuation against existing punctuation identities before count."
+}
