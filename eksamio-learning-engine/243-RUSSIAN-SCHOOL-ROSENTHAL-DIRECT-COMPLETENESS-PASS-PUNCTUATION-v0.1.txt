@@ -1,0 +1,114 @@
+EKSAMIO LEARNING ENGINE — RUSSIAN SCHOOL ROSENTHAL DIRECT COMPLETENESS PASS — PUNCTUATION
+DATE: 2026-08-18
+STATUS: PRIMARY_SOURCE_TOPIC_PASS_COMPLETE / PUNCTUATION_GAPS_ESTABLISHED / IDENTITY_NORMALIZATION_PENDING
+PRODUCTION / TILDA / RUNTIME / SCORING / LOCALSTORAGE: NOT TOUCHED
+
+PRIMARY SOURCE
+Repository: niknikdym-hue/ege
+Path: rosenthal/rozental.doc
+Work: D. E. Rosenthal, «Справочник по русскому языку. Орфография и пунктуация»
+Scope read for this pass: PUNCTUATION, §§1–72 plus unnumbered source Sections 13, 16, 20, 21.
+Active semantic comparison set: file 239, 137 active identities before this source-completeness pass.
+
+COUNTING RULE
+A source paragraph is not automatically one denominator identity. Missing paragraphs are first mapped to normalized candidate families; source/editorial/meta-variation material may be provenance only. Existing branches are not recounted as parents.
+No +N denominator count is asserted in this file.
+
+SOURCE-TOPIC -> ACTIVE-IDENTITY PASS
+§1 | Точка | GENUINELY_MISSING_CANONICAL_DECISION | family=school-sentence-end-punctuation-system
+§2 | Вопросительный знак | GENUINELY_MISSING_CANONICAL_DECISION | family=school-sentence-end-punctuation-system
+§3 | Восклицательный знак | GENUINELY_MISSING_CANONICAL_DECISION | family=school-sentence-end-punctuation-system
+§4 | Многоточие | GENUINELY_MISSING_CANONICAL_DECISION | family=school-sentence-end-punctuation-system
+§5 | Тире между подлежащим и сказуемым | COVERED | owners=school-dash-subject-predicate-basic-placement; school-dash-subject-predicate-no-dash-boundaries; school-dash-subject-predicate-closing-comma-boundary
+§6 | Тире в неполном предложении | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-dash-incomplete-sentence
+§7 | Интонационное тире | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-intonational-dash-boundary
+§8 | Соединительное тире | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-connecting-dash-range-route
+§9 | Однородные члены без союзов | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-homogeneous-no-conjunction-punctuation-base
+§10 | Однородные и неоднородные определения | COVERED | owner=school-homogeneous-vs-nonhomogeneous-definitions
+§11 | Однородные и неоднородные приложения | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-homogeneous-vs-nonhomogeneous-appositions
+§12 | Однородные члены с неповторяющимися союзами | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-homogeneous-single-conjunction-punctuation-base | existing partial=school-single-i-homogeneous-vs-clause-boundary; school-homogeneous-adversative-conjunction-punctuation
+§13 | Однородные члены с повторяющимися союзами | COVERED | owner=school-homogeneous-repeated-conjunction-punctuation
+§14 | Однородные члены с двойными/парными союзами | COVERED | owner=school-paired-conjunction-fixed-pairs
+§15 | Обобщающие слова при однородных членах | COVERED | owners=school-generalizing-word-basic-colon-dash-position; school-generalizing-word-insertion-punctuation-boundary
+§16 | Запятая при повторяющихся словах | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-repeated-word-comma-boundary
+§17 | Дефисное написание повторяющихся слов | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-repeated-word-hyphen-base | existing school-adverb-repeat-hyphen-vs-noun-expression-boundary is narrower
+§18 | Обособленные определения | COVERED | owners=school-agreed-definition-isolation-boundaries; school-nonagreed-definition-isolation-boundaries
+§19 | Обособленные приложения | COVERED | owners=school-apposition-basic-isolation-boundaries; school-apposition-introducer-isolation-boundary; school-apposition-final-explanatory-dash
+§20 | Обособленные обстоятельства | COVERED_BY_STRUCTURED_BRANCH | owners=school-gerund-basic-isolation-boundary; school-gerund-idioms-no-isolation; school-gerund-adverbial-no-isolation-boundary; school-gerund-after-conjunction-isolation-boundary; school-gerund-two-turns-shared-predicate-i-boundary; school-derived-preposition-circumstance-variable-isolation; school-concessive-preposition-circumstance-isolation | no new parent count
+§21 | Обособленные дополнения | COVERED | owner=school-obosob-additions-krome-vmesto-boundary
+§22 | Уточняющие члены | COVERED | owner=school-clarifying-adverbial-isolation
+§23 | Пояснительные конструкции | COVERED_BY_STRUCTURED_BRANCH | owners=school-apposition-introducer-isolation-boundary; school-apposition-final-explanatory-dash; school-generalizing-word-insertion-punctuation-boundary
+§24 | Присоединительные конструкции | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-joining-construction-punctuation
+§25 | Вводные слова и словосочетания | COVERED | owners=school-introductory-semantic-group-recognition plus function-context identities ОДНАКО / ЗНАЧИТ / НАКОНЕЦ / ВООБЩЕ / ДЕЙСТВИТЕЛЬНО
+§26 | Вводные и вставные конструкции | COVERED | owner=school-introductory-sentence-punctuation | source topic remains one structured engine, not a word-list count
+§27 | Обращения | COVERED | owner=school-address-punctuation-boundary
+§28 | Междометия и частицы | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-interjection-particle-punctuation
+§29 | Утвердительные, отрицательные и вопросительно-восклицательные слова | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-yes-no-interrogative-exclamatory-word-punctuation
+§30 | Запятая в ССП | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-ssp-comma-base | existing partial=school-ssp-no-comma-common-element-boundary; school-single-i-homogeneous-vs-clause-boundary
+§31 | Точка с запятой в ССП | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-ssp-semicolon-boundary
+§32 | Тире в ССП | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-ssp-dash-boundary
+§33 | Запятая между главной и придаточной частями СПП | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-spp-main-subordinate-comma-base
+§34 | Запятая при сложных подчинительных союзах | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-spp-complex-subordinator-comma-boundary
+§35 | СПП с несколькими придаточными | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-spp-multiple-subordinate-punctuation
+§36 | Запятая на стыке двух союзов | COVERED | owner=school-junction-of-conjunctions-to-no-boundary
+§37 | Точка с запятой в СПП | GENUINELY_MISSING_CANONICAL_DECISION | family=school-spp-special-signs-family
+§38 | Тире в СПП | GENUINELY_MISSING_CANONICAL_DECISION | family=school-spp-special-signs-family
+§39 | Двоеточие в СПП | GENUINELY_MISSING_CANONICAL_DECISION | family=school-spp-special-signs-family
+§40 | Запятая и тире в СПП | GENUINELY_MISSING_CANONICAL_DECISION | family=school-spp-special-signs-family
+§41 | Цельные по смыслу выражения | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-semantically-integral-expression-comma-boundary
+§42 | Сравнительный оборот | COVERED | owner=school-kak-comma-functional-boundary
+§43 | Запятая и точка с запятой в БСП | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-bsp-comma-semicolon-base
+§44 | Двоеточие в БСП | COVERED | owner=school-colon-bsp-vs-generalizing-word
+§45 | Тире в БСП | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-bsp-dash-boundary
+§46 | Запятая и тире в БСП | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-bsp-comma-dash-boundary
+Раздел 13 | Знаки препинания в периоде | OUT_OF_SCOPE_OR_PROVENANCE_ONLY | rhetorical/stylistic structure; do not admit without independent school-course ownership
+§47 | Оформление прямой речи | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-direct-speech-base-formatting
+§48 | Прямая речь после слов автора | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-direct-speech-author-before
+§49 | Прямая речь перед словами автора | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-direct-speech-author-after
+§50 | Слова автора внутри прямой речи | COVERED | owners=school-direct-speech-author-words-middle-comma-break; school-direct-speech-author-words-middle-period-break; school-direct-speech-author-words-middle-question-exclamation-break
+§51 | Прямая речь внутри слов автора | GENUINELY_MISSING_CANONICAL_DECISION | candidate=school-direct-speech-inside-author-words
+§52 | Диалог | COVERED | owner=school-dialogue-replica-punctuation
+§53 | Абзацы при прямой речи | OUT_OF_SCOPE_OR_PROVENANCE_ONLY | graphical/editorial layout unless separate school-course ownership is established
+§54 | Оформление текста в пьесах | OUT_OF_SCOPE_OR_PROVENANCE_ONLY | editorial/dramatic formatting
+§55 | Кавычки при цитатах | GENUINELY_MISSING_CANONICAL_DECISION | family=school-citation-punctuation-formatting
+§56 | Многоточие при цитатах | GENUINELY_MISSING_CANONICAL_DECISION | family=school-citation-punctuation-formatting
+§57 | Знаки при ссылке на автора/источник цитаты | GENUINELY_MISSING_CANONICAL_DECISION | family=school-citation-punctuation-formatting
+§58 | Прописные/строчные буквы в цитатах | GENUINELY_MISSING_CANONICAL_DECISION | family=school-citation-punctuation-formatting
+Раздел 16 | Пунктуация газетных и журнальных заголовков | OUT_OF_SCOPE_OR_PROVENANCE_ONLY | source explicitly contains publishing practice; not a core school mastery identity here
+§59 | Кавычки при необычном/условном/ироническом употреблении | GENUINELY_MISSING_CANONICAL_DECISION | family=school-quotation-mark-usage-system
+§60 | Кавычки в названиях произведений, органов печати, предприятий и т. д. | GENUINELY_MISSING_CANONICAL_DECISION | family=school-quotation-mark-usage-system
+§61 | Кавычки в названиях орденов и медалей | GENUINELY_MISSING_CANONICAL_DECISION | family=school-quotation-mark-usage-system
+§62 | Кавычки в названиях марок машин, изделий и т. д. | GENUINELY_MISSING_CANONICAL_DECISION | family=school-quotation-mark-usage-system
+§63 | Кавычки в названиях сортов растений и пород животных | GENUINELY_MISSING_CANONICAL_DECISION | family=school-quotation-mark-usage-system
+§64 | Запятая и тире | COVERED_BY_STRUCTURED_BRANCH | combination belongs to owning syntax engines; do not count a meta-sign unit
+§65 | Вопросительный и восклицательный знаки | COVERED_BY_STRUCTURED_BRANCH | combination handling belongs to sentence/direct-speech punctuation engines after those bases are materialized
+§66 | Кавычки и другие знаки | COVERED_BY_STRUCTURED_BRANCH | combination handling belongs to citation/quotation/direct-speech engines
+§67 | Скобки и другие знаки | COVERED_BY_STRUCTURED_BRANCH | combination handling belongs to insertion/parenthetical engine
+§68 | Многоточие и другие знаки | COVERED_BY_STRUCTURED_BRANCH | combination handling belongs to sentence/direct-speech/citation engines
+§69 | Знаки при сноске | OUT_OF_SCOPE_OR_PROVENANCE_ONLY | reference/footnote layout
+§70 | Собственно факультативные знаки | OUT_OF_SCOPE_OR_PROVENANCE_ONLY | meta-variation background, not deterministic mastery identity
+§71 | Альтернативные знаки | OUT_OF_SCOPE_OR_PROVENANCE_ONLY | meta-variation background, not deterministic mastery identity
+§72 | Вариативные знаки | OUT_OF_SCOPE_OR_PROVENANCE_ONLY | meta-variation background, not deterministic mastery identity
+Раздел 20 | Авторская пунктуация | OUT_OF_SCOPE_OR_PROVENANCE_ONLY | stylistic/authorial choice, not deterministic canonical mastery
+Раздел 21 | Пунктуация текстов разговорной речи | OUT_OF_SCOPE_OR_PROVENANCE_ONLY | special editorial rendering unless separately owned by school curriculum
+
+PASS COUNTS — SOURCE TOPICS, NOT DENOMINATOR IDENTITIES
+source_topics_classified=76
+COVERED=17
+COVERED_BY_STRUCTURED_BRANCH=7
+GENUINELY_MISSING_CANONICAL_DECISION=42
+OUT_OF_SCOPE_OR_PROVENANCE_ONLY=10
+normalized_candidate_families_before cross-family dedupe=29
+
+CRITICAL INTERPRETATION
+42 missing source topics DOES NOT mean +42 denominator units.
+Examples of mandatory collapse: §§1–4 sentence-ending signs -> one structured sentence-end engine; §§37–40 SPP special signs -> one structured family subject to mastery granularity; §§55–58 citations -> one citation family; §§59–63 quotation-mark use -> one quotation-use system.
+The source's editorial and meta-variation sections are intentionally not promoted into the deterministic school denominator.
+
+NEXT
+1. Merge file 242 orthography candidate families with this punctuation pass.
+2. Deduplicate against file 239 and across new parent/child families.
+3. Current-norm validate candidates against current academic/dictionary authorities; do not import obsolete Rosenthal-only formulations.
+4. Materialize validated base decisions in waves, absorbing existing exception identities as branches where appropriate.
+5. Recompute semantic denominator only after normalization.
+6. Do not start FIPI overlay or trainer implementation until the school denominator is frozen.
