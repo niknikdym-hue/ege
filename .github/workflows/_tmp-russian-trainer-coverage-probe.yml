@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Patch probe extractor for singular unit containers
+      - name: Patch probe extractor for all materialized units
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -21,8 +21,12 @@ jobs:
           s=p.read_text()
           old="""                if k in {'canonical_units','new_canonical_units','new_units'} and isinstance(v,list):\n                    for item in v:\n                        if isinstance(item,dict) and isinstance(item.get('unit_id'),str) and item['unit_id'].startswith('school-'):\n                            out.append(item)\n                else:\n                    walk(v)\n"""
           new="""                if k in {'canonical_units','new_canonical_units','new_units'} and isinstance(v,list):\n                    for item in v:\n                        if isinstance(item,dict) and isinstance(item.get('unit_id'),str) and item['unit_id'].startswith('school-'):\n                            out.append(item)\n                elif k in {'canonical_unit','new_canonical_unit','new_unit'} and isinstance(v,dict) and isinstance(v.get('unit_id'),str) and v['unit_id'].startswith('school-'):\n                    out.append(v)\n                else:\n                    walk(v)\n"""
-          if old not in s: raise SystemExit('patch target not found')
-          p.write_text(s.replace(old,new))
+          if old not in s: raise SystemExit('patch target 1 not found')
+          s=s.replace(old,new)
+          old2="""    walk(d)\n    # de-duplicate records if a file repeats a materialized unit in an accounting section\n"""
+          new2="""    walk(d)\n    # Some wave files use semantic section names rather than canonical/new_unit containers.\n    # A positive count field identifies the materialized parent; old owners/absorptions have zero or negative effect.\n    def scan_positive(x):\n        if isinstance(x,dict):\n            uid=x.get('unit_id')\n            if isinstance(uid,str) and uid.startswith('school-') and any(x.get(k)==1 for k in ('count_effect','new_parent_count','count_effect_new_parent')):\n                out.append(x)\n            for v in x.values(): scan_positive(v)\n        elif isinstance(x,list):\n            for v in x: scan_positive(v)\n    scan_positive(d)\n    # de-duplicate records if a file repeats a materialized unit in an accounting section\n"""
+          if old2 not in s: raise SystemExit('patch target 2 not found')
+          p.write_text(s.replace(old2,new2))
           PY
       - name: Build probe
         run: python eksamio-learning-engine/_tmp_russian_trainer_coverage_probe.py
