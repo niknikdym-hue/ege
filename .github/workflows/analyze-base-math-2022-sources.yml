@@ -11,12 +11,17 @@ on:
       - 'matematika-source-2022/scripts/analyze_base_2022_sources.py'
       - '.github/workflows/analyze-base-math-2022-sources.yml'
 
+permissions:
+  contents: write
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -31,6 +36,28 @@ jobs:
           cp matematika-source-2022/ege-2022-matematika-baza-demoversiya.pdf /tmp/base2022-source-analysis/official-pdf/
           cp matematika-source-2022/ege-2022-matematika-baza-specifikatsiya.pdf /tmp/base2022-source-analysis/official-pdf/
           cp matematika-source-2022/ege-2022-matematika-kodifikator.pdf /tmp/base2022-source-analysis/official-pdf/
+      - name: Persist source lock metadata in repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST=matematika-source-2022/source-lock
+          rm -rf "$DEST"
+          mkdir -p "$DEST/demo" "$DEST/spec" "$DEST/cod"
+          cp /tmp/base2022-source-analysis/SOURCE-LOCK.txt "$DEST/"
+          cp /tmp/base2022-source-analysis/SOURCE-LOCK.json "$DEST/"
+          cp /tmp/base2022-source-analysis/demo/PAGE-MAP.json "$DEST/demo/"
+          cp /tmp/base2022-source-analysis/spec/PAGE-MAP.json "$DEST/spec/"
+          cp /tmp/base2022-source-analysis/cod/PAGE-MAP.json "$DEST/cod/"
+          for f in /tmp/base2022-source-analysis/demo/page-*.txt; do cp "$f" "$DEST/demo/"; done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$DEST"
+          if git diff --cached --quiet; then
+            echo "Source lock metadata unchanged"
+          else
+            git commit -m "Persist BASE 2022 source lock metadata"
+            git push origin HEAD:main
+          fi
       - name: Upload source analysis
         uses: actions/upload-artifact@v4
         with:
