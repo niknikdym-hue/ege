@@ -2,15 +2,18 @@
 
 **Date:** 2026-08-18  
 **Type:** documentation / product architecture  
+**System root:** `eksamio-learning-engine/`  
 **Production code:** MUST NOT CHANGE
 
 ## Goal
 
-Reconcile the current Eksamio repository with the new product direction: Eksamio must evolve from separate demos/trainers/content into one measurable personalized learning system, with Russian as the first implementation domain and with future reusable Living Core boundaries.
+Reconcile the current Eksamio repository with the new product direction. The shared `ege` repository remains the container for demos, trainers, sources and subject packages; `eksamio-learning-engine/` remains the root of the new intelligent learning system.
+
+Eksamio must evolve from separate demos/trainers/content into one measurable personalized learning system, with Russian as the first implementation domain and with future reusable Living Core boundaries.
 
 ## Required outputs
 
-1. Create a repository-level product/architecture authority document.
+1. Create the product/architecture authority **inside `eksamio-learning-engine/`**.
 2. Define the relationship between demos, EGE trainer, standalone trainers, the full Russian program, Learning Engine and AI.
 3. Record implementation priorities, including what must happen before realtime voice.
 4. Preserve all current exam/source fidelity and production safety rules.
@@ -26,6 +29,7 @@ Reconcile the current Eksamio repository with the new product direction: Eksamio
 
 ## Architecture decisions to record
 
+- `eksamio-learning-engine/` is the root of the new system;
 - one semantic/skill identity space;
 - one Student Model/evidence model;
 - demos remain exam-faithful and non-adaptive inside exam mode;
