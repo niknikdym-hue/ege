@@ -167,13 +167,23 @@ Do NOT rent a permanent remote development server initially.
 
 Use Codex Cloud as the default remote compute for repository tasks.
 
-A persistent remote devbox may be added later only if one or more verified blockers appear, for example:
+A remote dev runner may be added as a fallback or controlled execution environment when one or more verified needs appear, for example:
+- Codex Cloud quota/subscription is temporarily unavailable;
 - a task requires a long-lived service that Codex Cloud cannot practically host;
 - very large local dependencies or datasets make repeated ephemeral setup uneconomical;
 - production-like integration testing requires a persistent environment;
 - a specific private network/resource must be reached from a controlled remote host.
 
-If this becomes necessary, prefer an inexpensive remote machine that can be stopped when idle rather than an always-on high-spec server. Codex may then work through supported remote-environment/SSH workflows while GitHub remains the source of truth.
+Current accepted fallback direction:
+- an inexpensive Yandex Cloud Compute Linux VM acting as `Eksamio Dev Runner`;
+- START only when needed;
+- pull current task branch from GitHub;
+- run builders/tests/scripts or controlled development work;
+- push durable changes/results back to GitHub;
+- STOP when idle.
+
+The Dev Runner is NOT a source of truth and is NOT required to remain powered on.
+Its disk may preserve environment/dependencies between runs, while canonical source code and accepted results remain in GitHub.
 
 ======================================================================
 8. COST RULE
@@ -182,9 +192,10 @@ If this becomes necessary, prefer an inexpensive remote machine that can be stop
 Remote engineering infrastructure must follow the same Eksamio cost principle as runtime infrastructure:
 
 - no always-on server without measured need;
-- use Codex Cloud first;
+- use Codex Cloud first when available and economically justified;
 - GitHub remains central;
-- add persistent compute only after a real blocker or economic case exists;
+- use Yandex Cloud Dev Runner as an on-demand fallback/runner, not as an always-on workstation;
+- stop paid compute when idle;
 - avoid duplicate repositories/workspaces that create synchronization work;
 - do not use the user's Mac as a hidden production/build server.
 
@@ -195,13 +206,13 @@ Remote engineering infrastructure must follow the same Eksamio cost principle as
 Development/workflow architecture and production/runtime architecture are separate:
 
 DEVELOPMENT
-GitHub + Codex Cloud + PR/review
+GitHub + Codex Cloud + optional on-demand Yandex Dev Runner + PR/review
 
 PRODUCTION
 Tilda + Eksamio Platform API + serverless/data/storage + payment provider + AI/speech provider adapters
 
 Do not put production learner data into the Git repository.
-Do not use Codex task storage as production persistence.
+Do not use Codex task storage or Dev Runner local storage as production persistence.
 
 ======================================================================
 10. CURRENT OPERATING DECISION
@@ -210,12 +221,14 @@ Do not use Codex task storage as production persistence.
 Effective immediately for new coding-heavy Eksamio Learning Engine work:
 
 1. GitHub is the shared state.
-2. Codex Cloud is the preferred execution environment.
-3. The user's Mac is optional, not required.
-4. Codex produces branch + result artifact + PR.
-5. ChatGPT reviews the committed GitHub state/PR directly.
-6. No routine manual transfer of project context between ChatGPT and Codex.
-7. No paid persistent remote devbox until Codex Cloud demonstrates a real limitation.
+2. Codex Cloud is the preferred AI execution environment when available.
+3. Yandex Cloud Dev Runner is the accepted on-demand fallback and independent remote execution environment.
+4. The user's Mac is optional, not required.
+5. Codex produces branch + result artifact + PR.
+6. Work executed on the Dev Runner must also end in committed/pushed GitHub state and durable results.
+7. ChatGPT reviews the committed GitHub state/PR directly.
+8. No routine manual transfer of project context between ChatGPT and Codex.
+9. No always-on paid remote devbox without a measured need.
 
 ======================================================================
 11. OFFICIAL CAPABILITY BASIS CHECKED 2026-08-18
@@ -232,3 +245,23 @@ Official references checked:
 - https://help.openai.com/en/articles/11390924
 - https://openai.com/index/work-with-codex-from-anywhere/
 - https://openai.com/index/introducing-upgrades-to-codex/
+
+======================================================================
+12. FAILURE-INDEPENDENCE PRINCIPLE
+======================================================================
+
+Eksamio development must not stop because any one execution surface is unavailable.
+
+The following are explicitly non-canonical and replaceable execution surfaces:
+- Codex Cloud;
+- Yandex Cloud Dev Runner;
+- the user's Mac;
+- any individual AI coding assistant.
+
+The durable project survives through:
+- GitHub repository state;
+- task/result/review artifacts;
+- Source Library for large/private educational sources;
+- production cloud data/services kept separately from development execution environments.
+
+If Codex Cloud is unavailable because of plan, quota, credits or service limitations, repository state remains intact and work can continue using the Yandex Dev Runner or another approved execution path without project migration.
