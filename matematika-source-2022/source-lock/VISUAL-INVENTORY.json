@@ -1,0 +1,80 @@
+{
+  "year": 2022,
+  "source_pdf": "ege-2022-matematika-baza-demoversiya.pdf",
+  "source_sha256": "8b2c6fe0e36eb1d3a749af08cd035b142ea5e7099dbdf9a14e4ff1617470e207",
+  "status": "PREBUILD_INVENTORY_LOCKED",
+  "policy": {
+    "raster_source": "direct contiguous render/crop from official 2022 PDF only; lossless encoding allowed; no redraw/reconstruction",
+    "structured_source": "tables/characteristics may be exact HTML structure when that improves interface; text/data must be source-exact and independently traceable",
+    "crop_rule": "one task/variant at a time; four-edge audit; never reuse a mechanical crop preset",
+    "zoom_rule": "large/dense graphs, plans, geometry and source tables require enlarge + zoom in/out/reset + mobile verification"
+  },
+  "reference_pages": [
+    {"id": "ref-04", "printed_page": 4, "representation": "full_source_render", "zoom": true},
+    {"id": "ref-05", "printed_page": 5, "representation": "full_source_render", "zoom": true},
+    {"id": "ref-06", "printed_page": 6, "representation": "full_source_render", "zoom": true},
+    {"id": "ref-07", "printed_page": 7, "representation": "full_source_render", "zoom": true}
+  ],
+  "items": [
+    {"id": "base22-01-v2-fraction-expression", "variant": "1.2", "printed_page": 8, "representation": "source_formula_crop", "zoom": false, "must_include": "entire fractional expression with all fraction bars and division sign"},
+
+    {"id": "base22-03-v1-values", "variant": "3.1", "printed_page": 9, "representation": "exact_html_matching_table", "zoom": false, "must_include": "four quantities and four possible values exactly; real matching controls"},
+    {"id": "base22-03-v2-values", "variant": "3.2", "printed_page": 9, "representation": "exact_html_matching_table", "zoom": false, "must_include": "four quantities and four possible values exactly; real matching controls"},
+
+    {"id": "base22-04-v1-rivers-chart", "variant": "4.1", "printed_page": 10, "representation": "source_figure_crop", "zoom": true, "must_include": "all bars, river names, vertical scale and tick labels; no clipped axes/labels"},
+    {"id": "base22-04-v2-smartphone-table", "variant": "4.2", "printed_page": 10, "representation": "exact_html_table", "zoom": false, "must_include": "all store names and prices exactly"},
+    {"id": "base22-04-v3-temperature-chart", "variant": "4.3", "printed_page": 11, "representation": "source_figure_crop", "zoom": true, "must_include": "full graph, temperature scale, dates, times and axis labels"},
+
+    {"id": "base22-05-v1-lake-plan", "variant": "5.1", "printed_page": 11, "representation": "source_figure_crop", "zoom": true, "must_include": "entire lake outline and full relevant grid; no clipped boundary"},
+    {"id": "base22-05-v2-grid-plan", "variant": "5.2", "printed_page": 12, "representation": "source_figure_crop", "zoom": true, "must_include": "entire parcel outline and all grid cells needed for area"},
+
+    {"id": "base22-07-v1-expression", "variant": "7.1", "printed_page": 12, "representation": "source_formula_crop", "zoom": false, "must_include": "complete exponent/fraction expression"},
+    {"id": "base22-07-v2-trig-condition", "variant": "7.2", "printed_page": 12, "representation": "source_formula_crop", "zoom": false, "must_include": "cos/sin condition and angle interval without symbol loss"},
+    {"id": "base22-07-v3-radical-expression", "variant": "7.3", "printed_page": 13, "representation": "source_formula_crop", "zoom": false, "must_include": "both radical signs and full product; PDF text extraction loses radical structure"},
+    {"id": "base22-07-v4-log-expression", "variant": "7.4", "printed_page": 13, "representation": "source_formula_crop", "zoom": false, "must_include": "both logarithms with bases and operands"},
+
+    {"id": "base22-08-v1-power-formula", "variant": "8.1", "printed_page": 13, "representation": "source_formula_crop", "zoom": false, "must_include": "P = I²R exactly"},
+    {"id": "base22-08-v2-geometric-mean-formula", "variant": "8.2", "printed_page": 13, "representation": "source_formula_crop", "zoom": false, "must_include": "cube-root formula g = cuberoot(abc) without radical loss"},
+
+    {"id": "base22-09-v1-exponential-equation", "variant": "9.1", "printed_page": 13, "representation": "source_formula_crop", "zoom": false, "must_include": "full exponential equation with exponent positioning"},
+    {"id": "base22-09-v2-log-equation", "variant": "9.2", "printed_page": 13, "representation": "source_formula_crop", "zoom": false, "must_include": "logarithm base and argument exactly"},
+
+    {"id": "base22-10-v1-dacha-plan", "variant": "10.1", "printed_page": 14, "representation": "source_figure_crop", "zoom": true, "must_include": "rectangle, division, 25 m and 30 m labels"},
+    {"id": "base22-10-v2-clock", "variant": "10.2", "printed_page": 14, "representation": "source_figure_crop", "zoom": true, "must_include": "complete clock face, numerals and hand positions"},
+
+    {"id": "base22-12-v1-translators-table", "variant": "12.1", "printed_page": 15, "representation": "exact_html_table", "zoom": false, "must_include": "translator numbers, languages and daily costs exactly; selection UI separate"},
+    {"id": "base22-12-v2-suitcases-table", "variant": "12.2", "printed_page": 15, "representation": "exact_html_table", "zoom": false, "must_include": "all six suitcases, three dimensions and mass exactly"},
+    {"id": "base22-12-v3-suppliers-table", "variant": "12.3", "printed_page": 16, "representation": "exact_html_table", "zoom": false, "must_include": "supplier price, delivery cost and additional conditions exactly"},
+
+    {"id": "base22-13-v1-cylinder-water", "variant": "13.1", "printed_page": 16, "representation": "source_figure_crop", "zoom": true, "must_include": "cylinder/water diagram and h label without neighboring text"},
+    {"id": "base22-13-v2-cut-cube", "variant": "13.2", "printed_page": 16, "representation": "source_figure_crop", "zoom": true, "must_include": "complete cut-cube drawing including all visible edges"},
+
+    {"id": "base22-14-v1-derivative-graph", "variant": "14.1", "printed_page": 17, "representation": "source_figure_crop", "zoom": true, "must_include": "full function, tangents, axes and A/B/C/D labels"},
+    {"id": "base22-14-v1-values", "variant": "14.1", "printed_page": 17, "representation": "exact_html_matching_table", "zoom": false, "must_include": "four derivative values exactly; real matching controls"},
+    {"id": "base22-14-v2-engine-chart", "variant": "14.2", "printed_page": 18, "representation": "source_figure_crop", "zoom": true, "must_include": "full axes, all time ticks and temperature ticks"},
+    {"id": "base22-14-v2-characteristics", "variant": "14.2", "printed_page": 18, "representation": "exact_html_matching_table", "zoom": false, "must_include": "four time intervals and four characteristics exactly"},
+    {"id": "base22-14-v3-function-graphs", "variant": "14.3", "printed_page": 19, "representation": "source_figure_crop", "zoom": true, "must_include": "all four A/Б/В/Г graphs, axes and -1/0/1 labels"},
+    {"id": "base22-14-v3-characteristics", "variant": "14.3", "printed_page": 19, "representation": "exact_html_matching_table", "zoom": false, "must_include": "all four function characteristics exactly"},
+
+    {"id": "base22-15-v1-triangle-median", "variant": "15.1", "printed_page": 19, "representation": "source_figure_crop", "zoom": true, "must_include": "triangle ABC, point M and median BM with labels"},
+
+    {"id": "base22-16-v1-cylinder-section", "variant": "16.1", "printed_page": 20, "representation": "source_figure_crop", "zoom": true, "must_include": "complete cylinder section geometry and relevant labels"},
+    {"id": "base22-16-v2-pyramid", "variant": "16.2", "printed_page": 20, "representation": "source_figure_crop", "zoom": true, "must_include": "complete square pyramid drawing"},
+    {"id": "base22-16-v3-spheres", "variant": "16.3", "printed_page": 20, "representation": "source_figure_crop", "zoom": true, "must_include": "both spheres or complete source comparison drawing"},
+
+    {"id": "base22-17-v1-number-line", "variant": "17.1", "printed_page": 21, "representation": "source_figure_crop", "zoom": true, "must_include": "full coordinate line, 0–6 ticks and A/B/C/D positions"},
+    {"id": "base22-17-v1-numbers-table", "variant": "17.1", "printed_page": 21, "representation": "source_formula_table_crop", "zoom": true, "must_include": "all four source numbers with fractions/logarithm/radical/power rendered exactly"},
+    {"id": "base22-17-v2-inequalities-table", "variant": "17.2", "printed_page": 21, "representation": "source_formula_table_crop", "zoom": true, "must_include": "all four inequalities and all four graphical solution rows; no clipped ray/inequality symbols"},
+
+    {"id": "base22-19-v2-card-expression", "variant": "19.2", "printed_page": 23, "representation": "source_formula_crop", "zoom": false, "must_include": "complete square-card expression with all placeholder squares"},
+
+    {"id": "base22-21-v2-rectangle-partition", "variant": "21.2", "printed_page": 24, "representation": "source_figure_crop", "zoom": true, "must_include": "all four rectangles and perimeter labels 24, 28, 16 and ?"}
+  ],
+  "counts": {
+    "reference_full_page_renders": 4,
+    "source_raster_or_formula_candidates": 29,
+    "exact_html_structures": 9,
+    "total_locked_source_elements": 42
+  },
+  "build_rule": "Final crop_px rectangles are not guessed here. They are created from fresh official-PDF renders during build, one item at a time, then passed through VISUAL_UI_CROP_GATE. A representation may change only after documented source/UI audit, never by copying another year's asset map."
+}
