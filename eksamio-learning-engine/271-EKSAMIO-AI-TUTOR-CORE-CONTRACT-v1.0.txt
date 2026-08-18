@@ -1,0 +1,592 @@
+EKSAMIO / PEIS
+AI TUTOR CORE CONTRACT
+VERSION: v1.0
+DATE: 2026-08-19
+STATUS: ACTIVE ARCHITECTURE CONTRACT
+
+PURPOSE
+
+Define the stable subject-agnostic Tutor Core for Eksamio. The Tutor Core must support Russian first, then Mathematics, Physics and future subjects without redesigning the central tutoring architecture.
+
+This contract separates:
+- Tutor Core;
+- Subject Knowledge Packs;
+- Learner Model;
+- deterministic tools;
+- AI/speech providers;
+- content/assessment policy;
+- evidence writes.
+
+The language model is an execution component, not the owner of curriculum truth, learner truth or payment/access truth.
+
+======================================================================
+1. CORE PRODUCT DEFINITION
+======================================================================
+
+Eksamio AI Tutor is not a generic chatbot.
+
+It is a controlled tutoring orchestrator operating over:
+1. verified subject knowledge;
+2. persistent learner state;
+3. current learning goal;
+4. current task/context;
+5. deterministic subject tools;
+6. pedagogical strategy policy;
+7. evidence and verification rules.
+
+Core loop:
+
+OBSERVE
+-> INTERPRET LEARNER STATE
+-> SELECT PEDAGOGICAL ACTION
+-> RETRIEVE VERIFIED KNOWLEDGE / CALL TOOL
+-> INTERACT
+-> CHECK UNDERSTANDING
+-> VERIFY INDEPENDENTLY
+-> WRITE EVIDENCE
+-> UPDATE LEARNER STATE
+-> SELECT NEXT BEST ACTION
+
+======================================================================
+2. TUTOR CORE MUST REMAIN SUBJECT-AGNOSTIC
+======================================================================
+
+Tutor Core owns:
+- session goal;
+- tutoring state machine;
+- learner-context assembly;
+- pedagogy strategy selection;
+- hint escalation/de-escalation;
+- conversation turn policy;
+- voice/text/multimodal channel coordination;
+- tool routing;
+- source-grounding enforcement;
+- understanding checks;
+- verification requests;
+- evidence write requests;
+- cost/model routing;
+- safety/fallback behavior.
+
+Tutor Core does NOT own:
+- Russian grammar rules;
+- mathematical formulas;
+- physical laws;
+- official EGE/OGE answers;
+- subject-specific scoring rules;
+- canonical examples/exceptions;
+- subject-specific step checking.
+
+Those belong to Subject Knowledge Packs and deterministic subject tools.
+
+======================================================================
+3. SUBJECT KNOWLEDGE PACK CONTRACT
+======================================================================
+
+Every subject pack must expose, at minimum:
+
+subject_id
+semantic_registry_version
+source_manifest_version
+knowledge_units[]
+prerequisite_relations[]
+exam_overlays[] where applicable
+approved_explanations[]
+approved_examples[]
+common_misconceptions[]
+subject_tool_capabilities[]
+source/provenance references
+
+A knowledge unit must be addressable by stable semantic_id.
+
+Subject packs must support retrieval by:
+- semantic_id;
+- prerequisite relation;
+- exam route/task overlay;
+- content/task mapping;
+- misconception/error type;
+- source/provenance.
+
+Subject packs must not store per-user mastery.
+
+======================================================================
+4. LEARNER MODEL INPUT CONTRACT
+======================================================================
+
+Tutor receives compact structured context, not raw full history.
+
+Minimum context shape:
+
+learner_id or anonymous_id
+subject_id
+current_goal
+current_semantic_ids[]
+current_task/source_item_id
+attempt_state
+recent_evidence_summary
+mastery_by_relevant_semantic_id
+mastery_confidence
+prerequisite_state
+recent_error_fingerprint
+help_history
+retention_due
+session_time_budget
+exam/date context where relevant
+access/entitlement capability flags where relevant
+
+Raw chat transcript may be referenced for continuity but must not substitute for structured learner state.
+
+======================================================================
+5. TUTOR SESSION MODES
+======================================================================
+
+Supported core modes:
+
+A. EXPLAIN
+"Explain this to me."
+
+B. HELP_ME_SOLVE
+Learner is solving a concrete task/homework item.
+
+C. EXPLAIN_MY_ERROR
+Tutor explains why the learner's actual answer/process failed.
+
+D. ORAL_RECALL
+Tutor asks learner to answer/explain aloud.
+
+E. TEACH_BACK
+Learner explains a rule/method in own words; tutor checks completeness and misconceptions.
+
+F. GUIDED_PRACTICE
+Tutor leads through a small set of targeted practice steps.
+
+G. VERIFY
+Independent no-help check after tutoring.
+
+H. REVIEW / RETENTION
+Delayed recheck of previously learned material.
+
+I. HOMEWORK_WITH_ME
+Multi-step homework session using the same core modes.
+
+J. DIAGNOSTIC_DIALOGUE
+Short adaptive interaction designed to identify a likely gap, not merely teach immediately.
+
+Modes may transition during a session but the current mode must remain explicit in orchestration state.
+
+======================================================================
+6. PEDAGOGICAL STRATEGY LIBRARY
+======================================================================
+
+Tutor does not use one fixed "Socratic" behavior for every learner/problem.
+
+Available strategy primitives include:
+- ask for learner attempt;
+- ask what is already known;
+- micro-hint;
+- cue attention to relevant fragment;
+- leading question;
+- partial worked step;
+- rule reminder;
+- simple explanation;
+- deeper explanation;
+- analogy when subject-appropriate;
+- example;
+- counterexample;
+- contrast two similar cases;
+- identify misconception;
+- return to prerequisite;
+- ask learner to justify answer;
+- teach-back;
+- independent new example;
+- delayed verification.
+
+Strategy selection must consider:
+- whether learner attempted the task;
+- mastery level;
+- mastery confidence;
+- first learning vs review;
+- previous help intensity;
+- repeated misconception;
+- prerequisite readiness;
+- session time budget;
+- learner goal.
+
+======================================================================
+7. HELP LADDER / ANSWER RELEASE POLICY
+======================================================================
+
+Default help ladder:
+
+0. learner attempt
+1. micro-hint
+2. guiding question
+3. point to location/type of issue
+4. explain relevant rule/method
+5. partial worked reasoning
+6. full worked solution when justified
+7. independent verification item
+
+The tutor must not mechanically force every learner through every level.
+
+Full solution is allowed when appropriate, for example:
+- learner explicitly requests it after meaningful attempt/help;
+- instructional goal requires worked example;
+- time-limited one-off homework mode reaches configured escalation threshold;
+- accessibility/learning context requires more direct support.
+
+However, full solution must not count as mastery evidence by itself.
+
+======================================================================
+8. KNOWLEDGE GROUNDING RULE
+======================================================================
+
+For any claim that depends on curriculum, rule, official exam facts or canonical subject matter:
+
+TUTOR MUST:
+1. resolve relevant semantic_id(s);
+2. retrieve approved knowledge/source data;
+3. use deterministic official data where applicable;
+4. generate explanation only within that grounded envelope.
+
+If grounding is unavailable or conflicting:
+- do not invent;
+- mark/return needs_review or insufficient_verified_knowledge;
+- provide only safe generic tutoring assistance that does not assert an unverified rule/fact.
+
+AI output must never silently become canonical knowledge.
+
+======================================================================
+9. TOOL-FIRST RULE
+======================================================================
+
+Tutor Core decides when a deterministic tool is more reliable than model reasoning.
+
+Examples:
+
+Russian:
+- answer key lookup;
+- semantic mapping;
+- rule/exception retrieval;
+- morphology/orthography/punctuation validators where available.
+
+Mathematics:
+- arithmetic calculator;
+- symbolic equivalence checker;
+- equation solver/checker;
+- step validator;
+- graph/function tool where appropriate.
+
+Physics:
+- unit/dimensional analysis;
+- numeric calculation;
+- formula relation checker;
+- graph/data interpretation tools.
+
+The model explains tool results; it does not replace deterministic checks when deterministic checking is available.
+
+======================================================================
+10. VOICE CONTRACT
+======================================================================
+
+Voice is a first-class channel, not a separate tutor.
+
+The same Tutor Core state and knowledge grounding must apply to text and voice.
+
+Voice requirements:
+- low-latency turn-taking;
+- interruption/barge-in support;
+- learner can answer orally;
+- tutor can ask learner to explain concept aloud;
+- transcript/event representation available for evidence extraction;
+- important canonical conclusions are derived from grounded Tutor Core context, not from free voice improvisation;
+- voice provider must be replaceable.
+
+Architecture:
+
+VOICE CHANNEL
+-> speech/realtime provider adapter
+-> Tutor Core
+-> knowledge/tools/learner state
+-> response
+-> speech provider adapter
+
+No provider-specific voice logic may be embedded in semantic learner state.
+
+======================================================================
+11. MULTIMODAL CONTRACT
+======================================================================
+
+Tutor may receive:
+- typed text;
+- spoken input;
+- photo;
+- screenshot;
+- PDF/document;
+- image of handwritten work;
+- later, diagrams/board-like input where technically justified.
+
+Multimodal ingestion must separate:
+A. user source capture/recognition;
+B. task extraction;
+C. semantic mapping;
+D. tutoring.
+
+For ambiguous extraction, tutor must confirm critical recognized content before high-stakes checking/scoring.
+
+Learner uploads are not canonical knowledge sources.
+
+======================================================================
+12. LEARNER EVIDENCE WRITE POLICY
+======================================================================
+
+Tutor conversation does not automatically equal mastery evidence.
+
+Evidence classes may include:
+- learner_answer_correct_without_help;
+- learner_answer_wrong;
+- correct_after_hint_level_N;
+- teach_back_complete;
+- teach_back_partial;
+- misconception_detected;
+- prerequisite_gap_detected;
+- independent_verification_correct;
+- independent_verification_wrong;
+- retention_correct;
+- retention_wrong;
+- confidence_signal;
+- response_latency/effort signal where validated.
+
+Highest-value mastery evidence comes from independent learner performance without active tutor help.
+
+Tutor must request evidence writes through the platform evidence service; it must not directly mutate canonical mastery state.
+
+======================================================================
+13. VERIFY-AFTER-HELP CONTRACT
+======================================================================
+
+After meaningful tutor assistance, Eksamio should normally obtain a new independent check before increasing mastery substantially.
+
+Flow:
+HELP
+-> LEARNER UNDERSTANDS/ACKNOWLEDGES
+-> NEW INDEPENDENT ITEM OR TEACH-BACK
+-> RESULT
+-> EVIDENCE
+-> MASTERY UPDATE
+
+The verification item must not simply repeat the same answer pattern if transfer is the target.
+
+======================================================================
+14. PREREQUISITE / READINESS CONTRACT
+======================================================================
+
+Tutor must be able to distinguish:
+- target skill is weak but ready to learn;
+- target skill is blocked by prerequisite gap;
+- target skill appears known but retention is weak;
+- insufficient evidence exists to decide.
+
+If prerequisite gap is likely and evidence confidence is adequate, tutor may temporarily route to prerequisite repair.
+
+Readiness is not identical to weakness.
+
+======================================================================
+15. NEXT BEST ACTION INTERFACE
+======================================================================
+
+Tutor may propose a next action but the platform NBA engine owns cross-session prioritization.
+
+Tutor emits structured recommendation candidate such as:
+
+action_type
+semantic_targets[]
+reason_codes[]
+urgency
+estimated_minutes
+required_mode
+verification_needed
+source_session_id
+
+NBA engine may combine this with:
+- exam importance;
+- time to exam;
+- learner goal;
+- retention due;
+- global workload;
+- other subjects/tasks.
+
+======================================================================
+16. MODEL / PROVIDER ROUTING
+======================================================================
+
+Tutor Core is provider-neutral.
+
+Provider adapters may expose:
+- text reasoning model;
+- low-cost text model;
+- realtime voice model;
+- STT;
+- TTS;
+- image/multimodal model.
+
+The platform selects model tier based on task difficulty and cost policy.
+
+Example routing:
+LEVEL 0: deterministic tools only
+LEVEL 1: low-cost model for simple grounded explanation/classification
+LEVEL 2: stronger model for complex tutoring/reasoning
+LEVEL 3: realtime/advanced model for difficult live voice or complex multimodal tutoring
+
+No product feature may assume one specific provider/model ID forever.
+
+======================================================================
+17. COST CONTROL CONTRACT
+======================================================================
+
+Tutor must be designed for cost per learning outcome, not maximum token usage.
+
+Required controls:
+- compact context summaries;
+- retrieval only of relevant semantic knowledge;
+- prompt/context caching where provider supports it;
+- deterministic checks before AI calls;
+- low-cost model routing;
+- hard request/session ceilings;
+- per-user internal AI budget;
+- voice-minute accounting;
+- expensive-call accounting;
+- abuse/rate controls;
+- kill switch / provider fallback.
+
+Do not send entire learner history or entire textbooks to the model per turn.
+
+======================================================================
+18. SAFETY / TRUTH BOUNDARIES
+======================================================================
+
+Tutor must not:
+- synthesize official FIPI answers/criteria when canonical data exists;
+- claim official essay score when only AI preliminary evaluation exists;
+- treat hints-assisted success as independent mastery;
+- write learner state directly from model opinion;
+- silently change source truth;
+- leak private learner data into public knowledge artifacts;
+- use another learner's data as tutoring context;
+- present unverified source conflicts as resolved facts.
+
+======================================================================
+19. EXPERIMENTATION CONTRACT
+======================================================================
+
+Tutor strategy changes should be experimentally measurable.
+
+Minimum experiment dimensions:
+- strategy variant;
+- learner cohort constraints;
+- source skill/domain;
+- next-item correctness;
+- NIC-3;
+- transfer;
+- retention;
+- help intensity;
+- cost;
+- latency;
+- abandonment.
+
+A change that increases chat engagement but decreases learning outcome must not be treated as a product improvement.
+
+======================================================================
+20. RUSSIAN PILOT CONTRACT
+======================================================================
+
+Russian is the first full implementation target.
+
+Russian Tutor must connect to, without duplicating or mutating canonical content:
+- Unified Semantic Identity Registry (to be built over existing frozen school identities + EGE graph mappings);
+- existing explanation banks;
+- current exceptions manifest/bank;
+- practice bank;
+- EGE trainer adapters;
+- demo adapters 2022-2026;
+- essay criteria/self-check layer;
+- Source Library/provenance.
+
+Initial high-value Russian tutor scenarios:
+1. explain my error;
+2. help me solve;
+3. explain rule at chosen depth;
+4. contrast confusing cases;
+5. oral recall;
+6. teach-back;
+7. verify after help;
+8. homework from photo/text;
+9. retention review.
+
+The production trainer and accepted demos remain frozen unless a separate integration gate authorizes changes.
+
+======================================================================
+21. MATHEMATICS TRANSFER TEST
+======================================================================
+
+Before declaring the Tutor Core stable/universal, create a narrow Mathematics Subject Pack pilot.
+
+Purpose:
+- verify Subject Pack boundary;
+- verify tool routing;
+- verify step-by-step solution checking;
+- verify that tutoring strategies are not Russian-language-specific;
+- identify missing core interfaces before broad expansion.
+
+Do not require full Mathematics content coverage for this architectural test.
+
+======================================================================
+22. PHYSICS THIRD-SUBJECT TEST
+======================================================================
+
+Physics should be the third architecture validation subject because it adds:
+- units/dimensions;
+- formulas;
+- numerical reasoning;
+- graph/diagram interpretation;
+- physical meaning;
+- multi-step problem solving.
+
+If the same Tutor Core supports Russian, Mathematics and Physics with subject adapters/tools rather than core rewrites, the architecture is considered ready for broader subject scaling.
+
+======================================================================
+23. REQUIRED PLATFORM DEPENDENCIES
+======================================================================
+
+Before full Tutor production integration, platform contracts must exist for:
+- Unified Semantic Identity Registry;
+- Learner Evidence Service;
+- Learner State / Mastery Service;
+- prerequisite/readiness representation;
+- Next Best Action interface;
+- identity/auth anonymous/authenticated;
+- entitlement checks;
+- Source Library/provenance;
+- AI provider adapter;
+- speech provider adapter;
+- observability/cost accounting.
+
+======================================================================
+24. DEFINITION OF SUCCESS
+======================================================================
+
+Eksamio Tutor succeeds when it can answer all of these questions reliably:
+
+1. What exactly is the learner trying to learn/solve?
+2. Which stable semantic knowledge is involved?
+3. What does Eksamio currently know about this learner's mastery and prerequisites?
+4. Which pedagogical action is best now?
+5. Which verified source/tool should support the response?
+6. How much help was given?
+7. Can the learner now do a new independent task?
+8. What evidence should be written?
+9. What should happen next and when?
+10. Did this tutoring interaction measurably improve learning?
+
+If the system can only hold a convincing conversation but cannot answer these questions, it is not yet the Eksamio Tutor.
+
+END OF DOCUMENT
