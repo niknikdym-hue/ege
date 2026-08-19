@@ -1,0 +1,134 @@
+name: profile-math-2023-visual-prebuild
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/profile-math-2023-visual-prebuild.yml'
+      - 'PROFILE-MATH-2023-VISUAL-PREBUILD-TRIGGER.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-math-2023-visual-prebuild
+  cancel-in-progress: false
+
+jobs:
+  visual-prebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact-source visual dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
+      - name: Build exact-source PROFILE 2023 visual lock
+        run: python matematika-source-2023/profile-source-lock/build_profile_2023_visual_lock.py --repo-root .
+      - name: Independent generated-asset gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, io, json
+          import fitz
+          from PIL import Image, ImageChops
+          root=Path('.')
+          lock=root/'matematika-source-2023/profile-source-lock'
+          pdf=root/'matematika-source-2023/ege-2023-matematika-profil-demoversiya.pdf'
+          inv=json.loads((lock/'VISUAL-INVENTORY.json').read_text(encoding='utf-8'))
+          fid=json.loads((lock/'VISUAL-FIDELITY-EVIDENCE.json').read_text(encoding='utf-8'))
+          assert inv['status']=='VISUAL_PREBUILD_LOCK_PASS'
+          assert inv['source_sha256']=='9278f5cc60388da2ed63eaa946c82e0902f0867047fc9b5ea6051bae16e3b6b2'
+          assert inv['direct_exact_source_assets']==47 and len(inv['assets'])==47
+          assert sum(x['semantic_role']=='learner_condition' for x in inv['assets'])==35
+          assert inv['reference_materials']==1 and inv['extended_solution_criteria_segments']==11
+          assert inv['reconstructed_official_visuals']==0 and inv['stitched_multi_page_official_visuals']==0
+          assert fid['pixel_identity_pass']==47 and fid['pixel_identity_fail']==0
+          h=hashlib.sha256(pdf.read_bytes()).hexdigest(); assert h==inv['source_sha256']
+          pm=json.loads((lock/'demo/PAGE-MAP.json').read_text(encoding='utf-8'))
+          doc=fitz.open(pdf); cache={}; pages={}; scale=2.5
+          for row in pm['pages']:
+              ph=int(row['physical_pdf_page'])
+              if ph not in cache:
+                  pix=doc[ph-1].get_pixmap(matrix=fitz.Matrix(scale,scale),alpha=False)
+                  cache[ph]=Image.open(io.BytesIO(pix.tobytes('png'))).convert('RGB')
+              full=cache[ph]; half=row['half']
+              im=full.crop((0,0,full.width//2,full.height)) if half=='left' else full.crop((full.width//2,0,full.width,full.height)) if half=='right' else full
+              pages[int(row['printed_page'])]=im
+          assert len(pages)==23
+          for row in inv['assets']:
+              asset=Image.open(lock/row['file']).convert('RGB')
+              expected=pages[row['printed_page']].crop(tuple(row['final_crop_render_px']))
+              assert asset.size==expected.size and ImageChops.difference(asset,expected).getbbox() is None, row['asset_id']
+              assert hashlib.sha256((lock/row['file']).read_bytes()).hexdigest()==row['sha256']
+              assert row['four_edge_audit']=='PASS'
+          print('INDEPENDENT PROFILE 2023 VISUAL GATE PASS: 47/47 pixel-identical direct crops')
+          PY
+      - name: Close prebuild admissions and record run
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          lock=Path('matematika-source-2023/profile-source-lock')
+          for name in ['EXAM-LOCK.json','ANSWER-LOCK.json','INPUT-CONTRACT.json','EXTENDED-CRITERIA-MAP.json']:
+              p=lock/name; d=json.loads(p.read_text(encoding='utf-8'))
+              d.setdefault('admission',{})['ready_for_verified_build']=True
+              if name=='EXTENDED-CRITERIA-MAP.json':
+                  d['admission']['extended_visual_assets_still_require_visual_inventory_and_crop_gate']=False
+                  d['admission']['extended_visual_assets_locked']=True
+              p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          cat > PROFILE-MATH-2023-LATEST-VISUAL-PREBUILD-RUN.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Head SHA: ${{ github.sha }}
+          Status: VISUAL_PREBUILD_LOCK_PASS
+          Source SHA256: 9278f5cc60388da2ed63eaa946c82e0902f0867047fc9b5ea6051bae16e3b6b2
+          Assets: 47/47 direct exact-source lossless crops
+          Learner conditions: 35/35
+          Reference materials: 1/1
+          Extended solution/criteria segments: 11/11
+          Pixel identity: 47/47 PASS
+          Reconstructed official visuals: 0
+          Stitched multi-page official visuals: 0
+          READY_FOR_VERIFIED_BUILD: YES
+          READY_FOR_TILDA: NO
+          LIVE_GO: NO
+          EOF
+      - name: Persist visual prebuild lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add matematika-source-2023/profile-source-lock/EXAM-LOCK.json \
+                  matematika-source-2023/profile-source-lock/ANSWER-LOCK.json \
+                  matematika-source-2023/profile-source-lock/INPUT-CONTRACT.json \
+                  matematika-source-2023/profile-source-lock/EXTENDED-CRITERIA-MAP.json \
+                  matematika-source-2023/profile-source-lock/VISUAL-INVENTORY.json \
+                  matematika-source-2023/profile-source-lock/VISUAL-FIDELITY-EVIDENCE.json \
+                  matematika-source-2023/profile-source-lock/VISUAL-PREBUILD-VALIDATION.txt \
+                  matematika-source-2023/profile-source-lock/visual-assets \
+                  PROFILE-MATH-2023-LATEST-VISUAL-PREBUILD-RUN.txt
+          git commit -m 'Persist PROFILE 2023 exact-source visual prebuild lock' || true
+          git push origin HEAD:main
+      - name: Upload visual prebuild evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: profile-math-2023-visual-prebuild
+          path: |
+            matematika-source-2023/profile-source-lock/VISUAL-INVENTORY.json
+            matematika-source-2023/profile-source-lock/VISUAL-FIDELITY-EVIDENCE.json
+            matematika-source-2023/profile-source-lock/VISUAL-PREBUILD-VALIDATION.txt
+            matematika-source-2023/profile-source-lock/visual-assets
+            PROFILE-MATH-2023-LATEST-VISUAL-PREBUILD-RUN.txt
+          retention-days: 30
