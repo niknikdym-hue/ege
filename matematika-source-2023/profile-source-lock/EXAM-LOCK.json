@@ -1,0 +1,62 @@
+{
+  "exam": "ЕГЭ",
+  "subject": "математика",
+  "level": "профильный",
+  "year": 2023,
+  "status": "EXAM_LOCK_PASS",
+  "authority": "official FIPI 2023 demo/spec/codifier exact bytes locked under matematika-source-2023/profile-source-lock",
+  "source_files": {
+    "demo": {"file": "ege-2023-matematika-profil-demoversiya.pdf", "sha256": "9278f5cc60388da2ed63eaa946c82e0902f0867047fc9b5ea6051bae16e3b6b2", "physical_pdf_pages": 12, "prelock_generated_printed_segments": 23},
+    "spec": {"file": "ege-2023-matematika-profil-specifikatsiya.pdf", "sha256": "a960947267c29db18561f4ddf36b78e8385e9833fa47a4d8240f7328b80a36d3", "physical_pdf_pages": 7, "prelock_generated_printed_segments": 14},
+    "codifier": {"file": "ege-2023-matematika-kodifikator.pdf", "sha256": "e75a596e2d1b8e76f99d2cf717f1269a247725a40cfac9e6bf305d8bb131c087", "physical_pdf_pages": 21, "prelock_generated_printed_segments": 42}
+  },
+  "exam_structure": {
+    "task_count": 18,
+    "short_task_range": [1, 11],
+    "extended_task_range": [12, 18],
+    "duration_minutes": 235,
+    "duration_human": "3 часа 55 минут",
+    "max_primary_score": 31,
+    "per_task_max_score": {"1":1,"2":1,"3":1,"4":1,"5":1,"6":1,"7":1,"8":1,"9":1,"10":1,"11":1,"12":2,"13":3,"14":2,"15":2,"16":3,"17":4,"18":4},
+    "score_sum_check": 31
+  },
+  "reference_materials": {"provided_with_exam": true, "demo_official_page": 3, "description": "Справочные материалы, выдаваемые вместе с КИМ; точные формулы отображаются только из exact FIPI source render/crop.", "source_representation_rule": "direct source render/crop; text extraction is not typography authority"},
+  "allowed_equipment": {"spec_official_page": 7, "allowed": ["линейка"], "source_wording": "При выполнении заданий разрешается пользоваться линейкой."},
+  "official_examples": {
+    "short_examples": 28,
+    "extended_examples": 7,
+    "total_examples": 35,
+    "examples_per_task": {"1":4,"2":3,"3":2,"4":2,"5":4,"6":3,"7":2,"8":1,"9":3,"10":1,"11":3,"12":1,"13":1,"14":1,"15":1,"16":1,"17":1,"18":1},
+    "short_answer_table_official_page": 13,
+    "variant_source_pages": [
+      {"task":1,"variant":1,"condition_official_pages":[4]},{"task":1,"variant":2,"condition_official_pages":[4]},{"task":1,"variant":3,"condition_official_pages":[4]},{"task":1,"variant":4,"condition_official_pages":[4]},
+      {"task":2,"variant":1,"condition_official_pages":[5]},{"task":2,"variant":2,"condition_official_pages":[5]},{"task":2,"variant":3,"condition_official_pages":[5]},
+      {"task":3,"variant":1,"condition_official_pages":[6]},{"task":3,"variant":2,"condition_official_pages":[6]},
+      {"task":4,"variant":1,"condition_official_pages":[6]},{"task":4,"variant":2,"condition_official_pages":[6]},
+      {"task":5,"variant":1,"condition_official_pages":[7]},{"task":5,"variant":2,"condition_official_pages":[7]},{"task":5,"variant":3,"condition_official_pages":[7]},{"task":5,"variant":4,"condition_official_pages":[7]},
+      {"task":6,"variant":1,"condition_official_pages":[7]},{"task":6,"variant":2,"condition_official_pages":[7]},{"task":6,"variant":3,"condition_official_pages":[7]},
+      {"task":7,"variant":1,"condition_official_pages":[8]},{"task":7,"variant":2,"condition_official_pages":[8]},
+      {"task":8,"variant":1,"condition_official_pages":[9]},
+      {"task":9,"variant":1,"condition_official_pages":[9]},{"task":9,"variant":2,"condition_official_pages":[9]},{"task":9,"variant":3,"condition_official_pages":[9]},
+      {"task":10,"variant":1,"condition_official_pages":[10]},
+      {"task":11,"variant":1,"condition_official_pages":[10]},{"task":11,"variant":2,"condition_official_pages":[10]},{"task":11,"variant":3,"condition_official_pages":[10]},
+      {"task":12,"variant":1,"condition_official_pages":[11]},{"task":13,"variant":1,"condition_official_pages":[11]},{"task":14,"variant":1,"condition_official_pages":[11]},{"task":15,"variant":1,"condition_official_pages":[11]},
+      {"task":16,"variant":1,"condition_official_pages":[12]},{"task":17,"variant":1,"condition_official_pages":[12]},{"task":18,"variant":1,"condition_official_pages":[12]}
+    ]
+  },
+  "answer_solution_criteria_source_pages": {
+    "short_tasks_1_11": {"official_answer_table_pages": [13]},
+    "12":{"condition":[11],"solution":[14],"criteria":[14],"max_score":2},
+    "13":{"condition":[11],"solution":[15],"criteria":[15],"max_score":3},
+    "14":{"condition":[11],"solution":[16],"criteria":[16],"max_score":2},
+    "15":{"condition":[11],"solution":[17],"criteria":[17],"max_score":2},
+    "16":{"condition":[12],"solution":[18],"criteria":[19],"max_score":3},
+    "17":{"condition":[12],"solution":[19,20],"criteria":[21],"max_score":4},
+    "18":{"condition":[12],"solution":[21,22],"criteria":[22],"max_score":4},
+    "general_expert_disagreement_rules":{"demo_official_pages":[23]}
+  },
+  "source_evidence": {"demo_structure_official_page":3,"spec_structure_official_page":4,"spec_duration_equipment_scoring_official_page":7,"demo_short_answer_table_official_page":13},
+  "source_anomalies": [],
+  "processing_caveats": ["Extracted text is diagnostic only for formulas, radicals, superscripts/subscripts and figures; exact source rendering is mandatory before literal/visual lock.","Raw counts of ИЛИ are not used to infer variant count; examples_per_task is locked from condition boundaries plus official FIPI answer table."],
+  "admission": {"ready_for_answer_input_criteria_visual_locks":true,"ready_for_verified_build":false,"ready_for_tilda":false,"live_go":false}
+}
