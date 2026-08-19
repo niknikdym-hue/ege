@@ -39,8 +39,8 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install PyMuPDF
-        run: python -m pip install --disable-pip-version-check pymupdf
+      - name: Install render dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
 
       - name: Render exact FIPI demo into official printed-page images
         shell: bash
@@ -50,6 +50,7 @@ jobs:
           from pathlib import Path
           import hashlib
           import pymupdf as fitz
+          from PIL import Image
 
           src=Path('matematika-source-2024/ege-2024-matematika-profil-demoversiya.pdf')
           expected='89698a59be7da5c5f6c628f752a6810534888c423cae31a181ef743c910c1ae3'
@@ -64,15 +65,12 @@ jobs:
               pix=page.get_pixmap(matrix=fitz.Matrix(scale,scale), alpha=False)
               png=out/f'physical-{physical:02d}.png'
               pix.save(png)
-              # The official source is two-up landscape after page rotation except a possible sparse half.
-              from PIL import Image
               im=Image.open(png)
               if im.width > im.height*1.18:
                   halves=[im.crop((0,0,im.width//2,im.height)), im.crop((im.width//2,0,im.width,im.height))]
               else:
                   halves=[im]
               for half in halves:
-                  # Keep only non-empty official halves; analyzer prelock already established 23 printed pages.
                   gray=half.convert('L')
                   bbox=gray.point(lambda p: 255 if p < 248 else 0).getbbox()
                   if bbox is None:
@@ -82,12 +80,6 @@ jobs:
           assert printed==23, printed
           print('RENDER PASS printed pages:', printed)
           PY
-        env:
-          PIP_DISABLE_PIP_VERSION_CHECK: '1'
-
-      - name: Install Pillow used by render split
-        if: failure()
-        run: true
 
       - name: Upload exact-source page renders
         uses: actions/upload-artifact@v4
