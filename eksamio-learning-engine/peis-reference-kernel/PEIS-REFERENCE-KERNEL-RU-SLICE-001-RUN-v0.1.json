@@ -1,0 +1,654 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-20",
+  "status": "PASS_EXECUTABLE_REFERENCE_NO_PRODUCTION_INTEGRATION",
+  "kernel_version": "peis-reference-kernel-v0.1-ordinal-no-coefficients",
+  "subject_fixture_ref": "../russian-program/verified-slices/RU-SLICE-001-GOLDEN-SCENARIOS-v0.1.json",
+  "subject_scenarios": [
+    {
+      "scenario_id": "RU001-GOLDEN-A-PREREQUISITE-GAP",
+      "status": "PASS",
+      "trace": [
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001"
+          ],
+          "mastery": {
+            "band": "NOT_ESTABLISHED",
+            "status": "INSUFFICIENT_EVIDENCE",
+            "confidence_band": "INSUFFICIENT",
+            "reason_codes": [
+              "MAPPING_PARTIAL"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "INSUFFICIENT_EVIDENCE",
+            "required_prerequisite_assessments": [
+              {
+                "edge_ref": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+                "relation_type": "REQUIRED",
+                "state": "UNKNOWN",
+                "confidence_band": "INSUFFICIENT",
+                "basis_evidence_refs": []
+              }
+            ]
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 1,
+          "nba": {
+            "action_type": "DIAGNOSE_TARGET",
+            "semantic_targets": [
+              "school-verb-personal-ending-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "STATE_UNCERTAIN_NEEDS_DIAGNOSTIC"
+            ],
+            "verification_required": true
+          },
+          "step": 1
+        },
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001",
+            "ru001.ev.preq.diag.failure"
+          ],
+          "mastery": {
+            "band": "NOT_ESTABLISHED",
+            "status": "INSUFFICIENT_EVIDENCE",
+            "confidence_band": "INSUFFICIENT",
+            "reason_codes": [
+              "MAPPING_PARTIAL"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "BLOCKED_BY_REQUIRED_PREREQUISITE",
+            "required_prerequisite_assessments": [
+              {
+                "edge_ref": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+                "relation_type": "REQUIRED",
+                "state": "GAP_CONFIRMED",
+                "confidence_band": "HIGH",
+                "basis_evidence_refs": [
+                  "ru001.ev.preq.diag.failure"
+                ]
+              }
+            ]
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 1,
+          "nba": {
+            "action_type": "LEARN_PREREQUISITE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [
+              "school-verb-personal-ending-conjugation-base"
+            ],
+            "reason_codes": [
+              "PREREQUISITE_BLOCKS_TARGET",
+              "PREREQUISITE_REPAIR_FOR_ORIGINAL_GOAL"
+            ],
+            "verification_required": true
+          },
+          "step": 2
+        },
+        {
+          "target_semantic_id": "school-verb-personal-ending-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001",
+            "ru001.ev.preq.diag.failure"
+          ],
+          "mastery": {
+            "band": "EMERGING",
+            "status": "INFERRED",
+            "confidence_band": "HIGH",
+            "reason_codes": [
+              "INDEPENDENT_EVIDENCE_PRESENT",
+              "MAPPING_PARTIAL"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "READY_TO_LEARN_OR_PRACTICE",
+            "required_prerequisite_assessments": []
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 2,
+          "nba": {
+            "action_type": "INDEPENDENT_PRACTICE",
+            "semantic_targets": [
+              "school-verb-personal-ending-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "INDEPENDENT_VERIFICATION_REQUIRED_AFTER_HELP"
+            ],
+            "verification_required": true
+          },
+          "step": 3,
+          "intervention_ref": "../../36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json#verb_conjugation_endings",
+          "meaningful_help_delivered_for": "school-verb-personal-ending-conjugation-base"
+        },
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001",
+            "ru001.ev.preq.diag.failure",
+            "ru001.ev.preq.reverify.success"
+          ],
+          "mastery": {
+            "band": "NOT_ESTABLISHED",
+            "status": "INSUFFICIENT_EVIDENCE",
+            "confidence_band": "INSUFFICIENT",
+            "reason_codes": [
+              "MAPPING_PARTIAL"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "READY_TO_LEARN_OR_PRACTICE",
+            "required_prerequisite_assessments": [
+              {
+                "edge_ref": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+                "relation_type": "REQUIRED",
+                "state": "MET",
+                "confidence_band": "MODERATE",
+                "basis_evidence_refs": [
+                  "ru001.ev.preq.diag.failure",
+                  "ru001.ev.preq.reverify.success"
+                ]
+              }
+            ]
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 1,
+          "nba": {
+            "action_type": "GUIDED_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "TARGET_READY_TO_LEARN"
+            ],
+            "verification_required": true
+          },
+          "step": 4
+        },
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001",
+            "ru001.ev.preq.diag.failure",
+            "ru001.ev.preq.reverify.success",
+            "ru001.ev.target.assisted.success"
+          ],
+          "mastery": {
+            "band": "EMERGING",
+            "status": "INFERRED",
+            "confidence_band": "LOW",
+            "reason_codes": [
+              "ASSISTED_EVIDENCE_ONLY",
+              "MAPPING_PARTIAL",
+              "INDEPENDENT_VERIFICATION_REQUIRED"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "READY_TO_LEARN_OR_PRACTICE",
+            "required_prerequisite_assessments": [
+              {
+                "edge_ref": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+                "relation_type": "REQUIRED",
+                "state": "MET",
+                "confidence_band": "MODERATE",
+                "basis_evidence_refs": [
+                  "ru001.ev.preq.diag.failure",
+                  "ru001.ev.preq.reverify.success"
+                ]
+              }
+            ]
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 2,
+          "nba": {
+            "action_type": "INDEPENDENT_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "INDEPENDENT_VERIFICATION_REQUIRED_AFTER_HELP"
+            ],
+            "verification_required": true
+          },
+          "step": 5
+        },
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001",
+            "ru001.ev.preq.diag.failure",
+            "ru001.ev.preq.reverify.success",
+            "ru001.ev.target.assisted.success",
+            "ru001.ev.target.verify.success"
+          ],
+          "mastery": {
+            "band": "DEVELOPING",
+            "status": "INFERRED",
+            "confidence_band": "MODERATE",
+            "reason_codes": [
+              "INDEPENDENT_EVIDENCE_PRESENT",
+              "MAPPING_PARTIAL"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "READY_TO_LEARN_OR_PRACTICE",
+            "required_prerequisite_assessments": [
+              {
+                "edge_ref": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+                "relation_type": "REQUIRED",
+                "state": "MET",
+                "confidence_band": "MODERATE",
+                "basis_evidence_refs": [
+                  "ru001.ev.preq.diag.failure",
+                  "ru001.ev.preq.reverify.success"
+                ]
+              }
+            ]
+          },
+          "retention_state": "SCHEDULED",
+          "state_revision": 3,
+          "nba": {
+            "action_type": "RETENTION_REVIEW",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "RETENTION_DUE"
+            ],
+            "verification_required": true
+          },
+          "step": 6,
+          "measured_state_delta": {
+            "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+            "mastery_band_before": "EMERGING",
+            "mastery_band_after": "DEVELOPING",
+            "status_before": "INFERRED",
+            "status_after": "INFERRED",
+            "evidence_event_ref": "ru001.ev.target.verify.success"
+          }
+        }
+      ]
+    },
+    {
+      "scenario_id": "RU001-GOLDEN-B-PREREQUISITE-ALREADY-MET",
+      "status": "PASS",
+      "trace": [
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001"
+          ],
+          "mastery": {
+            "band": "NOT_ESTABLISHED",
+            "status": "INSUFFICIENT_EVIDENCE",
+            "confidence_band": "INSUFFICIENT",
+            "reason_codes": [
+              "MAPPING_PARTIAL"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "INSUFFICIENT_EVIDENCE",
+            "required_prerequisite_assessments": [
+              {
+                "edge_ref": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+                "relation_type": "REQUIRED",
+                "state": "UNKNOWN",
+                "confidence_band": "INSUFFICIENT",
+                "basis_evidence_refs": []
+              }
+            ]
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 1,
+          "nba": {
+            "action_type": "DIAGNOSE_TARGET",
+            "semantic_targets": [
+              "school-verb-personal-ending-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "STATE_UNCERTAIN_NEEDS_DIAGNOSTIC"
+            ],
+            "verification_required": true
+          },
+          "step": 1
+        },
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001",
+            "ru001.ev.preq.diag.success"
+          ],
+          "mastery": {
+            "band": "NOT_ESTABLISHED",
+            "status": "INSUFFICIENT_EVIDENCE",
+            "confidence_band": "INSUFFICIENT",
+            "reason_codes": [
+              "MAPPING_PARTIAL"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "READY_TO_LEARN_OR_PRACTICE",
+            "required_prerequisite_assessments": [
+              {
+                "edge_ref": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+                "relation_type": "REQUIRED",
+                "state": "MET",
+                "confidence_band": "MODERATE",
+                "basis_evidence_refs": [
+                  "ru001.ev.preq.diag.success"
+                ]
+              }
+            ]
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 1,
+          "nba": {
+            "action_type": "DIAGNOSE_TARGET",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "STATE_UNCERTAIN_NEEDS_DIAGNOSTIC"
+            ],
+            "verification_required": true
+          },
+          "step": 2
+        },
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001",
+            "ru001.ev.preq.diag.success",
+            "ru001.ev.target.diag.failure"
+          ],
+          "mastery": {
+            "band": "EMERGING",
+            "status": "INFERRED",
+            "confidence_band": "HIGH",
+            "reason_codes": [
+              "INDEPENDENT_EVIDENCE_PRESENT",
+              "MAPPING_PARTIAL"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "READY_TO_LEARN_OR_PRACTICE",
+            "required_prerequisite_assessments": [
+              {
+                "edge_ref": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+                "relation_type": "REQUIRED",
+                "state": "MET",
+                "confidence_band": "MODERATE",
+                "basis_evidence_refs": [
+                  "ru001.ev.preq.diag.success"
+                ]
+              }
+            ]
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 2,
+          "nba": {
+            "action_type": "GUIDED_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "LOW_MASTERY_HIGH_CONFIDENCE",
+              "TARGET_READY_TO_LEARN"
+            ],
+            "verification_required": true
+          },
+          "step": 3
+        },
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001",
+            "ru001.ev.preq.diag.success",
+            "ru001.ev.target.diag.failure",
+            "ru001.ev.target.assisted.success"
+          ],
+          "mastery": {
+            "band": "EMERGING",
+            "status": "INFERRED",
+            "confidence_band": "HIGH",
+            "reason_codes": [
+              "INDEPENDENT_EVIDENCE_PRESENT",
+              "MAPPING_PARTIAL",
+              "INDEPENDENT_VERIFICATION_REQUIRED"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "READY_TO_LEARN_OR_PRACTICE",
+            "required_prerequisite_assessments": [
+              {
+                "edge_ref": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+                "relation_type": "REQUIRED",
+                "state": "MET",
+                "confidence_band": "MODERATE",
+                "basis_evidence_refs": [
+                  "ru001.ev.preq.diag.success"
+                ]
+              }
+            ]
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 3,
+          "nba": {
+            "action_type": "INDEPENDENT_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "INDEPENDENT_VERIFICATION_REQUIRED_AFTER_HELP"
+            ],
+            "verification_required": true
+          },
+          "step": 4
+        },
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.composite.error.001",
+            "ru001.ev.preq.diag.success",
+            "ru001.ev.target.diag.failure",
+            "ru001.ev.target.assisted.success",
+            "ru001.ev.target.verify.success"
+          ],
+          "mastery": {
+            "band": "DEVELOPING",
+            "status": "INFERRED",
+            "confidence_band": "MODERATE",
+            "reason_codes": [
+              "INDEPENDENT_EVIDENCE_PRESENT",
+              "MAPPING_PARTIAL"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "READY_TO_LEARN_OR_PRACTICE",
+            "required_prerequisite_assessments": [
+              {
+                "edge_ref": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+                "relation_type": "REQUIRED",
+                "state": "MET",
+                "confidence_band": "MODERATE",
+                "basis_evidence_refs": [
+                  "ru001.ev.preq.diag.success"
+                ]
+              }
+            ]
+          },
+          "retention_state": "SCHEDULED",
+          "state_revision": 4,
+          "nba": {
+            "action_type": "RETENTION_REVIEW",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "RETENTION_DUE"
+            ],
+            "verification_required": true
+          },
+          "step": 5,
+          "measured_state_delta": {
+            "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+            "mastery_band_before": "EMERGING",
+            "mastery_band_after": "DEVELOPING",
+            "status_before": "INFERRED",
+            "status_after": "INFERRED",
+            "evidence_event_ref": "ru001.ev.target.verify.success"
+          }
+        }
+      ]
+    },
+    {
+      "scenario_id": "RU001-GUARDRAIL-TARGET-VERIFY-FAILURE",
+      "status": "PASS",
+      "trace": [
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.target.assisted.success"
+          ],
+          "mastery": {
+            "band": "EMERGING",
+            "status": "INFERRED",
+            "confidence_band": "LOW",
+            "reason_codes": [
+              "ASSISTED_EVIDENCE_ONLY",
+              "INDEPENDENT_VERIFICATION_REQUIRED"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "READY_TO_LEARN_OR_PRACTICE",
+            "required_prerequisite_assessments": []
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 1,
+          "nba": {
+            "action_type": "INDEPENDENT_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "INDEPENDENT_VERIFICATION_REQUIRED_AFTER_HELP"
+            ],
+            "verification_required": true
+          },
+          "step": 1
+        },
+        {
+          "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "consumed_event_refs": [
+            "ru001.ev.target.assisted.success",
+            "ru001.ev.target.verify.failure"
+          ],
+          "mastery": {
+            "band": "EMERGING",
+            "status": "INFERRED",
+            "confidence_band": "HIGH",
+            "reason_codes": [
+              "INDEPENDENT_EVIDENCE_PRESENT"
+            ],
+            "contradiction_status": "NONE_OBSERVED"
+          },
+          "readiness": {
+            "status": "READY_TO_LEARN_OR_PRACTICE",
+            "required_prerequisite_assessments": []
+          },
+          "retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+          "state_revision": 2,
+          "nba": {
+            "action_type": "GUIDED_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [],
+            "reason_codes": [
+              "LOW_MASTERY_HIGH_CONFIDENCE",
+              "TARGET_READY_TO_LEARN"
+            ],
+            "verification_required": true
+          },
+          "step": 2
+        }
+      ]
+    }
+  ],
+  "mathematics_structural_smoke": {
+    "fixture_scope": "STRUCTURAL_ONLY_NO_SUBJECT_TRUTH",
+    "status": "PASS",
+    "trace": {
+      "target_semantic_id": "fixture-mathematics-target-12",
+      "consumed_event_refs": [
+        "math.structural.correct.001",
+        "math.structural.incorrect.002"
+      ],
+      "mastery": {
+        "band": "DEVELOPING",
+        "status": "INFERRED",
+        "confidence_band": "LOW",
+        "reason_codes": [
+          "INDEPENDENT_EVIDENCE_PRESENT",
+          "CONTRADICTORY_EVIDENCE"
+        ],
+        "contradiction_status": "PRESENT_VERIFICATION_RECOMMENDED"
+      },
+      "readiness": {
+        "status": "NEEDS_VERIFICATION",
+        "required_prerequisite_assessments": []
+      },
+      "retention_state": "SCHEDULED",
+      "state_revision": 2,
+      "nba": {
+        "action_type": "VERIFY_UNCERTAIN_STATE",
+        "semantic_targets": [
+          "fixture-mathematics-target-12"
+        ],
+        "prerequisite_targets": [],
+        "reason_codes": [
+          "CONTRADICTORY_EVIDENCE_NEEDS_VERIFICATION"
+        ],
+        "verification_required": true
+      }
+    }
+  },
+  "boundaries": {
+    "numeric_mastery_coefficients": false,
+    "universal_forgetting_curve": false,
+    "subject_specific_core_branch": false,
+    "ai_required": false,
+    "production_state_write": false
+  }
+}
