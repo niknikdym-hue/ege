@@ -1,0 +1,77 @@
+name: physics-2025-layout-extract
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  extract:
+    if: github.head_ref == 'chatgpt/physics-2025-archive-20260819'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2025-archive-20260819
+          fetch-depth: 0
+      - name: Guard one-shot
+        id: gate
+        shell: bash
+        run: |
+          if [ -f .physics-2025-layout-trigger ] && grep -qx 'run=yes' .physics-2025-layout-trigger; then echo 'run=true' >> "$GITHUB_OUTPUT"; else echo 'run=false' >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.run == 'true'
+        with:
+          python-version: '3.12'
+      - name: Render 40 internal FIPI layout pages and split text
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pymupdf pillow >/dev/null
+          python - <<'PY'
+          from pathlib import Path
+          import fitz, json, re, shutil
+          from PIL import Image
+          from io import BytesIO
+
+          src=Path('ege-source-fizika/source-fizika-2025')
+          pdf=src/'ege-2025-fizika-demoversiya.pdf'
+          out=src/'derived-layout'
+          shutil.rmtree(out,ignore_errors=True); out.mkdir(parents=True)
+          doc=fitz.open(pdf)
+          assert len(doc)==20, len(doc)
+          mapping=[]; internal=1
+          for pno,page in enumerate(doc,1):
+              rect=page.rect
+              if rect.width>=rect.height:
+                  orientation='left-right'
+                  clips=[fitz.Rect(0,0,rect.width/2,rect.height),fitz.Rect(rect.width/2,0,rect.width,rect.height)]
+              else:
+                  orientation='top-bottom'
+                  clips=[fitz.Rect(0,0,rect.width,rect.height/2),fitz.Rect(0,rect.height/2,rect.width,rect.height)]
+              for slot,clip in enumerate(clips,1):
+                  pix=page.get_pixmap(matrix=fitz.Matrix(2,2),clip=clip,alpha=False)
+                  im=Image.open(BytesIO(pix.tobytes('png'))).convert('RGB')
+                  image_name=f'page-{internal:02d}.webp'; text_name=f'page-{internal:02d}.txt'
+                  im.save(out/image_name,'WEBP',quality=88,method=6)
+                  text=page.get_text('text',clip=clip).replace('\x00','').strip()
+                  (out/text_name).write_text(text+'\n',encoding='utf-8')
+                  nums=re.findall(r'\b(\d{1,2})\s*/\s*40\b',text)
+                  mapping.append({'layout_page':internal,'physical_pdf_page':pno,'slot':slot,'split_orientation':orientation,'render':f'derived-layout/{image_name}','text':f'derived-layout/{text_name}','detected_footer_pages':nums})
+                  internal+=1
+          assert internal==41
+          meta={'source_year':2025,'authority':'FIPI PDF byte-locked in this source container','physical_pdf_pages':20,'internal_layout_pages':40,'derived_layout_is_content_authority':False,'purpose':'visual/text navigation and crop planning; official PDF remains authority','pages':mapping}
+          (src/'SOURCE-LAYOUT-MAP.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Commit derived layout evidence
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' 'run=no' > .physics-2025-layout-trigger
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-source-fizika/source-fizika-2025 .physics-2025-layout-trigger
+          git commit -m 'Map Physics 2025 official demo layout'
+          git push origin HEAD:chatgpt/physics-2025-archive-20260819
