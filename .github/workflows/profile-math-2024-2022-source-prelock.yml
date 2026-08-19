@@ -1,0 +1,105 @@
+name: profile-math-2024-2022-source-prelock
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'matematika-source-2024/ege-2024-matematika-profil-demoversiya.pdf'
+      - 'matematika-source-2024/ege-2024-matematika-profil-specifikatsiya.pdf'
+      - 'matematika-source-2024/ege-2024-matematika-kodifikator.pdf'
+      - 'matematika-source-2023/ege-2023-matematika-profil-demoversiya.pdf'
+      - 'matematika-source-2023/ege-2023-matematika-profil-specifikatsiya.pdf'
+      - 'matematika-source-2023/ege-2023-matematika-kodifikator.pdf'
+      - 'matematika-source-2022/ege-2022-matematika-profil-demoversiya.pdf'
+      - 'matematika-source-2022/ege-2022-matematika-profil-specifikatsiya.pdf'
+      - 'matematika-source-2022/ege-2022-matematika-kodifikator.pdf'
+      - 'demo-production-standard/scripts/analyze_profile_math_year_sources.py'
+      - '.github/workflows/profile-math-2024-2022-source-prelock.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  source-prelock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PDF analysis dependency
+        run: python -m pip install --disable-pip-version-check pymupdf
+
+      - name: Analyze exact FIPI profile sources for 2024-2022
+        shell: bash
+        run: |
+          set -euo pipefail
+          for YEAR in 2024 2023 2022; do
+            DEST="matematika-source-${YEAR}/profile-source-lock"
+            rm -rf "$DEST"
+            mkdir -p "$DEST"
+            python demo-production-standard/scripts/analyze_profile_math_year_sources.py \
+              --year "$YEAR" \
+              --repo-root "$GITHUB_WORKSPACE" \
+              --out-dir "$DEST"
+          done
+
+      - name: Cross-year separation gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for year in (2024, 2023, 2022):
+              root=Path(f'matematika-source-{year}/profile-source-lock')
+              lock=json.loads((root/'SOURCE-LOCK.json').read_text(encoding='utf-8'))
+              assert lock['year']==year
+              assert lock['level']=='профильный'
+              assert lock['status']=='SOURCE_BYTES_AND_PAGE_MAP_LOCKED'
+              demo=lock['sources']['demo']['file']
+              spec=lock['sources']['spec']['file']
+              assert f'{year}-matematika-profil-demoversiya' in demo
+              assert f'{year}-matematika-profil-specifikatsiya' in spec
+              # Base source-lock is a separate namespace and must never be consumed here.
+              assert root.name=='profile-source-lock'
+          print('PROFILE CROSS-YEAR / BASE-SEPARATION GATE PASS')
+          PY
+
+      - name: Record run and persist prelocks
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > PROFILE-MATH-2024-2022-LATEST-SOURCE-PRELOCK-RUN.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Head SHA: ${{ github.sha }}
+          Years: 2024,2023,2022
+          Status: SOURCE_PRELOCK_PASS
+          Authority: exact year-specific FIPI profile PDFs stored in repository
+          READY_FOR_BUILD: NO — exam/answer/visual year locks still required before each build
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add matematika-source-2024/profile-source-lock matematika-source-2023/profile-source-lock matematika-source-2022/profile-source-lock PROFILE-MATH-2024-2022-LATEST-SOURCE-PRELOCK-RUN.txt
+          if git diff --cached --quiet; then
+            echo 'Profile source prelocks unchanged'
+          else
+            git commit -m 'Persist profile math 2024-2022 FIPI source prelocks'
+            git push origin HEAD:main
+          fi
+
+      - name: Upload source-prelock evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: profile-math-2024-2022-source-prelock
+          path: |
+            matematika-source-2024/profile-source-lock
+            matematika-source-2023/profile-source-lock
+            matematika-source-2022/profile-source-lock
+          retention-days: 30
