@@ -1,0 +1,87 @@
+{
+  "exam": "ЕГЭ",
+  "subject": "математика",
+  "level": "профильный",
+  "year": 2024,
+  "status": "INPUT_CONTRACT_LOCK_PASS",
+  "source_demo_sha256": "89698a59be7da5c5f6c628f752a6810534888c423cae31a181ef743c910c1ae3",
+  "source_basis": {
+    "demo_instruction_page": 3,
+    "part_1_instruction_page": 4,
+    "required_answer_form": "целое число или конечная десятичная дробь",
+    "units_in_answer": false
+  },
+  "global_rules": {
+    "control_type": "text",
+    "inputmode": "decimal",
+    "allowed_characters": "digits 0-9, one leading ASCII/Unicode minus, one decimal separator comma or dot",
+    "plus_sign": "reject",
+    "scientific_notation": "reject",
+    "fractions_with_slash": "reject",
+    "spaces": "reject; do not silently strip internal or edge spaces",
+    "units_or_words": "reject",
+    "multiple_decimal_separators": "reject",
+    "empty_state": "allowed while editing; not counted as answered",
+    "partial_state": "allowed while editing; not counted as answered until lexically valid",
+    "paste_behavior": "validate pasted text as a whole; do not delete forbidden characters",
+    "comma_dot_rule": "accept comma or dot as web decimal separator after lexical validation",
+    "minus_rule": "accept ASCII hyphen-minus or Unicode mathematical minus only in first position; canonicalize to ASCII minus after validation",
+    "numeric_equivalence": "after lexical validation only, compare finite decimal numeric value; leading zeros and trailing fractional zeros do not change value",
+    "answered_navigation_state": "true only for lexically valid value satisfying mode constraints",
+    "invalid_input_behavior": "preserve typed value, show validation state, do not score and do not mark task answered"
+  },
+  "modes": {
+    "number": {
+      "range": "unrestricted finite decimal",
+      "hint": "Введите целое число или конечную десятичную дробь без единиц измерения и пробелов."
+    },
+    "probability": {
+      "range": "0 <= value <= 1",
+      "hint": "Введите вероятность числом от 0 до 1 без единиц измерения и пробелов."
+    },
+    "integer_nonnegative": {
+      "range": "integer >= 0",
+      "decimal_separator": "not allowed",
+      "minus": "not allowed",
+      "hint": "Введите количество точек целым неотрицательным числом."
+    }
+  },
+  "contracts": {
+    "1-1": {"mode": "number"},
+    "1-2": {"mode": "number"},
+    "1-3": {"mode": "number"},
+    "1-4": {"mode": "number"},
+    "2-1": {"mode": "number"},
+    "2-2": {"mode": "number"},
+    "3-1": {"mode": "number"},
+    "3-2": {"mode": "number"},
+    "3-3": {"mode": "number"},
+    "4-1": {"mode": "probability"},
+    "4-2": {"mode": "probability"},
+    "5-1": {"mode": "probability"},
+    "5-2": {"mode": "probability"},
+    "6-1": {"mode": "number"},
+    "6-2": {"mode": "number"},
+    "6-3": {"mode": "number"},
+    "6-4": {"mode": "number"},
+    "7-1": {"mode": "number"},
+    "7-2": {"mode": "number"},
+    "7-3": {"mode": "number"},
+    "8-1": {"mode": "integer_nonnegative"},
+    "8-2": {"mode": "number"},
+    "9-1": {"mode": "number"},
+    "10-1": {"mode": "number"},
+    "10-2": {"mode": "number"},
+    "10-3": {"mode": "number"},
+    "11-1": {"mode": "number"},
+    "12-1": {"mode": "number"},
+    "12-2": {"mode": "number"},
+    "12-3": {"mode": "number"}
+  },
+  "contract_count": 30,
+  "admission": {
+    "all_short_official_examples_have_contract": true,
+    "browser_input_hygiene_tests_required_before_build_release": true,
+    "ready_for_verified_build": false
+  }
+}
