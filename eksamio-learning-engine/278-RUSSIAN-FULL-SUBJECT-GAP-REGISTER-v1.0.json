@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0.0",
+  "date": "2026-08-19",
+  "status": "ACTIVE_GAP_REGISTER_NO_PRODUCTION_INTEGRATION",
+  "subject": "russian",
+  "program_ref": "277-RUSSIAN-FULL-SUBJECT-PROGRAM-v1.0.json",
+  "authorities": [
+    "272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
+    "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+    "274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+    "275-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-VALIDATION.txt"
+  ],
+  "observed_baseline": {
+    "canonical_school_identities": 185,
+    "draft_missing_subject_semantic_candidates": 55,
+    "inventory_needs_review": 8,
+    "current_ege_trainer_items": 174,
+    "inventory_objects": 983,
+    "draft_crosswalk_mappings": 1429
+  },
+  "principles": [
+    "185 is preserved; no gap action may rename or duplicate a canonical school identity.",
+    "55 candidates are evidence-backed inventory candidates, not automatically approved ru-* identities.",
+    "The current product inventory is not itself proof of full grades-5-11 subject completeness.",
+    "Trainer card presence is not equivalent to independently assessable semantic coverage.",
+    "No production change is allowed from this register."
+  ],
+  "gaps": [
+    {
+      "gap_id": "RU-GAP-001",
+      "kind": "SEMANTIC_ADMISSION",
+      "priority": "BLOCKING_FOR_CANONICAL_REGISTRY",
+      "scope": "candidate-001..candidate-055",
+      "status": "OPEN",
+      "problem": "55 missing-subject semantic candidates exist in the audited inventory but have not been admitted as final ru-* semantic identities.",
+      "closure_gate": [
+        "source-backed review per candidate",
+        "duplicate check against all 185 school-* identities and admitted subject identities",
+        "granularity decision",
+        "stable ru-* id only after approval",
+        "crosswalk replacement of candidate refs with canonical semantic refs"
+      ]
+    },
+    {
+      "gap_id": "RU-GAP-002",
+      "kind": "FOUNDATIONAL_SUBJECT_SCOPE",
+      "priority": "HIGH",
+      "modules": ["RU-PROG-01", "RU-PROG-04", "RU-PROG-05", "RU-PROG-06"],
+      "status": "OPEN",
+      "problem": "The current semantic inventory was built from current Russian products/authorities; it does not yet prove a complete canonical grades-5-11 identity set for phonetics/graphics, morphemics, word formation and full morphology.",
+      "closure_gate": [
+        "source-library coverage pass for each domain",
+        "reuse existing identity where meaning already exists",
+        "admit only genuinely missing semantic identities",
+        "record provenance and grade scope"
+      ]
+    },
+    {
+      "gap_id": "RU-GAP-003",
+      "kind": "OGE_WRITTEN_RESPONSE_SCOPE",
+      "priority": "HIGH",
+      "modules": ["RU-PROG-15"],
+      "status": "OPEN",
+      "problem": "OGE route objects exist, but the full semantic decomposition for exposition, microthemes, compression methods and written-response competencies is not yet canonicalized as a subject layer.",
+      "closure_gate": [
+        "official OGE authority decomposition",
+        "source-backed semantic admission",
+        "map OGE route objects to semantic identities",
+        "independent evidence rules for listening/reading/writing"
+      ]
+    },
+    {
+      "gap_id": "RU-GAP-004",
+      "kind": "CURRENT_EGE_TRAINER_IDENTITY_COVERAGE",
+      "priority": "HIGH",
+      "modules": ["RU-PROG-02", "RU-PROG-03", "RU-PROG-07", "RU-PROG-08", "RU-PROG-09", "RU-PROG-10", "RU-PROG-11", "RU-PROG-12", "RU-PROG-13", "RU-PROG-14", "RU-PROG-16"],
+      "status": "OPEN",
+      "problem": "The 174 trainer items are inventoried/crosswalked, but there is no closed 185-row identity-level audit classifying each canonical school identity as COVERED, PARTIALLY_COVERED or NOT_COVERED under independent-evidence semantics.",
+      "coverage_status_definitions": {
+        "COVERED": "Current trainer forces application of the concrete identity and can independently evidence it.",
+        "PARTIALLY_COVERED": "Identity appears only in mixed tasks, only some branches, or cannot be isolated as independent evidence.",
+        "NOT_COVERED": "No real current trainer practice/evidence for the identity.",
+        "non_rule": "Mere appearance of a word/example does not count as coverage."
+      },
+      "closure_gate": [
+        "exactly 185 unique school-* rows",
+        "each referenced trainer item exists among current 174",
+        "only three coverage statuses",
+        "counts sum to 185",
+        "gap action assigned to every PARTIALLY_COVERED and NOT_COVERED row"
+      ]
+    },
+    {
+      "gap_id": "RU-GAP-005",
+      "kind": "PROGRAM_CONTENT_MATERIALIZATION",
+      "priority": "HIGH",
+      "modules": "RU-PROG-01..RU-PROG-16",
+      "status": "OPEN",
+      "problem": "The full subject program architecture exists, but not every semantic identity yet has the complete teach/practice/check content bundle required for Tutor, Homework and adaptive course delivery.",
+      "required_bundle": [
+        "canonical explanation",
+        "worked examples",
+        "misconceptions/errors",
+        "guided recognition",
+        "guided application",
+        "independent practice",
+        "mixed/transfer practice",
+        "retention items",
+        "independent mastery check"
+      ]
+    },
+    {
+      "gap_id": "RU-GAP-006",
+      "kind": "PRODUCT_ADAPTER_COMPLETION",
+      "priority": "MEDIUM",
+      "status": "OPEN",
+      "problem": "Existing demos/trainers/thematic trainers/exceptions/practice/explanations are inventoried, but generalized semantic evidence adapters are not yet production-integrated.",
+      "closure_gate": [
+        "canonical registry available",
+        "versioned crosswalk available",
+        "learner evidence schema materialized",
+        "legacy state adapter validated",
+        "regression tests pass",
+        "production integration separately approved"
+      ]
+    }
+  ],
+  "closed_or_frozen": [
+    {
+      "item": "school_semantic_denominator",
+      "state": "FROZEN",
+      "value": 185,
+      "action": "DO_NOT_REOPEN_WITHOUT_NEW_VERSIONED_AUTHORITY"
+    },
+    {
+      "item": "task003_semantic_inventory",
+      "state": "PASS",
+      "inventory_objects": 983,
+      "crosswalk_mappings": 1429
+    }
+  ]
+}
