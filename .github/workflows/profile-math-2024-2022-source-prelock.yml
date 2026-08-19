@@ -1,3 +1,4 @@
+# PROFILE 2024-2022 FIPI PRELOCK — reproducible source-byte/page-map gate
 name: profile-math-2024-2022-source-prelock
 
 on:
@@ -67,7 +68,6 @@ jobs:
               spec=lock['sources']['spec']['file']
               assert f'{year}-matematika-profil-demoversiya' in demo
               assert f'{year}-matematika-profil-specifikatsiya' in spec
-              # Base source-lock is a separate namespace and must never be consumed here.
               assert root.name=='profile-source-lock'
           print('PROFILE CROSS-YEAR / BASE-SEPARATION GATE PASS')
           PY
