@@ -1,0 +1,208 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-19",
+  "status": "SOURCE_GATE_PASS_READY_FOR_IMPLEMENTATION_FIXTURES",
+  "subject": "russian",
+  "slice_id": "RU-SLICE-001",
+  "title": "EGE task 12: verb conjugation -> present-tense participle suffix selection",
+  "purpose": "First narrow verified Russian slice for the shared Eksamio PEIS closed loop. The slice is deliberately small, deterministic, source-backed and capable of exercising composite evidence, prerequisite-readiness and independent verification without creating a Russian-specific learner engine.",
+  "authority_chain": [
+    "../../00-PRODUCT-MASTERPLAN.md",
+    "../../00B-PROJECT-PRIORITIES-CURRENT.md",
+    "../../00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md",
+    "../../253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+    "../../264-RUSSIAN-FIPI-2026-EGE-ROUTE-OVERLAY-v0.1.json",
+    "../../265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json",
+    "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+    "../../36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+    "../../277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+    "../../282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json",
+    "../../283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json",
+    "../../285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json",
+    "../RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-v1.0.json"
+  ],
+  "selection_reason": [
+    "Both semantic identities are already canonical school identities; no new ru-* identity is required.",
+    "Both identities are source-materialized from Rosenthal and current academic norms.",
+    "Both map to official EGE 2026 task 12; corresponding OGE orthography routes also exist.",
+    "Both have source-verified explanation units.",
+    "Both map to real current EGE trainer cards for 2023-2026.",
+    "The current EGE task is composite, so it naturally demonstrates why raw task correctness must not be treated as exact semantic mastery.",
+    "The present-tense participle branch has a documentable prerequisite dependency on verb conjugation, allowing the first real readiness edge to be tested without inventing a course-order dependency.",
+    "Evaluation is deterministic and does not require AI."
+  ],
+  "semantic_identities": [
+    {
+      "semantic_id": "school-verb-personal-ending-conjugation-base",
+      "role": "PREREQUISITE_AND_DIRECT_TARGET",
+      "canonical_label": "Личные окончания глаголов: определение спряжения и выбор окончания",
+      "canonical_source_materialization": {
+        "artifact": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+        "section": "O26_verb_personal_endings",
+        "primary_source": "Rosenthal §44",
+        "current_norm": "current academic conjugation/endings rules"
+      },
+      "explanation_unit": {
+        "artifact": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+        "explanation_id": "verb_conjugation_endings",
+        "source_status": "source_verified"
+      },
+      "official_routes": [
+        "EGE 2026 task 12",
+        "OGE 2026 orthography codifier route 6.7"
+      ],
+      "current_trainer": {
+        "status": "PARTIALLY_COVERED",
+        "task": 12,
+        "mapped_card_ids": [
+          "ege-ru-12-2023-12-01",
+          "ege-ru-12-2024-12-01",
+          "ege-ru-12-2025-12-01",
+          "ege-ru-12-2026-12-01"
+        ]
+      }
+    },
+    {
+      "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+      "role": "PRIMARY_TARGET",
+      "canonical_label": "Гласные в суффиксах причастий: спряжение, инфинитивная основа и тип причастия",
+      "canonical_source_materialization": {
+        "artifact": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+        "section": "O29_participle_vowels",
+        "primary_source": "Rosenthal §47",
+        "current_norm": "Lopatin §§58–60, 76"
+      },
+      "explanation_unit": {
+        "artifact": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+        "explanation_id": "participle_suffixes",
+        "source_status": "source_verified"
+      },
+      "official_routes": [
+        "EGE 2026 task 12",
+        "OGE 2026 orthography codifier route 6.6"
+      ],
+      "current_trainer": {
+        "status": "PARTIALLY_COVERED",
+        "task": 12,
+        "mapped_card_ids": [
+          "ege-ru-12-2023-12-01",
+          "ege-ru-12-2024-12-01",
+          "ege-ru-12-2025-12-01",
+          "ege-ru-12-2026-12-01"
+        ]
+      }
+    }
+  ],
+  "source_backed_prerequisite_candidate": {
+    "edge_id": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+    "source_semantic_id": "school-verb-personal-ending-conjugation-base",
+    "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+    "relation_type": "REQUIRED",
+    "conditional_scope": {
+      "subject_id": "russian",
+      "goal_context": "present-tense participle suffix selection",
+      "route_context": "any Russian route assessing present-tense participle suffix selection"
+    },
+    "provenance": [
+      {
+        "source_ref": "eksamio-learning-engine/russkiy-knigi/rozental.doc",
+        "source_locator": "Rosenthal §44: verb conjugation/personal endings; §47: participle suffixes",
+        "assertion_type": "VERIFIED_SUBJECT_SOURCE"
+      },
+      {
+        "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+        "source_locator": "O26_verb_personal_endings + O29_participle_vowels",
+        "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+      },
+      {
+        "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+        "source_locator": "verb_conjugation_endings.algorithm + participle_suffixes.rule/algorithm",
+        "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+      }
+    ],
+    "review_status": "SOURCE_VERIFIED",
+    "admission_scope": "CANONICAL_GRAPH",
+    "important_boundary": "The REQUIRED relation applies only to the present-tense participle suffix branch. It must not block the entire semantic identity in goal contexts where a past passive participle suffix is selected from the infinitive/model rather than conjugation.",
+    "shared_graph_status": "READY_FOR_SHARED_GRAPH_MATERIALIZATION_NOT_YET_WRITTEN_TO_283_CANONICAL_EDGES"
+  },
+  "current_composite_entry_signal": {
+    "product": "current EGE Russian trainer",
+    "card_id": "ege-ru-12-2026-12-01",
+    "task": 12,
+    "property": "Rows mix verb personal endings and present participle suffixes under one all-or-nothing task answer.",
+    "required_evidence_mapping": [
+      {
+        "semantic_id": "school-verb-personal-ending-conjugation-base",
+        "mapping_resolution": "COMPOSITE"
+      },
+      {
+        "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+        "mapping_resolution": "COMPOSITE"
+      }
+    ],
+    "inference_rule": "An incorrect composite task 12 attempt is evidence of uncertainty over the mapped set, not proof that either exact identity is weak. NBA should request an isolated diagnostic before targeted remediation."
+  },
+  "required_isolated_content_for_slice": {
+    "prerequisite_diagnostic": {
+      "semantic_id": "school-verb-personal-ending-conjugation-base",
+      "minimum_original_items": 4,
+      "requirements": [
+        "exact single semantic target",
+        "unassisted deterministic evaluation",
+        "include regular I/II conjugation and reviewed exception boundaries",
+        "no item copied from official demo/trainer wording"
+      ]
+    },
+    "target_diagnostic_and_practice": {
+      "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+      "goal_context": "present-tense participle suffix selection",
+      "minimum_original_items": 4,
+      "requirements": [
+        "exact single semantic target",
+        "requires deriving the suffix from source verb conjugation",
+        "unassisted deterministic evaluation",
+        "separate from past-passive participle branch"
+      ]
+    },
+    "independent_verification": {
+      "minimum_original_items": 4,
+      "requirements": [
+        "fresh contexts not used in explanation/worked examples",
+        "no hints or solution exposure",
+        "exact semantic target",
+        "SAME_SESSION_VERIFICATION or later retention context recorded through shared EvidenceEvent"
+      ]
+    }
+  },
+  "first_closed_loop_scenario": [
+    "1. Learner fails or produces uncertain evidence on composite EGE task 12.",
+    "2. EvidenceEvent records both semantic targets as COMPOSITE; system does not invent exact weakness.",
+    "3. NBA selects an isolated conjugation diagnostic because the target branch depends on conjugation and prerequisite state is unknown.",
+    "4. If conjugation gap is confirmed, readiness for present-tense participle suffix selection becomes BLOCKED_BY_REQUIRED_PREREQUISITE.",
+    "5. Learner receives source-grounded conjugation explanation/practice and a fresh independent conjugation check.",
+    "6. Shared state is recomputed; once prerequisite is sufficiently established/verified, readiness for the target becomes READY_TO_LEARN_OR_PRACTICE.",
+    "7. Learner practices present-tense participle suffix selection with exact-target items.",
+    "8. Fresh independent verification writes a second exact EvidenceEvent for the target.",
+    "9. Shared PEIS recomputes mastery/readiness and records recommendation result/state delta."
+  ],
+  "forbidden_shortcuts": [
+    "Do not infer exact conjugation or participle weakness directly from an all-or-nothing task 12 failure.",
+    "Do not treat explanation viewing or assisted success as mastery.",
+    "Do not create a Russian-specific evidence/mastery/readiness/NBA engine.",
+    "Do not use AI evaluation for deterministic spelling choices.",
+    "Do not treat exam task order as prerequisite truth.",
+    "Do not generalize the conditional prerequisite edge to past-passive participle suffix selection.",
+    "Do not change current trainer/T123/scoring/localStorage/production in this source-gate stage."
+  ],
+  "gate_result": {
+    "source_truth": "PASS",
+    "canonical_identity_stability": "PASS",
+    "official_route_mapping": "PASS",
+    "source_verified_explanation": "PASS",
+    "documentable_prerequisite": "PASS_CONDITIONAL_PRESENT_TENSE_BRANCH",
+    "current_exact_trainer_coverage": "INSUFFICIENT_BY_DESIGN_PARTIAL_ONLY",
+    "isolated_slice_items": "TO_BUILD",
+    "shared_executable_peis_kernel": "NOT_YET_IMPLEMENTED",
+    "production_integration": "HOLD"
+  }
+}
