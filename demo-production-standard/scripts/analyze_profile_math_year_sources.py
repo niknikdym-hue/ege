@@ -201,6 +201,8 @@ def main() -> None:
             hard_errors.append(f'{role}: year marker {args.year} not found')
         if not c['contains_mathematics_marker']:
             hard_errors.append(f'{role}: mathematics marker not found')
+        if c['standalone_project_marker']:
+            hard_errors.append(f'{role}: standalone ПРОЕКТ marker found; draft/project source forbidden')
     for role in ('demo', 'spec'):
         if not maps[role]['checks']['contains_profile_marker']:
             hard_errors.append(f'{role}: profile marker not found')
