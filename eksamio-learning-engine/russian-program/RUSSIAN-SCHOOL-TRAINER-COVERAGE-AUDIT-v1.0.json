@@ -1,11 +1,12 @@
 {
   "artifact": "RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-v1.0",
   "date": "2026-08-19",
-  "status": "FINAL_SUBJECT_CONTENT_AUDIT",
+  "status": "FINAL_SUBJECT_CONTENT_AUDIT_SECOND_SEMANTIC_PASS",
   "scope": "russian_subject_content_only_no_runtime_integration",
   "authority_chain": [
     "266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json",
     "260-RUSSIAN-SCHOOL-CANONICAL-DENOMINATOR-FINAL-HANDOFF.txt",
+    "264-RUSSIAN-FIPI-2026-EGE-ROUTE-OVERLAY-v0.1.json",
     "272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
     "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
     "274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
@@ -16,7 +17,8 @@
     "workflow_source": ".github/workflows/_tmp-russian-trainer-coverage-probe.yml",
     "workflow_run_id": 32282704412,
     "workflow_conclusion": "success",
-    "trainer_path": "eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/"
+    "trainer_path": "eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/",
+    "second_semantic_pass": "Manual review of the compact 174-card corpus against official FIPI 2026 routes recovered five probe false negatives."
   },
   "fixed_denominators": {
     "canonical_school_semantic_identities": 185,
@@ -33,16 +35,23 @@
     "NOT_COVERED": "No substantive current trainer route/card evidence requires the canonical identity.",
     "word_or_example_presence_alone_is_coverage": false,
     "task_number_route_alone_can_produce_COVERED": false,
-    "probe_override": "The probe produced one tentative COVERED record from a lexical-hit heuristic. It is PARTIALLY_COVERED in this audit because task 13 is composite and does not isolate the identity."
+    "probe_override": "The probe produced one tentative COVERED record from a lexical-hit heuristic. It is PARTIALLY_COVERED in this audit because task 13 is composite and does not isolate the identity.",
+    "second_pass_false_negative_corrections": [
+      "school-adjective-iv-ev-liv-chiv-base -> task 11",
+      "school-adjective-ov-ev-ovat-evat-ovit-evit -> task 11",
+      "school-noun-genitive-plural-ending-system -> task 7",
+      "school-pri-chem-ni-pri-chem-nipochem -> task 14",
+      "school-verb-stressed-va-boundary -> task 11"
+    ]
   },
   "summary": {
     "COVERED": 0,
-    "PARTIALLY_COVERED": 144,
-    "NOT_COVERED": 41,
+    "PARTIALLY_COVERED": 149,
+    "NOT_COVERED": 36,
     "status_sum": 185,
     "full_coverage_rate_pct": 0.0,
-    "any_exposure_rate_pct": 77.84,
-    "no_route_gap_rate_pct": 22.16
+    "any_exposure_rate_pct": 80.54,
+    "no_route_gap_rate_pct": 19.46
   },
   "coverage_parts": [
     {
@@ -76,8 +85,7 @@
     "unique_canonical_ids": 185,
     "trainer_cards": 174,
     "unique_trainer_card_ids": 174,
-    "not_covered_entries_have_zero_candidate_task_routes": true,
-    "partially_covered_entries_have_at_least_one_candidate_task_route": true,
+    "manual_second_pass_false_negatives_corrected": 5,
     "peis_runtime_touched": false,
     "trainer_t123_touched": false,
     "scoring_touched": false,
@@ -85,8 +93,10 @@
     "production_touched": false
   },
   "strict_next_content_step": {
-    "phase_1": "Create dedicated content for the 41 NOT_COVERED identities, explicitly mapped to one canonical_id per independently diagnosable target.",
-    "phase_2": "For the 144 PARTIALLY_COVERED identities, add identity-specific content or mappings only where an exercise genuinely diagnoses that identity; do not relabel mixed EGE exposure as full coverage.",
+    "phase_0": "Split the remaining 36 NOT_COVERED identities by current EGE-2026 relevance before authoring content; do not force school-only skills into the faithful EGE trainer.",
+    "phase_1": "For proven EGE-2026 gaps, create identity-specific EGE practice content while preserving task fidelity.",
+    "phase_2": "For school/full-program gaps without a proven EGE-2026 route, create subject-level thematic/full-program practice mapped to canonical_id rather than polluting the EGE trainer.",
+    "phase_3": "For the 149 PARTIALLY_COVERED identities, add identity-specific content or mappings only where an exercise genuinely diagnoses that identity; do not relabel mixed EGE exposure as full coverage.",
     "runtime_changes": "FORBIDDEN_IN_THIS_CONTENT_PHASE"
   }
 }
