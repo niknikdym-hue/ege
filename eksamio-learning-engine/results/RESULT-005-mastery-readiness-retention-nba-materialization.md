@@ -2,7 +2,7 @@
 
 TASK_ID: TASK-005
 
-STATUS: PARTIAL
+STATUS: DONE
 
 MODE: ADD_ONLY / ARCHITECTURE_MATERIALIZATION / NO_PRODUCTION_INTEGRATION
 
@@ -103,6 +103,8 @@ BRANCH: `codex/task-005-mastery-readiness-retention-nba`
 
 TASK_ARTIFACT_COMMIT: `9642153a4218089424c0501a8eba7a11caea8d42`
 
-PR: BLOCKED_PENDING_GITHUB_PUBLICATION. Direct authenticated push is unavailable in this environment (`git push` cannot obtain GitHub credentials); the signed-in browser session cannot see the local-only branch until it is published. This result will be updated with the exact PR URL/number when publication is authorized/completed.
+PR: [#36](https://github.com/niknikdym-hue/ege/pull/36)
 
-STOP: The four machine-readable contracts, validation snapshot and RESULT-005 are complete locally. Production runtime/service integration is not started. Remaining delivery action: publish this branch and open the required PR.
+PUBLICATION: GitHub Web branch `codex/task-005-mastery-readiness-retention-nba`, published after direct authenticated push was unavailable in this environment. The branch contains only the seven TASK-005 add-only artifacts at their required paths.
+
+STOP: The four machine-readable contracts, validation snapshot and RESULT-005 are complete. Production runtime/service integration is not started.
