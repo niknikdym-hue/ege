@@ -1,0 +1,63 @@
+name: physics-2026-pr-mechanical-fix
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.head_ref == 'chatgpt/physics-2026-acceptance-20260819'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2026-acceptance-20260819
+          fetch-depth: 0
+
+      - name: Patch exact approved criterion references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+          pkg=Path('ege-fizika-demoversiya-v3-1-fixed')
+          def load(name,bid):
+              p=pkg/name; s=p.read_text(encoding='utf-8')
+              m=re.fullmatch(r'(<script type="application/json" id="'+re.escape(bid)+r'">)(.*?)(</script>\s*)',s,re.S)
+              assert m, name
+              return p,m.group(1),json.loads(m.group(2)),m.group(3)
+          def save(p,a,o,z): p.write_text(a+json.dumps(o,ensure_ascii=False,separators=(',',':'))+z,encoding='utf-8')
+          def rep(s,old,new,label):
+              assert s.count(old)==1,(label,s.count(old)); return s.replace(old,new)
+          old_new='записи, соответствующие пунктам о рисунке и/или новых обозначениях, представлены не в полном объёме или отсутствуют'
+          old='записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют'
+          p,a,o,z=load('ege-fizika-demoversiya-T123-04.txt','ephys-data-3'); t={x['number']:x for x in o['tasks']}
+          t[22]['criteriaHtml']=rep(t[22]['criteriaHtml'],old_new,'записи, соответствующие пунктам II или III, представлены не в полном объёме или отсутствуют','22')
+          t[23]['criteriaHtml']=rep(t[23]['criteriaHtml'],old_new,'записи, соответствующие пункту II, представлены не в полном объёме или отсутствуют','23')
+          t[24]['criteriaHtml']=rep(t[24]['criteriaHtml'],old,'записи, соответствующие пункту II, представлены не в полном объёме или отсутствуют','24')
+          t[25]['criteriaHtml']=rep(t[25]['criteriaHtml'],old,'записи, соответствующие пунктам II и III, представлены не в полном объёме или отсутствуют','25')
+          save(p,a,o,z)
+          p,a,o,z=load('ege-fizika-demoversiya-T123-05.txt','ephys-data-4'); v={x['variant']:x for x in o['variants26']}
+          v[1]['criteriaK2Html']=rep(v[1]['criteriaK2Html'],old,'записи, соответствующие пункту II, представлены не в полном объёме или отсутствуют','26v1')
+          v[2]['criteriaK2Html']=rep(v[2]['criteriaK2Html'],old,'записи, соответствующие пунктам II или III, представлены не в полном объёме или отсутствуют','26v2')
+          v[3]['criteriaK2Html']=rep(v[3]['criteriaK2Html'],old,'записи, соответствующие пунктам II и III, представлены не в полном объёме или отсутствуют','26v3')
+          save(p,a,o,z)
+          dpath=pkg/'PHYSICS-2026-CONTENT-FIDELITY-DEFECTS.json'; d=json.loads(dpath.read_text(encoding='utf-8')); d['status']='RESOLVED_PENDING_RENDERED_RECHECK'; d['resolved_count']=7; d['resolved_by']='direct JSON field correction in T123-04/T123-05'; dpath.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          for n in ('ege-fizika-demoversiya-T123-04.txt','ege-fizika-demoversiya-T123-05.txt'):
+              assert 'пунктам о рисунке и/или' not in (pkg/n).read_text(encoding='utf-8')
+          PY
+
+      - name: Commit fixes and remove temporary workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/physics-2026-pr-mechanical-fix.yml .github/workflows/physics-2026-one-shot-acceptance.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Fix Physics 2026 extended criterion fidelity'
+          git push origin HEAD:chatgpt/physics-2026-acceptance-20260819
