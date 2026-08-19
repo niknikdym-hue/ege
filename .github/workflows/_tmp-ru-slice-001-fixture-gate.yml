@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
@@ -17,6 +17,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -31,3 +33,17 @@ jobs:
           test -f eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-PREREQUISITE-EDGE-v0.1.json
           test -f eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-GOLDEN-SCENARIOS-v0.1.json
           test -f eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-FIXTURE-VALIDATION.txt
+      - name: Persist validated fixtures to PR branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-ITEM-BANK-v0.1.json \
+            eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-EVIDENCE-FIXTURES-v0.1.json \
+            eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-PREREQUISITE-EDGE-v0.1.json \
+            eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-GOLDEN-SCENARIOS-v0.1.json \
+            eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-FIXTURE-VALIDATION.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Materialize RU-SLICE-001 validated fixtures [skip ci]'
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
