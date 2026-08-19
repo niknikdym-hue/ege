@@ -1,0 +1,94 @@
+name: physics-2026-exam-tools-patch
+on:
+  push:
+    branches:
+      - chatgpt/physics-2026-source-visual-tools-fix-20260819
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2026-source-visual-tools-fix-20260819
+          fetch-depth: 0
+      - name: Guard
+        id: gate
+        shell: bash
+        run: |
+          if [ -f .physics-2026-exam-tools-trigger ] && grep -qx 'run=yes' .physics-2026-exam-tools-trigger; then echo 'run=true' >> "$GITHUB_OUTPUT"; else echo 'run=false' >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version: '20'
+      - name: Patch runtime with physics keyboard and non-programmable calculator
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          p=Path('ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-06.txt')
+          s=p.read_text(encoding='utf-8')
+          assert 'function installExamTools()' not in s
+          marker='function installRuntimeStyles(){'
+          assert marker in s
+          tools=r'''var PHYSICS_SYMBOLS=["²","³","⁻¹","₀","₁","₂","₃","₄","₅","₆","₇","₈","₉","→","↑","↓","±","≈","√","π","α","β","γ","φ","ω","Δ","Σ","λ","μ","ν","ρ","ε","η","Ω","·","×","≤","≥","v⃗","a⃗","F⃗","p⃗","B⃗","E⃗"];
+var calcLastAnswer=0;
+function insertAtCursor(el,text){if(!el)return;var start=typeof el.selectionStart==="number"?el.selectionStart:el.value.length,end=typeof el.selectionEnd==="number"?el.selectionEnd:start;el.setRangeText(text,start,end,"end");el.dispatchEvent(new Event("input",{bubbles:true}));el.focus()}
+function physicsSymbolKeyboardHtml(targetId){return '<div class="ephys-symbol-keyboard" data-target="'+escapeHtml(targetId)+'" aria-label="Клавиатура физических символов"><div class="ephys-symbol-keyboard__label">Физические знаки</div><div class="ephys-symbol-keyboard__keys">'+PHYSICS_SYMBOLS.map(function(sym){return '<button type="button" class="ephys-symbol-key" data-symbol="'+escapeHtml(sym)+'">'+escapeHtml(sym)+'</button>'}).join("")+'</div></div>'}
+function installSymbolKeyboards(container){container.querySelectorAll("textarea").forEach(function(el){if(!el.id||el.getAttribute("data-symbol-keyboard")==="true")return;el.setAttribute("data-symbol-keyboard","true");var holder=document.createElement("div");holder.innerHTML=physicsSymbolKeyboardHtml(el.id);var keyboard=holder.firstElementChild;el.insertAdjacentElement("afterend",keyboard);keyboard.querySelectorAll("button[data-symbol]").forEach(function(btn){btn.addEventListener("click",function(){insertAtCursor(el,btn.getAttribute("data-symbol"))})})})}
+function calcTokenize(input){var s=String(input||"").replace(/,/g,".").replace(/π/g,"pi").replace(/×/g,"*").replace(/÷/g,"/").replace(/−/g,"-").replace(/\s+/g,"");var out=[],i=0;while(i<s.length){var rest=s.slice(i),m;if((m=rest.match(/^(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/))){out.push({t:"num",v:Number(m[0])});i+=m[0].length;continue}if((m=rest.match(/^[A-Za-z]+/))){out.push({t:"id",v:m[0].toLowerCase()});i+=m[0].length;continue}var c=s[i];if("+-*/^()".indexOf(c)>=0){out.push({t:c,v:c});i++;continue}throw new Error("Недопустимый символ: "+c)}return out}
+function calcEvaluate(input){var tokens=calcTokenize(input),pos=0;function peek(t){return tokens[pos]&&tokens[pos].t===t}function take(t){if(!peek(t))throw new Error("Ожидается "+t);return tokens[pos++]}function expr(){var v=term();while(peek("+")||peek("-")){var op=tokens[pos++].t,r=term();v=op==="+"?v+r:v-r}return v}function term(){var v=power();while(peek("*")||peek("/")){var op=tokens[pos++].t,r=power();if(op==="/"&&r===0)throw new Error("Деление на ноль");v=op==="*"?v*r:v/r}return v}function power(){var v=unary();if(peek("^")){pos++;v=Math.pow(v,power())}return v}function unary(){if(peek("+")){pos++;return unary()}if(peek("-")){pos++;return-unary()}return primary()}function primary(){if(peek("num"))return take("num").v;if(peek("(")){pos++;var v=expr();take(")");return v}if(peek("id")){var id=take("id").v;if(id==="pi")return Math.PI;if(id==="e")return Math.E;if(id==="ans")return calcLastAnswer;if(!peek("("))throw new Error("После "+id+" нужны скобки");pos++;var a=expr();take(")");if(id==="sin")return Math.sin(a*Math.PI/180);if(id==="cos")return Math.cos(a*Math.PI/180);if(id==="tan")return Math.tan(a*Math.PI/180);if(id==="sqrt")return Math.sqrt(a);if(id==="ln")return Math.log(a);if(id==="log")return Math.log10(a);if(id==="abs")return Math.abs(a);throw new Error("Неизвестная функция: "+id)}throw new Error("Неполное выражение")}var result=expr();if(pos!==tokens.length)throw new Error("Проверьте выражение");if(!Number.isFinite(result))throw new Error("Результат не является конечным числом");return result}
+function calculatorHtml(){var keys=[['7','7'],['8','8'],['9','9'],['÷','/'],['√','sqrt('],['4','4'],['5','5'],['6','6'],['×','*'],['x²','^2'],['1','1'],['2','2'],['3','3'],['−','-'],['xʸ','^'],['0','0'],[',','.'],['(', '('],[')',')'],['+','+'],['sin','sin('],['cos','cos('],['tan','tan('],['π','pi'],['EXP','E'],['log','log('],['ln','ln('],['Ans','ans'],['1/x','__RECIP__'],['±','__SIGN__']];return '<div class="ephys-calculator"><p class="ephys-mini"><strong>Непрограммируемый мини-калькулятор.</strong> Тригонометрия — в градусах. Без CAS, формульного решателя и программирования.</p><label for="ephys-calc-expression">Выражение</label><input id="ephys-calc-expression" class="ephys-calc-display" inputmode="text" autocomplete="off"><div class="ephys-calc-result" id="ephys-calc-result" aria-live="polite">0</div><div class="ephys-calc-grid"><button type="button" data-calc-action="clear">C</button><button type="button" data-calc-action="back">⌫</button>'+keys.map(function(k){var val=k[1];return val==="__RECIP__"||val==="__SIGN__"?'<button type="button" data-calc-action="'+(val==="__RECIP__"?'recip':'sign')+'">'+k[0]+'</button>':'<button type="button" data-calc-insert="'+escapeHtml(val)+'">'+k[0]+'</button>'}).join("")+'<button type="button" class="ephys-calc-equals" data-calc-action="equals">=</button></div></div>'}
+function bindCalculator(){var input=byId("ephys-calc-expression"),result=byId("ephys-calc-result");if(!input||!result)return;function setResult(){try{var v=calcEvaluate(input.value);calcLastAnswer=v;result.textContent=Number(v.toPrecision(12)).toString();result.removeAttribute("data-error")}catch(e){result.textContent=e.message;result.setAttribute("data-error","true")}}document.querySelectorAll("#ephys-modal-body [data-calc-insert]").forEach(function(b){b.addEventListener("click",function(){insertAtCursor(input,b.getAttribute("data-calc-insert"))})});document.querySelectorAll("#ephys-modal-body [data-calc-action]").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-calc-action");if(a==="clear"){input.value="";result.textContent="0";result.removeAttribute("data-error");input.focus()}else if(a==="back"){var st=input.selectionStart||0,en=input.selectionEnd||st;if(st===en&&st>0)st--;input.setRangeText("",st,en,"end");input.focus()}else if(a==="recip"){input.value=input.value?'1/('+input.value+')':'1/(';input.focus()}else if(a==="sign"){input.value=input.value?'-('+input.value+')':'-';input.focus()}else if(a==="equals")setResult()})});input.addEventListener("keydown",function(ev){if(ev.key==="Enter"){ev.preventDefault();setResult()}});input.focus()}
+function openCalculator(){openModal("Калькулятор",calculatorHtml());bindCalculator()}
+function installExamTools(){if(byId("ephys-tools-style"))return;var st=document.createElement("style");st.id="ephys-tools-style";st.textContent="#"+ROOT_ID+" .ephys-toolbar{grid-template-columns:auto 1fr auto auto auto}#"+ROOT_ID+" .ephys-symbol-keyboard{margin:10px 0 4px;padding:10px;border:1px solid #dfe4eb;border-radius:12px;background:#f8fafc}#"+ROOT_ID+" .ephys-symbol-keyboard__label{font-size:13px;font-weight:800;margin-bottom:8px}#"+ROOT_ID+" .ephys-symbol-keyboard__keys{display:flex;gap:6px;flex-wrap:wrap}#"+ROOT_ID+" .ephys-symbol-key{min-width:38px;min-height:36px;padding:6px 8px;border:1px solid #cdd4df;border-radius:9px;background:#fff;color:#17324d;font:inherit;font-weight:800;cursor:pointer}#"+ROOT_ID+" .ephys-symbol-key:hover{background:#eef4ff;border-color:#8aa6d8}#"+ROOT_ID+" .ephys-calculator{max-width:620px;margin:0 auto}#"+ROOT_ID+" .ephys-calc-display{width:100%;padding:14px;border:1px solid #cdd4df;border-radius:12px;font:600 18px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace}#"+ROOT_ID+" .ephys-calc-result{margin:10px 0 14px;padding:12px 14px;border-radius:10px;background:#f3f7ff;font:800 20px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}#"+ROOT_ID+" .ephys-calc-result[data-error=true]{background:#fff0f0;color:#8a2634}#"+ROOT_ID+" .ephys-calc-grid{display:grid;grid-template-columns:repeat(5,minmax(48px,1fr));gap:8px}#"+ROOT_ID+" .ephys-calc-grid button{min-height:44px;border:1px solid #cdd4df;border-radius:10px;background:#fff;color:#17324d;font:inherit;font-weight:800;cursor:pointer}#"+ROOT_ID+" .ephys-calc-grid button:hover{background:#f4f7fb}#"+ROOT_ID+" .ephys-calc-grid .ephys-calc-equals{background:#315fb5;color:#fff;border-color:#315fb5}@media(max-width:900px){#"+ROOT_ID+" .ephys-toolbar{grid-template-columns:1fr auto auto auto}#"+ROOT_ID+" .ephys-progress{grid-column:1/-1}}@media(max-width:560px){#"+ROOT_ID+" .ephys-toolbar{grid-template-columns:1fr 1fr}#"+ROOT_ID+" .ephys-toolbar .ephys-timer-wrap,#"+ROOT_ID+" .ephys-progress{grid-column:1/-1}#"+ROOT_ID+" .ephys-toolbar button{width:100%}#"+ROOT_ID+" .ephys-calc-grid{grid-template-columns:repeat(5,minmax(42px,1fr));gap:6px}#"+ROOT_ID+" .ephys-symbol-keyboard__keys{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}}";document.head.appendChild(st);var finish=byId("ephys-finish-top"),ref=byId("ephys-reference");if(finish&&ref&&!byId("ephys-calculator")){var b=document.createElement("button");b.className="ep-button ep-button--small ep-button--secondary";b.id="ephys-calculator";b.type="button";b.textContent="Калькулятор";b.addEventListener("click",openCalculator);finish.parentNode.insertBefore(b,finish)}}
+'''
+          s=s.replace(marker,tools+marker,1)
+          old='bindZoom(stage);updateNav();updateValidation(t,getAnswer(t.number));'
+          assert old in s
+          s=s.replace(old,'installSymbolKeyboards(stage);bindZoom(stage);updateNav();updateValidation(t,getAnswer(t.number));',1)
+          old2='installRuntimeStyles();applyResultSemantics();'
+          assert old2 in s
+          s=s.replace(old2,'installRuntimeStyles();installExamTools();applyResultSemantics();',1)
+          p.write_text(s,encoding='utf-8')
+          contract={
+            'source_year':2026,
+            'status':'IMPLEMENTED_PENDING_BROWSER_GATE',
+            'symbol_keyboard':{
+              'targets':['extended answer textarea','draft textarea'],
+              'symbols':['²','³','⁻¹','subscripts 0–9','vector arrow/common vector tokens','±','≈','√','π','α β γ φ ω','Δ Σ λ μ ν ρ ε η Ω','· × ≤ ≥'],
+              'does_not_solve':True
+            },
+            'calculator':{
+              'type':'non-programmable mini scientific calculator',
+              'allowed_operations':['+','-','*','/','parentheses','powers','square root','reciprocal','scientific notation','sin/cos/tan in degrees','log10','ln','pi','e','Ans'],
+              'forbidden_features':['CAS','equation solver','formula solver','programming','symbolic algebra'],
+              'exam_alignment':'FIPI 2026 instruction allows ruler and non-programmable calculator'
+            },
+            'storage_contract':'unchanged'
+          }
+          Path('ege-fizika-demoversiya-v3-1-fixed/PHYSICS-2026-EXAM-TOOLS-CONTRACT.json').write_text(json.dumps(contract,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-06.txt').read_text(encoding='utf-8')
+          m=re.search(r'<script>(.*)</script>\s*$',s,re.S); assert m
+          Path('/tmp/physics-tools-runtime.js').write_text(m.group(1),encoding='utf-8')
+          PY
+          node --check /tmp/physics-tools-runtime.js
+      - name: Commit exam tools
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' 'run=no' > .physics-2026-exam-tools-trigger
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-06.txt ege-fizika-demoversiya-v3-1-fixed/PHYSICS-2026-EXAM-TOOLS-CONTRACT.json .physics-2026-exam-tools-trigger
+          git commit -m 'Add Physics symbol keyboard and calculator'
+          git push origin HEAD:chatgpt/physics-2026-source-visual-tools-fix-20260819
