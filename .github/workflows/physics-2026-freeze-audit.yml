@@ -1,0 +1,250 @@
+name: physics-2026-freeze-audit
+
+on:
+  push:
+    branches: ['chatgpt/physics-2026-acceptance-20260819']
+    paths:
+      - '.github/workflows/physics-2026-freeze-audit.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PDF inspection dependency
+        run: python -m pip install --disable-pip-version-check pymupdf
+
+      - name: Acquire exact approved FIPI 2026 Physics archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          CAN='ege-source-fizika/source-fizika-2026'
+          URL='https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2026/fi_11_2026.zip'
+          mkdir -p "$CAN"
+          rm -rf "$CAN/original"
+          mkdir -p "$CAN/original"
+          curl --fail --location --retry 3 --retry-delay 2 \
+            --user-agent 'Mozilla/5.0 Eksamio source verification' \
+            --referer 'https://fipi.ru/ege/demoversii-specifikacii-kodifikatory' \
+            "$URL" -o "$CAN/fi_11_2026.zip"
+          unzip -q -o "$CAN/fi_11_2026.zip" -d "$CAN/original"
+          find "$CAN/original" -type f -maxdepth 3 -print
+
+      - name: Verify official bytes, approved status, exam structure and package contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import csv, hashlib, json, re
+          import fitz
+
+          PKG = Path('ege-fizika-demoversiya-v3-1-fixed')
+          PSRC = PKG / 'source'
+          CAN = Path('ege-source-fizika/source-fizika-2026')
+          ORIGINAL = CAN / 'original'
+          ARCHIVE = CAN / 'fi_11_2026.zip'
+          OFFICIAL_URL = 'https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2026/fi_11_2026.zip'
+
+          def sha256(path: Path) -> str:
+              h = hashlib.sha256()
+              with path.open('rb') as f:
+                  for chunk in iter(lambda: f.read(1024 * 1024), b''):
+                      h.update(chunk)
+              return h.hexdigest()
+
+          def norm(text: str) -> str:
+              return re.sub(r'\s+', ' ', text.replace('\u00a0', ' ')).strip()
+
+          official_pdfs = sorted([p for p in ORIGINAL.rglob('*') if p.is_file() and p.suffix.lower() == '.pdf'])
+          package_pdfs = sorted([p for p in PSRC.glob('*.pdf') if p.is_file()])
+          assert len(official_pdfs) == 3, [str(p) for p in official_pdfs]
+          assert len(package_pdfs) == 3, [str(p) for p in package_pdfs]
+
+          official = {}
+          official_rows = []
+          for p in official_pdfs:
+              doc = fitz.open(p)
+              first = norm(' '.join(doc[i].get_text('text') for i in range(min(4, len(doc))))).upper()
+              if 'ДЕМОНСТРАЦИОННЫЙ ВАРИАНТ' in first:
+                  kind = 'demo'
+              elif 'КОДИФИКАТОР' in first:
+                  kind = 'codifier'
+              elif 'СПЕЦИФИКАЦИЯ' in first:
+                  kind = 'specification'
+              else:
+                  raise AssertionError(f'Cannot classify official PDF: {p}')
+              assert kind not in official, kind
+              assert 'ПРОЕКТ' not in first, f'Draft/PROJECT marker found in {p}'
+              all_text = norm(' '.join(page.get_text('text') for page in doc))
+              row = {
+                  'kind': kind,
+                  'file': str(p.relative_to(CAN)),
+                  'bytes': p.stat().st_size,
+                  'sha256': sha256(p),
+                  'pages': len(doc),
+              }
+              official[kind] = {'path': p, 'text': all_text, **row}
+              official_rows.append(row)
+
+          assert set(official) == {'demo', 'codifier', 'specification'}
+          assert official['demo']['pages'] == 42, official['demo']['pages']
+          demo_text = official['demo']['text']
+          spec_text = official['specification']['text']
+          for token in ('26 заданий', '235 минут'):
+              assert token in demo_text, token
+          assert '45' in spec_text and 'Максимальный первичный балл' in spec_text
+
+          official_hashes = sorted(row['sha256'] for row in official_rows)
+          package_rows = [{
+              'file': str(p.relative_to(PKG)),
+              'bytes': p.stat().st_size,
+              'sha256': sha256(p),
+          } for p in package_pdfs]
+          package_hashes = sorted(row['sha256'] for row in package_rows)
+          assert package_hashes == official_hashes, {'official': official_hashes, 'package': package_hashes}
+
+          data_objects = []
+          for name in ('ege-fizika-demoversiya-T123-02.txt','ege-fizika-demoversiya-T123-03.txt','ege-fizika-demoversiya-T123-04.txt','ege-fizika-demoversiya-T123-05.txt'):
+              text = (PKG / name).read_text(encoding='utf-8')
+              blocks = re.findall(r'<script[^>]*type="application/json"[^>]*>(.*?)</script>', text, flags=re.S)
+              assert blocks, name
+              data_objects.extend(json.loads(block) for block in blocks)
+
+          tasks = []
+          variants26 = []
+          for obj in data_objects:
+              tasks.extend(obj.get('tasks', []))
+              variants26.extend(obj.get('variants26', []))
+          by_num = {}
+          for task in tasks:
+              n = int(task['number'])
+              assert n not in by_num, f'duplicate task {n}'
+              by_num[n] = task
+          assert set(by_num) == set(range(1, 26)), sorted(by_num)
+          assert len(variants26) == 3
+          assert all(int(v['number']) == 26 and int(v['maxScore']) == 4 for v in variants26)
+
+          max_scores = {
+              1:1,2:1,3:1,4:1,5:2,6:2,7:1,8:1,9:2,10:2,
+              11:1,12:1,13:1,14:2,15:2,16:1,17:2,18:2,19:1,20:1,
+              21:3,22:2,23:2,24:3,25:3,
+          }
+          for n, score in max_scores.items():
+              assert int(by_num[n]['maxScore']) == score, (n, by_num[n]['maxScore'], score)
+          assert sum(max_scores[n] for n in range(1, 21)) == 28
+          assert sum(max_scores[n] for n in range(21, 26)) + 4 == 17
+
+          expected_answers = {
+              1:'-1',2:'16',3:'10',4:'2.25',5:'35',6:'43',7:'4',8:'0.75',9:'35',10:'33',
+              11:'100',12:'2',13:'4',14:'13',15:'12',16:'4',17:'12',18:'234',20:'25',
+          }
+          for n, expected in expected_answers.items():
+              actual = str(by_num[n].get('answer','')).replace(',', '.')
+              assert actual == expected, (n, actual, expected)
+          task19_blob = json.dumps(by_num[19], ensure_ascii=False)
+          assert '136' in task19_blob and '3' in task19_blob
+
+          unordered = {5,9,14,18,20}
+          ordered = {6,10,15,17}
+          for n in unordered:
+              assert 'unordered' in str(by_num[n].get('kind','')), (n, by_num[n].get('kind'))
+          for n in ordered:
+              assert str(by_num[n].get('kind','')) == 'ordered', (n, by_num[n].get('kind'))
+
+          head = (PKG/'ege-fizika-demoversiya-HEAD.txt').read_text(encoding='utf-8')
+          assert '<title' not in head.lower() or '2026' not in head
+          assert '2026' not in head
+
+          manifest_text = (PKG/'ege-fizika-demoversiya-MANIFEST.txt').read_text(encoding='utf-8')
+          listed = set()
+          for line in manifest_text.splitlines():
+              if '\t' in line and not line.startswith('FILENAME'):
+                  listed.add(line.split('\t',1)[0])
+          actual_files = set(str(p.relative_to(PKG)) for p in PKG.rglob('*') if p.is_file())
+          stale_manifest_entries = sorted(listed - actual_files)
+          missing_manifest_entries = sorted(actual_files - listed - {'ege-fizika-demoversiya-MANIFEST.txt'})
+
+          audit = {
+              'status': 'BYTE_AND_STRUCTURE_AUDIT_PASS',
+              'authority': 'FIPI approved 2026 archive acquired from official URL during audit',
+              'official_archive_url': OFFICIAL_URL,
+              'official_archive': {
+                  'file': str(ARCHIVE.relative_to(CAN)),
+                  'bytes': ARCHIVE.stat().st_size,
+                  'sha256': sha256(ARCHIVE),
+              },
+              'official_pdfs': official_rows,
+              'package_source_pdfs': package_rows,
+              'package_source_byte_identity_with_official_archive': True,
+              'approved_not_project_gate': 'PASS',
+              'demo_pages': official['demo']['pages'],
+              'task_positions_1_25': len(by_num),
+              'task26_official_variants': len(variants26),
+              'part1_max': 28,
+              'part2_max': 17,
+              'total_max': 45,
+              'short_answer_contracts_checked': 20,
+              'manifest_gate': 'FAIL_STALE' if stale_manifest_entries or missing_manifest_entries else 'PASS',
+              'stale_manifest_entries': stale_manifest_entries,
+              'missing_manifest_entries': missing_manifest_entries,
+              'freeze_ready': False,
+              'freeze_blockers': ['current package manifest must be regenerated', 'current-version visual/browser regression must be bound to V3.1 before freeze'],
+          }
+          (PKG/'PHYSICS-2026-BYTE-AUDIT.json').write_text(json.dumps(audit, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+
+          inventory = [
+              'EKSAMIO PHYSICS 2026 — FIPI SOURCE INVENTORY',
+              f'OFFICIAL_SOURCE_URL={OFFICIAL_URL}',
+              'SOURCE_STATUS=APPROVED_FIPI_2026_BYTE_LOCKED',
+              f'ARCHIVE_FILE={ARCHIVE.name}',
+              f'ARCHIVE_BYTES={ARCHIVE.stat().st_size}',
+              f'ARCHIVE_SHA256={sha256(ARCHIVE)}',
+              '',
+              'OFFICIAL_PDFS:',
+          ]
+          for row in sorted(official_rows, key=lambda x: x['kind']):
+              inventory.append(f"{row['kind']}\t{row['file']}\tbytes={row['bytes']}\tpages={row['pages']}\tsha256={row['sha256']}")
+          inventory += ['', 'PACKAGE_SOURCE_BYTE_IDENTITY=PASS', 'APPROVED_NOT_PROJECT=PASS']
+          (CAN/'SOURCE-INVENTORY.txt').write_text('\n'.join(inventory)+'\n', encoding='utf-8')
+
+          status = f'''EKSAMIO PHYSICS 2026 — OFFICIAL SOURCE STATUS
+YEAR=2026
+SUBJECT=physics
+AUTHORITY=FIPI
+OFFICIAL_SOURCE_PAGE=https://fipi.ru/ege/demoversii-specifikacii-kodifikatory
+OFFICIAL_SOURCE_URL={OFFICIAL_URL}
+SOURCE_STATUS=APPROVED_FIPI_2026_BYTE_LOCKED
+SOURCE_GATE=CLOSED
+APPROVED_NOT_PROJECT=PASS
+PACKAGE_SOURCE_BYTE_IDENTITY=PASS
+
+The untouched official FIPI archive is stored as fi_11_2026.zip.
+The untouched official PDFs extracted from that archive are stored under original/.
+Their hashes and page counts are recorded in SOURCE-INVENTORY.txt.
+The three PDFs previously stored in ege-fizika-demoversiya-v3-1-fixed/source are byte-identical to the official FIPI archive contents.
+'''
+          (CAN/'SOURCE-STATUS.txt').write_text(status, encoding='utf-8')
+          print(json.dumps(audit, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Commit audit evidence and canonical source lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-source-fizika/source-fizika-2026 ege-fizika-demoversiya-v3-1-fixed/PHYSICS-2026-BYTE-AUDIT.json
+          git commit -m 'Lock and audit Physics 2026 FIPI source bytes'
+          git push origin HEAD:chatgpt/physics-2026-acceptance-20260819
