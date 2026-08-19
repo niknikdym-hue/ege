@@ -1,0 +1,578 @@
+EKSAMIO / PEIS
+MASTERY CONFIDENCE + READINESS + RETENTION + NEXT BEST ACTION CONTRACT
+VERSION: v1.0
+DATE: 2026-08-19
+STATUS: ACTIVE ARCHITECTURE CONTRACT / MATERIALIZATION AFTER TASK-004 REVIEW
+
+PURPOSE
+
+Define the platform-level inference and recommendation boundaries that sit above the generalized learner-evidence layer.
+
+This contract answers four different questions without collapsing them into one score:
+1. How strong is the evidence that the learner can perform a semantic skill independently?
+2. How certain is Eksamio about that estimate?
+3. Is the learner ready to learn/use a target skill now, given verified prerequisites and retention state?
+4. What is the best next educational action for this learner and goal?
+
+This contract does NOT authorize production integration and does NOT freeze arbitrary psychometric constants before evidence exists.
+
+======================================================================
+1. DEPENDENCY
+======================================================================
+
+This layer consumes the contract defined by:
+- `276-EKSAMIO-LEARNER-EVIDENCE-STATE-CONTRACT-v1.0.txt`;
+- machine-readable evidence/state materialization produced by TASK-004 after review;
+- stable semantic identities/crosswalks;
+- source-backed prerequisite relations when admitted;
+- learner goal/exam overlays.
+
+It must never bypass the evidence layer and infer mastery directly from raw product flags or AI conversation summaries.
+
+======================================================================
+2. FOUR SEPARATE CONCEPTS
+======================================================================
+
+MASTERY ESTIMATE
+= current inference about independent capability on a semantic identity.
+
+INFERENCE CONFIDENCE / UNCERTAINTY
+= how much trustworthy evidence supports that estimate.
+
+READINESS
+= whether the learner is currently prepared to learn/practice a target, considering prerequisite evidence and uncertainty.
+
+NEXT BEST ACTION (NBA)
+= the recommended educational action now, considering mastery, confidence, readiness, retention, learner goal, urgency and available content/time.
+
+These concepts must remain separate.
+
+A learner can be:
+- low mastery but high confidence in that diagnosis;
+- apparently high mastery but low confidence because evidence is old/narrow;
+- weak on a target but ready to learn it;
+- weak on a target but blocked by a prerequisite;
+- previously mastered but retention-due;
+- mastered and retained, so another target is more valuable now.
+
+======================================================================
+3. MASTERY IS AN INFERENCE, NOT A COUNTER
+======================================================================
+
+Mastery must not be defined as:
+- raw percent correct;
+- one correct answer;
+- three consecutive correct answers;
+- a product `mastered` flag;
+- a Tutor statement that the learner understood;
+- a fixed number of completed exercises.
+
+Mastery inference may use evidence features such as:
+- unassisted correctness;
+- amount of evidence;
+- diversity of items/contexts;
+- recency;
+- transfer performance;
+- delayed retention;
+- evaluator trust;
+- assistance history;
+- repeated error recurrence;
+- evidence contradictions;
+- semantic precision of the mapping.
+
+The exact mathematical model must be versioned and replaceable.
+
+======================================================================
+4. CONFIDENCE IS NOT LEARNER SELF-CONFIDENCE
+======================================================================
+
+System inference confidence measures evidence quality/quantity/consistency.
+
+Learner self-confidence is a separate optional signal.
+
+Do not merge them into one field.
+
+System confidence may depend on:
+- number of independent observations;
+- source/evaluator trust;
+- temporal spread;
+- item/context diversity;
+- transfer evidence;
+- retention evidence;
+- contradictions;
+- semantic mapping precision.
+
+Learner self-confidence may be useful for calibration/overconfidence analysis but does not directly establish mastery.
+
+======================================================================
+5. AVOID FALSE PRECISION
+======================================================================
+
+Eksamio may internally compute numeric estimates, but product-facing/state contracts should support bands/uncertainty rather than pretending a weak data point means exact knowledge such as 73.41% mastery.
+
+The inference layer must preserve:
+- estimate;
+- uncertainty/confidence;
+- inference_version;
+- evidence watermark;
+- supporting reason/features.
+
+======================================================================
+6. INDEPENDENCE HIERARCHY
+======================================================================
+
+Evidence strength must be sensitive to assistance.
+
+General ordering principle, subject to versioned inference:
+
+UNASSISTED INDEPENDENT VERIFICATION / DELAYED RETENTION
+> UNASSISTED TRANSFER
+> UNASSISTED SAME-DOMAIN PRACTICE
+> LOW-ASSISTANCE SUCCESS
+> HIGH-ASSISTANCE SUCCESS
+> SOLUTION-EXPOSED COMPLETION
+
+This is an ordering principle, not a fixed coefficient table.
+
+Meaningful Tutor help must normally be followed by an independent verification before substantial mastery increase.
+
+======================================================================
+7. CONTRADICTORY EVIDENCE
+======================================================================
+
+The engine must represent contradictions rather than averaging them away blindly.
+
+Examples:
+- repeated independent success followed by a recent retention failure;
+- correct demo answer but repeated targeted trainer failure;
+- high assisted performance with weak independent performance;
+- strong recognition but weak production/transfer.
+
+Contradictory evidence should generally increase uncertainty and may trigger targeted verification rather than immediate mastery downgrade/upgrade by a fixed rule.
+
+======================================================================
+8. PREREQUISITE GRAPH CONTRACT
+======================================================================
+
+Prerequisite relations must be source-backed and versioned.
+
+Allowed relation classes should support at least:
+- REQUIRED;
+- RECOMMENDED;
+- SUPPORTS.
+
+A course sequence is not automatically a prerequisite graph.
+An exam task dependency is not automatically a prerequisite.
+AI must not invent prerequisite edges.
+
+Each admitted prerequisite relation should support:
+- source semantic_id;
+- target semantic_id;
+- relation type;
+- provenance;
+- review status;
+- graph version;
+- optional scope/context where relation is conditional.
+
+======================================================================
+9. READINESS
+======================================================================
+
+Readiness asks whether a target is learnable/actionable now.
+
+Readiness may consider:
+- target mastery/uncertainty;
+- REQUIRED prerequisite state;
+- prerequisite uncertainty;
+- availability of suitable content/tools;
+- recent evidence;
+- learner goal.
+
+Readiness must be able to represent at least:
+- READY;
+- BLOCKED_BY_PREREQUISITE;
+- INSUFFICIENT_EVIDENCE;
+- ALREADY_STRONG / NOT_CURRENTLY_NEEDED where useful;
+- NEEDS_VERIFICATION where evidence is contradictory/stale.
+
+Exact status names can be finalized in materialization; the distinctions are mandatory.
+
+======================================================================
+10. PREREQUISITE REPAIR
+======================================================================
+
+If a target is blocked by a verified prerequisite gap, NBA may route temporarily to prerequisite repair.
+
+Flow:
+TARGET WEAKNESS
+-> VERIFY PREREQUISITE GAP WITH SUFFICIENT CONFIDENCE
+-> REPAIR PREREQUISITE
+-> VERIFY PREREQUISITE
+-> RETURN TO TARGET
+
+Do not send the learner into an indefinite prerequisite rabbit hole.
+Keep the original target/goal traceable.
+
+======================================================================
+11. RETENTION IS A SEPARATE DIMENSION
+======================================================================
+
+Recent mastery evidence does not prove durable retention.
+
+Retention state must be able to represent:
+- not yet eligible/insufficient evidence;
+- review scheduled;
+- due;
+- overdue;
+- retained after delayed check;
+- retention failure / restabilization needed.
+
+A same-session repeated answer is not delayed retention.
+
+======================================================================
+12. FORGETTING / REVIEW SCHEDULING
+======================================================================
+
+Do not claim one universal forgetting curve for all learners, skills and subjects.
+
+Review scheduling must be a versioned policy that can use:
+- previous independent success;
+- retention successes/failures;
+- time since verification;
+- evidence stability;
+- error recurrence;
+- skill importance/goal relevance;
+- available review capacity.
+
+Initial schedules may be deterministic and conservative.
+Later empirical data may improve them.
+
+Every scheduled review should retain:
+- policy/version;
+- reason;
+- target semantic IDs;
+- due window;
+- source evidence reference.
+
+======================================================================
+13. RETENTION FAILURE
+======================================================================
+
+A retention failure must not erase historical mastery evidence.
+
+It adds new evidence and triggers a new inference.
+
+Likely consequences may include:
+- increased uncertainty;
+- reduced current mastery estimate;
+- restabilization practice;
+- shorter next retention interval.
+
+Exact effects belong to the versioned inference/scheduling policy.
+
+======================================================================
+14. NEXT BEST ACTION — PURPOSE
+======================================================================
+
+NBA chooses the best educational action now.
+
+It is not a feed/recommendation engine optimized for engagement.
+
+Primary objective:
+maximize expected educational value for the learner's goal under time/content/readiness constraints.
+
+NBA must prefer learning gain and durable competence over chat length, clicks or minutes consumed.
+
+======================================================================
+15. NBA CANDIDATE ACTION TYPES
+======================================================================
+
+Candidate generators must support actions such as:
+- DIAGNOSE_TARGET;
+- VERIFY_UNCERTAIN_STATE;
+- LEARN_PREREQUISITE;
+- EXPLAIN_RULE_OR_CONCEPT;
+- GUIDED_PRACTICE;
+- INDEPENDENT_PRACTICE;
+- TRANSFER_CHECK;
+- RETENTION_REVIEW;
+- EXAM_CONTROL / DEMO RECHECK;
+- HOMEWORK_FOLLOWUP;
+- ESSAY_REWRITE / CRITERION_REPAIR;
+- MOVE_TO_NEXT_TARGET;
+- STOP / SESSION_COMPLETE when more work has low value.
+
+Not every subject/product needs every action type.
+
+======================================================================
+16. NBA INPUTS
+======================================================================
+
+NBA may use structured inputs such as:
+- learner goal;
+- target exam/date where relevant;
+- semantic mastery estimate;
+- inference confidence/uncertainty;
+- prerequisite/readiness state;
+- retention due/overdue;
+- recent errors/misconceptions;
+- recent assistance dependence;
+- available content/items/tools;
+- estimated action duration;
+- session time budget;
+- exam relevance/importance overlays;
+- prior recommendation outcome.
+
+Do not use speculative psychological labels as required inputs.
+
+======================================================================
+17. NBA SCORING / PRIORITIZATION PRINCIPLE
+======================================================================
+
+The exact scoring formula remains versioned.
+
+Candidate prioritization should conceptually consider:
+- expected learning gain;
+- goal/exam relevance;
+- urgency;
+- readiness;
+- uncertainty reduction value;
+- retention urgency;
+- estimated time/cost;
+- content availability;
+- need for independent verification after assistance.
+
+Do not hardcode one opaque magic score into product clients.
+
+======================================================================
+18. GOAL / EXAM OVERLAYS DO NOT CHANGE SEMANTIC TRUTH
+======================================================================
+
+A learner's goal may change priority, not the meaning of a skill.
+
+Examples:
+- EGE in 40 days may prioritize high-value exam gaps;
+- school homework tonight may prioritize the homework prerequisite chain;
+- long-term course study may prioritize foundational progression.
+
+Exam route/year/task metadata affects recommendation relevance but does not create or mutate semantic identity/mastery truth.
+
+======================================================================
+19. EXPLAINABLE RECOMMENDATIONS
+======================================================================
+
+Every NBA output must include structured reason codes sufficient to answer:
+WHY THIS NOW?
+
+Examples:
+- `RETENTION_DUE`;
+- `PREREQUISITE_BLOCKS_TARGET`;
+- `INDEPENDENT_VERIFICATION_REQUIRED_AFTER_HELP`;
+- `HIGH_VALUE_EXAM_GAP`;
+- `RECENT_REPEATED_ERROR`;
+- `STATE_UNCERTAIN_NEEDS_DIAGNOSTIC`;
+- `TRANSFER_NOT_YET_VERIFIED`;
+- `TARGET_READY_TO_LEARN`.
+
+Human-facing wording may be generated from these structured reasons.
+Do not let the language model invent the underlying reason after the fact.
+
+======================================================================
+20. NBA OUTPUT CONTRACT
+======================================================================
+
+A recommendation should support fields equivalent to:
+
+recommendation_id
+learner_profile_id
+subject_id
+action_type
+semantic_targets[]
+prerequisite_targets[] where applicable
+reason_codes[]
+priority/score or band under a declared policy version
+estimated_minutes
+product/mode/content route
+verification_required
+created_at
+expires_at / reevaluate_after where useful
+nba_policy_version
+learner_state_watermark
+source_goal/context refs
+
+The recommendation is a proposal/action record, not learner mastery truth.
+
+======================================================================
+21. RECOMMENDATION OUTCOME LOGGING
+======================================================================
+
+To improve NBA scientifically, log whether recommendations were:
+- shown;
+- accepted;
+- skipped;
+- completed;
+- abandoned;
+- followed by independent success/failure;
+- followed by transfer/retention outcome.
+
+Recommendation outcomes must feed evaluation, not silently mutate semantic truth unless they generate valid learner evidence.
+
+======================================================================
+22. EXPERIMENTATION / EFFICACY
+======================================================================
+
+Changes to mastery inference, retention scheduling or NBA policy should be versioned and experimentally evaluable.
+
+Important outcome metrics include:
+- next-item correctness;
+- NIC-3;
+- transfer success;
+- delayed retention;
+- repeated-error reduction;
+- time to independently verified competence;
+- mastery gain per unit learning time;
+- help-dependency reduction;
+- prerequisite repair success;
+- cost per successful learning outcome.
+
+Do not treat increased session length as educational success.
+
+======================================================================
+23. SUBJECT-AGNOSTIC CORE
+======================================================================
+
+Mastery/readiness/retention/NBA core must work across subjects.
+
+Russian supplies semantic knowledge, rule/exceptions data and language-specific tools.
+Mathematics supplies mathematical semantic graph and deterministic math tools.
+Physics supplies units/formulas/graphs/problem-solving tools.
+
+The central inference/recommendation contracts must not require Russian-only fields.
+
+======================================================================
+24. TUTOR CONTRACT
+======================================================================
+
+Tutor Core may request/recommend actions and consume mastery/readiness state, but it must not own cross-session canonical NBA policy.
+
+After Tutor assistance:
+- record assistance-aware evidence;
+- require independent verification when appropriate;
+- only then let the learner-state inference update from that new evidence;
+- NBA selects the next cross-session action.
+
+Tutor conversational fluency must not override structured state.
+
+======================================================================
+25. HOMEWORK CONTRACT
+======================================================================
+
+Homework may create a short-term urgent goal, but still uses the same learner model.
+
+If homework exposes a prerequisite gap:
+- help with the immediate task;
+- record grounded evidence;
+- propose a follow-up prerequisite/target action when useful;
+- do not create a separate Homework mastery system.
+
+======================================================================
+26. COURSE / TRAINER CONTRACT
+======================================================================
+
+Course order and trainer sessions are candidate content routes, not the NBA engine itself.
+
+A course may suggest a default next lesson, while NBA may override with:
+- prerequisite repair;
+- retention review;
+- uncertainty verification;
+- urgent exam gap;
+provided the reason is structured and explainable.
+
+Product-local states remain backward-compatible projections.
+
+======================================================================
+27. SAFETY / FAIRNESS / MINORS
+======================================================================
+
+Do not infer sensitive personality/mental-health traits to rank educational actions.
+
+Use academic evidence needed for learning.
+
+Recommendation reasons should be inspectable and avoid stigmatizing labels.
+
+The learner should not be trapped by an old low mastery estimate; new evidence must be able to update state.
+
+======================================================================
+28. COST CONTROL
+======================================================================
+
+Mastery/readiness/retention/NBA calculations should be deterministic and inexpensive by default.
+
+AI is not required to rank every recommendation.
+
+AI may assist with explanation wording or complex interpretation after the structured engine has determined state/action boundaries.
+
+Do not make every evidence event trigger an expensive frontier-model call.
+
+======================================================================
+29. VERSIONING
+======================================================================
+
+At minimum version separately:
+- mastery inference policy/model;
+- prerequisite graph;
+- readiness policy;
+- retention scheduling policy;
+- NBA policy;
+- semantic registry/crosswalk.
+
+Recommendation and state records must expose relevant versions/watermarks so historical outcomes can be evaluated correctly.
+
+======================================================================
+30. ACCEPTANCE INVARIANTS
+======================================================================
+
+1. Mastery estimate and confidence/uncertainty are separate.
+2. Learner self-confidence and system inference confidence are separate.
+3. Assisted success is not independent mastery.
+4. Retention is not same-session repetition.
+5. Prerequisite edges are source-backed/versioned, not AI guesses.
+6. Course order is not automatically prerequisite truth.
+7. Readiness and weakness are separate.
+8. NBA is optimized for educational value, not engagement.
+9. Recommendations have structured reason codes.
+10. Goal/exam overlays change priority, not semantic truth.
+11. Recommendation outcomes are logged/evaluable.
+12. Algorithms are replaceable/versioned.
+13. Cross-subject core contains no required Russian-only fields.
+14. No production product must be rewritten merely to adopt this architecture.
+
+======================================================================
+31. CURRENT NON-GOALS
+======================================================================
+
+Do NOT now:
+- choose arbitrary final coefficients;
+- claim a universal forgetting curve;
+- materialize guessed prerequisite edges;
+- optimize for engagement;
+- let AI write mastery/recommendation truth directly;
+- build production runtime before TASK-004 evidence/state materialization is reviewed;
+- migrate localStorage;
+- rewrite current trainers/demos/course.
+
+======================================================================
+32. MATERIALIZATION ORDER
+======================================================================
+
+1. Review/merge TASK-004 generalized evidence/state schemas.
+2. Materialize mastery inference input/output contract.
+3. Materialize versioned prerequisite/readiness graph contract.
+4. Materialize retention schedule/state contract.
+5. Materialize NBA candidate/recommendation/result contract.
+6. Build deterministic validators and scenario fixtures.
+7. Run Russian scenarios.
+8. Run narrow Mathematics transfer scenarios.
+9. Only after architecture validation, design production service/runtime integration.
+
+END OF DOCUMENT
