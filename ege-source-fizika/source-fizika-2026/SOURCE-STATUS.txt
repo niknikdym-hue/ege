@@ -1,29 +1,17 @@
-EKSAMIO PHYSICS 2026 — SOURCE STATUS
-
+EKSAMIO PHYSICS 2026 — OFFICIAL SOURCE STATUS
 YEAR=2026
 SUBJECT=physics
 AUTHORITY=FIPI
 OFFICIAL_SOURCE_PAGE=https://fipi.ru/ege/demoversii-specifikacii-kodifikatory
 OFFICIAL_SOURCE_URL=https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2026/fi_11_2026.zip
-
-APPROVED_SET_PUBLICATION_CONFIRMED=YES
 APPROVED_SET_PUBLICATION_DATE=2025-11-12
-DRAFT_PROJECT_SET_IS_NOT_AUTHORITY=YES
+SOURCE_STATUS=APPROVED_FIPI_2026_BYTE_LOCKED
+SOURCE_GATE=CLOSED
+PACKAGE_SOURCE_BYTE_IDENTITY=PASS
+ARCHIVE_SHA256=5d8b6490dbba5e64344b88a75929b08defde478f23420b2076f1e1cc886a4b30
+DEMO_INTERNAL_LAYOUT_PAGES=42
+DEMO_PHYSICAL_PDF_PAGES=21
 
-CURRENT_REPOSITORY_SOURCE_STATE=CANDIDATE_BYTES_PRESERVED
-CURRENT_PACKAGE_SOURCE_PATH=ege-fizika-demoversiya-v3-1-fixed/source/
-CANONICAL_CANDIDATE_PATH=ege-source-fizika/source-fizika-2026/candidate-from-current-package/
-
-PRESERVED_FILES:
-- ege-2026-fizika-demoversiya.pdf
-- ege-2026-fizika-kodifikator.pdf
-- ege-2026-fizika-specifikatsiya.pdf
-
-GIT_BLOB_IDENTITY_WITH_CURRENT_PACKAGE=PASS
-CONTENT_MATCH_TO_APPROVED_2026_SET=SUPPORTED_BY_CURRENT_AUDIT
-EXTERNAL_FIPI_ARCHIVE_SHA256_LOCK=NOT_YET_PROVEN
-SOURCE_GATE=OPEN_PENDING_EXTERNAL_BYTE_LOCK
-
-The three PDFs are preserved in the canonical Physics 2026 source container using the exact Git blobs already present in the current V3.1 package. They are not relabelled as byte-locked official originals until their bytes are compared with the current official FIPI archive fi_11_2026.zip.
-
-Do not use the obsolete root ege-fizika-demoversiya-v3.zip as source authority.
+Untouched current official FIPI archive is preserved as fi_11_2026.zip.
+Untouched PDFs extracted from it are preserved under original/.
+The package source PDFs are byte-identical to the PDFs extracted from that archive.

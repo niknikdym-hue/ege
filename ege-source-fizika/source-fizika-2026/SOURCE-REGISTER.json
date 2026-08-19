@@ -6,32 +6,41 @@
   "official_page": "https://fipi.ru/ege/demoversii-specifikacii-kodifikatory",
   "official_archive_url": "https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2026/fi_11_2026.zip",
   "approved_set_publication_date": "2025-11-12",
-  "draft_project_is_authority": false,
-  "external_archive_sha256_locked": false,
-  "source_gate": "OPEN_PENDING_EXTERNAL_BYTE_LOCK",
+  "approved_status_basis": "current official FIPI 2026 archive + FIPI approved-documents publication",
+  "external_archive_sha256_locked": true,
+  "source_gate": "CLOSED",
+  "archive": {
+    "path": "fi_11_2026.zip",
+    "bytes": 2902153,
+    "sha256": "5d8b6490dbba5e64344b88a75929b08defde478f23420b2076f1e1cc886a4b30"
+  },
   "files": [
     {
-      "role": "demo",
-      "path": "candidate-from-current-package/ege-2026-fizika-demoversiya.pdf",
-      "bytes": 1318654,
-      "git_blob_sha1": "74ab4743c0c417fa3f8147dceb5ddef232ab0b73",
-      "same_git_blob_as_current_package_source": true,
-      "expected_pages": 42
+      "role": "codifier",
+      "official_filename": "ФИ-11 ЕГЭ 2026 КОДИФ.pdf",
+      "package_filename": "ege-2026-fizika-kodifikator.pdf",
+      "bytes": 1071398,
+      "physical_pdf_pages": 28,
+      "sha256": "0e76a2726f273a14fd30df530579cbea6afcbb61fd2c6e4d54aacbf80b714d14"
     },
     {
-      "role": "codifier",
-      "path": "candidate-from-current-package/ege-2026-fizika-kodifikator.pdf",
-      "bytes": 1071398,
-      "git_blob_sha1": "5318b5b48662ad0bdf026953135eb81c8ce741f8",
-      "same_git_blob_as_current_package_source": true
+      "role": "demo",
+      "official_filename": "ФИ-11 ЕГЭ 2026 ДЕМО.pdf",
+      "package_filename": "ege-2026-fizika-demoversiya.pdf",
+      "bytes": 1318654,
+      "physical_pdf_pages": 21,
+      "sha256": "e93318f05b38a664a09a7b154a24710930b833c7a18110f81470398f34fa716a"
     },
     {
       "role": "specification",
-      "path": "candidate-from-current-package/ege-2026-fizika-specifikatsiya.pdf",
+      "official_filename": "ФИ-11 ЕГЭ 2026 СПЕЦ.pdf",
+      "package_filename": "ege-2026-fizika-specifikatsiya.pdf",
       "bytes": 713382,
-      "git_blob_sha1": "20b84a93c5892f4ab6b704153026f24f0a38eebf",
-      "same_git_blob_as_current_package_source": true
+      "physical_pdf_pages": 8,
+      "sha256": "0da709e9a5603e753c293a8010be8a973c312fef98d8c88e4280f2757ba15792"
     }
   ],
-  "rule": "Do not promote candidate bytes to byte-locked official originals until compared against the current approved FIPI archive."
+  "package_source_byte_identity_with_official_archive": true,
+  "demo_internal_layout_pages": 42,
+  "demo_physical_pdf_pages": 21
 }
