@@ -1,0 +1,641 @@
+EKSAMIO / PEIS
+LEARNER EVIDENCE + LEARNER STATE CONTRACT
+VERSION: v1.0
+DATE: 2026-08-19
+STATUS: ACTIVE ARCHITECTURE CONTRACT / NO PRODUCTION INTEGRATION
+
+PURPOSE
+
+Define one subject-agnostic learner evidence and learner-state layer for Eksamio across Russian, Mathematics, Physics and future subjects.
+
+This contract must work over the current Russian ecosystem without rewriting it: historical demos, the full subject trainer, thematic trainers, EGE/OGE products, the parallel full Russian course, Homework and AI Tutor must converge on one evidence/state model rather than creating separate learner-state universes.
+
+This document defines the durable data boundaries. It does NOT authorize production integration and does NOT freeze the final mastery algorithm.
+
+======================================================================
+1. CANONICAL DISTINCTIONS
+======================================================================
+
+SEMANTIC IDENTITY
+= what exact knowledge, skill, procedure or competency the learner must know or be able to perform.
+
+TASK / ITEM
+= a concrete exercise, demo subtask, homework problem, oral prompt or verification item.
+
+EVIDENCE
+= an append-only observation of learner performance or a structured correction/retraction of an earlier observation.
+
+LEARNER STATE
+= a recomputable inference/materialized view derived from evidence under a declared inference version.
+
+MASTERY
+= an inferred educational state. It is not a raw event, product flag, UI label or language-model opinion.
+
+PRODUCT STATE
+= local workflow/UI state such as new/learning/review/mastered or new/active/due/stabilizing/stabilized. Product state may coexist with canonical learner state but must not silently become canonical mastery.
+
+Core rule:
+RAW EVIDENCE IS OBSERVED; MASTERY IS INFERRED.
+
+======================================================================
+2. ONE EVIDENCE BUS ACROSS EKSAMIO
+======================================================================
+
+All learner-facing products must eventually write compatible evidence into the same logical layer:
+- historical and current demos, including 2022-2026 exam-year packages;
+- full subject trainers;
+- thematic trainers;
+- EGE/OGE trainers;
+- school/course modules;
+- explicit diagnostics;
+- Homework;
+- AI Tutor;
+- essay/open-response checks;
+- independent verification;
+- transfer checks;
+- review/retention checks.
+
+No product owns a separate canonical mastery universe.
+
+A product may keep local UI/progress state for UX/backward compatibility, but canonical cross-product learning inference is derived from the shared evidence model.
+
+======================================================================
+3. EVIDENCE IS APPEND-ONLY
+======================================================================
+
+A canonical evidence event is immutable after acceptance.
+
+If an event was wrong, duplicated semantically, invalidated, rescored or must be withdrawn:
+- do not mutate the historical event;
+- write a new correction/supersession/retraction event referencing the prior event_id;
+- preserve the reason, actor/evaluator and version/provenance of the correction.
+
+Benefits:
+- learner state is reproducible;
+- inference algorithms can be upgraded and replayed;
+- audits remain possible;
+- product bugs do not silently rewrite educational history.
+
+======================================================================
+4. MINIMUM EVIDENCE EVENT ENVELOPE
+======================================================================
+
+Every canonical event must support fields equivalent to:
+
+event_id
+idempotency_key where distinct from event_id
+schema_version
+learner_profile_id
+anonymous_identity_ref where applicable
+user_identity_ref where applicable
+subject_id
+semantic_targets[]
+source_object_type
+source_object_id
+source_object_version
+product_type
+product_id / route where useful
+session_id
+occurred_at_client
+received_at_server
+server_sequence_or_watermark where implemented
+attempt_index where meaningful
+outcome/result
+correctness/score where applicable
+response_mode
+assistance_level
+evaluator
+source/provenance refs
+semantic_mapping_version
+content/item version
+exam route/year metadata where applicable
+transfer_context
+retention_context
+error/misconception labels
+latency where valid/useful
+learner_self_confidence where explicitly collected
+subject_payload / extension version where needed
+created_at
+
+Not every field is mandatory for every product, but the canonical schema must make the distinctions representable.
+
+======================================================================
+5. LEARNER IDENTITY RULE
+======================================================================
+
+Canonical academic history is keyed by stable learner_profile_id.
+
+Do not use email as the stable learner identifier.
+
+Keep separate:
+- anonymous browser/session identity;
+- authenticated platform user identity;
+- learner_profile_id / academic history;
+- entitlement/purchase/access state.
+
+Anonymous evidence may later be merged into an authenticated learner profile through an explicit one-time/import process.
+
+Import/merge must:
+- preserve original event IDs/provenance;
+- prevent duplicate import;
+- record merge/import origin;
+- never silently overwrite already accepted evidence.
+
+======================================================================
+6. SEMANTIC TARGET CONTRACT
+======================================================================
+
+Evidence must point to stable semantic meaning, not only to a product item or exam task number.
+
+Each semantic target must support:
+- semantic_id;
+- target_role;
+- semantic_registry_version / mapping_version;
+- optional mapping confidence/review metadata when mapping itself is not deterministic.
+
+Target roles should support at minimum:
+- PRIMARY;
+- SECONDARY;
+- PREREQUISITE_OBSERVED.
+
+For a mixed item, do not arbitrarily distribute mastery credit across every related semantic identity.
+
+The client must not invent semantic contribution weights merely because an item references multiple skills.
+
+If exact diagnostic precision is unavailable, record a partial/composite observation rather than fabricating a precise weakness.
+
+======================================================================
+7. PRODUCT / SOURCE TYPES
+======================================================================
+
+Canonical source types must support at least:
+- demo;
+- subject_trainer;
+- thematic_trainer;
+- ege_oge_trainer;
+- homework;
+- tutor;
+- diagnostic;
+- essay_or_open_response;
+- course_module;
+- retention_review;
+- imported_legacy_state.
+
+Exam year and task route are metadata dimensions, not semantic identity.
+
+A 2022 demo and a 2026 demo may provide evidence for the same semantic identity while preserving their exact source-year truth and item versions.
+
+======================================================================
+8. ASSISTANCE TAXONOMY
+======================================================================
+
+The evidence layer must distinguish help intensity.
+
+Minimum assistance ladder:
+- UNASSISTED;
+- MICRO_HINT;
+- GUIDED_HINT;
+- SOCRATIC_GUIDANCE;
+- RULE_EXPLANATION;
+- PARTIAL_WORKED;
+- WORKED_EXAMPLE;
+- SOLUTION_EXPOSED.
+
+This taxonomy records what happened. It does not itself define final mastery weights.
+
+Key invariant:
+TUTOR-ASSISTED SUCCESS IS NOT EQUIVALENT TO INDEPENDENT SUCCESS.
+
+After meaningful help, a new unassisted verification is normally required before a substantial mastery upgrade.
+
+======================================================================
+9. EVALUATOR / TRUST CONTRACT
+======================================================================
+
+Evidence evaluation must record who/what judged the event and under which version.
+
+Evaluator types must support:
+- DETERMINISTIC_VALIDATOR;
+- OFFICIAL_KEY_OR_RULE;
+- HUMAN_REVIEW;
+- AI_EVALUATOR;
+- HYBRID_VALIDATED.
+
+Evaluator data must support:
+- evaluator_type;
+- evaluator/version;
+- verification/trust class;
+- rubric version where relevant;
+- source/provenance.
+
+AI-derived interpretation is lower-trust by default unless independently validated.
+
+AI must never silently convert its own judgment into official FIPI truth or canonical mastery.
+
+======================================================================
+10. RESULT / OPEN-RESPONSE CONTRACT
+======================================================================
+
+Closed tasks may record exact correctness or deterministic score.
+
+Open-response/essay events must be able to record:
+- overall provisional outcome;
+- rubric dimensions;
+- per-dimension evidence;
+- semantic claims tied to relevant semantic targets;
+- evaluator type/version;
+- uncertainty/review status;
+- official vs educational/preliminary boundary.
+
+An AI essay evaluation is educational evidence, not an official exam score unless an authorized deterministic/human process establishes that status.
+
+======================================================================
+11. CLIENTS DO NOT AUTHOR FINAL EVIDENCE WEIGHT
+======================================================================
+
+Canonical events should store raw evidence features, not a client-written final mastery weight.
+
+Examples of raw features:
+- correctness;
+- assistance level;
+- evaluator trust;
+- transfer context;
+- retention delay/context;
+- item/source version;
+- response mode;
+- semantic target role;
+- latency where validated.
+
+The inference engine may derive effective evidence strength under an inference version.
+
+Do not store an arbitrary `effective_weight` as canonical client truth.
+
+======================================================================
+12. TRANSFER / RETENTION CONTEXT
+======================================================================
+
+The event schema must distinguish at least:
+- same-pattern repetition;
+- near transfer;
+- broader transfer;
+- same-session verification;
+- delayed retention check.
+
+Recognition-only success must not automatically establish transfer.
+
+Same-session repetition must not automatically establish delayed retention.
+
+Retention and transfer policies remain versioned inference/pedagogy policy rather than hardcoded universal facts in the raw event.
+
+======================================================================
+13. ERROR / MISCONCEPTION EVIDENCE
+======================================================================
+
+Evidence may attach structured error or misconception observations.
+
+These are observations/hypotheses and must retain provenance and confidence when not deterministic.
+
+Examples:
+- exact rule error;
+- prerequisite gap;
+- rule confusion;
+- procedural error;
+- reading/parsing error;
+- slip/careless error where defensible;
+- recurring misconception;
+- unknown/insufficient precision.
+
+A broad task failure must not be converted into an exact misconception without evidence.
+
+======================================================================
+14. CANONICAL MATERIALIZED LEARNER STATE
+======================================================================
+
+For each learner_profile_id x semantic_id, the platform must be able to materialize a state containing fields equivalent to:
+
+learner_profile_id
+subject_id
+semantic_id
+semantic_registry_version
+mastery_estimate_or_band
+mastery_status where the inference version defines one
+mastery_confidence / uncertainty
+independent_evidence_summary
+assisted_evidence_summary
+recent_evidence_summary
+last_independent_verification_at
+last_assisted_attempt_at
+transfer_evidence_summary
+retention_evidence_summary
+last_retention_check_at
+retention_due_at where scheduled
+prerequisite/readiness hooks
+error_fingerprint / misconception summary
+goal/exam relevance overlay refs
+inference_version
+computed_at
+evidence_watermark / evidence reference
+state_revision
+
+The exact inference formula and universal mastery status taxonomy are NOT frozen by this contract.
+
+======================================================================
+15. RECOMPUTABLE STATE
+======================================================================
+
+Canonical learner state is a materialized inference, not the only copy of truth.
+
+It must be possible to recompute/backfill state from accepted evidence when:
+- inference_version changes;
+- semantic mapping is corrected through a versioned process;
+- a source event is retracted/superseded;
+- a new retention/readiness model is introduced.
+
+Every materialized state must declare:
+- inference_version;
+- computed_at;
+- evidence watermark/reference sufficient to know which events were included.
+
+Avoid false psychometric precision. Confidence/uncertainty must be distinguishable from the point estimate/status.
+
+======================================================================
+16. PREREQUISITE / READINESS HOOKS
+======================================================================
+
+This contract reserves state interfaces for prerequisite/readiness but does not invent prerequisite edges or freeze the readiness algorithm.
+
+A later versioned engine may use:
+- source-backed prerequisite graph;
+- target mastery evidence;
+- prerequisite states;
+- uncertainty;
+- recent independent verification;
+- current learner goal.
+
+Course ordering is not automatically a prerequisite relation.
+
+======================================================================
+17. IDEMPOTENCY / ORDERING / DUPLICATES
+======================================================================
+
+Server-side acceptance must support:
+- unique event_id;
+- idempotent replay protection;
+- duplicate detection/import protection;
+- client occurrence timestamp distinct from server receipt timestamp;
+- out-of-order arrival;
+- replay/recompute without double counting.
+
+An already accepted event replay must not increment counts or mastery again.
+
+If clients operate offline/local-first, server reconciliation must preserve event identity and provenance.
+
+======================================================================
+18. CORRECTION / RETRACTION EVENT MODEL
+======================================================================
+
+Corrections must support structured linkage such as:
+- supersedes_event_id;
+- retracts_event_id;
+- correction_reason;
+- correction_actor/evaluator;
+- correction_version.
+
+Original evidence remains immutable and queryable for audit.
+
+Materialized state uses the currently valid event interpretation under the declared inference version.
+
+======================================================================
+19. SUBJECT EXTENSION CONTRACT
+======================================================================
+
+Core evidence/state fields are subject-agnostic.
+
+Subject-specific data belongs in a versioned extension envelope such as:
+- subject_payload;
+- subject_payload_schema_version.
+
+Examples:
+Russian may need token/position/rule evidence.
+Mathematics may need step/equivalence evidence.
+Physics may need units/formula/diagram evidence.
+
+Do not add Russian exception-specific fields to the universal core merely because Russian is the first implementation.
+
+======================================================================
+20. RUSSIAN LEGACY COMPATIBILITY
+======================================================================
+
+Existing Russian learner-state work is preserved.
+
+`102-RUSSIAN-EXCEPTIONS-LEARNER-STATE-SCHEMA.json`
+- remains a product-local Exceptions learner-state contract;
+- is not deleted or silently rewritten;
+- its exception_id/practice_item_id/trainer_item references may be adapted into generalized evidence through semantic crosswalks.
+
+`120-RUSSIAN-EXCEPTIONS-LEARNER-STATE-v1.1-ADDENDUM.json`
+- remains valid for local idempotency/state revision;
+- processed_event_ids semantics must be preserved during any adapter/import;
+- it does not own universal mastery thresholds.
+
+`114-RUSSIAN-ERROR-EXCEPTION-HANDOFF-MAP-v0.1.json`
+- exact error mappings may feed structured error/misconception evidence;
+- whole-task failure remains insufficient for exact exception activation;
+- known audit issue: it names superseded manifest 83 while current Exceptions authority is 118; this contract records compatibility, not a silent mutation.
+
+Legacy event/history data must not be double-counted during import.
+
+======================================================================
+21. PARALLEL FULL RUSSIAN COURSE COMPATIBILITY
+======================================================================
+
+The full Russian course and thematic trainers being developed in parallel must converge into this same learner-evidence layer.
+
+Existing product/UI states such as:
+- new;
+- learning;
+- review;
+- mastered;
+
+may remain useful local display/workflow states.
+
+They MUST NOT be automatically interpreted as canonical mastery merely because the product string says `mastered`.
+
+Existing localStorage progress may later be imported/adapted as:
+- product state;
+- structured evidence where exact historical facts are available;
+- low/known-trust imported evidence where only aggregates exist.
+
+Do not force a rewrite of current course components during architecture work.
+Preserve backward compatibility and use adapters.
+
+======================================================================
+22. TASK-003 / SEMANTIC REGISTRY DEPENDENCY
+======================================================================
+
+TASK-003 established the current inventory/crosswalk input layer:
+- 185 active canonical school identities;
+- 101 current EGE Skill Graph nodes;
+- versioned inventory/crosswalk artifacts;
+- source-backed missing subject semantic candidates without final new IDs.
+
+Generalized evidence must resolve semantic targets through the accepted semantic registry/crosswalk version active for the event.
+
+Product IDs remain product IDs; they are evidence-source addresses, not mastery keys.
+
+======================================================================
+23. DEMO / TRAINER / HOMEWORK / TUTOR CONVERGENCE
+======================================================================
+
+Target flow:
+
+PRODUCT EVENT
+-> canonical item/source identity + version
+-> semantic mapping/version
+-> validated append-only learner evidence
+-> inference/materialized learner state
+-> prerequisite/readiness/retention/NBA engines
+-> Tutor/Homework/Trainer next action
+
+This same flow must support:
+- historical demos;
+- current demos;
+- full trainers;
+- thematic trainers;
+- course modules;
+- Homework;
+- Tutor;
+- independent verification;
+- retention.
+
+======================================================================
+24. STORAGE / API DIRECTION
+======================================================================
+
+Logical architecture:
+- append-only evidence event store/log;
+- materialized learner semantic-state view;
+- inference/recompute service;
+- adapter/import layer for legacy/local product state.
+
+Current economical runtime direction may use YDB Serverless, but this contract does not freeze the physical table schema.
+
+Initial platform does NOT require:
+- Kafka;
+- Kubernetes;
+- Redis as canonical state;
+- ClickHouse/data warehouse;
+- Elasticsearch;
+- vector database.
+
+Stable semantic IDs provide deterministic joins for the core learning model.
+
+======================================================================
+25. SERVER VALIDATION BOUNDARY
+======================================================================
+
+Canonical server-side ingestion must validate/enrich as applicable:
+- schema/version;
+- learner identity;
+- source object/version;
+- semantic mapping/version;
+- evaluator/version/trust class;
+- idempotency;
+- timestamps/order metadata;
+- allowed assistance/result enums;
+- provenance;
+- correction/retraction references.
+
+Clients may propose events; clients do not own canonical inference truth.
+
+======================================================================
+26. PRIVACY / MINORS / DATA LIFECYCLE
+======================================================================
+
+Persistent educational memory should remain academic and product-relevant.
+
+Learner state should be:
+- inspectable;
+- correctable through explicit processes;
+- deletable/exportable under future account/privacy contracts;
+- separated from payment/entitlement data.
+
+Sensitive learner uploads such as homework photos, scans and PDFs must live in a separate learner-upload storage lifecycle.
+
+Canonical evidence should reference such uploads when needed, not embed entire sensitive raw documents into learner state.
+
+Do not reuse one learner's private data as another learner's tutoring context.
+
+======================================================================
+27. OBSERVABILITY / QUALITY
+======================================================================
+
+The platform must be able to measure:
+- ingestion failures;
+- duplicate/replay suppression;
+- mapping failures;
+- evaluator disagreement;
+- retraction/correction rates;
+- inference version distribution;
+- state recompute failures;
+- unknown/low-confidence semantic mappings;
+- evidence-source distribution;
+- assisted vs independent evidence mix.
+
+Educational outcome metrics are defined in later mastery/NIC/retention contracts.
+
+======================================================================
+28. ACCEPTANCE INVARIANTS
+======================================================================
+
+The generalized layer is acceptable only if all are true:
+
+1. Every canonical learner state is traceable to evidence.
+2. Raw accepted evidence is immutable.
+3. Corrections/retractions are append-only linked events.
+4. AI cannot directly write canonical mastery as fact.
+5. Assisted success remains distinguishable from independent success.
+6. Delayed retention remains distinguishable from same-session repetition.
+7. Product/exam year/task IDs are not mastery identities.
+8. Semantic mapping/content/evaluator/inference versions are traceable.
+9. Canonical state is recomputable.
+10. Legacy Russian learner state can coexist through adapters without double counting.
+11. Local UI `mastered` does not automatically mean canonical mastery.
+12. Russian-specific fields do not leak into the universal core.
+13. The same core can serve Russian, Mathematics, Physics and future subjects.
+14. No production trainer/demo/Tilda/localStorage migration is required to adopt this architecture contract.
+
+======================================================================
+29. CURRENT NON-GOALS
+======================================================================
+
+Do NOT now:
+- choose final mastery coefficients;
+- declare a universal forgetting curve;
+- invent prerequisite edges;
+- migrate production localStorage;
+- rewrite existing Russian products;
+- connect Tutor/Homework to production;
+- create a vector database;
+- build persistent high-cost infrastructure;
+- treat AI interpretation as canonical truth;
+- convert draft semantic candidates into final IDs without the semantic admission gate.
+
+======================================================================
+30. NEXT MATERIALIZATION STEP
+======================================================================
+
+Create a machine-readable generalized evidence event schema, a materialized learner-state schema and explicit legacy adapter map.
+
+The first implementation task must be ADD-ONLY and must prove compatibility with:
+- 102/120 legacy Exceptions learner state;
+- exact error handoff semantics;
+- merged TASK-003 semantic inventory/crosswalk;
+- historical demos;
+- full/thematic Russian trainers;
+- parallel full Russian course product state;
+- Tutor-assisted vs independent verification;
+- Homework;
+- future cross-subject extension.
+
+END OF DOCUMENT
