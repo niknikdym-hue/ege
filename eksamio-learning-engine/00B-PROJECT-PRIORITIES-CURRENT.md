@@ -112,7 +112,8 @@
 - production не менять побочно;
 - не создавать повторные аудиты уже закрытых вопросов;
 - приоритет delivery: русский + математика, затем физика;
-- параллельная работа допустима только при разделённых ветках/предметных контурах.
+- параллельная работа допустима только при разделённых ветках/предметных контурах;
+- после существенного рабочего периода фиксировать durable checkpoint в `worklog/`; базовый ритм — не реже одного раза за рабочий день, если велась значимая работа.
 
 ## 10. Если новый чат не понимает, что делать
 
@@ -120,9 +121,12 @@
 
 1. `00-PRODUCT-MASTERPLAN.md`;
 2. этот файл — `00B-PROJECT-PRIORITIES-CURRENT.md`;
-3. `00-WORK-STATUS.txt` и current addendum;
-4. `AGENTS.md`;
-5. current subject authority;
-6. exact task / branch / PR context.
+3. `00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md`;
+4. `00D-BRAIN-CONTINUITY-PROTOCOL.md`;
+5. последний checkpoint в `worklog/`;
+6. `00-WORK-STATUS.txt` и current addendum как исторический контекст;
+7. `AGENTS.md`;
+8. current subject authority;
+9. exact task / branch / PR context.
 
 Ни один локальный task не может молча изменить зафиксированные product priorities.
