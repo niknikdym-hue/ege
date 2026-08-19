@@ -1,0 +1,51 @@
+EKSAMIO — ЕГЭ ПРОФИЛЬНАЯ МАТЕМАТИКА 2023
+PRESTART GATE BEFORE ANY BUILD
+Дата: 2026-08-19
+
+STATUS: READY_FOR_FIPI_SOURCE_PRELOCK
+READY_FOR_EXAM_LOCK: NO — exact PDF SHA/page-map prelock must pass first
+READY_FOR_VERIFIED_BUILD: NO
+READY_FOR_TILDA: NO
+LIVE_GO: NO
+
+SOURCE AUTHORITY
+Только официальный комплект ФИПИ 2023, сохранённый в этом репозитории. PROFILE 2024/2025/2026 не является content authority.
+
+EXACT PROFILE SOURCE FILES IN MAIN — CONFIRMED
+1. ege-2023-matematika-profil-demoversiya.pdf
+   Git blob: 332566fa2989a0dff3105c4135cc9cc650df57a1
+   Repository bytes: 964534
+2. ege-2023-matematika-profil-specifikatsiya.pdf
+   Git blob: 8686c178c9c88e2c84f7ca2cffcadc769550fbc0
+   Repository bytes: 952993
+3. ege-2023-matematika-kodifikator.pdf
+   Git blob: 789b6bd3af38658a641b32e736a4d62bda0adcf3
+   Repository bytes: 1000016
+
+IMPORTANT
+Git blob SHA is repository identity, NOT source SHA-256. Exact SHA-256 must be computed from PDF bytes and stored in `profile-source-lock/`.
+
+BASE SEPARATION
+Do NOT use BASE 2023 `source-lock/`, base task bank, base answer map, visual crops or package as PROFILE evidence. PROFILE namespace: `matematika-source-2023/profile-source-lock/`.
+
+MANDATORY DOCUMENTS
+- /PROFILE-MATH-2024-2022-PREBUILD-MASTER.txt
+- /00-SOURCE-FIDELITY-ZERO-TOLERANCE.md
+- /00-READ-FIRST-EGE-DEMOVERSII-MASTER.md
+- /demo-production-standard/README.md
+- /MATEMATIKA-EGE-DEMOVERSII-REGLAMENT-SOZDANIYA-I-PROVERKI.md
+- /demo-production-standard/PROFILE-MATH-PRODUCTION-STANDARD.md
+- /demo-production-standard/PROFILE-MATH-YEAR-PREBUILD-LOCK-TEMPLATE.md
+- /eksamio-learning-engine/130-EXTENDED-ANSWER-INPUT-UX-STANDARD.txt
+
+FIRST REQUIRED ACTION
+Run exact FIPI 2023 PROFILE source prelock and persist SHA-256/bytes, physical/printed page map, full text, word coordinates and year/profile validation.
+
+ONLY AFTER SOURCE PRELOCK PASS
+Build current-year EXAM-LOCK, ANSWER-LOCK, INPUT-CONTRACT, EXTENDED-CRITERIA-MAP, VISUAL-INVENTORY and AUDIT-MATRIX. Nothing year-specific may be copied from 2024/2025/2026 as evidence.
+
+BUILD ADMISSION
+READY_FOR_VERIFIED_BUILD = YES only after all prebuild locks pass without TODO/ASSUMED/UNVERIFIED.
+
+RELEASE ADMISSION
+READY_FOR_TILDA only after full source/formula/visual/UI-crop/DOM/state/responsive/zoom/T123 gates, frozen ZIP, clean extraction full regression and independent final audit.
