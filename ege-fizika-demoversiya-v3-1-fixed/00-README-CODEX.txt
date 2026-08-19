@@ -32,7 +32,7 @@ ege-source-fizika/source-fizika-2026/candidate-from-current-package/
 Текущий SOURCE-REGISTER честно оставляет внешний byte-lock открытым до сравнения с утверждённым архивом ФИПИ fi_11_2026.zip.
 
 СТАТУС
-NOT_FROZEN.
+ACCEPTED_TECHNICAL_REFERENCE.
 Старые INDEPENDENT-AUDIT / TEST-EVIDENCE / TEST-REPORT от 2026-07-26/27 относятся к V3/V3.1 и не являются PASS для текущего V3.2 после изменения interaction contracts.
 
-До freeze обязательны: внешний source byte-lock, синхронизация PREVIEW, новый manifest, текущий browser/scorer/state/responsive regression и clean-package gate.
+Freeze закрыт 2026-08-19. Доказательства: PHYSICS-2026-CURRENT-ACCEPTANCE-EVIDENCE.json и ACCEPTED-TECHNICAL-REFERENCE-2026-08-19.txt.
