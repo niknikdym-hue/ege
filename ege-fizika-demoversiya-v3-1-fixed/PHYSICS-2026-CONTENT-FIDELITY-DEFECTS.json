@@ -1,7 +1,8 @@
 {
   "status": "OPEN_FIX_REQUIRED",
-  "scope": "extended-answer criterion wording and completeness in current V3.1 data blocks",
-  "rule": "FIPI criterion semantics and position references must be preserved per official task; a generic drawing/notation template is not acceptable.",
+  "scope": "extended-answer criterion wording in current V3.1 data blocks",
+  "rule": "FIPI criterion semantics and item references must be preserved per official task; a generic drawing/notation template is not acceptable.",
+  "correction_note": "A previously suspected Task 26 variant 3 K1 omission was rechecked against the approved final 2026 demo and removed: the current K1 summary matches the official scoring core. The massless-string condition remains correctly present in the possible solution but is not an additional item in the official K1 one-point summary.",
   "defects": [
     {
       "task": 22,
@@ -9,7 +10,7 @@
       "field": "criteriaHtml",
       "current_fragment": "записи, соответствующие пунктам о рисунке и/или новых обозначениях, представлены не в полном объёме или отсутствуют",
       "required_fragment": "Записи, соответствующие пунктам II или III, представлены не в полном объёме или отсутствуют.",
-      "reason": "Task 22 criterion explicitly references both the force drawing and introduced notation by criterion item numbers."
+      "reason": "Approved final 2026 criterion references the drawing and introduced notation by item numbers II or III."
     },
     {
       "task": 23,
@@ -17,7 +18,7 @@
       "field": "criteriaHtml",
       "current_fragment": "записи, соответствующие пунктам о рисунке и/или новых обозначениях, представлены не в полном объёме или отсутствуют",
       "required_fragment": "Записи, соответствующие пункту II, представлены не в полном объёме или отсутствуют.",
-      "reason": "Task 23 has no drawing item in the scoring criterion; item II is introduced notation only."
+      "reason": "Approved final 2026 Task 23 has no drawing item; item II is introduced notation only."
     },
     {
       "task": 24,
@@ -25,7 +26,7 @@
       "field": "criteriaHtml",
       "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
       "required_fragment": "Записи, соответствующие пункту II, представлены не в полном объёме или отсутствуют.",
-      "reason": "Task 24 has no drawing item in the scoring criterion; item II is introduced notation only."
+      "reason": "Approved final 2026 Task 24 has no drawing item in the scoring scheme; item II is introduced notation only."
     },
     {
       "task": 25,
@@ -33,7 +34,7 @@
       "field": "criteriaHtml",
       "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
       "required_fragment": "Записи, соответствующие пунктам II и III, представлены не в полном объёме или отсутствуют.",
-      "reason": "Task 25 criterion explicitly references the ray construction and introduced notation as items II and III."
+      "reason": "Approved final 2026 criterion references the ray construction and introduced notation as items II and III."
     },
     {
       "task": 26,
@@ -42,7 +43,7 @@
       "field": "criteriaK2Html",
       "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
       "required_fragment": "Записи, соответствующие пункту II, представлены не в полном объёме или отсутствуют.",
-      "reason": "Projectile variant K2 has no drawing criterion item; item II is introduced notation."
+      "reason": "Approved final projectile variant has no drawing criterion item; item II is introduced notation."
     },
     {
       "task": 26,
@@ -51,16 +52,7 @@
       "field": "criteriaK2Html",
       "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
       "required_fragment": "Записи, соответствующие пунктам II или III, представлены не в полном объёме или отсутствуют.",
-      "reason": "Board/block variant K2 explicitly has drawing and introduced-notation items."
-    },
-    {
-      "task": 26,
-      "variant": 3,
-      "file": "ege-fizika-demoversiya-T123-05.txt",
-      "field": "criteriaK1Html",
-      "current_fragment": "выбор ИСО, модели твёрдого тела и материальной точки, условие равновесия твёрдого тела относительно вращательного движения, условие равновесия материальной точки",
-      "required_semantics": "The required K1 justification must also include the consequence of the massless connecting string: the tension magnitude is the same at every point of the string.",
-      "reason": "The official solution explicitly uses T1 = T2 = T, and the applicability justification for this task requires the massless-string condition; omitting it makes the learner-facing K1 checklist incomplete."
+      "reason": "Approved final board/block variant references drawing and introduced notation as items II or III."
     },
     {
       "task": 26,
@@ -69,7 +61,7 @@
       "field": "criteriaK2Html",
       "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
       "required_fragment": "Записи, соответствующие пунктам II и III, представлены не в полном объёме или отсутствуют.",
-      "reason": "Lever variant K2 explicitly has drawing and introduced-notation items."
+      "reason": "Approved final lever variant references drawing and introduced notation as items II and III."
     }
   ],
   "freeze_effect": "BLOCKING",
