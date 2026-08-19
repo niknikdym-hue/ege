@@ -1,0 +1,92 @@
+{
+  "artifact": "RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-v1.0",
+  "date": "2026-08-19",
+  "status": "FINAL_SUBJECT_CONTENT_AUDIT",
+  "scope": "russian_subject_content_only_no_runtime_integration",
+  "authority_chain": [
+    "266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json",
+    "260-RUSSIAN-SCHOOL-CANONICAL-DENOMINATOR-FINAL-HANDOFF.txt",
+    "272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
+    "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+    "274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+    "275-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-VALIDATION.txt"
+  ],
+  "evidence": {
+    "probe_source": "_tmp_russian_trainer_coverage_probe.py",
+    "workflow_source": ".github/workflows/_tmp-russian-trainer-coverage-probe.yml",
+    "workflow_run_id": 32282704412,
+    "workflow_conclusion": "success",
+    "trainer_path": "eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/"
+  },
+  "fixed_denominators": {
+    "canonical_school_semantic_identities": 185,
+    "trainer_cards": 174
+  },
+  "coverage_status_vocabulary": [
+    "COVERED",
+    "PARTIALLY_COVERED",
+    "NOT_COVERED"
+  ],
+  "classification_policy": {
+    "COVERED": "The current trainer materially requires application of the exact canonical identity as a sufficiently isolated target. Mere occurrence, task-number routing or lexical coincidence is not enough.",
+    "PARTIALLY_COVERED": "The identity is encountered only inside a mixed/composite EGE task, only some branches are exercised, or the trainer cannot diagnose this identity separately.",
+    "NOT_COVERED": "No substantive current trainer route/card evidence requires the canonical identity.",
+    "word_or_example_presence_alone_is_coverage": false,
+    "task_number_route_alone_can_produce_COVERED": false,
+    "probe_override": "The probe produced one tentative COVERED record from a lexical-hit heuristic. It is PARTIALLY_COVERED in this audit because task 13 is composite and does not isolate the identity."
+  },
+  "summary": {
+    "COVERED": 0,
+    "PARTIALLY_COVERED": 144,
+    "NOT_COVERED": 41,
+    "status_sum": 185,
+    "full_coverage_rate_pct": 0.0,
+    "any_exposure_rate_pct": 77.84,
+    "no_route_gap_rate_pct": 22.16
+  },
+  "coverage_parts": [
+    {
+      "file": "RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-v1.0-part-01.json",
+      "range": [1, 37],
+      "rows": 37
+    },
+    {
+      "file": "RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-v1.0-part-02.json",
+      "range": [38, 74],
+      "rows": 37
+    },
+    {
+      "file": "RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-v1.0-part-03.json",
+      "range": [75, 111],
+      "rows": 37
+    },
+    {
+      "file": "RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-v1.0-part-04.json",
+      "range": [112, 148],
+      "rows": 37
+    },
+    {
+      "file": "RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-v1.0-part-05.json",
+      "range": [149, 185],
+      "rows": 37
+    }
+  ],
+  "validation": {
+    "coverage_rows": 185,
+    "unique_canonical_ids": 185,
+    "trainer_cards": 174,
+    "unique_trainer_card_ids": 174,
+    "not_covered_entries_have_zero_candidate_task_routes": true,
+    "partially_covered_entries_have_at_least_one_candidate_task_route": true,
+    "peis_runtime_touched": false,
+    "trainer_t123_touched": false,
+    "scoring_touched": false,
+    "localStorage_touched": false,
+    "production_touched": false
+  },
+  "strict_next_content_step": {
+    "phase_1": "Create dedicated content for the 41 NOT_COVERED identities, explicitly mapped to one canonical_id per independently diagnosable target.",
+    "phase_2": "For the 144 PARTIALLY_COVERED identities, add identity-specific content or mappings only where an exercise genuinely diagnoses that identity; do not relabel mixed EGE exposure as full coverage.",
+    "runtime_changes": "FORBIDDEN_IN_THIS_CONTENT_PHASE"
+  }
+}
