@@ -1,0 +1,65 @@
+EKSAMIO — ЕГЭ ПРОФИЛЬНАЯ МАТЕМАТИКА 2024
+PRESTART GATE BEFORE ANY BUILD
+Дата: 2026-08-19
+
+STATUS: READY_FOR_FIPI_SOURCE_PRELOCK
+READY_FOR_EXAM_LOCK: NO — exact PDF SHA/page-map prelock must pass first
+READY_FOR_VERIFIED_BUILD: NO
+READY_FOR_TILDA: NO
+LIVE_GO: NO
+
+SOURCE AUTHORITY
+Только официальный комплект ФИПИ 2024, сохранённый в этом репозитории. PROFILE 2025/2026 — только technical reference, не content authority.
+
+EXACT PROFILE SOURCE FILES IN MAIN — CONFIRMED
+1. ege-2024-matematika-profil-demoversiya.pdf
+   Git blob: 7e4d386cac53e3a58f912a138e2b1a32a33573a0
+   Repository bytes: 684418
+2. ege-2024-matematika-profil-specifikatsiya.pdf
+   Git blob: d15bf36a44240c75913671ed6c10256f313dd2a6
+   Repository bytes: 626865
+3. ege-2024-matematika-kodifikator.pdf
+   Git blob: 9a8d20bdfa46bf4c7eb0c3bed8e469f3031de017
+   Repository bytes: 755283
+
+IMPORTANT
+Git blob SHA is repository identity, NOT the required SHA-256 source lock. Actual SHA-256 must be computed from exact PDF bytes by the source-prelock analyzer/CI and persisted under `profile-source-lock/`.
+
+BASE SEPARATION
+Do NOT use existing BASE 2024 `source-lock/`, base demo/spec, base answer map, base crops or base task bank as PROFILE 2024 evidence. PROFILE namespace is `matematika-source-2024/profile-source-lock/`.
+
+MANDATORY DOCUMENTS
+- /PROFILE-MATH-2024-2022-PREBUILD-MASTER.txt
+- /00-SOURCE-FIDELITY-ZERO-TOLERANCE.md
+- /00-READ-FIRST-EGE-DEMOVERSII-MASTER.md
+- /demo-production-standard/README.md
+- /MATEMATIKA-EGE-DEMOVERSII-REGLAMENT-SOZDANIYA-I-PROVERKI.md
+- /demo-production-standard/PROFILE-MATH-PRODUCTION-STANDARD.md
+- /demo-production-standard/PROFILE-MATH-YEAR-PREBUILD-LOCK-TEMPLATE.md
+- /eksamio-learning-engine/130-EXTENDED-ANSWER-INPUT-UX-STANDARD.txt
+
+FIRST REQUIRED ACTION
+Run exact FIPI source prelock for 2024 and persist:
+- source SHA-256/bytes;
+- physical PDF pages;
+- printed page/half map;
+- full text and word-coordinate evidence;
+- year/profile verification;
+- SOURCE-VALIDATION.txt.
+
+ONLY AFTER SOURCE PRELOCK PASS
+Create year-specific, independently source-audited:
+- EXAM-LOCK.json;
+- ANSWER-LOCK.json;
+- INPUT-CONTRACT.json;
+- EXTENDED-CRITERIA-MAP.json;
+- VISUAL-INVENTORY.json;
+- AUDIT-MATRIX.csv.
+
+No task count, duration, max score, short/extended split, example distribution or criteria structure may be inherited from 2025/2026 before current-year evidence proves it.
+
+BUILD ADMISSION
+READY_FOR_VERIFIED_BUILD = YES only after all source/exam/answer/input/extended-criteria/visual prebuild locks are PASS with no TODO/ASSUMED/UNVERIFIED.
+
+RELEASE ADMISSION
+READY_FOR_TILDA only after complete verified build, direct-source visual/UI crop gates, full DOM interaction, state/reload/results, responsive/zoom, atomic T123 <42500, frozen ZIP, clean-extraction full regression and independent final audit.
