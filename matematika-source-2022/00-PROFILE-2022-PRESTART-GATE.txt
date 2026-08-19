@@ -1,0 +1,51 @@
+EKSAMIO — ЕГЭ ПРОФИЛЬНАЯ МАТЕМАТИКА 2022
+PRESTART GATE BEFORE ANY BUILD
+Дата: 2026-08-19
+
+STATUS: READY_FOR_FIPI_SOURCE_PRELOCK
+READY_FOR_EXAM_LOCK: NO — exact PDF SHA/page-map prelock must pass first
+READY_FOR_VERIFIED_BUILD: NO
+READY_FOR_TILDA: NO
+LIVE_GO: NO
+
+SOURCE AUTHORITY
+Только официальный комплект ФИПИ 2022, сохранённый в этом репозитории. PROFILE 2023/2024/2025/2026 не является content authority.
+
+EXACT PROFILE SOURCE FILES IN MAIN — CONFIRMED
+1. ege-2022-matematika-profil-demoversiya.pdf
+   Git blob: 6e50c62d8517c4dc01845836d4578269949cd331
+   Repository bytes: 1700090
+2. ege-2022-matematika-profil-specifikatsiya.pdf
+   Git blob: 306cdca1ab5c2df91a3901ff1c566cb738800aaa
+   Repository bytes: 1712854
+3. ege-2022-matematika-kodifikator.pdf
+   Git blob: 1a446ad66764ed108f120e95d113f6722d030648
+   Repository bytes: 1734001
+
+IMPORTANT
+Git blob SHA is repository identity, NOT source SHA-256. Exact SHA-256 must be computed from PDF bytes and stored in `profile-source-lock/`.
+
+BASE SEPARATION
+The same directory contains accepted BASE 2022 source-lock artifacts. They are strictly forbidden as PROFILE 2022 source evidence. PROFILE must use `matematika-source-2022/profile-source-lock/` and exact `ege-2022-matematika-profil-*.pdf` files.
+
+MANDATORY DOCUMENTS
+- /PROFILE-MATH-2024-2022-PREBUILD-MASTER.txt
+- /00-SOURCE-FIDELITY-ZERO-TOLERANCE.md
+- /00-READ-FIRST-EGE-DEMOVERSII-MASTER.md
+- /demo-production-standard/README.md
+- /MATEMATIKA-EGE-DEMOVERSII-REGLAMENT-SOZDANIYA-I-PROVERKI.md
+- /demo-production-standard/PROFILE-MATH-PRODUCTION-STANDARD.md
+- /demo-production-standard/PROFILE-MATH-YEAR-PREBUILD-LOCK-TEMPLATE.md
+- /eksamio-learning-engine/130-EXTENDED-ANSWER-INPUT-UX-STANDARD.txt
+
+FIRST REQUIRED ACTION
+Run exact FIPI 2022 PROFILE source prelock and persist SHA-256/bytes, physical/printed page map, full text, word coordinates and year/profile validation.
+
+ONLY AFTER SOURCE PRELOCK PASS
+Build current-year EXAM-LOCK, ANSWER-LOCK, INPUT-CONTRACT, EXTENDED-CRITERIA-MAP, VISUAL-INVENTORY and AUDIT-MATRIX. No structure, answer, criterion, task count, duration, max score, crop or variant distribution may be inherited from later years without 2022 source evidence.
+
+BUILD ADMISSION
+READY_FOR_VERIFIED_BUILD = YES only after all prebuild locks pass without TODO/ASSUMED/UNVERIFIED.
+
+RELEASE ADMISSION
+READY_FOR_TILDA only after full source/formula/visual/UI-crop/DOM/state/responsive/zoom/T123 gates, frozen ZIP, clean extraction full regression and independent final audit.
