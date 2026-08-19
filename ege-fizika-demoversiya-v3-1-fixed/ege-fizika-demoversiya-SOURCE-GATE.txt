@@ -3,20 +3,29 @@ EXAM=ЕГЭ
 SUBJECT=физика
 SOURCE_YEAR=2026
 CURRENT_PACKAGE=ege-fizika-demoversiya-v3-1-fixed
-CURRENT_ACCEPTANCE_CANDIDATE=V3.2
-STATUS=ACCEPTED_TECHNICAL_REFERENCE
+CURRENT_ACCEPTANCE_CANDIDATE=V3.3
+STATUS=REOPENED_BLOCKING_MANUAL_AUDIT
 SOURCE_GATE=CLOSED
 SOURCE_BYTE_LOCK=PASS
 PACKAGE_SOURCE_BYTE_IDENTITY=PASS
-CONTENT_FIDELITY=PASS
-INPUT_CONTRACTS=PASS
-BROWSER_INTERACTION=PASS
-SCORER=PASS
-STATE_RESTORE=PASS
-RESPONSIVE=PASS
-CLEAN_UNPACK_BROWSER=PASS
-TECHNICAL_REFERENCE_FROZEN=YES
+CONTENT_TEXT_FIDELITY=PASS
+INPUT_CONTRACTS=REOPENED_FOR_PHYSICS_SYMBOL_TOOLING
+VISUAL_FIDELITY=FAIL_RECONSTRUCTED_ASSETS_PRESENT
+VISUAL_SIZE_GATE=FAIL_OVERSIZED_ASSETS_REPORTED
+BROWSER_INTERACTION=RECHECK_REQUIRED
+SCORER=PASS_PENDING_REGRESSION
+STATE_RESTORE=PASS_PENDING_REGRESSION
+RESPONSIVE=RECHECK_REQUIRED
+CLEAN_UNPACK_BROWSER=RECHECK_REQUIRED
+TECHNICAL_REFERENCE_FROZEN=NO_REOPENED
 
-Authority: exact approved FIPI 2026 archive preserved in ege-source-fizika/source-fizika-2026/.
-Part 1 is automatically scored up to 28. Part 2 self-evaluation is explicitly unofficial and orientational; expert-only maximum is 17.
-Archive years 2025–2022 must not inherit 2026 content; they use 2026 only as a technical implementation reference.
+Authority remains the exact approved FIPI 2026 archive preserved in ege-source-fizika/source-fizika-2026/.
+
+Blocking manual-audit findings on 2026-08-19:
+1. Exam figures/graphs/diagrams must be taken only as exact crops from the official FIPI PDF. Reconstructed/self-drawn SVG is not acceptable source fidelity.
+2. Every visual needs an explicit size class and must be visually proportionate to its role in the official KIM. Source fidelity does not justify displaying a small diagram as a giant image.
+3. Every crop must pass the same visual policy used for base mathematics: official_pdf_crop preferred; all four crop edges checked; desktop and mobile checked; old/reconstructed SVG is not source evidence.
+4. Extended-answer and draft inputs need a physics symbol keyboard including square/superscript, vector notation support, indices/subscripts and common physics symbols.
+5. The exam shell needs a compact non-programmable scientific calculator sufficient for calculations required by the demo, without CAS/formula solving/programming features.
+
+The previous V3.2 freeze record remains historical evidence of the earlier acceptance state but is superseded by this reopened gate until V3.3 passes source-visual, visual-size, symbol-keyboard, calculator and full browser regression.
