@@ -1,0 +1,229 @@
+name: profile-math-2023-full-build
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/profile-math-2023-full-build.yml'
+      - 'PROFILE-MATH-2023-BUILD-TRIGGER.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-math-2023-full-build
+  cancel-in-progress: false
+
+jobs:
+  build-audit-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record started full build
+        shell: bash
+        run: |
+          cat > PROFILE-MATH-2023-LATEST-BUILD-RUN.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Head SHA: ${{ github.sha }}
+          Status: STARTED
+          Source SHA256: 9278f5cc60388da2ed63eaa946c82e0902f0867047fc9b5ea6051bae16e3b6b2
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add PROFILE-MATH-2023-LATEST-BUILD-RUN.txt
+          git commit -m 'Record started PROFILE 2023 full build' || true
+          git push origin HEAD:main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Restore audited PROFILE 2023 build scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .profile2023-bootstrap/chunk01.txt .profile2023-bootstrap/chunk02.txt .profile2023-bootstrap/chunk03.txt .profile2023-bootstrap/chunk04.txt > /tmp/profile2023-bootstrap.b64
+          echo 'cb6b8d9cd936cde855a1d1bb128628b986b116e498a221a56550b05e9283540e  /tmp/profile2023-bootstrap.b64' | sha256sum -c -
+          base64 -d /tmp/profile2023-bootstrap.b64 > /tmp/profile2023-bootstrap.tar.gz
+          echo 'cc8547c7ebf69fa43b24d6ee447471671cee81f547db762aac48d904c5ca171d  /tmp/profile2023-bootstrap.tar.gz' | sha256sum -c -
+          tar -xzf /tmp/profile2023-bootstrap.tar.gz -C .
+          python -m py_compile \
+            ege-matematika-profil-demoversiya-2023/scripts/build_profile_2023.py \
+            ege-matematika-profil-demoversiya-2023/tests/test_profile_2023.py \
+            ege-matematika-profil-demoversiya-2023/audit/independent_audit_2023.py \
+            matematika-source-2023/profile-source-lock/build_profile_2023_visual_lock.py
+
+      - name: Install build and browser dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow selenium
+
+      - uses: browser-actions/setup-chrome@v1
+      - uses: nanasess/setup-chromedriver@v2
+
+      - name: Rebuild and verify exact-source PROFILE 2023 visual lock
+        run: python matematika-source-2023/profile-source-lock/build_profile_2023_visual_lock.py --repo-root .
+
+      - name: Independent visual source gate before product build
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, io, json
+          import fitz
+          from PIL import Image,ImageChops
+          lock=Path('matematika-source-2023/profile-source-lock')
+          pdf=Path('matematika-source-2023/ege-2023-matematika-profil-demoversiya.pdf')
+          inv=json.loads((lock/'VISUAL-INVENTORY.json').read_text(encoding='utf-8'))
+          assert inv['status']=='VISUAL_PREBUILD_LOCK_PASS' and len(inv['assets'])==47
+          assert sum(x['semantic_role']=='learner_condition' for x in inv['assets'])==35
+          assert hashlib.sha256(pdf.read_bytes()).hexdigest()==inv['source_sha256']=='9278f5cc60388da2ed63eaa946c82e0902f0867047fc9b5ea6051bae16e3b6b2'
+          pm=json.loads((lock/'demo/PAGE-MAP.json').read_text(encoding='utf-8')); doc=fitz.open(pdf);cache={};pages={}
+          for row in pm['pages']:
+              ph=int(row['physical_pdf_page'])
+              if ph not in cache:
+                  px=doc[ph-1].get_pixmap(matrix=fitz.Matrix(2.5,2.5),alpha=False);cache[ph]=Image.open(io.BytesIO(px.tobytes('png'))).convert('RGB')
+              full=cache[ph];half=row['half'];im=full.crop((0,0,full.width//2,full.height)) if half=='left' else full.crop((full.width//2,0,full.width,full.height)) if half=='right' else full
+              pages[int(row['printed_page'])]=im
+          assert len(pages)==23
+          for r in inv['assets']:
+              a=Image.open(lock/r['file']).convert('RGB');e=pages[r['printed_page']].crop(tuple(r['final_crop_render_px']))
+              assert a.size==e.size and ImageChops.difference(a,e).getbbox() is None,r['asset_id']
+          print('PROFILE 2023 independent visual source gate PASS 47/47')
+          PY
+
+      - name: Build PROFILE 2023 from locked FIPI source assets
+        run: python ege-matematika-profil-demoversiya-2023/scripts/build_profile_2023.py
+
+      - name: Start first preview server
+        shell: bash
+        run: |
+          cd ege-matematika-profil-demoversiya-2023
+          python -m http.server 8765 > /tmp/profile2023-http.log 2>&1 &
+          echo $! > /tmp/profile2023-http.pid
+          sleep 2
+
+      - name: First real-browser acceptance audit
+        env:
+          EKSAMIO_PREVIEW_URL: http://127.0.0.1:8765/ege-matematika-profil-demoversiya-2023-PREVIEW.html
+        run: python ege-matematika-profil-demoversiya-2023/tests/test_profile_2023.py
+
+      - name: Independent source-runtime audit before freeze
+        run: python ege-matematika-profil-demoversiya-2023/audit/independent_audit_2023.py
+
+      - name: Repack candidate ZIP with browser and independent evidence
+        run: python ege-matematika-profil-demoversiya-2023/scripts/build_profile_2023.py --repack
+
+      - name: Clean ZIP extraction independent audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/profile2023-clean
+          mkdir -p /tmp/profile2023-clean
+          unzip -q ege-matematika-profil-demoversiya-2023-v1.0.zip -d /tmp/profile2023-clean
+          python ege-matematika-profil-demoversiya-2023/audit/independent_audit_2023.py /tmp/profile2023-clean/ege-matematika-profil-demoversiya-2023 --clean
+          cd /tmp/profile2023-clean/ege-matematika-profil-demoversiya-2023
+          python -m http.server 8766 > /tmp/profile2023-clean-http.log 2>&1 &
+          echo $! > /tmp/profile2023-clean-http.pid
+          sleep 2
+
+      - name: Second real-browser regression from clean extracted ZIP
+        env:
+          EKSAMIO_PREVIEW_URL: http://127.0.0.1:8766/ege-matematika-profil-demoversiya-2023-PREVIEW.html
+          EKSAMIO_PACKAGE_ROOT: /tmp/profile2023-clean/ege-matematika-profil-demoversiya-2023
+        run: python ege-matematika-profil-demoversiya-2023/tests/test_profile_2023.py
+
+      - name: Freeze exact clean-tested package
+        shell: bash
+        run: |
+          set -euo pipefail
+          CLEAN=/tmp/profile2023-clean/ege-matematika-profil-demoversiya-2023
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/profile2023-clean/ege-matematika-profil-demoversiya-2023/ege-matematika-profil-demoversiya-2023-PAGE-STATUS.txt')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('INDEPENDENT_AUDIT_GATE: PENDING_FINAL_CLEAN_ZIP','INDEPENDENT_AUDIT_GATE: PASS — independent source/runtime audit + clean extraction audit')
+          s=s.replace('FINAL_STATUS: READY_FOR_FINAL_CLEAN_ZIP_AUDIT','FINAL_STATUS: READY_FOR_TILDA')
+          s=s.replace('READY_FOR_TILDA: PENDING_FINAL_CLEAN_ZIP_AUDIT','READY_FOR_TILDA: YES')
+          if 'CLEAN_ZIP_REGRESSION_GATE:' not in s:s=s.replace('LIVE_GO: NO','CLEAN_ZIP_REGRESSION_GATE: PASS — clean extraction + second real-browser regression\nLIVE_GO: NO')
+          p.write_text(s,encoding='utf-8')
+          PY
+          python "$CLEAN/scripts/build_profile_2023.py" --repack
+          python ege-matematika-profil-demoversiya-2023/audit/independent_audit_2023.py "$CLEAN" --clean
+          python "$CLEAN/scripts/build_profile_2023.py" --repack
+          rm -rf ege-matematika-profil-demoversiya-2023
+          cp -a "$CLEAN" ege-matematika-profil-demoversiya-2023
+          cp /tmp/profile2023-clean/ege-matematika-profil-demoversiya-2023-v1.0.zip ege-matematika-profil-demoversiya-2023-v1.0.zip
+          sha256sum ege-matematika-profil-demoversiya-2023-v1.0.zip | tee PROFILE-MATH-2023-FINAL-SHA256.txt
+
+      - name: Final static package assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re,subprocess,tempfile
+          root=Path('ege-matematika-profil-demoversiya-2023');blocks=sorted(root.glob('*-T123-*.txt'))
+          assert blocks
+          nums=[int(re.search(r'T123-(\d+)\.txt$',p.name).group(1)) for p in blocks];assert nums==list(range(1,len(blocks)+1)),nums
+          mx=max(p.stat().st_size for p in blocks);assert mx<42500,mx
+          for p in blocks:
+              s=p.read_text(encoding='utf-8')
+              assert s.count('<script')==s.count('</script>'),p.name
+              assert s.count('<style')==s.count('</style>'),p.name
+              for m in re.finditer(r'<script[^>]*>(.*?)</script>',s,re.S):
+                  with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False) as f:f.write(m.group(1));name=f.name
+                  assert subprocess.run(['node','--check',name],capture_output=True).returncode==0,p.name
+          status=(root/'ege-matematika-profil-demoversiya-2023-PAGE-STATUS.txt').read_text(encoding='utf-8')
+          assert 'READY_FOR_TILDA: YES' in status and 'CLEAN_ZIP_REGRESSION_GATE: PASS' in status
+          print('FINAL STATIC ASSERTIONS PASS:',len(blocks),'T123, max',mx)
+          PY
+
+      - name: Persist final frozen package and year locks
+        shell: bash
+        run: |
+          set -euo pipefail
+          SHA=$(cut -d' ' -f1 PROFILE-MATH-2023-FINAL-SHA256.txt)
+          TCOUNT=$(find ege-matematika-profil-demoversiya-2023 -maxdepth 1 -name '*-T123-*.txt' | wc -l | tr -d ' ')
+          TMAX=$(find ege-matematika-profil-demoversiya-2023 -maxdepth 1 -name '*-T123-*.txt' -printf '%s\n' | sort -nr | head -1)
+          cat > PROFILE-MATH-2023-LATEST-BUILD-RUN.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Head SHA: ${{ github.sha }}
+          Status: READY_FOR_TILDA
+          Archive: ege-matematika-profil-demoversiya-2023-v1.0.zip
+          Archive SHA256: $SHA
+          Source SHA256: 9278f5cc60388da2ed63eaa946c82e0902f0867047fc9b5ea6051bae16e3b6b2
+          Official examples: 35/35
+          Short correct+wrong real DOM: 28/28
+          Direct exact-source assets: 47/47
+          Reconstructed official visuals: 0
+          T123: $TCOUNT atomic blocks, max $TMAX bytes <42500, standalone JS/tag syntax PASS
+          Extended UX: math toolbar + own answer + official FIPI solution/criteria + separate self-score PASS
+          Zoom/responsive/reload: PASS
+          Clean ZIP second real-browser regression: PASS
+          LIVE_GO: NO until Tilda publication + production smoke + manual student acceptance
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add matematika-source-2023/profile-source-lock/VISUAL-INVENTORY.json \
+                  matematika-source-2023/profile-source-lock/VISUAL-FIDELITY-EVIDENCE.json \
+                  matematika-source-2023/profile-source-lock/VISUAL-PREBUILD-VALIDATION.txt \
+                  matematika-source-2023/profile-source-lock/visual-assets \
+                  ege-matematika-profil-demoversiya-2023 PROFILE-MATH-2023-LATEST-BUILD-RUN.txt PROFILE-MATH-2023-FINAL-SHA256.txt
+          git commit -m 'Finalize PROFILE 2023 source-locked Tilda package'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload authoritative Tilda package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-matematika-profil-demoversiya-2023-v1.0-SOURCE-LOCKED
+          path: |
+            ege-matematika-profil-demoversiya-2023-v1.0.zip
+            PROFILE-MATH-2023-FINAL-SHA256.txt
+            PROFILE-MATH-2023-LATEST-BUILD-RUN.txt
+          retention-days: 30
