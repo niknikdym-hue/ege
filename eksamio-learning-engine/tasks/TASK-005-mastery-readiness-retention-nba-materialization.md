@@ -1,11 +1,14 @@
 # TASK-005 — Mastery Confidence + Readiness + Retention + Next Best Action Materialization
 
 TASK_ID: TASK-005
-STATUS: WAITING_FOR_TASK-004_REVIEW
+STATUS: READY
 MODE: ADD_ONLY / ARCHITECTURE_MATERIALIZATION / NO_PRODUCTION_INTEGRATION
 SCOPE: Materialize versioned mastery inference, prerequisite/readiness, retention and Next Best Action contracts after TASK-004 generalized learner evidence/state schemas are reviewed and merged.
 
-DO NOT START TASK-005 UNTIL TASK-004 STATUS IS REVIEWED/APPROVED AND ITS MERGED ARTIFACTS ARE PRESENT ON `main`.
+ACTIVATION_GATE: SATISFIED
+TASK-004 PR #33 is reviewed, approved and merged into `main`.
+TASK-004 merge commit: `cc2d3e255c18b7935a2941f81dec0dc0306afbbf`.
+Merged TASK-004 artifacts `277...280` and `results/RESULT-004...` are present on `main`.
 
 ## Read first
 
@@ -16,9 +19,11 @@ DO NOT START TASK-005 UNTIL TASK-004 STATUS IS REVIEWED/APPROVED AND ITS MERGED 
 5. `../02-CODEX-BUILD-INDEX.txt`
 6. `../276-EKSAMIO-LEARNER-EVIDENCE-STATE-CONTRACT-v1.0.txt`
 7. `../281-EKSAMIO-MASTERY-READINESS-RETENTION-NBA-CONTRACT-v1.0.txt`
-8. merged TASK-004 artifacts `277...280` and `results/RESULT-004...` after they exist on `main`.
+8. merged TASK-004 artifacts `277...280` and `results/RESULT-004...` on `main`.
 
 Also use current semantic registry/crosswalk authorities and Tutor Core contracts.
+
+If an older status/index line still names TASK-004 as current, treat this explicit TASK-005 activation record and the merged `main` state as authoritative for this task. Do not rewrite unrelated parallel Russian-program work merely to normalize historical status text.
 
 ## Goal
 
@@ -34,7 +39,7 @@ Do not choose opaque arbitrary coefficients merely to make the schemas look comp
 
 ## Allowed outputs
 
-After TASK-004 review, create ADD-ONLY artifacts:
+Create ADD-ONLY artifacts:
 
 - `../282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json`
 - `../283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json`
@@ -187,7 +192,6 @@ Report at minimum:
 ## Forbidden
 
 Do NOT:
-- start before TASK-004 is reviewed/merged;
 - change production demos/trainers/Tilda/runtime/scoring/localStorage;
 - invent prerequisite relations;
 - invent psychometric precision;
@@ -195,7 +199,8 @@ Do NOT:
 - let AI directly write canonical mastery/readiness/NBA truth;
 - implement payment/auth/runtime infrastructure;
 - add vector DB/Kafka/Kubernetes;
-- rewrite current Russian course/trainer state.
+- rewrite current Russian course/trainer state;
+- overwrite or normalize unrelated files changed by parallel Russian-program work.
 
 ## Required result
 
