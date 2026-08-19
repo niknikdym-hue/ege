@@ -1,10 +1,10 @@
 ПАКЕТ ДЛЯ CODEX / TILDA
-Интерактивная демоверсия ЕГЭ по физике — текущий кандидат V3.2
+Интерактивная демоверсия ЕГЭ по физике — принятая техническая версия V3.2
 
 CURRENT_ACCEPTANCE_AUTHORITY:
 ege-fizika-demoversiya-SOURCE-GATE.txt
 
-ege-fizika-demoversiya-EXAM-MAP.json фиксирует текущий экзаменационный и input-контракт.
+ege-fizika-demoversiya-EXAM-MAP.json фиксирует принятый экзаменационный и input-контракт.
 
 ВАЖНО
 - использовать T123 строго по порядку 01 → 06;
@@ -15,7 +15,7 @@ ege-fizika-demoversiya-EXAM-MAP.json фиксирует текущий экза�
 - год не добавлять в постоянные SEO-поля и URL;
 - год конкретной демоверсии сохраняется в интерфейсе и source metadata.
 
-ТЕКУЩИЕ INPUT-КОНТРАКТЫ
+ПРИНЯТЫЕ INPUT-КОНТРАКТЫ
 - числовой краткий ответ: задания 1, 2, 3, 4, 7, 8, 11, 12, 13, 16;
 - checkbox multiple selection: 5, 9, 14, 18, 20;
 - отдельный select для каждой позиции соответствия: 6, 10, 15, 17;
@@ -26,13 +26,26 @@ ege-fizika-demoversiya-EXAM-MAP.json фиксирует текущий экза�
 Задания 21–26 проверяются экспертом на реальном ЕГЭ. Самооценка на странице является только учебной неофициальной оценкой. Сумма с частью 1 может показываться только как ориентировочная, не как официальный первичный балл.
 
 ИСТОЧНИК
-Кандидатные PDF 2026 сохранены в каноническом source-контуре:
-ege-source-fizika/source-fizika-2026/candidate-from-current-package/
+Канонический source-контур 2026:
+ege-source-fizika/source-fizika-2026/
 
-Текущий SOURCE-REGISTER честно оставляет внешний byte-lock открытым до сравнения с утверждённым архивом ФИПИ fi_11_2026.zip.
+В нём сохранены:
+- нетронутый официальный архив ФИПИ fi_11_2026.zip;
+- нетронутые PDF из архива в original/;
+- SOURCE-INVENTORY.txt с SHA256 и размерами;
+- SOURCE-REGISTER.json;
+- SOURCE-STATUS.txt.
+
+SOURCE_GATE=CLOSED.
+Три PDF в source/ этого пакета побайтно совпадают с PDF, извлечёнными из зафиксированного официального архива ФИПИ.
 
 СТАТУС
 ACCEPTED_TECHNICAL_REFERENCE.
-Старые INDEPENDENT-AUDIT / TEST-EVIDENCE / TEST-REPORT от 2026-07-26/27 относятся к V3/V3.1 и не являются PASS для текущего V3.2 после изменения interaction contracts.
+TECHNICAL_REFERENCE_FROZEN=YES.
+Старые INDEPENDENT-AUDIT / TEST-EVIDENCE / TEST-REPORT от 2026-07-26/27 являются историческими доказательствами V3/V3.1, но authority для принятой V3.2 — текущие acceptance evidence и freeze-файл.
 
-Freeze закрыт 2026-08-19. Доказательства: PHYSICS-2026-CURRENT-ACCEPTANCE-EVIDENCE.json и ACCEPTED-TECHNICAL-REFERENCE-2026-08-19.txt.
+Freeze закрыт 2026-08-19. Доказательства:
+- PHYSICS-2026-CURRENT-ACCEPTANCE-EVIDENCE.json;
+- ACCEPTED-TECHNICAL-REFERENCE-2026-08-19.txt.
+
+V3.2 используется для 2025–2022 только как технический reference. Контент каждого архивного года определяется исключительно точным FIPI source соответствующего года.
