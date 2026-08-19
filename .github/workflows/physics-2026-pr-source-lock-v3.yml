@@ -1,0 +1,78 @@
+name: physics-2026-pr-source-lock-v3
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  source-lock:
+    if: github.head_ref == 'chatgpt/physics-2026-acceptance-20260819'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2026-acceptance-20260819
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Lock exact current official FIPI bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pypdf >/dev/null
+          rm -rf /tmp/fipi26 && mkdir -p /tmp/fipi26/original
+          curl --fail --location --retry 3 --retry-delay 2 \
+            --user-agent 'Mozilla/5.0 Eksamio source verification' \
+            --referer 'https://fipi.ru/ege/demoversii-specifikacii-kodifikatory' \
+            'https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2026/fi_11_2026.zip' \
+            -o /tmp/fipi26/fi_11_2026.zip
+          unzip -q /tmp/fipi26/fi_11_2026.zip -d /tmp/fipi26/original
+          python - <<'PY'
+          from pathlib import Path
+          from hashlib import sha256
+          from pypdf import PdfReader
+          import json, shutil
+          pkg=Path('ege-fizika-demoversiya-v3-1-fixed/source')
+          can=Path('ege-source-fizika/source-fizika-2026')
+          ext=Path('/tmp/fipi26/original'); archive=Path('/tmp/fipi26/fi_11_2026.zip')
+          def digest(p):
+              h=sha256()
+              with p.open('rb') as f:
+                  for chunk in iter(lambda:f.read(1024*1024),b''): h.update(chunk)
+              return h.hexdigest()
+          package=sorted(pkg.glob('*.pdf')); official=sorted(ext.rglob('*.pdf'))
+          assert len(package)==3 and len(official)==3
+          package_by_hash={digest(p):p for p in package}; official_by_hash={digest(p):p for p in official}
+          assert set(package_by_hash)==set(official_by_hash)
+          rows=[]
+          for h,p in official_by_hash.items():
+              package_name=package_by_hash[h].name
+              role='demo' if 'demoversiya' in package_name else ('codifier' if 'kodifikator' in package_name else 'specification')
+              pages=len(PdfReader(str(p)).pages)
+              if role=='demo': assert pages==21
+              rows.append({'role':role,'official_filename':str(p.relative_to(ext)),'package_filename':package_name,'bytes':p.stat().st_size,'physical_pdf_pages':pages,'sha256':h})
+          shutil.rmtree(can/'original',ignore_errors=True); shutil.copytree(ext,can/'original')
+          shutil.copy2(archive,can/'fi_11_2026.zip'); shutil.rmtree(can/'candidate-from-current-package',ignore_errors=True)
+          ah=digest(archive)
+          reg={'exam':'ЕГЭ','subject':'физика','source_year':2026,'authority':'ФИПИ','official_page':'https://fipi.ru/ege/demoversii-specifikacii-kodifikatory','official_archive_url':'https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2026/fi_11_2026.zip','approved_set_publication_date':'2025-11-12','approved_status_basis':'current official FIPI 2026 archive + FIPI approved-documents publication','external_archive_sha256_locked':True,'source_gate':'CLOSED','archive':{'path':'fi_11_2026.zip','bytes':archive.stat().st_size,'sha256':ah},'files':sorted(rows,key=lambda x:x['role']),'package_source_byte_identity_with_official_archive':True,'demo_internal_layout_pages':42,'demo_physical_pdf_pages':21}
+          (can/'SOURCE-REGISTER.json').write_text(json.dumps(reg,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          lines=['EKSAMIO PHYSICS 2026 — OFFICIAL SOURCE INVENTORY','OFFICIAL_SOURCE_URL='+reg['official_archive_url'],'SOURCE_STATUS=APPROVED_FIPI_2026_BYTE_LOCKED','SOURCE_GATE=CLOSED','ARCHIVE_BYTES='+str(archive.stat().st_size),'ARCHIVE_SHA256='+ah,'','PDF_FILES:']
+          for r in sorted(rows,key=lambda x:x['role']): lines.append(r['role']+'\t'+r['official_filename']+'\tbytes='+str(r['bytes'])+'\tphysical_pdf_pages='+str(r['physical_pdf_pages'])+'\tsha256='+r['sha256'])
+          lines += ['', 'DEMO_INTERNAL_LAYOUT_PAGES=42','DEMO_PHYSICAL_PDF_PAGES=21','PACKAGE_SOURCE_BYTE_IDENTITY=PASS','APPROVED_SET_AUTHORITY=PASS']
+          (can/'SOURCE-INVENTORY.txt').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          status=['EKSAMIO PHYSICS 2026 — OFFICIAL SOURCE STATUS','YEAR=2026','SUBJECT=physics','AUTHORITY=FIPI','OFFICIAL_SOURCE_PAGE=https://fipi.ru/ege/demoversii-specifikacii-kodifikatory','OFFICIAL_SOURCE_URL='+reg['official_archive_url'],'APPROVED_SET_PUBLICATION_DATE=2025-11-12','SOURCE_STATUS=APPROVED_FIPI_2026_BYTE_LOCKED','SOURCE_GATE=CLOSED','PACKAGE_SOURCE_BYTE_IDENTITY=PASS','ARCHIVE_SHA256='+ah,'DEMO_INTERNAL_LAYOUT_PAGES=42','DEMO_PHYSICAL_PDF_PAGES=21','','Untouched current official FIPI archive is preserved as fi_11_2026.zip.','Untouched PDFs extracted from it are preserved under original/.','The package source PDFs are byte-identical to the PDFs extracted from that archive.']
+          (can/'SOURCE-STATUS.txt').write_text('\n'.join(status)+'\n',encoding='utf-8')
+          print(json.dumps(reg,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit byte lock and remove one-shot files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/physics-2026-pr-source-lock-v3.yml .physics-2026-source-lock-trigger
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Lock Physics 2026 approved FIPI source bytes'
+          git push origin HEAD:chatgpt/physics-2026-acceptance-20260819
