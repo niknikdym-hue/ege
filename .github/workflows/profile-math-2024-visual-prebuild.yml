@@ -1,0 +1,123 @@
+name: profile-math-2024-visual-prebuild
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'matematika-source-2024/ege-2024-matematika-profil-demoversiya.pdf'
+      - 'matematika-source-2024/profile-source-lock/SOURCE-LOCK.json'
+      - 'matematika-source-2024/profile-source-lock/demo/**'
+      - 'matematika-source-2024/profile-source-lock/build_profile_2024_visual_lock.py'
+      - '.github/workflows/profile-math-2024-visual-prebuild.yml'
+      - 'PROFILE-MATH-2024-VISUAL-TRIGGER.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  visual-prebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record started visual prebuild
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > PROFILE-MATH-2024-LATEST-VISUAL-PREBUILD-RUN.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Head SHA: ${{ github.sha }}
+          Status: STARTED
+          Source SHA256: 89698a59be7da5c5f6c628f752a6810534888c423cae31a181ef743c910c1ae3
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add PROFILE-MATH-2024-LATEST-VISUAL-PREBUILD-RUN.txt
+          git commit -m 'Record started PROFILE 2024 visual prebuild' || true
+          git push origin HEAD:main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install exact-source visual dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
+
+      - name: Build and verify exact-source PROFILE 2024 visual lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          python matematika-source-2024/profile-source-lock/build_profile_2024_visual_lock.py --repo-root "$GITHUB_WORKSPACE"
+          cat matematika-source-2024/profile-source-lock/VISUAL-PREBUILD-VALIDATION.txt
+
+      - name: Independent generated-asset gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('matematika-source-2024/profile-source-lock')
+          inv=json.loads((root/'VISUAL-INVENTORY.json').read_text(encoding='utf-8'))
+          fid=json.loads((root/'VISUAL-FIDELITY-EVIDENCE.json').read_text(encoding='utf-8'))
+          assert inv['status']=='VISUAL_PREBUILD_LOCK_PASS'
+          assert inv['asset_count']==49
+          assert inv['counts']=={'learner_conditions':37,'reference_materials':1,'extended_solution_criteria_segments':11}
+          assert fid['status']=='PASS' and fid['assets_verified']==49
+          files=list((root/'visual-assets').glob('*.webp'))
+          assert len(files)==49, len(files)
+          assert all(a['four_edge_audit']=='PASS' for a in inv['assets'])
+          assert all(a['representation'].startswith('direct contiguous crop') for a in inv['assets'])
+          assert all(c['pixel_identity']=='PASS' for c in fid['checks'])
+          print('INDEPENDENT PROFILE 2024 VISUAL PREBUILD GATE PASS: 49/49')
+          PY
+
+      - name: Persist visual prebuild lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > PROFILE-MATH-2024-LATEST-VISUAL-PREBUILD-RUN.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Head SHA: ${{ github.sha }}
+          Status: VISUAL_PREBUILD_LOCK_PASS
+          Source SHA256: 89698a59be7da5c5f6c628f752a6810534888c423cae31a181ef743c910c1ae3
+          Assets: 49/49 direct exact-source crops
+          Learner conditions: 37/37
+          Reference materials: 1/1
+          Extended solution/criteria segments: 11/11
+          Pixel identity: 49/49 PASS
+          Reconstructed official visuals: 0
+          Stitched multi-page official visuals: 0
+          READY_FOR_VERIFIED_BUILD: YES — subject to all already locked EXAM/ANSWER/INPUT/EXTENDED criteria gates remaining PASS
+          READY_FOR_TILDA: NO
+          LIVE_GO: NO
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            matematika-source-2024/profile-source-lock/visual-assets \
+            matematika-source-2024/profile-source-lock/VISUAL-INVENTORY.json \
+            matematika-source-2024/profile-source-lock/VISUAL-FIDELITY-EVIDENCE.json \
+            matematika-source-2024/profile-source-lock/VISUAL-PREBUILD-VALIDATION.txt \
+            PROFILE-MATH-2024-LATEST-VISUAL-PREBUILD-RUN.txt
+          if git diff --cached --quiet; then
+            echo 'PROFILE 2024 visual lock unchanged'
+          else
+            git commit -m 'Persist PROFILE 2024 exact-source visual prebuild lock'
+            git push origin HEAD:main
+          fi
+
+      - name: Upload visual prebuild evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: profile-math-2024-visual-prebuild
+          path: |
+            matematika-source-2024/profile-source-lock/visual-assets
+            matematika-source-2024/profile-source-lock/VISUAL-INVENTORY.json
+            matematika-source-2024/profile-source-lock/VISUAL-FIDELITY-EVIDENCE.json
+            matematika-source-2024/profile-source-lock/VISUAL-PREBUILD-VALIDATION.txt
+          retention-days: 30
