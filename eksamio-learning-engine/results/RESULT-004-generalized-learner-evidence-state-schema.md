@@ -8,7 +8,7 @@ MODE: ADD_ONLY / ARCHITECTURE_MATERIALIZATION / NO_PRODUCTION_INTEGRATION
 
 BRANCH: `codex/task-004-generalized-learner-evidence-state-schema`
 
-COMMIT: `9acf1d98281c09416f1a2b1d7dd3c670b65713c5` (published review-fix validated artifact set)
+COMMIT: `b772cd1872dbcb1b7b1c58f12f46ea24e07188fd` (published review-fix validated artifact set)
 
 PR: [#33](https://github.com/niknikdym-hue/ege/pull/33)
 
