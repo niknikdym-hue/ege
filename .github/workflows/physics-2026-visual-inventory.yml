@@ -1,0 +1,69 @@
+name: physics-2026-visual-inventory
+on:
+  push:
+    branches:
+      - chatgpt/physics-2026-source-visual-tools-fix-20260819
+permissions:
+  contents: write
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2026-source-visual-tools-fix-20260819
+          fetch-depth: 0
+      - name: Guard
+        id: gate
+        shell: bash
+        run: |
+          if [ -f .physics-2026-visual-inventory-trigger ] && grep -qx 'run=yes' .physics-2026-visual-inventory-trigger; then echo 'run=true' >> "$GITHUB_OUTPUT"; else echo 'run=false' >> "$GITHUB_OUTPUT"; fi
+      - name: Build current visual inventory
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          pkg=Path('ege-fizika-demoversiya-v3-1-fixed')
+          rows=[]
+          def parse_block(path,bid):
+              s=path.read_text(encoding='utf-8')
+              m=re.search(r'<script[^>]+id="'+re.escape(bid)+r'"[^>]*>(.*?)</script>',s,re.S)
+              assert m,path
+              return json.loads(m.group(1))
+          objs=[]
+          for file,bid in [('ege-fizika-demoversiya-T123-02.txt','ephys-data-1'),('ege-fizika-demoversiya-T123-03.txt','ephys-data-2'),('ege-fizika-demoversiya-T123-04.txt','ephys-data-3')]:
+              o=parse_block(pkg/file,bid)
+              for t in o.get('tasks',[]): objs.append(('task',t['number'],None,file,t))
+          o=parse_block(pkg/'ege-fizika-demoversiya-T123-05.txt','ephys-data-4')
+          for v in o.get('variants26',[]): objs.append(('task26',26,v['variant'],'ege-fizika-demoversiya-T123-05.txt',v))
+          fields=('promptHtml','solutionHtml','criteriaHtml','criteriaK1Html','criteriaK2Html')
+          for kind,task,var,file,obj in objs:
+              for field in fields:
+                  html=obj.get(field,'') or ''
+                  if '<svg' not in html and '<img' not in html: continue
+                  svgs=len(re.findall(r'<svg\b',html,re.I)); imgs=len(re.findall(r'<img\b',html,re.I))
+                  srcs=re.findall(r'<img[^>]+src="([^"]+)"',html,re.I)
+                  captions=[re.sub('<[^>]+>','',x).strip() for x in re.findall(r'<figcaption[^>]*>(.*?)</figcaption>',html,re.I|re.S)]
+                  alts=re.findall(r'aria-label="([^"]+)"',html,re.I)
+                  rows.append({'task':task,'variant':var,'file':file,'field':field,'inline_svg_count':svgs,'img_count':imgs,'img_sources':srcs,'captions':captions,'aria_labels':alts,'current_source_class':'RECONSTRUCTED_OR_INLINE_SVG' if svgs else ('EMBEDDED_DATA_IMAGE' if any(s.startswith('data:') for s in srcs) else 'FILE_IMAGE')})
+          standalone=[]
+          for p in sorted(pkg.glob('asset-*')):
+              if p.is_file(): standalone.append({'file':p.name,'suffix':p.suffix.lower(),'bytes':p.stat().st_size})
+          out={'source_year':2026,'policy':'Every exam/solution visual must be an exact crop from the byte-locked official FIPI PDF; reconstructed SVG is forbidden.','rows':rows,'counts':{'visual_fields':len(rows),'inline_svg_fields':sum(1 for r in rows if r['inline_svg_count']),'embedded_data_image_fields':sum(1 for r in rows if any(s.startswith('data:') for s in r['img_sources'])),'file_image_fields':sum(1 for r in rows if r['current_source_class']=='FILE_IMAGE')},'standalone_assets':standalone}
+          Path('tmp-physics-2026-visual-audit/current-visual-inventory.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(out['counts'],ensure_ascii=False))
+          PY
+      - name: Commit inventory
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' 'run=no' > .physics-2026-visual-inventory-trigger
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tmp-physics-2026-visual-audit/current-visual-inventory.json .physics-2026-visual-inventory-trigger
+          git commit -m 'Inventory Physics 2026 current visuals'
+          git push origin HEAD:chatgpt/physics-2026-source-visual-tools-fix-20260819
