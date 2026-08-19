@@ -17,6 +17,7 @@ on:
       - 'matematika-source-2022/ege-2022-matematika-kodifikator.pdf'
       - 'demo-production-standard/scripts/analyze_profile_math_year_sources.py'
       - '.github/workflows/profile-math-2024-2022-source-prelock.yml'
+      - 'PROFILE-MATH-2024-2022-PRELOCK-TRIGGER.txt'
 
 permissions:
   contents: write
@@ -29,6 +30,23 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Record started source-prelock run
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > PROFILE-MATH-2024-2022-LATEST-SOURCE-PRELOCK-RUN.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Head SHA: ${{ github.sha }}
+          Years: 2024,2023,2022
+          Status: STARTED
+          Authority: exact year-specific FIPI profile PDFs stored in repository
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add PROFILE-MATH-2024-2022-LATEST-SOURCE-PRELOCK-RUN.txt
+          git commit -m 'Record started profile math FIPI source prelock' || true
+          git push origin HEAD:main
 
       - uses: actions/setup-python@v5
         with:
@@ -72,7 +90,7 @@ jobs:
           print('PROFILE CROSS-YEAR / BASE-SEPARATION GATE PASS')
           PY
 
-      - name: Record run and persist prelocks
+      - name: Persist successful source prelocks
         shell: bash
         run: |
           set -euo pipefail
@@ -82,7 +100,7 @@ jobs:
           Years: 2024,2023,2022
           Status: SOURCE_PRELOCK_PASS
           Authority: exact year-specific FIPI profile PDFs stored in repository
-          READY_FOR_BUILD: NO — exam/answer/visual year locks still required before each build
+          READY_FOR_BUILD: NO — exam/answer/input/visual/extended-criteria year locks still required before each build
           EOF
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
