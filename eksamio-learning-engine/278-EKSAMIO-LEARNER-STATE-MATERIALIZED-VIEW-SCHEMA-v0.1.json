@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eksamio.ru/schemas/learner-semantic-state/0.1.0",
+  "title": "Eksamio subject-agnostic recomputable learner semantic state",
+  "description": "Materialized inference per learner_profile_id x semantic_id. Raw evidence remains canonical history.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "learner_profile_id",
+    "subject_id",
+    "semantic_id",
+    "semantic_registry_version",
+    "mastery",
+    "independent_evidence_summary",
+    "assisted_evidence_summary",
+    "recent_evidence_summary",
+    "last_independent_verification_at",
+    "last_assisted_attempt_at",
+    "transfer_evidence_summary",
+    "retention_evidence_summary",
+    "last_retention_check_at",
+    "retention_due_at",
+    "prerequisite_readiness_hooks",
+    "error_fingerprint",
+    "goal_exam_overlay_refs",
+    "inference_version",
+    "computed_at",
+    "evidence_position",
+    "state_revision"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "learner_profile_id": {"type": "string", "minLength": 3},
+    "subject_id": {"type": "string", "minLength": 2},
+    "semantic_id": {"type": "string", "minLength": 3},
+    "semantic_registry_version": {"type": "string", "minLength": 1},
+    "mastery": {"$ref": "#/$defs/mastery"},
+    "learner_self_confidence_summary": {"$ref": "#/$defs/self_confidence_summary"},
+    "independent_evidence_summary": {"$ref": "#/$defs/evidence_summary"},
+    "assisted_evidence_summary": {"$ref": "#/$defs/assisted_evidence_summary"},
+    "recent_evidence_summary": {"$ref": "#/$defs/recent_evidence_summary"},
+    "last_independent_verification_at": {"type": ["string", "null"], "format": "date-time"},
+    "last_assisted_attempt_at": {"type": ["string", "null"], "format": "date-time"},
+    "transfer_evidence_summary": {"$ref": "#/$defs/transfer_summary"},
+    "retention_evidence_summary": {"$ref": "#/$defs/retention_summary"},
+    "last_retention_check_at": {"type": ["string", "null"], "format": "date-time"},
+    "retention_due_at": {"type": ["string", "null"], "format": "date-time"},
+    "prerequisite_readiness_hooks": {"$ref": "#/$defs/prerequisite_readiness_hooks"},
+    "error_fingerprint": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/error_fingerprint_item"}
+    },
+    "goal_exam_overlay_refs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/overlay_ref"}
+    },
+    "subject_extension": {"$ref": "#/$defs/subject_extension"},
+    "inference_version": {"type": "string", "minLength": 1},
+    "computed_at": {"type": "string", "format": "date-time"},
+    "evidence_position": {"$ref": "#/$defs/evidence_position"},
+    "state_revision": {"type": "integer", "minimum": 0},
+    "recompute_metadata": {"$ref": "#/$defs/recompute_metadata"}
+  },
+  "$defs": {
+    "mastery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["estimate", "band", "status", "system_confidence", "uncertainty"],
+      "properties": {
+        "estimate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "band": {"type": ["string", "null"]},
+        "status": {"type": ["string", "null"]},
+        "system_confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "uncertainty": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+      },
+      "description": "Inference output. No universal status taxonomy or coefficient is frozen by schema v0.1."
+    },
+    "self_confidence_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["latest_value", "scale", "observed_at", "event_ref"],
+      "properties": {
+        "latest_value": {"type": ["number", "null"]},
+        "scale": {"type": ["string", "null"]},
+        "observed_at": {"type": ["string", "null"], "format": "date-time"},
+        "event_ref": {"type": ["string", "null"]}
+      },
+      "description": "Learner-reported confidence remains separate from system confidence."
+    },
+    "evidence_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted_event_count", "correct_count", "incorrect_count", "partial_count", "first_event_at", "last_event_at", "event_refs"],
+      "properties": {
+        "accepted_event_count": {"type": "integer", "minimum": 0},
+        "correct_count": {"type": "integer", "minimum": 0},
+        "incorrect_count": {"type": "integer", "minimum": 0},
+        "partial_count": {"type": "integer", "minimum": 0},
+        "first_event_at": {"type": ["string", "null"], "format": "date-time"},
+        "last_event_at": {"type": ["string", "null"], "format": "date-time"},
+        "event_refs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "assisted_evidence_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted_event_count", "correct_count", "incorrect_count", "partial_count", "first_event_at", "last_event_at", "event_refs", "assistance_levels_observed"],
+      "properties": {
+        "accepted_event_count": {"type": "integer", "minimum": 0},
+        "correct_count": {"type": "integer", "minimum": 0},
+        "incorrect_count": {"type": "integer", "minimum": 0},
+        "partial_count": {"type": "integer", "minimum": 0},
+        "first_event_at": {"type": ["string", "null"], "format": "date-time"},
+        "last_event_at": {"type": ["string", "null"], "format": "date-time"},
+        "event_refs": {"type": "array", "items": {"type": "string"}},
+        "assistance_levels_observed": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "MICRO_HINT",
+              "GUIDED_HINT",
+              "SOCRATIC_GUIDANCE",
+              "RULE_EXPLANATION",
+              "PARTIAL_WORKED",
+              "WORKED_EXAMPLE",
+              "SOLUTION_EXPOSED"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "recent_evidence_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["window_definition", "event_count", "independent_count", "assisted_count", "event_refs"],
+      "properties": {
+        "window_definition": {"type": "string", "minLength": 1},
+        "event_count": {"type": "integer", "minimum": 0},
+        "independent_count": {"type": "integer", "minimum": 0},
+        "assisted_count": {"type": "integer", "minimum": 0},
+        "event_refs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "transfer_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["same_pattern_count", "near_transfer_count", "broad_transfer_count", "last_transfer_at", "event_refs"],
+      "properties": {
+        "same_pattern_count": {"type": "integer", "minimum": 0},
+        "near_transfer_count": {"type": "integer", "minimum": 0},
+        "broad_transfer_count": {"type": "integer", "minimum": 0},
+        "last_transfer_at": {"type": ["string", "null"], "format": "date-time"},
+        "event_refs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "retention_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["delayed_check_count", "delayed_correct_count", "delayed_incorrect_count", "last_delay_seconds", "event_refs"],
+      "properties": {
+        "delayed_check_count": {"type": "integer", "minimum": 0},
+        "delayed_correct_count": {"type": "integer", "minimum": 0},
+        "delayed_incorrect_count": {"type": "integer", "minimum": 0},
+        "last_delay_seconds": {"type": ["integer", "null"], "minimum": 0},
+        "event_refs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "prerequisite_readiness_hooks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prerequisite_graph_version", "prerequisite_state_refs", "readiness_policy_version", "readiness_status"],
+      "properties": {
+        "prerequisite_graph_version": {"type": ["string", "null"]},
+        "prerequisite_state_refs": {"type": "array", "items": {"type": "string"}},
+        "readiness_policy_version": {"type": ["string", "null"]},
+        "readiness_status": {"type": ["string", "null"]}
+      },
+      "description": "Hooks only. This schema does not invent prerequisite edges or a readiness algorithm."
+    },
+    "error_fingerprint_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fingerprint_id", "observation_type", "confidence", "precision", "event_refs", "last_observed_at"],
+      "properties": {
+        "fingerprint_id": {"type": "string", "minLength": 2},
+        "observation_type": {"type": "string", "minLength": 2},
+        "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "precision": {"enum": ["EXACT", "PARTIAL", "BROAD", "UNKNOWN"]},
+        "event_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "last_observed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "overlay_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overlay_type", "overlay_id", "overlay_version"],
+      "properties": {
+        "overlay_type": {"enum": ["LEARNER_GOAL", "EXAM_ROUTE", "COURSE_ROUTE"]},
+        "overlay_id": {"type": "string", "minLength": 2},
+        "overlay_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "subject_extension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subject_payload_schema_version", "subject_payload"],
+      "properties": {
+        "subject_payload_schema_version": {"type": "string", "minLength": 1},
+        "subject_payload": {"type": "object"}
+      }
+    },
+    "evidence_position": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "server_watermark": {"type": "string", "minLength": 1},
+        "max_server_sequence": {"type": "integer", "minimum": 0},
+        "included_event_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "semantic_mapping_versions": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      },
+      "required": ["semantic_mapping_versions"],
+      "anyOf": [
+        {"required": ["server_watermark"]},
+        {"required": ["max_server_sequence"]},
+        {"required": ["included_event_refs"]}
+      ],
+      "description": "Sufficient evidence reference/watermark for reproducible recompute."
+    },
+    "recompute_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "previous_inference_version", "backfill_id"],
+      "properties": {
+        "reason": {"enum": ["INITIAL", "NEW_EVIDENCE", "INFERENCE_VERSION_CHANGE", "MAPPING_VERSION_CHANGE", "CORRECTION_OR_RETRACTION", "BACKFILL"]},
+        "previous_inference_version": {"type": ["string", "null"]},
+        "backfill_id": {"type": ["string", "null"]}
+      }
+    }
+  },
+  "x-inference-invariants": [
+    "state is recomputable from accepted evidence",
+    "inference_version and evidence position are mandatory",
+    "assisted evidence is separate from independent evidence",
+    "system confidence is separate from learner self-confidence",
+    "no universal mastery coefficients, forgetting curve, or prerequisite edges are defined"
+  ]
+}
