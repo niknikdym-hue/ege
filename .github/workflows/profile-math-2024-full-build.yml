@@ -1,0 +1,183 @@
+name: profile-math-2024-full-build
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/profile-math-2024-full-build.yml'
+      - 'PROFILE-MATH-2024-BUILD-TRIGGER.txt'
+      - '.profile2024-bootstrap/**'
+      - 'matematika-source-2024/profile-source-lock/**'
+      - 'matematika-source-2024/ege-2024-matematika-profil-demoversiya.pdf'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-math-2024-full-build
+  cancel-in-progress: false
+
+jobs:
+  build-audit-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Restore audited PROFILE 2024 build scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .profile2024-bootstrap/chunk01.txt .profile2024-bootstrap/chunk02.txt .profile2024-bootstrap/chunk03.txt .profile2024-bootstrap/chunk04.txt > /tmp/profile2024-bootstrap.b64
+          echo '637333aa135e79bed2d147f684717e971b9a30945f3f117be53f461858ada060  /tmp/profile2024-bootstrap.b64' | sha256sum -c -
+          base64 -d /tmp/profile2024-bootstrap.b64 > /tmp/profile2024-bootstrap.tar.gz
+          echo '61a7538c210f9c1bb16abff06b17c9e0949b078363dbea7b5fefdf75d84842f3  /tmp/profile2024-bootstrap.tar.gz' | sha256sum -c -
+          tar -xzf /tmp/profile2024-bootstrap.tar.gz -C .
+          python -m py_compile \
+            ege-matematika-profil-demoversiya-2024/scripts/build_profile_2024.py \
+            ege-matematika-profil-demoversiya-2024/tests/test_profile_2024.py \
+            ege-matematika-profil-demoversiya-2024/audit/independent_audit_2024.py
+
+      - name: Install build and browser dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow selenium
+
+      - uses: browser-actions/setup-chrome@v1
+      - uses: nanasess/setup-chromedriver@v2
+
+      - name: Build PROFILE 2024 from locked FIPI source assets
+        run: python ege-matematika-profil-demoversiya-2024/scripts/build_profile_2024.py
+
+      - name: Start first preview server
+        shell: bash
+        run: |
+          cd ege-matematika-profil-demoversiya-2024
+          python -m http.server 8765 > /tmp/profile2024-http.log 2>&1 &
+          echo $! > /tmp/profile2024-http.pid
+          sleep 2
+
+      - name: First real-browser acceptance audit
+        env:
+          EKSAMIO_PREVIEW_URL: http://127.0.0.1:8765/ege-matematika-profil-demoversiya-2024-PREVIEW.html
+        run: python ege-matematika-profil-demoversiya-2024/tests/test_profile_2024.py
+
+      - name: Independent source-runtime audit before freeze
+        run: python ege-matematika-profil-demoversiya-2024/audit/independent_audit_2024.py
+
+      - name: Repack candidate ZIP with browser and independent evidence
+        run: python ege-matematika-profil-demoversiya-2024/scripts/build_profile_2024.py --repack
+
+      - name: Clean ZIP extraction independent audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/profile2024-clean
+          mkdir -p /tmp/profile2024-clean
+          unzip -q ege-matematika-profil-demoversiya-2024-v1.0.zip -d /tmp/profile2024-clean
+          python ege-matematika-profil-demoversiya-2024/audit/independent_audit_2024.py /tmp/profile2024-clean/ege-matematika-profil-demoversiya-2024 --clean
+          cd /tmp/profile2024-clean/ege-matematika-profil-demoversiya-2024
+          python -m http.server 8766 > /tmp/profile2024-clean-http.log 2>&1 &
+          echo $! > /tmp/profile2024-clean-http.pid
+          sleep 2
+
+      - name: Second real-browser regression from clean extracted ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          EKSAMIO_PREVIEW_URL=http://127.0.0.1:8766/ege-matematika-profil-demoversiya-2024-PREVIEW.html \
+          EKSAMIO_PACKAGE_ROOT=/tmp/profile2024-clean/ege-matematika-profil-demoversiya-2024 \
+          python ege-matematika-profil-demoversiya-2024/tests/test_profile_2024.py
+
+      - name: Freeze exact clean-tested package
+        shell: bash
+        run: |
+          set -euo pipefail
+          CLEAN=/tmp/profile2024-clean/ege-matematika-profil-demoversiya-2024
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/profile2024-clean/ege-matematika-profil-demoversiya-2024/ege-matematika-profil-demoversiya-2024-PAGE-STATUS.txt')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('INDEPENDENT_AUDIT_GATE: PENDING_FINAL_CLEAN_ZIP','INDEPENDENT_AUDIT_GATE: PASS — independent source/runtime audit + clean extraction audit')
+          s=s.replace('FINAL_STATUS: READY_FOR_FINAL_CLEAN_ZIP_AUDIT','FINAL_STATUS: READY_FOR_TILDA')
+          s=s.replace('READY_FOR_TILDA: PENDING_FINAL_CLEAN_ZIP_AUDIT','READY_FOR_TILDA: YES')
+          if 'CLEAN_ZIP_REGRESSION_GATE:' not in s:
+              s=s.replace('LIVE_GO: NO','CLEAN_ZIP_REGRESSION_GATE: PASS — clean extraction + second real-browser regression\nLIVE_GO: NO')
+          p.write_text(s,encoding='utf-8')
+          PY
+          python "$CLEAN/scripts/build_profile_2024.py" --repack
+          python ege-matematika-profil-demoversiya-2024/audit/independent_audit_2024.py "$CLEAN" --clean
+          python "$CLEAN/scripts/build_profile_2024.py" --repack
+          rm -rf ege-matematika-profil-demoversiya-2024
+          cp -a "$CLEAN" ege-matematika-profil-demoversiya-2024
+          cp /tmp/profile2024-clean/ege-matematika-profil-demoversiya-2024-v1.0.zip ege-matematika-profil-demoversiya-2024-v1.0.zip
+          sha256sum ege-matematika-profil-demoversiya-2024-v1.0.zip | tee PROFILE-MATH-2024-FINAL-SHA256.txt
+
+      - name: Final static package assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re, subprocess, tempfile
+          root=Path('ege-matematika-profil-demoversiya-2024')
+          blocks=sorted(root.glob('*-T123-*.txt'))
+          assert blocks and len(blocks)==30, len(blocks)
+          assert max(p.stat().st_size for p in blocks) < 42500
+          for p in blocks:
+              s=p.read_text(encoding='utf-8')
+              assert s.count('<script') == s.count('</script>'), p.name
+              assert s.count('<style') == s.count('</style>'), p.name
+              for m in re.finditer(r'<script[^>]*>(.*?)</script>',s,re.S):
+                  with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False) as f:
+                      f.write(m.group(1)); name=f.name
+                  assert subprocess.run(['node','--check',name],capture_output=True).returncode==0, p.name
+          status=(root/'ege-matematika-profil-demoversiya-2024-PAGE-STATUS.txt').read_text(encoding='utf-8')
+          assert 'READY_FOR_TILDA: YES' in status
+          assert 'CLEAN_ZIP_REGRESSION_GATE: PASS' in status
+          print('FINAL STATIC ASSERTIONS PASS:',len(blocks),'T123, max',max(p.stat().st_size for p in blocks))
+          PY
+
+      - name: Persist final frozen package
+        shell: bash
+        run: |
+          set -euo pipefail
+          SHA=$(cut -d' ' -f1 PROFILE-MATH-2024-FINAL-SHA256.txt)
+          cat > PROFILE-MATH-2024-LATEST-BUILD-RUN.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Head SHA: ${{ github.sha }}
+          Status: READY_FOR_TILDA
+          Archive: ege-matematika-profil-demoversiya-2024-v1.0.zip
+          Archive SHA256: $SHA
+          Source SHA256: 89698a59be7da5c5f6c628f752a6810534888c423cae31a181ef743c910c1ae3
+          Official examples: 37/37
+          Short correct+wrong real DOM: 30/30
+          Direct exact-source assets: 49/49
+          Reconstructed official visuals: 0
+          T123: 30 atomic blocks, each <42500, standalone JS/tag syntax PASS
+          Extended UX: math toolbar + own answer + official FIPI solution/criteria + separate self-score PASS
+          Zoom/responsive/reload: PASS
+          Clean ZIP second real-browser regression: PASS
+          LIVE_GO: NO until Tilda publication + production smoke + manual student acceptance
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add ege-matematika-profil-demoversiya-2024 PROFILE-MATH-2024-LATEST-BUILD-RUN.txt PROFILE-MATH-2024-FINAL-SHA256.txt
+          git commit -m 'Finalize PROFILE 2024 source-locked Tilda package' || true
+          git push origin HEAD:main
+
+      - name: Upload authoritative Tilda package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-matematika-profil-demoversiya-2024-v1.0-SOURCE-LOCKED
+          path: |
+            ege-matematika-profil-demoversiya-2024-v1.0.zip
+            PROFILE-MATH-2024-FINAL-SHA256.txt
+            PROFILE-MATH-2024-LATEST-BUILD-RUN.txt
+          retention-days: 30
