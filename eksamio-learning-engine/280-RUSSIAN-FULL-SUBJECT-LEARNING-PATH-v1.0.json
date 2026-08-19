@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0.0",
+  "date": "2026-08-19",
+  "status": "ACTIVE_PROGRAM_LEARNING_PATH_CONTRACT_NO_PRODUCTION_INTEGRATION",
+  "subject": "russian",
+  "program_ref": "277-RUSSIAN-FULL-SUBJECT-PROGRAM-v1.0.json",
+  "learner_evidence_ref": "276-EKSAMIO-LEARNER-EVIDENCE-STATE-CONTRACT-v1.0.txt",
+  "goal": "Turn semantic identity state into the next teach/practice/check action without tying learning order to a specific exam product.",
+  "entry_modes": [
+    {
+      "mode": "FULL_COURSE",
+      "start": "diagnostic across program domains",
+      "selection": "weak prerequisites first, then ordered domain progression"
+    },
+    {
+      "mode": "EXAM_ROUTE",
+      "start": "EGE/OGE route diagnostic",
+      "selection": "route-relevant semantic gaps plus prerequisite repair"
+    },
+    {
+      "mode": "THEMATIC",
+      "start": "selected module/identity",
+      "selection": "target plus unresolved prerequisites"
+    },
+    {
+      "mode": "HOMEWORK",
+      "start": "recognized homework semantics",
+      "selection": "solve current task while repairing only necessary prerequisites"
+    },
+    {
+      "mode": "TUTOR",
+      "start": "learner goal + current semantic state",
+      "selection": "next best pedagogical action"
+    }
+  ],
+  "identity_cycle": [
+    {
+      "stage": "DIAGNOSE",
+      "purpose": "Estimate current state from valid evidence; absence of evidence is not automatically failure.",
+      "exit": "route to prerequisite repair, instruction, practice or verification"
+    },
+    {
+      "stage": "PREREQUISITE_REPAIR",
+      "purpose": "Repair blocking semantic prerequisites before repeated failure on the target.",
+      "exit": "blocking prerequisites reach readiness threshold"
+    },
+    {
+      "stage": "EXPLAIN",
+      "purpose": "Give canonical rule/concept/strategy with provenance-aware knowledge.",
+      "evidence_strength": "instructional_only"
+    },
+    {
+      "stage": "WORKED_EXAMPLE",
+      "purpose": "Show application with explicit reasoning tied to semantic identity.",
+      "evidence_strength": "instructional_only"
+    },
+    {
+      "stage": "GUIDED_RECOGNITION",
+      "purpose": "Identify the relevant phenomenon/rule boundary.",
+      "evidence_strength": "weak_to_medium"
+    },
+    {
+      "stage": "GUIDED_APPLICATION",
+      "purpose": "Apply with hints/scaffolding.",
+      "evidence_strength": "assisted"
+    },
+    {
+      "stage": "INDEPENDENT_APPLICATION",
+      "purpose": "Apply without Tutor/hint assistance.",
+      "evidence_strength": "strong"
+    },
+    {
+      "stage": "MIXED_PRACTICE",
+      "purpose": "Discriminate target from neighboring rules/skills.",
+      "evidence_strength": "strong_if_semantics_resolved"
+    },
+    {
+      "stage": "TRANSFER",
+      "purpose": "Apply to new form/context/product route.",
+      "evidence_strength": "strong"
+    },
+    {
+      "stage": "RETENTION",
+      "purpose": "Recheck after spacing and after interference from other material.",
+      "evidence_strength": "strong"
+    },
+    {
+      "stage": "MASTERY_CHECK",
+      "purpose": "Independent verified assessment without assistance.",
+      "evidence_strength": "strongest"
+    }
+  ],
+  "next_best_action_rules": [
+    {"when": "target prerequisite not ready", "action": "PREREQUISITE_REPAIR"},
+    {"when": "no meaningful evidence for target", "action": "short diagnostic or explanation depending on route urgency"},
+    {"when": "repeated same misconception", "action": "switch explanation/example and run discrimination practice; do not just repeat same item"},
+    {"when": "guided success but no independent success", "action": "INDEPENDENT_APPLICATION"},
+    {"when": "independent success only in one narrow format", "action": "TRANSFER"},
+    {"when": "mastery strong but retention stale", "action": "RETENTION"},
+    {"when": "verified retained mastery", "action": "advance to next unresolved route-relevant identity"}
+  ],
+  "evidence_constraints": {
+    "tutor_hint_or_solution": "never strongest mastery evidence",
+    "explanation_view": "never mastery evidence",
+    "mixed_item": "may contribute to multiple identities but exact attribution requires resolvable item semantics",
+    "historical_exam_year": "metadata only",
+    "current_product_local_mastered_flag": "legacy UI state only until adapter inference"
+  },
+  "module_completion": {
+    "required": "module's required identities pass independent mastery/retention gates appropriate to learner route",
+    "route_specific": "A learner may complete an EGE route without claiming complete grades-5-11 subject mastery.",
+    "full_subject": "Full program completion requires all required canonical subject identities, not merely all EGE task numbers."
+  },
+  "content_bundle_contract": {
+    "per_semantic_identity": [
+      "canonical_definition_or_rule",
+      "source_provenance",
+      "prerequisites",
+      "worked_examples",
+      "misconceptions",
+      "guided_items",
+      "independent_items",
+      "mixed_or_transfer_items",
+      "retention_items",
+      "mastery_check"
+    ]
+  }
+}
