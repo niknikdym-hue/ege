@@ -1,0 +1,97 @@
+EKSAMIO — ЕГЭ ПРОФИЛЬНАЯ МАТЕМАТИКА 2023 — FINAL REPORT
+
+STATUS: READY_FOR_TILDA
+LIVE_GO: NO — до публикации в Tilda, production smoke и ручной приёмки.
+
+1. OFFICIAL FIPI SOURCE LOCK
+Demo: ege-2023-matematika-profil-demoversiya.pdf
+SHA256: 9278f5cc60388da2ed63eaa946c82e0902f0867047fc9b5ea6051bae16e3b6b2
+Physical PDF pages: 12
+Printed pages: 23
+
+Specification: ege-2023-matematika-profil-specifikatsiya.pdf
+SHA256: a960947267c29db18561f4ddf36b78e8385e9833fa47a4d8240f7328b80a36d3
+Physical PDF pages: 7
+Printed pages: 14
+
+Codifier: ege-2023-matematika-kodifikator.pdf
+SHA256: e75a596e2d1b8e76f99d2cf717f1269a247725a40cfac9e6bf305d8bb131c087
+Physical PDF pages: 21
+Printed pages: 42
+
+Content authority: official FIPI files for 2023 only. Adjacent years were used only as technical implementation reference after the 2023 source lock.
+
+2. EXAM LOCK
+Tasks: 18
+Short tasks: 1–11
+Extended tasks: 12–18
+Duration: 235 minutes / 3 h 55 min
+Maximum primary score: 31
+Short-answer maximum: 11
+Extended self-score maximum: 20
+Official examples: 35 total = 28 short + 7 extended
+
+Examples per task 1–18:
+4,3,2,2,4,3,2,1,3,1,3,1,1,1,1,1,1,1
+
+3. ANSWER / INPUT / EXTENDED LOCKS
+Short official answers locked: 28/28
+Real DOM correct + wrong scorer audit: 28/28 PASS
+Input contracts locked for all 28 short examples.
+Extended tasks 12–18: source pages, maximum scores, official solutions and criteria locked from exact 2023 FIPI demo.
+Required extended-answer UX: math toolbar, own answer persistence, official material only after completion, separate self-evaluation — PASS 7/7.
+
+4. VISUAL SOURCE LOCK
+Direct exact-source assets: 47/47
+Learner condition assets: 35/35
+Reference materials: 1/1
+Extended solution/criteria segments: 11/11
+Pixel identity against exact 2023 FIPI render: 47/47 PASS
+Reconstructed official visuals: 0
+Stitched multi-page official visuals: 0
+Zoom and responsive browser checks: PASS
+
+5. BROWSER / STATE / PACKAGE GATES
+Official examples through real DOM controls: 35/35 PASS
+Short scorer correct + wrong: 28/28 PASS
+State restore: variants, answers, mark-for-return and current state survive reload — PASS
+Responsive widths: 1280 / 768 / 390 / 360 / 320 — PASS
+First real-browser acceptance audit — PASS
+Independent source/runtime audit before freeze — PASS
+Clean ZIP extraction independent audit — PASS
+Second real-browser regression from clean extracted ZIP — PASS
+
+6. TILDA ATOMIC PACKAGE
+T123 blocks: 33
+Maximum T123 size: 41386 bytes
+Limit: <42500 bytes
+Standalone script/style/Node syntax: PASS
+No mechanical split across unfinished script/style/JS/base64 units.
+
+Final archive: ege-matematika-profil-demoversiya-2023-v1.0.zip
+Archive SHA256: 817d37467364a873a635a9229a6f763f145d52aba6426630604d1e3d87f038e4
+GitHub Actions run: 32274033231
+Final product commit: d131676197226e2f5e75c1ed6b3ae927632962ee
+
+7. HISTORICAL IDENTITY / PEIS COMPATIBILITY
+Stable historical task IDs and demo_item_id values are locked in:
+matematika-source-2023/profile-source-lock/DEMO-ITEM-IDENTITY-MAP.json
+
+Format:
+task_id = ege.math.profile.2023.task.<task_number>
+demo_item_id = ege.math.profile.2023.task.<task_number>.variant.<variant_number>
+
+These IDs are product/evidence metadata only. No mathematics learner mastery/state subsystem was created.
+No final mathematics semantic IDs were invented. Future semantic mapping is explicitly UNRESOLVED and must be performed through a future PEIS adapter against an approved mathematics semantic registry.
+Historical year, task number, variant order, content, official answers, criteria and scoring remain authoritative and must not be rewritten by PEIS mapping.
+
+8. REPOSITORY SYNCHRONIZATION
+All PROFILE 2023 work is contained in the existing mathematics/year contour and its build workflow/support files.
+No global PEIS numbered architecture documents were created.
+Reserved global numbers 282–286 were not used.
+Parallel Russian/PEIS work on main was not overwritten; final package persistence rebased/pulled current main before push and completed without overlapping-file conflict.
+
+9. CURRENT STATUS
+READY_FOR_TILDA: YES
+LIVE_GO: NO
+Next action: install HEAD/SEO + T123 blocks in strict package order, publish, run production smoke, then manual student acceptance.
