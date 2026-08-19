@@ -1,0 +1,68 @@
+{
+  "status": "OPEN_FIX_REQUIRED",
+  "scope": "extended-answer criterion wording in current V3.1 data blocks",
+  "rule": "FIPI criterion semantics and position references must be preserved per official task; a generic drawing/notation template is not acceptable.",
+  "defects": [
+    {
+      "task": 22,
+      "file": "ege-fizika-demoversiya-T123-04.txt",
+      "field": "criteriaHtml",
+      "current_fragment": "записи, соответствующие пунктам о рисунке и/или новых обозначениях, представлены не в полном объёме или отсутствуют",
+      "required_fragment": "Записи, соответствующие пунктам II или III, представлены не в полном объёме или отсутствуют.",
+      "reason": "Task 22 criterion explicitly references both the force drawing and introduced notation by criterion item numbers."
+    },
+    {
+      "task": 23,
+      "file": "ege-fizika-demoversiya-T123-04.txt",
+      "field": "criteriaHtml",
+      "current_fragment": "записи, соответствующие пунктам о рисунке и/или новых обозначениях, представлены не в полном объёме или отсутствуют",
+      "required_fragment": "Записи, соответствующие пункту II, представлены не в полном объёме или отсутствуют.",
+      "reason": "Task 23 has no drawing item in the scoring criterion; item II is introduced notation only."
+    },
+    {
+      "task": 24,
+      "file": "ege-fizika-demoversiya-T123-04.txt",
+      "field": "criteriaHtml",
+      "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
+      "required_fragment": "Записи, соответствующие пункту II, представлены не в полном объёме или отсутствуют.",
+      "reason": "Task 24 has no drawing item in the scoring criterion; item II is introduced notation only."
+    },
+    {
+      "task": 25,
+      "file": "ege-fizika-demoversiya-T123-04.txt",
+      "field": "criteriaHtml",
+      "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
+      "required_fragment": "Записи, соответствующие пунктам II и III, представлены не в полном объёме или отсутствуют.",
+      "reason": "Task 25 criterion explicitly references the ray construction and introduced notation as items II and III."
+    },
+    {
+      "task": 26,
+      "variant": 1,
+      "file": "ege-fizika-demoversiya-T123-05.txt",
+      "field": "criteriaK2Html",
+      "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
+      "required_fragment": "Записи, соответствующие пункту II, представлены не в полном объёме или отсутствуют.",
+      "reason": "Projectile variant K2 has no drawing criterion item; item II is introduced notation."
+    },
+    {
+      "task": 26,
+      "variant": 2,
+      "file": "ege-fizika-demoversiya-T123-05.txt",
+      "field": "criteriaK2Html",
+      "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
+      "required_fragment": "Записи, соответствующие пунктам II или III, представлены не в полном объёме или отсутствуют.",
+      "reason": "Board/block variant K2 explicitly has drawing and introduced-notation items."
+    },
+    {
+      "task": 26,
+      "variant": 3,
+      "file": "ege-fizika-demoversiya-T123-05.txt",
+      "field": "criteriaK2Html",
+      "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
+      "required_fragment": "Записи, соответствующие пунктам II и III, представлены не в полном объёме или отсутствуют.",
+      "reason": "Lever variant K2 explicitly has drawing and introduced-notation items."
+    }
+  ],
+  "freeze_effect": "BLOCKING",
+  "acceptance_rule": "Do not mark content fidelity PASS until the actual T123 data fields are corrected and rechecked in rendered review UI."
+}
