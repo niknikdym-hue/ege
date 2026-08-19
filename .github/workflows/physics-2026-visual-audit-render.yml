@@ -1,0 +1,74 @@
+name: physics-2026-visual-audit-render
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  render:
+    if: github.head_ref == 'chatgpt/physics-2026-source-visual-tools-fix-20260819'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2026-source-visual-tools-fix-20260819
+          fetch-depth: 0
+      - name: Guard
+        id: gate
+        shell: bash
+        run: |
+          if [ -f .physics-2026-visual-render-trigger ] && grep -qx 'run=yes' .physics-2026-visual-render-trigger; then echo 'run=true' >> "$GITHUB_OUTPUT"; else echo 'run=false' >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.run == 'true'
+        with:
+          python-version: '3.12'
+      - name: Render official source pages and geometry metadata
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pymupdf pillow >/dev/null
+          python - <<'PY'
+          from pathlib import Path
+          import fitz, json, shutil
+          from PIL import Image, ImageOps, ImageDraw
+          from io import BytesIO
+
+          pdf=Path('ege-fizika-demoversiya-v3-1-fixed/source/ege-2026-fizika-demoversiya.pdf')
+          out=Path('tmp-physics-2026-visual-audit')
+          shutil.rmtree(out,ignore_errors=True); (out/'pages').mkdir(parents=True)
+          doc=fitz.open(pdf); assert len(doc)==21
+          meta=[]; thumbs=[]
+          for i,page in enumerate(doc,1):
+              pix=page.get_pixmap(matrix=fitz.Matrix(1.45,1.45),alpha=False)
+              im=Image.open(BytesIO(pix.tobytes('png'))).convert('RGB')
+              name=f'physical-{i:02d}.webp'; im.save(out/'pages'/name,'WEBP',quality=88,method=6)
+              thumb=im.copy(); thumb.thumbnail((620,420)); canvas=Image.new('RGB',(640,460),'white'); canvas.paste(thumb,((640-thumb.width)//2,20)); d=ImageDraw.Draw(canvas); d.text((12,432),f'physical PDF page {i}',fill='black'); thumbs.append(canvas)
+              drawings=[]
+              for d0 in page.get_drawings():
+                  r=d0.get('rect')
+                  if r and r.width>2 and r.height>2: drawings.append([round(r.x0,2),round(r.y0,2),round(r.x1,2),round(r.y1,2)])
+              blocks=[]
+              for b in page.get_text('blocks'):
+                  txt=(b[4] or '').replace('\n',' ').strip()
+                  if txt: blocks.append({'bbox':[round(x,2) for x in b[:4]],'text':txt[:280]})
+              meta.append({'physical_page':i,'width':round(page.rect.width,2),'height':round(page.rect.height,2),'render':'pages/'+name,'drawings':drawings,'text_blocks':blocks})
+          # contact sheets, 4 pages each
+          for k in range(0,len(thumbs),4):
+              group=thumbs[k:k+4]; sheet=Image.new('RGB',(1280,920),'#eeeeee')
+              for j,img in enumerate(group): sheet.paste(img,((j%2)*640,(j//2)*460))
+              sheet.save(out/f'contact-{k//4+1:02d}.webp','WEBP',quality=86,method=6)
+          (out/'geometry.json').write_text(json.dumps({'authority':'exact byte-locked FIPI 2026 demo PDF','temporary':True,'pages':meta},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Commit temporary visual audit renders
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' 'run=no' > .physics-2026-visual-render-trigger
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tmp-physics-2026-visual-audit .physics-2026-visual-render-trigger
+          git commit -m 'Render Physics 2026 official PDF for visual audit'
+          git push origin HEAD:chatgpt/physics-2026-source-visual-tools-fix-20260819
