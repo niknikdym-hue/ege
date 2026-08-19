@@ -2,7 +2,7 @@ EKSAMIO LEARNING ENGINE
 RUSSIAN FULL SUBJECT PROGRAM — CURRENT-MAIN SALVAGE VALIDATION
 DATE: 2026-08-19
 STATUS: PASS / SUBJECT PROGRAM SALVAGED / SHARED PEIS BOUNDARY RESTORED / NO PRODUCTION INTEGRATION
-MODE: ADD_ONLY / RUSSIAN-PROGRAM-ONLY / NO_PRODUCTION_INTEGRATION
+MODE: RUSSIAN-PROGRAM-ONLY / NO_PRODUCTION_INTEGRATION
 
 PURPOSE
 This validation supersedes the architectural packaging of PR #35 without merging its old root-level numeric namespace 277–282 into current main. Valuable Russian full-program material is retained under `eksamio-learning-engine/russian-program/` and rebased onto the restored product authority plus TASK-004/TASK-005 shared PEIS contracts.
@@ -74,8 +74,9 @@ CURRENT TRAINER COVERAGE — CLOSED AND REUSED
 - canonical identities audited: 185 / 185
 - current trainer cards: 174 / 174
 - COVERED: 0
-- PARTIALLY_COVERED: 144
-- NOT_COVERED: 41
+- PARTIALLY_COVERED: 149
+- NOT_COVERED: 36
+- second semantic pass corrections: 5 conservative probe false negatives
 - general 185×174 audit rerun required now: NO
 
 IMPORTANT CHANGE FROM OLD PR #35
@@ -103,4 +104,4 @@ PRODUCTION SAFETY
 
 RESULT
 PASS.
-The useful full-Russian-program architecture from PR #35 is retained without importing its obsolete root numbering or creating a parallel learner engine. The next Russian system gate is no longer another broad program redesign or another 185×174 audit; it is the source-backed prerequisite + verified-content slice required to prove the first PEIS closed loop.
+The useful full-Russian-program architecture from PR #35 is retained without importing its obsolete root numbering or creating a parallel learner engine. The trainer-coverage correction changes only the audited exposure accounting from 0/144/41 to 0/149/36; it does not reopen the broad audit. The next Russian system gate remains the source-backed prerequisite + verified-content slice required to prove the first PEIS closed loop.
