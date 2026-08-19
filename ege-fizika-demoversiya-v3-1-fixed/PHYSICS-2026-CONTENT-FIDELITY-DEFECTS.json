@@ -1,6 +1,6 @@
 {
   "status": "OPEN_FIX_REQUIRED",
-  "scope": "extended-answer criterion wording in current V3.1 data blocks",
+  "scope": "extended-answer criterion wording and completeness in current V3.1 data blocks",
   "rule": "FIPI criterion semantics and position references must be preserved per official task; a generic drawing/notation template is not acceptable.",
   "defects": [
     {
@@ -52,6 +52,15 @@
       "current_fragment": "записи, соответствующие пунктам о рисунке и/или обозначениях, представлены не в полном объёме или отсутствуют",
       "required_fragment": "Записи, соответствующие пунктам II или III, представлены не в полном объёме или отсутствуют.",
       "reason": "Board/block variant K2 explicitly has drawing and introduced-notation items."
+    },
+    {
+      "task": 26,
+      "variant": 3,
+      "file": "ege-fizika-demoversiya-T123-05.txt",
+      "field": "criteriaK1Html",
+      "current_fragment": "выбор ИСО, модели твёрдого тела и материальной точки, условие равновесия твёрдого тела относительно вращательного движения, условие равновесия материальной точки",
+      "required_semantics": "The required K1 justification must also include the consequence of the massless connecting string: the tension magnitude is the same at every point of the string.",
+      "reason": "The official solution explicitly uses T1 = T2 = T, and the applicability justification for this task requires the massless-string condition; omitting it makes the learner-facing K1 checklist incomplete."
     },
     {
       "task": 26,
