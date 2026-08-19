@@ -7,7 +7,6 @@ on:
     paths:
       - '.github/workflows/profile-math-2024-full-build.yml'
       - 'PROFILE-MATH-2024-BUILD-TRIGGER.txt'
-      - '.profile2024-bootstrap/**'
       - 'matematika-source-2024/profile-source-lock/**'
       - 'matematika-source-2024/ege-2024-matematika-profil-demoversiya.pdf'
 
@@ -36,9 +35,9 @@ jobs:
         run: |
           set -euo pipefail
           cat .profile2024-bootstrap/chunk01.txt .profile2024-bootstrap/chunk02.txt .profile2024-bootstrap/chunk03.txt .profile2024-bootstrap/chunk04.txt > /tmp/profile2024-bootstrap.b64
-          echo '637333aa135e79bed2d147f684717e971b9a30945f3f117be53f461858ada060  /tmp/profile2024-bootstrap.b64' | sha256sum -c -
+          echo '50aa52a3d111e046d17c0e71c74f4c10c1ed2bd85513ac7e94ce5fa037f3405f  /tmp/profile2024-bootstrap.b64' | sha256sum -c -
           base64 -d /tmp/profile2024-bootstrap.b64 > /tmp/profile2024-bootstrap.tar.gz
-          echo '61a7538c210f9c1bb16abff06b17c9e0949b078363dbea7b5fefdf75d84842f3  /tmp/profile2024-bootstrap.tar.gz' | sha256sum -c -
+          echo '3874b173ec3f4052e585ec56855c64a8a17932a04548d28fa0e746c0fbeab190  /tmp/profile2024-bootstrap.tar.gz' | sha256sum -c -
           tar -xzf /tmp/profile2024-bootstrap.tar.gz -C .
           python -m py_compile \
             ege-matematika-profil-demoversiya-2024/scripts/build_profile_2024.py \
