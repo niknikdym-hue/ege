@@ -1,62 +1,51 @@
-PROJECT: Эксамио — интерактивная демоверсия ЕГЭ по физике
-EXAM: ЕГЭ
-SUBJECT: физика
-SOURCE_YEAR: 2026
-STATUS: SOURCE_GATE_PASSED
-PACKAGE_VERSION: V3
-PACKAGE_STATUS: READY_FOR_TILDA_TEST
-INDEPENDENT_CONDITION_TO_KEY_CHECK: PASS
-PAGE_URL: /ege/fizika/demoversiya/
+EKSAMIO PHYSICS 2026 — CURRENT ACCEPTANCE GATE
 
-ОФИЦИАЛЬНАЯ ОСНОВА
+EXAM=ЕГЭ
+SUBJECT=физика
+SOURCE_YEAR=2026
+CURRENT_PACKAGE=ege-fizika-demoversiya-v3-1-fixed
+CURRENT_ACCEPTANCE_CANDIDATE=V3.2
+STATUS=NOT_FROZEN
 
-1. Демонстрационный вариант КИМ ЕГЭ 2026 года по физике.
-2. Кодификатор проверяемых требований и элементов содержания ЕГЭ 2026 года по физике.
-3. Спецификация КИМ ЕГЭ 2026 года по физике.
+OFFICIAL AUTHORITY
+- Current FIPI EGE 2026 page lists Physics: Demonstration variant, Codifier, Specification.
+- Official archive URL: https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2026/fi_11_2026.zip
+- FIPI published the approved 2026 set on 2025-11-12.
+- The earlier 2025 draft marked PROJECT is not authority.
 
-Папка исходников пользователя:
-https://github.com/niknikdym-hue/eksamio-audio/tree/main/fizika%3A/source%3A
+SOURCE STATE
+- Three Physics 2026 PDFs from the current package are preserved in ege-source-fizika/source-fizika-2026/candidate-from-current-package/ using the same Git blobs as the package source/ directory.
+- Their roles, sizes and Git blob IDs are recorded in ege-source-fizika/source-fizika-2026/SOURCE-REGISTER.json.
+- Exact SHA256 identity against the current official FIPI archive has NOT yet been proven in this branch.
+SOURCE_GATE=OPEN_PENDING_EXTERNAL_BYTE_LOCK
 
-Официальный раздел ФИПИ:
-https://fipi.ru/ege/demoversii-specifikacii-kodifikatory
+STRUCTURE CONFIRMED
+- 26 tasks;
+- 235 minutes;
+- part 1: tasks 1–20, maximum 28 primary points;
+- part 2: tasks 21–26, maximum 17 primary points;
+- total official maximum: 45 primary points;
+- three official demonstration alternatives for task 26.
 
-ПОДТВЕРЖДЕНО ОФИЦИАЛЬНЫМИ МАТЕРИАЛАМИ
+CURRENT FIXES AFTER THE OLD V3/V3.1 REPORTS
+- Tasks 5, 9, 14, 18 and 20 now use checkbox selection instead of a free text string.
+- Tasks 6, 10, 15 and 17 now use a separate select control for every correspondence position.
+- Navigation marks an answer as filled only when its current input contract is valid.
+- Invalid legacy localStorage strings are not silently normalised into valid answers.
+- Leading/trailing whitespace, plus signs, Unicode minus and other unsupported numeric forms are not silently cleaned into valid numeric answers.
+- Part 2 is explicitly an unofficial self-evaluation; the combined 45-point display is explicitly an orientational sum and not expert verification.
+- Existing localStorage key remains unchanged for compatibility: eksamio_ege_physics_demo_2026_v2.
 
-- 26 заданий;
-- 235 минут;
-- часть 1: задания 1–20, максимум 28 первичных баллов;
-- часть 2: задания 21–26, максимум 17 первичных баллов;
-- общий максимум: 45 первичных баллов;
-- разрешены линейка и непрограммируемый калькулятор;
-- в демоверсии представлены три примера задания 26 через «ИЛИ», в реальном КИМ — один.
+OLD EVIDENCE
+The files dated 2026-07-26 and 2026-07-27 remain useful historical evidence for V3/V3.1, but their PASS/READY_FOR_TILDA_TEST labels do not constitute acceptance of the current V3.2 candidate after the interaction changes above.
 
-НЕЗАВИСИМАЯ СОДЕРЖАТЕЛЬНАЯ ПРОВЕРКА
+BLOCKERS BEFORE TECHNICAL FREEZE
+1. exact external byte lock against approved FIPI fi_11_2026.zip;
+2. regenerate/synchronise PREVIEW from the current T123 blocks;
+3. regenerate the package manifest from the final current tree;
+4. run current-version static and browser regression through the actual checkbox/select/input controls;
+5. verify state restoration including legacy V3.1 attempts;
+6. verify all 26 tasks at 320, 360, 390, 768 and 1280 px;
+7. verify scorer, 28-point automatic maximum, extended self-evaluation semantics and clean final package.
 
-- каждое задание 1–20 решено заново по условию;
-- каждый результат сопоставлен с официальной таблицей ответов;
-- задания 21–25 независимо пересчитаны и сопоставлены с возможными решениями ФИПИ;
-- независимо решены все три примера задания 26;
-- противоречий между условиями и официальными ключами не найдено;
-- все ответы и итоговые выводы пакета подтверждены;
-- подробности приведены в ege-fizika-demoversiya-INDEPENDENT-SOLUTION-CHECK.txt.
-
-КОНТРОЛЬ ПАКЕТА
-
-- строгая проверка формы кратких ответов: PASS;
-- частичное оценивание заданий части 1: PASS;
-- восстановление попытки после перезагрузки: PASS;
-- непрерывный таймер: PASS;
-- общий результат до самооценки развёрнутой части не выводится: PASS;
-- максимумы 28 + 17 = 45: PASS;
-- задания 1–26 на ширинах 320, 360, 390, 768 и 1280 px: PASS;
-- отдельные T123 проверены на корректное закрытие тегов: PASS;
-- JavaScript T123-06: PASS.
-
-SEO-ПРАВИЛО
-
-Год сохранён в интерфейсе конкретной демоверсии и в данных источника.
-Год удалён из постоянных SEO-полей, canonical, OG, Twitter и JSON-LD.
-
-ОГРАНИЧЕНИЕ
-
-Реальный тест после установки шести блоков T123 на опубликованной странице Tilda ещё не проведён.
+Only after every blocker is closed may Physics 2026 receive ACCEPTED_TECHNICAL_REFERENCE and become the technical reference for archive years 2025–2022. It must never become content authority for another year.
