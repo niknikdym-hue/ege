@@ -1,0 +1,37 @@
+EKSAMIO — ЕГЭ ПРОФИЛЬНАЯ МАТЕМАТИКА 2026
+ACCEPTED TECHNICAL REFERENCE / FREEZE RECORD
+Дата фиксации: 2026-08-19
+
+ACCEPTED_BY_USER: YES
+RECHECK_CONFIRMED_BY_USER: YES
+TECHNICAL_REFERENCE_FROZEN: YES
+DO_NOT_REBUILD_WITHOUT_CAUSE: YES
+
+USER ACCEPTANCE
+Пользователь подтвердил 2026-08-19, что профильная математика 2026 после повторной проверки работает отлично.
+
+WHAT IS FROZEN
+- текущая принятая демоверсия PROFILE 2026;
+- текущая source/answer/input/criteria/visual evidence chain;
+- текущая навигация, timer/state/results behavior;
+- extended-answer UX, включая последующее принятое расширение математической панели/собственного ответа для заданий с развёрнутым ответом;
+- текущие опубликованные/принятые технические паттерны, необходимые как reference для следующих лет.
+
+AUTHORITY RULE
+Эта принятая сборка может использоваться для 2024/2023/2022 ТОЛЬКО как технический reference.
+Нельзя использовать PROFILE 2026 как источник содержания для другого года: task count, тексты, варианты ИЛИ, ответы, критерии, баллы, source pages, visual crops/assets, reference pages и year-specific input contracts доказываются только официальными материалами ФИПИ нужного года.
+
+EXTENDED UX REFERENCE
+При переносе технического UX учитывать принятую расширенную механику развёрнутых заданий, а не откатываться к более раннему состоянию пакета. Для новых годов обязательный стандарт: /eksamio-learning-engine/130-EXTENDED-ANSWER-INPUT-UX-STANDARD.txt.
+
+REOPEN ONLY FOR
+1. подтверждённый функциональный дефект;
+2. подтверждённое расхождение с официальным источником ФИПИ;
+3. обязательное изменение совместимости платформы;
+4. прямое указание пользователя.
+
+LIVE STATUS
+Этот freeze-record не меняет автоматически существующий LIVE/production status. LIVE_GO определяется только опубликованной страницей, production smoke и ручной приёмкой на живом URL.
+
+REFERENCE FOR ARCHIVE YEARS
+Для PROFILE 2024 → 2023 → 2022 использовать /demo-production-standard/PROFILE-MATH-PRODUCTION-STANDARD.md и каждый год начинать заново с exact-year FIPI SOURCE PRELOCK.
