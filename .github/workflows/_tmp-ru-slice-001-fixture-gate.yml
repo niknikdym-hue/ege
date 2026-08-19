@@ -1,0 +1,49 @@
+name: RU Slice 001 Fixture Gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/verified-slices/**'
+      - '.github/workflows/_tmp-ru-slice-001-fixture-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install JSON Schema validator
+        run: python -m pip install jsonschema
+      - name: Materialize and validate RU-SLICE-001
+        run: python eksamio-learning-engine/russian-program/verified-slices/materialize_ru_slice_001.py
+      - name: Verify generated artifacts exist
+        run: |
+          test -f eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-ITEM-BANK-v0.1.json
+          test -f eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-EVIDENCE-FIXTURES-v0.1.json
+          test -f eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-PREREQUISITE-EDGE-v0.1.json
+          test -f eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-GOLDEN-SCENARIOS-v0.1.json
+          test -f eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-FIXTURE-VALIDATION.txt
+      - name: Persist validated fixtures to PR branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-ITEM-BANK-v0.1.json \
+            eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-EVIDENCE-FIXTURES-v0.1.json \
+            eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-PREREQUISITE-EDGE-v0.1.json \
+            eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-GOLDEN-SCENARIOS-v0.1.json \
+            eksamio-learning-engine/russian-program/verified-slices/RU-SLICE-001-FIXTURE-VALIDATION.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Materialize RU-SLICE-001 validated fixtures [skip ci]'
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
