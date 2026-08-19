@@ -1,0 +1,36 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN SCHOOL TRAINER COVERAGE AUDIT VALIDATION
+DATE: 2026-08-19
+STATUS: PASS
+
+AUTHORITATIVE DENOMINATOR
+- canonical school semantic identities: 185
+- current trainer cards: 174
+
+COVERAGE COUNTS
+- COVERED: 0
+- PARTIALLY_COVERED: 144
+- NOT_COVERED: 41
+- SUM: 185
+
+POLICY CHECKS
+- word/example presence alone counted as coverage: NO
+- task-number route alone allowed to become COVERED: NO
+- mixed/composite EGE card exposure classified as PARTIALLY_COVERED: YES
+- probe lexical-hit COVERED promoted unchanged: NO; downgraded to PARTIALLY_COVERED
+
+INTEGRITY
+- unique canonical IDs: 185 / 185
+- unique trainer card IDs: 174 / 174
+- NOT_COVERED entries with zero candidate task routes: PASS
+- PARTIALLY_COVERED entries with at least one candidate route: PASS
+
+SAFETY
+- PEIS/runtime touched: NO
+- trainer T123 touched: NO
+- scoring touched: NO
+- localStorage touched: NO
+- production touched: NO
+
+VERDICT
+PASS. The current 174-card EGE trainer does not provide full isolated coverage of any of the 185 canonical school semantic identities under the strict coverage contract. 144 identities have only mixed/composite exposure; 41 have no substantive current trainer route.
