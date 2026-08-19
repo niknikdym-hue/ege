@@ -1,0 +1,228 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-20",
+  "status": "GOLDEN_CLOSED_LOOP_SCENARIOS_READY_FOR_SHARED_RUNTIME",
+  "slice_id": "RU-SLICE-001",
+  "shared_contract_refs": [
+    "../../277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+    "../../282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json",
+    "../../283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json",
+    "../../284-EKSAMIO-RETENTION-SCHEDULE-STATE-CONTRACT-v0.1.json",
+    "../../285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json"
+  ],
+  "semantic_scope": {
+    "prerequisite": "school-verb-personal-ending-conjugation-base",
+    "target": "school-participle-vowel-suffix-conjugation-base",
+    "goal_context": "present-tense participle suffix selection"
+  },
+  "global_assertions": [
+    "Composite failure cannot become an exact semantic failure.",
+    "The REQUIRED edge may block only in the declared present-tense goal context.",
+    "Assisted success requires independent verification before strong mastery evidence.",
+    "No scenario asserts final universal mastery coefficients or a forgetting curve."
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "RU001-GOLDEN-A-PREREQUISITE-GAP",
+      "steps": [
+        {
+          "step": 1,
+          "consume_event": "ru001.ev.composite.error.001",
+          "expected_readiness": "INSUFFICIENT_EVIDENCE",
+          "expected_nba": {
+            "action_type": "DIAGNOSE_TARGET",
+            "semantic_targets": [
+              "school-verb-personal-ending-conjugation-base"
+            ],
+            "reason_codes": [
+              "STATE_UNCERTAIN_NEEDS_DIAGNOSTIC"
+            ]
+          }
+        },
+        {
+          "step": 2,
+          "consume_event": "ru001.ev.preq.diag.failure",
+          "expected_readiness": "BLOCKED_BY_REQUIRED_PREREQUISITE",
+          "expected_nba": {
+            "action_type": "LEARN_PREREQUISITE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "prerequisite_targets": [
+              "school-verb-personal-ending-conjugation-base"
+            ],
+            "reason_codes": [
+              "PREREQUISITE_BLOCKS_TARGET",
+              "PREREQUISITE_REPAIR_FOR_ORIGINAL_GOAL"
+            ]
+          }
+        },
+        {
+          "step": 3,
+          "instruction_ref": "../../36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json#verb_conjugation_endings",
+          "expected_nba": {
+            "action_type": "INDEPENDENT_PRACTICE",
+            "semantic_targets": [
+              "school-verb-personal-ending-conjugation-base"
+            ],
+            "reason_codes": [
+              "INDEPENDENT_VERIFICATION_REQUIRED_AFTER_HELP"
+            ]
+          }
+        },
+        {
+          "step": 4,
+          "consume_event": "ru001.ev.preq.reverify.success",
+          "expected_readiness": "READY_TO_LEARN_OR_PRACTICE",
+          "expected_mastery_reason_codes": [
+            "INDEPENDENT_EVIDENCE_PRESENT"
+          ],
+          "expected_nba": {
+            "action_type": "GUIDED_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "reason_codes": [
+              "TARGET_READY_TO_LEARN"
+            ]
+          }
+        },
+        {
+          "step": 5,
+          "consume_event": "ru001.ev.target.assisted.success",
+          "expected_nba": {
+            "action_type": "INDEPENDENT_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "reason_codes": [
+              "INDEPENDENT_VERIFICATION_REQUIRED_AFTER_HELP"
+            ]
+          }
+        },
+        {
+          "step": 6,
+          "consume_event": "ru001.ev.target.verify.success",
+          "expected_mastery_reason_codes": [
+            "INDEPENDENT_EVIDENCE_PRESENT"
+          ],
+          "expected_nba": {
+            "action_type": "RETENTION_REVIEW",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "reason_codes": [
+              "RETENTION_DUE"
+            ]
+          },
+          "measured_outcome_required": true
+        }
+      ]
+    },
+    {
+      "scenario_id": "RU001-GOLDEN-B-PREREQUISITE-ALREADY-MET",
+      "steps": [
+        {
+          "step": 1,
+          "consume_event": "ru001.ev.composite.error.001",
+          "expected_readiness": "INSUFFICIENT_EVIDENCE",
+          "expected_nba": {
+            "action_type": "DIAGNOSE_TARGET",
+            "semantic_targets": [
+              "school-verb-personal-ending-conjugation-base"
+            ],
+            "reason_codes": [
+              "STATE_UNCERTAIN_NEEDS_DIAGNOSTIC"
+            ]
+          }
+        },
+        {
+          "step": 2,
+          "consume_event": "ru001.ev.preq.diag.success",
+          "expected_readiness": "READY_TO_LEARN_OR_PRACTICE",
+          "expected_nba": {
+            "action_type": "DIAGNOSE_TARGET",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "reason_codes": [
+              "STATE_UNCERTAIN_NEEDS_DIAGNOSTIC"
+            ]
+          }
+        },
+        {
+          "step": 3,
+          "consume_event": "ru001.ev.target.diag.failure",
+          "expected_readiness": "READY_TO_LEARN_OR_PRACTICE",
+          "expected_nba": {
+            "action_type": "GUIDED_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "reason_codes": [
+              "LOW_MASTERY_HIGH_CONFIDENCE",
+              "TARGET_READY_TO_LEARN"
+            ]
+          }
+        },
+        {
+          "step": 4,
+          "consume_event": "ru001.ev.target.assisted.success",
+          "expected_nba": {
+            "action_type": "INDEPENDENT_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "reason_codes": [
+              "INDEPENDENT_VERIFICATION_REQUIRED_AFTER_HELP"
+            ]
+          }
+        },
+        {
+          "step": 5,
+          "consume_event": "ru001.ev.target.verify.success",
+          "expected_mastery_reason_codes": [
+            "INDEPENDENT_EVIDENCE_PRESENT"
+          ],
+          "expected_nba": {
+            "action_type": "RETENTION_REVIEW",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "reason_codes": [
+              "RETENTION_DUE"
+            ]
+          },
+          "measured_outcome_required": true
+        }
+      ]
+    },
+    {
+      "scenario_id": "RU001-GUARDRAIL-TARGET-VERIFY-FAILURE",
+      "steps": [
+        {
+          "step": 1,
+          "consume_event": "ru001.ev.target.assisted.success"
+        },
+        {
+          "step": 2,
+          "consume_event": "ru001.ev.target.verify.failure",
+          "expected_assertions": [
+            "assisted success must not override fresh independent failure",
+            "target must not be promoted to strong mastery"
+          ],
+          "expected_nba": {
+            "action_type": "GUIDED_PRACTICE",
+            "semantic_targets": [
+              "school-participle-vowel-suffix-conjugation-base"
+            ],
+            "reason_codes": [
+              "LOW_MASTERY_HIGH_CONFIDENCE",
+              "TARGET_READY_TO_LEARN"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
