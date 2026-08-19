@@ -1,0 +1,41 @@
+EKSAMIO LEARNING ENGINE
+RU-SLICE-001 FIXTURE VALIDATION
+DATE: 2026-08-20
+STATUS: PASS
+
+CONTENT
+- exact item bank: 12 / PASS
+- prerequisite diagnostic items: 4 / PASS
+- target present-tense participle items: 4 / PASS
+- fresh independent verification items: 4 / PASS
+- deterministic evaluation only: PASS
+
+SHARED EVIDENCE CONTRACT 277
+- schema-valid EvidenceEvent fixtures: 9 / PASS_FULL_JSONSCHEMA
+- composite EGE-12 has two COMPOSITE targets: PASS
+- composite failure creates exact rule error: NO / PASS
+- exact diagnostic and verification mappings: PASS
+- assisted event marked RULE_EXPLANATION: PASS
+- independent verification unassisted: PASS
+- forbidden client-authored mastery fields: NONE / PASS
+
+SHARED PREREQUISITE CONTRACT 283
+- edge validates against $defs.edge_schema: PASS_FULL_JSONSCHEMA
+- relation: REQUIRED
+- review_status: SOURCE_VERIFIED
+- conditional goal scope exact: PASS
+- generalized to past-passive branch: NO / PASS
+- contract 283 mutated: NO
+
+GOLDEN SCENARIOS
+- prerequisite gap branch: PASS
+- prerequisite already met branch: PASS
+- independent verification failure guardrail: PASS
+
+SAFETY
+- Russian-specific learner/mastery/readiness/NBA schema: NONE
+- AI evaluator required: NO
+- trainer/T123/scoring/localStorage/runtime/Tilda changed: NO
+
+VERDICT
+PASS. RU-SLICE-001 content/evidence/edge fixtures are ready as deterministic input for the shared executable PEIS reference kernel. This does not claim the shared runtime itself is implemented.
