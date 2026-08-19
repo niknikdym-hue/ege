@@ -1,0 +1,28 @@
+name: physics-2026-fix-browser-runner-selector
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix-runner:
+    if: github.head_ref == 'chatgpt/physics-2026-acceptance-20260819'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2026-acceptance-20260819
+          fetch-depth: 0
+      - name: Correct test-only result selector
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i 's/#ephys-results/.ephys-result/g' .github/workflows/physics-2026-pr-browser-acceptance-v2.yml
+          grep -q "locator('.ephys-result')" .github/workflows/physics-2026-pr-browser-acceptance-v2.yml
+          printf '%s\n' 'one-shot browser acceptance trigger v3' > .physics-2026-browser-trigger
+          rm .github/workflows/physics-2026-fix-browser-runner-selector.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Fix Physics acceptance runner result selector'
+          git push origin HEAD:chatgpt/physics-2026-acceptance-20260819
