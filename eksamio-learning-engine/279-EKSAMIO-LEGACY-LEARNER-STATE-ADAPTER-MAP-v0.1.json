@@ -1,0 +1,223 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-19",
+  "status": "DESIGN_READY_NO_PRODUCTION_MIGRATION",
+  "purpose": "Backward-compatible, idempotent adaptation of repository-visible Russian product and learner state into generalized append-only evidence.",
+  "target_event_schema": "277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+  "target_state_schema": "278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json",
+  "semantic_inputs": {
+    "inventory": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json@0.1.0",
+    "crosswalk": "274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json@0.1.0-draft",
+    "candidate_policy": "candidate-* refs remain draft mapping inputs and are never converted into final ru-* semantic IDs by this adapter",
+    "active_school_identity_count_observed": 185,
+    "skill_graph_node_count_observed": 101
+  },
+  "global_import_policy": {
+    "mode": "READ_ONLY_SNAPSHOT_TO_APPEND_ONLY_EVENTS",
+    "production_local_storage_migration": "FORBIDDEN_IN_TASK_004",
+    "source_mutation": "FORBIDDEN",
+    "accepted_event_mutation": "FORBIDDEN",
+    "current_ui_continues_during_transition": true,
+    "identity_rule": "learner_profile_id is the academic-history key; email is never used as stable learner identity",
+    "exact_history_rule": "emit one generalized evidence event per source event only when exact source event identity and result are available",
+    "aggregate_rule": "when only counters/status/snapshots exist, emit at most one aggregate legacy-import event per stable source record revision; never synthesize a false attempt history",
+    "semantic_rule": "resolve semantic targets through the declared mapping version; null/partial mapping remains partial and never becomes guessed exact mastery evidence",
+    "idempotency_tuple": [
+      "source_namespace",
+      "source_schema_version",
+      "source_record_key",
+      "source_record_revision",
+      "source_event_id_if_present"
+    ],
+    "import_ledger_required_fields": [
+      "import_batch_id",
+      "source_namespace",
+      "source_schema_version",
+      "source_record_key",
+      "source_record_revision",
+      "canonical_event_id",
+      "idempotency_key",
+      "applied_at"
+    ],
+    "duplicate_application_rule": "an existing idempotency tuple or preserved processed source event ID returns already_applied and appends no event/state delta",
+    "correction_rule": "later source corrections append linked CORRECTION/RETRACTION events; imported accepted events are not edited in place",
+    "rollback_rule": "disable future import and retain source state plus import ledger; do not delete source state or accepted evidence"
+  },
+  "adapters": [
+    {
+      "adapter_id": "russian-exceptions-state-102-exact-events",
+      "source_refs": [
+        "102-RUSSIAN-EXCEPTIONS-LEARNER-STATE-SCHEMA.json#attempt_event_contract",
+        "102-RUSSIAN-EXCEPTIONS-LEARNER-STATE-SCHEMA.json#exception_state_contract"
+      ],
+      "source_namespace": "eksamio:russian:exceptions",
+      "source_schema_versions": ["1", "1.0.0"],
+      "source_record_kind": "exact_attempt_event",
+      "adapter_status": "DESIGN_READY_NOT_CONNECTED",
+      "trust_class": "IMPORTED_LEGACY_KNOWN",
+      "event_kind": "LEGACY_IMPORT",
+      "mapping_rules": [
+        {"from": "profile_id", "to": "learner_profile_id", "rule": "preserve stable local profile ID or map through explicit anonymous-profile link; never use email"},
+        {"from": "event_id", "to": "legacy_import.source_event_id", "rule": "preserve exact source event identity"},
+        {"from": "practice_item_id", "to": "source.object_id", "rule": "source.object_type=practice_item and content_version comes from current accepted practice manifest/build"},
+        {"from": "exception_id", "to": "subject_extension.subject_payload.exception_id", "rule": "preserve Russian product ID only in versioned subject payload"},
+        {"from": "exception_id/practice_item_id", "to": "semantic_targets", "rule": "resolve through 274 mapping version; exact canonical owner only when mapping evidence supports it"},
+        {"from": "is_correct", "to": "result.correctness", "rule": "exact boolean evidence"},
+        {"from": "mode/source/transfer_level", "to": "product, response_mode, transfer_context, retention_context", "rule": "preserve raw distinctions; recognition is not transfer and same-session is not delayed retention"},
+        {"from": "response_time_ms", "to": "latency_ms", "rule": "copy only non-negative valid measurement"}
+      ],
+      "aggregate_fallback": {
+        "source_fields": ["status", "seen_count", "correct_count", "wrong_count", "consecutive_correct", "last_result", "transfer_passed", "retention_passed", "next_due_at"],
+        "output": "single AGGREGATE_ONLY legacy-import event per exception_id + updated_at/state_revision",
+        "trust_class": "IMPORTED_LEGACY_AGGREGATE_LOW",
+        "forbidden_inferences": [
+          "do not generate seen_count synthetic attempt events",
+          "do not treat stabilized as canonical mastery",
+          "do not treat transfer_passed/retention_passed booleans as independent raw attempts without exact history"
+        ]
+      }
+    },
+    {
+      "adapter_id": "russian-exceptions-state-120-idempotency",
+      "source_refs": [
+        "120-RUSSIAN-EXCEPTIONS-LEARNER-STATE-v1.1-ADDENDUM.json",
+        "standalone-exceptions-trainer/core/rex-state.js",
+        "build/reduce_russian_exceptions_learner_state.py"
+      ],
+      "source_namespace": "eksamio:russian:exceptions",
+      "source_schema_versions": ["1.1.0-addendum", "runtime-schema-1"],
+      "source_record_kind": "idempotency_and_revision_metadata",
+      "adapter_status": "DESIGN_READY_NOT_CONNECTED",
+      "mapping_rules": [
+        {"from": "processed_event_ids", "to": "import_ledger.source_event_id_set", "rule": "preserve replay suppression; never re-apply an already processed source event"},
+        {"from": "state_revision", "to": "legacy_import.source_record_revision", "rule": "preserve revision as source snapshot identity, not canonical mastery revision"},
+        {"from": "updated_at", "to": "timestamps.occurred_at_client", "rule": "use as snapshot time only; server receive time remains separate"}
+      ],
+      "atomicity_rule": "canonical event acceptance and import-ledger insertion are one idempotent operation",
+      "compaction_rule": "do not compact processed IDs until an equivalent durable import ledger exists",
+      "mastery_boundary": "120 defines idempotent aggregation only and contributes no universal mastery threshold"
+    },
+    {
+      "adapter_id": "russian-error-exception-handoff-114",
+      "source_refs": [
+        "113-RUSSIAN-ERROR-TO-EXCEPTION-HANDOFF-SPEC.txt",
+        "114-RUSSIAN-ERROR-EXCEPTION-HANDOFF-MAP-v0.1.json",
+        "118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json"
+      ],
+      "source_namespace": "eksamio:russian:error-exception-handoff",
+      "source_schema_versions": ["1.0.0"],
+      "source_record_kind": "exact_error_mapping",
+      "adapter_status": "DESIGN_READY_WITH_RECORDED_SUPERSESSION_FINDING",
+      "exact_activation_gate": {
+        "required": ["activation_allowed=true", "evidence_precision=exact", "exact word/position/option evidence", "enabled current exception target"],
+        "output": "structured EXACT_RULE_ERROR observation with source locator and mapping provenance"
+      },
+      "broad_failure_boundary": {
+        "insufficient_inputs": ["task number", "whole-task score", "generic wrong status", "broad skill name", "session score"],
+        "output": "BROAD or UNKNOWN observation without exact exception_id activation",
+        "forbidden": "whole-task failure must not become an exact exception error or guessed semantic target"
+      },
+      "supersession_finding": {
+        "source_declares": "83-RUSSIAN-EXCEPTIONS-MASTER-MANIFEST.json",
+        "current_authority": "118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json",
+        "policy": "preserve 114 unchanged, record both refs in provenance, and resolve enabled target against 118 at import time",
+        "review_status": "needs_review_until_114_is_versioned_by_its_owner"
+      }
+    },
+    {
+      "adapter_id": "current-ege-russian-trainer-progress-v1",
+      "source_refs": [
+        "russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt#PROGRESS_KEY",
+        "russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt#getProgress",
+        "russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt#updateHero"
+      ],
+      "source_namespace": "eksamio:ege-russian-trainer:progress:v1",
+      "source_schema_versions": ["implicit-v1"],
+      "source_record_kind": "item_aggregate_progress",
+      "adapter_status": "DESIGN_READY_NO_PRODUCTION_READ_OR_WRITE",
+      "observed_fields": ["attempts", "correct", "wrong", "lastCorrect", "needsReview", "marked", "lastAt"],
+      "mapping_rules": [
+        {"from": "card_id", "to": "source.object_id", "rule": "preserve trainer item/card identity and content version"},
+        {"from": "attempts/correct/wrong/lastCorrect/lastAt", "to": "subject_extension.subject_payload.product_progress_snapshot", "rule": "aggregate-only import; no synthetic per-attempt history"},
+        {"from": "needsReview/marked", "to": "subject_extension.subject_payload.product_ui_state", "rule": "workflow/preferences only, not mastery"},
+        {"from": "updateHero mastered counter", "to": null, "rule": "computed UI summary only; never maps to canonical mastery"}
+      ],
+      "trust_class": "IMPORTED_LEGACY_AGGREGATE_LOW",
+      "semantic_policy": "map card ID through declared crosswalk version; mixed task evidence stays partial/composite",
+      "idempotency_revision": "stable hash of the complete item aggregate plus namespace and card ID"
+    },
+    {
+      "adapter_id": "current-ege-russian-trainer-session-v1",
+      "source_refs": [
+        "russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt#SESSION_KEY",
+        "russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt#startWithCards",
+        "russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt#recordCard"
+      ],
+      "source_namespace": "eksamio:ege-russian-trainer:session:v1",
+      "source_schema_versions": ["1"],
+      "source_record_kind": "session_snapshot",
+      "adapter_status": "DESIGN_READY_NO_PRODUCTION_READ_OR_WRITE",
+      "exactness_policy": "a checked card can become exact result evidence only when stable session identity, card identity, checked score/max, content version and deterministic semantic mapping are all available",
+      "fallback_policy": "otherwise preserve one session/product snapshot as aggregate-only evidence and do not infer exact error positions",
+      "duplicate_policy": "derive deterministic source record key from namespace + session.startedAt + card ID; recorded/checked replay appends no duplicate"
+    },
+    {
+      "adapter_id": "course-thematic-product-state",
+      "source_refs": [
+        "276-EKSAMIO-LEARNER-EVIDENCE-STATE-CONTRACT-v1.0.txt#21",
+        "tasks/TASK-004-generalized-learner-evidence-state-schema.md#current-course-thematic-product-state"
+      ],
+      "source_namespace": "SOURCE_NAMESPACE_MUST_BE_DECLARED_BY_PRODUCT_OWNER",
+      "source_schema_versions": ["SOURCE_VERSION_REQUIRED"],
+      "source_record_kind": "product_ui_workflow_state",
+      "adapter_status": "DESIGN_ONLY_SOURCE_CONTRACT_NOT_REPOSITORY_VISIBLE",
+      "recognized_local_labels": ["new", "learning", "review", "mastered"],
+      "label_mapping": {
+        "new": "subject_extension.subject_payload.product_state=new",
+        "learning": "subject_extension.subject_payload.product_state=learning",
+        "review": "subject_extension.subject_payload.product_state=review",
+        "mastered": "subject_extension.subject_payload.product_state=mastered"
+      },
+      "canonical_mastery_policy": "none of the four strings writes mastery.estimate, mastery.band, mastery.status or system_confidence",
+      "evidence_policy": "exact attempts may be imported separately when product history exposes stable event IDs, versions, results and semantic mappings; label-only state is PRODUCT_STATE_ONLY",
+      "activation_gate": [
+        "product owner declares exact namespace and schema version",
+        "snapshot/revision identity is stable",
+        "semantic mapping version is available",
+        "double-import tests pass"
+      ],
+      "needs_review": "No concrete course/thematic runtime namespace or state schema is repository-visible at TASK-004 time. Do not guess it."
+    }
+  ],
+  "forbidden_direct_mappings": [
+    {
+      "source": "any product label mastered/stabilized",
+      "forbidden_targets": ["mastery.estimate", "mastery.band", "mastery.status", "mastery.system_confidence"],
+      "reason": "product/UI state is not canonical mastery"
+    },
+    {
+      "source": "aggregate counters without exact events",
+      "forbidden_targets": ["synthetic exact attempt events", "independent verification timestamps"],
+      "reason": "do not fabricate history or precision"
+    },
+    {
+      "source": "whole-task failure through 114",
+      "forbidden_targets": ["exact exception error", "exact misconception", "guessed exception_id activation"],
+      "reason": "114 requires exact word/position/option evidence"
+    },
+    {
+      "source": "AI evaluator output",
+      "forbidden_targets": ["canonical mastery write", "official FIPI truth"],
+      "reason": "AI evidence remains lower-trust interpreted evidence until independently validated"
+    }
+  ],
+  "legacy_compatibility_findings": [
+    "102 exact attempt events are structurally adaptable; aggregate exception state is not a substitute for exact history.",
+    "120 processed_event_ids and state_revision semantics must survive import and prevent duplicate application.",
+    "114 exact handoff evidence can feed structured errors; broad task failure cannot.",
+    "114 names superseded manifest 83 while current authority is 118; this task records and adapts around the inconsistency without editing 114.",
+    "Current EGE trainer progress is item-level aggregate localStorage state and receives aggregate-only trust unless an exact session snapshot satisfies the exactness gate.",
+    "Course/thematic new/learning/review/mastered labels remain local product state; concrete runtime namespace/schema is not repository-visible and remains needs_review."
+  ],
+  "production_integration": "HOLD"
+}

@@ -1,0 +1,589 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eksamio.ru/schemas/learner-evidence-event/0.1.0",
+  "title": "Eksamio subject-agnostic append-only learner evidence event",
+  "description": "Canonical raw evidence envelope. Evidence is observed; mastery is inferred elsewhere.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "schema_version",
+    "event_kind",
+    "learner_profile_id",
+    "identity_refs",
+    "subject_id",
+    "semantic_targets",
+    "semantic_context",
+    "source",
+    "product",
+    "session_id",
+    "timestamps",
+    "result",
+    "response_mode",
+    "assistance",
+    "evaluator",
+    "provenance_refs",
+    "transfer_context",
+    "retention_context",
+    "error_observations",
+    "subject_extension",
+    "created_at"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 8,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]+$"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]+$",
+      "description": "Optional replay key distinct in purpose from event_id. event_id remains globally unique."
+    },
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "event_kind": {
+      "enum": [
+        "PERFORMANCE_OBSERVATION",
+        "LEGACY_IMPORT",
+        "CORRECTION",
+        "RETRACTION"
+      ]
+    },
+    "learner_profile_id": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Stable academic-history identifier; email is forbidden as an identifier."
+    },
+    "identity_refs": {
+      "$ref": "#/$defs/identity_refs"
+    },
+    "subject_id": {
+      "type": "string",
+      "minLength": 2
+    },
+    "semantic_targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/semantic_target"
+      }
+    },
+    "semantic_context": {
+      "$ref": "#/$defs/semantic_context"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "product": {
+      "$ref": "#/$defs/product"
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "timestamps": {
+      "$ref": "#/$defs/timestamps"
+    },
+    "result": {
+      "$ref": "#/$defs/result"
+    },
+    "response_mode": {
+      "enum": [
+        "SELECTED_OPTION",
+        "TYPED_TEXT",
+        "NUMERIC",
+        "SYMBOLIC",
+        "ORDERED_MATCH",
+        "UNORDERED_SET",
+        "ESSAY",
+        "ORAL",
+        "MULTIMODAL",
+        "IMPORTED_AGGREGATE",
+        "NO_RESPONSE"
+      ]
+    },
+    "assistance": {
+      "$ref": "#/$defs/assistance"
+    },
+    "evaluator": {
+      "$ref": "#/$defs/evaluator"
+    },
+    "provenance_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 3
+      }
+    },
+    "transfer_context": {
+      "$ref": "#/$defs/transfer_context"
+    },
+    "retention_context": {
+      "$ref": "#/$defs/retention_context"
+    },
+    "error_observations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/error_observation"
+      }
+    },
+    "latency_ms": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Raw latency only when the measurement is valid for the response mode."
+    },
+    "learner_self_confidence": {
+      "$ref": "#/$defs/learner_self_confidence"
+    },
+    "open_response_evaluation": {
+      "$ref": "#/$defs/open_response_evaluation"
+    },
+    "legacy_import": {
+      "$ref": "#/$defs/legacy_import"
+    },
+    "correction": {
+      "$ref": "#/$defs/correction"
+    },
+    "subject_extension": {
+      "$ref": "#/$defs/subject_extension"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "event_kind": {"const": "LEGACY_IMPORT"}
+        },
+        "required": ["event_kind"]
+      },
+      "then": {
+        "required": ["idempotency_key", "legacy_import"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_kind": {"const": "CORRECTION"}
+        },
+        "required": ["event_kind"]
+      },
+      "then": {
+        "required": ["correction"],
+        "properties": {
+          "correction": {
+            "required": ["supersedes_event_id"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_kind": {"const": "RETRACTION"}
+        },
+        "required": ["event_kind"]
+      },
+      "then": {
+        "required": ["correction"],
+        "properties": {
+          "correction": {
+            "required": ["retracts_event_id"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "evaluator": {
+            "properties": {
+              "evaluator_type": {"const": "AI_EVALUATOR"}
+            },
+            "required": ["evaluator_type"]
+          }
+        },
+        "required": ["evaluator"]
+      },
+      "then": {
+        "properties": {
+          "evaluator": {
+            "required": ["trust_class", "uncertainty", "review_status", "official_truth_status"],
+            "properties": {
+              "trust_class": {"const": "AI_INTERPRETED_LOW"},
+              "official_truth_status": {"const": "EDUCATIONAL_NON_OFFICIAL"}
+            }
+          },
+          "open_response_evaluation": {
+            "properties": {
+              "official_truth_status": {"const": "EDUCATIONAL_NON_OFFICIAL"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "properties": {
+              "source_type": {"const": "essay_or_open_response"}
+            },
+            "required": ["source_type"]
+          }
+        },
+        "required": ["product"]
+      },
+      "then": {
+        "required": ["open_response_evaluation"]
+      }
+    }
+  ],
+  "$defs": {
+    "identity_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "anonymous_identity_ref": {"type": "string", "minLength": 3},
+        "user_identity_ref": {"type": "string", "minLength": 3}
+      },
+      "anyOf": [
+        {"required": ["anonymous_identity_ref"]},
+        {"required": ["user_identity_ref"]}
+      ],
+      "description": "No email field exists in the canonical identity envelope."
+    },
+    "semantic_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semantic_id", "target_role", "mapping_resolution"],
+      "properties": {
+        "semantic_id": {"type": "string", "minLength": 3},
+        "target_role": {
+          "enum": ["PRIMARY", "SECONDARY", "PREREQUISITE_OBSERVED"]
+        },
+        "mapping_resolution": {
+          "enum": ["EXACT", "PARTIAL", "COMPOSITE"]
+        },
+        "mapping_confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "mapping_review_status": {
+          "enum": ["accepted", "source_verified", "needs_review"]
+        }
+      },
+      "description": "Target roles are raw mapping facts. Clients do not provide mastery shares or contribution percentages."
+    },
+    "semantic_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semantic_registry_version", "semantic_mapping_version"],
+      "properties": {
+        "semantic_registry_version": {"type": "string", "minLength": 1},
+        "semantic_mapping_version": {"type": "string", "minLength": 1},
+        "mapping_artifact_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 3}
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["object_type", "object_id", "content_version"],
+      "properties": {
+        "object_type": {"type": "string", "minLength": 2},
+        "object_id": {"type": "string", "minLength": 2},
+        "content_version": {"type": "string", "minLength": 1},
+        "item_version": {"type": ["string", "null"]},
+        "route_metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "exam": {"type": ["string", "null"]},
+            "exam_year": {"type": ["integer", "null"], "minimum": 2000},
+            "task_route": {"type": ["string", "null"]},
+            "historical_format": {"type": ["boolean", "null"]}
+          }
+        }
+      }
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_type", "product_id"],
+      "properties": {
+        "source_type": {
+          "enum": [
+            "demo",
+            "subject_trainer",
+            "thematic_trainer",
+            "ege_oge_trainer",
+            "homework",
+            "tutor",
+            "diagnostic",
+            "essay_or_open_response",
+            "course_module",
+            "retention_review",
+            "imported_legacy_state"
+          ]
+        },
+        "product_id": {"type": "string", "minLength": 2},
+        "route": {"type": ["string", "null"]}
+      }
+    },
+    "timestamps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["occurred_at_client", "received_at_server"],
+      "properties": {
+        "occurred_at_client": {"type": "string", "format": "date-time"},
+        "received_at_server": {"type": "string", "format": "date-time"},
+        "server_sequence": {"type": ["integer", "null"], "minimum": 0},
+        "server_watermark": {"type": ["string", "null"]}
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempt_index", "outcome", "correctness"],
+      "properties": {
+        "attempt_index": {"type": ["integer", "null"], "minimum": 1},
+        "outcome": {
+          "enum": [
+            "CORRECT",
+            "INCORRECT",
+            "PARTIAL",
+            "SKIPPED",
+            "SUBMITTED",
+            "AGGREGATE_ONLY",
+            "INVALIDATED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "correctness": {"type": ["boolean", "null"]},
+        "score": {"type": ["number", "null"]},
+        "max_score": {"type": ["number", "null"], "minimum": 0},
+        "response_value": {},
+        "result_details": {"type": "object"}
+      }
+    },
+    "assistance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level"],
+      "properties": {
+        "level": {
+          "enum": [
+            "UNASSISTED",
+            "MICRO_HINT",
+            "GUIDED_HINT",
+            "SOCRATIC_GUIDANCE",
+            "RULE_EXPLANATION",
+            "PARTIAL_WORKED",
+            "WORKED_EXAMPLE",
+            "SOLUTION_EXPOSED"
+          ]
+        },
+        "help_event_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 3}
+        },
+        "assistance_provider": {"type": ["string", "null"]}
+      }
+    },
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evaluator_type", "evaluator_id", "evaluator_version", "trust_class", "official_truth_status"],
+      "properties": {
+        "evaluator_type": {
+          "enum": [
+            "DETERMINISTIC_VALIDATOR",
+            "OFFICIAL_KEY_OR_RULE",
+            "HUMAN_REVIEW",
+            "AI_EVALUATOR",
+            "HYBRID_VALIDATED"
+          ]
+        },
+        "evaluator_id": {"type": "string", "minLength": 2},
+        "evaluator_version": {"type": "string", "minLength": 1},
+        "trust_class": {
+          "enum": [
+            "DETERMINISTIC_HIGH",
+            "OFFICIAL_SOURCE_HIGH",
+            "HUMAN_REVIEWED",
+            "AI_INTERPRETED_LOW",
+            "HYBRID_VALIDATED",
+            "IMPORTED_LEGACY_KNOWN",
+            "IMPORTED_LEGACY_AGGREGATE_LOW"
+          ]
+        },
+        "uncertainty": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "review_status": {
+          "enum": ["not_required", "pending_review", "reviewed", "needs_review"]
+        },
+        "rubric_version": {"type": ["string", "null"]},
+        "official_truth_status": {
+          "enum": ["OFFICIAL_OR_DETERMINISTIC", "EDUCATIONAL_NON_OFFICIAL", "NOT_APPLICABLE"]
+        }
+      }
+    },
+    "transfer_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "enum": ["SAME_PATTERN", "NEAR_TRANSFER", "BROAD_TRANSFER", "SAME_SESSION_VERIFICATION", "NOT_APPLICABLE"]
+        },
+        "origin_event_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 3}
+        }
+      }
+    },
+    "retention_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["NONE", "SAME_SESSION", "DELAYED_RETENTION"]},
+        "delay_seconds": {"type": ["integer", "null"], "minimum": 0},
+        "scheduled_by_policy_version": {"type": ["string", "null"]}
+      }
+    },
+    "error_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observation_type", "precision", "confidence", "provenance_refs"],
+      "properties": {
+        "observation_type": {
+          "enum": [
+            "EXACT_RULE_ERROR",
+            "PREREQUISITE_GAP",
+            "RULE_CONFUSION",
+            "PROCEDURAL_ERROR",
+            "READING_OR_PARSING_ERROR",
+            "SLIP_OR_CARELESS_ERROR",
+            "RECURRING_MISCONCEPTION",
+            "UNKNOWN_OR_INSUFFICIENT_PRECISION"
+          ]
+        },
+        "semantic_id": {"type": ["string", "null"]},
+        "candidate_ref": {"type": ["string", "null"]},
+        "precision": {"enum": ["EXACT", "PARTIAL", "BROAD", "UNKNOWN"]},
+        "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "source_locator": {"type": ["string", "null"]},
+        "provenance_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 3}
+        }
+      }
+    },
+    "learner_self_confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "scale", "collected_at"],
+      "properties": {
+        "value": {"type": "number"},
+        "scale": {"type": "string", "minLength": 2},
+        "collected_at": {"type": "string", "format": "date-time"}
+      },
+      "description": "Learner-reported signal, never system mastery confidence."
+    },
+    "open_response_evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overall_outcome", "rubric_version", "rubric_dimensions", "uncertainty", "review_status", "official_truth_status"],
+      "properties": {
+        "overall_outcome": {"enum": ["PROVISIONAL", "REVIEWED", "INSUFFICIENT_EVIDENCE"]},
+        "rubric_version": {"type": "string", "minLength": 1},
+        "rubric_dimensions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["dimension_id", "outcome", "evidence_refs"],
+            "properties": {
+              "dimension_id": {"type": "string", "minLength": 1},
+              "outcome": {"enum": ["MET", "PARTIAL", "NOT_MET", "NOT_EVALUATED"]},
+              "evidence_refs": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+        "review_status": {"enum": ["pending_review", "reviewed", "needs_review"]},
+        "official_truth_status": {
+          "enum": ["OFFICIAL_OR_DETERMINISTIC", "EDUCATIONAL_NON_OFFICIAL", "NOT_APPLICABLE"]
+        }
+      }
+    },
+    "legacy_import": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["import_batch_id", "source_namespace", "source_schema_version", "source_record_key", "source_record_revision", "import_trust_class"],
+      "properties": {
+        "import_batch_id": {"type": "string", "minLength": 3},
+        "source_namespace": {"type": "string", "minLength": 3},
+        "source_schema_version": {"type": "string", "minLength": 1},
+        "source_record_key": {"type": "string", "minLength": 1},
+        "source_record_revision": {"type": ["string", "integer"]},
+        "source_event_id": {"type": ["string", "null"]},
+        "import_trust_class": {"enum": ["EXACT_EVENT_HISTORY", "AGGREGATE_ONLY", "PRODUCT_STATE_ONLY"]}
+      }
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correction_reason", "correction_actor", "correction_version"],
+      "properties": {
+        "supersedes_event_id": {"type": "string", "minLength": 8},
+        "retracts_event_id": {"type": "string", "minLength": 8},
+        "correction_reason": {"type": "string", "minLength": 3},
+        "correction_actor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["actor_type", "actor_ref"],
+          "properties": {
+            "actor_type": {"enum": ["SYSTEM", "HUMAN_REVIEWER", "EVALUATOR_PIPELINE"]},
+            "actor_ref": {"type": "string", "minLength": 2}
+          }
+        },
+        "correction_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "subject_extension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subject_payload_schema_version", "subject_payload"],
+      "properties": {
+        "subject_payload_schema_version": {"type": "string", "minLength": 1},
+        "subject_payload": {
+          "type": "object",
+          "description": "Versioned subject/product-specific payload. Recursive final mastery-weight field names are forbidden by the ingestion invariant."
+        }
+      }
+    }
+  },
+  "x-append-only-invariants": [
+    "accepted events are immutable",
+    "corrections and retractions are new linked events",
+    "replay is idempotent by event_id and optional idempotency_key",
+    "clients do not write canonical mastery"
+  ],
+  "x-forbidden-client-authored-field-names-recursive": [
+    "effective_weight",
+    "mastery_weight",
+    "semantic_contribution_percentage",
+    "canonical_mastery",
+    "mastery_estimate"
+  ]
+}

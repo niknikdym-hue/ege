@@ -1,0 +1,96 @@
+EKSAMIO LEARNING ENGINE
+TASK-004 GENERALIZED LEARNER EVIDENCE / STATE VALIDATION
+
+STATUS: PASS
+DATE: 2026-08-19
+MODE: ADD_ONLY / ARCHITECTURE_MATERIALIZATION / NO_PRODUCTION_INTEGRATION
+
+SCHEMAS
+- EVENT_SCHEMA: 277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json / 0.1.0
+- STATE_SCHEMA: 278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json / 0.1.0
+- JSON_SCHEMA_DIALECT: Draft 2020-12
+- VALIDATOR: strict stdlib implementation of the exact Draft 2020-12 keyword subset used by 277/278
+
+CORE CHECKS
+- JSON_PARSE: PASS
+- JSON_SCHEMA_STRUCTURE_AND_LOCAL_REFS: PASS
+- STRICT_FIXTURE_SCHEMA_VALIDATION: PASS
+- EVENT_ID_REQUIRED_AND_IDEMPOTENCY_CONTRACT: PASS
+- SEMANTIC_TARGET_ROLE_ENUM: PASS
+- SEMANTIC_MAPPING_ENUMS_PRODUCTION_ONLY: PASS
+- ASSISTANCE_ENUM: PASS
+- EVALUATOR_AND_TRUST_ENUM: PASS
+- PRODUCT_SOURCE_TYPE_ENUM: PASS
+- SEMANTIC_REGISTRY_AND_MAPPING_VERSION_TRACEABILITY: PASS
+- SOURCE_OBJECT_AND_CONTENT_VERSION_TRACEABILITY: PASS
+- NO_CLIENT_AUTHORED_EFFECTIVE_OR_MASTERY_WEIGHT: PASS
+- APPEND_ONLY_CORRECTION_RETRACTION_MODEL: PASS
+- AI_EVALUATOR_LOW_TRUST_NON_OFFICIAL_BOUNDARY: PASS
+- NON_AI_REVIEWED_OPEN_RESPONSE_TRUTH_PATH: PASS
+- MATERIALIZED_STATE_INFERENCE_VERSION_REQUIRED: PASS
+- MATERIALIZED_STATE_EVIDENCE_WATERMARK_OR_REFERENCE_REQUIRED: PASS
+- SYSTEM_CONFIDENCE_DISTINCT_FROM_LEARNER_SELF_CONFIDENCE: PASS
+- LEGACY_DUPLICATE_APPLICATION_PREVENTION: PASS
+- PRODUCT_MASTERED_LABEL_NOT_CANONICAL_MASTERY: PASS
+- LEGACY_102_120_COMPATIBILITY: PASS
+- HANDOFF_114_EXACT_VS_BROAD_BOUNDARY: PASS
+- RUSSIAN_SPECIFIC_FIELDS_NOT_REQUIRED_BY_CORE: PASS
+- NO_FINAL_MASTERY_COEFFICIENTS_OR_FORGETTING_CURVE: PASS
+- PRODUCTION_FILES_CHANGED: NO
+
+FIXTURES
+- EVENT_FIXTURE_COUNT: 13
+- EVENT_FIXTURE: correction_retraction / PASS
+- EVENT_FIXTURE: course_local_product_state / PASS
+- EVENT_FIXTURE: cross_subject_placeholder / PASS
+- EVENT_FIXTURE: delayed_retention / PASS
+- EVENT_FIXTURE: essay_open_response / PASS
+- EVENT_FIXTURE: historical_russian_demo / PASS
+- EVENT_FIXTURE: homework / PASS
+- EVENT_FIXTURE: human_reviewed_open_response / PASS
+- EVENT_FIXTURE: legacy_exceptions_import / PASS
+- EVENT_FIXTURE: subject_trainer_unassisted / PASS
+- EVENT_FIXTURE: thematic_trainer / PASS
+- EVENT_FIXTURE: tutor_assisted / PASS
+- EVENT_FIXTURE: unassisted_verification_after_tutor / PASS
+- STATE_FIXTURE_COUNT: 2
+- STATE_FIXTURE: russian_empty_recomputable_state / PASS
+- STATE_FIXTURE: cross_subject_placeholder_state / PASS
+- CROSS_SUBJECT_EVENT_STRUCTURAL_VALIDATION: PASS
+- CROSS_SUBJECT_STATE_STRUCTURAL_VALIDATION: PASS
+- CROSS_SUBJECT_TRUTH_POLICY: production-valid PARTIAL + needs_review mapping; fixture-only marking is confined to provenance / subject_extension; no Mathematics/Physics subject truth invented
+- NEGATIVE_FIXTURE_COUNT: 12
+- NEGATIVE_FIXTURES_REJECTED: PASS
+
+ADAPTERS
+- ADAPTER_COUNT: 6
+- russian-exceptions-state-102-exact-events: REPRESENTED
+- russian-exceptions-state-120-idempotency: REPRESENTED
+- russian-error-exception-handoff-114: REPRESENTED
+- current-ege-russian-trainer-progress-v1: REPRESENTED
+- current-ege-russian-trainer-session-v1: REPRESENTED
+- course-thematic-product-state: REPRESENTED
+
+LEGACY COMPATIBILITY / NEEDS REVIEW
+- 102 exact event history can adapt to exact evidence; aggregate-only state remains lower-trust and must not synthesize attempts.
+- 120 processed_event_ids/state_revision semantics are preserved through a durable import ledger and source snapshot revision.
+- 114 exact handoff can create structured error evidence; whole-task failure cannot create an exact exception error.
+- 114 still names manifest 83; current authority 118 is used only by the adapter resolution gate without mutating 114.
+- Current EGE trainer progress is an aggregate local product snapshot; its computed mastered UI counter is not canonical mastery.
+- Concrete course/thematic namespace and schema are not repository-visible; the adapter is design-only and remains needs_review until product-owner declaration.
+
+CHANGED PATHS
+- eksamio-learning-engine/277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json
+- eksamio-learning-engine/278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json
+- eksamio-learning-engine/279-EKSAMIO-LEGACY-LEARNER-STATE-ADAPTER-MAP-v0.1.json
+- eksamio-learning-engine/280-EKSAMIO-LEARNER-EVIDENCE-STATE-VALIDATION.txt
+- eksamio-learning-engine/build/validate_generalized_learner_evidence_state.py
+- eksamio-learning-engine/results/RESULT-004-generalized-learner-evidence-state-schema.md
+
+ERRORS
+- none
+
+PRODUCTION SAFETY
+- No demo/trainer/T123/HTML/CSS/JS/scoring/localStorage file is an allowed TASK-004 change.
+- This validator reads legacy/product contracts and writes only the required 280 validation snapshot.
+- Runtime storage migration, Tutor/Homework integration and final mastery/readiness/retention/NBA algorithms remain HOLD.
