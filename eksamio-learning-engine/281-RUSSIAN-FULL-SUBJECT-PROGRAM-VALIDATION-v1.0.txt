@@ -1,0 +1,86 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN FULL SUBJECT PROGRAM VALIDATION
+DATE: 2026-08-19
+STATUS: PASS / ARCHITECTURE COMPLETE / SEMANTIC ADMISSION AND CONTENT MATERIALIZATION REMAIN SEPARATE GATES
+MODE: ADD_ONLY / NO_PRODUCTION_INTEGRATION
+
+FILES VALIDATED
+- 277-RUSSIAN-FULL-SUBJECT-PROGRAM-v1.0.json
+- 278-RUSSIAN-FULL-SUBJECT-GAP-REGISTER-v1.0.json
+- 279-RUSSIAN-FULL-SUBJECT-PRODUCT-CROSSWALK-v1.0.json
+- 280-RUSSIAN-FULL-SUBJECT-LEARNING-PATH-v1.0.json
+
+AUTHORITY CHAIN USED
+- 266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json
+- 272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt
+- 273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json
+- 274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json
+- 275-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-VALIDATION.txt
+- 276-EKSAMIO-LEARNER-EVIDENCE-STATE-CONTRACT-v1.0.txt
+
+CORE CHECKS
+- JSON_PARSE_277: PASS
+- JSON_PARSE_278: PASS
+- JSON_PARSE_279: PASS
+- JSON_PARSE_280: PASS
+- PROGRAM_MODULE_COUNT: 16
+- UNIQUE_PROGRAM_MODULE_IDS: PASS
+- PROGRAM_MODULE_RANGE: RU-PROG-01..RU-PROG-16
+- CURRENT_DRAFT_SUBJECT_CANDIDATES_OBSERVED: 55
+- CANDIDATE_RANGE_BOUND_TO_PROGRAM: candidate-001..candidate-055 / PASS
+- CANDIDATE_REUSE_ACROSS_COMPOSITE_MODULES: ALLOWED; does not create duplicate semantic identity
+- ACTIVE_SCHOOL_IDENTITY_DENOMINATOR: 185 / PRESERVED
+- SCHOOL_IDS_RENAMED: NO
+- SCHOOL_IDS_DUPLICATED_AS_RU_IDS: NO
+- EGE_SKILL_GRAPH_PROMOTED_TO_UNIVERSAL_REGISTRY: NO
+- FINAL_RU_SEMANTIC_IDS_AUTO_CREATED: NO
+- EXAM_TASK_NUMBERS_USED_AS_SEMANTIC_IDS: NO
+- PRODUCT_IDS_USED_AS_SEMANTIC_IDS: NO
+- CURRENT_EGE_TRAINER_ITEMS_OBSERVED: 174
+- TASK003_INVENTORY_OBJECTS_OBSERVED: 983
+- TASK003_DRAFT_CROSSWALK_MAPPINGS_OBSERVED: 1429
+- PROGRAM_PRODUCT_FAMILIES_ROUTED: EGE trainer, EGE demos, OGE, thematic trainers, exceptions, practice, explanations, Homework, Tutor, diagnostics
+- LEARNING_PATH_HAS_INDEPENDENT_MASTERY_GATE: YES
+- ASSISTED_SUCCESS_TREATED_AS_MASTERY: NO
+
+FULL SUBJECT MODULE COVERAGE
+01 phonetics/graphics
+02 orthoepy/stress
+03 lexis/semantics/paronyms/phraseology
+04 morphemics
+05 word formation
+06 morphology/parts of speech
+07 morphological/grammatical norms
+08 orthography
+09 syntax/syntactic norms
+10 punctuation
+11 text/cohesion/information interpretation/speech types
+12 stylistics/genre/register
+13 expressive means
+14 speech culture/editing/error diagnosis
+15 OGE exposition/compression/written response
+16 EGE text analysis/essay
+
+OPEN GATES RECORDED, NOT HIDDEN
+- 55 current semantic candidates still require source-backed canonical admission/merge/split/reject decisions before final ru-* IDs exist.
+- Current product inventory does not by itself prove exhaustive grades-5-11 canonical identity coverage for foundational domains; source-backed expansion is required where identities are genuinely missing.
+- The current 174-item EGE trainer still requires the exact 185-row COVERED / PARTIALLY_COVERED / NOT_COVERED audit under independent-evidence semantics.
+- Full teach/practice/check content bundles must be materialized per canonical semantic identity before the adaptive full course can be called content-complete.
+- Product adapters and learner-state migration remain outside this ADD_ONLY architecture change and require separate regression/production approval.
+
+MASTERPLAN NOTE
+- The originally expected eksamio-learning-engine/00-PRODUCT-MASTERPLAN.md was not present on current main during this stage.
+- Current 00A status + 266 + 272-276 authority chain was used instead; no content was fabricated for the missing file.
+
+PRODUCTION SAFETY
+- T123 changed: NO
+- trainer answers changed: NO
+- scoring changed: NO
+- runtime changed: NO
+- localStorage changed: NO
+- Tilda/public production changed: NO
+- production integration: HOLD
+
+RESULT
+PASS.
+The complete Russian subject PROGRAM ARCHITECTURE now has one durable module map, product routing, learning-cycle contract and explicit gap register on top of the frozen semantic authority chain. The remaining work is semantic admission/content materialization and exact trainer coverage, not another redesign of the subject structure.
