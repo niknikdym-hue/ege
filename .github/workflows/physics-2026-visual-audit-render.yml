@@ -1,12 +1,15 @@
 name: physics-2026-visual-audit-render
 on:
+  push:
+    branches:
+      - chatgpt/physics-2026-source-visual-tools-fix-20260819
   pull_request:
     branches: [main]
 permissions:
   contents: write
 jobs:
   render:
-    if: github.head_ref == 'chatgpt/physics-2026-source-visual-tools-fix-20260819'
+    if: github.ref == 'refs/heads/chatgpt/physics-2026-source-visual-tools-fix-20260819' || github.head_ref == 'chatgpt/physics-2026-source-visual-tools-fix-20260819'
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -32,7 +35,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import fitz, json, shutil
-          from PIL import Image, ImageOps, ImageDraw
+          from PIL import Image, ImageDraw
           from io import BytesIO
 
           pdf=Path('ege-fizika-demoversiya-v3-1-fixed/source/ege-2026-fizika-demoversiya.pdf')
@@ -54,7 +57,6 @@ jobs:
                   txt=(b[4] or '').replace('\n',' ').strip()
                   if txt: blocks.append({'bbox':[round(x,2) for x in b[:4]],'text':txt[:280]})
               meta.append({'physical_page':i,'width':round(page.rect.width,2),'height':round(page.rect.height,2),'render':'pages/'+name,'drawings':drawings,'text_blocks':blocks})
-          # contact sheets, 4 pages each
           for k in range(0,len(thumbs),4):
               group=thumbs[k:k+4]; sheet=Image.new('RGB',(1280,920),'#eeeeee')
               for j,img in enumerate(group): sheet.paste(img,((j%2)*640,(j//2)*460))
