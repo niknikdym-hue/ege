@@ -266,6 +266,14 @@ CURRENT ARCHITECTURE AUTHORITIES
   Subject-agnostic Tutor Core / Subject Knowledge Pack / tools / evidence / voice contract.
 - `272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt`
   Russian semantic backbone contract preserving the frozen school identities and EGE taxonomy while building a unified crosswalk.
+- `273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json`
+  Merged TASK-003 factual inventory of current Russian semantic/product identities.
+- `274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json`
+  Merged TASK-003 draft crosswalk; candidate refs are not final new semantic IDs.
+- `275-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-VALIDATION.txt`
+  TASK-003 validation snapshot.
+- `276-EKSAMIO-LEARNER-EVIDENCE-STATE-CONTRACT-v1.0.txt`
+  Subject-agnostic append-only learner evidence + recomputable learner-state contract.
 
 PERMANENT SUBJECT PRODUCT PIPELINE
 
@@ -280,18 +288,46 @@ For every declared exam subject:
 
 FIPI/demo source truth remains authoritative for exam-specific facts. Supplementary literature may expand subject explanations, prerequisite coverage and training content but may not override official FIPI truth.
 
-CURRENT READY CODEX TASK
+TASK-003 — MERGED
 
 `tasks/TASK-003-russian-semantic-identity-inventory-crosswalk.md`
 
-TASK-003 is ADD_ONLY / AUDIT_ONLY / NO_PRODUCTION_INTEGRATION.
-It must:
-- inventory the active 185 school semantic identities;
-- inventory the current EGE Skill Graph and semantic references across explanations/exceptions/practice/handoff/learner-state layers;
-- produce a factual draft crosswalk;
-- identify source-backed missing Russian subject semantic candidates without creating final new IDs;
-- validate supersession/referential integrity;
-- create the required durable `results/RESULT-003-russian-semantic-identity-inventory-crosswalk.md`;
-- change NO production demos/trainers/Tilda/runtime/scoring/localStorage.
+Status:
+- DONE;
+- PR #27 merged into `main`;
+- merge commit `d4d05d7c567532e1785a58f064f74051b7f7172a`;
+- RESULT-003 present;
+- 185 active school identities;
+- 101 EGE Skill Graph nodes;
+- 983 inventoried objects;
+- 1429 draft mappings;
+- 55 distinct missing-subject semantic candidates;
+- no final new `ru-*` IDs;
+- production demos/trainers/Tilda/runtime/scoring/localStorage unchanged.
 
-After TASK-003 review, the next semantic step is source-backed canonicalization/materialization of genuinely missing Russian subject identities, followed by generalized Learner Evidence / Learner State architecture.
+CURRENT READY CODEX TASK
+
+`tasks/TASK-004-generalized-learner-evidence-state-schema.md`
+
+TASK-004 is ADD_ONLY / ARCHITECTURE_MATERIALIZATION / NO_PRODUCTION_INTEGRATION.
+It must create:
+- `277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json`;
+- `278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json`;
+- `279-EKSAMIO-LEGACY-LEARNER-STATE-ADAPTER-MAP-v0.1.json`;
+- `280-EKSAMIO-LEARNER-EVIDENCE-STATE-VALIDATION.txt`;
+- `results/RESULT-004-generalized-learner-evidence-state-schema.md`;
+- a narrow validator/tests only if required.
+
+TASK-004 must prove:
+- immutable append-only evidence;
+- correction/retraction via linked events;
+- semantic target/mapping version traceability;
+- assistance/evaluator trust distinctions;
+- Tutor-assisted success != independent mastery;
+- recomputable state with inference_version + evidence watermark;
+- 102/120/114 legacy Russian compatibility through adapters;
+- current course/thematic `mastered`-style UI state is not automatically canonical mastery;
+- cross-subject core without required Russian-specific fields;
+- no production changes.
+
+After TASK-004 review, the next architecture layer is versioned Mastery Confidence + prerequisite/readiness + retention/forgetting + Next Best Action. Do not start that layer inside TASK-004.
