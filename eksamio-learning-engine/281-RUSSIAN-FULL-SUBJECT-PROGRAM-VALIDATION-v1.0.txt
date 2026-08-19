@@ -1,7 +1,7 @@
 EKSAMIO LEARNING ENGINE
 RUSSIAN FULL SUBJECT PROGRAM VALIDATION
 DATE: 2026-08-19
-STATUS: PASS / ARCHITECTURE COMPLETE / SEMANTIC ADMISSION AND CONTENT MATERIALIZATION REMAIN SEPARATE GATES
+STATUS: PASS / PROGRAM ARCHITECTURE COMPLETE / 185x174 TRAINER COVERAGE CLOSED / NO PRODUCTION INTEGRATION
 MODE: ADD_ONLY / NO_PRODUCTION_INTEGRATION
 
 FILES VALIDATED
@@ -9,6 +9,10 @@ FILES VALIDATED
 - 278-RUSSIAN-FULL-SUBJECT-GAP-REGISTER-v1.0.json
 - 279-RUSSIAN-FULL-SUBJECT-PRODUCT-CROSSWALK-v1.0.json
 - 280-RUSSIAN-FULL-SUBJECT-LEARNING-PATH-v1.0.json
+- 282-RUSSIAN-185-TO-EGE-174-COVERAGE-AUDIT-v1.0.json
+- 282A-RUSSIAN-185-TO-EGE-174-PARTIAL-COVERAGE-A-v1.0.json
+- 282B-RUSSIAN-185-TO-EGE-174-PARTIAL-COVERAGE-B-v1.0.json
+- 282C-RUSSIAN-185-TO-EGE-174-NOT-COVERED-v1.0.json
 
 AUTHORITY CHAIN USED
 - 266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json
@@ -23,6 +27,7 @@ CORE CHECKS
 - JSON_PARSE_278: PASS
 - JSON_PARSE_279: PASS
 - JSON_PARSE_280: PASS
+- JSON_PARSE_282/282A/282B/282C: PASS
 - PROGRAM_MODULE_COUNT: 16
 - UNIQUE_PROGRAM_MODULE_IDS: PASS
 - PROGRAM_MODULE_RANGE: RU-PROG-01..RU-PROG-16
@@ -61,10 +66,29 @@ FULL SUBJECT MODULE COVERAGE
 15 OGE exposition/compression/written response
 16 EGE text analysis/essay
 
+CURRENT EGE TRAINER COVERAGE — CLOSED
+- canonical identities audited: 185 / 185
+- current trainer cards: 174
+- COVERED: 0
+- PARTIALLY_COVERED: 144
+- NOT_COVERED: 41
+- counts sum to 185: PASS
+- incidental lexical occurrence counted as coverage: NO
+
+Coverage interpretation:
+- COVERED requires the current trainer to force the exact canonical decision and independently diagnose it.
+- Current EGE trainer is task/composite-addressed, so route exposure without identity-specific independent diagnosis is PARTIALLY_COVERED.
+- 41 identities have no current trainer target route and are NOT_COVERED.
+
+PROBE CORRECTION
+- The local non-authoritative 267 coverage probe had reported 1 COVERED / 143 PARTIALLY_COVERED / 41 NOT_COVERED.
+- Its only COVERED row, school-ne-ni-ni-odin-ne-odin-ni-razu-ne-raz, was a lexical false positive: the matched task-13 card contained incidental text while its actual answer tested another НЕ spelling decision.
+- Final strict audit corrects that row to PARTIALLY_COVERED.
+- Final result: 0 / 144 / 41.
+
 OPEN GATES RECORDED, NOT HIDDEN
 - 55 current semantic candidates still require source-backed canonical admission/merge/split/reject decisions before final ru-* IDs exist.
 - Current product inventory does not by itself prove exhaustive grades-5-11 canonical identity coverage for foundational domains; source-backed expansion is required where identities are genuinely missing.
-- The current 174-item EGE trainer still requires the exact 185-row COVERED / PARTIALLY_COVERED / NOT_COVERED audit under independent-evidence semantics.
 - Full teach/practice/check content bundles must be materialized per canonical semantic identity before the adaptive full course can be called content-complete.
 - Product adapters and learner-state migration remain outside this ADD_ONLY architecture change and require separate regression/production approval.
 
@@ -83,4 +107,4 @@ PRODUCTION SAFETY
 
 RESULT
 PASS.
-The complete Russian subject PROGRAM ARCHITECTURE now has one durable module map, product routing, learning-cycle contract and explicit gap register on top of the frozen semantic authority chain. The remaining work is semantic admission/content materialization and exact trainer coverage, not another redesign of the subject structure.
+The Russian subject program architecture is closed as a durable 16-module model, and the current 185x174 EGE trainer coverage audit is closed. Remaining work is now bounded to source-backed semantic admission, missing-domain expansion, content materialization and later adapters; it is not another redesign or another trainer-coverage audit.
