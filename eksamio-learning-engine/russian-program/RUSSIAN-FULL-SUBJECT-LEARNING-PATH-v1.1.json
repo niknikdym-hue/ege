@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.1.0",
+  "date": "2026-08-19",
+  "status": "SUBJECT_PEDAGOGY_OVERLAY_NO_PRODUCTION_INTEGRATION",
+  "subject": "russian",
+  "program_ref": "RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json",
+  "shared_evidence_ref": "../277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+  "shared_mastery_ref": "../282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json",
+  "shared_readiness_ref": "../283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json",
+  "shared_retention_ref": "../284-EKSAMIO-RETENTION-SCHEDULE-STATE-CONTRACT-v0.1.json",
+  "shared_nba_ref": "../285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json",
+  "goal": "Describe Russian pedagogical actions and content requirements that the shared PEIS may select. This file does not compute learner state, readiness, retention or NBA.",
+  "ownership_boundary": {
+    "this_file_may_define": ["Russian instructional stages","Russian content bundles","subject-specific practice/verification forms","non-binding pedagogical hints"],
+    "this_file_must_not_define": ["mastery coefficients","readiness thresholds","retention curve","cross-session recommendation algorithm","canonical learner state"]
+  },
+  "entry_modes": [
+    {"mode":"FULL_COURSE","start":"diagnostic across program domains","subject_content_intent":"expose gaps and available teaching actions; shared PEIS selects actual next action"},
+    {"mode":"EXAM_ROUTE","start":"EGE/OGE route diagnostic","subject_content_intent":"provide route-relevant semantic targets plus source-backed prerequisite candidates"},
+    {"mode":"THEMATIC","start":"selected module/identity","subject_content_intent":"provide target content and prerequisite-aware practice options"},
+    {"mode":"HOMEWORK","start":"recognized homework semantics","subject_content_intent":"assist current task and offer independent verification on mapped identities"},
+    {"mode":"TUTOR","start":"learner goal + shared structured learner context","subject_content_intent":"provide grounded Russian knowledge/actions to Tutor Core"}
+  ],
+  "identity_pedagogy_cycle": [
+    {"stage":"DIAGNOSE","purpose":"Obtain valid evidence for the semantic target; absence of evidence is not failure.","writes_evidence":true},
+    {"stage":"PREREQUISITE_REPAIR","purpose":"Teach/practice source-admitted blocking prerequisites selected by shared readiness/NBA.","requires_admitted_prerequisite_edges":true},
+    {"stage":"EXPLAIN","purpose":"Give source-grounded rule/concept/strategy.","writes_mastery_directly":false},
+    {"stage":"WORKED_EXAMPLE","purpose":"Show application with explicit reasoning tied to semantic identity.","writes_mastery_directly":false},
+    {"stage":"GUIDED_RECOGNITION","purpose":"Identify the relevant phenomenon/rule boundary.","writes_evidence":true},
+    {"stage":"GUIDED_APPLICATION","purpose":"Apply with hints/scaffolding.","writes_evidence":true},
+    {"stage":"INDEPENDENT_APPLICATION","purpose":"Apply without Tutor/hint assistance.","writes_evidence":true},
+    {"stage":"MIXED_PRACTICE","purpose":"Discriminate target from neighboring rules/skills.","writes_evidence":true},
+    {"stage":"TRANSFER","purpose":"Apply to a new form/context/product route.","writes_evidence":true},
+    {"stage":"RETENTION_CHECK","purpose":"Recheck after spacing; scheduling is owned by shared retention contract.","writes_evidence":true},
+    {"stage":"INDEPENDENT_VERIFICATION","purpose":"Produce fresh unassisted evidence on a new item or teach-back where appropriate.","writes_evidence":true}
+  ],
+  "non_binding_subject_action_hints": [
+    {"signal":"no meaningful target evidence","available_actions":["short diagnostic","source-grounded explanation"]},
+    {"signal":"repeated same mapped misconception","available_actions":["alternate explanation","worked example","discrimination practice"]},
+    {"signal":"assisted success without independent verification","available_actions":["independent application"]},
+    {"signal":"success only in one narrow form","available_actions":["transfer item"]},
+    {"signal":"retention check due according to shared state","available_actions":["retention item"]}
+  ],
+  "nba_rule": "The hints above are subject capabilities, not an NBA algorithm. The shared Next Best Action contract decides whether and when to use them.",
+  "evidence_constraints": {
+    "tutor_hint_or_solution":"must be represented as assistance context; never independently establishes mastery",
+    "explanation_view":"instructional event only",
+    "mixed_item":"exact attribution requires resolvable semantic mapping",
+    "historical_exam_year":"route metadata only",
+    "legacy_local_mastered_flag":"legacy product/UI state only; not canonical PEIS truth"
+  },
+  "content_bundle_contract": {
+    "per_stable_semantic_identity": ["canonical_definition_or_rule","source_provenance","approved prerequisite refs where any","worked_examples","misconceptions","guided_items","independent_items","mixed_or_transfer_items","retention_items","independent_verification_items"]
+  },
+  "module_completion_boundary": {
+    "exam_route_completion":"May be achieved for the route without claiming full grades-5-11 Russian mastery.",
+    "full_subject_completion":"Requires all required canonical subject identities and shared PEIS verification/retention conditions; task-number completion is insufficient.",
+    "state_owner":"shared PEIS"
+  }
+}

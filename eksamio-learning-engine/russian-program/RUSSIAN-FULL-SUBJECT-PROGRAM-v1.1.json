@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.1.0",
+  "date": "2026-08-19",
+  "status": "CURRENT_SUBJECT_PROGRAM_ARCHITECTURE_NO_PRODUCTION_INTEGRATION",
+  "subject": "russian",
+  "program_id": "eksamio-russian-full-subject",
+  "purpose": "Единая предметная программа русского языка для Eksamio PEIS: 5–11 классы, ОГЭ/ЕГЭ, тематические тренажёры, Homework и Tutor через один семантический слой.",
+  "authority_chain": [
+    "../00-PRODUCT-MASTERPLAN.md",
+    "../00B-PROJECT-PRIORITIES-CURRENT.md",
+    "../00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md",
+    "../266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json",
+    "../272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
+    "../273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+    "../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+    "../275-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-VALIDATION.txt",
+    "../276-EKSAMIO-LEARNER-EVIDENCE-STATE-CONTRACT-v1.0.txt",
+    "../277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+    "../278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json",
+    "../282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json",
+    "../283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json",
+    "../284-EKSAMIO-RETENTION-SCHEDULE-STATE-CONTRACT-v0.1.json",
+    "../285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json"
+  ],
+  "fixed_observed_counts": {
+    "active_school_semantic_identities": 185,
+    "ege_skill_graph_nodes": 101,
+    "current_ege_trainer_items": 174,
+    "semantic_inventory_objects": 983,
+    "draft_crosswalk_mappings": 1429,
+    "missing_subject_semantic_candidates": 55,
+    "inventory_needs_review": 8
+  },
+  "architecture_boundary": {
+    "subject_layer_owns": [
+      "verified Russian sources and provenance",
+      "Russian semantic/identity model",
+      "Russian prerequisite relations after source-backed admission",
+      "exam-route mappings",
+      "program modules and content bundles",
+      "demo/trainer/thematic-product mappings",
+      "Russian deterministic subject tools"
+    ],
+    "shared_peis_owns": [
+      "learner evidence",
+      "materialized learner state",
+      "mastery inference",
+      "prerequisite readiness computation",
+      "retention scheduling state",
+      "Next Best Action / Recommendation"
+    ],
+    "forbidden_parallel_systems": [
+      "Russian-specific Student Model",
+      "Russian-specific learner state engine",
+      "Russian-specific universal evidence contract",
+      "Russian-specific mastery engine",
+      "Russian-specific readiness engine",
+      "Russian-specific retention engine",
+      "Russian-specific NBA engine"
+    ]
+  },
+  "semantic_policy": {
+    "school_identity_policy": "PRESERVE_ALL_185_UNCHANGED",
+    "ege_skill_graph_policy": "PRESERVE_AS_EXAM_TAXONOMY_NOT_UNIVERSAL_SEMANTIC_REGISTRY",
+    "new_subject_identity_namespace": "ru-*",
+    "new_identity_admission": "SOURCE_BACKED_REVIEW_REQUIRED",
+    "candidate_refs_are_canonical_ids": false,
+    "exam_year_or_task_number_creates_identity": false,
+    "product_object_creates_identity": false
+  },
+  "program_scope": {
+    "grade_scope": ["5", "6", "7", "8", "9", "10", "11"],
+    "routes": ["school", "oge", "ege", "homework", "thematic_trainer", "diagnostic", "tutor"],
+    "delivery_principle": "Один предметный граф; ОГЭ/ЕГЭ и продукты являются маршрутами поверх общей семантики."
+  },
+  "pedagogical_cycle": [
+    "diagnostic",
+    "prerequisite_repair",
+    "explanation",
+    "worked_example",
+    "guided_recognition",
+    "guided_application",
+    "independent_application",
+    "mixed_practice",
+    "transfer",
+    "spaced_retention",
+    "independent_verification"
+  ],
+  "pedagogy_boundary": "Этот цикл описывает содержание и типы учебных действий. Решения о mastery/readiness/retention/NBA принимает только общий PEIS по контрактам 282–285 на основании EvidenceEvent; предметная программа не задаёт отдельные коэффициенты, thresholds или learner-state truth.",
+  "modules": [
+    {"module_id":"RU-PROG-01","title_ru":"Фонетика и графика","purpose":"Звуки и буквы, фонетическая структура слова, соотношение звуковой и буквенной формы, базовые фонетические операции.","domains":["phonetics","graphics"],"candidate_refs":[],"semantic_binding_mode":"SOURCE_BACKED_SUBJECT_EXPANSION_REQUIRED","route_relevance":["school","oge","homework","tutor"]},
+    {"module_id":"RU-PROG-02","title_ru":"Орфоэпия и ударение","purpose":"Нормативное произношение и постановка ударения; перенос навыка между словарными единицами и формами слова.","domains":["orthoepy","stress"],"candidate_refs":["candidate-018","candidate-019","candidate-020","candidate-021","candidate-022","candidate-023","candidate-024"],"semantic_binding_mode":"DRAFT_CANDIDATE_BINDING","route_relevance":["school","oge","ege","thematic_trainer","homework","tutor"]},
+    {"module_id":"RU-PROG-03","title_ru":"Лексика, значение слова, паронимы и фразеология","purpose":"Контекстное значение, многозначность, лексическая сочетаемость, паронимы, фразеологизмы, контекстные синонимы.","domains":["lexis","semantics","paronyms","phraseology"],"candidate_refs":["candidate-008","candidate-009","candidate-010","candidate-011","candidate-012","candidate-013","candidate-014","candidate-015"],"semantic_binding_mode":"DRAFT_CANDIDATE_BINDING","route_relevance":["school","oge","ege","thematic_trainer","homework","tutor"]},
+    {"module_id":"RU-PROG-04","title_ru":"Морфемика","purpose":"Морфемный состав слова, различение морфем и их функций как база для словообразования и орфографии.","domains":["morphemics"],"candidate_refs":[],"semantic_binding_mode":"SOURCE_BACKED_SUBJECT_EXPANSION_REQUIRED","route_relevance":["school","oge","homework","tutor"]},
+    {"module_id":"RU-PROG-05","title_ru":"Словообразование","purpose":"Способы образования слов, словообразовательные связи и использование структуры слова для языкового анализа.","domains":["word_formation"],"candidate_refs":[],"semantic_binding_mode":"SOURCE_BACKED_SUBJECT_EXPANSION_REQUIRED","route_relevance":["school","oge","homework","tutor"]},
+    {"module_id":"RU-PROG-06","title_ru":"Морфология и части речи","purpose":"Распознавание частей речи, грамматических признаков и форм; морфологический анализ как prerequisite для норм и правописания.","domains":["morphology","parts_of_speech"],"candidate_refs":[],"semantic_binding_mode":"MIXED_EXISTING_AND_EXPANSION_BINDING","route_relevance":["school","oge","ege","homework","tutor"]},
+    {"module_id":"RU-PROG-07","title_ru":"Морфологические и грамматические нормы","purpose":"Нормативные формы существительных, числительных, глаголов, степеней сравнения и других изменяемых форм.","domains":["morphological_norms","grammatical_norms"],"candidate_refs":["candidate-025","candidate-026","candidate-027","candidate-053"],"semantic_binding_mode":"DRAFT_CANDIDATE_BINDING","route_relevance":["school","oge","ege","thematic_trainer","homework","tutor"]},
+    {"module_id":"RU-PROG-08","title_ru":"Орфография","purpose":"Системное применение школьных орфографических решений: корни, приставки, суффиксы, окончания, НЕ/НИ, Н/НН, слитное/раздельное/дефисное написание и связанные случаи.","domains":["orthography"],"candidate_refs":[],"semantic_binding_mode":"CANONICAL_185_SCHOOL_SET_CROSSWALK_BINDING","route_relevance":["school","oge","ege","thematic_trainer","homework","tutor"]},
+    {"module_id":"RU-PROG-09","title_ru":"Синтаксис и синтаксические нормы","purpose":"Словосочетание, простое и сложное предложение, конструкции и нормативное построение синтаксических связей.","domains":["syntax","syntactic_norms"],"candidate_refs":["candidate-028","candidate-029","candidate-030","candidate-031","candidate-032"],"semantic_binding_mode":"MIXED_CANONICAL_AND_DRAFT_CANDIDATE_BINDING","route_relevance":["school","oge","ege","homework","tutor"]},
+    {"module_id":"RU-PROG-10","title_ru":"Пунктуация","purpose":"Пунктуационные решения в простом и сложном предложении, при обособлении, однородности, вводности, обращениях, прямой речи и других школьных конструкциях.","domains":["punctuation"],"candidate_refs":[],"semantic_binding_mode":"CANONICAL_185_SCHOOL_SET_CROSSWALK_BINDING","route_relevance":["school","oge","ege","thematic_trainer","homework","tutor"]},
+    {"module_id":"RU-PROG-11","title_ru":"Текст, смысл и межфразовая связь","purpose":"Понимание фактов и смыслов текста, типов речи, логико-смысловых отношений и средств связи предложений.","domains":["text","cohesion","information_interpretation","speech_types"],"candidate_refs":["candidate-001","candidate-002","candidate-003","candidate-004","candidate-005","candidate-006","candidate-007","candidate-043","candidate-044","candidate-045","candidate-046","candidate-047"],"semantic_binding_mode":"DRAFT_CANDIDATE_BINDING","route_relevance":["school","oge","ege","homework","tutor"]},
+    {"module_id":"RU-PROG-12","title_ru":"Стили, жанры и коммуникативная задача","purpose":"Функциональные стили, жанр, адресат, цель и речевая ситуация.","domains":["stylistics","genre","register"],"candidate_refs":["candidate-016","candidate-017"],"semantic_binding_mode":"DRAFT_CANDIDATE_BINDING","route_relevance":["school","oge","ege","homework","tutor"]},
+    {"module_id":"RU-PROG-13","title_ru":"Средства выразительности","purpose":"Распознавание и интерпретация тропов, фигур и фонетико-синтаксических средств выразительности.","domains":["expressive_means"],"candidate_refs":["candidate-033","candidate-034","candidate-035","candidate-036","candidate-037","candidate-038","candidate-039","candidate-040","candidate-041","candidate-042"],"semantic_binding_mode":"DRAFT_CANDIDATE_BINDING","route_relevance":["school","oge","ege","homework","tutor"]},
+    {"module_id":"RU-PROG-14","title_ru":"Культура речи, редактирование и исправление ошибок","purpose":"Поиск, классификация и исправление лексических, грамматических, речевых и иных нормативных нарушений.","domains":["speech_norms","editing","error_diagnosis"],"candidate_refs":["candidate-012","candidate-013","candidate-025","candidate-026","candidate-027","candidate-028","candidate-029","candidate-030","candidate-031","candidate-032","candidate-053"],"semantic_binding_mode":"COMPOSITE_CROSS_MODULE_BINDING","route_relevance":["school","oge","ege","thematic_trainer","homework","tutor"]},
+    {"module_id":"RU-PROG-15","title_ru":"ОГЭ: изложение, сжатие и письменный ответ","purpose":"Смысловое чтение/слушание, выделение микротем, сжатие информации и построение проверяемого письменного ответа по маршруту ОГЭ.","domains":["oge_exposition","compression","written_response"],"candidate_refs":[],"semantic_binding_mode":"SOURCE_BACKED_ROUTE_COMPETENCY_EXPANSION_REQUIRED","route_relevance":["oge","homework","tutor"]},
+    {"module_id":"RU-PROG-16","title_ru":"ЕГЭ: анализ текста и сочинение","purpose":"Авторская позиция, примеры-иллюстрации, смысловая связь, собственное отношение, композиция, фактическая точность и этическая нормативность письменного рассуждения.","domains":["essay","argumentative_writing","text_analysis"],"candidate_refs":["candidate-048","candidate-049","candidate-050","candidate-051","candidate-052","candidate-053","candidate-054","candidate-055"],"semantic_binding_mode":"DRAFT_CANDIDATE_BINDING","route_relevance":["ege","homework","tutor"]}
+  ],
+  "sequence": {
+    "default_content_order": ["RU-PROG-01","RU-PROG-02","RU-PROG-03","RU-PROG-04","RU-PROG-05","RU-PROG-06","RU-PROG-07","RU-PROG-08","RU-PROG-09","RU-PROG-10","RU-PROG-11","RU-PROG-12","RU-PROG-13","RU-PROG-14","RU-PROG-15","RU-PROG-16"],
+    "adaptive_override": "Learner may enter any module by route/goal; actual prerequisite repair and next action are computed by shared PEIS only after source-backed prerequisite edges exist.",
+    "exam_overlay_rule": "EGE/OGE task order never becomes subject prerequisite order."
+  },
+  "completion_definition": {
+    "program_architecture_complete_when": [
+      "all subject domains have a module owner",
+      "all current school identities remain preserved",
+      "current semantic candidates are bound to modules without being auto-promoted",
+      "product routes map to modules and shared semantic/evidence contracts",
+      "subject content requirements are explicit without duplicating PEIS inference engines"
+    ],
+    "canonical_subject_registry_complete_when": [
+      "all admitted ru-* identities pass source-backed review",
+      "all 55 current candidates are admitted, merged, split or rejected with reason",
+      "foundation/OGE expansion domains receive source-backed identities where genuinely missing",
+      "all crosswalk semantic refs resolve"
+    ],
+    "runtime_complete": false
+  }
+}

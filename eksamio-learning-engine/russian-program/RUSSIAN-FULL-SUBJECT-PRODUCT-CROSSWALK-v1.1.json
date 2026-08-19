@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.1.0",
+  "date": "2026-08-19",
+  "status": "PROGRAM_LEVEL_CROSSWALK_ACTIVE_OBJECT_LEVEL_CANONICALIZATION_PENDING",
+  "subject": "russian",
+  "program_ref": "RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json",
+  "object_level_crosswalk_ref": "../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+  "shared_evidence_ref": "../277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+  "rule": "This file routes Russian product families to subject-program modules. It does not replace object-level semantic mappings, does not invent canonical semantic IDs, and does not define learner-state inference.",
+  "product_routes": [
+    {"product_family":"ege_full_trainer","source_system":"trainer_item","observed_items":174,"modules":["RU-PROG-02","RU-PROG-03","RU-PROG-07","RU-PROG-08","RU-PROG-09","RU-PROG-10","RU-PROG-11","RU-PROG-12","RU-PROG-13","RU-PROG-14","RU-PROG-16"],"evidence_role":"ASSESS/PRACTICE only where object-level mapping and item semantics support that claim","semantic_truth_owner":"Russian Identity Model"},
+    {"product_family":"ege_demos_2022_2026","source_system":"demo_task/subtask","modules":["RU-PROG-02","RU-PROG-03","RU-PROG-07","RU-PROG-08","RU-PROG-09","RU-PROG-10","RU-PROG-11","RU-PROG-12","RU-PROG-13","RU-PROG-14","RU-PROG-16"],"evidence_role":"EXAM_ATTEMPT_EVIDENCE after exact semantic mapping","year_route":"preserve exact source year","semantic_truth_owner":"Russian Identity Model"},
+    {"product_family":"oge_russian","source_system":"oge_route","modules":["RU-PROG-01","RU-PROG-03","RU-PROG-04","RU-PROG-05","RU-PROG-06","RU-PROG-07","RU-PROG-08","RU-PROG-09","RU-PROG-10","RU-PROG-11","RU-PROG-12","RU-PROG-14","RU-PROG-15"],"evidence_role":"EXAM_ROUTE_EVIDENCE only after official-route semantic decomposition","semantic_truth_owner":"Russian Identity Model"},
+    {"product_family":"thematic_orthoepy_trainer","source_system":"thematic_trainer","modules":["RU-PROG-02"],"evidence_role":"PRACTICE/ASSESS when item semantics are isolated"},
+    {"product_family":"thematic_paronyms_trainer","source_system":"thematic_trainer","modules":["RU-PROG-03"],"evidence_role":"PRACTICE/ASSESS when item semantics are isolated"},
+    {"product_family":"thematic_phraseology_trainer","source_system":"thematic_trainer","modules":["RU-PROG-03"],"evidence_role":"PRACTICE/ASSESS when item semantics are isolated"},
+    {"product_family":"exceptions_bank","source_system":"exception_item","authority":"../118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json","modules":["RU-PROG-07","RU-PROG-08","RU-PROG-09","RU-PROG-10","RU-PROG-14"],"evidence_role":"SOURCE/EXPLANATION RELATION; exception identity is not semantic identity"},
+    {"product_family":"exceptions_practice","source_system":"practice_item","authority":"../119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json","modules":["RU-PROG-07","RU-PROG-08","RU-PROG-09","RU-PROG-10","RU-PROG-14"],"evidence_role":"PRACTICE; evidence strength is determined by shared PEIS from actual assistance/verification context"},
+    {"product_family":"explanations","source_system":"explanation_unit","modules":"RU-PROG-01..RU-PROG-16","evidence_role":"INSTRUCTIONAL; viewing an explanation never establishes mastery"},
+    {"product_family":"homework","source_system":"future_homework_task","modules":"RU-PROG-01..RU-PROG-16","pipeline":["extract_task","classify_subject","map_semantics","assist_or_verify","write_shared_evidence"],"evidence_role":"Observed through shared EvidenceEvent only"},
+    {"product_family":"ai_tutor","source_system":"tutor_session","modules":"RU-PROG-01..RU-PROG-16","evidence_role":"ORCHESTRATION/ASSISTANCE; Tutor does not own semantic truth or mastery","semantic_truth_owner":"Russian Identity Model"},
+    {"product_family":"diagnostic","source_system":"diagnostic_item","modules":"RU-PROG-01..RU-PROG-16","evidence_role":"ASSESS only where semantic target is resolvable; readiness itself is computed by shared PEIS"}
+  ],
+  "routing_invariants": [
+    "Product IDs remain source addresses.",
+    "Exam year/task remains route metadata.",
+    "Semantic identity remains the learner-knowledge address.",
+    "A source object may map to multiple semantic identities.",
+    "Mixed item evidence must not overclaim exact mastery.",
+    "Legacy product state remains backward-compatible through adapters.",
+    "No product route may create a subject-specific learner-state or NBA engine."
+  ]
+}

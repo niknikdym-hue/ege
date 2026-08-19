@@ -1,0 +1,106 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN FULL SUBJECT PROGRAM — CURRENT-MAIN SALVAGE VALIDATION
+DATE: 2026-08-19
+STATUS: PASS / SUBJECT PROGRAM SALVAGED / SHARED PEIS BOUNDARY RESTORED / NO PRODUCTION INTEGRATION
+MODE: ADD_ONLY / RUSSIAN-PROGRAM-ONLY / NO_PRODUCTION_INTEGRATION
+
+PURPOSE
+This validation supersedes the architectural packaging of PR #35 without merging its old root-level numeric namespace 277–282 into current main. Valuable Russian full-program material is retained under `eksamio-learning-engine/russian-program/` and rebased onto the restored product authority plus TASK-004/TASK-005 shared PEIS contracts.
+
+FILES VALIDATED
+- RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json
+- RUSSIAN-FULL-SUBJECT-GAP-REGISTER-v1.1.json
+- RUSSIAN-FULL-SUBJECT-PRODUCT-CROSSWALK-v1.1.json
+- RUSSIAN-FULL-SUBJECT-LEARNING-PATH-v1.1.json
+- RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-v1.0.json
+- RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-v1.0-part-01.json .. part-05.json
+- RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-VALIDATION.txt
+
+CURRENT AUTHORITY CHAIN
+- ../00-PRODUCT-MASTERPLAN.md
+- ../00B-PROJECT-PRIORITIES-CURRENT.md
+- ../00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md
+- ../00D-BRAIN-CONTINUITY-PROTOCOL.md
+- ../266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json
+- ../272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt
+- ../273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json
+- ../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json
+- ../275-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-VALIDATION.txt
+- ../276-EKSAMIO-LEARNER-EVIDENCE-STATE-CONTRACT-v1.0.txt
+- ../277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json
+- ../278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json
+- ../282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json
+- ../283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json
+- ../284-EKSAMIO-RETENTION-SCHEDULE-STATE-CONTRACT-v0.1.json
+- ../285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json
+
+STRUCTURAL CHECKS
+- PROGRAM_MODULE_COUNT: 16 / PASS
+- UNIQUE_PROGRAM_MODULE_IDS: PASS
+- PROGRAM_MODULE_RANGE: RU-PROG-01..RU-PROG-16 / PASS
+- ACTIVE_SCHOOL_IDENTITY_DENOMINATOR: 185 / PRESERVED
+- CURRENT_DRAFT_SUBJECT_CANDIDATES: 55 / PRESERVED AS CANDIDATES
+- SCHOOL_IDS_RENAMED: NO
+- SCHOOL_IDS_DUPLICATED_AS_RU_IDS: NO
+- EGE_SKILL_GRAPH_PROMOTED_TO_UNIVERSAL_REGISTRY: NO
+- FINAL_RU_SEMANTIC_IDS_AUTO_CREATED: NO
+- EXAM_TASK_NUMBERS_USED_AS SEMANTIC IDS: NO
+- PRODUCT IDS USED AS SEMANTIC IDS: NO
+- CURRENT_EGE_TRAINER_ITEMS: 174
+- TASK003_INVENTORY_OBJECTS: 983
+- TASK003_DRAFT_CROSSWALK_MAPPINGS: 1429
+
+SHARED PEIS BOUNDARY CHECKS
+- RUSSIAN-SPECIFIC STUDENT MODEL CREATED: NO
+- RUSSIAN-SPECIFIC LEARNER STATE ENGINE CREATED: NO
+- RUSSIAN-SPECIFIC UNIVERSAL EVIDENCE CONTRACT CREATED: NO
+- RUSSIAN-SPECIFIC MASTERY ENGINE CREATED: NO
+- RUSSIAN-SPECIFIC READINESS ENGINE CREATED: NO
+- RUSSIAN-SPECIFIC RETENTION ENGINE CREATED: NO
+- RUSSIAN-SPECIFIC NBA ENGINE CREATED: NO
+- SHARED EvidenceEvent REFERENCED: YES
+- SHARED learner state REFERENCED: YES
+- SHARED mastery/readiness/retention/NBA REFERENCED: YES
+- SUBJECT LEARNING PATH RECLASSIFIED AS PEDAGOGY OVERLAY: YES
+- SUBJECT ACTION HINTS DECLARED NON-BINDING FOR NBA: YES
+- LOCAL MASTERY THRESHOLDS/COEFFICIENTS INTRODUCED: NO
+
+NAMESPACE CHECK
+- Old PR #35 root-level filenames 277-RUSSIAN... through 282C-RUSSIAN... are NOT introduced.
+- Current shared PEIS namespace 277–286 remains unambiguous.
+- Salvaged subject artifacts live only under `russian-program/` with descriptive non-conflicting filenames.
+
+CURRENT TRAINER COVERAGE — CLOSED AND REUSED
+- canonical identities audited: 185 / 185
+- current trainer cards: 174 / 174
+- COVERED: 0
+- PARTIALLY_COVERED: 144
+- NOT_COVERED: 41
+- general 185×174 audit rerun required now: NO
+
+IMPORTANT CHANGE FROM OLD PR #35
+The old program package was created before the restored Masterplan and before current shared PEIS governance was available to that branch. The current salvage explicitly treats Masterplan/governance/TASK-004/TASK-005 as superior authority and removes any interpretation that Russian program files own mastery/readiness/retention/NBA logic.
+
+OPEN GATES — DOCUMENTED, NOT HIDDEN
+1. Resolve 55 semantic candidates through source-backed admit / merge / split / reject decisions.
+2. Prove foundational grades-5–11 identity completeness where current product-derived inventory is insufficient.
+3. Complete official OGE written-response semantic decomposition.
+4. Admit first real source-backed Russian prerequisite edges; current shared canonical prerequisite edge count is zero.
+5. Materialize source-backed teach/practice/verify bundles for a narrow stable slice first, not all 185 at once.
+6. Implement the shared executable PEIS runtime over TASK-004/TASK-005 contracts.
+7. Prove the first end-to-end Russian vertical slice: source -> identity -> prerequisite -> mapped attempt -> EvidenceEvent -> shared state/mastery/readiness -> NBA -> targeted action -> independent verification -> measured outcome.
+8. Production adapters/integration remain a later separate gate.
+
+PRODUCTION SAFETY
+- T123 changed: NO
+- trainer answers changed: NO
+- scoring changed: NO
+- runtime changed: NO
+- localStorage changed: NO
+- Tilda/public production changed: NO
+- physics/mathematics changed: NO
+- production integration: HOLD
+
+RESULT
+PASS.
+The useful full-Russian-program architecture from PR #35 is retained without importing its obsolete root numbering or creating a parallel learner engine. The next Russian system gate is no longer another broad program redesign or another 185×174 audit; it is the source-backed prerequisite + verified-content slice required to prove the first PEIS closed loop.
