@@ -1,0 +1,33 @@
+name: profile-math-2024-build-watch
+
+on:
+  workflow_run:
+    workflows: ['profile-math-2024-full-build']
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  record-result:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Record completed PROFILE 2024 build run
+        shell: bash
+        run: |
+          cat > PROFILE-MATH-2024-WORKFLOW-RESULT.txt <<EOF
+          GitHub Actions run: ${{ github.event.workflow_run.id }}
+          Head SHA: ${{ github.event.workflow_run.head_sha }}
+          Status: ${{ github.event.workflow_run.status }}
+          Conclusion: ${{ github.event.workflow_run.conclusion }}
+          Workflow: ${{ github.event.workflow_run.name }}
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add PROFILE-MATH-2024-WORKFLOW-RESULT.txt
+          git commit -m 'Record PROFILE 2024 build workflow result' || true
+          git push origin HEAD:main
