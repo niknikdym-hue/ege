@@ -74,8 +74,8 @@
       "kind": "CURRENT_EGE_TRAINER_IDENTITY_COVERAGE",
       "priority": "HIGH",
       "modules": ["RU-PROG-02", "RU-PROG-03", "RU-PROG-07", "RU-PROG-08", "RU-PROG-09", "RU-PROG-10", "RU-PROG-11", "RU-PROG-12", "RU-PROG-13", "RU-PROG-14", "RU-PROG-16"],
-      "status": "OPEN",
-      "problem": "The 174 trainer items are inventoried/crosswalked, but there is no closed 185-row identity-level audit classifying each canonical school identity as COVERED, PARTIALLY_COVERED or NOT_COVERED under independent-evidence semantics.",
+      "status": "CLOSED",
+      "problem": "Closed exact 185-row identity-level audit against the current 174-card EGE trainer under strict independent-evidence semantics.",
       "coverage_status_definitions": {
         "COVERED": "Current trainer forces application of the concrete identity and can independently evidence it.",
         "PARTIALLY_COVERED": "Identity appears only in mixed tasks, only some branches, or cannot be isolated as independent evidence.",
@@ -88,7 +88,19 @@
         "only three coverage statuses",
         "counts sum to 185",
         "gap action assigned to every PARTIALLY_COVERED and NOT_COVERED row"
-      ]
+      ],
+      "result_refs": [
+        "282-RUSSIAN-185-TO-EGE-174-COVERAGE-AUDIT-v1.0.json",
+        "282A-RUSSIAN-185-TO-EGE-174-PARTIAL-COVERAGE-A-v1.0.json",
+        "282B-RUSSIAN-185-TO-EGE-174-PARTIAL-COVERAGE-B-v1.0.json",
+        "282C-RUSSIAN-185-TO-EGE-174-NOT-COVERED-v1.0.json"
+      ],
+      "result_summary": {
+        "COVERED": 0,
+        "PARTIALLY_COVERED": 144,
+        "NOT_COVERED": 41
+      },
+      "closure_gate_status": "PASS"
     },
     {
       "gap_id": "RU-GAP-005",
@@ -137,6 +149,16 @@
       "state": "PASS",
       "inventory_objects": 983,
       "crosswalk_mappings": 1429
+    },
+    {
+      "item": "current_ege_trainer_185_identity_coverage_audit",
+      "state": "CLOSED",
+      "result": {
+        "COVERED": 0,
+        "PARTIALLY_COVERED": 144,
+        "NOT_COVERED": 41
+      },
+      "authority": "282-RUSSIAN-185-TO-EGE-174-COVERAGE-AUDIT-v1.0.json"
     }
   ]
 }
