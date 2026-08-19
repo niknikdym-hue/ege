@@ -1,0 +1,33 @@
+name: profile-2024-run-probe
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/profile-2024-run-probe.yml'
+      - 'PROFILE-2024-RUN-PROBE-TRIGGER.txt'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Record full-build runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh run list --repo '${{ github.repository }}' --workflow profile-math-2024-full-build.yml --limit 5 --json databaseId,status,conclusion,headSha,createdAt,updatedAt > PROFILE-2024-RUN-PROBE.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add PROFILE-2024-RUN-PROBE.json
+          git commit -m 'Record PROFILE 2024 build run probe' || true
+          git push origin HEAD:main
