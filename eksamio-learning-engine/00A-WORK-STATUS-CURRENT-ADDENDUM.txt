@@ -181,3 +181,56 @@ After Tutor Core closure, the next central platform step is the Unified Semantic
 - add missing semantic domains required for the full Russian subject;
 - provide versioned crosswalks from demos/trainers/exceptions/practice/explanations/homework/tutor to stable semantic identities;
 - establish alias/supersession/backward-compatibility rules before generalized learner evidence/state is implemented.
+
+TASK-003 SEMANTIC INVENTORY MERGED — 2026-08-19
+
+PR #27 `Add Russian semantic identity inventory crosswalk` was merged into `main`.
+Merge commit:
+- `d4d05d7c567532e1785a58f064f74051b7f7172a`
+
+Merged artifacts:
+- `273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json`
+- `274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json`
+- `275-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-VALIDATION.txt`
+- `build/validate_russian_semantic_inventory.py`
+- `results/RESULT-003-russian-semantic-identity-inventory-crosswalk.md`
+
+Verified TASK-003 result:
+- active school semantic identities: 185;
+- EGE Skill Graph: 12 roots + 89 subskills = 101 nodes;
+- inventory objects: 983;
+- draft mappings: 1429;
+- distinct missing-subject semantic candidates: 55;
+- needs_review: 8;
+- final new `ru-*` semantic IDs created: NO;
+- production/demo/current trainer changes: NO.
+
+Known compatibility finding retained for later adapter work:
+- `114-RUSSIAN-ERROR-EXCEPTION-HANDOFF-MAP-v0.1.json` names superseded Exceptions manifest 83; current Exceptions authority is 118. TASK-003 correctly recorded this and did not mutate 114 under ADD_ONLY scope.
+
+GENERALIZED LEARNER EVIDENCE / STATE — 2026-08-19
+
+See:
+- `276-EKSAMIO-LEARNER-EVIDENCE-STATE-CONTRACT-v1.0.txt`
+
+Fixed direction:
+- one subject-independent append-only evidence layer across demos, full trainers, thematic trainers, course modules, Homework, Tutor, diagnostics, essay/open response and retention;
+- semantic identity is the learner-knowledge address; product/item/task IDs remain evidence-source addresses;
+- accepted raw evidence is immutable; correction/retraction uses new linked events;
+- canonical learner state/mastery is a recomputable inference with `inference_version` and evidence watermark, not a product flag or AI opinion;
+- assisted success remains distinguishable from independent verification;
+- historical demo year/task route remains metadata rather than semantic identity;
+- 102/120 and current Russian product/localStorage states remain backward-compatible through future adapters rather than destructive migration;
+- local UI state such as `mastered` does not automatically become canonical mastery;
+- the same evidence/state core must serve Russian, Mathematics, Physics and future subjects.
+
+CURRENT READY CODEX TASK
+- `tasks/TASK-004-generalized-learner-evidence-state-schema.md`
+
+TASK-004 is ADD_ONLY / ARCHITECTURE_MATERIALIZATION / NO_PRODUCTION_INTEGRATION.
+It must materialize:
+- generalized append-only evidence event schema;
+- recomputable learner-state/materialized-view schema;
+- legacy Russian state adapter map;
+- validation/result artifacts;
+without changing production demos/trainers/Tilda/runtime/scoring/localStorage or freezing the final mastery algorithm.
