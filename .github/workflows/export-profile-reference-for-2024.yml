@@ -1,0 +1,25 @@
+name: export-profile-reference-for-2024
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/export-profile-reference-for-2024.yml'
+      - 'PROFILE-MATH-REFERENCE-EXPORT-TRIGGER.txt'
+
+jobs:
+  export-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload accepted profile reference implementation
+        uses: actions/upload-artifact@v4
+        with:
+          name: profile-math-reference-for-2024
+          path: |
+            ege-matematika-profil-demoversiya-2025
+            ege-matematika-profil-demoversiya-2026/scripts/build_profile_2026.py
+            eksamio-learning-engine/130-EXTENDED-ANSWER-INPUT-UX-STANDARD.txt
+          retention-days: 7
