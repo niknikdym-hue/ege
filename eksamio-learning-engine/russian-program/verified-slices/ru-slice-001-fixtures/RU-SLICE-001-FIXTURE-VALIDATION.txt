@@ -1,0 +1,86 @@
+EKSAMIO LEARNING ENGINE
+RU-SLICE-001 IMPLEMENTATION FIXTURE VALIDATION
+DATE: 2026-08-19
+STATUS: PASS / READY FOR SHARED-PEIS REFERENCE-KERNEL CONSUMPTION / NO PRODUCTION INTEGRATION
+
+SLICE
+- slice_id: RU-SLICE-001
+- prerequisite/direct identity: school-verb-personal-ending-conjugation-base
+- primary target identity: school-participle-vowel-suffix-conjugation-base
+- prerequisite goal scope: present-tense participle suffix selection
+
+ITEM BANK
+- prerequisite diagnostic items: 4 / PASS
+- target diagnostic items: 4 / PASS
+- fresh independent verification items: 4 / PASS
+- total items: 12 / PASS
+- unique item IDs: PASS
+- exactly one canonical semantic target per item: PASS
+- all item mappings EXACT: PASS
+- deterministic answer check: PASS
+- original Eksamio wording: PASS
+- source provenance present on every item: PASS
+- target items restricted to present-tense participle suffix selection: PASS
+- target items declare conjugation prerequisite: PASS
+- verification assistance allowed: NO / PASS
+- source worked examples reused as verification items: NO / PASS
+- diagnostic answers/contexts reused as verification items: NO / PASS
+
+EVIDENCE FIXTURES
+- EvidenceEvent fixtures: 12
+- composite EGE-12 fixtures: 2
+- exact prerequisite diagnostic success/failure: PRESENT / PASS
+- exact target diagnostic success/failure: PRESENT / PASS
+- assisted prerequisite success: PRESENT / PASS
+- independent prerequisite verification success/failure: PRESENT / PASS
+- independent target verification success/failure: PRESENT / PASS
+- composite semantic target set: exactly the two RU-SLICE-001 identities / PASS
+- composite mapping_resolution: COMPOSITE for both / PASS
+- composite exact semantic error assignment: NONE / PASS
+- composite error precision: UNKNOWN_OR_INSUFFICIENT_PRECISION / PASS
+- exact item events: one semantic target with mapping_resolution EXACT / PASS
+- exact failed events: EXACT_RULE_ERROR only for the isolated target / PASS
+- verification events: UNASSISTED + SAME_SESSION_VERIFICATION / PASS
+- client-authored mastery/readiness/NBA fields: NONE / PASS
+
+SHARED CONTRACT COMPATIBILITY
+- EvidenceEvent field/value contract checked against 277 definitions used by these fixtures: PASS
+- prerequisite edge field/value contract checked against 283 edge schema: PASS
+- reproducible validator included: validate_ru_slice_001_fixtures.py
+- validator loads the exact repository 277 and 283 JSON Schemas when executed in a repository checkout
+- jsonschema is required by the validator; absence is a validation failure, not a silent skip
+
+PREREQUISITE EDGE
+- source -> target: conjugation -> participle suffix identity / PASS
+- relation_type: REQUIRED / PASS
+- review_status: SOURCE_VERIFIED / PASS
+- admission_scope: CANONICAL_GRAPH / PASS
+- verified subject/source provenance records: 3 / PASS
+- conditional subject scope: russian / PASS
+- conditional goal scope: present-tense participle suffix selection / PASS
+- generalized to past-passive participles: NO / PASS
+- immutable shared contract 283 mutated: NO / PASS
+
+GOLDEN SCENARIOS
+- prerequisite-gap-confirmed branch: PRESENT / PASS
+- prerequisite-already-met branch: PRESENT / PASS
+- composite miss -> isolated diagnosis: PASS
+- prerequisite block asserted only under shared-policy GAP_CONFIRMED condition: PASS
+- assisted success treated as mastery: NO / PASS
+- independent re-verification required after help: YES / PASS
+- target diagnosis bypassed when exact cause remains uncertain: NO / PASS
+- Russian-specific mastery threshold introduced: NO / PASS
+- expected NBA actions use shared 285 vocabulary: PASS
+
+PRODUCTION SAFETY
+- existing EGE trainer/T123 changed: NO
+- scoring changed: NO
+- localStorage changed: NO
+- runtime changed: NO
+- Tilda/public production changed: NO
+- shared PEIS contracts changed: NO
+- new Russian-specific learner/mastery/readiness/retention/NBA engine: NO
+
+VERDICT
+PASS.
+RU-SLICE-001 now has the subject-side content, shared EvidenceEvent examples, source-verified conditional prerequisite-edge data, and two deterministic golden scenarios required by the merged implementation task. This package does not claim that the shared executable PEIS kernel exists. Its next consumer is the subject-neutral reference kernel: EvidenceEvent -> state materialization -> mastery -> readiness -> retention -> Next Best Action.
