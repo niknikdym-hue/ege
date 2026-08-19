@@ -1,7 +1,7 @@
 EKSAMIO LEARNING ENGINE
 RUSSIAN SCHOOL TRAINER COVERAGE AUDIT VALIDATION
 DATE: 2026-08-19
-STATUS: PASS
+STATUS: PASS / SECOND SEMANTIC PASS
 
 AUTHORITATIVE DENOMINATOR
 - canonical school semantic identities: 185
@@ -9,8 +9,8 @@ AUTHORITATIVE DENOMINATOR
 
 COVERAGE COUNTS
 - COVERED: 0
-- PARTIALLY_COVERED: 144
-- NOT_COVERED: 41
+- PARTIALLY_COVERED: 149
+- NOT_COVERED: 36
 - SUM: 185
 
 POLICY CHECKS
@@ -18,12 +18,22 @@ POLICY CHECKS
 - task-number route alone allowed to become COVERED: NO
 - mixed/composite EGE card exposure classified as PARTIALLY_COVERED: YES
 - probe lexical-hit COVERED promoted unchanged: NO; downgraded to PARTIALLY_COVERED
+- compact 174-card corpus manually reviewed for conservative probe false negatives: YES
+
+SECOND-PASS CORRECTIONS
+- school-adjective-iv-ev-liv-chiv-base -> PARTIALLY_COVERED via task 11 target forms (e.g. -ЧИВ- branch)
+- school-adjective-ov-ev-ovat-evat-ovit-evit -> PARTIALLY_COVERED via task 11 target forms (-ЕВ- branch)
+- school-noun-genitive-plural-ending-system -> PARTIALLY_COVERED via task 7 mixed morphological candidates
+- school-pri-chem-ni-pri-chem-nipochem -> PARTIALLY_COVERED via task 14 ПРИЧЁМ / ПРИ ЧЁМ contrast exposure
+- school-verb-stressed-va-boundary -> PARTIALLY_COVERED via task 11 ЗАСТРЕВАТЬ / ПРОДЛЕВАТЬ / ЗАТМЕВАТЬ branch evidence
+- false negatives corrected: 5
 
 INTEGRITY
 - unique canonical IDs: 185 / 185
 - unique trainer card IDs: 174 / 174
-- NOT_COVERED entries with zero candidate task routes: PASS
-- PARTIALLY_COVERED entries with at least one candidate route: PASS
+- status sum: 185 / 185
+- remaining NOT_COVERED: 36
+- production-route separation required before content authoring: YES
 
 SAFETY
 - PEIS/runtime touched: NO
@@ -33,4 +43,4 @@ SAFETY
 - production touched: NO
 
 VERDICT
-PASS. The current 174-card EGE trainer does not provide full isolated coverage of any of the 185 canonical school semantic identities under the strict coverage contract. 144 identities have only mixed/composite exposure; 41 have no substantive current trainer route.
+PASS. Under the strict coverage contract, the current 174-card EGE trainer still provides no sufficiently isolated full coverage of any canonical school identity. After manual semantic review of the card corpus, 149 identities have mixed/composite exposure and 36 have no substantive current trainer evidence. The remaining 36 must be split by proven EGE-2026 relevance before new content is authored, so school-only material is not incorrectly inserted into the faithful EGE trainer.
