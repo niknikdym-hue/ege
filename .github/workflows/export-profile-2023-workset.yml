@@ -1,0 +1,51 @@
+name: export-profile-2023-workset
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/export-profile-2023-workset.yml'
+      - 'PROFILE-MATH-2023-WORKSET-TRIGGER.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  export-workset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Record export run
+        shell: bash
+        run: |
+          cat > PROFILE-MATH-2023-WORKSET-STATUS.txt <<EOF
+          GitHub Actions run: ${{ github.run_id }}
+          Head SHA: ${{ github.sha }}
+          Status: EXPORTED_PROFILE_2023_WORKSET
+          Artifact name: profile-math-2023-workset
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add PROFILE-MATH-2023-WORKSET-STATUS.txt
+          git commit -m 'Record PROFILE 2023 workset export run' || true
+          git push origin HEAD:main
+      - name: Upload PROFILE 2023 source and accepted technical references
+        uses: actions/upload-artifact@v4
+        with:
+          name: profile-math-2023-workset
+          path: |
+            matematika-source-2023/ege-2023-matematika-profil-demoversiya.pdf
+            matematika-source-2023/ege-2023-matematika-profil-specifikatsiya.pdf
+            matematika-source-2023/ege-2023-matematika-kodifikator.pdf
+            matematika-source-2023/profile-source-lock
+            ege-matematika-profil-demoversiya-2024/scripts/build_profile_2024.py
+            ege-matematika-profil-demoversiya-2024/tests/test_profile_2024.py
+            ege-matematika-profil-demoversiya-2024/audit/independent_audit_2024.py
+            ege-matematika-profil-demoversiya-2026/scripts/build_profile_2026.py
+            eksamio-learning-engine/130-EXTENDED-ANSWER-INPUT-UX-STANDARD.txt
+            00-SOURCE-FIDELITY-ZERO-TOLERANCE.md
+          retention-days: 7
