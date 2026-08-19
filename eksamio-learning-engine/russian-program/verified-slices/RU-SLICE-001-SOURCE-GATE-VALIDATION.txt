@@ -1,0 +1,74 @@
+EKSAMIO LEARNING ENGINE
+RU-SLICE-001 SOURCE GATE VALIDATION
+DATE: 2026-08-19
+STATUS: PASS / READY FOR IMPLEMENTATION FIXTURES / NO PRODUCTION INTEGRATION
+
+SLICE
+- prerequisite/direct target: school-verb-personal-ending-conjugation-base
+- primary target: school-participle-vowel-suffix-conjugation-base
+- goal context for prerequisite edge: present-tense participle suffix selection
+
+CANONICAL IDENTITY CHECK
+- both semantic IDs already canonical school identities: PASS
+- new ru-* identity required: NO
+- exam task number used as identity: NO
+- product item used as identity: NO
+
+SOURCE CHECK
+- verb conjugation canonical source: Rosenthal §44 via materialization 253: PASS
+- participle suffix canonical source: Rosenthal §47 via materialization 253: PASS
+- current norm recorded for participle identity: Lopatin §§58–60, 76: PASS
+- verb_conjugation_endings explanation source status: source_verified
+- participle_suffixes explanation source status: source_verified
+
+PREREQUISITE CHECK
+- source explanation explicitly transfers conjugation to present-tense participle suffix choice: PASS
+- participle rule explicitly requires determining conjugation for present tense: PASS
+- REQUIRED edge is limited to present-tense participle suffix goal context: PASS
+- edge generalized to past-passive participle branch: NO
+- course order used as evidence: NO
+- exam task order used as evidence: NO
+- AI assertion used as evidence: NO
+- canonical shared graph file changed in this gate: NO
+- edge state after this gate: SOURCE_VERIFIED / READY_FOR_SHARED_GRAPH_MATERIALIZATION
+
+OFFICIAL/PRODUCT ROUTE CHECK
+- EGE 2026 task 12 maps to both identities: PASS
+- OGE 2026 orthography route exists for both: PASS
+- current trainer maps 2023-2026 task-12 cards to both identities: PASS
+- current exact trainer coverage for both identities: PARTIALLY_COVERED
+- mixed EGE-12 failure sufficient for exact weakness claim: NO
+
+COMPOSITE EVIDENCE CHECK
+- current 2026 task-12 card mixes personal endings and participle suffixes: PASS
+- shared EvidenceEvent supports multiple semantic_targets: PASS
+- shared EvidenceEvent supports mapping_resolution COMPOSITE: PASS
+- exact mastery may be inferred directly from composite task correctness alone: NO
+
+IMPLEMENTATION REQUIREMENT
+- isolated prerequisite diagnostic items: REQUIRED / TO_BUILD
+- isolated target items: REQUIRED / TO_BUILD
+- fresh independent verification items: REQUIRED / TO_BUILD
+- schema-valid shared EvidenceEvent fixtures: REQUIRED / TO_BUILD
+- conditional edge materialization fixture: REQUIRED / TO_BUILD
+- golden closed-loop scenario: REQUIRED / TO_BUILD
+
+SHARED-CORE SAFETY
+- Russian-specific Evidence schema created: NO
+- Russian-specific learner state created: NO
+- Russian-specific mastery engine created: NO
+- Russian-specific readiness engine created: NO
+- Russian-specific retention engine created: NO
+- Russian-specific NBA engine created: NO
+- AI required for evaluation: NO
+
+PRODUCTION SAFETY
+- trainer/T123 changed: NO
+- scoring changed: NO
+- localStorage changed: NO
+- runtime changed: NO
+- Tilda/public production changed: NO
+
+VERDICT
+PASS.
+RU-SLICE-001 is selected as the first Russian verified PEIS slice because it combines stable canonical identities, verified source truth, official route mappings, real but composite trainer exposure, deterministic checking and a defensible conditional prerequisite relationship. The source gate does NOT claim the PEIS closed loop is implemented. The immediate next deliverable is the isolated content/evidence/edge fixture package defined by RU-SLICE-001-IMPLEMENTATION-TASK.md.
