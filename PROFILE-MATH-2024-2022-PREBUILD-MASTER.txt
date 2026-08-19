@@ -1,0 +1,96 @@
+EKSAMIO — ЕГЭ ПРОФИЛЬНАЯ МАТЕМАТИКА 2024 → 2023 → 2022
+PREBUILD MASTER / ERROR-PREVENTION LOCK
+Дата: 2026-08-19
+
+PURPOSE
+Зафиксировать единый безопасный порядок архивных профильных демоверсий после повторной успешной проверки и приёмки PROFILE 2026 и PROFILE 2025.
+
+SOURCE AUTHORITY
+AUTHORITATIVE CONTENT SOURCE = официальный комплект ФИПИ конкретного года.
+GitHub `niknikdym-hue/ege` является хранилищем exact-year FIPI PDFs и производственных артефактов, но не заменяет ФИПИ как содержательный authority.
+
+ORDER
+1. PROFILE 2024
+2. PROFILE 2023
+3. PROFILE 2022
+
+Каждый год — независимый source-locked продукт. Успех предыдущего года не позволяет пропустить source/exam/answer/input/criteria/visual gates следующего.
+
+ACCEPTED TECHNICAL REFERENCES
+- /ege-matematika-profil-demoversiya-2026/ACCEPTED-TECHNICAL-REFERENCE-2026-08-19.txt
+- /ege-matematika-profil-demoversiya-2025/ACCEPTED-TECHNICAL-REFERENCE-2026-08-19.txt
+
+Они разрешены только как reference технического shell/UX/test architecture. Контент, ответы, критерии, баллы, варианты, source pages и visual assets из них не являются evidence для 2024/2023/2022.
+
+MANDATORY READ ORDER BEFORE EACH YEAR
+1. /00-SOURCE-FIDELITY-ZERO-TOLERANCE.md
+2. /00-READ-FIRST-EGE-DEMOVERSII-MASTER.md
+3. /demo-production-standard/README.md
+4. /MATEMATIKA-EGE-DEMOVERSII-REGLAMENT-SOZDANIYA-I-PROVERKI.md
+5. /demo-production-standard/PROFILE-MATH-PRODUCTION-STANDARD.md
+6. /demo-production-standard/PROFILE-MATH-YEAR-PREBUILD-LOCK-TEMPLATE.md
+7. /eksamio-learning-engine/130-EXTENDED-ANSWER-INPUT-UX-STANDARD.txt
+8. year-specific `00-PROFILE-YYYY-PRESTART-GATE.txt`
+9. year-specific `profile-source-lock/` after source-prelock PASS
+
+MANDATORY YEAR PIPELINE
+FIPI SOURCE PRELOCK
+→ EXAM LOCK
+→ ANSWER LOCK
+→ INPUT CONTRACT
+→ EXTENDED CRITERIA MAP
+→ VISUAL PREBUILD LOCK
+→ VERIFIED BUILD
+→ SOURCE/TEXT/FORMULA/VISUAL/UI-CROP GATES
+→ DOM INTERACTION + SCORER/SELF-EVAL + STATE
+→ RESPONSIVE + ZOOM
+→ ATOMIC T123 <42500 + MANIFEST + ORDERED PASTE
+→ FREEZE ZIP
+→ CLEAN EXTRACTION FULL REGRESSION
+→ INDEPENDENT FINAL AUDIT
+→ READY_FOR_TILDA
+→ PUBLICATION/PRODUCTION SMOKE/MANUAL ACCEPTANCE
+→ LIVE_GO
+
+BASE / PROFILE SEPARATION
+Folders `matematika-source-2024`, `matematika-source-2023`, `matematika-source-2022` contain both base and profile sources/artifacts. PROFILE work must use `profile-source-lock/` and exact `ege-YYYY-matematika-profil-*.pdf`. Existing BASE `source-lock/`, answers, maps, crops or builders are forbidden as PROFILE source evidence.
+
+FIPI FILE PRESENCE — CONFIRMED IN MAIN
+PROFILE 2024:
+- matematika-source-2024/ege-2024-matematika-profil-demoversiya.pdf
+- matematika-source-2024/ege-2024-matematika-profil-specifikatsiya.pdf
+- matematika-source-2024/ege-2024-matematika-kodifikator.pdf
+
+PROFILE 2023:
+- matematika-source-2023/ege-2023-matematika-profil-demoversiya.pdf
+- matematika-source-2023/ege-2023-matematika-profil-specifikatsiya.pdf
+- matematika-source-2023/ege-2023-matematika-kodifikator.pdf
+
+PROFILE 2022:
+- matematika-source-2022/ege-2022-matematika-profil-demoversiya.pdf
+- matematika-source-2022/ege-2022-matematika-profil-specifikatsiya.pdf
+- matematika-source-2022/ege-2022-matematika-kodifikator.pdf
+
+AUTOMATION
+Reusable exact-year source analyzer:
+/demo-production-standard/scripts/analyze_profile_math_year_sources.py
+
+Batch CI source-prelock:
+/.github/workflows/profile-math-2024-2022-source-prelock.yml
+
+The source analyzer computes SHA-256 from actual PDF bytes, rotation-aware printed-page maps, text and word-coordinate evidence. Its structure candidates are diagnostic only; they never become EXAM LOCK without source audit.
+
+NO-GUESS RULE
+Before a year-specific EXAM LOCK passes, do not assert its task count, duration, short/extended split, max score, official-example count, criteria structure or variant counts from memory or from 2026/2025.
+
+VISUAL RULE
+No reconstruction. Exact FIPI current-year source → direct contiguous crop/render → individual four-edge semantic crop audit → readable desktop/mobile → zoom where required → embedded-byte/source proof.
+
+EXTENDED RULE
+Every current-year extended official example needs: full own-answer field, math toolbar, persistence, exact current-year FIPI solution/criteria after completion, own answer shown safely, and separate self-evaluation based on current-year criteria/max score.
+
+T123 RULE FOR NEW ARCHIVE BUILDS
+No mechanical split. Every T123 standalone-valid. No HTML/script/style/JS/base64 continuation across files. Each <42500 bytes. Manifest bytes+SHA256. Ordered-paste simulation. Any repack triggers full browser/state regression.
+
+CURRENT ADMISSION
+2024/2023/2022 are admitted only to SOURCE PRELOCK / year-specific lock work until each year's machine evidence says otherwise. No archive year is READY_FOR_BUILD merely because 2026/2025 are accepted.
