@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "date": "2026-08-19",
+  "status": "FINAL_CURRENT_EGE_TRAINER_IDENTITY_COVERAGE_AUDIT",
+  "canonical_authority": "266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json",
+  "canonical_total": 185,
+  "trainer_cards_total": 174,
+  "coverage_definitions": {
+    "COVERED": "Current trainer forces application of the concrete canonical identity and can independently diagnose it.",
+    "PARTIALLY_COVERED": "Identity is exposed only through task-number/composite cards or otherwise cannot be independently isolated as evidence.",
+    "NOT_COVERED": "No current trainer route provides real target practice/evidence for the identity."
+  },
+  "summary": {
+    "COVERED": 0,
+    "PARTIALLY_COVERED": 144,
+    "NOT_COVERED": 41
+  },
+  "coverage_parts": [
+    "282A-RUSSIAN-185-TO-EGE-174-PARTIAL-COVERAGE-A-v1.0.json",
+    "282B-RUSSIAN-185-TO-EGE-174-PARTIAL-COVERAGE-B-v1.0.json",
+    "282C-RUSSIAN-185-TO-EGE-174-NOT-COVERED-v1.0.json"
+  ],
+  "validation": {
+    "unique_identity_rows": 185,
+    "counts_sum_to_185": true,
+    "trainer_task_range": "1..27",
+    "incidental_lexical_occurrence_counts_as_coverage": false
+  },
+  "probe_correction": {
+    "source": "267-RUSSIAN-SCHOOL-TRAINER-COVERAGE-PROBE-v0.1.json (local probe; not authority)",
+    "original_probe_summary": {
+      "COVERED": 1,
+      "PARTIALLY_COVERED": 143,
+      "NOT_COVERED": 41
+    },
+    "corrected_identity": "school-ne-ni-ni-odin-ne-odin-ni-razu-ne-raz",
+    "correction": "COVERED -> PARTIALLY_COVERED",
+    "reason": "The probe matched incidental lexical text in EGE task 13; the card answer concerns a different НЕ spelling decision and does not independently exercise the canonical identity."
+  },
+  "method_notes": [
+    "The 41 NOT_COVERED identities have no current EGE trainer target route in the canonical route-to-school mapping.",
+    "The 144 PARTIALLY_COVERED identities have current trainer route exposure but the trainer is task/composite-addressed rather than canonical-identity-addressed.",
+    "No current trainer card can be used as strongest independent evidence for a single school identity without an identity-specific item/adaptor contract.",
+    "This audit does not modify trainer content, answers, scoring, runtime or localStorage."
+  ]
+}
