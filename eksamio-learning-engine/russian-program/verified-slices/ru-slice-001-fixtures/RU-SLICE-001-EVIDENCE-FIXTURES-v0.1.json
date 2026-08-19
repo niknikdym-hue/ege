@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-19",
+  "status": "SHARED_EVIDENCEEVENT_FIXTURES_NO_RUNTIME_INFERENCE",
+  "subject": "russian",
+  "slice_id": "RU-SLICE-001",
+  "shared_event_schema_ref": "../../../277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+  "source_gate_ref": "../RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json",
+  "item_bank_ref": "RU-SLICE-001-ITEM-BANK-v0.1.json",
+  "invariants": [
+    "Composite EGE task 12 failure maps both semantic targets as COMPOSITE and creates no exact semantic error claim.",
+    "Isolated diagnostic and verification events map exactly one semantic target as EXACT.",
+    "Assisted success remains an observed event with assistance metadata and does not establish mastery by itself.",
+    "No fixture writes canonical mastery/readiness/NBA fields."
+  ],
+  "event_count": 12,
+  "parts": [
+    {"file":"RU-SLICE-001-EVIDENCE-FIXTURES-v0.1-part-01.json","events":4},
+    {"file":"RU-SLICE-001-EVIDENCE-FIXTURES-v0.1-part-02.json","events":4},
+    {"file":"RU-SLICE-001-EVIDENCE-FIXTURES-v0.1-part-03.json","events":4}
+  ]
+}
