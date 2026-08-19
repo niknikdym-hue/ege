@@ -52,21 +52,25 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install PDF analysis dependency
-        run: python -m pip install --disable-pip-version-check pymupdf
+      - name: Install PDF analysis/render dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
 
-      - name: Analyze exact FIPI profile sources for 2024-2022
+      - name: Analyze exact FIPI profile sources for 2024-2022 without deleting downstream locks
         shell: bash
         run: |
           set -euo pipefail
           for YEAR in 2024 2023 2022; do
             DEST="matematika-source-${YEAR}/profile-source-lock"
-            rm -rf "$DEST"
-            mkdir -p "$DEST"
+            TMP="${RUNNER_TEMP}/profile-source-lock-${YEAR}"
+            rm -rf "$TMP"
+            mkdir -p "$TMP" "$DEST"
             python demo-production-standard/scripts/analyze_profile_math_year_sources.py \
               --year "$YEAR" \
               --repo-root "$GITHUB_WORKSPACE" \
-              --out-dir "$DEST"
+              --out-dir "$TMP"
+            rm -rf "$DEST/demo" "$DEST/spec" "$DEST/cod"
+            rm -f "$DEST/SOURCE-LOCK.json" "$DEST/SOURCE-VALIDATION.txt" "$DEST/STRUCTURE-CANDIDATES.json"
+            cp -R "$TMP"/. "$DEST"/
           done
 
       - name: Cross-year separation gate
@@ -90,6 +94,48 @@ jobs:
           print('PROFILE CROSS-YEAR / BASE-SEPARATION GATE PASS')
           PY
 
+      - name: Render PROFILE 2024 exact FIPI demo printed-page evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          import pymupdf as fitz
+          from PIL import Image
+
+          src=Path('matematika-source-2024/ege-2024-matematika-profil-demoversiya.pdf')
+          expected='89698a59be7da5c5f6c628f752a6810534888c423cae31a181ef743c910c1ae3'
+          actual=hashlib.sha256(src.read_bytes()).hexdigest()
+          assert actual==expected, (actual, expected)
+          page_map=json.loads(Path('matematika-source-2024/profile-source-lock/demo/PAGE-MAP.json').read_text(encoding='utf-8'))
+          assert page_map['generated_printed_pages']==23
+          out=Path('profile-2024-rendered-source')
+          out.mkdir(exist_ok=True)
+          doc=fitz.open(src)
+          cache={}
+          scale=2.5
+          for row in page_map['pages']:
+              physical=row['physical_pdf_page']
+              if physical not in cache:
+                  page=doc[physical-1]
+                  pix=page.get_pixmap(matrix=fitz.Matrix(scale,scale), alpha=False)
+                  p=out/f'physical-{physical:02d}.png'
+                  pix.save(p)
+                  cache[physical]=Image.open(p).copy()
+              im=cache[physical]
+              half=row['half']
+              if half=='left':
+                  img=im.crop((0,0,im.width//2,im.height))
+              elif half=='right':
+                  img=im.crop((im.width//2,0,im.width,im.height))
+              else:
+                  img=im
+              img.save(out/f"printed-{row['printed_page']:02d}.png")
+          assert len(list(out.glob('printed-*.png')))==23
+          print('PROFILE 2024 EXACT SOURCE RENDER PASS: 23/23')
+          PY
+
       - name: Persist successful source prelocks
         shell: bash
         run: |
@@ -100,7 +146,8 @@ jobs:
           Years: 2024,2023,2022
           Status: SOURCE_PRELOCK_PASS
           Authority: exact year-specific FIPI profile PDFs stored in repository
-          READY_FOR_BUILD: NO — exam/answer/input/visual/extended-criteria year locks still required before each build
+          PROFILE_2024_RENDERED_SOURCE: 23/23 PASS
+          READY_FOR_BUILD: NO — answer/input/visual/extended-criteria year locks still required before build
           EOF
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -112,7 +159,7 @@ jobs:
             git push origin HEAD:main
           fi
 
-      - name: Upload source-prelock evidence
+      - name: Upload source-prelock and PROFILE 2024 render evidence
         uses: actions/upload-artifact@v4
         with:
           name: profile-math-2024-2022-source-prelock
@@ -120,4 +167,5 @@ jobs:
             matematika-source-2024/profile-source-lock
             matematika-source-2023/profile-source-lock
             matematika-source-2022/profile-source-lock
+            profile-2024-rendered-source
           retention-days: 30
