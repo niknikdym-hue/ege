@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0.0",
+  "date": "2026-08-19",
+  "status": "PROGRAM_LEVEL_CROSSWALK_ACTIVE_OBJECT_LEVEL_CANONICALIZATION_PENDING",
+  "subject": "russian",
+  "program_ref": "277-RUSSIAN-FULL-SUBJECT-PROGRAM-v1.0.json",
+  "object_level_crosswalk_ref": "274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+  "rule": "This file routes product families to program modules. It does not replace the 1429 object-level mappings and does not invent canonical semantic IDs.",
+  "product_routes": [
+    {
+      "product_family": "ege_full_trainer",
+      "source_system": "trainer_item",
+      "observed_items": 174,
+      "modules": ["RU-PROG-02", "RU-PROG-03", "RU-PROG-07", "RU-PROG-08", "RU-PROG-09", "RU-PROG-10", "RU-PROG-11", "RU-PROG-12", "RU-PROG-13", "RU-PROG-14", "RU-PROG-16"],
+      "evidence_role": "ASSESS/PRACTICE depending on item and crosswalk relation",
+      "year_route": "current EGE task taxonomy",
+      "semantic_truth_owner": "unified semantic registry"
+    },
+    {
+      "product_family": "ege_demos_2022_2026",
+      "source_system": "demo_task/subtask",
+      "modules": ["RU-PROG-02", "RU-PROG-03", "RU-PROG-07", "RU-PROG-08", "RU-PROG-09", "RU-PROG-10", "RU-PROG-11", "RU-PROG-12", "RU-PROG-13", "RU-PROG-14", "RU-PROG-16"],
+      "evidence_role": "EXAM_ROUTE_EVIDENCE",
+      "year_route": "preserve exact source year",
+      "semantic_truth_owner": "unified semantic registry"
+    },
+    {
+      "product_family": "oge_russian",
+      "source_system": "oge_route",
+      "modules": ["RU-PROG-01", "RU-PROG-03", "RU-PROG-04", "RU-PROG-05", "RU-PROG-06", "RU-PROG-07", "RU-PROG-08", "RU-PROG-09", "RU-PROG-10", "RU-PROG-11", "RU-PROG-12", "RU-PROG-14", "RU-PROG-15"],
+      "evidence_role": "EXAM_ROUTE_EVIDENCE",
+      "semantic_truth_owner": "unified semantic registry"
+    },
+    {
+      "product_family": "thematic_orthoepy_trainer",
+      "source_system": "thematic_trainer",
+      "modules": ["RU-PROG-02"],
+      "evidence_role": "PRACTICE/ASSESS when item semantics are isolated"
+    },
+    {
+      "product_family": "thematic_paronyms_trainer",
+      "source_system": "thematic_trainer",
+      "modules": ["RU-PROG-03"],
+      "evidence_role": "PRACTICE/ASSESS when item semantics are isolated"
+    },
+    {
+      "product_family": "thematic_phraseology_trainer",
+      "source_system": "thematic_trainer",
+      "modules": ["RU-PROG-03"],
+      "evidence_role": "PRACTICE/ASSESS when item semantics are isolated"
+    },
+    {
+      "product_family": "exceptions_bank",
+      "source_system": "exception_item",
+      "authority": "118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json",
+      "modules": ["RU-PROG-07", "RU-PROG-08", "RU-PROG-09", "RU-PROG-10", "RU-PROG-14"],
+      "evidence_role": "IS_EXCEPTION_OF/EXPLAINS; exception identity is not semantic identity"
+    },
+    {
+      "product_family": "exceptions_practice",
+      "source_system": "practice_item",
+      "authority": "119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json",
+      "modules": ["RU-PROG-07", "RU-PROG-08", "RU-PROG-09", "RU-PROG-10", "RU-PROG-14"],
+      "evidence_role": "PRACTICES; mastery strength depends on independent verification"
+    },
+    {
+      "product_family": "explanations",
+      "source_system": "explanation_unit",
+      "modules": "RU-PROG-01..RU-PROG-16",
+      "evidence_role": "EXPLAINS; viewing explanation never proves mastery"
+    },
+    {
+      "product_family": "homework",
+      "source_system": "future_homework_task",
+      "modules": "RU-PROG-01..RU-PROG-16",
+      "pipeline": ["extract_task", "classify_subject", "map_semantics", "assist", "write_evidence"],
+      "evidence_role": "ASSISTED_OR_INDEPENDENT according to interaction trace"
+    },
+    {
+      "product_family": "ai_tutor",
+      "source_system": "tutor_session",
+      "modules": "RU-PROG-01..RU-PROG-16",
+      "evidence_role": "ORCHESTRATES learning; Tutor help is not mastery",
+      "semantic_truth_owner": "unified semantic registry"
+    },
+    {
+      "product_family": "diagnostic",
+      "source_system": "diagnostic_item",
+      "modules": "RU-PROG-01..RU-PROG-16",
+      "evidence_role": "ASSESS/READINESS; route selected by semantic prerequisites"
+    }
+  ],
+  "routing_invariants": [
+    "Product IDs remain stable source addresses.",
+    "Exam year/task remains route metadata.",
+    "Semantic identity remains the learner-knowledge address.",
+    "A source object may map to multiple semantic identities.",
+    "Mixed item evidence must not overclaim exact mastery.",
+    "Legacy product state remains backward-compatible through adapters."
+  ]
+}
