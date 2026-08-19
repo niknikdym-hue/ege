@@ -1,0 +1,70 @@
+name: physics-2025-source-lock-live
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  source-lock:
+    if: github.head_ref == 'chatgpt/physics-2025-archive-20260819'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2025-archive-20260819
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify exact 2025 source bytes and preserve official archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pypdf >/dev/null
+          rm -rf /tmp/fipi25 && mkdir -p /tmp/fipi25/original
+          curl --fail --location --retry 3 --retry-delay 2 \
+            --user-agent 'Mozilla/5.0 Eksamio source verification' \
+            --referer 'https://fipi.ru/ege/demoversii-specifikacii-kodifikatory' \
+            'https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2025/fi_11_2025.zip' \
+            -o /tmp/fipi25/fi_11_2025.zip
+          unzip -q /tmp/fipi25/fi_11_2025.zip -d /tmp/fipi25/original
+          python - <<'PY'
+          from pathlib import Path
+          from hashlib import sha256
+          from pypdf import PdfReader
+          import json, shutil
+          can=Path('ege-source-fizika/source-fizika-2025'); ext=Path('/tmp/fipi25/original'); archive=Path('/tmp/fipi25/fi_11_2025.zip')
+          def h(p):
+              x=sha256()
+              with p.open('rb') as f:
+                  for b in iter(lambda:f.read(1024*1024),b''): x.update(b)
+              return x.hexdigest()
+          friendly=sorted(can.glob('ege-2025-fizika-*.pdf')); official=sorted(ext.rglob('*.pdf'))
+          assert len(friendly)==3 and len(official)==3,(friendly,official)
+          fh={h(p):p for p in friendly}; oh={h(p):p for p in official}; assert set(fh)==set(oh),{'existing':sorted(fh),'official':sorted(oh)}
+          rows=[]; extracts=[]
+          for digest,p in oh.items():
+              fn=fh[digest].name; role='demo' if 'demoversiya' in fn else ('codifier' if 'kodifikator' in fn else 'specification'); reader=PdfReader(str(p)); pages=[]
+              for i,page in enumerate(reader.pages,1): pages.append((page.extract_text() or '').replace('\x00','').strip())
+              rows.append({'role':role,'official_filename':str(p.relative_to(ext)),'friendly_filename':fn,'bytes':p.stat().st_size,'physical_pdf_pages':len(reader.pages),'sha256':digest})
+              extracts.append('\n'.join(['===== '+role.upper()+' =====']+[f'--- PDF PAGE {i} ---\n{txt}' for i,txt in enumerate(pages,1)]))
+          shutil.rmtree(can/'original',ignore_errors=True); shutil.copytree(ext,can/'original'); shutil.copy2(archive,can/'fi_11_2025.zip'); (can/'.gitkeep').unlink(missing_ok=True); ah=h(archive)
+          reg={'exam':'ЕГЭ','subject':'физика','source_year':2025,'authority':'ФИПИ','official_page':'https://fipi.ru/ege/demoversii-specifikacii-kodifikatory','official_archive_url':'https://doc.fipi.ru/ege/demoversii-specifikacii-kodifikatory/2025/fi_11_2025.zip','external_archive_sha256_locked':True,'source_gate':'CLOSED','archive':{'path':'fi_11_2025.zip','bytes':archive.stat().st_size,'sha256':ah},'files':sorted(rows,key=lambda x:x['role']),'friendly_pdf_byte_identity_with_official_archive':True,'derived_text_extract_is_authority':False}
+          (can/'SOURCE-REGISTER.json').write_text(json.dumps(reg,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          inv=['EKSAMIO PHYSICS 2025 — OFFICIAL SOURCE INVENTORY','OFFICIAL_SOURCE_URL='+reg['official_archive_url'],'SOURCE_STATUS=FIPI_2025_BYTE_LOCKED','SOURCE_GATE=CLOSED','ARCHIVE_BYTES='+str(archive.stat().st_size),'ARCHIVE_SHA256='+ah,'','PDF_FILES:']
+          for r in sorted(rows,key=lambda x:x['role']): inv.append(r['role']+'\t'+r['official_filename']+'\tfriendly='+r['friendly_filename']+'\tbytes='+str(r['bytes'])+'\tphysical_pdf_pages='+str(r['physical_pdf_pages'])+'\tsha256='+r['sha256'])
+          inv+=['','FRIENDLY_PDF_BYTE_IDENTITY=PASS','DERIVED_TEXT_EXTRACT_AUTHORITY=NO']; (can/'SOURCE-INVENTORY.txt').write_text('\n'.join(inv)+'\n',encoding='utf-8')
+          (can/'SOURCE-STATUS.txt').write_text('\n'.join(['EKSAMIO PHYSICS 2025 — OFFICIAL SOURCE STATUS','YEAR=2025','SUBJECT=physics','AUTHORITY=FIPI','OFFICIAL_SOURCE_PAGE=https://fipi.ru/ege/demoversii-specifikacii-kodifikatory','OFFICIAL_SOURCE_URL='+reg['official_archive_url'],'SOURCE_STATUS=FIPI_2025_BYTE_LOCKED','SOURCE_GATE=CLOSED','FRIENDLY_PDF_BYTE_IDENTITY=PASS','ARCHIVE_SHA256='+ah,'','Untouched official archive: fi_11_2025.zip.','Untouched extracted PDFs: original/.','Existing friendly-named PDFs are byte-identical to official archive PDFs.','DERIVED-PDF-TEXT.txt is audit/navigation aid only, not authority.'])+'\n',encoding='utf-8')
+          (can/'DERIVED-PDF-TEXT.txt').write_text('\n\n'.join(extracts)+'\n',encoding='utf-8'); print(json.dumps(reg,ensure_ascii=False,indent=2))
+          PY
+      - name: Commit verified source evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' 'run=no' > .physics-2025-source-trigger
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ege-source-fizika/source-fizika-2025 .physics-2025-source-trigger
+          git commit -m 'Lock Physics 2025 exact FIPI source'
+          git push origin HEAD:chatgpt/physics-2025-archive-20260819
