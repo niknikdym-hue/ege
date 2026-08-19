@@ -108,8 +108,8 @@ DEMOS_OR_CURRENT_TRAINERS_CHANGED: NO
 
 BRANCH: `codex/task-003-russian-semantic-crosswalk`
 
-COMMIT: `PENDING_PUBLICATION`
+COMMIT: `1251c11021068b1b54e4750d508d4b1472da3d77` (published artifact set)
 
-PR: `PENDING_PUBLICATION`
+PR: [#27](https://github.com/niknikdym-hue/ege/pull/27)
 
 STOP: Inventory, draft crosswalk, validation and result only. No registry admission, learner-state migration, Tutor Core integration or Homework integration was started.
