@@ -1,0 +1,93 @@
+EKSAMIO LEARNING ENGINE
+TASK-003 RUSSIAN SEMANTIC IDENTITY INVENTORY VALIDATION
+
+STATUS: PASS
+DATE: 2026-08-19
+MODE: ADD_ONLY / AUDIT_ONLY / NO_PRODUCTION_INTEGRATION
+
+CORE CHECKS
+- JSON_PARSE: PASS
+- UNIQUE_INVENTORY_OBJECT_KEYS: PASS
+- UNIQUE_MAPPING_IDS: PASS
+- TARGET_SEMANTIC_REFS_RESOLVE: PASS
+- TARGET_CANDIDATE_REFS_RESOLVE: PASS
+- ACTIVE_SCHOOL_IDENTITY_COUNT: 185 / EXPECTED 185
+- SKILL_GRAPH_SKILLS: 12
+- SKILL_GRAPH_SUBSKILLS: 89
+- SCHOOL_IDS_RENAMED_OR_DUPLICATED: NO
+- FINAL_RU_SEMANTIC_IDS_CREATED: NO
+- SUPERSEDED_MANIFESTS_MARKED: 83, 99
+- CURRENT_MANIFESTS_USED: 118, 119
+- PRODUCTION_FILES_CHANGED: NO
+
+COUNTS
+- INVENTORY_OBJECTS_TOTAL: 983
+- MAPPINGS_TOTAL: 1429
+- SAME_MEANING_OR_CANONICAL_MAPPINGS: 193
+- PARENT_CHILD_PARTIAL_COMPOSITE_MAPPINGS: 27
+- PRODUCT_ONLY_OBJECTS: 178
+- MISSING_SUBJECT_SEMANTIC_CANDIDATE_COUNT: 55
+- NEEDS_REVIEW_COUNT: 8
+
+OBJECT COUNTS BY SOURCE SYSTEM
+- ege_2026_overlay: 24
+- ege_skill_graph: 101
+- ege_task_route: 27
+- essay_criterion: 10
+- essay_gate: 4
+- exception_item: 127
+- explanation_routing_tag: 43
+- explanation_task_route: 27
+- explanation_unit: 72
+- handoff_mapping: 10
+- learner_state_schema: 2
+- manifest_authority: 4
+- oge_2026_exam_route: 9
+- oge_2026_orthography_route: 14
+- oge_2026_punctuation_route: 12
+- practice_item: 80
+- review_only_source: 2
+- school_canonical: 185
+- semantic_candidate: 55
+- semantic_reference_audit: 1
+- trainer_item: 174
+
+MAPPING COUNTS BY RELATION
+- CANONICAL_SCHOOL_IDENTITY: 185
+- COMPOSITE_OF: 25
+- EGE_TAXONOMY_NODE: 12
+- EXAM_ROUTE_ONLY: 394
+- EXCEPTION_OBJECT_ONLY: 135
+- EXPLANATION_OBJECT_ONLY: 102
+- LEARNER_STATE_LEGACY_REF: 2
+- MISSING_SUBJECT_SEMANTIC_CANDIDATE: 107
+- NEEDS_REVIEW: 3
+- PARTIAL_OVERLAP: 2
+- PRACTICE_OBJECT_ONLY: 84
+- PRODUCT_OBJECT_ONLY: 370
+- SAME_MEANING_AS_EXISTING: 8
+
+SUPERSESSION / CURRENT-AUTHORITY FINDINGS
+- 114 references superseded manifest 83; current authority is 118 (recorded, not modified).
+- 118 supersedes 83 for current exception builds.
+- 119 supersedes 99 for current practice builds.
+
+CONTRADICTIONS / NEEDS REVIEW
+- Handoff map 114 names superseded manifest 83 while current exception authority is 118; recorded as needs_review and not changed under ADD_ONLY scope.
+- 87A confirms comparison-degree content but leaves candidate granularity open.
+- 84A requires function-sensitive handling of примерно; no absolute blacklist is inferred.
+- Skill Graph contextual_synonym_selection remains needs_review.
+
+CHANGED PATHS
+- eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json
+- eksamio-learning-engine/274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json
+- eksamio-learning-engine/275-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-VALIDATION.txt
+- eksamio-learning-engine/build/validate_russian_semantic_inventory.py
+- eksamio-learning-engine/results/RESULT-003-russian-semantic-identity-inventory-crosswalk.md
+
+ERRORS
+- none
+
+PRODUCTION SAFETY
+- No demo/trainer/T123/HTML/CSS/JS/scoring/localStorage file is an allowed TASK-003 change.
+- This validator writes only this required validation report.
