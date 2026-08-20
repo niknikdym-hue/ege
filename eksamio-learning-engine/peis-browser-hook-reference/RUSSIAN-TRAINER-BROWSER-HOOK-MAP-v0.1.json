@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1.0",
+  "task": "PEIS-BROWSER-HOOK-001",
+  "status": "REFERENCE_INTEGRATION_MAP",
+  "runtime": {
+    "path": "../russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt",
+    "git_blob_sha": "97143363a5adfaef5609bc28fe823c31a2c1fc4d",
+    "function": "checkCurrent(card)",
+    "anchor": "session.checked[card.id]=checked;recordCard(card,checked);saveSession();",
+    "anchor_expected_count": 1
+  },
+  "reference_projection": {
+    "insertion_position": "IMMEDIATELY_AFTER_ANCHOR",
+    "snippet": "try{if(window.__EKSAMIO_PEIS_HOOK__)void window.__EKSAMIO_PEIS_HOOK__.observeCheckedCard(card,session);}catch(e){}",
+    "fire_and_forget": true,
+    "await_allowed": false,
+    "production_runtime_mutation": false
+  },
+  "hook_configuration": {
+    "adapter_id": "russian-ege-trainer-task12-v0.1",
+    "enabled_by_default": false,
+    "transport": "HOST_INJECTED",
+    "browser_identity": "NONE"
+  },
+  "client_fact_sources": {
+    "card_id": "card.id",
+    "session_started_at_ms": "session.startedAt",
+    "session_mode": "session.mode",
+    "answer": "session.answers[card.id]",
+    "occurred_at_client": "hook clock at observation",
+    "client_request_id": "stable digest of adapter_id + session.startedAt + card.id"
+  },
+  "explicitly_not_read_from_checked": [
+    "checked.score",
+    "checked.max",
+    "checked.correctness"
+  ],
+  "completion_status": "REFERENCE_BROWSER_HOOK_VALIDATED_NOT_WIRED_TO_PRODUCTION"
+}

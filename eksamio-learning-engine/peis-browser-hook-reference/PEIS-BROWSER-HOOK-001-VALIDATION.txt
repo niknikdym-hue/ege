@@ -1,0 +1,49 @@
+PEIS-BROWSER-HOOK-001 VALIDATION
+Date: 2026-08-20
+Result: PASS
+GitHub Actions run: 32386196695
+Job: 96481174742
+Validated head before durable-result commits: 443c8c21bbcda5ada07812fc9d1a4401189b617c
+
+WHAT WAS PROVEN
+
+1. The integration map is pinned to the actual current Russian trainer runtime blob 97143363a5adfaef5609bc28fe823c31a2c1fc4d.
+2. The current checkCurrent/card progress anchor exists exactly once.
+3. The current runtime still records local product progress through recordCard/saveSession before the reference PEIS observation point.
+4. The generic browser hook embeds no Russian semantic ID, current Russian card ID, or Russian service adapter ID.
+5. The generic hook performs no localStorage/sessionStorage canonical-state writes.
+6. The hook contains no production endpoint and defines no public authentication flow.
+7. The hook requires host-injected transport.
+8. The reference runtime projection changes only one guarded fire-and-forget hook call after current progress saving; the real runtime remains byte-identical.
+9. The hook is disabled by default and disabled mode sends nothing.
+10. Stable client_request_id is derived from adapter + session start + card and remains stable for duplicate product observation.
+11. The browser request contains only card_id, session_started_at_ms, session_mode, answer, occurred_at_client and client_request_id.
+12. Browser request does not assert score/correctness/max_score, semantic truth, evaluator trust, mastery/readiness/retention/NBA, prerequisite edges, learner identity, or server position.
+13. Product answer is cloned before transport so later UI mutation cannot rewrite the submitted observation object.
+14. A valid host transport response is consumed without blocking current product flow.
+15. The returned directive is accepted only when canonical_state_owner=shared_peis.
+16. Directive fields are filtered to the contract allowlist.
+17. Extra server mastery/evidence/state fields do not leak into the browser directive.
+18. Directive consumer callback failure is fail-open.
+19. Synchronous transport failure is fail-open.
+20. Transport timeout is fail-open.
+21. Invalid/non-shared directive is rejected fail-open.
+22. Enabled hook without configured host transport remains non-fatal.
+23. Validation leaves the actual current Russian trainer runtime byte-identical.
+
+ARCHITECTURAL INVARIANTS
+
+- browser owns product facts only
+- browser does not own learner identity
+- browser does not own canonical educational truth
+- browser does not own PEIS state
+- browser does not persist canonical mastery/readiness/retention/NBA
+- current trainer scoring/progress behavior is untouched
+- PEIS failure cannot break current answer checking in the reference integration pattern
+- deployment/auth remain separate future gates
+
+STATUS
+REFERENCE_BROWSER_HOOK_VALIDATED_NOT_WIRED_TO_PRODUCTION
+
+NEXT GATE
+A deployment/auth integration decision is now the central blocker before any real Tilda/browser traffic may reach the PEIS service. Do not hard-code a public endpoint or pass trusted learner identity from browser JavaScript. Prefer a same-origin trusted host/session boundary or equivalent architecture that can resolve learner identity server-side and preserve fail-open product behavior.
