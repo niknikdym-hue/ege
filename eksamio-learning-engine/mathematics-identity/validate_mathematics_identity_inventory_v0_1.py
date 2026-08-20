@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+REPO = HERE.parents[1]
 
 
 def load(name):
@@ -28,14 +29,27 @@ actual = {(cell["route"], cell["year"]) for cell in cells}
 assert actual == expected
 assert len(actual) == len(cells)
 
-gaps = [cell for cell in cells if cell["source_status"] == "GAP"]
-assert len(gaps) == 1
-assert (gaps[0]["route"], gaps[0]["year"]) == ("base", 2025)
-assert gaps[0]["package_status"] == "ABSENT_CURRENT_MAIN"
-assert gaps[0].get("gap_reason")
+source_gaps = [cell for cell in cells if cell["source_status"] == "GAP"]
+assert source_gaps == []
+assert inventory["findings"]["explicit_source_gaps"] == []
+
+base_2025 = next(cell for cell in cells if (cell["route"], cell["year"]) == ("base", 2025))
+assert base_2025["source_status"] == "VERIFIED"
+assert base_2025["package_status"] == "ROUTE_BUILD_ABSENT_CURRENT_MAIN"
+required_base_2025_sources = [
+    "matematika-source-2025/ege-2025-matematika-baza-demoversiya.pdf",
+    "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+    "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+]
+for relative in required_base_2025_sources:
+    assert (REPO / relative).is_file(), relative
+assert {entry["ref"] for entry in base_2025["evidence"]} == set(required_base_2025_sources)
+
+route_build_gaps = {(gap["route"], gap["year"]) for gap in inventory["findings"]["route_build_gaps"]}
+assert route_build_gaps == {("profile", 2022), ("base", 2025)}
+
 for cell in cells:
-    if cell["source_status"] != "GAP":
-        assert cell.get("evidence"), (cell["route"], cell["year"])
+    assert cell.get("evidence"), (cell["route"], cell["year"])
 
 assert foundation["canonical_semantic_identity_count"] == 0
 assert inventory["findings"]["canonical_math_semantic_identities_admitted"] == 0
@@ -64,8 +78,9 @@ print("MATRIX_CELLS: 10")
 print("ROUTES: profile, base")
 print("YEARS: 2022-2026")
 print("CANONICAL_SEMANTIC_IDENTITIES_ADMITTED: 0")
-print("EXPLICIT_GAPS: 1")
-print("GAP_BASE_2025: NEEDS_SOURCE_INVENTORY")
+print("EXPLICIT_SOURCE_GAPS: 0")
+print("BASE_2025_SOURCE: VERIFIED_OFFICIAL_FIPI_FILES_PRESENT")
+print("ROUTE_BUILD_GAPS: profile/2022, base/2025")
 print("SHARED_PEIS_REUSE: PASS")
 print("PARALLEL_MATH_LEARNER_ENGINE_CREATED: false")
 print("PRODUCTION_INTEGRATION: false")
