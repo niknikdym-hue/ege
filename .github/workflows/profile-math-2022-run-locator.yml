@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows:
       - 'PROFILE Math 2022 — exact FIPI full build and audit'
+      - 'PROFILE Math 2022 — corrected exact FIPI full build and audit'
     types: [completed]
 
 permissions:
@@ -22,6 +23,7 @@ jobs:
           set -euo pipefail
           cat > PROFILE-MATH-2022-ACTIVE-RUN.txt <<EOF
           Run ID: ${{ github.event.workflow_run.id }}
+          Workflow: ${{ github.event.workflow_run.name }}
           Conclusion: ${{ github.event.workflow_run.conclusion }}
           Head SHA: ${{ github.event.workflow_run.head_sha }}
           URL: ${{ github.event.workflow_run.html_url }}
