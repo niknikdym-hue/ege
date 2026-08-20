@@ -1,7 +1,10 @@
 EKSAMIO — ЕГЭ ПРОФИЛЬНАЯ МАТЕМАТИКА 2023 — FINAL REPORT
 
-STATUS: READY_FOR_TILDA
-LIVE_GO: NO — до публикации в Tilda, production smoke и ручной приёмки.
+STATUS: ACCEPTED_BY_USER / PACKAGE_FROZEN
+READY_FOR_TILDA: YES
+MANUAL_STUDENT_ACCEPTANCE: PASS
+LIVE_GO: separate production status; do not infer from package acceptance alone
+AUTHORITATIVE ACCEPTANCE RECORD: matematika-source-2023/PROFILE-2023-ACCEPTED-FROZEN.txt
 
 1. OFFICIAL FIPI SOURCE LOCK
 Demo: ege-2023-matematika-profil-demoversiya.pdf
@@ -19,7 +22,7 @@ SHA256: e75a596e2d1b8e76f99d2cf717f1269a247725a40cfac9e6bf305d8bb131c087
 Physical PDF pages: 21
 Printed pages: 42
 
-Content authority: official FIPI files for 2023 only. Adjacent years were used only as technical implementation reference after the 2023 source lock.
+Content authority: official FIPI files for 2023 only. Adjacent years are technical/UI references only after the 2023 source lock.
 
 2. EXAM LOCK
 Tasks: 18
@@ -30,16 +33,14 @@ Maximum primary score: 31
 Short-answer maximum: 11
 Extended self-score maximum: 20
 Official examples: 35 total = 28 short + 7 extended
-
-Examples per task 1–18:
-4,3,2,2,4,3,2,1,3,1,3,1,1,1,1,1,1,1
+Examples per task 1–18: 4,3,2,2,4,3,2,1,3,1,3,1,1,1,1,1,1,1
 
 3. ANSWER / INPUT / EXTENDED LOCKS
 Short official answers locked: 28/28
 Real DOM correct + wrong scorer audit: 28/28 PASS
 Input contracts locked for all 28 short examples.
-Extended tasks 12–18: source pages, maximum scores, official solutions and criteria locked from exact 2023 FIPI demo.
-Required extended-answer UX: math toolbar, own answer persistence, official material only after completion, separate self-evaluation — PASS 7/7.
+Extended tasks 12–18: exact 2023 FIPI source pages, maximum scores, official solutions and criteria locked.
+Extended-answer UX: math toolbar, own-answer persistence, official material only after completion, separate self-evaluation — PASS 7/7.
 
 4. VISUAL SOURCE LOCK
 Direct exact-source assets: 47/47
@@ -49,49 +50,53 @@ Extended solution/criteria segments: 11/11
 Pixel identity against exact 2023 FIPI render: 47/47 PASS
 Reconstructed official visuals: 0
 Stitched multi-page official visuals: 0
-Zoom and responsive browser checks: PASS
 
-5. BROWSER / STATE / PACKAGE GATES
-Official examples through real DOM controls: 35/35 PASS
-Short scorer correct + wrong: 28/28 PASS
-State restore: variants, answers, mark-for-return and current state survive reload — PASS
-Responsive widths: 1280 / 768 / 390 / 360 / 320 — PASS
-First real-browser acceptance audit — PASS
-Independent source/runtime audit before freeze — PASS
-Clean ZIP extraction independent audit — PASS
-Second real-browser regression from clean extracted ZIP — PASS
+5. ACCEPTED UI / TILDA CORRECTIONS
+The initial v1.0 package passed package/browser gates but manual Tilda acceptance exposed two runtime/UI defects that were subsequently fixed and are part of the accepted freeze:
 
-6. TILDA ATOMIC PACKAGE
-T123 blocks: 33
-Maximum T123 size: 41386 bytes
-Limit: <42500 bytes
-Standalone script/style/Node syntax: PASS
-No mechanical split across unfinished script/style/JS/base64 units.
+A. OFFICIAL EXAMPLE LABEL
+Accepted shared UI parity with PROFILE 2025/2026 restored:
+`ФИПИ 2023 · официальный пример <variant_number>`.
+Generic `официальный материал демоверсии` is no longer the accepted behavior.
+Extended results preserve the assigned official-example number.
 
-Final archive: ege-matematika-profil-demoversiya-2023-v1.0.zip
-Archive SHA256: 817d37467364a873a635a9229a6f763f145d52aba6426630604d1e3d87f038e4
-GitHub Actions run: 32274033231
-Final product commit: d131676197226e2f5e75c1ed6b3ae927632962ee
+B. TASK 3 IMAGE RELIABILITY
+Exact source-locked task-3 condition assets were made resilient to Tilda runtime initialization/order behavior.
+
+C. TASK 2 IMAGE RELIABILITY — ALL VARIANTS
+All three official task-2 variants were checked and stabilized:
+- condition-2-1.webp
+- condition-2-2.webp
+- condition-2-3.webp
+Final runtime handling preloads and reasserts exact locked asset bytes after DOM/Tilda rerenders.
+User subsequently confirmed: “все ок”.
+
+6. FINAL ACCEPTED PACKAGE
+Archive: ege-matematika-profil-demoversiya-2023-v1.0.4-TASK2-ALWAYS-LOAD.zip
+SHA256: d6a9264a0844cb9df97fb26e033b44d686ef935f45cf631c2d2a5fe99568d2c1
+Bytes: 2207348
+Package status: ACCEPTED_BY_USER / FROZEN
+
+The earlier archive `ege-matematika-profil-demoversiya-2023-v1.0.zip` with SHA256 `817d37467364a873a635a9229a6f763f145d52aba6426630604d1e3d87f038e4` is SUPERSEDED and must not be treated as the accepted package.
 
 7. HISTORICAL IDENTITY / PEIS COMPATIBILITY
-Stable historical task IDs and demo_item_id values are locked in:
+Stable historical task IDs and demo_item_id values remain locked in:
 matematika-source-2023/profile-source-lock/DEMO-ITEM-IDENTITY-MAP.json
 
-Format:
 task_id = ege.math.profile.2023.task.<task_number>
 demo_item_id = ege.math.profile.2023.task.<task_number>.variant.<variant_number>
 
-These IDs are product/evidence metadata only. No mathematics learner mastery/state subsystem was created.
-No final mathematics semantic IDs were invented. Future semantic mapping is explicitly UNRESOLVED and must be performed through a future PEIS adapter against an approved mathematics semantic registry.
-Historical year, task number, variant order, content, official answers, criteria and scoring remain authoritative and must not be rewritten by PEIS mapping.
+These IDs are product/evidence metadata only. No mathematics-specific learner mastery/state subsystem was created. Final mathematics semantic mapping remains a shared PEIS/registry concern and must not rewrite historical year, task number, variant order, content, answers, criteria or scoring.
 
-8. REPOSITORY SYNCHRONIZATION
-All PROFILE 2023 work is contained in the existing mathematics/year contour and its build workflow/support files.
-No global PEIS numbered architecture documents were created.
-Reserved global numbers 282–286 were not used.
-Parallel Russian/PEIS work on main was not overwritten; final package persistence rebased/pulled current main before push and completed without overlapping-file conflict.
+8. 2022 NON-REGRESSION REQUIREMENT
+PROFILE 2022 must not repeat the 2023 defects. Its prestart gate now requires:
+- exact 2022 FIPI content authority;
+- accepted 2025/2026 UI parity for visible official-example numbering;
+- forced real-DOM testing of every official variant, not random coverage;
+- all-variant image reliability across first render, navigation, reload and repeated rerenders;
+- no T123 asset initialization race;
+- exact final T123-stream regression before freeze;
+- production smoke after Tilda publication before LIVE_GO.
 
-9. CURRENT STATUS
-READY_FOR_TILDA: YES
-LIVE_GO: NO
-Next action: install HEAD/SEO + T123 blocks in strict package order, publish, run production smoke, then manual student acceptance.
+9. FREEZE RULE
+Do not rebuild or alter accepted PROFILE 2023 unless a concrete production defect is reproduced, an exact FIPI discrepancy is proven, a compatibility requirement forces a change, or the user explicitly requests a change.
