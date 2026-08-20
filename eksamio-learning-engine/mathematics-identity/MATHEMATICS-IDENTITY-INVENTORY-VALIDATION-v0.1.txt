@@ -1,19 +1,27 @@
 MATHEMATICS IDENTITY INVENTORY VALIDATION v0.1
-STATUS: PASS
+STATUS: PASS / CORRECTED
 DATE: 2026-08-20
 BASELINE: 65640fc33fdd7c7e91899e47792254ebb1b2c645
 MATRIX_CELLS: 10
 ROUTES: profile, base
 YEARS: 2022-2026
 CANONICAL_SEMANTIC_IDENTITIES_ADMITTED: 0
-EXPLICIT_GAPS: 1
-GAP_BASE_2025: NEEDS_SOURCE_INVENTORY
+EXPLICIT_SOURCE_GAPS: 0
+BASE_2025_SOURCE: VERIFIED_OFFICIAL_FIPI_FILES_PRESENT
+BASE_2025_SOURCE_REFS:
+- matematika-source-2025/ege-2025-matematika-baza-demoversiya.pdf
+- matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf
+- matematika-source-2025/ege-2025-matematika-kodifikator.pdf
+ROUTE_BUILD_GAPS: profile/2022, base/2025
 SHARED_PEIS_REUSE: PASS
 PARALLEL_MATH_LEARNER_ENGINE_CREATED: false
 PRODUCTION_INTEGRATION: false
 
+CORRECTION NOTE:
+The original PR #54 validation reported GAP_BASE_2025: NEEDS_SOURCE_INVENTORY. Direct contents verification at the exact baseline SHA proves that matematika-source-2025/ and all three official BASE-2025 source PDFs were already present. The original source-gap assertion was an audit error caused by incomplete repository-tree inspection. Missing ege-matematika-baza-demoversiya-2025/ remains a product/build gap only.
+
 VALIDATOR: validate_mathematics_identity_inventory_v0_1.py
-GITHUB_ACTIONS_RUN: 32330962326
-GITHUB_ACTIONS_JOB: 96311333333
-RUN_CONCLUSION: success
-CHECKOUT_CONTEXT: PR #54 merge ref against baseline main
+ORIGINAL_GITHUB_ACTIONS_RUN: 32330962326
+ORIGINAL_GITHUB_ACTIONS_JOB: 96311333333
+ORIGINAL_RUN_CONCLUSION: success against the old incorrect gap assertion
+CORRECTED_VALIDATION: validator now checks the BASE-2025 source files directly instead of requiring a hand-authored GAP marker.
