@@ -2,9 +2,10 @@
   "artifact_id": "MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.1",
   "version": "0.1",
   "date": "2026-08-20",
-  "status": "CURRENT_MAIN_SOURCE_BUILD_INVENTORY",
-  "mode": "ADD_ONLY / AUDIT / NO_PRODUCTION_INTEGRATION",
+  "status": "CURRENT_MAIN_SOURCE_BUILD_INVENTORY_CORRECTED",
+  "mode": "CORRECTED_AUDIT / NO_PRODUCTION_INTEGRATION",
   "baseline": {"ref": "main", "sha": "65640fc33fdd7c7e91899e47792254ebb1b2c645", "tree_sha": "646d56e1bcafba3d13a1542894a878924dce318b"},
+  "correction": {"reason": "matematika-source-2025/ and exact BASE-2025 official demo/specification/codifier files were present at the original baseline SHA; the previous GAP classification came from incomplete repository-tree inspection.", "source_gap_count_before": 1, "source_gap_count_after": 0},
   "subject_id": "mathematics",
   "identity_model_id": "mathematics-identity-v0.1",
   "routes": ["profile", "base"],
@@ -18,13 +19,14 @@
     {"route": "base", "year": 2022, "source_status": "VERIFIED", "package_status": "ACCEPTED_FROZEN", "evidence": [{"type": "path", "ref": "matematika-source-2022/"}, {"type": "commit", "ref": "f0fb9295495c5223f602fb0ad8ca2be1811d1463"}]},
     {"route": "base", "year": 2023, "source_status": "VERIFIED", "package_status": "VERIFIED_BUILD", "evidence": [{"type": "path", "ref": "matematika-source-2023/"}, {"type": "commit", "ref": "31a2dc642933ade523c76b6bb5569caad0f682a7"}]},
     {"route": "base", "year": 2024, "source_status": "VERIFIED", "package_status": "READY_FOR_TILDA", "evidence": [{"type": "path", "ref": "matematika-source-2024/"}], "notes": "Full official-source recheck/final report evidence."},
-    {"route": "base", "year": 2025, "source_status": "GAP", "package_status": "ABSENT_CURRENT_MAIN", "gap_reason": "No ege-matematika-baza-demoversiya-2025/ and no matematika-source-2025/ found in baseline tree.", "notes": "Must be inventoried/admitted before claiming complete 2022-2026 BASE source coverage."},
+    {"route": "base", "year": 2025, "source_status": "VERIFIED", "package_status": "ROUTE_BUILD_ABSENT_CURRENT_MAIN", "evidence": [{"type": "path", "ref": "matematika-source-2025/ege-2025-matematika-baza-demoversiya.pdf"}, {"type": "path", "ref": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf"}, {"type": "path", "ref": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf"}], "notes": "Official exact-year BASE source is present. Missing ege-matematika-baza-demoversiya-2025/ is a product/build gap, not a source gap."},
     {"route": "base", "year": 2026, "source_status": "TECHNICAL_ROUTE_PACKAGE", "package_status": "MATURE_BUILD", "evidence": [{"type": "path", "ref": "ege-matematika-baza-demoversiya-2026/"}], "notes": "Route/year package; not itself a route-independent semantic registry."}
   ],
   "interpretation": {
     "source_status_is_not_semantic_identity": true,
     "package_status_is_not_source_authority": true,
     "exam_route_is_not_subject_identity": true,
-    "known_explicit_gap_count": 1
+    "known_explicit_source_gap_count": 0,
+    "known_route_build_gaps": [{"route": "profile", "year": 2022}, {"route": "base", "year": 2025}]
   }
 }
