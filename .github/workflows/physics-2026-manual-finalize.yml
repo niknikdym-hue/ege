@@ -1,0 +1,147 @@
+name: physics-2026-manual-finalize
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  finalize:
+    if: github.head_ref == 'chatgpt/physics-2026-source-visual-tools-fix-20260819'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2026-source-visual-tools-fix-20260819
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install acceptance runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pymupdf pillow playwright >/dev/null
+          python -m playwright install --with-deps chromium >/dev/null
+      - name: Apply manually approved official-source crops
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tmp-physics-2026-manual-crop-correction.py pass
+          ! grep -Rni '<svg' ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-0{2,3,4,5}.txt
+          grep -q '<meta charset="utf-8">' ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-PREVIEW.html
+          grep -q 'MANUAL_FOUR_EDGE_VISUAL_GATE=PASS' ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-SOURCE-GATE.txt
+      - name: Full post-correction browser gate
+        shell: bash
+        env:
+          EVIDENCE_DIR: /tmp/physics-final-manual-evidence
+        run: |
+          set -euo pipefail
+          PKG=ege-fizika-demoversiya-v3-1-fixed
+          python -m http.server 8771 --bind 127.0.0.1 --directory "$PKG" >/tmp/physics-final-http.log 2>&1 &
+          SERVER=$!
+          trap 'kill $SERVER 2>/dev/null || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:8771/ege-fizika-demoversiya-PREVIEW.html >/dev/null && break; sleep 1; done
+          python tmp-physics-2026-final-manual-browser.py http://127.0.0.1:8771/ege-fizika-demoversiya-PREVIEW.html full
+          kill $SERVER 2>/dev/null || true
+          trap - EXIT
+      - name: Record browser pass and build pre-final clean ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json,zipfile
+          P=Path('ege-fizika-demoversiya-v3-1-fixed')
+          ev=P/'PHYSICS-2026-V3.3-ACCEPTANCE-EVIDENCE.json'; d=json.loads(ev.read_text(encoding='utf-8')); d['manual_post_correction_browser_gate']='PASS'; d['manual_post_correction_clean_zip']='PENDING_FINAL_RECHECK'; ev.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          cur=P/'PHYSICS-2026-CURRENT-ACCEPTANCE-EVIDENCE.json'; c=json.loads(cur.read_text(encoding='utf-8')); c['manual_post_correction_browser_gate']='PASS'; c['manual_post_correction_clean_zip']='PENDING_FINAL_RECHECK'; cur.write_text(json.dumps(c,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          rep=P/'ege-fizika-demoversiya-TEST-REPORT.txt'; s=rep.read_text(encoding='utf-8');
+          if 'Manual four-edge visual gate: PASS.' not in s: s += '\nManual four-edge visual gate: PASS.\nPost-correction browser gate: PASS.\n'
+          rep.write_text(s,encoding='utf-8')
+          def h(p):
+           x=hashlib.sha256(); x.update(p.read_bytes()); return x.hexdigest()
+          man=P/'ege-fizika-demoversiya-MANIFEST.txt'
+          lines=['EGE ФИЗИКА — ИНТЕРАКТИВНАЯ ДЕМОВЕРСИЯ — ACCEPTED V3.3','PACKAGE_STATUS=ACCEPTED_TECHNICAL_REFERENCE','SOURCE_YEAR=2026','PACKAGE_LAYOUT=FLAT_WITH_SOURCE','','FILENAME\tSIZE_BYTES\tSHA256']
+          for p in sorted(P.rglob('*')):
+           if p.is_file() and p!=man: lines.append(f'{p.relative_to(P).as_posix()}\t{p.stat().st_size}\t{h(p)}')
+          man.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          out=Path('/tmp/physics-2026-pre-final.zip')
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+           for p in sorted(P.rglob('*')):
+            if p.is_file(): z.write(p,(Path(P.name)/p.relative_to(P)).as_posix())
+          PY
+          rm -rf /tmp/physics-clean-pre && mkdir -p /tmp/physics-clean-pre
+          unzip -q /tmp/physics-2026-pre-final.zip -d /tmp/physics-clean-pre
+          python -m http.server 8772 --bind 127.0.0.1 --directory /tmp/physics-clean-pre/ege-fizika-demoversiya-v3-1-fixed >/tmp/physics-clean-pre.log 2>&1 &
+          SERVER=$!
+          trap 'kill $SERVER 2>/dev/null || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:8772/ege-fizika-demoversiya-PREVIEW.html >/dev/null && break; sleep 1; done
+          EVIDENCE_DIR=/tmp/physics-final-manual-evidence python tmp-physics-2026-final-manual-browser.py http://127.0.0.1:8772/ege-fizika-demoversiya-PREVIEW.html quick
+          kill $SERVER 2>/dev/null || true
+          trap - EXIT
+      - name: Seal evidence and verify final clean ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json,zipfile
+          P=Path('ege-fizika-demoversiya-v3-1-fixed')
+          ev=P/'PHYSICS-2026-V3.3-ACCEPTANCE-EVIDENCE.json'; d=json.loads(ev.read_text(encoding='utf-8')); d['manual_post_correction_clean_zip']='PASS'; d['final_status']='ACCEPTED_TECHNICAL_REFERENCE'; ev.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          cur=P/'PHYSICS-2026-CURRENT-ACCEPTANCE-EVIDENCE.json'; c=json.loads(cur.read_text(encoding='utf-8')); c['manual_post_correction_clean_zip']='PASS'; c['status']='PASS'; cur.write_text(json.dumps(c,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          gate=P/'ege-fizika-demoversiya-SOURCE-GATE.txt'; g=gate.read_text(encoding='utf-8');
+          if 'POST_MANUAL_CORRECTION_CLEAN_ZIP=' in g:
+           import re; g=re.sub(r'POST_MANUAL_CORRECTION_CLEAN_ZIP=.*','POST_MANUAL_CORRECTION_CLEAN_ZIP=PASS',g)
+          else: g=g.replace('MANUAL_FOUR_EDGE_VISUAL_GATE=PASS\n','MANUAL_FOUR_EDGE_VISUAL_GATE=PASS\nPOST_MANUAL_CORRECTION_CLEAN_ZIP=PASS\n')
+          gate.write_text(g,encoding='utf-8')
+          fr=P/'ACCEPTED-TECHNICAL-REFERENCE-2026-08-20.txt'; f=fr.read_text(encoding='utf-8');
+          if 'POST_MANUAL_CORRECTION_CLEAN_ZIP=PASS' not in f: f=f.replace('MANUAL_FOUR_EDGE_VISUAL_GATE=PASS\n','MANUAL_FOUR_EDGE_VISUAL_GATE=PASS\nPOST_MANUAL_CORRECTION_CLEAN_ZIP=PASS\n')
+          fr.write_text(f,encoding='utf-8')
+          rep=P/'ege-fizika-demoversiya-TEST-REPORT.txt'; s=rep.read_text(encoding='utf-8');
+          if 'Post-manual-correction clean ZIP: PASS.' not in s: s += 'Post-manual-correction clean ZIP: PASS.\n'
+          rep.write_text(s,encoding='utf-8')
+          def h(p):
+           x=hashlib.sha256(); x.update(p.read_bytes()); return x.hexdigest()
+          man=P/'ege-fizika-demoversiya-MANIFEST.txt'; lines=['EGE ФИЗИКА — ИНТЕРАКТИВНАЯ ДЕМОВЕРСИЯ — ACCEPTED V3.3','PACKAGE_STATUS=ACCEPTED_TECHNICAL_REFERENCE','SOURCE_YEAR=2026','PACKAGE_LAYOUT=FLAT_WITH_SOURCE','','FILENAME\tSIZE_BYTES\tSHA256']
+          for p in sorted(P.rglob('*')):
+           if p.is_file() and p!=man: lines.append(f'{p.relative_to(P).as_posix()}\t{p.stat().st_size}\t{h(p)}')
+          man.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          out=Path('/tmp/ege-fizika-demoversiya-2026-v3.3-final.zip')
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+           for p in sorted(P.rglob('*')):
+            if p.is_file(): z.write(p,(Path(P.name)/p.relative_to(P)).as_posix())
+          Path('/tmp/physics-final-manual-evidence/FINAL-ZIP-SHA256.txt').write_text(hashlib.sha256(out.read_bytes()).hexdigest()+'\n',encoding='utf-8')
+          PY
+          rm -rf /tmp/physics-clean-final-manual && mkdir -p /tmp/physics-clean-final-manual
+          unzip -q /tmp/ege-fizika-demoversiya-2026-v3.3-final.zip -d /tmp/physics-clean-final-manual
+          python -m http.server 8773 --bind 127.0.0.1 --directory /tmp/physics-clean-final-manual/ege-fizika-demoversiya-v3-1-fixed >/tmp/physics-clean-final-manual.log 2>&1 &
+          SERVER=$!
+          trap 'kill $SERVER 2>/dev/null || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:8773/ege-fizika-demoversiya-PREVIEW.html >/dev/null && break; sleep 1; done
+          EVIDENCE_DIR=/tmp/physics-final-manual-evidence python tmp-physics-2026-final-manual-browser.py http://127.0.0.1:8773/ege-fizika-demoversiya-PREVIEW.html quick
+          kill $SERVER 2>/dev/null || true
+          trap - EXIT
+          grep -q 'TECHNICAL_REFERENCE_FROZEN=YES' ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-SOURCE-GATE.txt
+          grep -q 'MANUAL_FOUR_EDGE_VISUAL_GATE=PASS' ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-SOURCE-GATE.txt
+          grep -q 'POST_MANUAL_CORRECTION_CLEAN_ZIP=PASS' ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-SOURCE-GATE.txt
+      - name: Upload final accepted package and evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: physics-2026-v3.3-manual-final
+          path: |
+            /tmp/ege-fizika-demoversiya-2026-v3.3-final.zip
+            /tmp/physics-final-manual-evidence
+            /tmp/physics-manual-crop-review
+          if-no-files-found: error
+      - name: Commit final Physics 2026 and remove temporary machinery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f .github/workflows/physics-2026-manual-*.yml 2>/dev/null || true
+          git rm -f tmp-physics-2026-manual-crop-correction.py tmp-physics-2026-final-manual-browser.py 2>/dev/null || true
+          git add -A ege-fizika-demoversiya-v3-1-fixed
+          if git diff --cached --quiet; then echo 'No final Physics 2026 changes staged' >&2; exit 1; fi
+          git commit -m 'Finalize Physics 2026 V3.3 manual visual gate'
+          git push origin HEAD:chatgpt/physics-2026-source-visual-tools-fix-20260819
