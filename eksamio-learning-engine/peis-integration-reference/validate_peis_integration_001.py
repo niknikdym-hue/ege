@@ -328,7 +328,7 @@ def main() -> int:
             require(store.event_count(learner_profile_id=LEARNER, subject_id="russian") == 5, "shared persistence holds the five-step integration evidence history")
 
             target_telemetry = store.telemetry_summary(LEARNER, "russian", TARGET)
-            require(target_verify["event_id"] in target_telemetry["verification_event_refs"], "read-side telemetry preserves final same-session verification provenance")
+            require(target_verify["event_id"] in target_telemetry["same_session_verification_refs"], "read-side telemetry preserves final same-session verification provenance")
             require(d5["canonical_state_owner"] == "shared_peis", "product read-side directive explicitly leaves canonical state ownership in shared PEIS")
 
     require(runtime_path.read_bytes() == runtime_before, "validation leaves current trainer runtime byte-identical")
