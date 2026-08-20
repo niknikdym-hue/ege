@@ -1,0 +1,64 @@
+PEIS-INTEGRATION-001 VALIDATION
+Date: 2026-08-20
+Status: PASS
+
+Validated on GitHub Actions run 32383756827, job 96473050656.
+
+Current-product assertions:
+- actual current Russian trainer runtime blob pinned and verified: PASS
+- actual current Task 12 bank blob pinned and verified: PASS
+- checkCurrent(card) surface present: PASS
+- recordCard(card,checked) surface present: PASS
+- session.checked[card.id]={score,max,answer} surface present: PASS
+- actual card ege-ru-12-2026-12-01 loaded from repository bank: PASS
+- deterministic whole-card maxScore=1 confirmed: PASS
+
+Precision guardrails:
+- real Task 12 sensor event maps COMPOSITE: PASS
+- whole-card failure emits UNKNOWN precision: PASS
+- broad whole-card failure does not invent EXACT_RULE_ERROR: PASS
+
+Shared PEIS integration:
+- current trainer-shaped EvidenceEvent accepted by shared persistence: PASS
+- duplicate product sensor delivery idempotent: PASS
+- composite failure -> readiness INSUFFICIENT_EVIDENCE: PASS
+- composite failure -> NBA DIAGNOSE_TARGET for prerequisite: PASS
+- exact prerequisite failure -> BLOCKED_BY_REQUIRED_PREREQUISITE: PASS
+- exact prerequisite failure -> NBA LEARN_PREREQUISITE: PASS
+- independent prerequisite re-verification -> READY_TO_LEARN_OR_PRACTICE: PASS
+- after prerequisite repair -> GUIDED_PRACTICE on original target: PASS
+- assisted target success -> INDEPENDENT_PRACTICE: PASS
+- verification_required preserved: PASS
+- independent target verification -> mastery DEVELOPING: PASS
+- independent target verification -> NBA RETENTION_REVIEW: PASS
+- no numeric mastery invented: PASS
+- no retention due time invented: PASS
+- recommendation outcome SUBSEQUENT_INDEPENDENT_SUCCESS linked to prior NBA: PASS
+- same-session verification telemetry preserved: PASS
+- product directive leaves canonical state ownership in shared PEIS: PASS
+
+Safety:
+- current trainer runtime byte-identical after validation: PASS
+- current Task 12 bank byte-identical after validation: PASS
+- current trainer scoring mutated: NO
+- current trainer localStorage mutated: NO
+- subject-specific learner engine created: NO
+- live Tilda wiring claimed: NO
+
+Final closed loop:
+current trainer whole-card failure
+-> COMPOSITE EvidenceEvent
+-> shared append-only persistence
+-> DIAGNOSE_TARGET
+-> exact prerequisite failure
+-> LEARN_PREREQUISITE
+-> independent prerequisite re-verification
+-> GUIDED_PRACTICE
+-> assisted target success
+-> INDEPENDENT_PRACTICE
+-> fresh independent verification
+-> mastery DEVELOPING
+-> RETENTION_REVIEW
+
+Result: PASS
+Implementation status: REFERENCE_INTEGRATION_VALIDATED_NOT_LIVE_TILDA_WIRING

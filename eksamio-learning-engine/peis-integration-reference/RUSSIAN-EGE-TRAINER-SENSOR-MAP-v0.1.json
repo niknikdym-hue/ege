@@ -1,0 +1,89 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-20",
+  "status": "REFERENCE_INTEGRATION_MAPPING_NO_LIVE_RUNTIME_MUTATION",
+  "integration_id": "PEIS-INTEGRATION-001",
+  "source_namespace": "eksamio:ege-russian-trainer:checked-card:v1",
+  "source_runtime": {
+    "trainer_runtime_ref": "../russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt",
+    "trainer_runtime_blob_sha": "97143363a5adfaef5609bc28fe823c31a2c1fc4d",
+    "task12_bank_ref": "../russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-06.txt",
+    "task12_bank_blob_sha": "9e38b3263ca32f3351c00cd52f92654df1b0aa6f",
+    "progress_key": "eksamio:ege-russian-trainer:progress:v1",
+    "session_key": "eksamio:ege-russian-trainer:session:v1",
+    "checked_surface": "checkCurrent(card) -> session.checked[card.id]={score,max,answer}",
+    "recorded_surface": "recordCard(card,checked)"
+  },
+  "shared_contract_refs": [
+    "../277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+    "../278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json",
+    "../282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json",
+    "../283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json",
+    "../284-EKSAMIO-RETENTION-SCHEDULE-STATE-CONTRACT-v0.1.json",
+    "../285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json",
+    "../279-EKSAMIO-LEGACY-LEARNER-STATE-ADAPTER-MAP-v0.1.json"
+  ],
+  "identity_boundary": {
+    "learner_profile_id": "REQUIRED_FROM_SHARED_HOST",
+    "identity_ref": "REQUIRED_FROM_SHARED_HOST",
+    "email_as_academic_identity": "FORBIDDEN",
+    "legacy_local_storage_as_canonical_identity": "FORBIDDEN"
+  },
+  "semantic_context": {
+    "semantic_registry_version": "russian-school-185-current",
+    "semantic_mapping_version": "peis-integration-001-russian-task12-v0.1",
+    "mapping_artifact_refs": [
+      "../russian-program/verified-slices/RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json",
+      "../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json"
+    ]
+  },
+  "product": {
+    "source_type": "ege_oge_trainer",
+    "product_id": "ege-russkiy-trenazher",
+    "route": "/ege/russkiy/trenazher/"
+  },
+  "card_mappings": {
+    "ege-ru-12-2026-12-01": {
+      "task": 12,
+      "mapping_status": "SOURCE_VERIFIED_COMPOSITE",
+      "goal_context": "present-tense participle suffix selection",
+      "semantic_targets": [
+        {
+          "semantic_id": "school-verb-personal-ending-conjugation-base",
+          "target_role": "PRIMARY",
+          "mapping_resolution": "COMPOSITE",
+          "mapping_confidence": null,
+          "mapping_review_status": "source_verified"
+        },
+        {
+          "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "target_role": "SECONDARY",
+          "mapping_resolution": "COMPOSITE",
+          "mapping_confidence": null,
+          "mapping_review_status": "source_verified"
+        }
+      ],
+      "provenance_refs": [
+        "../russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-06.txt#ege-ru-12-2026-12-01",
+        "../russian-program/verified-slices/RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+      ]
+    }
+  },
+  "precision_policy": {
+    "whole_card_failure": "COMPOSITE_OR_UNKNOWN_ONLY",
+    "forbidden": "whole-card score must not become an exact semantic failure",
+    "incorrect_observation_type": "UNKNOWN_OR_INSUFFICIENT_PRECISION",
+    "next_expected_system_action": "DIAGNOSE_TARGET"
+  },
+  "event_identity_policy": {
+    "stable_source_tuple": [
+      "source_namespace",
+      "session.startedAt",
+      "card.id"
+    ],
+    "reason": "current runtime records each card at most once per session through session.recorded",
+    "event_id": "deterministic hash of stable source tuple",
+    "idempotency_key": "deterministic hash of stable source tuple"
+  },
+  "runtime_mutation": "FORBIDDEN_IN_PEIS_INTEGRATION_001"
+}
