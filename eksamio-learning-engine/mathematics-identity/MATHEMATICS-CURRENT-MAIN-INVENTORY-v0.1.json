@@ -1,0 +1,60 @@
+{
+  "artifact_id": "MATHEMATICS-CURRENT-MAIN-INVENTORY-v0.1",
+  "version": "0.1",
+  "date": "2026-08-20",
+  "status": "AUDIT_FOUNDATION",
+  "mode": "ADD_ONLY / ARCHITECTURE_MATERIALIZATION / NO_PRODUCTION_INTEGRATION",
+  "baseline": {
+    "ref": "main",
+    "sha": "65640fc33fdd7c7e91899e47792254ebb1b2c645",
+    "tree_sha": "646d56e1bcafba3d13a1542894a878924dce318b"
+  },
+  "subject_id": "mathematics",
+  "identity_model_id": "mathematics-identity-v0.1",
+  "routes": [
+    {"route_id": "ege-mathematics-profile", "route_type": "profile", "identity_model_id": "mathematics-identity-v0.1"},
+    {"route_id": "ege-mathematics-base", "route_type": "base", "identity_model_id": "mathematics-identity-v0.1"}
+  ],
+  "current_main_assets": {
+    "profile": {
+      "2022": {"source_state": "PRELOCK_VERIFIED", "package_state": "NOT_CONFIRMED_CURRENT_MAIN", "evidence": [{"type": "commit", "ref": "915bad3126112fb2cd8c4e12da3fe5ea0cd93b79"}]},
+      "2023": {"source_state": "VERIFIED", "package_state": "MATURE_BUILD", "evidence": [{"type": "path", "ref": "ege-matematika-profil-demoversiya-2023/"}]},
+      "2024": {"source_state": "VERIFIED", "package_state": "READY_FOR_TILDA", "evidence": [{"type": "path", "ref": "ege-matematika-profil-demoversiya-2024/"}]},
+      "2025": {"source_state": "ACCEPTED", "package_state": "MATURE_BUILD", "evidence": [{"type": "path", "ref": "ege-matematika-profil-demoversiya-2025/"}]},
+      "2026": {"source_state": "TECHNICAL_REFERENCE_ACCEPTED", "package_state": "MATURE_REFERENCE", "evidence": [{"type": "path", "ref": "ege-matematika-profil-demoversiya-2026/"}, {"type": "commit", "ref": "f0ec2f7dae611163372a48f9116a4be00498152a"}]}
+    },
+    "base": {
+      "2022": {"source_state": "VERIFIED", "package_state": "ACCEPTED_FROZEN", "evidence": [{"type": "path", "ref": "matematika-source-2022/"}, {"type": "commit", "ref": "f0fb9295495c5223f602fb0ad8ca2be1811d1463"}]},
+      "2023": {"source_state": "VERIFIED", "package_state": "VERIFIED_BUILD", "evidence": [{"type": "path", "ref": "matematika-source-2023/"}, {"type": "commit", "ref": "31a2dc642933ade523c76b6bb5569caad0f682a7"}]},
+      "2024": {"source_state": "VERIFIED", "package_state": "READY_FOR_TILDA", "evidence": [{"type": "path", "ref": "matematika-source-2024/"}]},
+      "2025": {"source_state": "GAP", "package_state": "ABSENT_CURRENT_MAIN", "gap_reason": "No ege-matematika-baza-demoversiya-2025/ and no matematika-source-2025/ found in baseline tree."},
+      "2026": {"source_state": "TECHNICAL_ROUTE_PACKAGE", "package_state": "MATURE_BUILD", "evidence": [{"type": "path", "ref": "ege-matematika-baza-demoversiya-2026/"}]}
+    }
+  },
+  "existing_shared_peis": {
+    "evidence_event_schema": "eksamio-learning-engine/277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+    "learner_state_schema": "eksamio-learning-engine/278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json",
+    "mastery_contract": "eksamio-learning-engine/282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json",
+    "readiness_contract": "eksamio-learning-engine/283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json",
+    "retention_contract": "eksamio-learning-engine/284-EKSAMIO-RETENTION-SCHEDULE-STATE-CONTRACT-v0.1.json",
+    "nba_contract": "eksamio-learning-engine/285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json",
+    "reference_kernel": "eksamio-learning-engine/peis-reference-kernel/"
+  },
+  "findings": {
+    "route_independent_math_identity_layer_found": false,
+    "canonical_math_semantic_identities_admitted": 0,
+    "profile_and_base_are_same_subject": true,
+    "exam_maps_are_route_year_overlays_not_semantic_registry": true,
+    "historical_base_locator_note": "BASE 2022-2024 durable evidence is under matematika-source-YYYY/, not expected ege-matematika-baza-demoversiya-YYYY/ paths.",
+    "explicit_source_gaps": [{"route": "base", "year": 2025, "status": "NEEDS_SOURCE_INVENTORY"}]
+  },
+  "scope_guards": {
+    "rebuild_existing_demos": false,
+    "mutate_source_authority": false,
+    "change_shared_peis_contracts": false,
+    "change_runtime_or_production": false,
+    "create_parallel_math_learner_engine": false,
+    "derive_canonical_identity_from_exam_task_number": false,
+    "admit_ai_assertion_as_canonical_truth": false
+  }
+}
