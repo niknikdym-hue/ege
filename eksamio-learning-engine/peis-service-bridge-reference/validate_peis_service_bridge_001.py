@@ -5,10 +5,11 @@ from __future__ import annotations
 
 import copy
 import json
+import queue
 import sys
 import tempfile
 import threading
-from http.server import ThreadingHTTPServer
+from http.server import HTTPServer
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError
@@ -104,6 +105,17 @@ def main() -> int:
     require(registry.adapter_ids() == ["russian-ege-trainer-task12-v0.1"], "Russian subject adapter is registered separately from the generic service core")
 
     fixed_now = "2026-08-20T17:00:01+03:00"
+    forbidden_examples = {
+        "score": 1,
+        "correctness": True,
+        "semantic_targets": [{"semantic_id": "client-guess"}],
+        "evaluator": {"trust_class": "OFFICIAL_SOURCE_HIGH"},
+        "mastery": {"band": "STRONG"},
+        "nba": {"action_type": "STOP_SESSION_COMPLETE"},
+        "server_sequence": 999,
+        "server_watermark": "client-owned",
+    }
+
     with tempfile.TemporaryDirectory(prefix="peis-service-bridge-001-") as temp_dir:
         db_path = Path(temp_dir) / "service.sqlite"
         with PeisPersistenceStore(db_path, evidence_schema=evidence_schema, nba_schema=nba_schema) as store:
@@ -115,16 +127,6 @@ def main() -> int:
             )
 
             # Browser cannot assert canonical truth or transport position.
-            forbidden_examples = {
-                "score": 1,
-                "correctness": True,
-                "semantic_targets": [{"semantic_id": "client-guess"}],
-                "evaluator": {"trust_class": "OFFICIAL_SOURCE_HIGH"},
-                "mastery": {"band": "STRONG"},
-                "nba": {"action_type": "STOP_SESSION_COMPLETE"},
-                "server_sequence": 999,
-                "server_watermark": "client-owned",
-            }
             for field, value in forbidden_examples.items():
                 malicious = request_payload()
                 malicious[field] = value
@@ -194,52 +196,89 @@ def main() -> int:
                 raise AssertionError("email was accepted as academic-history identity")
             require(True, "email is rejected as academic-history identity")
 
-            handler = make_reference_http_handler(bridge)
-            server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
-            thread = threading.Thread(target=server.serve_forever, daemon=True)
-            thread.start()
-            try:
-                base_url = f"http://127.0.0.1:{server.server_port}"
-                health_status, health = http_json(base_url + "/healthz")
-                require(health_status == 200 and health["status"] == "ok", "real loopback HTTP health endpoint works")
-                require(health["mode"] == "REFERENCE_NOT_PUBLIC_PRODUCTION", "health endpoint explicitly avoids production deployment claim")
+        # The SQLite reference store intentionally keeps Python's thread-affinity
+        # safety. Therefore the loopback HTTP fixture owns a separate store and
+        # bridge created inside the same single server thread that serves requests.
+        # This validates transport without weakening shared persistence semantics.
+        ready: queue.Queue[tuple[int, HTTPServer]] = queue.Queue(maxsize=1)
+        http_db_path = Path(temp_dir) / "http-service.sqlite"
 
-                status, body = http_json(
-                    base_url + "/v0/checked-card",
-                    method="POST",
-                    body={"adapter_id": adapter.adapter_id, "payload": request_payload()},
-                    headers={
-                        "X-Eksamio-Learner-Profile": LEARNER,
-                        "X-Eksamio-Anonymous-Identity": "anon:service-bridge-001",
-                    },
+        def serve_reference_http() -> None:
+            http_adapter = RussianEgeTrainerTask12Adapter(ROOT)
+            http_registry = AdapterRegistry()
+            http_registry.register(http_adapter)
+            with PeisPersistenceStore(http_db_path, evidence_schema=evidence_schema, nba_schema=nba_schema) as http_store:
+                http_bridge = PeisServiceBridge(
+                    store=http_store,
+                    registry=http_registry,
+                    kernel_snapshot=kernel_snapshot,
+                    now_provider=lambda: fixed_now,
                 )
-                require(status == 200, "real loopback HTTP checked-card endpoint works")
-                require(body["status"] == "ALREADY_APPLIED", "HTTP replay reaches the same canonical event idempotently")
-                require(body["event_receipt"]["event_id"] == receipt["event_id"], "HTTP transport returns the canonical event receipt")
-                require(body["directive"]["action_type"] == "DIAGNOSE_TARGET", "HTTP transport returns shared PEIS read-side directive")
+                server = HTTPServer(("127.0.0.1", 0), make_reference_http_handler(http_bridge))
+                ready.put((server.server_port, server))
+                try:
+                    server.serve_forever()
+                finally:
+                    server.server_close()
 
-                missing_status, missing_body = http_json(
-                    base_url + "/v0/checked-card",
-                    method="POST",
-                    body={"adapter_id": adapter.adapter_id, "payload": request_payload()},
-                )
-                require(missing_status == 401 and missing_body["error"] == "HOST_IDENTITY_REQUIRED", "HTTP checked-card rejects missing host identity")
+        thread = threading.Thread(target=serve_reference_http, daemon=True)
+        thread.start()
+        port, server = ready.get(timeout=5)
+        try:
+            base_url = f"http://127.0.0.1:{port}"
+            health_status, health = http_json(base_url + "/healthz")
+            require(health_status == 200 and health["status"] == "ok", "real loopback HTTP health endpoint works")
+            require(health["mode"] == "REFERENCE_NOT_PUBLIC_PRODUCTION", "health endpoint explicitly avoids production deployment claim")
 
-                email_status, email_body = http_json(
-                    base_url + "/v0/checked-card",
-                    method="POST",
-                    body={"adapter_id": adapter.adapter_id, "payload": request_payload()},
-                    headers={
-                        "X-Eksamio-Learner-Profile": LEARNER,
-                        "X-Eksamio-User-Identity": "user:service-bridge-001",
-                        "X-Eksamio-Email": "student@example.com",
-                    },
-                )
-                require(email_status == 401 and email_body["error"] == "HOST_IDENTITY_REQUIRED", "reference HTTP identity resolver rejects email identity header")
-            finally:
-                server.shutdown()
-                server.server_close()
-                thread.join(timeout=5)
+            status, body = http_json(
+                base_url + "/v0/checked-card",
+                method="POST",
+                body={"adapter_id": adapter.adapter_id, "payload": request_payload()},
+                headers={
+                    "X-Eksamio-Learner-Profile": LEARNER,
+                    "X-Eksamio-Anonymous-Identity": "anon:service-bridge-001",
+                },
+            )
+            require(status == 200 and body["status"] == "ACCEPTED", "real loopback HTTP checked-card endpoint accepts a fresh browser-safe event")
+            http_receipt = body["event_receipt"]
+            require(http_receipt["server_sequence"] == 1, "HTTP service owns its first server sequence")
+            require(body["directive"]["action_type"] == "DIAGNOSE_TARGET", "HTTP transport returns shared PEIS read-side directive")
+
+            replay_status, replay_body = http_json(
+                base_url + "/v0/checked-card",
+                method="POST",
+                body={"adapter_id": adapter.adapter_id, "payload": request_payload()},
+                headers={
+                    "X-Eksamio-Learner-Profile": LEARNER,
+                    "X-Eksamio-Anonymous-Identity": "anon:service-bridge-001",
+                },
+            )
+            require(replay_status == 200 and replay_body["status"] == "ALREADY_APPLIED", "HTTP retry reaches the same canonical event idempotently")
+            require(replay_body["event_receipt"]["event_id"] == http_receipt["event_id"], "HTTP retry returns the same canonical event receipt")
+            require(replay_body["event_receipt"]["server_sequence"] == http_receipt["server_sequence"], "HTTP retry preserves server sequence")
+
+            missing_status, missing_body = http_json(
+                base_url + "/v0/checked-card",
+                method="POST",
+                body={"adapter_id": adapter.adapter_id, "payload": request_payload()},
+            )
+            require(missing_status == 401 and missing_body["error"] == "HOST_IDENTITY_REQUIRED", "HTTP checked-card rejects missing host identity")
+
+            email_status, email_body = http_json(
+                base_url + "/v0/checked-card",
+                method="POST",
+                body={"adapter_id": adapter.adapter_id, "payload": request_payload()},
+                headers={
+                    "X-Eksamio-Learner-Profile": LEARNER,
+                    "X-Eksamio-User-Identity": "user:service-bridge-001",
+                    "X-Eksamio-Email": "student@example.com",
+                },
+            )
+            require(email_status == 401 and email_body["error"] == "HOST_IDENTITY_REQUIRED", "reference HTTP identity resolver rejects email identity header")
+        finally:
+            server.shutdown()
+            thread.join(timeout=5)
+            require(not thread.is_alive(), "reference HTTP service stops cleanly")
 
     require(runtime_path.read_bytes() == runtime_before, "service validation leaves current Russian trainer runtime byte-identical")
     require(bank_path.read_bytes() == bank_before, "service validation leaves current Russian trainer bank byte-identical")
@@ -253,6 +292,7 @@ def main() -> int:
             "reference_http": True,
             "production_deployment_claimed": False,
             "public_authentication_claimed": False,
+            "reference_sqlite_thread_affinity_preserved": True,
         },
         "trust_boundary": {
             "client_truth_fields_rejected": sorted(forbidden_examples),
@@ -272,6 +312,12 @@ def main() -> int:
             "identical": "ALREADY_APPLIED",
             "changed_payload": "INTEGRITY_CONFLICT",
             "raw_event_count": 1,
+        },
+        "http_transport": {
+            "fresh_event": "ACCEPTED",
+            "identical_retry": "ALREADY_APPLIED",
+            "missing_identity": "REJECTED",
+            "email_identity": "REJECTED",
         },
         "shared_invariants": {
             "shared_persistence_reused": True,
