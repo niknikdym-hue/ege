@@ -1,0 +1,1187 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-20",
+  "status": "PHASE_2_ADMISSION_REVIEW_COMPLETE_PROPOSAL_NOT_CANONICAL",
+  "subject_id": "russian",
+  "registry_contract_ref": "eksamio-learning-engine/272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
+  "inventory_ref": "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+  "school_denominator_ref": "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json",
+  "scope": {
+    "candidate_count": 55,
+    "ready_for_human_admission": 53,
+    "blocked": 2,
+    "blocked_candidate_refs": [
+      "candidate-015",
+      "candidate-053"
+    ],
+    "canonical_school_ids_preserved": 185
+  },
+  "rules": [
+    "candidate-* refs remain legacy/audit refs and are never canonical semantic IDs.",
+    "No proposed ru-* identity is canonical until the human admission gate is completed.",
+    "No proposed ru-* identity duplicates an existing school-* identity according to the Phase-1 inventory classification.",
+    "Exam task numbers and product IDs are mappings/evidence sources, not identity owners.",
+    "No prerequisite edge is proposed in this admission pass.",
+    "Blocked candidates remain unresolved rather than being force-fit into the registry."
+  ],
+  "entries": [
+    {
+      "candidate_ref": "candidate-001",
+      "legacy_semantic_ref": "cohesion_gap_grammatical_fit",
+      "observed_label_ru": "Подбор средства связи по смыслу и грамматической форме",
+      "proposed_semantic_id": "ru-text-cohesion-gap-grammatical-fit",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "text_cohesion",
+      "canonical_label_ru_proposal": "Подбор средства связи по смыслу и грамматической форме",
+      "canonical_definition_ru_proposal": "Подбор средства связи по смыслу и грамматической форме.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_gap_grammatical_fit]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-002",
+      "legacy_semantic_ref": "cohesion_determinative_pronoun",
+      "observed_label_ru": "Определительное местоимение как средство связи",
+      "proposed_semantic_id": "ru-text-cohesion-determinative-pronoun",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "text_cohesion",
+      "canonical_label_ru_proposal": "Определительное местоимение как средство связи",
+      "canonical_definition_ru_proposal": "Определительное местоимение как средство связи.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_determinative_pronoun]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-003",
+      "legacy_semantic_ref": "cohesion_demonstrative_pronoun",
+      "observed_label_ru": "Указательное местоимение как средство связи",
+      "proposed_semantic_id": "ru-text-cohesion-demonstrative-pronoun",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "text_cohesion",
+      "canonical_label_ru_proposal": "Указательное местоимение как средство связи",
+      "canonical_definition_ru_proposal": "Указательное местоимение как средство связи.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_demonstrative_pronoun]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-004",
+      "legacy_semantic_ref": "cohesion_possessive_pronoun",
+      "observed_label_ru": "Притяжательное местоимение как средство связи",
+      "proposed_semantic_id": "ru-text-cohesion-possessive-pronoun",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "text_cohesion",
+      "canonical_label_ru_proposal": "Притяжательное местоимение как средство связи",
+      "canonical_definition_ru_proposal": "Притяжательное местоимение как средство связи.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_possessive_pronoun]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-005",
+      "legacy_semantic_ref": "cohesion_conjunction",
+      "observed_label_ru": "Союз как средство межфразовой связи",
+      "proposed_semantic_id": "ru-text-cohesion-conjunction",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "text_cohesion",
+      "canonical_label_ru_proposal": "Союз как средство межфразовой связи",
+      "canonical_definition_ru_proposal": "Союз как средство межфразовой связи.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_conjunction]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-006",
+      "legacy_semantic_ref": "cohesion_word_forms",
+      "observed_label_ru": "Формы одного слова как средство межфразовой связи",
+      "proposed_semantic_id": "ru-text-cohesion-word-forms",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "text_cohesion",
+      "canonical_label_ru_proposal": "Формы одного слова как средство межфразовой связи",
+      "canonical_definition_ru_proposal": "Формы одного слова как средство межфразовой связи.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_word_forms]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-007",
+      "legacy_semantic_ref": "cohesion_cognate_words",
+      "observed_label_ru": "Однокоренные слова как средство межфразовой связи",
+      "proposed_semantic_id": "ru-text-cohesion-cognate-words",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "text_cohesion",
+      "canonical_label_ru_proposal": "Однокоренные слова как средство межфразовой связи",
+      "canonical_definition_ru_proposal": "Однокоренные слова как средство межфразовой связи.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_cognate_words]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-008",
+      "legacy_semantic_ref": "lexical_meaning_in_context",
+      "observed_label_ru": "Определение значения слова в данном контексте",
+      "proposed_semantic_id": "ru-lexis-lexical-meaning-in-context",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "lexis",
+      "canonical_label_ru_proposal": "Определение значения слова в данном контексте",
+      "canonical_definition_ru_proposal": "Определение значения слова в данном контексте.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[lexical_meaning_in_context]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-009",
+      "legacy_semantic_ref": "dictionary_sense_selection",
+      "observed_label_ru": "Выбор значения многозначного слова по словарной статье",
+      "proposed_semantic_id": "ru-lexis-dictionary-sense-selection",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "lexis",
+      "canonical_label_ru_proposal": "Выбор значения многозначного слова по словарной статье",
+      "canonical_definition_ru_proposal": "Выбор значения многозначного слова по словарной статье.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[dictionary_sense_selection]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-010",
+      "legacy_semantic_ref": "definition_context_matching",
+      "observed_label_ru": "Сопоставление словарного толкования с употреблением слова в тексте",
+      "proposed_semantic_id": "ru-lexis-definition-context-matching",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "lexis",
+      "canonical_label_ru_proposal": "Сопоставление словарного толкования с употреблением слова в тексте",
+      "canonical_definition_ru_proposal": "Сопоставление словарного толкования с употреблением слова в тексте.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[definition_context_matching]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-011",
+      "legacy_semantic_ref": "paronym_context_choice",
+      "observed_label_ru": "Выбор паронима по значению и лексической сочетаемости",
+      "proposed_semantic_id": "ru-lexis-paronym-context-choice",
+      "proposed_entity_type": "DISCRIMINATION_SKILL",
+      "domain": "lexis",
+      "canonical_label_ru_proposal": "Выбор паронима по значению и лексической сочетаемости",
+      "canonical_definition_ru_proposal": "Выбор паронима по значению и лексической сочетаемости.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[paronym_context_choice]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-012",
+      "legacy_semantic_ref": "lexical_redundancy",
+      "observed_label_ru": "Обнаружение и устранение плеоназма или лишнего слова",
+      "proposed_semantic_id": "ru-lexis-lexical-redundancy",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "lexis",
+      "canonical_label_ru_proposal": "Обнаружение и устранение плеоназма или лишнего слова",
+      "canonical_definition_ru_proposal": "Обнаружение и устранение плеоназма или лишнего слова.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[lexical_redundancy]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-013",
+      "legacy_semantic_ref": "lexical_collocation_correction",
+      "observed_label_ru": "Замена слова, нарушающего лексическую сочетаемость",
+      "proposed_semantic_id": "ru-lexis-lexical-collocation-correction",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "lexis",
+      "canonical_label_ru_proposal": "Замена слова, нарушающего лексическую сочетаемость",
+      "canonical_definition_ru_proposal": "Замена слова, нарушающего лексическую сочетаемость.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[lexical_collocation_correction]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-014",
+      "legacy_semantic_ref": "phraseologism_identification",
+      "observed_label_ru": "Поиск фразеологизма в заданном фрагменте текста",
+      "proposed_semantic_id": "ru-lexis-phraseologism-identification",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "lexis",
+      "canonical_label_ru_proposal": "Поиск фразеологизма в заданном фрагменте текста",
+      "canonical_definition_ru_proposal": "Поиск фразеологизма в заданном фрагменте текста.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[phraseologism_identification]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-015",
+      "legacy_semantic_ref": "contextual_synonym_selection",
+      "observed_label_ru": "Подбор контекстного синонима к слову исходного текста",
+      "proposed_semantic_id": null,
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "lexis",
+      "canonical_label_ru_proposal": "Подбор контекстного синонима к слову исходного текста",
+      "canonical_definition_ru_proposal": "Подбор контекстного синонима к слову исходного текста.",
+      "admission_decision": "BLOCKED_SOURCE_REVIEW",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[contextual_synonym_selection]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": "Skill Graph source node is explicitly marked needs_review; source-review flag must be cleared before canonical admission.",
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-016",
+      "legacy_semantic_ref": "functional_style_identification",
+      "observed_label_ru": "Определение функционального стиля текста",
+      "proposed_semantic_id": "ru-stylistics-functional-style-identification",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "stylistics",
+      "canonical_label_ru_proposal": "Определение функционального стиля текста",
+      "canonical_definition_ru_proposal": "Определение функционального стиля текста.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[functional_style_identification]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-017",
+      "legacy_semantic_ref": "genre_and_communicative_purpose",
+      "observed_label_ru": "Определение жанра, адресата и коммуникативной цели текста",
+      "proposed_semantic_id": "ru-stylistics-genre-and-communicative-purpose",
+      "proposed_entity_type": "COMPOSITE_COMPETENCY",
+      "domain": "stylistics",
+      "canonical_label_ru_proposal": "Определение жанра, адресата и коммуникативной цели текста",
+      "canonical_definition_ru_proposal": "Определять жанр текста, предполагаемого адресата и коммуникативную цель как составные параметры речевой ситуации.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION_AS_COMPOSITE",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[genre_and_communicative_purpose]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-018",
+      "legacy_semantic_ref": "normative_stress_selection",
+      "observed_label_ru": "Определение нормативной позиции ударения",
+      "proposed_semantic_id": "ru-orthoepy-normative-stress-selection",
+      "proposed_entity_type": "COMPOSITE_COMPETENCY",
+      "domain": "orthoepy",
+      "canonical_label_ru_proposal": "Определение нормативной позиции ударения",
+      "canonical_definition_ru_proposal": "Определять нормативную позицию словесного ударения; используется как составная орфоэпическая компетенция над более узкими частеречными ветвями.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION_AS_COMPOSITE",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[normative_stress_selection]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-019",
+      "legacy_semantic_ref": "stress_nouns",
+      "observed_label_ru": "Ударение в существительных и их формах",
+      "proposed_semantic_id": "ru-orthoepy-nouns",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "orthoepy",
+      "canonical_label_ru_proposal": "Ударение в существительных и их формах",
+      "canonical_definition_ru_proposal": "Ударение в существительных и их формах.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[stress_nouns]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-020",
+      "legacy_semantic_ref": "stress_adjectival_forms",
+      "observed_label_ru": "Ударение в прилагательных, кратких формах и степенях сравнения",
+      "proposed_semantic_id": "ru-orthoepy-adjectival-forms",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "orthoepy",
+      "canonical_label_ru_proposal": "Ударение в прилагательных, кратких формах и степенях сравнения",
+      "canonical_definition_ru_proposal": "Ударение в прилагательных, кратких формах и степенях сравнения.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[stress_adjectival_forms]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-021",
+      "legacy_semantic_ref": "stress_verbs",
+      "observed_label_ru": "Ударение в глаголах и личных/родовых формах",
+      "proposed_semantic_id": "ru-orthoepy-verbs",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "orthoepy",
+      "canonical_label_ru_proposal": "Ударение в глаголах и личных/родовых формах",
+      "canonical_definition_ru_proposal": "Ударение в глаголах и личных/родовых формах.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[stress_verbs]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-022",
+      "legacy_semantic_ref": "stress_participles",
+      "observed_label_ru": "Ударение в причастиях и кратких причастиях",
+      "proposed_semantic_id": "ru-orthoepy-participles",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "orthoepy",
+      "canonical_label_ru_proposal": "Ударение в причастиях и кратких причастиях",
+      "canonical_definition_ru_proposal": "Ударение в причастиях и кратких причастиях.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[stress_participles]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-023",
+      "legacy_semantic_ref": "stress_gerunds",
+      "observed_label_ru": "Ударение в деепричастиях",
+      "proposed_semantic_id": "ru-orthoepy-gerunds",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "orthoepy",
+      "canonical_label_ru_proposal": "Ударение в деепричастиях",
+      "canonical_definition_ru_proposal": "Ударение в деепричастиях.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[stress_gerunds]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-024",
+      "legacy_semantic_ref": "stress_adverbs",
+      "observed_label_ru": "Ударение в наречиях",
+      "proposed_semantic_id": "ru-orthoepy-adverbs",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "orthoepy",
+      "canonical_label_ru_proposal": "Ударение в наречиях",
+      "canonical_definition_ru_proposal": "Ударение в наречиях.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[stress_adverbs]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-025",
+      "legacy_semantic_ref": "noun_form_norms",
+      "observed_label_ru": "Нормативные формы рода, числа и падежа существительных",
+      "proposed_semantic_id": "ru-morphology-noun-form-norms",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "morphological_norms",
+      "canonical_label_ru_proposal": "Нормативные формы рода, числа и падежа существительных",
+      "canonical_definition_ru_proposal": "Нормативные формы рода, числа и падежа существительных.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[noun_form_norms]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-026",
+      "legacy_semantic_ref": "numeral_form_norms",
+      "observed_label_ru": "Нормативное образование и склонение числительных",
+      "proposed_semantic_id": "ru-morphology-numeral-form-norms",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "morphological_norms",
+      "canonical_label_ru_proposal": "Нормативное образование и склонение числительных",
+      "canonical_definition_ru_proposal": "Нормативное образование и склонение числительных.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[numeral_form_norms]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-027",
+      "legacy_semantic_ref": "verb_form_norms",
+      "observed_label_ru": "Нормативные формы глагола, включая инфинитив и повелительное наклонение",
+      "proposed_semantic_id": "ru-morphology-verb-form-norms",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "morphological_norms",
+      "canonical_label_ru_proposal": "Нормативные формы глагола, включая инфинитив и повелительное наклонение",
+      "canonical_definition_ru_proposal": "Нормативные формы глагола, включая инфинитив и повелительное наклонение.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[verb_form_norms]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-028",
+      "legacy_semantic_ref": "government_case_norm",
+      "observed_label_ru": "Нормативная предложно-падежная форма управляемого слова",
+      "proposed_semantic_id": "ru-syntax-government-case-norm",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "syntactic_norms",
+      "canonical_label_ru_proposal": "Нормативная предложно-падежная форма управляемого слова",
+      "canonical_definition_ru_proposal": "Нормативная предложно-падежная форма управляемого слова.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[government_case_norm]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-029",
+      "legacy_semantic_ref": "indirect_speech_construction",
+      "observed_label_ru": "Нормативное построение предложения с косвенной речью",
+      "proposed_semantic_id": "ru-syntax-indirect-speech-construction",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "syntactic_norms",
+      "canonical_label_ru_proposal": "Нормативное построение предложения с косвенной речью",
+      "canonical_definition_ru_proposal": "Нормативное построение предложения с косвенной речью.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[indirect_speech_construction]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-030",
+      "legacy_semantic_ref": "uncoordinated_apposition_construction",
+      "observed_label_ru": "Нормативное употребление несогласованного приложения",
+      "proposed_semantic_id": "ru-syntax-uncoordinated-apposition-construction",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "syntactic_norms",
+      "canonical_label_ru_proposal": "Нормативное употребление несогласованного приложения",
+      "canonical_definition_ru_proposal": "Нормативное употребление несогласованного приложения.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[uncoordinated_apposition_construction]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-031",
+      "legacy_semantic_ref": "gerundial_construction_norm",
+      "observed_label_ru": "Соотнесение деепричастного оборота с производителем действия",
+      "proposed_semantic_id": "ru-syntax-gerundial-construction-norm",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "syntactic_norms",
+      "canonical_label_ru_proposal": "Соотнесение деепричастного оборота с производителем действия",
+      "canonical_definition_ru_proposal": "Соотнесение деепричастного оборота с производителем действия.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[gerundial_construction_norm]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-032",
+      "legacy_semantic_ref": "homogeneous_members_construction",
+      "observed_label_ru": "Нормативное построение конструкции с однородными членами",
+      "proposed_semantic_id": "ru-syntax-homogeneous-members-construction",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "syntactic_norms",
+      "canonical_label_ru_proposal": "Нормативное построение конструкции с однородными членами",
+      "canonical_definition_ru_proposal": "Нормативное построение конструкции с однородными членами.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[homogeneous_members_construction]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-033",
+      "legacy_semantic_ref": "device_assonance",
+      "observed_label_ru": "Распознавание ассонанса",
+      "proposed_semantic_id": "ru-expressive-assonance",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "expressive_means",
+      "canonical_label_ru_proposal": "Распознавание ассонанса",
+      "canonical_definition_ru_proposal": "Распознавание ассонанса.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[device_assonance]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-034",
+      "legacy_semantic_ref": "device_hyperbole",
+      "observed_label_ru": "Распознавание гиперболы",
+      "proposed_semantic_id": "ru-expressive-hyperbole",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "expressive_means",
+      "canonical_label_ru_proposal": "Распознавание гиперболы",
+      "canonical_definition_ru_proposal": "Распознавание гиперболы.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[device_hyperbole]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-035",
+      "legacy_semantic_ref": "device_metonymy",
+      "observed_label_ru": "Распознавание метонимии",
+      "proposed_semantic_id": "ru-expressive-metonymy",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "expressive_means",
+      "canonical_label_ru_proposal": "Распознавание метонимии",
+      "canonical_definition_ru_proposal": "Распознавание метонимии.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[device_metonymy]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-036",
+      "legacy_semantic_ref": "device_anaphora",
+      "observed_label_ru": "Распознавание анафоры",
+      "proposed_semantic_id": "ru-expressive-anaphora",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "expressive_means",
+      "canonical_label_ru_proposal": "Распознавание анафоры",
+      "canonical_definition_ru_proposal": "Распознавание анафоры.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[device_anaphora]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-037",
+      "legacy_semantic_ref": "device_parcellation",
+      "observed_label_ru": "Распознавание парцелляции",
+      "proposed_semantic_id": "ru-expressive-parcellation",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "expressive_means",
+      "canonical_label_ru_proposal": "Распознавание парцелляции",
+      "canonical_definition_ru_proposal": "Распознавание парцелляции.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[device_parcellation]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-038",
+      "legacy_semantic_ref": "device_homogeneous_rows",
+      "observed_label_ru": "Распознавание ряда однородных членов как средства выразительности",
+      "proposed_semantic_id": "ru-expressive-homogeneous-rows",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "expressive_means",
+      "canonical_label_ru_proposal": "Распознавание ряда однородных членов как средства выразительности",
+      "canonical_definition_ru_proposal": "Распознавание ряда однородных членов как средства выразительности.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[device_homogeneous_rows]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-039",
+      "legacy_semantic_ref": "device_address",
+      "observed_label_ru": "Распознавание обращения как синтаксического средства выразительности",
+      "proposed_semantic_id": "ru-expressive-address",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "expressive_means",
+      "canonical_label_ru_proposal": "Распознавание обращения как синтаксического средства выразительности",
+      "canonical_definition_ru_proposal": "Распознавание обращения как синтаксического средства выразительности.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[device_address]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-040",
+      "legacy_semantic_ref": "device_epithet",
+      "observed_label_ru": "Распознавание эпитета",
+      "proposed_semantic_id": "ru-expressive-epithet",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "expressive_means",
+      "canonical_label_ru_proposal": "Распознавание эпитета",
+      "canonical_definition_ru_proposal": "Распознавание эпитета.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[device_epithet]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-041",
+      "legacy_semantic_ref": "device_metaphor",
+      "observed_label_ru": "Распознавание метафоры",
+      "proposed_semantic_id": "ru-expressive-metaphor",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "expressive_means",
+      "canonical_label_ru_proposal": "Распознавание метафоры",
+      "canonical_definition_ru_proposal": "Распознавание метафоры.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[device_metaphor]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-042",
+      "legacy_semantic_ref": "device_comparison",
+      "observed_label_ru": "Распознавание сравнения",
+      "proposed_semantic_id": "ru-expressive-comparison",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "expressive_means",
+      "canonical_label_ru_proposal": "Распознавание сравнения",
+      "canonical_definition_ru_proposal": "Распознавание сравнения.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[device_comparison]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-043",
+      "legacy_semantic_ref": "content_statement_verification",
+      "observed_label_ru": "Проверка утверждения по фактам и смыслам исходного текста",
+      "proposed_semantic_id": "ru-text-analysis-content-statement-verification",
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "text_analysis",
+      "canonical_label_ru_proposal": "Проверка утверждения по фактам и смыслам исходного текста",
+      "canonical_definition_ru_proposal": "Проверка утверждения по фактам и смыслам исходного текста.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[content_statement_verification]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-044",
+      "legacy_semantic_ref": "narration_identification",
+      "observed_label_ru": "Распознавание повествования",
+      "proposed_semantic_id": "ru-text-analysis-narration-identification",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "text_analysis",
+      "canonical_label_ru_proposal": "Распознавание повествования",
+      "canonical_definition_ru_proposal": "Распознавание повествования.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[narration_identification]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-045",
+      "legacy_semantic_ref": "description_identification",
+      "observed_label_ru": "Распознавание описания",
+      "proposed_semantic_id": "ru-text-analysis-description-identification",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "text_analysis",
+      "canonical_label_ru_proposal": "Распознавание описания",
+      "canonical_definition_ru_proposal": "Распознавание описания.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[description_identification]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-046",
+      "legacy_semantic_ref": "reasoning_identification",
+      "observed_label_ru": "Распознавание рассуждения",
+      "proposed_semantic_id": "ru-text-analysis-reasoning-identification",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "text_analysis",
+      "canonical_label_ru_proposal": "Распознавание рассуждения",
+      "canonical_definition_ru_proposal": "Распознавание рассуждения.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[reasoning_identification]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-047",
+      "legacy_semantic_ref": "semantic_relation_between_sentences",
+      "observed_label_ru": "Определение причинных, следственных, пояснительных и противительных отношений между предложениями",
+      "proposed_semantic_id": "ru-text-analysis-semantic-relation-between-sentences",
+      "proposed_entity_type": "RECOGNITION_SKILL",
+      "domain": "text_analysis",
+      "canonical_label_ru_proposal": "Определение причинных, следственных, пояснительных и противительных отношений между предложениями",
+      "canonical_definition_ru_proposal": "Определение причинных, следственных, пояснительных и противительных отношений между предложениями.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[semantic_relation_between_sentences]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-048",
+      "legacy_semantic_ref": "author_position_formulation",
+      "observed_label_ru": "Формулирование позиции автора по проблеме исходного текста",
+      "proposed_semantic_id": "ru-essay-author-position-formulation",
+      "proposed_entity_type": "PRODUCTION_SKILL",
+      "domain": "essay",
+      "canonical_label_ru_proposal": "Формулирование позиции автора по проблеме исходного текста",
+      "canonical_definition_ru_proposal": "Формулирование позиции автора по проблеме исходного текста.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[author_position_formulation]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-049",
+      "legacy_semantic_ref": "textual_comment_examples",
+      "observed_label_ru": "Выбор и пояснение двух примеров-иллюстраций из исходного текста",
+      "proposed_semantic_id": "ru-essay-textual-comment-examples",
+      "proposed_entity_type": "PRODUCTION_SKILL",
+      "domain": "essay",
+      "canonical_label_ru_proposal": "Выбор и пояснение примеров-иллюстраций из исходного текста",
+      "canonical_definition_ru_proposal": "Выбирать релевантные примеры-иллюстрации из исходного текста и пояснять их связь с анализируемой авторской позицией; требуемое количество примеров задаётся экзаменационным маршрутом, а не semantic identity.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION_WITH_ROUTE_NORMALIZATION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[textual_comment_examples]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-050",
+      "legacy_semantic_ref": "example_relation_explanation",
+      "observed_label_ru": "Определение и пояснение смысловой связи между примерами",
+      "proposed_semantic_id": "ru-essay-example-relation-explanation",
+      "proposed_entity_type": "PRODUCTION_SKILL",
+      "domain": "essay",
+      "canonical_label_ru_proposal": "Определение и пояснение смысловой связи между примерами",
+      "canonical_definition_ru_proposal": "Определение и пояснение смысловой связи между примерами.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[example_relation_explanation]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-051",
+      "legacy_semantic_ref": "own_position_argumentation",
+      "observed_label_ru": "Формулирование и обоснование собственного отношения к позиции автора",
+      "proposed_semantic_id": "ru-essay-own-position-argumentation",
+      "proposed_entity_type": "PRODUCTION_SKILL",
+      "domain": "essay",
+      "canonical_label_ru_proposal": "Формулирование и обоснование собственного отношения к позиции автора",
+      "canonical_definition_ru_proposal": "Формулирование и обоснование собственного отношения к позиции автора.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[own_position_argumentation]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-052",
+      "legacy_semantic_ref": "essay_composition_coherence",
+      "observed_label_ru": "Логичная композиция, связность и последовательность сочинения",
+      "proposed_semantic_id": "ru-essay-composition-coherence",
+      "proposed_entity_type": "PRODUCTION_SKILL",
+      "domain": "essay",
+      "canonical_label_ru_proposal": "Логичная композиция, связность и последовательность сочинения",
+      "canonical_definition_ru_proposal": "Логичная композиция, связность и последовательность сочинения.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[essay_composition_coherence]"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-053",
+      "legacy_semantic_ref": "comparison_degree_forms",
+      "observed_label_ru": "Нормативные формы степеней сравнения прилагательных и наречий",
+      "proposed_semantic_id": null,
+      "proposed_entity_type": "PROCEDURAL_SKILL",
+      "domain": "morphological_norms",
+      "canonical_label_ru_proposal": "Нормативные формы степеней сравнения прилагательных и наречий",
+      "canonical_definition_ru_proposal": "Нормативные формы степеней сравнения прилагательных и наречий.",
+      "admission_decision": "BLOCKED_GRANULARITY_REVIEW",
+      "source_authority_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[morphological_norms]",
+        "eksamio-learning-engine/87A-RUSSIAN-MORPHOLOGY-GRAPH-GAP-CANDIDATES.txt"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": "Source-backed graph gap explicitly leaves final granularity open: one identity or narrower comparison-degree branches.",
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-054",
+      "legacy_semantic_ref": "essay_factual_accuracy",
+      "observed_label_ru": "Фактическая точность письменного рассуждения",
+      "proposed_semantic_id": "ru-essay-factual-accuracy",
+      "proposed_entity_type": "PRODUCTION_SKILL",
+      "domain": "essay",
+      "canonical_label_ru_proposal": "Фактическая точность письменного рассуждения",
+      "canonical_definition_ru_proposal": "Фактическая точность письменного рассуждения.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json#criteria[K4]",
+        "eksamio-learning-engine/55-RUSSIAN-ESSAY-27-EXPLANATION-COMPONENTS-v0.1.json#essay_fact_logic_review"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    },
+    {
+      "candidate_ref": "candidate-055",
+      "legacy_semantic_ref": "essay_ethical_compliance",
+      "observed_label_ru": "Этическая нормативность письменного ответа",
+      "proposed_semantic_id": "ru-essay-ethical-compliance",
+      "proposed_entity_type": "PRODUCTION_SKILL",
+      "domain": "essay",
+      "canonical_label_ru_proposal": "Этическая нормативность письменного ответа",
+      "canonical_definition_ru_proposal": "Этическая нормативность письменного ответа.",
+      "admission_decision": "READY_FOR_HUMAN_ADMISSION",
+      "source_authority_refs": [
+        "eksamio-learning-engine/53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json#criteria[K6]",
+        "eksamio-learning-engine/55-RUSSIAN-ESSAY-27-EXPLANATION-COMPONENTS-v0.1.json#essay_ethics_review"
+      ],
+      "duplicate_gate_basis": [
+        "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+        "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      ],
+      "prerequisite_ids_proposed": [],
+      "blocked_reason": null,
+      "human_admission_required": true
+    }
+  ]
+}

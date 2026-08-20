@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.2.0",
+  "date": "2026-08-20",
+  "status": "ACTIVE_GAP_REGISTER_PHASE2_CANONICALIZATION",
+  "subject": "russian",
+  "program_ref": "RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json",
+  "supersedes": "RUSSIAN-FULL-SUBJECT-GAP-REGISTER-v1.1.json",
+  "baseline_main_sha": "0d5fff2cf25b6a93d60cbd7eac8b61546e29d793",
+  "observed_baseline": {
+    "canonical_school_identities": 185,
+    "draft_missing_subject_semantic_candidates": 55,
+    "phase2_ready_for_human_admission": 53,
+    "phase2_blocked_candidates": 2,
+    "current_ege_trainer_items": 174,
+    "canonical_prerequisite_edge_count_at_first_verified_slice": 1,
+    "first_verified_peis_slice": "RU-SLICE-001",
+    "shared_reference_kernel": "implemented"
+  },
+  "principles": [
+    "Preserve all 185 school-* identities unchanged.",
+    "New ru-* identities require source review and human admission; AI does not self-approve canonical truth.",
+    "Exam/product/task IDs are routes/evidence sources, not semantic identity owners.",
+    "No Russian-specific learner/mastery/readiness/retention/NBA engine.",
+    "No production mutation during registry/content materialization."
+  ],
+  "phase_status": {
+    "PHASE_1_INVENTORY_CROSSWALK": "COMPLETE",
+    "FIRST_VERIFIED_VERTICAL_SLICE": "COMPLETE_REFERENCE_LEVEL",
+    "PHASE_2_GAP_CANONICALIZATION": "IN_PROGRESS_PROPOSAL_READY",
+    "PHASE_3_VERSIONED_CROSSWALKS": "STARTED_FOR_53_PROPOSALS",
+    "PHASE_4_BUILDER_VALIDATION": "STARTED_DETERMINISTIC_MATERIALIZER",
+    "PHASE_5_LEARNER_EVIDENCE_ADAPTER": "NOT_STARTED_PRODUCTION",
+    "PHASE_6_TUTOR_HOMEWORK_CONSUMPTION": "NOT_STARTED"
+  },
+  "gaps": [
+    {
+      "gap_id": "RU-GAP-001",
+      "kind": "SEMANTIC_ADMISSION",
+      "priority": "P0_RUSSIAN_CURRENT",
+      "status": "IN_PROGRESS_PHASE2_PROPOSAL_READY",
+      "problem": "55 missing-subject semantic candidates were inventoried in Phase 1 but were not yet admitted into the unified Russian registry.",
+      "current_result": {
+        "candidate_count": 55,
+        "ready_for_human_admission": 53,
+        "blocked": 2,
+        "blocked_candidate_refs": [
+          "candidate-015",
+          "candidate-053"
+        ]
+      },
+      "result_refs": [
+        "semantic-registry/RUSSIAN-SEMANTIC-CANDIDATE-ADMISSION-LEDGER-v0.1.json",
+        "semantic-registry/RUSSIAN-SEMANTIC-REGISTRY-PROPOSAL-v0.1.json",
+        "semantic-registry/RUSSIAN-SEMANTIC-CANDIDATE-CROSSWALK-PROPOSAL-v0.1.json"
+      ],
+      "closure_gate": [
+        "human admission of 53 source-reviewed proposals",
+        "resolve candidate-015 source review",
+        "resolve candidate-053 granularity",
+        "canonical crosswalk materialization after admission"
+      ]
+    },
+    {
+      "gap_id": "RU-GAP-002",
+      "kind": "FOUNDATIONAL_SUBJECT_SCOPE",
+      "priority": "NEXT_AFTER_RU_GAP_001",
+      "status": "OPEN",
+      "modules": [
+        "RU-PROG-01",
+        "RU-PROG-04",
+        "RU-PROG-05",
+        "RU-PROG-06"
+      ],
+      "problem": "Current inventory does not yet prove complete grades-5-11 canonical coverage for phonetics/graphics, morphemics, word formation and full morphology.",
+      "closure_gate": [
+        "source-library coverage pass per domain",
+        "reuse existing school-/ru-* identity where meaning exists",
+        "admit only genuinely missing identities",
+        "record provenance and grade scope"
+      ]
+    },
+    {
+      "gap_id": "RU-GAP-003",
+      "kind": "OGE_WRITTEN_RESPONSE_SCOPE",
+      "priority": "NEXT_AFTER_FOUNDATIONAL_SCOPE",
+      "status": "OPEN",
+      "modules": [
+        "RU-PROG-15"
+      ],
+      "problem": "OGE exposition/compression/written-response competencies are not yet fully canonicalized into route-independent semantic identities.",
+      "closure_gate": [
+        "official OGE authority decomposition",
+        "source-backed semantic admission",
+        "route mapping",
+        "evidence semantics without inventing official scoring"
+      ]
+    },
+    {
+      "gap_id": "RU-GAP-004",
+      "kind": "CURRENT_EGE_TRAINER_IDENTITY_COVERAGE",
+      "priority": "CLOSED",
+      "status": "CLOSED_CURRENT_MAIN_AUTHORITY",
+      "result_summary": {
+        "COVERED": 0,
+        "PARTIALLY_COVERED": 144,
+        "NOT_COVERED": 41
+      },
+      "result_refs": [
+        "RUSSIAN-SCHOOL-TRAINER-COVERAGE-AUDIT-VALIDATION.txt"
+      ],
+      "note": "Preserves current-main merged authority; unmerged second-pass proposals are not canonical state."
+    },
+    {
+      "gap_id": "RU-GAP-005",
+      "kind": "PROGRAM_CONTENT_MATERIALIZATION",
+      "priority": "AFTER_REGISTRY_SCOPE",
+      "status": "OPEN",
+      "modules": "RU-PROG-01..RU-PROG-16",
+      "problem": "Not every stable semantic identity has a complete source-backed teach/practice/check bundle.",
+      "required_bundle": [
+        "canonical explanation",
+        "source provenance",
+        "worked examples",
+        "misconceptions/errors",
+        "guided practice",
+        "independent practice",
+        "mixed/transfer practice",
+        "retention items",
+        "independent verification items"
+      ]
+    },
+    {
+      "gap_id": "RU-GAP-006",
+      "kind": "PRODUCT_ADAPTER_COMPLETION",
+      "priority": "AFTER_CANONICAL_REGISTRY_AND_CONTENT",
+      "status": "OPEN",
+      "problem": "Generalized semantic evidence adapters are not production-integrated.",
+      "closure_gate": [
+        "canonical registry slice available",
+        "versioned crosswalk available",
+        "shared learner evidence/state schemas used",
+        "legacy state adapter validated",
+        "regression tests pass",
+        "production integration separately approved"
+      ]
+    },
+    {
+      "gap_id": "RU-GAP-007",
+      "kind": "SOURCE_BACKED_PREREQUISITE_RELATIONS",
+      "priority": "CLOSED_FIRST_VERIFIED_SLICE",
+      "status": "CLOSED_AT_VERIFIED_SLICE_LEVEL",
+      "result_refs": [
+        "verified-slices/RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json",
+        "verified-slices/RU-SLICE-001-PREREQUISITE-EDGE-v0.1.json"
+      ],
+      "result": "First source-verified conditional REQUIRED edge is materialized for present-tense participle suffix selection; no claim of a complete Russian prerequisite graph."
+    },
+    {
+      "gap_id": "RU-GAP-008",
+      "kind": "FIRST_VERIFIED_PEIS_SLICE",
+      "priority": "CLOSED_REFERENCE_IMPLEMENTATION",
+      "status": "CLOSED_AT_REFERENCE_IMPLEMENTATION_LEVEL",
+      "result_refs": [
+        "verified-slices/RU-SLICE-001-GOLDEN-SCENARIOS-v0.1.json",
+        "../peis-reference-kernel/PEIS-REFERENCE-KERNEL-RU-SLICE-001-RUN-v0.1.json",
+        "../peis-reference-kernel/PEIS-REFERENCE-KERNEL-VALIDATION.txt"
+      ],
+      "result": "RU-SLICE-001 executes source -> identity -> prerequisite -> evidence -> shared PEIS -> NBA -> independent verification with measured ordinal learner-state delta. Production persistence/API remains outside this closure."
+    }
+  ],
+  "current_next_gate": "RU-GAP-001: human admission of 53 source-reviewed ru-* proposals plus resolution of candidate-015 and candidate-053; then RU-GAP-002 foundational school-domain completion, RU-GAP-003 OGE written-response semantics, and RU-GAP-005 complete content bundles."
+}
