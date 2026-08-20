@@ -1,0 +1,30 @@
+name: PEIS Trusted Host 001 Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/peis-trusted-host-reference/**'
+      - 'eksamio-learning-engine/tasks/PEIS-TRUSTED-HOST-001.md'
+      - 'eksamio-learning-engine/peis-persistence-reference/**'
+      - 'eksamio-learning-engine/peis-service-bridge-reference/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install validator dependency
+        run: python -m pip install --disable-pip-version-check jsonschema
+      - name: Validate PEIS-TRUSTED-HOST-001 with ephemeral test key
+        shell: bash
+        run: |
+          export EKSAMIO_PEIS_TRUSTED_HOST_TEST_SECRET="$(python -c 'import secrets; print(secrets.token_urlsafe(48))')"
+          python eksamio-learning-engine/peis-trusted-host-reference/validate_peis_trusted_host_001.py
