@@ -1,0 +1,126 @@
+{
+  "artifact_id": "MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2",
+  "version": "0.2",
+  "date": "2026-08-20",
+  "status": "CURRENT_MAIN_SOURCE_BUILD_INVENTORY",
+  "mode": "ADD_ONLY / GOVERNANCE_REFRESH / NO_PRODUCTION_INTEGRATION",
+  "supersedes": "MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.1",
+  "baseline": {
+    "ref": "main",
+    "sha": "0d5fff2cf25b6a93d60cbd7eac8b61546e29d793",
+    "tree_sha": "3404830d52b0a3cdad83be8bd29e1b90faaf8bb5"
+  },
+  "subject_id": "mathematics",
+  "identity_model_id": "mathematics-identity-v0.1",
+  "routes": ["profile", "base"],
+  "years": [2022, 2023, 2024, 2025, 2026],
+  "cells": [
+    {
+      "route": "profile",
+      "year": 2022,
+      "source_status": "PRELOCK_VERIFIED",
+      "package_status": "BUILD_WORK_IN_PROGRESS_CURRENT_MAIN",
+      "evidence": [
+        {"type": "commit", "ref": "915bad3126112fb2cd8c4e12da3fe5ea0cd93b79"},
+        {"type": "commit", "ref": "0d5fff2cf25b6a93d60cbd7eac8b61546e29d793"}
+      ],
+      "notes": "Exact-year FIPI source/prelock evidence exists. Current main contains PROFILE 2022 build/bootstrap work, but no canonical ege-matematika-profil-demoversiya-2022/ package path was confirmed at this refresh. Do not mark the route package complete until its own build/browser gates finish."
+    },
+    {
+      "route": "profile",
+      "year": 2023,
+      "source_status": "VERIFIED",
+      "package_status": "MATURE_BUILD",
+      "evidence": [{"type": "path", "ref": "ege-matematika-profil-demoversiya-2023/"}]
+    },
+    {
+      "route": "profile",
+      "year": 2024,
+      "source_status": "VERIFIED",
+      "package_status": "READY_FOR_TILDA",
+      "evidence": [{"type": "path", "ref": "ege-matematika-profil-demoversiya-2024/"}]
+    },
+    {
+      "route": "profile",
+      "year": 2025,
+      "source_status": "ACCEPTED",
+      "package_status": "MATURE_BUILD",
+      "evidence": [
+        {"type": "path", "ref": "ege-matematika-profil-demoversiya-2025/"},
+        {"type": "path", "ref": "matematika-source-2025/ege-2025-matematika-profil-demoversiya.pdf"},
+        {"type": "path", "ref": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf"},
+        {"type": "path", "ref": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf"}
+      ]
+    },
+    {
+      "route": "profile",
+      "year": 2026,
+      "source_status": "TECHNICAL_REFERENCE_ACCEPTED",
+      "package_status": "MATURE_REFERENCE",
+      "evidence": [
+        {"type": "path", "ref": "ege-matematika-profil-demoversiya-2026/"},
+        {"type": "commit", "ref": "f0ec2f7dae611163372a48f9116a4be00498152a"}
+      ],
+      "notes": "Technical UI/engine reference; do not substitute it for exact historical source authority."
+    },
+    {
+      "route": "base",
+      "year": 2022,
+      "source_status": "VERIFIED",
+      "package_status": "ACCEPTED_FROZEN",
+      "evidence": [
+        {"type": "path", "ref": "matematika-source-2022/"},
+        {"type": "commit", "ref": "f0fb9295495c5223f602fb0ad8ca2be1811d1463"}
+      ]
+    },
+    {
+      "route": "base",
+      "year": 2023,
+      "source_status": "VERIFIED",
+      "package_status": "VERIFIED_BUILD",
+      "evidence": [
+        {"type": "path", "ref": "matematika-source-2023/"},
+        {"type": "commit", "ref": "31a2dc642933ade523c76b6bb5569caad0f682a7"}
+      ]
+    },
+    {
+      "route": "base",
+      "year": 2024,
+      "source_status": "VERIFIED",
+      "package_status": "READY_FOR_TILDA",
+      "evidence": [{"type": "path", "ref": "matematika-source-2024/"}],
+      "notes": "Full official-source recheck/final report evidence."
+    },
+    {
+      "route": "base",
+      "year": 2025,
+      "source_status": "OFFICIAL_SOURCE_PRESENT",
+      "package_status": "SOURCE_CORPUS_PRESENT / BUILD_STATUS_NOT_ASSERTED_BY_THIS MATRIX",
+      "evidence": [
+        {"type": "path", "ref": "matematika-source-2025/ege-2025-matematika-baza-demoversiya.pdf"},
+        {"type": "path", "ref": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf"},
+        {"type": "path", "ref": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf"}
+      ],
+      "notes": "This closes the v0.1 source-presence gap. Presence of official source files does not by itself assert a completed interactive build or publication readiness."
+    },
+    {
+      "route": "base",
+      "year": 2026,
+      "source_status": "TECHNICAL_ROUTE_PACKAGE",
+      "package_status": "MATURE_BUILD",
+      "evidence": [{"type": "path", "ref": "ege-matematika-baza-demoversiya-2026/"}],
+      "notes": "Route/year package; not itself a route-independent semantic registry."
+    }
+  ],
+  "interpretation": {
+    "source_status_is_not_semantic_identity": true,
+    "package_status_is_not_source_authority": true,
+    "exam_route_is_not_subject_identity": true,
+    "known_explicit_source_presence_gap_count": 0,
+    "known_package_or_build_completion_gap_count": 1,
+    "known_package_or_build_completion_gaps": [
+      {"route": "profile", "year": 2022, "status": "BUILD_WORK_IN_PROGRESS_CURRENT_MAIN"}
+    ]
+  },
+  "next_gate": "MATHEMATICS-SEMANTIC-SLICE-001"
+}
