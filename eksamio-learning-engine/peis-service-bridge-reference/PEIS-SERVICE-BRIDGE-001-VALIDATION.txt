@@ -1,0 +1,47 @@
+PEIS-SERVICE-BRIDGE-001 VALIDATION
+Date: 2026-08-20
+Result: PASS
+GitHub Actions run: 32385502262
+Job: 96478876744
+Validated head before durable-result commits: e7a82dbd152be0b68acfc1ed85c2516d7f780934
+
+WHAT WAS PROVEN
+
+1. The generic PEIS service core contains no Russian semantic identity or current Task 12 card literal.
+2. The Russian checked-card adapter is registered separately and owns subject-specific mapping/evaluator truth.
+3. Browser/client payloads cannot assert canonical score/correctness, semantic_targets, evaluator trust, mastery, NBA, server_sequence or server_watermark.
+4. A browser-safe checked-card payload is accepted and converted to canonical EvidenceEvent through the shared persistence boundary.
+5. Server allocates server_sequence, server_watermark and received_at_server.
+6. The server independently recomputes the wrong whole-card score from the pinned current trainer card key.
+7. The current Task 12 whole-card failure remains COMPOSITE and does not invent an EXACT semantic error.
+8. Shared PEIS returns DIAGNOSE_TARGET for the broad/composite failure.
+9. Shared NBA is persisted by the service.
+10. Identical direct service retry is ALREADY_APPLIED with the original server position and no duplicate evidence.
+11. Changed educational payload under the stable product event identity is rejected with INTEGRITY_CONFLICT and cannot rewrite canonical history.
+12. Email is rejected as the academic-history identity key.
+13. Real loopback HTTP /healthz works and explicitly identifies itself as REFERENCE_NOT_PUBLIC_PRODUCTION.
+14. Real loopback HTTP POST /v0/checked-card accepts a fresh browser-safe event.
+15. HTTP retry reaches the same canonical event idempotently and preserves server sequence.
+16. HTTP checked-card rejects missing host identity.
+17. HTTP identity resolver rejects email identity header.
+18. Reference HTTP service shuts down cleanly.
+19. Python sqlite3 thread-affinity safety remains intact; the HTTP fixture uses its own store/bridge created and served in one server thread rather than weakening shared persistence semantics.
+20. Current Russian trainer runtime and Task 12 bank remain byte-identical.
+
+ARCHITECTURAL INVARIANTS
+
+- shared EvidenceEvent contract reused
+- shared persistence reused
+- shared PEIS reference kernel reused
+- no subject-specific learner engine created
+- no browser-owned mastery/readiness/retention/NBA
+- no client-owned semantic mapping or evaluator trust
+- no production deployment claim
+- no public authentication claim
+- no Tilda/runtime/localStorage/scoring mutation
+
+STATUS
+REFERENCE_HTTP_SERVICE_VALIDATED_NOT_DEPLOYED_PRODUCTION
+
+NEXT GATE
+A separate live-safe browser integration gate may consume this service boundary only after transport/auth/deployment decisions are explicitly admitted. Product failure must remain non-destructive: the existing trainer must continue to function if PEIS transport is unavailable.
