@@ -1,0 +1,30 @@
+name: physics-2026-manual-crop-review
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  review:
+    if: github.head_ref == 'chatgpt/physics-2026-source-visual-tools-fix-20260819'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2026-source-visual-tools-fix-20260819
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Render corrected exact-source crops
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check pymupdf pillow >/dev/null
+          python tmp-physics-2026-manual-crop-correction.py
+          ! grep -Rni '<svg' ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-0{2,3,4,5}.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: physics-2026-manual-crop-review
+          path: /tmp/physics-manual-crop-review
+          if-no-files-found: error
