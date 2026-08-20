@@ -1,0 +1,76 @@
+{
+  "schema_version": "0.1.0",
+  "task": "PEIS-BROWSER-HOOK-001",
+  "status": "REFERENCE_BROWSER_HOOK_CONTRACT",
+  "default_enabled": false,
+  "client_request": {
+    "top_level_allowed": ["adapter_id", "payload"],
+    "payload_allowed": [
+      "card_id",
+      "session_started_at_ms",
+      "session_mode",
+      "answer",
+      "occurred_at_client",
+      "client_request_id"
+    ],
+    "forbidden": [
+      "score",
+      "correctness",
+      "max_score",
+      "semantic_targets",
+      "semantic_id",
+      "mapping_resolution",
+      "evaluator",
+      "trust_class",
+      "mastery",
+      "readiness",
+      "retention",
+      "nba",
+      "prerequisite_edges",
+      "learner_profile_id",
+      "anonymous_identity_ref",
+      "user_identity_ref",
+      "identity_refs",
+      "server_sequence",
+      "server_watermark",
+      "received_at_server"
+    ]
+  },
+  "directive": {
+    "read_only": true,
+    "allowed_fields": [
+      "recommendation_id",
+      "action_type",
+      "semantic_targets",
+      "prerequisite_targets",
+      "reason_codes",
+      "verification_required",
+      "learner_state_watermark",
+      "route",
+      "canonical_state_owner"
+    ],
+    "required_canonical_state_owner": "shared_peis",
+    "must_not_persist_in_browser": true
+  },
+  "failure_policy": {
+    "mode": "FAIL_OPEN",
+    "must_not_block_current_scoring": true,
+    "must_not_block_current_progress_save": true,
+    "must_not_block_navigation": true,
+    "transport_timeout_is_non_fatal": true,
+    "transport_error_is_non_fatal": true,
+    "directive_callback_error_is_non_fatal": true
+  },
+  "transport": {
+    "injected_by_host": true,
+    "production_endpoint_defined": false,
+    "public_authentication_defined": false,
+    "browser_supplies_trusted_identity": false
+  },
+  "browser_storage": {
+    "canonical_peis_state_allowed": false,
+    "local_storage_write_allowed": false,
+    "session_storage_write_allowed": false
+  },
+  "completion_status": "REFERENCE_BROWSER_HOOK_VALIDATED_NOT_WIRED_TO_PRODUCTION"
+}
