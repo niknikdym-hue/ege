@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1.0",
+  "task": "PEIS-TRUSTED-HOST-001",
+  "status": "REFERENCE_TRUSTED_HOST_IDENTITY_CONTRACT",
+  "reuse": {
+    "shared_identity_link_store": "../peis-persistence-reference/peis_persistence.py",
+    "shared_host_identity_contract": "../peis-service-bridge-reference/peis_service_bridge.py",
+    "production_auth_host_found_in_current_main": false
+  },
+  "identity": {
+    "scope": "CROSS_SUBJECT",
+    "learner_profile_id_browser_owned": false,
+    "identity_refs_browser_owned": false,
+    "email_allowed_as_identity_ref": false,
+    "anonymous_identity_ref_prefix": "anon:",
+    "user_identity_ref_prefix": "user:"
+  },
+  "host_token": {
+    "format": "BASE64URL_CANONICAL_JSON.DOT.BASE64URL_HMAC_SHA256",
+    "signature": "HMAC-SHA256",
+    "secret_source": "SERVER_RUNTIME_ONLY",
+    "allowed_claims": ["v", "kid", "identity_ref", "iat", "exp"],
+    "forbidden_claims": [
+      "learner_profile_id",
+      "email",
+      "subject_id",
+      "semantic_id",
+      "mastery",
+      "readiness",
+      "retention",
+      "nba",
+      "evidence"
+    ],
+    "token_version": 1,
+    "future_iat_skew_seconds": 30,
+    "default_ttl_seconds": 2592000
+  },
+  "cookie_projection": {
+    "name": "eksamio_peis_host",
+    "http_only": true,
+    "secure": true,
+    "same_site": "Lax",
+    "path": "/",
+    "domain_hardcoded": false,
+    "learner_profile_id_exposed": false
+  },
+  "anonymous_to_account": {
+    "mechanism": "SHARED_PERSISTENCE_LINK_IDENTITY",
+    "evidence_rewrite_allowed": false,
+    "learner_profile_migration_allowed": false,
+    "same_learner_profile_required": true
+  },
+  "negative_gates": [
+    "MISSING_TOKEN_REJECTED",
+    "MALFORMED_TOKEN_REJECTED",
+    "TAMPERED_PAYLOAD_REJECTED",
+    "TAMPERED_SIGNATURE_REJECTED",
+    "EXPIRED_TOKEN_REJECTED",
+    "FUTURE_IAT_REJECTED",
+    "UNKNOWN_KEY_ID_REJECTED",
+    "WRONG_SECRET_REJECTED",
+    "EMAIL_IDENTITY_REJECTED",
+    "BROWSER_LEARNER_PROFILE_REJECTED",
+    "BROWSER_IDENTITY_REFS_REJECTED",
+    "IDENTITY_REASSIGNMENT_REJECTED"
+  ],
+  "implementation_status": "REFERENCE_TRUSTED_HOST_IDENTITY_VALIDATED_NOT_PRODUCTION_AUTH"
+}
