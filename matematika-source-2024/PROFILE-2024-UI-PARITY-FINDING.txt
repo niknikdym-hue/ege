@@ -1,0 +1,15 @@
+PROFILE 2024 UI PARITY FINDING
+
+STATUS: DEFECT CONFIRMED
+REFERENCE: accepted PROFILE Mathematics 2025/2026 UI behavior
+
+Defect:
+The 2024 builder intentionally replaced the inherited source tag `ФИПИ 2026 · официальный пример ${v.variant}` with the generic `ФИПИ 2024 · официальный материал демоверсии` and removed the official example number from the extended-results heading.
+
+This was an implementation deviation, not a FIPI year-specific requirement, and manual acceptance missed it.
+
+Required behavior:
+`ФИПИ 2024 · официальный пример <variant_number>`
+Extended results: `Задание <task_number> · официальный пример <variant_number>`
+
+No historical content, answers, scoring, criteria, task order, PEIS state/mastery or semantic IDs may be changed by this UI repair.
