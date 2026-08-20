@@ -1,0 +1,62 @@
+EKSAMIO PHYSICS ARCHIVE — TECHNICAL ACCEPTANCE STANDARD v1.0
+DATE=2026-08-20
+SCOPE=PHYSICS_EGE_DEMOS_2025_2024_2023_2022_AND_FUTURE_ARCHIVE_BUILDS
+TECHNICAL_REFERENCE=ege-fizika-demoversiya-v3-1-fixed/PHYSICS-2026-FINAL-FREEZE-2026-08-20.txt
+UX_REFERENCE=accepted 2026 profile mathematics demo
+
+PURPOSE
+Prevent recurrence of source-fidelity, visual-crop, result-UX and Tilda deployment failures while building historical physics years.
+2026 is a TECHNICAL reference only. It is never content authority for another year.
+
+GATE A — EXACT-YEAR SOURCE AUTHORITY
+1. Lock the exact official FIPI source package for the target year before build.
+2. Demo/specification/codifier provenance must be explicit and byte-verifiable where available.
+3. Never copy 2026 wording, answers, criteria, visuals or input contracts into another year unless independently present in that year's official source.
+4. The built Eksamio demo is never source authority.
+
+GATE B — CONTENT / ANSWERS / CRITERIA
+1. Verify task text against the exact-year official source.
+2. Independently verify short answers and accepted formats.
+3. Verify every extended official solution and scoring criterion.
+4. Verify units, signs, decimal comma/dot handling, ordering and measurement-error formats.
+5. Do not freeze while any content/source mismatch remains.
+
+GATE C — OFFICIAL VISUALS
+1. Exam and solution visuals must use exact official PDF crops when a source visual exists.
+2. No invented/reconstructed/redrawn substitute may silently replace an official visual.
+3. Perform manual four-edge inspection: no neighboring text, no clipped labels, no wrong figure, no accidental answer-table/solution contamination.
+4. Apply per-asset rendered-size limits on desktop and mobile; exact crop does not excuse oversized/distorted rendering.
+5. Clean package must contain no dead reconstructed duplicate visual assets.
+
+GATE D — EXAM UX PARITY
+1. Use accepted 2026 profile mathematics demo as the structural UX reference; do not invent an alternate results sequence.
+2. Every task must display the exact-year provenance tag format: «ФИПИ YYYY · официальный пример N».
+3. If a task has randomized official alternatives, the assigned official example number must persist with the attempt.
+4. After «Завершить экзамен», follow the accepted sequence: result/score row -> short-answer results -> extended official solutions and criteria with task-level self-score -> final actions.
+5. Do not add parallel standalone result/self-score/source-status blocks that break this sequence unless product authority explicitly changes the reference.
+
+GATE E — TILDA T123 DEPLOYMENT
+1. HARD LIMIT: every individual T123 file MUST be strictly < 42,500 UTF-8 bytes.
+2. BUILD TARGET: keep every T123 <= 38,000 UTF-8 bytes whenever practical to preserve headroom.
+3. Split only at atomic boundaries. Never split HTML/JS/data in a way that depends on invalid fragments.
+4. Create a T123 manifest with count, byte size and SHA256 for every block.
+5. Upload blocks in exact manifest order; never concatenate multiple T123 files into one Tilda block.
+6. TILDA_SIZE_GATE and TILDA_T123_ATOMIC_GATE are mandatory BEFORE any package is called Tilda-ready.
+7. Clean-unpack/browser test the exact ZIP intended for handoff, not an earlier working directory.
+
+GATE F — PHYSICS RUNTIME
+1. Non-programmable calculator must work and must not provide CAS/equation/formula solving or programming.
+2. Physics symbol keyboard must work in required answer/draft fields.
+3. State restore/persistence must work after reload.
+4. Scorer must pass the full acceptance matrix for the target year.
+5. No severe JS errors.
+6. Responsive gate minimum widths: 1280, 768, 390, 360, 320; no horizontal overflow.
+7. All randomized official variants must be browser-tested and persist correctly.
+
+GATE G — FINAL FREEZE
+A year may be declared ACCEPTED / TILDA-READY / FROZEN only when ALL applicable gates above are PASS.
+The final acceptance evidence must record exact-year source identity, T123 size/atomic status, UX parity, browser/scorer/state/responsive gates and clean-unpack status.
+Reopen a frozen year only for a confirmed defect, confirmed source mismatch, platform compatibility requirement, or direct user instruction.
+
+SEQUENCE
+After frozen 2026, build/accept physics archive in order: 2025 -> 2024 -> 2023 -> 2022.
