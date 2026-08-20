@@ -1,0 +1,24 @@
+name: PEIS Browser Hook 001 Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/peis-browser-hook-reference/**'
+      - 'eksamio-learning-engine/tasks/PEIS-BROWSER-HOOK-001.md'
+      - 'eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate PEIS-BROWSER-HOOK-001
+        run: node eksamio-learning-engine/peis-browser-hook-reference/validate_peis_browser_hook_001.mjs
