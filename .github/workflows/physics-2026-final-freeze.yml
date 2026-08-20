@@ -1,0 +1,56 @@
+name: Physics 2026 final freeze
+on:
+  push:
+    branches:
+      - chatgpt/physics-2026-final-freeze-20260820
+    paths:
+      - .github/workflows/physics-2026-final-freeze.yml
+permissions:
+  contents: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2026-final-freeze-20260820
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build exact accepted T123 set
+        run: python .physics-2026-final-freeze/finalize.py
+      - name: Commit exact frozen deployment
+        run: |
+          rm -f .github/workflows/physics-2026-final-freeze.yml
+          rm -rf .physics-2026-final-freeze
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-01.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-02.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-03.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-04.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-05.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-06.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-07.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-08.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-09.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-10.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-11.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-12.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-13.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-14.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-15.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-16.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-17.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-MANIFEST.txt \
+            ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-PREVIEW.html \
+            .github/workflows/physics-2026-final-freeze.yml \
+            .physics-2026-final-freeze/finalize.py \
+            .physics-2026-final-freeze/payload01.b64 \
+            .physics-2026-final-freeze/payload17.b64
+          git diff --cached --check
+          git diff --cached --stat
+          git commit -m "Freeze Physics 2026 Tilda deployment"
+          git push origin HEAD:chatgpt/physics-2026-final-freeze-20260820
