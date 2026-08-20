@@ -43,6 +43,7 @@
 #ege-physics-demo-2026 .ephys-nav-btn[aria-current="true"]{outline:3px solid rgba(49,96,181,.24);outline-offset:2px;border-color:#315fb5}
 #ege-physics-demo-2026 .ephys-task-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
 #ege-physics-demo-2026 .ephys-task-number{font-size:14px;font-weight:850;letter-spacing:.04em;text-transform:uppercase}
+#ege-physics-demo-2026 .ephys-source-tag{font-size:12px;color:#657289;margin:3px 0 13px}
 #ege-physics-demo-2026 .ephys-task-prompt{font-size:17px;line-height:1.62}
 #ege-physics-demo-2026 .ephys-task-prompt li{margin-bottom:10px}
 #ege-physics-demo-2026 .ephys-figure{margin:18px 0;padding:14px;border:1px solid #dfe4eb;border-radius:14px;background:#fff;text-align:center}
@@ -73,6 +74,19 @@
 #ege-physics-demo-2026 .ephys-review-item{border:1px solid #dfe4eb;border-radius:14px;padding:16px;background:#fff;min-width:0}
 #ege-physics-demo-2026 .ephys-review-item[data-correct="true"]{border-left:5px solid #2f8a58}
 #ege-physics-demo-2026 .ephys-review-item[data-correct="false"]{border-left:5px solid #b84e4e}
+#ege-physics-demo-2026 .ephys-result-list{display:grid;gap:9px}
+#ege-physics-demo-2026 .ephys-result-item{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:10px;background:#f7f9fc}
+#ege-physics-demo-2026 .ephys-ok{color:#087a3e}
+#ege-physics-demo-2026 .ephys-bad{color:#b42318}
+#ege-physics-demo-2026 .ephys-ext{margin-top:18px;border-top:1px solid #e3e7ef;padding-top:18px}
+#ege-physics-demo-2026 .ephys-ext-card{border:1px solid #dfe5ee;border-radius:14px;padding:16px;margin:12px 0}
+#ege-physics-demo-2026 .ephys-ext-card h3{margin:0 0 8px}
+#ege-physics-demo-2026 .ephys-student-answer{margin:10px 0 12px;padding:12px;border:1px solid #dbe3ef;border-radius:10px;background:#f8faff}
+#ege-physics-demo-2026 .ephys-student-answer strong,#ege-physics-demo-2026 .ephys-solution-label{display:block;margin-bottom:6px}
+#ege-physics-demo-2026 .ephys-student-text{white-space:pre-wrap;overflow-wrap:anywhere;font:15px/1.5 Arial,sans-serif;color:#26344d}
+#ege-physics-demo-2026 .ephys-self-buttons{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+#ege-physics-demo-2026 .ephys-score-btn{border:1px solid #cfd7e5;background:#fff;border-radius:9px;padding:8px 12px;cursor:pointer}
+#ege-physics-demo-2026 .ephys-score-btn.is-on{background:#315fb5;color:#fff;border-color:#315fb5}
 #ege-physics-demo-2026 .ephys-self-grid{display:grid;gap:10px}
 #ege-physics-demo-2026 .ephys-self-row{display:grid;grid-template-columns:1fr minmax(130px,190px);gap:12px;align-items:center;border:1px solid #dfe4eb;border-radius:12px;padding:12px}
 #ege-physics-demo-2026 .ephys-self-row select{width:100%;padding:10px;border:1px solid #cdd4df;border-radius:10px;background:#fff}
@@ -148,14 +162,11 @@
 <section class="ep-panel" id="ephys-task-stage" aria-live="polite"></section>
 </div>
 <div class="ephys-result">
-<section class="ep-panel"><h2 class="ep-section-title">Результат попытки</h2><div class="ephys-score-grid">
-<div class="ephys-score-card"><div class="ephys-mini">Часть 1</div><div class="ephys-score-value"><span id="ephys-short-score">0</span>/28</div></div>
-<div class="ephys-score-card"><div class="ephys-mini">Часть 2</div><div class="ephys-score-value"><span id="ephys-extended-score">—</span>/17</div></div>
-<div class="ephys-score-card"><div class="ephys-mini">Общий первичный балл</div><div class="ephys-score-value"><span id="ephys-total-score">—</span>/45</div></div>
-</div><p id="ephys-result-note" class="ephys-mini"></p></section>
-<section class="ep-panel"><h2 class="ep-section-title">Самооценка заданий 21–26</h2><p>Выберите баллы после сравнения своего решения с возможным решением и критериями ФИПИ. Пока оценены не все задания, общий результат не считается окончательным.</p><div class="ephys-self-grid" id="ephys-self-grid"></div></section>
-<section class="ep-panel"><h2 class="ep-section-title">Проверка заданий</h2><div class="ephys-review-list" id="ephys-review"></div></section>
-<section class="ep-panel ephys-source-credit"><h2 class="ep-section-title">Источники и статус страницы</h2><p>Задания, ответы, возможные решения и критерии перенесены из официальной демоверсии ФИПИ ЕГЭ 2026 по физике; структура сверена со спецификацией и кодификатором. Все рисунки, графики, схемы и фотографии, воспроизводящие материалы КИМ и официальных решений, показаны как точные crop-фрагменты из зафиксированного официального PDF ФИПИ; реконструированные изображения в экзаменационном контенте не используются.</p><p>Эксамио не является официальным сайтом ФИПИ, Рособрнадзора или организаторов ЕГЭ.</p><div class="ephys-actions"><button class="ep-button ep-button--secondary" id="ephys-reset-result" type="button">Начать новую попытку</button></div></section>
+<section class="ep-panel ephys-results-card"><h2 class="ep-section-title">Результат попытки</h2><div class="ephys-score-grid">
+<div class="ephys-score-card"><div class="ephys-mini">Автоматически, №1–20</div><div class="ephys-score-value"><span id="ephys-short-score">0</span>/28</div></div>
+<div class="ephys-score-card"><div class="ephys-mini">Самооценка, №21–26</div><div class="ephys-score-value"><span id="ephys-extended-score">—</span>/17</div></div>
+<div class="ephys-score-card"><div class="ephys-mini">Итого по самооценке</div><div class="ephys-score-value"><span id="ephys-total-score">—</span>/45</div></div>
+</div><div id="ephys-short-results" class="ephys-result-list"></div><div class="ephys-ext"><h2 class="ep-section-title">Развёрнутая часть: официальные решения и критерии</h2><p class="ephys-mini">Выберите балл только после сравнения своего решения с официальным решением и критериями ФИПИ. Это самостоятельная оценка, а не автоматическая проверка.</p><div id="ephys-ext-results"></div></div><div class="ephys-actions"><button class="ep-button" id="ephys-new" type="button">Новая попытка</button><button class="ep-button ep-button--secondary" id="ephys-reference-result" type="button">Справочные материалы</button></div></section>
 </div>
 </div></div>
 <div class="ephys-modal" id="ephys-modal" aria-hidden="true"><div class="ephys-modal__card" role="dialog" aria-modal="true" aria-labelledby="ephys-modal-title" tabindex="-1"><div class="ephys-modal__head"><h2 class="ep-section-title" id="ephys-modal-title">Справочные данные</h2><button class="ep-button ep-button--small ep-button--secondary" id="ephys-modal-close" type="button">Закрыть</button></div><div class="ephys-modal__body" id="ephys-modal-body"></div></div></div>
