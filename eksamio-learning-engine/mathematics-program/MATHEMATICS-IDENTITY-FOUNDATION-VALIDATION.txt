@@ -1,35 +1,56 @@
 EKSAMIO LEARNING ENGINE
-MATHEMATICS IDENTITY FOUNDATION — CURRENT-MAIN INVENTORY VALIDATION
+MATHEMATICS IDENTITY FOUNDATION — CURRENT-MAIN INVENTORY / SEED REGISTRY VALIDATION
 DATE: 2026-08-20
 BASELINE MAIN: 65640fc33fdd7c7e91899e47792254ebb1b2c645
-STATUS: PASS / SUBJECT INVENTORY ONLY / NO PRODUCTION INTEGRATION
+STATUS: PASS / SUBJECT IDENTITY FOUNDATION / NO PRODUCTION INTEGRATION
 
-SCOPE
+SOURCE / ROUTE SCOPE
 - years inventoried: 2022, 2023, 2024, 2025, 2026
-- exam route overlays per year: base + profile
+- exam route overlays: base + profile
 - route-year cells: 10 / 10
+- official source material observed: 10 / 10
+- materialized route builds: 8 / 10
+- confirmed build gaps: BASE 2025; PROFILE 2022
+- build gaps mislabeled as semantic gaps: NO
 
-SOURCE AUTHORITY
-- official source material observed for all 10 route-year cells: PASS
-- exact-year content authority preserved: PASS
-- adjacent-year accepted builds used as content authority: NO
-- existing source/build directories moved or normalized: NO
+2026 PRE-SEMANTIC INVENTORY
+- official top-level domains: 7
+- official content objects: 41
+- in 2026 EGE task scope: 37
+- broad BASE route rows: 21 / 21
+- broad PROFILE route rows: 19 / 19
+- broad codifier/task route promoted automatically to exact learner skill: NO
 
-MATERIALIZED ROUTE BUILDS
-- base: 2022, 2023, 2024, 2026
-- profile: 2023, 2024, 2025, 2026
-- confirmed product/build gaps: BASE 2025; PROFILE 2022
-- product/build gaps mislabeled as semantic gaps: NO
-
-IDENTITY BOUNDARY
-- one Mathematics subject model: YES
+UNIFIED REGISTRY
+- one Mathematics subject registry: YES
 - base/profile are route overlays: YES
-- year creates semantic identity: NO
-- task number creates semantic identity: NO
-- demo_item_id creates semantic identity: NO
-- existing historical product IDs preserved: YES
-- new final mathematics semantic IDs created: 0
-- semantic registry status: NOT_YET_MATERIALIZED
+- namespace: math-<domain>-<stable-slug>
+- admitted semantic identities: 1
+- seed identity: math-probability-equiprobable-elementary-outcomes
+- seed duplicate/granularity admission audit present: YES
+- seed crosswalk present: YES
+
+SEED IDENTITY SOURCE CHECK
+- 2022 codifier 6.3.1 exact historical meaning: PASS
+- 2023 codifier 6.3.1 same meaning: PASS
+- current 2026 requirement 8 / content 6.2 preserves probability domain: PASS
+- current BASE-2026 exact mapped examples: PASS
+- current PROFILE-2026 exact mapped examples: PASS
+- PROFILE task-level overmapping prevented: PASS
+- nested-event-difference variant explicitly excluded from this identity: PASS
+
+GRANULARITY / HISTORY
+- task number used as semantic identity: NO
+- year used as semantic identity: NO
+- demo_item_id used as semantic identity: NO
+- FIPI code copied as semantic ID: NO
+- 2022/2023/2026 code equality assumed: NO
+- historical finer codifier granularity preserved as source evidence: YES
+
+PREREQUISITES
+- canonical Mathematics prerequisite edges admitted: 0
+- prerequisite invented from exam/course order: NO
+- seed prerequisite_ids: empty
 
 SHARED PEIS BOUNDARY
 - shared EvidenceEvent/State/Mastery/Readiness/Retention/NBA contracts reused: YES
@@ -44,8 +65,12 @@ PRODUCTION SAFETY
 - Tilda/production changed: NO
 
 NEXT GATE
-Create a provenance-rich Mathematics semantic candidate inventory and cross-route/year dedupe.
-Only after identity stability: select a deterministic real Mathematics slice and run it through the existing shared PEIS reference kernel.
+Materialize the first real Mathematics PEIS slice around the admitted probability identity:
+- original isolated diagnostic items;
+- fresh independent verification items;
+- exact shared EvidenceEvent fixtures;
+- no fake prerequisite edge;
+- execute through the existing subject-neutral PEIS reference kernel.
 
 VERDICT
-PASS. Current mathematics work is preserved non-destructively, the 2022–2026 source/build topology is explicit, and the project can now move from route/product objects toward one evidence-backed Mathematics Identity Model without inventing semantic truth.
+PASS. Mathematics now has a non-destructive 2022–2026 source topology, a source/object-to-route pre-semantic layer, an explicit unified-registry contract and one source-verified cross-route semantic seed. The next step is executable evidence over that real identity, not bulk ID generation.

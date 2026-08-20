@@ -1,18 +1,12 @@
 {
-  "schema_version": "0.1.0",
-  "date": "2026-08-20",
-  "status": "CURRENT_MAIN_MATHEMATICS_SOURCE_ROUTE_MATRIX",
-  "subject": "mathematics",
-  "main_baseline_sha": "65640fc33fdd7c7e91899e47792254ebb1b2c645",
-  "purpose": "Non-destructive 2022–2026 inventory of exact-year official source authority and route-build status for EGE base/profile mathematics before Mathematics Identity Model admission.",
-  "authority_rules": [
-    "Exact-year official FIPI demo/specification/codifier sources own historical content truth.",
-    "Accepted packages from adjacent years are technical references only and never content authority for another year.",
-    "Base and profile are exam-route overlays of one Mathematics subject model, not separate learner models.",
-    "Product task IDs, demo item IDs, year and variant order are evidence/source addresses, not semantic identities.",
-    "No existing source/build directory is renamed, moved or rebuilt merely for uniformity."
-  ],
-  "routes": [
+  "schema_version":"0.1.0",
+  "date":"2026-08-20",
+  "status":"CURRENT_MAIN_MATHEMATICS_SOURCE_ROUTE_MATRIX",
+  "subject":"mathematics",
+  "main_baseline_sha":"65640fc33fdd7c7e91899e47792254ebb1b2c645",
+  "purpose":"Non-destructive 2022–2026 inventory of exact-year official source authority and route-build status for EGE base/profile mathematics, now linked to the seed Mathematics semantic registry.",
+  "authority_rules":["Exact-year official FIPI demo/specification/codifier sources own historical content truth.","Accepted packages from adjacent years are technical references only and never content authority for another year.","Base and profile are exam-route overlays of one Mathematics subject model, not separate learner models.","Product task IDs, demo item IDs, year and variant order are evidence/source addresses, not semantic identities.","No existing source/build directory is renamed, moved or rebuilt merely for uniformity."],
+  "routes":[
     {"year":2026,"route":"base","source_status":"APPROVED_FIPI_2026_CANONICALIZED","source_refs":["matematika-source-2026/SOURCE-INVENTORY.txt","matematika-source-2026/original/"],"build_status":"PUBLISHED_AND_VALIDATED","build_ref":"ege-matematika-baza-demoversiya-2026/","status_ref":"ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-PAGE-STATUS.txt","notes":"21/21 full attempt; 70/70 official examples; published smoke PASS."},
     {"year":2026,"route":"profile","source_status":"APPROVED_FIPI_2026_CANONICAL_SOURCE_AVAILABLE","source_refs":["matematika-source-2026/SOURCE-INVENTORY.txt","matematika-source-2026/original/"],"build_status":"ACCEPTED_TECHNICAL_REFERENCE_FROZEN","build_ref":"ege-matematika-profil-demoversiya-2026/","status_ref":"ege-matematika-profil-demoversiya-2026/ACCEPTED-TECHNICAL-REFERENCE-2026-08-19.txt","notes":"User-rechecked accepted reference; do not rebuild without cause."},
     {"year":2025,"route":"base","source_status":"OFFICIAL_FIPI_FILES_PRESENT_NO_DEDICATED_BASE_SOURCE_LOCK_OBSERVED","source_refs":["matematika-source-2025/ege-2025-matematika-baza-demoversiya.pdf","matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf","matematika-source-2025/ege-2025-matematika-kodifikator.pdf"],"build_status":"ROUTE_BUILD_ABSENT_IN_CURRENT_MAIN","build_ref":null,"status_ref":null,"notes":"Real product/build gap. Source availability is not a completed demo or a semantic gap."},
@@ -24,5 +18,5 @@
     {"year":2022,"route":"base","source_status":"EXACT_YEAR_FIPI_SOURCE_LOCKED","source_refs":["matematika-source-2022/01-BASE-2022-SOURCE-LOCK.txt","matematika-source-2022/ege-2022-matematika-baza-demoversiya.pdf","matematika-source-2022/ege-2022-matematika-baza-specifikatsiya.pdf","matematika-source-2022/ege-2022-matematika-kodifikator.pdf"],"build_status":"ACCEPTED_BY_USER_FROZEN_READY_FOR_TILDA","build_ref":"ege-matematika-baza-demoversiya-2022/","status_ref":"matematika-source-2022/07-BASE-2022-ACCEPTED.txt","notes":"52/52 source trace; clean-ZIP full regression; accepted package frozen."},
     {"year":2022,"route":"profile","source_status":"SOURCE_BYTES_AND_PAGE_MAP_LOCKED","source_refs":["matematika-source-2022/profile-source-lock/SOURCE-LOCK.json","matematika-source-2022/ege-2022-matematika-profil-demoversiya.pdf","matematika-source-2022/ege-2022-matematika-profil-specifikatsiya.pdf","matematika-source-2022/ege-2022-matematika-kodifikator.pdf"],"build_status":"ROUTE_BUILD_ABSENT_IN_CURRENT_MAIN","build_ref":null,"status_ref":null,"notes":"Exact-year source prelock exists; accepted profile-2022 route package is not materialized in current main."}
   ],
-  "summary": {"route_year_cells":10,"cells_with_official_source_material":10,"cells_with_materialized_route_build":8,"route_build_gaps":[{"year":2025,"route":"base"},{"year":2022,"route":"profile"}],"semantic_registry_materialized":false}
+  "summary":{"route_year_cells":10,"cells_with_official_source_material":10,"cells_with_materialized_route_build":8,"route_build_gaps":[{"year":2025,"route":"base"},{"year":2022,"route":"profile"}],"semantic_registry_materialized":true,"semantic_registry_ref":"MATHEMATICS-SEMANTIC-IDENTITY-REGISTRY-v0.1.json","admitted_semantic_id_count":1}
 }

@@ -1,0 +1,58 @@
+EKSAMIO / PEIS
+MATHEMATICS UNIFIED SEMANTIC IDENTITY REGISTRY CONTRACT
+VERSION: v0.1
+DATE: 2026-08-20
+STATUS: ACTIVE SUBJECT ARCHITECTURE CONTRACT / SEED MATERIALIZATION
+
+PURPOSE
+Define one stable Mathematics semantic identity layer across EGE base/profile, historical exam years, future school/homework products, diagnostics and Tutor while preserving all existing source/build/product IDs.
+
+1. CORE PRINCIPLE
+A Mathematics semantic identity answers: WHAT DISTINCT MATHEMATICAL KNOWLEDGE / PROCEDURE / DISCRIMINATION / PROBLEM-SOLVING CAPABILITY CAN BE LEARNED AND ASSESSED?
+It does not answer which exam route/year/task/product was used, whether the learner has mastered it, or which recommendation should be shown.
+
+2. ONE SUBJECT MODEL
+There is one Mathematics Identity Model. EGE base and EGE profile are versioned route overlays onto the same semantic truth. Year changes and task renumbering do not create new semantic identities. A profile-only depth may justify a distinct identity only when the mathematical capability itself is genuinely distinct.
+
+3. SOURCE AUTHORITY
+Historical/current mathematical truth must remain traceable to exact-year official source objects and reviewed school/curriculum sources. Existing `matematika-source-*` source locks and accepted `ege-matematika-*` builds remain source/product evidence systems; this registry maps them and does not replace them.
+
+4. NAMESPACE
+New admitted Mathematics semantic identities use: `math-<domain>-<stable-slug>`.
+A final ID is created only by a source-backed admission record.
+Forbidden as semantic IDs: task numbers; year-specific IDs when meaning is unchanged; demo item IDs; FIPI codifier codes copied verbatim; base/profile-prefixed duplicates of the same meaning.
+
+5. ENTITY TYPES
+KNOWLEDGE_CONCEPT; PROCEDURAL_SKILL; DISCRIMINATION_SKILL; REPRESENTATION_SKILL; PROBLEM_MODELING_SKILL; PROOF_REASONING_SKILL; COMPOSITE_COMPETENCY.
+A composite competency may reference smaller identities but must not erase them.
+
+6. MINIMUM ENTRY CONTRACT
+Each admitted identity must contain: semantic_id; subject_id=mathematics; entity_type; canonical_label_ru; canonical_definition_ru; domain; subdomain; status; review_status; source_authority_refs[]; source_provenance_refs[]; route_relevance[]; school_grade_scope[] when verified; aliases[]; parent_ids[]; prerequisite_ids[]; legacy_refs[]; supersedes[]; superseded_by[]; notes.
+No mastery/readiness values belong in the subject registry.
+
+7. GRANULARITY
+An identity should be independently teachable and assessable. Do not promote broad headings such as `Преобразование выражений`, `Вероятность`, or `Фигуры на плоскости` unchanged when they aggregate distinct decisions. Do not split solely because examples, task numbers, years or routes differ. Do not combine unrelated operations because one exam item scores them together. Mixed tasks may map PARTIAL/COMPOSITE to multiple identities.
+
+8. DUPLICATE / ADMISSION GATE
+Before admission: search admitted Mathematics identities and aliases; compare current and historical FIPI content objects by mathematical meaning, not code equality; compare base/profile route objects; inspect exact demo/product evidence; decide REUSE / MERGE / SPLIT / ROUTE_ONLY / ADMIT.
+Different wording, year, route or task number is never sufficient reason for a new identity.
+
+9. CROSSWALK
+Product/source IDs remain stable. Versioned mappings may use ASSESSES, PARTIAL_ASSESSMENT, PRACTICES, EXPLAINS, ROUTES_TO, SOURCE_SUPPORTS, COMPOSITE_OF. An official broad content-section mapping is not automatically an exact ASSESSES mapping.
+
+10. PREREQUISITES
+Prerequisite edges are separate graph data under shared contract 283. No prerequisite may be admitted from course order alone, exam task order alone, apparent conceptual intuition alone, or AI assertion alone. Source-backed blocking relation plus provenance/review is required.
+
+11. SHARED PEIS BOUNDARY
+Mathematics does not own a separate learner evidence schema, Student Model/learner state, mastery, readiness, retention, or Next Best Action engine. Shared contracts 277/278/282/283/284/285 and the subject-neutral PEIS kernel consume Mathematics semantic IDs and evidence.
+
+12. VERSIONING / HISTORY
+Admitted IDs are stable. If candidates prove equivalent, choose one canonical owner and preserve aliases/history. If meaning genuinely changes, supersede/version explicitly. Historic learner evidence remains interpretable through the mapping version active at event time.
+
+13. MATERIALIZATION PHASES
+A. source/product inventory; B. candidate semantic decomposition and cross-year/route dedupe; C. source-backed identity admission; D. versioned crosswalk; E. subject slice fixtures; F. shared PEIS execution. No predetermined final identity count is allowed.
+
+14. FIRST SEED ADMISSION
+The first admitted identity is materialized separately in `MATHEMATICS-SEMANTIC-IDENTITY-REGISTRY-v0.1.json`. It is admitted because exact mathematical meaning is explicitly present in historical official codifiers, remains within current 2026 probability requirements, and is independently exercised by current BASE and PROFILE demo variants.
+
+END OF CONTRACT

@@ -1,0 +1,32 @@
+{
+  "schema_version":"0.1.0",
+  "registry_version":"mathematics-semantic-registry-v0.1",
+  "date":"2026-08-20",
+  "status":"ACTIVE_SEED_REGISTRY",
+  "subject_id":"mathematics",
+  "contract_ref":"MATHEMATICS-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v0.1.txt",
+  "identity_count":1,
+  "identities":[{
+    "semantic_id":"math-probability-equiprobable-elementary-outcomes",
+    "subject_id":"mathematics",
+    "entity_type":"PROCEDURAL_SKILL",
+    "canonical_label_ru":"Вычисление вероятности события при равновозможных элементарных исходах",
+    "canonical_definition_ru":"Выделить элементарные исходы случайного опыта, убедиться в применимости модели равновозможных исходов, определить число благоприятных исходов и общее число исходов и вычислить вероятность события как их отношение.",
+    "domain":"probability_and_statistics",
+    "subdomain":"classical_probability",
+    "status":"ACCEPTED",
+    "review_status":"SOURCE_VERIFIED",
+    "source_authority_refs":["matematika-source-2022/profile-source-lock/cod/ALL-TEXT.txt#6.3.1","matematika-source-2023/profile-source-lock/cod/ALL-TEXT.txt#6.3.1","matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026_КОДИФ.txt#requirement-8","matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026_КОДИФ.txt#content-6.2"],
+    "source_provenance_refs":["2022 codifier 6.3.1 explicitly references probabilities in experiments with equiprobable elementary outcomes","2023 codifier 6.3.1 repeats the same base-level meaning","2026 codifier keeps probability current under requirement 8 / content section 6.2","2026 BASE demo task 5 contains exact independent examples","2026 PROFILE demo task 4 contains both exact examples of this meaning and other probability branches, proving task-level mapping must be selective"],
+    "route_relevance":["ege_base","ege_profile","diagnostic","homework","tutor"],
+    "school_grade_scope":[],
+    "aliases":[],
+    "parent_ids":[],
+    "prerequisite_ids":[],
+    "legacy_refs":["fipi-2022-content-6.3.1","fipi-2023-content-6.3.1","fipi-2026-content-6.2"],
+    "supersedes":[],
+    "superseded_by":[],
+    "notes":"No prerequisite edge admitted. This identity is narrower than broad current FIPI content object 6.2 Probability and narrower than EGE profile task 4 as a whole."
+  }],
+  "registry_invariants":["base/profile share identities when mathematical meaning is the same","exam task/year/product IDs remain source/evidence addresses","no learner mastery or readiness value is stored here","no unreviewed candidate is promoted by count or naming convenience"]
+}

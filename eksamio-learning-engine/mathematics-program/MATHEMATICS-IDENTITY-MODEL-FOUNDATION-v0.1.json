@@ -1,81 +1,18 @@
 {
-  "schema_version": "0.1.0",
-  "date": "2026-08-20",
-  "status": "MATHEMATICS_IDENTITY_MODEL_FOUNDATION_PRE_ADMISSION",
-  "subject": "mathematics",
-  "main_baseline_sha": "65640fc33fdd7c7e91899e47792254ebb1b2c645",
-  "source_matrix_ref": "MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.1.json",
-  "product_architecture": {
-    "subject_model": "ONE_MATHEMATICS_IDENTITY_MODEL",
-    "exam_route_overlays": ["ege_base", "ege_profile"],
-    "year_role": "route/source metadata, never semantic identity",
-    "task_number_role": "exam route metadata, never semantic identity",
-    "variant_role": "product/evidence address, never semantic identity",
-    "accepted_demo_role": "diagnostic/evidence sensor after exact semantic mapping"
-  },
-  "existing_identity_evidence": {
-    "profile_2023_identity_map": "matematika-source-2023/profile-source-lock/DEMO-ITEM-IDENTITY-MAP.json",
-    "locked_product_id_formats": ["ege.math.profile.2023.task.<task_number>", "ege.math.profile.2023.task.<task_number>.variant.<variant_number>"],
-    "boundary": "Stable historical IDs are source/evidence addresses and must be mapped to, not promoted into, the future semantic registry."
-  },
-  "semantic_admission_policy": {
-    "current_final_math_semantic_ids_created_by_this_artifact": 0,
-    "final_namespace": "UNDECIDED_UNTIL_REGISTRY_CONTRACT",
-    "candidate_sources": [
-      "official FIPI codifier structure for exact years 2022-2026",
-      "official task/specification mappings where they clarify assessed actions",
-      "verified school mathematics sources required to distinguish underlying concepts from exam-route packaging"
-    ],
-    "required_decisions": ["reuse_same_meaning", "merge_cross_year_route_equivalents", "split_composite_exam_objects", "reject_route_only_objects", "admit_genuinely_distinct_semantic_identity"],
-    "forbidden_shortcuts": [
-      "task number becomes semantic identity",
-      "base/profile creates parallel semantic registries",
-      "year creates a new semantic identity when meaning is unchanged",
-      "demo item wording alone defines prerequisite truth",
-      "course order or exam order defines prerequisite truth",
-      "AI assertion alone admits identity or prerequisite"
-    ]
-  },
-  "shared_peis_boundary": {
-    "reuse_contracts": [
-      "277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
-      "278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json",
-      "282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json",
-      "283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json",
-      "284-EKSAMIO-RETENTION-SCHEDULE-STATE-CONTRACT-v0.1.json",
-      "285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json"
-    ],
-    "forbidden_parallel_systems": ["Mathematics Student Model", "Mathematics learner state engine", "Mathematics mastery engine", "Mathematics readiness engine", "Mathematics retention engine", "Mathematics NBA engine"]
-  },
-  "current_real_gaps": {
-    "route_build_gaps": [
-      {"year": 2025, "route": "ege_base", "kind": "PRODUCT_BUILD_GAP", "not_a_semantic_gap": true},
-      {"year": 2022, "route": "ege_profile", "kind": "PRODUCT_BUILD_GAP_AFTER_SOURCE_PRELOCK", "not_a_semantic_gap": true}
-    ],
-    "identity_gap": {"kind": "SUBJECT_SEMANTIC_REGISTRY_NOT_MATERIALIZED", "priority": "P0", "description": "Current exact-year source and accepted product evidence must now be inventoried into one deduplicated Mathematics semantic candidate registry."}
-  },
-  "observed_contours": {
-    "source_roots": ["../../matematika-source-2022/", "../../matematika-source-2023/", "../../matematika-source-2024/", "../../matematika-source-2025/", "../../matematika-source-2026/"],
-    "materialized_base_build_years": [2022, 2023, 2024, 2026],
-    "materialized_profile_build_years": [2023, 2024, 2025, 2026],
-    "missing_materialized_route_builds": [{"year": 2025, "route": "base"}, {"year": 2022, "route": "profile"}]
-  },
-  "preservation_contract": [
-    "Do not rewrite accepted source locks, task text, answers, scoring, visual crops, input contracts or historical ordering.",
-    "Do not rebuild frozen/accepted packages solely to normalize directory or implementation shape.",
-    "Do not use one year's accepted package as content evidence for another year.",
-    "Historical product IDs survive future semantic mapping unchanged.",
-    "Production/Tilda is outside this identity-foundation change."
-  ],
-  "next_gate": {
-    "deliverable": "MATHEMATICS_SEMANTIC_CANDIDATE_INVENTORY_AND_CROSS_ROUTE_DEDUPE",
-    "method": [
-      "inventory source/task/codifier objects without modifying historical content",
-      "record provenance and base/profile/year routes",
-      "classify route-only vs same-meaning vs composite vs candidate semantic objects",
-      "admit no final semantic ID until duplicates/granularity are reviewed",
-      "select first deterministic source-complete math slice only after stable identities exist",
-      "run that real math slice through the existing shared PEIS reference kernel"
-    ]
-  }
+  "schema_version":"0.1.0",
+  "date":"2026-08-20",
+  "status":"MATHEMATICS_IDENTITY_MODEL_FOUNDATION_WITH_SEED_REGISTRY",
+  "subject":"mathematics",
+  "main_baseline_sha":"65640fc33fdd7c7e91899e47792254ebb1b2c645",
+  "source_matrix_ref":"MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.1.json",
+  "registry_contract_ref":"MATHEMATICS-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v0.1.txt",
+  "registry_ref":"MATHEMATICS-SEMANTIC-IDENTITY-REGISTRY-v0.1.json",
+  "product_architecture":{"subject_model":"ONE_MATHEMATICS_IDENTITY_MODEL","exam_route_overlays":["ege_base","ege_profile"],"year_role":"route/source metadata, never semantic identity","task_number_role":"exam route metadata, never semantic identity","variant_role":"product/evidence address, never semantic identity","accepted_demo_role":"diagnostic/evidence sensor after exact semantic mapping"},
+  "existing_identity_evidence":{"profile_2023_identity_map":"matematika-source-2023/profile-source-lock/DEMO-ITEM-IDENTITY-MAP.json","locked_product_id_formats":["ege.math.profile.2023.task.<task_number>","ege.math.profile.2023.task.<task_number>.variant.<variant_number>"],"boundary":"Stable historical IDs are source/evidence addresses and must be mapped to, not promoted into, the semantic registry."},
+  "semantic_admission_policy":{"final_namespace":"math-<domain>-<stable-slug>","current_admitted_math_semantic_id_count":1,"seed_identity":"math-probability-equiprobable-elementary-outcomes","candidate_sources":["official FIPI codifier structure for exact years 2022-2026","official task/specification mappings where they clarify assessed actions","verified school mathematics sources required to distinguish underlying concepts from exam-route packaging"],"required_decisions":["reuse_same_meaning","merge_cross_year_route_equivalents","split_composite_exam_objects","reject_route_only_objects","admit_genuinely_distinct_semantic_identity"],"forbidden_shortcuts":["task number becomes semantic identity","base/profile creates parallel semantic registries","year creates a new semantic identity when meaning is unchanged","demo item wording alone defines prerequisite truth","course order or exam order defines prerequisite truth","AI assertion alone admits identity or prerequisite"]},
+  "shared_peis_boundary":{"reuse_contracts":["277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json","278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json","282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json","283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json","284-EKSAMIO-RETENTION-SCHEDULE-STATE-CONTRACT-v0.1.json","285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json"],"forbidden_parallel_systems":["Mathematics Student Model","Mathematics learner state engine","Mathematics mastery engine","Mathematics readiness engine","Mathematics retention engine","Mathematics NBA engine"]},
+  "current_real_gaps":{"route_build_gaps":[{"year":2025,"route":"ege_base","kind":"PRODUCT_BUILD_GAP","not_a_semantic_gap":true},{"year":2022,"route":"ege_profile","kind":"PRODUCT_BUILD_GAP_AFTER_SOURCE_PRELOCK","not_a_semantic_gap":true}],"identity_gap":{"kind":"SUBJECT_SEMANTIC_REGISTRY_PARTIALLY_MATERIALIZED","priority":"P0","description":"A one-identity seed proves admission mechanics; remaining official/historical objects still require provenance-rich decomposition and dedupe. No final count is targeted."}},
+  "observed_contours":{"source_roots":["../../matematika-source-2022/","../../matematika-source-2023/","../../matematika-source-2024/","../../matematika-source-2025/","../../matematika-source-2026/"],"materialized_base_build_years":[2022,2023,2024,2026],"materialized_profile_build_years":[2023,2024,2025,2026],"missing_materialized_route_builds":[{"year":2025,"route":"base"},{"year":2022,"route":"profile"}]},
+  "preservation_contract":["Do not rewrite accepted source locks, task text, answers, scoring, visual crops, input contracts or historical ordering.","Do not rebuild frozen/accepted packages solely to normalize directory or implementation shape.","Do not use one year's accepted package as content evidence for another year.","Historical product IDs survive future semantic mapping unchanged.","Production/Tilda is outside this identity-foundation change."],
+  "next_gate":{"deliverable":"FIRST_REAL_MATHEMATICS_PEIS_SLICE","method":["use the admitted seed identity with exact mapped 2026 base/profile variants","create original isolated diagnostic and independent verification fixtures without copying FIPI wording","emit schema-valid shared EvidenceEvent fixtures with EXACT mapping","do not invent a prerequisite edge where none is source-admitted","run the real Mathematics fixtures through the existing subject-neutral PEIS reference kernel","then continue registry expansion via the same source-backed admission gate"]}
 }
