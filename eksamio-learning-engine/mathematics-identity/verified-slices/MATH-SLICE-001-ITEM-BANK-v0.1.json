@@ -1,0 +1,55 @@
+{
+  "artifact_id": "MATH-SLICE-001-ITEM-BANK-v0.1",
+  "slice_id": "MATH-SLICE-001",
+  "version": "0.1",
+  "date": "2026-08-20",
+  "status": "ORIGINAL_EKSAMIO_DETERMINISTIC_FIXTURE_ITEMS",
+  "subject_id": "mathematics",
+  "semantic_registry_version": "mathematics-semantic-registry-v0.1",
+  "semantic_id": "math-probability-classical-equally-likely",
+  "source_gate_ref": "MATH-SLICE-001-SOURCE-GATE-v0.1.json",
+  "copyright_boundary": "These are original Eksamio validation/practice items. They test the source-backed capability but do not copy FIPI item wording.",
+  "items": [
+    {
+      "item_id": "MATH1-PROB-DIAG-01",
+      "role": "DIAGNOSTIC",
+      "mapping_resolution": "EXACT",
+      "prompt": "В непрозрачном пакете 20 одинаковых по форме жетонов. На 5 жетонах изображён треугольник. Один жетон выбирают случайно. Какова вероятность выбрать жетон с треугольником?",
+      "response_mode": "NUMERIC",
+      "correct_value": 0.25,
+      "accepted_decimal_strings": ["0.25", "0,25"],
+      "solution_rule": "5 / 20 = 0.25",
+      "assistance_policy": "UNASSISTED_DIAGNOSTIC"
+    },
+    {
+      "item_id": "MATH1-PROB-GUIDED-01",
+      "role": "GUIDED_PRACTICE",
+      "mapping_resolution": "EXACT",
+      "prompt": "В коробке 12 одинаково вероятных для выбора карточек, 3 из них красные. Одну карточку выбирают случайно. Найдите вероятность выбрать красную карточку.",
+      "response_mode": "NUMERIC",
+      "correct_value": 0.25,
+      "accepted_decimal_strings": ["0.25", "0,25"],
+      "solution_rule": "3 / 12 = 0.25",
+      "assistance_policy": "GUIDED_HINT_ALLOWED",
+      "guided_hint": "Сначала посчитайте число благоприятных исходов, затем разделите его на общее число равновозможных исходов."
+    },
+    {
+      "item_id": "MATH1-PROB-VERIFY-01",
+      "role": "INDEPENDENT_VERIFICATION",
+      "mapping_resolution": "EXACT",
+      "prompt": "Из 30 одинаково вероятных для выбора карточек 9 отмечены звездой. Одну карточку выбирают случайно. Какова вероятность выбрать карточку со звездой?",
+      "response_mode": "NUMERIC",
+      "correct_value": 0.3,
+      "accepted_decimal_strings": ["0.3", "0,3"],
+      "solution_rule": "9 / 30 = 0.3",
+      "assistance_policy": "UNASSISTED_REQUIRED",
+      "verification_kind": "SAME_SESSION_VERIFICATION"
+    }
+  ],
+  "invariants": [
+    "all items map EXACT to one admitted semantic identity",
+    "the verification item is fresh and distinct from the helped practice item",
+    "deterministic correctness does not depend on AI evaluation",
+    "no official FIPI wording is copied into Eksamio fixture items"
+  ]
+}
