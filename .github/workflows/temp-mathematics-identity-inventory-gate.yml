@@ -1,0 +1,23 @@
+name: TEMP Mathematics Identity Inventory Gate
+
+on:
+  push:
+    branches:
+      - brain/mathematics-identity-inventory-v0-1
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Mathematics Identity inventory
+        run: |
+          python3 eksamio-learning-engine/mathematics-identity/validate_mathematics_identity_inventory_v0_1.py | tee /tmp/math-identity-validation.txt
+          grep -Fx 'STATUS: PASS' /tmp/math-identity-validation.txt
+          grep -Fx 'MATRIX_CELLS: 10' /tmp/math-identity-validation.txt
+          grep -Fx 'CANONICAL_SEMANTIC_IDENTITIES_ADMITTED: 0' /tmp/math-identity-validation.txt
+          grep -Fx 'GAP_BASE_2025: NEEDS_SOURCE_INVENTORY' /tmp/math-identity-validation.txt
+          grep -Fx 'SHARED_PEIS_REUSE: PASS' /tmp/math-identity-validation.txt
