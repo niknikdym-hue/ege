@@ -1,0 +1,52 @@
+Russian Exceptions 121-card PEIS integration validation
+Date: 2026-08-21
+Status: PASS
+
+Baseline
+- current main: b1732041738f4f7ad342b0114cec04d9aa0cf548
+- PR #23 head: 2215e47b5c211cbff7e12d5b823a0a835adb7480
+- PR #72 probe head: a15901ab64ed8fbf890dcab30daf9104a940091d
+- manifest 119 sha256: 2bfe535d73f2a2b59265140e13988c2dce53bc1fc02cbcdc0bb5fd39fc369d87
+- extracted compact corpus sha256: 4744f6d754149bf59eb790cb4b99487215d5ca8f3de9faa67df5efb19104ef19
+- practice_item_ids sha256: 0f7560c97ad2fae486136713773530cecac9e848abd1470b979929dc06aab12f
+- exception_ids sha256: 17427f23ed420f5216a6f3b895155c5cc46a2a61bd5d23c6c20e9694f90c466a
+- practice_item/exception_id pairs sha256: 3245fa610f8ad562578f16df7d631c2a2b6a263bd872aaa09fb5bf3eeb9bd1b1
+
+Full source-snapshot validation
+PASS Russian Exceptions 121-card PEIS integration ledger
+rows=121
+unique practice_item_id=121
+represented exception_id=88
+classification EXACT=91
+classification PARTIAL_COMPOSITE=5
+classification BLOCKED=25
+semantic integration-ready=96/121 (79.34%)
+live service connected=0/121
+canonical school targets used=35
+new ru-* identities admitted=0
+source corpus checked=yes
+source manifest checked=yes
+
+Clean repository-mode validation
+PASS Russian Exceptions 121-card PEIS integration ledger
+rows=121
+represented exception_id=88
+classification EXACT=91 PARTIAL_COMPOSITE=5 BLOCKED=25
+semantic integration-ready=96/121 (79.34%)
+live service connected=0/121
+canonical school targets used=35
+new ru-* identities admitted=0
+source corpus checked=no
+source manifest checked=no
+
+Validation scope
+- every EXACT row resolves to exactly one current school_canonical identity with mapping_resolution=EXACT;
+- every PARTIAL_COMPOSITE row resolves only to current canonical school identities and forbids exact weakness attribution;
+- every BLOCKED row has no canonical semantic target;
+- all referenced candidate-* values exist as current MISSING_SUBJECT_SEMANTIC_CANDIDATE objects;
+- all item-level candidate reconciliations explicitly keep candidate_admitted=false;
+- ledger/summary classification sets agree;
+- summary blocked clusters cover exactly the 25 BLOCKED rows without duplicates;
+- denominator hashes are deterministic;
+- optional source-snapshot mode verifies exact corpus and manifest hashes;
+- no runtime, production, scoring, localStorage, shared PEIS contract or public/Tilda mutation is part of this validation.
