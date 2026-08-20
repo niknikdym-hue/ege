@@ -1,0 +1,48 @@
+{
+  "task": "PEIS-TRUSTED-HOST-001",
+  "result": "PASS",
+  "validated_at": "2026-08-20T15:39:11Z",
+  "github_actions": {
+    "workflow_run_id": 32387373769,
+    "job_id": 96485046831,
+    "conclusion": "success"
+  },
+  "reuse_audit": {
+    "baseline_main": "24fc37e90d47f54206002de109d20f2e74eb1e29",
+    "project_auth_host_found": false,
+    "shared_identity_linking_reused": true,
+    "service_host_identity_contract_reused": true
+  },
+  "trusted_host": {
+    "browser_owns_learner_profile_id": false,
+    "browser_owns_identity_refs": false,
+    "token_exposes_learner_profile_id": false,
+    "token_signature": "HMAC-SHA256",
+    "cookie_http_only": true,
+    "cookie_secure": true,
+    "cookie_same_site": "Lax",
+    "runtime_secret_injected": true,
+    "production_auth_claimed": false
+  },
+  "continuity": {
+    "anonymous_to_user_same_learner": true,
+    "evidence_rewritten": false,
+    "evidence_migrated": false,
+    "cross_subject_learner_profile": true
+  },
+  "negative_gates": {
+    "browser_identity_assertions": "REJECTED",
+    "missing_token": "REJECTED",
+    "malformed_token": "REJECTED",
+    "tampered_payload": "REJECTED",
+    "tampered_signature": "REJECTED",
+    "expired_token": "REJECTED",
+    "future_iat": "REJECTED",
+    "unknown_key_id": "REJECTED",
+    "wrong_secret": "REJECTED",
+    "forbidden_token_claim": "REJECTED",
+    "email_identity": "REJECTED",
+    "identity_reassignment": "REJECTED"
+  },
+  "implementation_status": "REFERENCE_TRUSTED_HOST_IDENTITY_VALIDATED_NOT_PRODUCTION_AUTH"
+}

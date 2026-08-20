@@ -1,0 +1,41 @@
+PEIS-TRUSTED-HOST-001 REUSE AUDIT
+Date: 2026-08-20
+Baseline main: 24fc37e90d47f54206002de109d20f2e74eb1e29
+Recursive tree: 51ceb21341786d3eaea2eae3ae6a7ed4d5394e80
+Decision: NO_REUSABLE_PROJECT_AUTH_HOST_FOUND
+
+METHOD
+
+1. Searched repository code for auth/login/cookie/session/token/anonymous identity terms.
+2. Treated code-search results as advisory only because the GitHub code index did not yet surface some newly merged PEIS literals.
+3. Inspected the actual recursive tree of current main.
+4. Checked for application/runtime indicators including package.json, requirements.txt, pyproject.toml, Vercel, Netlify, Cloudflare, serverless functions, OAuth, JWT, account and sign-in paths.
+5. Inspected shared PEIS persistence identity-link APIs and the PEIS service HostIdentity contract.
+
+FINDINGS
+
+- No package.json application backend exists in current main.
+- No requirements.txt or pyproject.toml application backend exists in current main.
+- No Vercel/Netlify/Cloudflare/serverless functions tree was found.
+- No reusable OAuth/JWT/account/sign-in application layer was found.
+- No existing trusted cookie/session identity resolver was found.
+- The public/current trainer remains browser/localStorage-oriented rather than backed by a repository-defined authenticated host.
+
+REUSABLE PEIS COMPONENTS FOUND
+
+1. `peis-persistence-reference/peis_persistence.py`
+   - `link_identity(identity_ref, learner_profile_id, identity_kind=...)`
+   - `resolve_identity(identity_ref)`
+   - collision protection prevents an identity_ref from being silently reassigned to another learner.
+
+2. `peis-service-bridge-reference/peis_service_bridge.py`
+   - `HostIdentity(learner_profile_id, identity_refs)`
+   - validation already forbids email-like identity refs and accepts only anonymous/user identity refs.
+
+ARCHITECTURAL DECISION
+
+Do not create a production account system inside PEIS.
+
+Build a REFERENCE trusted-host boundary only, reusing shared persistence identity links and returning the existing service-bridge HostIdentity. The reference boundary may prove token integrity, expiry, opaque anonymous identity, secure cookie projection and anonymous-to-account continuity, but it must not claim public authentication or production deployment.
+
+No Tilda/browser runtime changes are authorized by this audit.
