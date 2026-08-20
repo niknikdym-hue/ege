@@ -1,0 +1,16 @@
+PHYSICS 2026 — TILDA T123 SIZE HOTFIX
+
+Reason: deployment split exceeded the established Eksamio/Tilda per-block limit.
+Canonical hard gate: every T123 MUST be < 42,500 UTF-8 bytes.
+This package uses a conservative target <= 38,000 UTF-8 bytes.
+
+T123_COUNT=17
+TILDA_SIZE_GATE=PASS
+TILDA_T123_ATOMIC_GATE=PASS
+DATA_JSON_RECONSTRUCTION=PASS_EXACT
+CONTENT_OR_SOURCE_VISUAL_CHANGE=NO
+SCORER_LOGIC_CHANGE=NO
+RUNTIME_CHANGE=ONLY_CHUNK_REASSEMBLY_FOR_DATA_BLOCKS
+
+Upload T123-01 ... T123-17 to separate T123 blocks in exactly this order.
+Do not concatenate multiple files into one T123.
