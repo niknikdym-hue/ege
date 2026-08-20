@@ -1,0 +1,49 @@
+{
+  "task": "PEIS-BROWSER-HOOK-001",
+  "result": "PASS",
+  "validated_at": "2026-08-20T15:27:18Z",
+  "github_actions": {
+    "workflow_run_id": 32386196695,
+    "job_id": 96481174742,
+    "conclusion": "success"
+  },
+  "current_runtime": {
+    "blob_sha": "97143363a5adfaef5609bc28fe823c31a2c1fc4d",
+    "mutated": false,
+    "projection_only": true
+  },
+  "browser_hook": {
+    "default_enabled": false,
+    "transport": "HOST_INJECTED",
+    "production_endpoint_defined": false,
+    "public_authentication_defined": false,
+    "browser_identity_sent": false,
+    "canonical_state_persisted_in_browser": false
+  },
+  "safety": {
+    "disabled_sends_nothing": true,
+    "transport_error": "FAILED_OPEN",
+    "transport_timeout": "FAILED_OPEN",
+    "callback_error": "FAILED_OPEN",
+    "invalid_directive": "FAILED_OPEN",
+    "runtime_projection_fire_and_forget": true
+  },
+  "request": {
+    "allowed_payload_fields": [
+      "card_id",
+      "session_started_at_ms",
+      "session_mode",
+      "answer",
+      "occurred_at_client",
+      "client_request_id"
+    ],
+    "stable_client_request_id": true,
+    "forbidden_truth_fields_absent": true
+  },
+  "directive": {
+    "read_only": true,
+    "canonical_state_owner": "shared_peis",
+    "allowlist_enforced": true
+  },
+  "implementation_status": "REFERENCE_BROWSER_HOOK_VALIDATED_NOT_WIRED_TO_PRODUCTION"
+}
