@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-20",
+  "status": "GOLDEN_SCENARIOS_FOR_SHARED_KERNEL",
+  "slice_id": "MATHEMATICS-SEMANTIC-SLICE-001",
+  "semantic_id": "math-probability-equiprobable-elementary-outcomes",
+  "goal_context": "classical probability with equiprobable elementary outcomes",
+  "admitted_edges": [],
+  "scenarios": [
+    {
+      "scenario_id": "MATH001-GOLDEN-A-ERROR-REPAIR-VERIFY-RETAIN",
+      "description": "Exact BASE demo error triggers targeted practice, assistance requires independent verification, fresh verification changes qualitative mastery state, delayed retention establishes retained strength.",
+      "steps": [
+        {"consume_event":"math001.ev.base.demo.fail","expected_mastery_band":"EMERGING","expected_readiness":"READY_TO_LEARN_OR_PRACTICE","expected_nba":{"action_type":"GUIDED_PRACTICE","reason_codes":["LOW_MASTERY_HIGH_CONFIDENCE","TARGET_READY_TO_LEARN"]}},
+        {"consume_event":"math001.ev.practice.assisted.success","expected_mastery_band":"EMERGING","expected_readiness":"READY_TO_LEARN_OR_PRACTICE","expected_nba":{"action_type":"INDEPENDENT_PRACTICE","reason_codes":["INDEPENDENT_VERIFICATION_REQUIRED_AFTER_HELP"]}},
+        {"consume_event":"math001.ev.verify.success","expected_mastery_band":"DEVELOPING","expected_readiness":"READY_TO_LEARN_OR_PRACTICE","expected_nba":{"action_type":"RETENTION_REVIEW","reason_codes":["RETENTION_DUE"]},"measured_state_delta":{"before_band":"EMERGING","after_band":"DEVELOPING","evidence_event_ref":"math001.ev.verify.success"}},
+        {"consume_event":"math001.ev.retention.success","expected_mastery_band":"STRONG","expected_readiness":"ALREADY_STRONG_NOT_CURRENT_PRIORITY","expected_retention_state":"RETAINED_AFTER_DELAYED_CHECK","expected_nba":{"action_type":"MOVE_TO_NEXT_TARGET","reason_codes":["ALREADY_STRONG_RETAINED"]},"measured_state_delta":{"before_band":"DEVELOPING","after_band":"STRONG","evidence_event_ref":"math001.ev.retention.success"}}
+      ]
+    },
+    {
+      "scenario_id": "MATH001-GOLDEN-B-FIRST-INDEPENDENT-SUCCESS",
+      "description": "A learner who succeeds independently on an exact isolated diagnostic is not forced through remediation; the reference kernel records developing evidence and schedules later verification/retention rather than inventing mastery certainty.",
+      "steps": [
+        {"consume_event":"math001.ev.diagnostic.success","expected_mastery_band":"DEVELOPING","expected_readiness":"READY_TO_LEARN_OR_PRACTICE","expected_retention_state":"SCHEDULED","expected_nba":{"action_type":"RETENTION_REVIEW","reason_codes":["RETENTION_DUE"]}}
+      ]
+    }
+  ],
+  "guardrails": [
+    "No prerequisite edge is supplied or fabricated for this slice.",
+    "The real demo attempt maps EXACT only because the selected BASE task-5 variant is source-reviewed for this semantic meaning.",
+    "PROFILE task 4 is not treated as one semantic identity; only reviewed exact variants may map to this identity.",
+    "Assisted success cannot close the loop without later unassisted verification.",
+    "Delayed retention is a distinct later-session event.",
+    "No numeric mastery coefficient is asserted by slice data."
+  ]
+}

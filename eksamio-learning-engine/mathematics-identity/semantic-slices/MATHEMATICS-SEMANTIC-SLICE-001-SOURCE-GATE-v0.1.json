@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-20",
+  "status": "SOURCE_GATE_PASS_PROPOSED_CANONICAL_PENDING_PR_ACCEPTANCE",
+  "slice_id": "MATHEMATICS-SEMANTIC-SLICE-001",
+  "subject_id": "mathematics",
+  "identity_model_id": "mathematics-identity-v0.1",
+  "title": "Classical probability with equiprobable elementary outcomes",
+  "semantic_candidate": {
+    "semantic_id": "math-probability-equiprobable-elementary-outcomes",
+    "canonical_label_ru": "Вычисление вероятности события при равновозможных элементарных исходах",
+    "definition_ru": "Выделить элементарные исходы случайного опыта, проверить применимость модели равновозможных исходов, определить число благоприятных исходов и общее число исходов и вычислить вероятность события как отношение этих количеств.",
+    "entity_type": "PROCEDURAL_SKILL",
+    "domain": "probability_and_statistics",
+    "subdomain": "classical_probability",
+    "admission_status": "PROPOSED_CANONICAL",
+    "review_status": "SOURCE_VERIFIED_PENDING_HUMAN_PR_ACCEPTANCE"
+  },
+  "source_evidence": [
+    {
+      "source_ref": "matematika-source-2022/profile-source-lock/cod/ALL-TEXT.txt",
+      "source_locator": "6.3.1 / base-level probability wording",
+      "assertion": "Computing probabilities in experiments with equiprobable elementary outcomes is explicitly represented as mathematical content."
+    },
+    {
+      "source_ref": "matematika-source-2023/profile-source-lock/cod/ALL-TEXT.txt",
+      "source_locator": "6.3.1 / base-level probability wording",
+      "assertion": "The same mathematical capability is independently present in the 2023 official codifier."
+    },
+    {
+      "source_ref": "matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026_КОДИФ.txt",
+      "source_locator": "requirement 8 and content object 6.2",
+      "assertion": "Current EGE 2026 retains probability as active assessed content; the current row is broader than this semantic candidate and therefore provides current-scope support, not one-to-one identity equivalence."
+    }
+  ],
+  "current_route_evidence": {
+    "base_2026": [
+      {"source_ref": "ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-EXAM-DATA.json", "locator": "task 5 variant 1", "mapping": "EXACT_CANDIDATE"},
+      {"source_ref": "ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-EXAM-DATA.json", "locator": "task 5 variant 2", "mapping": "EXACT_CANDIDATE"},
+      {"source_ref": "ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-EXAM-DATA.json", "locator": "task 5 variant 3", "mapping": "EXACT_CANDIDATE"}
+    ],
+    "profile_2026": [
+      {"source_ref": "matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026 ДЕМО_профильный.txt", "locator": "task 4 tourist first-flight variant", "mapping": "EXACT_CANDIDATE"},
+      {"source_ref": "matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026 ДЕМО_профильный.txt", "locator": "task 4 conference seventh-speaker variant", "mapping": "EXACT_CANDIDATE"},
+      {"source_ref": "matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026 ДЕМО_профильный.txt", "locator": "task 4 passenger-count 15-19 variant", "mapping": "EXPLICIT_NON_MAPPING", "reason": "This variant requires probability of a nested-event difference and must not inherit this identity merely because it shares task number 4."}
+    ]
+  },
+  "granularity_decision": {
+    "independently_teachable": true,
+    "independently_assessable": true,
+    "broader_official_2026_parent": "fipi-ege-math-2026-content:6.2",
+    "task_number_is_identity": false,
+    "base_profile_duplicate_needed": false,
+    "historical_code_is_identity": false,
+    "decision": "ADMIT_ON_PR_ACCEPTANCE_AS_ONE_ROUTE_INDEPENDENT_IDENTITY"
+  },
+  "prerequisite_gate": {
+    "canonical_edges_proposed": 0,
+    "decision": "NO_EDGE_ADMITTED",
+    "reason": "No source-backed blocking prerequisite relation is required to define or independently assess this narrow capability. A fake edge would violate contract 283 and the Mathematics foundation."
+  },
+  "shared_peis_boundary": {
+    "reuse": ["277 EvidenceEvent", "278 learner state", "282 mastery", "283 readiness", "284 retention", "285 NBA", "peis-reference-kernel"],
+    "mathematics_specific_learner_engine_created": false,
+    "production_integration": false
+  },
+  "acceptance_boundary": "The semantic ID is source-verified and reserved in this PR, but becomes canonical project authority only when the PR is explicitly accepted/merged by a human project reviewer."
+}

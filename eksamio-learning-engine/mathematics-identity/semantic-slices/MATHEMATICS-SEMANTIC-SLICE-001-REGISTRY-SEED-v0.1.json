@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1.0",
+  "registry_version": "mathematics-semantic-registry-seed-v0.1",
+  "date": "2026-08-20",
+  "status": "PROPOSED_CANONICAL_PENDING_HUMAN_PR_ACCEPTANCE",
+  "subject_id": "mathematics",
+  "identity_model_id": "mathematics-identity-v0.1",
+  "identity_count": 1,
+  "identities": [
+    {
+      "semantic_id": "math-probability-equiprobable-elementary-outcomes",
+      "entity_type": "PROCEDURAL_SKILL",
+      "canonical_label_ru": "Вычисление вероятности события при равновозможных элементарных исходах",
+      "canonical_definition_ru": "Выделить элементарные исходы случайного опыта, проверить применимость модели равновозможных исходов, определить число благоприятных исходов и общее число исходов и вычислить вероятность события как отношение этих количеств.",
+      "domain": "probability_and_statistics",
+      "subdomain": "classical_probability",
+      "status": "PROPOSED_CANONICAL",
+      "review_status": "SOURCE_VERIFIED_PENDING_HUMAN_PR_ACCEPTANCE",
+      "source_authority_refs": [
+        "matematika-source-2022/profile-source-lock/cod/ALL-TEXT.txt#6.3.1",
+        "matematika-source-2023/profile-source-lock/cod/ALL-TEXT.txt#6.3.1",
+        "matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026_КОДИФ.txt#requirement-8",
+        "matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026_КОДИФ.txt#content-6.2"
+      ],
+      "route_relevance": ["ege_base", "ege_profile", "diagnostic", "homework", "tutor", "retention_review"],
+      "aliases": [],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "legacy_refs": ["fipi-2022-content-6.3.1", "fipi-2023-content-6.3.1", "fipi-2026-content-6.2"],
+      "notes": "Narrower than the broad current FIPI 6.2 Probability object. No prerequisite relation is asserted."
+    }
+  ],
+  "admission_invariants": [
+    "One mathematical meaning has one route-independent identity across base/profile where scope is the same.",
+    "Task numbers and FIPI content codes remain source/route addresses, not semantic IDs.",
+    "Merge acceptance is the human project-admission gate for this proposed canonical seed.",
+    "No learner state, mastery, readiness, retention or NBA truth is stored in this registry."
+  ]
+}

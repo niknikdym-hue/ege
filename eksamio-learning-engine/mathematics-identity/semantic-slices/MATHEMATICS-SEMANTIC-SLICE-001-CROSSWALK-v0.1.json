@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1.0",
+  "mapping_version": "mathematics-semantic-slice-001-crosswalk-v0.1",
+  "date": "2026-08-20",
+  "status": "PROPOSED_MAPPING_PENDING_PR_ACCEPTANCE",
+  "subject_id": "mathematics",
+  "semantic_id": "math-probability-equiprobable-elementary-outcomes",
+  "mappings": [
+    {"mapping_id":"math001-map-001","source_system":"fipi_codifier","source_id":"2022:6.3.1","relation":"SOURCE_SUPPORTS","mapping_resolution":"EXACT_MEANING","review_status":"SOURCE_VERIFIED","provenance_ref":"matematika-source-2022/profile-source-lock/cod/ALL-TEXT.txt#6.3.1"},
+    {"mapping_id":"math001-map-002","source_system":"fipi_codifier","source_id":"2023:6.3.1","relation":"SOURCE_SUPPORTS","mapping_resolution":"EXACT_MEANING","review_status":"SOURCE_VERIFIED","provenance_ref":"matematika-source-2023/profile-source-lock/cod/ALL-TEXT.txt#6.3.1"},
+    {"mapping_id":"math001-map-003","source_system":"fipi_codifier","source_id":"2026:6.2","relation":"SOURCE_SUPPORTS","mapping_resolution":"PARTIAL_BROAD_PARENT_SCOPE","review_status":"SOURCE_VERIFIED","provenance_ref":"matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026_КОДИФ.txt#6.2"},
+    {"mapping_id":"math001-map-004","source_system":"ege_demo_base","source_id":"2026:task5:variant1","relation":"ASSESSES","mapping_resolution":"EXACT","review_status":"SOURCE_VERIFIED","provenance_ref":"ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-EXAM-DATA.json#task5.variant1"},
+    {"mapping_id":"math001-map-005","source_system":"ege_demo_base","source_id":"2026:task5:variant2","relation":"ASSESSES","mapping_resolution":"EXACT","review_status":"SOURCE_VERIFIED","provenance_ref":"ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-EXAM-DATA.json#task5.variant2"},
+    {"mapping_id":"math001-map-006","source_system":"ege_demo_base","source_id":"2026:task5:variant3","relation":"ASSESSES","mapping_resolution":"EXACT","review_status":"SOURCE_VERIFIED","provenance_ref":"ege-matematika-baza-demoversiya-2026/ege-matematika-baza-demoversiya-2026-EXAM-DATA.json#task5.variant3"},
+    {"mapping_id":"math001-map-007","source_system":"ege_demo_profile","source_id":"2026:task4:tourist-first-flight","relation":"ASSESSES","mapping_resolution":"EXACT","review_status":"SOURCE_VERIFIED","provenance_ref":"matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026 ДЕМО_профильный.txt#task4"},
+    {"mapping_id":"math001-map-008","source_system":"ege_demo_profile","source_id":"2026:task4:conference-seventh-speaker","relation":"ASSESSES","mapping_resolution":"EXACT","review_status":"SOURCE_VERIFIED","provenance_ref":"matematika-source-2026/extracted-text/МА-11 ЕГЭ 2026 ДЕМО_профильный.txt#task4"}
+  ],
+  "explicit_non_mappings": [
+    {"source_system":"ege_demo_profile","source_id":"2026:task4:passenger-count-15-19","reason":"Requires a nested-event difference; shared task number must not cause semantic overmapping."}
+  ],
+  "invariants": [
+    "Exact learner EvidenceEvent mapping is permitted only for exact mapped variants/items.",
+    "A whole task number is not promoted to this identity when variants exercise different probability operations.",
+    "The broad current FIPI 6.2 object provides current source support but is not an exact one-to-one semantic identity."
+  ]
+}
