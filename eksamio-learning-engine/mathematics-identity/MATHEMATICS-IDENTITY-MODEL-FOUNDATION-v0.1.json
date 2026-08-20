@@ -2,9 +2,18 @@
   "artifact_id": "MATHEMATICS-IDENTITY-MODEL-FOUNDATION-v0.1",
   "version": "0.1",
   "date": "2026-08-20",
-  "status": "IDENTITY_MODEL_FOUNDATION / PRE-ADMISSION",
-  "mode": "ADD_ONLY / ARCHITECTURE_MATERIALIZATION / NO_PRODUCTION_INTEGRATION",
+  "status": "IDENTITY_MODEL_FOUNDATION / PRE-ADMISSION / SOURCE-INVENTORY-CORRECTED",
+  "mode": "ARCHITECTURE_MATERIALIZATION / NO_PRODUCTION_INTEGRATION",
   "baseline": {"ref": "main", "sha": "65640fc33fdd7c7e91899e47792254ebb1b2c645", "tree_sha": "646d56e1bcafba3d13a1542894a878924dce318b"},
+  "source_inventory_correction": {
+    "base_2025_source_gap": "CLOSED_AS_AUDIT_ERROR",
+    "evidence": [
+      "matematika-source-2025/ege-2025-matematika-baza-demoversiya.pdf",
+      "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+      "matematika-source-2025/ege-2025-matematika-kodifikator.pdf"
+    ],
+    "remaining_state": "BASE 2025 route/build package ege-matematika-baza-demoversiya-2025/ remains absent; this is a product/build gap and does not invalidate exact-year source authority."
+  },
   "subject_id": "mathematics",
   "identity_model_id": "mathematics-identity-v0.1",
   "canonical_semantic_identity_count": 0,
@@ -49,10 +58,10 @@
   "next_gate": {
     "name": "MATHEMATICS-SEMANTIC-SLICE-001",
     "requirements": [
-      "Resolve or explicitly isolate the BASE 2025 source gap so it cannot contaminate claims of historical completeness.",
+      "BASE 2025 exact-year source inventory is confirmed; keep its missing route/build package classified separately and do not confuse it with semantic truth.",
       "Select a narrow deterministic mathematical skill supported by verified source evidence.",
       "Admit route-independent semantic identity or identities only after source review.",
-      "Admit at least one prerequisite relation only when source provenance supports it.",
+      "Admit prerequisite relations only when source provenance supports them; zero edges is valid when no blocking relation is proven.",
       "Map the identity to applicable base/profile route evidence without making task number the identity.",
       "Create independent verification item(s) and shared EvidenceEvents.",
       "Run the slice through the existing subject-neutral PEIS reference kernel and record measured state delta."
