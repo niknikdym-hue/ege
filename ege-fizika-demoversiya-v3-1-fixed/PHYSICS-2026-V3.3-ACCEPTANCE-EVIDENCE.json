@@ -17,31 +17,9 @@
     "state_restore": "PASS",
     "calculator": "PASS",
     "symbol_keyboard": "PASS",
-    "visual_tasks_checked": [
-      1,
-      2,
-      6,
-      7,
-      8,
-      10,
-      19,
-      21,
-      22,
-      23,
-      25
-    ],
-    "responsive_widths": [
-      1280,
-      768,
-      390,
-      360,
-      320
-    ],
-    "task26_variants": [
-      1,
-      2,
-      3
-    ],
+    "visual_tasks_checked": [1, 2, 6, 7, 8, 10, 19, 21, 22, 23, 25],
+    "responsive_widths": [1280, 768, 390, 360, 320],
+    "task26_variants": [1, 2, 3],
     "scorer": "PASS_28_OF_28",
     "visual_source": "PASS_EXACT_PDF_CROPS",
     "visual_size": "PASS_PER_ASSET_LIMITS"
@@ -50,18 +28,31 @@
   "technical_reference_frozen": true,
   "manual_four_edge_visual_gate": "PASS",
   "manual_four_edge_visual_gate_date": "2026-08-20",
-  "manual_correction_ids": [
-    "t02",
-    "t06a",
-    "t21s",
-    "t22s",
-    "t24sb",
-    "t25p",
-    "t25s",
-    "t26v2p",
-    "t26v2s"
-  ],
+  "manual_correction_ids": ["t02", "t06a", "t21s", "t22s", "t24sb", "t25p", "t25s", "t26v2p", "t26v2s"],
   "manual_post_correction_browser_gate": "PASS",
   "manual_post_correction_clean_zip": "PASS",
-  "final_status": "ACCEPTED_TECHNICAL_REFERENCE"
+  "final_status": "ACCEPTED_TECHNICAL_REFERENCE_FROZEN",
+  "ui_parity": {
+    "reference": "accepted 2026 profile mathematics demo",
+    "official_example_label_per_task": "PASS",
+    "task_label_format": "ФИПИ 2026 · официальный пример N",
+    "results_sequence_parity": "PASS",
+    "results_sequence": [
+      "score_row",
+      "short_results_1_20",
+      "extended_21_26_official_solution_criteria_and_task_self_score",
+      "actions"
+    ]
+  },
+  "tilda_deployment_gate": {
+    "t123_count": 17,
+    "internal_hard_limit_utf8_bytes": 42500,
+    "target_headroom_utf8_bytes": 38000,
+    "max_observed_utf8_bytes": 38000,
+    "size_gate": "PASS",
+    "atomic_gate": "PASS",
+    "order_gate": "PASS_01_TO_17"
+  },
+  "final_profile_parity_package_sha256": "cb0329e464e7078cb3311994173f92e9b8a3db85ee11a340796ff7abb42938ab",
+  "cross_year_technical_standard": "ege-source-fizika/PHYSICS-ARCHIVE-TECHNICAL-ACCEPTANCE-STANDARD-v1.0.txt"
 }
