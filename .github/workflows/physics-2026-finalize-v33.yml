@@ -45,6 +45,15 @@ jobs:
           EVIDENCE_DIR: /tmp/physics-final-evidence
         run: |
           set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tmp-physics-2026-browser-gate.py')
+          s=p.read_text(encoding='utf-8')
+          old="    page.locator('.ephys-symbol-keyboard').first.locator('button[data-symbol=\"²\"]').click()\n"
+          new="    key=page.locator('.ephys-symbol-keyboard').first.locator('button.ephys-symbol-key').first\n    if key.get_attribute('data-symbol')!='²': raise AssertionError('first physics symbol key is not superscript two')\n    key.click()\n"
+          if old not in s: raise SystemExit('symbol-key test patch target not found')
+          p.write_text(s.replace(old,new),encoding='utf-8')
+          PY
           PKG=ege-fizika-demoversiya-v3-1-fixed
           python -m http.server 8765 --bind 127.0.0.1 --directory "$PKG" >/tmp/physics-http.log 2>&1 &
           SERVER=$!
