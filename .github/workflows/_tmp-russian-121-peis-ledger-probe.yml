@@ -1,0 +1,140 @@
+name: TMP Russian 121 PEIS Ledger Probe
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current ledger branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Checkout PR23 legacy subject-content branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/russian-exceptions-content-polish
+          path: pr23
+          fetch-depth: 1
+
+      - name: Build exact manifest-119 121-card corpus
+        run: |
+          mkdir -p probe
+          python pr23/eksamio-learning-engine/build/build_russian_exceptions_practice_course_grade.py \
+            --root pr23/eksamio-learning-engine \
+            --output "$GITHUB_WORKSPACE/probe/pr23-121-canonical.json" \
+            --audit "$GITHUB_WORKSPACE/probe/pr23-121-build-validation.txt"
+
+      - name: Assemble deterministic analysis bundle
+        run: |
+          python - <<'PY'
+          import json, re
+          from pathlib import Path
+
+          root = Path.cwd()
+          eng = root / 'eksamio-learning-engine'
+          pr23 = root / 'pr23' / 'eksamio-learning-engine'
+          probe = root / 'probe'
+
+          canonical = json.loads((probe / 'pr23-121-canonical.json').read_text())
+          if isinstance(canonical, dict):
+              items = canonical.get('items') or canonical.get('practice_items') or canonical.get('cards')
+          else:
+              items = canonical
+          if not isinstance(items, list):
+              raise SystemExit('canonical build does not expose item array')
+          if len(items) != 121:
+              raise SystemExit(f'expected 121 active cards, got {len(items)}')
+          pids = [x.get('practice_item_id') for x in items]
+          if len(set(pids)) != 121 or any(not x for x in pids):
+              raise SystemExit('practice_item_id uniqueness failure')
+
+          # Keep only fields needed for semantic/evidence analysis; preserve source/provenance fields when present.
+          keys = {
+              'practice_item_id','exception_id','mode','response_kind','prompt','answer','feedback',
+              'context_signature','transfer_level','status','source_practice_bank','source_refs',
+              'source_path','provenance','rule_ref','content_audit_overlay','learner_feedback_polish',
+              'manual_review_overlay'
+          }
+          compact = [{k:v for k,v in x.items() if k in keys} for x in items]
+          (probe / 'pr23-121-card-corpus.json').write_text(json.dumps(compact, ensure_ascii=False, indent=2)+'\n')
+
+          # Exact source manifest that defines the 121 denominator.
+          for rel in [
+              '118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json',
+              '119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json',
+          ]:
+              (probe / rel).write_bytes((pr23 / rel).read_bytes())
+
+          # Current-main authorities required by the ledger.
+          authority_names = [
+              '266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json',
+              '272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt',
+              '273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json',
+              '274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json',
+              '277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json',
+              '278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json',
+              '279-EKSAMIO-LEGACY-LEARNER-STATE-ADAPTER-MAP-v0.1.json',
+              '282-EKSAMIO-MASTERY-CONTRACT-v0.1.json',
+              '283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json',
+          ]
+          # 284/285 filenames can evolve; collect numbered current-main authority files by prefix.
+          for p in eng.iterdir():
+              if p.is_file() and (p.name.startswith('284-') or p.name.startswith('285-')):
+                  authority_names.append(p.name)
+          seen=[]
+          for name in authority_names:
+              p=eng/name
+              if p.exists():
+                  (probe / ('authority-' + name)).write_bytes(p.read_bytes())
+                  seen.append(name)
+          (probe/'authority-files.json').write_text(json.dumps(sorted(seen),ensure_ascii=False,indent=2)+'\n')
+
+          # Current-main approved ru-* surface only. PR57 is deliberately not read.
+          ru_hits = {}
+          ru_pat = re.compile(r'\bru-[a-z0-9-]+\b')
+          rp = eng / 'russian-program'
+          if rp.exists():
+              for p in rp.rglob('*'):
+                  if not p.is_file() or p.suffix.lower() not in {'.json','.txt','.md','.py'}:
+                      continue
+                  try: text=p.read_text(errors='replace')
+                  except Exception: continue
+                  hits=sorted(set(ru_pat.findall(text)))
+                  if hits:
+                      ru_hits[str(p.relative_to(root))]=hits
+          (probe/'current-main-ru-id-surface.json').write_text(json.dumps(ru_hits,ensure_ascii=False,indent=2)+'\n')
+
+          # Exception IDs present in the exact 121 corpus.
+          exids=sorted({x.get('exception_id') for x in items if x.get('exception_id')})
+          if len(exids) != 88:
+              raise SystemExit(f'expected 88 represented exceptions, got {len(exids)}')
+          (probe/'pr23-121-exception-ids.json').write_text(json.dumps(exids,ensure_ascii=False,indent=2)+'\n')
+
+          summary={
+              'active_cards': len(items),
+              'unique_practice_item_ids': len(set(pids)),
+              'represented_exception_ids': len(exids),
+              'disabled_ids_expected': ['ex-practice-end-finally-001','ex-practice-zorevat-001'],
+              'current_main_authority_files_copied': sorted(seen),
+              'pr57_read': False,
+              'production_modified': False,
+              'runtime_modified': False,
+          }
+          (probe/'probe-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Upload probe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-121-peis-ledger-probe
+          path: probe/
+          if-no-files-found: error
