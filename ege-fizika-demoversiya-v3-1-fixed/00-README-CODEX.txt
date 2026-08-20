@@ -1,5 +1,5 @@
 ПАКЕТ ДЛЯ CODEX / TILDA
-Интерактивная демоверсия ЕГЭ по физике — принятая техническая версия V3.2
+Интерактивная демоверсия ЕГЭ по физике — принятая техническая версия V3.3
 
 CURRENT_ACCEPTANCE_AUTHORITY:
 ege-fizika-demoversiya-SOURCE-GATE.txt
@@ -42,10 +42,16 @@ SOURCE_GATE=CLOSED.
 СТАТУС
 ACCEPTED_TECHNICAL_REFERENCE.
 TECHNICAL_REFERENCE_FROZEN=YES.
-Старые INDEPENDENT-AUDIT / TEST-EVIDENCE / TEST-REPORT от 2026-07-26/27 являются историческими доказательствами V3/V3.1, но authority для принятой V3.2 — текущие acceptance evidence и freeze-файл.
+Старые INDEPENDENT-AUDIT / TEST-EVIDENCE / TEST-REPORT от 2026-07-26/27 являются историческими доказательствами V3/V3.1, но authority для принятой V3.3 — текущие acceptance evidence и freeze-файл.
 
-Freeze закрыт 2026-08-19. Доказательства:
+V3.2 freeze от 2026-08-19 сохранён как историческая запись. Текущий freeze V3.3 закрыт 2026-08-20. Доказательства:
 - PHYSICS-2026-CURRENT-ACCEPTANCE-EVIDENCE.json;
-- ACCEPTED-TECHNICAL-REFERENCE-2026-08-19.txt.
+- PHYSICS-2026-V3.3-ACCEPTANCE-EVIDENCE.json;
+- ACCEPTED-TECHNICAL-REFERENCE-2026-08-20.txt.
 
-V3.2 используется для 2025–2022 только как технический reference. Контент каждого архивного года определяется исключительно точным FIPI source соответствующего года.
+V3.3 используется для 2025–2022 только как технический reference. Контент каждого архивного года определяется исключительно точным FIPI source соответствующего года.
+
+V3.3 VISUAL POLICY
+- все изображения КИМ и официальных решений встроены как точные crop-фрагменты из byte-locked PDF ФИПИ;
+- реконструированные SVG/фотографии из итогового пакета удалены;
+- каждому crop задан индивидуальный максимальный размер; desktop/mobile проверены браузером.
