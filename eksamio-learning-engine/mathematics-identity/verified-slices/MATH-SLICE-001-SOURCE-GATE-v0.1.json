@@ -1,0 +1,84 @@
+{
+  "artifact_id": "MATH-SLICE-001-SOURCE-GATE-v0.1",
+  "slice_id": "MATH-SLICE-001",
+  "version": "0.1",
+  "date": "2026-08-20",
+  "status": "PASS_SOURCE_VERIFIED_NO_PRODUCTION_INTEGRATION",
+  "baseline": {
+    "ref": "main",
+    "sha": "1069b4e5781bbc559f5bb88b05eea3d50cd94c1b"
+  },
+  "subject_id": "mathematics",
+  "identity_model_id": "mathematics-identity-v0.1",
+  "admitted_semantic_identity": {
+    "semantic_id": "math-probability-classical-equally-likely",
+    "registry_ref": "../MATHEMATICS-SEMANTIC-REGISTRY-v0.1.json",
+    "admission_status": "SOURCE_VERIFIED",
+    "meaning": "Вычислять вероятность простого события в конечном опыте с равновозможными исходами через отношение числа благоприятных исходов к общему числу исходов; допускается предварительно получить благоприятное число как простое дополнение к явно заданному общему числу."
+  },
+  "official_subject_requirement_evidence": [
+    {
+      "source_ref": "matematika-source-2024/ege-2024-matematika-kodifikator.pdf",
+      "derived_text_ref": "matematika-source-2024/profile-source-lock/cod/ALL-TEXT.txt",
+      "locator": "Раздел проверяемых предметных требований / теория вероятностей и статистика",
+      "source_wording_excerpt": "Моделировать реальные ситуации на языке теории вероятностей и статистики, вычислять в простейших случаях вероятности событий",
+      "authority": "FIPI_2024_OFFICIAL_CODIFIER",
+      "use": "establishes that simple event-probability computation is an official Mathematics capability across the route levels represented by the codifier"
+    }
+  ],
+  "exact_route_item_evidence": [
+    {
+      "route": "ege-mathematics-base",
+      "year": 2024,
+      "source_ref": "matematika-source-2024/03-BASE-2024-EXAMPLE-MAP-A.txt",
+      "item_ref": "5.1",
+      "meaning": "35 equally selectable divers, 7 from Russia; probability of selecting a Russian diver = 7/35 = 0.2",
+      "mapping_resolution": "EXACT"
+    },
+    {
+      "route": "ege-mathematics-base",
+      "year": 2024,
+      "source_ref": "matematika-source-2024/03-BASE-2024-EXAMPLE-MAP-A.txt",
+      "item_ref": "5.2",
+      "meaning": "3 defective bulbs per 100; probability of a good bulb = 97/100 = 0.97",
+      "mapping_resolution": "EXACT"
+    },
+    {
+      "route": "ege-mathematics-profile",
+      "year": 2024,
+      "source_ref": "matematika-source-2024/profile-source-lock/demo/page-06.txt",
+      "item_ref": "task 4 / official variant 1",
+      "meaning": "25 equally selectable biology tickets, 2 contain the mushroom question; probability = 2/25 = 0.08",
+      "mapping_resolution": "EXACT",
+      "source_lock_ref": "matematika-source-2024/profile-source-lock/EXAM-LOCK.json"
+    }
+  ],
+  "explicit_non_mappings": [
+    {
+      "route": "ege-mathematics-profile",
+      "year": 2024,
+      "item_ref": "task 4 / official variant 2",
+      "reason": "requires deriving the probability of a duration interval from two nested-event probabilities; broader than the admitted favorable/total equally-likely capability"
+    },
+    {
+      "route": "ege-mathematics-profile",
+      "year": 2024,
+      "item_ref": "task 5 / official variants 1-2",
+      "reason": "conditions require conditional-probability reasoning; not admitted into this first identity"
+    }
+  ],
+  "prerequisite_admission": {
+    "canonical_prerequisite_edge_created": false,
+    "reason": "No source-reviewed prerequisite relation is required or supported for this first slice. Course order, exam task order and AI intuition are forbidden as canonical prerequisite truth.",
+    "structural_fixture_allowed": true,
+    "structural_fixture_scope": "TEST_FIXTURE_ONLY"
+  },
+  "production_boundary": {
+    "changes_demo_runtime": false,
+    "changes_tilda": false,
+    "changes_scoring": false,
+    "changes_local_storage": false,
+    "creates_subject_learner_engine": false
+  },
+  "decision": "ADMIT_NARROW_ROUTE_INDEPENDENT_IDENTITY_AND_PROCEED_TO_SHARED_PEIS_KERNEL_VALIDATION"
+}
