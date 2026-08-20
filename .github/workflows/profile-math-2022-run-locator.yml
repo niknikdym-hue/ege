@@ -1,0 +1,34 @@
+name: PROFILE Math 2022 — run locator
+
+on:
+  workflow_run:
+    workflows:
+      - 'PROFILE Math 2022 — exact FIPI full build and audit'
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Record completed run
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > PROFILE-MATH-2022-ACTIVE-RUN.txt <<EOF
+          Run ID: ${{ github.event.workflow_run.id }}
+          Conclusion: ${{ github.event.workflow_run.conclusion }}
+          Head SHA: ${{ github.event.workflow_run.head_sha }}
+          URL: ${{ github.event.workflow_run.html_url }}
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add PROFILE-MATH-2022-ACTIVE-RUN.txt
+          git commit -m 'Record PROFILE 2022 workflow result' || true
+          git push origin HEAD:main
