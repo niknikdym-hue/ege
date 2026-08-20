@@ -1,0 +1,41 @@
+EKSAMIO PHYSICS 2026 — FINAL FREEZE
+DATE=2026-08-20
+VERSION=V3.3
+STATUS=ACCEPTED_TECHNICAL_REFERENCE_FROZEN
+
+AUTHORITATIVE_SOURCE_YEAR=2026
+AUTHORITY_PDF_SHA256=e93318f05b38a664a09a7b154a24710930b833c7a18110f81470398f34fa716a
+FINAL_PROFILE_PARITY_PACKAGE_SHA256=cb0329e464e7078cb3311994173f92e9b8a3db85ee11a340796ff7abb42938ab
+
+FINAL DEPLOYMENT CONTRACT
+- 17 T123 blocks, order 01..17.
+- Every T123 is strictly < 42,500 UTF-8 bytes.
+- Conservative build target is <= 38,000 UTF-8 bytes.
+- Split boundaries are atomic; never split HTML/JS/data fragments incorrectly.
+- Every task displays: «ФИПИ 2026 · официальный пример N».
+- Results follow accepted profile mathematics sequence exactly: score row -> short results -> extended official solutions/criteria with task-level self-score -> actions.
+- Official FIPI visuals remain exact PDF crops; no reconstructed/redrawn duplicates.
+- Physics symbol keyboard, non-programmable calculator, state restore and scorer remain mandatory.
+
+FINAL GATES
+SOURCE_BYTE_LOCK=PASS
+CONTENT_FIDELITY=PASS
+VISUAL_FIDELITY=PASS
+MANUAL_FOUR_EDGE_VISUAL_GATE=PASS
+VISUAL_SIZE_GATE=PASS
+PROFILE_MATH_UI_PARITY=PASS
+OFFICIAL_EXAMPLE_LABEL_PER_TASK=PASS
+TILDA_SIZE_GATE=PASS
+TILDA_T123_ATOMIC_GATE=PASS
+BROWSER_INTERACTION=PASS
+SCORER=PASS_28_OF_28
+STATE_RESTORE=PASS
+RESPONSIVE=PASS_1280_768_390_360_320
+CLEAN_UNPACK_BROWSER=PASS
+
+CROSS-YEAR RULE
+2025 -> 2024 -> 2023 -> 2022 inherit the TECHNICAL acceptance standard only.
+They do not inherit 2026 content, answers, criteria, input contracts or source assets.
+Mandatory standard: ege-source-fizika/PHYSICS-ARCHIVE-TECHNICAL-ACCEPTANCE-STANDARD-v1.0.txt
+
+REOPEN_2026_ONLY_FOR=CONFIRMED_DEFECT_OR_FIPI_MISMATCH_OR_PLATFORM_COMPATIBILITY_OR_DIRECT_USER_INSTRUCTION
