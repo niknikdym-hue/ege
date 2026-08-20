@@ -6,9 +6,14 @@ on:
       - 'PROFILE Math 2022 — exact FIPI full build and audit'
       - 'PROFILE Math 2022 — corrected exact FIPI full build and audit'
     types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - 'PROFILE-MATH-2022-RUN-LOCATOR-TRIGGER.txt'
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   record:
@@ -17,17 +22,34 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Record completed run
+      - name: Record PROFILE 2022 run
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          cat > PROFILE-MATH-2022-ACTIVE-RUN.txt <<EOF
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            cat > PROFILE-MATH-2022-ACTIVE-RUN.txt <<EOF
           Run ID: ${{ github.event.workflow_run.id }}
           Workflow: ${{ github.event.workflow_run.name }}
+          Status: completed
           Conclusion: ${{ github.event.workflow_run.conclusion }}
           Head SHA: ${{ github.event.workflow_run.head_sha }}
           URL: ${{ github.event.workflow_run.html_url }}
           EOF
+          else
+            gh run list --repo "$GITHUB_REPOSITORY" --workflow profile-math-2022-full-build-v2.yml --limit 10 --json databaseId,status,conclusion,url,headSha,createdAt > /tmp/runs.json
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          runs=json.loads(Path('/tmp/runs.json').read_text())
+          if not runs: raise SystemExit('No corrected PROFILE 2022 runs found')
+          r=runs[0]
+          Path('PROFILE-MATH-2022-ACTIVE-RUN.txt').write_text(
+              f"Run ID: {r['databaseId']}\nWorkflow: PROFILE Math 2022 — corrected exact FIPI full build and audit\nStatus: {r['status']}\nConclusion: {r.get('conclusion')}\nHead SHA: {r['headSha']}\nURL: {r['url']}\nCreated: {r['createdAt']}\n",encoding='utf-8')
+          print(r)
+          PY
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git pull --rebase origin main
