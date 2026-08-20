@@ -34,11 +34,16 @@ jobs:
           old="""    expected_images=set(CROPS)\n    joined=''.join((PKG/f'ege-fizika-demoversiya-T123-0{i}.txt').read_text(encoding='utf-8') for i in range(1,6))\n    present=set(re.findall(r'data-source-crop=\"([^\"]+)\"',joined))\n"""
           new="""    expected_images=set(CROPS)\n    html_values=[]\n    for obj in (d1,d2,d3):\n        for row in obj['tasks']:\n            html_values.extend([row.get('promptHtml',''),row.get('solutionHtml','')])\n    for row in d4['variants26']:\n        html_values.extend([row.get('promptHtml',''),row.get('solutionHtml','')])\n    joined=''.join(html_values)\n    present=set(re.findall(r'data-source-crop=\"([^\"]+)\"',joined))\n"""
           if old not in s: raise SystemExit('inventory gate patch target not found')
-          p.write_text(s.replace(old,new),encoding='utf-8')
+          s=s.replace(old,new)
+          old_preview="    (PKG/'ege-fizika-demoversiya-PREVIEW.html').write_text('\\n'.join(parts),encoding='utf-8')\n"
+          new_preview="    preview='<!doctype html><html><head><meta charset=\\\"utf-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=device-width,initial-scale=1\\\"><title>ЕГЭ физика 2026 — preview</title></head><body>'+('\\n'.join(parts))+'</body></html>'\n    (PKG/'ege-fizika-demoversiya-PREVIEW.html').write_text(preview,encoding='utf-8')\n"
+          if old_preview not in s: raise SystemExit('preview patch target not found')
+          p.write_text(s.replace(old_preview,new_preview),encoding='utf-8')
           PY
           python tmp-physics-2026-finalize-v33.py patch
           ! grep -Rni '<svg' ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-0{2,3,4,5}.txt
           test "$(find ege-fizika-demoversiya-v3-1-fixed -maxdepth 1 -name 'asset-*.svg' | wc -l)" -eq 0
+          grep -q '<meta charset="utf-8">' ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-PREVIEW.html
       - name: Full browser acceptance gate
         shell: bash
         env:
