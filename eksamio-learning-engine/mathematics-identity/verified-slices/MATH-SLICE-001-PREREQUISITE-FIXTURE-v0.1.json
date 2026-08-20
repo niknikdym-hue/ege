@@ -1,0 +1,32 @@
+{
+  "artifact_id": "MATH-SLICE-001-PREREQUISITE-FIXTURE-v0.1",
+  "slice_id": "MATH-SLICE-001",
+  "version": "0.1",
+  "date": "2026-08-20",
+  "status": "TEST_FIXTURE_ONLY_NON_CANONICAL",
+  "canonical_graph_mutation": false,
+  "fixture_purpose": "Prove that even a REQUIRED-shaped relation cannot block readiness unless it is admitted to CANONICAL_GRAPH with source-reviewed provenance.",
+  "edge_id": "fixture-edge:math-ratio-placeholder->math-probability-classical-equally-likely",
+  "edge": {
+    "source_semantic_id": "math-fixture-ratio-placeholder",
+    "target_semantic_id": "math-probability-classical-equally-likely",
+    "relation_type": "REQUIRED",
+    "provenance": [
+      {
+        "source_ref": "MATH-SLICE-001-PREREQUISITE-FIXTURE-v0.1.json",
+        "source_locator": "synthetic structural validation only",
+        "assertion_type": "TEST_FIXTURE_NON_CANONICAL"
+      }
+    ],
+    "graph_version": "math-slice-001-test-fixture-graph-v0.1",
+    "review_status": "SOURCE_VERIFIED",
+    "conditional_scope": {
+      "subject_id": "mathematics",
+      "goal_context": "math-slice-001",
+      "route_context": "all"
+    },
+    "admission_scope": "TEST_FIXTURE_ONLY"
+  },
+  "expected_readiness_effect": "NONE",
+  "forbidden_interpretation": "This synthetic edge is not Mathematics subject truth and must never be promoted into canonical_edges from this fixture."
+}

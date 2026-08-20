@@ -1,0 +1,85 @@
+EKSAMIO — MATH-SLICE-001 VALIDATION
+DATE: 2026-08-20
+RESULT: PASS
+MODE: SOURCE-BACKED SUBJECT SLICE / SHARED PEIS REFERENCE KERNEL / NO PRODUCTION INTEGRATION
+
+VALIDATED HEAD
+18b56fc423afe43d24e885f08673df306891c0e4
+
+GITHUB ACTIONS
+Run: 32375529794
+Job: 96445885969
+Workflow: Mathematics Semantic Slice 001 Validation
+Conclusion: SUCCESS
+
+TARGET SEMANTIC IDENTITY
+math-probability-classical-equally-likely
+
+SOURCE ADMISSION
+PASS — the first Mathematics semantic identity is narrow and route-independent.
+PASS — official FIPI 2024 codifier supports simple probability computation.
+PASS — exact route evidence is admitted from:
+- Base 2024 example 5.1: 7 favorable of 35 equally selectable outcomes -> 0.2;
+- Base 2024 example 5.2: 97 good of 100 -> 0.97;
+- Profile 2024 task 4 variant 1: 2 favorable of 25 equally selectable tickets -> 0.08.
+PASS — broader profile probability variants are explicitly excluded from this identity when they require probability subtraction or conditional probability.
+PASS — exam task number is not used as semantic identity.
+
+SHARED CONTRACT VALIDATION
+PASS — all 3 events validate against 277 EvidenceEvent.
+PASS — mastery outputs validate against 282.
+PASS — readiness outputs validate against 283.
+PASS — retention outputs validate against 284.
+PASS — materialized learner states validate against 278.
+PASS — NBA outputs validate against 285.
+PASS — shared PEIS kernel contains no hardcoded Mathematics semantic target.
+
+GOLDEN SEQUENCE
+1. Unassisted exact diagnostic failure:
+   mastery = EMERGING
+   confidence = HIGH
+   readiness = READY_TO_LEARN_OR_PRACTICE
+   retention = NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE
+   NBA = GUIDED_PRACTICE
+
+2. Assisted guided success:
+   mastery remains EMERGING
+   confidence = HIGH
+   readiness = READY_TO_LEARN_OR_PRACTICE
+   retention = NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE
+   NBA = INDEPENDENT_PRACTICE
+
+3. Fresh unassisted SAME_SESSION_VERIFICATION success:
+   mastery = DEVELOPING
+   confidence = MODERATE
+   readiness = READY_TO_LEARN_OR_PRACTICE
+   retention = SCHEDULED
+   NBA = RETENTION_REVIEW
+
+MEASURED STATE DELTA
+PASS — EMERGING -> DEVELOPING after fresh independent verification.
+PASS — assisted success alone does not promote mastery.
+PASS — meaningful assistance is followed by independent verification.
+
+PREREQUISITE SAFETY
+PASS — no canonical Mathematics prerequisite edge is admitted in this slice.
+PASS — synthetic REQUIRED-shaped test edge uses admission_scope=TEST_FIXTURE_ONLY.
+PASS — the test edge produces zero canonical readiness assessments and does not block the target.
+
+CALIBRATION / SCIENTIFIC BOUNDARIES
+PASS — mastery estimate remains null; no universal numeric coefficient is invented.
+PASS — same-session verification is not counted as delayed retention.
+PASS — retention becomes eligible/scheduled after independent verification, but scheduled_at/due_window_start/due_window_end remain null.
+PASS — materialized retention_due_at remains null.
+
+PRODUCTION SAFETY
+PASS — no Tilda, production demo runtime, scoring, localStorage, authentication, or subject-specific learner engine changes are part of this slice.
+PASS — Profile Mathematics and Physics demo/source lanes are untouched.
+
+ARCHITECTURAL RESULT
+MATH-SLICE-001 proves that the already shared PEIS contracts and reference kernel can consume a real source-backed Mathematics semantic identity and produce a deterministic learner-state change without any Mathematics-specific learner engine.
+
+Together with RU-SLICE-001, the reusable PEIS closed-loop architecture is now demonstrated across two materially different subjects: Russian and Mathematics.
+
+NEXT PROJECT BOTTLENECK AFTER MERGE
+Move shared-platform work from reference proof toward a production Evidence persistence and deterministic recompute boundary, with recommendation-outcome / verification / retention telemetry. Do not jump to AI Tutor or voice before that measurement/persistence layer is real.

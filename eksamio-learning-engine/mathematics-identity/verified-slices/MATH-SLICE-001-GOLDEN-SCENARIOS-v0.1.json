@@ -1,0 +1,53 @@
+{
+  "artifact_id": "MATH-SLICE-001-GOLDEN-SCENARIOS-v0.1",
+  "slice_id": "MATH-SLICE-001",
+  "version": "0.1",
+  "date": "2026-08-20",
+  "subject_id": "mathematics",
+  "target_semantic_id": "math-probability-classical-equally-likely",
+  "kernel_ref": "../../peis-reference-kernel/peis_reference_kernel.py",
+  "events_ref": "MATH-SLICE-001-EVIDENCE-FIXTURES-v0.1.json",
+  "prerequisite_fixture_ref": "MATH-SLICE-001-PREREQUISITE-FIXTURE-v0.1.json",
+  "scenarios": [
+    {
+      "scenario_id": "MATH001-S1-DIAGNOSTIC-FAILURE",
+      "event_count": 1,
+      "expected_mastery_band": "EMERGING",
+      "expected_confidence_band": "HIGH",
+      "expected_readiness_status": "READY_TO_LEARN_OR_PRACTICE",
+      "expected_retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+      "expected_nba_action": "GUIDED_PRACTICE",
+      "expected_nba_reasons": ["LOW_MASTERY_HIGH_CONFIDENCE", "TARGET_READY_TO_LEARN"]
+    },
+    {
+      "scenario_id": "MATH001-S2-GUIDED-SUCCESS",
+      "event_count": 2,
+      "expected_mastery_band": "EMERGING",
+      "expected_confidence_band": "HIGH",
+      "expected_readiness_status": "READY_TO_LEARN_OR_PRACTICE",
+      "expected_retention_state": "NOT_ELIGIBLE_INSUFFICIENT_EVIDENCE",
+      "expected_nba_action": "INDEPENDENT_PRACTICE",
+      "expected_nba_reasons": ["INDEPENDENT_VERIFICATION_REQUIRED_AFTER_HELP"]
+    },
+    {
+      "scenario_id": "MATH001-S3-INDEPENDENT-VERIFICATION",
+      "event_count": 3,
+      "expected_mastery_band": "DEVELOPING",
+      "expected_confidence_band": "MODERATE",
+      "expected_readiness_status": "READY_TO_LEARN_OR_PRACTICE",
+      "expected_retention_state": "SCHEDULED",
+      "expected_nba_action": "RETENTION_REVIEW",
+      "expected_nba_reasons": ["RETENTION_DUE"],
+      "expected_mastery_estimate": null,
+      "expected_retention_due_at": null
+    }
+  ],
+  "cross_scenario_assertions": {
+    "mastery_delta": "EMERGING -> DEVELOPING",
+    "independent_verification_required_after_help": true,
+    "same_session_verification_is_delayed_retention": false,
+    "test_fixture_only_edge_blocks_readiness": false,
+    "numeric_mastery_coefficient_required": false,
+    "invented_retention_due_time_allowed": false
+  }
+}

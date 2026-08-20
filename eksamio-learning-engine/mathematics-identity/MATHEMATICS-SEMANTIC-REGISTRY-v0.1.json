@@ -1,0 +1,43 @@
+{
+  "artifact_id": "MATHEMATICS-SEMANTIC-REGISTRY-v0.1",
+  "version": "0.1",
+  "date": "2026-08-20",
+  "status": "CANONICAL_SOURCE_VERIFIED_SLICE_ADMISSION",
+  "identity_model_id": "mathematics-identity-v0.1",
+  "subject_id": "mathematics",
+  "supersedes_canonical_identity_count": 0,
+  "canonical_semantic_identity_count": 1,
+  "canonical_semantic_identities": [
+    {
+      "semantic_id": "math-probability-classical-equally-likely",
+      "label_ru": "Классическая вероятность в опыте с равновозможными исходами",
+      "capability": "Вычислять вероятность простого события как отношение числа благоприятных равновозможных исходов к общему числу равновозможных исходов, включая случаи, где число благоприятных исходов сначала определяется как дополнение к явно заданному общему числу.",
+      "scope_includes": [
+        "explicit finite equally likely outcome model",
+        "favorable-outcome count divided by total-outcome count",
+        "simple complement count before the favorable/total ratio"
+      ],
+      "scope_excludes": [
+        "addition or subtraction of event probabilities as a separate operation",
+        "conditional probability",
+        "multiplication of probabilities",
+        "Bernoulli formula",
+        "combinatorial probability requiring a separate counting model",
+        "continuous probability distributions"
+      ],
+      "admission_status": "SOURCE_VERIFIED",
+      "source_admission_ref": "verified-slices/MATH-SLICE-001-SOURCE-GATE-v0.1.json",
+      "route_overlays": [
+        "ege-mathematics-base",
+        "ege-mathematics-profile"
+      ],
+      "exam_task_number_is_identity": false
+    }
+  ],
+  "invariants": [
+    "profile and base are route overlays of one Mathematics Identity Model",
+    "exam task numbers are not semantic identities",
+    "no Mathematics-specific learner state, mastery, readiness, retention or NBA engine is created",
+    "future semantic identities require their own source-backed admission"
+  ]
+}
