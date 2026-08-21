@@ -50,20 +50,20 @@ jobs:
           p=Path('matematika-source-2022/profile-source-lock/prepare_profile_2022.py')
           s=p.read_text(encoding='utf-8')
           old="same=sorted((int(c['task']),float(c['rect'][1])) for c in d.get('task_candidates',[]) if float(c['rect'][1])>start+2 and 1<=int(c['task'])<=18)"
-          new="same=sorted((int(c['task']),float(c['rect'][1])) for c in d.get('task_candidates',[]) if float(c['rect'][1])>float(loc[t]['rect'][1])+1 and float(c['rect'][0])<45 and 1<=int(c['task'])<=18)"
+          new="same=sorted(((int(c['task']),float(c['rect'][1])) for c in d.get('task_candidates',[]) if float(c['rect'][1])>float(loc[t]['rect'][1])+1 and float(c['rect'][0])<45 and 1<=int(c['task'])<=18), key=lambda r:r[1])"
           if old in s:
               s=s.replace(old,new,1)
           elif new not in s:
               raise RuntimeError('expected task-boundary expression not found')
           old_or="ors=sorted(r for r in d.get('or_marks',[]) if start < float(r[1]) < end)"
-          new_or="ors=sorted((float(w['x0']),float(w['y0']),float(w['x1']),float(w['y1'])) for w in d['words'] if str(w.get('text','')).strip()=='ИЛИ' and start < float(w['y0']) < end)"
+          new_or="ors=sorted(((float(w['x0']),float(w['y0']),float(w['x1']),float(w['y1'])) for w in d['words'] if str(w.get('text','')).strip()=='ИЛИ' and start < float(w['y0']) < end), key=lambda r:r[1])"
           if old_or in s:
               s=s.replace(old_or,new_or,1)
           elif new_or not in s:
               raise RuntimeError('expected structural ИЛИ expression not found')
           compile(s,str(p),'exec')
           p.write_text(s,encoding='utf-8')
-          print('BOUNDARY FIX PASS: next true left-gutter label + exact uppercase ИЛИ + mandatory Ответ:')
+          print('BOUNDARY FIX PASS: true left-gutter labels and uppercase ИЛИ ordered by PDF y-coordinate; mandatory Ответ:')
           PY
           python -m py_compile matematika-source-2022/profile-source-lock/prepare_profile_2022.py
 
