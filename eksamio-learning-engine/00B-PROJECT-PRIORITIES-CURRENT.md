@@ -1,132 +1,98 @@
 # Eksamio — Current Project Priorities
 
-**Статус:** CURRENT PRODUCT PRIORITY SNAPSHOT  
-**Дата:** 2026-08-19  
-**Горизонт:** до 2026-09-01 и далее до первого работающего PEIS vertical slice
+**Status:** CURRENT PRODUCT / DELIVERY SNAPSHOT  
+**Updated:** 2026-08-21
 
-Этот файл не заменяет `00-PRODUCT-MASTERPLAN.md`. Он фиксирует текущую очередь исполнения и существует, чтобы новые чаты, Codex-задачи и параллельные предметные ветки не переизобретали приоритеты.
+This file does not replace `00-PRODUCT-MASTERPLAN.md`. For the shortest current operating state, read `00E-CURRENT-BRAIN-HANDOFF.md`.
 
-## 1. Предметный приоритет
+## 1. Product priority
 
-### P0 — два главных предмета
+Eksamio remains one **Personal Exam Intelligence System (PEIS)**.
 
-1. **Русский язык** — первый предмет Eksamio.
-2. **Математика** — второй предмет Eksamio.
+Subject order:
 
-Русский и математика имеют одинаковый высший ресурсный приоритет. Если возникает конкуренция за время, архитектурное внимание или delivery capacity, они не должны замедляться ради третьего предмета.
+1. Russian — subject #1, P0.
+2. Mathematics — subject #2, P0 system subject.
+3. Physics — subject #3, P1.
 
-В математике:
+P0/P1 describes product/architecture importance, not a requirement to keep obsolete workstreams alive.
 
-- профильная математика — ключевой интеллектуальный маршрут;
-- базовая математика — отдельный официальный exam route той же предметной системы;
-- уже существующие math source/audit/build-контуры сначала инвентаризируются и переиспользуются, а не перестраиваются ради унификации каталогов.
+## 2. Current shared-system bottleneck
 
-### P1 — третий предмет
+The validated reference chain has reached trusted-host identity. The next central production gate is:
 
-3. **Физика** — третий предмет Eksamio.
+`PEIS-DEPLOYMENT-SECURITY-001`
 
-Физика развивается параллельно, но не в ущерб русскому и математике.
+No public PEIS browser traffic should be enabled before this gate explicitly passes.
 
-## 2. Общий архитектурный инвариант
+The production design must preserve the free deterministic/base learning loop and must not depend on ChatGPT Plus/Pro, Codex credits, an OpenAI end-user account or one fixed AI provider.
 
-Все предметы подключаются к одной Eksamio Personal Exam Intelligence System.
+## 3. Russian — active P0 lane
 
-Нельзя создавать предметные копии:
+Continue the current Russian subject-program / semantic / PEIS-integration work from actual `main` and current PR state.
 
-- Student Model;
-- universal learner evidence;
-- mastery;
-- readiness;
-- retention;
-- Next Best Action / Recommendation Engine.
+Important current drafts include PR #72, PR #57 and PR #23. Drafts are not main authority.
 
-У предмета собственные source authority, identity model, prerequisites, exam routes и content mappings.
+Do not restart broad 185×174 coverage auditing from zero. Resolve the concrete current semantic/content/integration gates and move forward.
 
-## 3. Текущий общий фундамент
+## 4. Mathematics — P0 system subject, historical PROFILE delivery lane closed
 
-Уже materialized / accepted как общий PEIS foundation:
+The PROFILE Mathematics EGE historical demo preparation lane for 2022–2026 is closed for normal work.
 
-- TASK-003 — Russian semantic inventory / crosswalk foundation;
-- TASK-004 — generalized learner evidence and materialized state contracts;
-- TASK-005 — mastery / prerequisite-readiness / retention / Next Best Action contracts;
-- PR #37 — subject source contours 2022–2026 для соответствующих предметов без перестройки математики.
+- PROFILE 2026 is an accepted technical reference.
+- PROFILE 2025 is an accepted technical reference.
+- PROFILE 2024 has a finalized source-locked Tilda package in `main`.
+- PROFILE 2023 is accepted/frozen and its regression lessons are carried forward.
+- PROFILE 2022 is `READY_FOR_TILDA / FROZEN` with 18 tasks and 35/35 official FIPI examples accepted.
 
-Новые предметные работы обязаны переиспользовать этот фундамент.
+Do not keep doing historical demo work merely because an old chat exists. Reopen a frozen year only with an explicit reason/version and full required regression gates.
 
-## 4. Текущая очередь русского
+Next Mathematics work should be selected only when it closes a real current dependency: shared Mathematics Identity Model/PEIS integration, base-route work, telemetry or another explicitly approved product need.
 
-1. Не повторять общий coverage audit 185 × 174 как новый проект.
-2. Свести 185 canonical identities, Skill Graph, FIPI exam routes, demo items, 174 trainer items, thematic trainers и full-program content в Unified Russian Identity Model.
-3. Source-backed разобрать unresolved semantic candidates через admit / merge / split / reject.
-4. Материализовать teach/practice/check content там, где identity model уже устойчива.
-5. Использовать русский как первый verified vertical slice PEIS.
+## 5. Physics — active P1 lane with quality gate
 
-## 5. Текущая очередь математики
+Physics 2026 is the accepted technical reference (merged PR #49).
 
-1. Провести non-destructive inventory всего, что уже существует в `main` по профильной и базовой математике.
-2. Зафиксировать фактический source matrix 2022–2026 для обоих маршрутов.
-3. Не переделывать уже проверенные source/prelock/build/audit контуры без причины.
-4. Закрыть только реальные gaps.
-5. Построить единую Mathematics Identity Model с route overlays `profile` и `base`.
-6. Затем подключить math evidence к тем же общим PEIS contracts.
+Physics 2025 remains active in draft PR #48 and requires concrete quality revalidation before acceptance. Check actual source truth, year isolation, completeness, browser behavior and legitimate regressions; fix defects in the active lane rather than launching another general audit cycle.
 
-## 6. Текущая очередь физики
+Physics may proceed in parallel but must not create subject-specific PEIS engines or slow critical P0/platform work.
 
-1. Проверенный официальный source-корпус 2022–2026.
-2. Physics Identity Model.
-3. Source-backed prerequisite relationships.
-4. Mapping существующей физической демоверсии.
-5. Coverage/diagnostic audit.
-6. Подключение к общему PEIS.
+## 6. Parallel execution
 
-## 7. Главный системный milestone
+Recommended active chats/lanes:
 
-Первый работающий end-to-end контур:
+- Eksamio Brain — architecture, shared PEIS, priorities, cross-lane review and acceptance decisions.
+- Russian — Russian-only execution lane.
+- Physics — Physics-only execution lane.
 
-`demo -> diagnosis -> EvidenceEvent -> StudentSkillState -> Mastery/Readiness -> Next Best Action -> trainer/help -> independent verify -> measured outcome`
+No permanent Mathematics historical-demo chat is needed now. Start a new Mathematics lane only for a new real dependency.
 
-До этого момента не распыляться на декоративный AI.
+Parallel lanes communicate through GitHub branches/PRs/results, not by copying chat histories.
 
-## 8. После vertical slice
+## 7. Brain review cadence
 
-Последовательно:
+Review deltas, not the entire project repeatedly.
 
-1. NIC-1 / NIC-3 / transfer / retention / recommendation-result telemetry;
-2. grounded AI Review конкретной ошибки + independent verification;
-3. usage/cost/eval telemetry;
-4. account/server sync;
-5. «Тренировка на сегодня»;
-6. text AI Tutor;
-7. Student Learning Twin / Recommendation Engine expansion;
-8. essay/extended-answer evaluation;
-9. calibrated score forecast;
-10. vision;
-11. realtime voice.
+Brain cross-lane review is warranted after:
 
-## 9. Delivery discipline до 1 сентября
+- significant merges;
+- material PR updates affecting acceptance;
+- blocker/milestone changes;
+- shared PEIS/production changes;
+- cross-subject conflicts;
+- unsupported claims of completion.
 
-- не оставлять архитектурно готовые безопасные PR без причины;
-- каждую ветку начинать от актуального `main`;
-- перед merge проверять конфликт с общими PEIS contracts и current authority;
-- прямые изменения `main` в source/authority/identity/PEIS/runtime считать audit trigger;
-- production не менять побочно;
-- не создавать повторные аудиты уже закрытых вопросов;
-- приоритет delivery: русский + математика, затем физика;
-- параллельная работа допустима только при разделённых ветках/предметных контурах;
-- после существенного рабочего периода фиксировать durable checkpoint в `worklog/`; базовый ритм — не реже одного раза за рабочий день, если велась значимая работа.
+If nothing material changed, do not create another checkpoint or repeat an audit.
 
-## 10. Если новый чат не понимает, что делать
+## 8. Delivery rule
 
-Читать в таком порядке:
+Choose the next work by bottleneck and dependency, not by the number of open files or how easy a task is.
 
-1. `00-PRODUCT-MASTERPLAN.md`;
-2. этот файл — `00B-PROJECT-PRIORITIES-CURRENT.md`;
-3. `00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md`;
-4. `00D-BRAIN-CONTINUITY-PROTOCOL.md`;
-5. последний checkpoint в `worklog/`;
-6. `00-WORK-STATUS.txt` и current addendum как исторический контекст;
-7. `AGENTS.md`;
-8. current subject authority;
-9. exact task / branch / PR context.
+Prefer:
 
-Ни один локальный task не может молча изменить зафиксированные product priorities.
+`current authority -> narrow task -> evidence -> accept/reject -> next dependency`
+
+over
+`re-audit -> meta-report -> re-audit the report`.
+
+The project should become easier to reason about as it grows.
