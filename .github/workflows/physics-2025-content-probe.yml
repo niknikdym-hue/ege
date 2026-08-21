@@ -1,0 +1,66 @@
+name: physics-2025-content-probe
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  probe:
+    if: github.head_ref == 'chatgpt/physics-2025-archive-20260819'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/physics-2025-archive-20260819
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install parser
+        run: python -m pip install --disable-pip-version-check pymupdf pillow >/dev/null
+      - name: Extract 2025 logical pages and task candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/physics-2025-probe && mkdir -p /tmp/physics-2025-probe/pages
+          python - <<'PY'
+          from pathlib import Path
+          import fitz, json, re
+          from PIL import Image
+          from io import BytesIO
+
+          src=Path('ege-source-fizika/source-fizika-2025/ege-2025-fizika-demoversiya.pdf')
+          doc=fitz.open(src)
+          out=Path('/tmp/physics-2025-probe')
+          all_text=[]; meta=[]
+          logical=0
+          for pno,page in enumerate(doc,1):
+              r=page.rect
+              clips=[fitz.Rect(0,0,r.width/2,r.height), fitz.Rect(r.width/2,0,r.width,r.height)] if r.width>=r.height else [fitz.Rect(0,0,r.width,r.height/2),fitz.Rect(0,r.height/2,r.width,r.height)]
+              for slot,clip in enumerate(clips,1):
+                  logical += 1
+                  txt=page.get_text('text', clip=clip).replace('\x00','').strip()
+                  words=[]
+                  for w in page.get_text('words', clip=clip):
+                      x0,y0,x1,y1,t,*rest=w
+                      words.append({'x0':round(x0-clip.x0,2),'y0':round(y0-clip.y0,2),'x1':round(x1-clip.x0,2),'y1':round(y1-clip.y0,2),'text':t})
+                  (out/'pages'/f'logical-{logical:02d}.txt').write_text(txt+'\n',encoding='utf-8')
+                  (out/'pages'/f'logical-{logical:02d}-words.json').write_text(json.dumps(words,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+                  pix=page.get_pixmap(matrix=fitz.Matrix(1.35,1.35), clip=clip, alpha=False)
+                  im=Image.open(BytesIO(pix.tobytes('png'))).convert('RGB')
+                  im.save(out/'pages'/f'logical-{logical:02d}.webp','WEBP',quality=78,method=6)
+                  all_text.append(f'===== LOGICAL PAGE {logical:02d} | PDF {pno} SLOT {slot} =====\n{txt}\n')
+                  nums=[]
+                  for m in re.finditer(r'(?m)^\s*(?:№\s*)?(\d{1,2})(?:\.|\s)', txt):
+                      n=int(m.group(1))
+                      if 1<=n<=26: nums.append(n)
+                  meta.append({'logical_page':logical,'pdf_page':pno,'slot':slot,'chars':len(txt),'task_candidates':nums})
+          (out/'ALL-LOGICAL-TEXT.txt').write_text('\n'.join(all_text),encoding='utf-8')
+          (out/'PAGE-META.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(meta,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: physics-2025-content-probe
+          path: /tmp/physics-2025-probe
+          if-no-files-found: error
