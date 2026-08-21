@@ -1,129 +1,100 @@
 # Eksamio Learning Engine — Codex instructions
 
-These instructions apply to the entire `eksamio-learning-engine/` directory tree.
+These instructions apply to the entire `eksamio-learning-engine/` tree.
 
 ## Source of truth
 
-The GitHub repository is the durable source of truth for this direction. Do not rely on memory from prior chats when repository files provide current instructions.
+GitHub is the durable source of truth. Chat history is navigation, not project authority.
 
-`eksamio-learning-engine/` is the root of the Eksamio Personal Exam Intelligence System inside the shared `ege` repository.
+`eksamio-learning-engine/` is the Eksamio Personal Exam Intelligence System (PEIS) root inside `niknikdym-hue/ege`.
 
-Before every task in this direction, read in this order:
+### Minimal required start for every task
 
-1. `00-PRODUCT-MASTERPLAN.md` — product target, architectural invariants and long-term implementation order;
-2. `00B-PROJECT-PRIORITIES-CURRENT.md` — current subject/resource priorities and active delivery order;
-3. `00-WORK-STATUS.txt` and `00A-WORK-STATUS-CURRENT-ADDENDUM.txt` — current checkpoints;
-4. `COMMUNICATION-PROTOCOL.md`;
-5. `02-CODEX-BUILD-INDEX.txt`;
-6. the exact task file named by the user in `tasks/` or another explicitly named task file in this directory;
-7. any source/provenance/current-authority files referenced by that task.
+1. Refresh/check current `main`.
+2. Read `00-PRODUCT-MASTERPLAN.md`.
+3. Read `00E-CURRENT-BRAIN-HANDOFF.md`.
+4. Read the exact task/scope supplied for this run.
+5. Read only the subject/source/contracts directly relevant to that task.
 
-Product/architecture decisions from `00-PRODUCT-MASTERPLAN.md` and the current priority snapshot must not be silently overridden by an older historical checkpoint or a local subject task. Current explicit subject/source authority may supersede older subject counts or source checkpoints when it declares that supersession.
+For cross-subject architecture, PEIS, production, deployment/security, identity/auth, commerce or governance work, also read the relevant current authority named by `00E`, including `00B-PROJECT-PRIORITIES-CURRENT.md`, `00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md` and `00D-BRAIN-CONTINUITY-PROTOCOL.md` when needed.
 
-If instructions conflict materially, record the contradiction and stop the conflicting part instead of resolving it from memory. Safety constraints and explicit NO-DESTRUCTIVE/ADD-ONLY rules must never be relaxed implicitly.
+`00-WORK-STATUS.txt` and `00A-WORK-STATUS-CURRENT-ADDENDUM.txt` are historical checkpoints, not current operating state. Older files may contain valid substantive architecture but stale start/read-order instructions; current `00E` + this file supersede those operational pointers.
 
-## Fixed product priorities
+Do not perform broad repository audits from zero when the task can be resolved by checking the delta from current accepted state.
 
-Unless a newer explicit product decision changes them through the authority chain:
+## Fixed system rules
 
-- Russian and mathematics are P0 and the two principal Eksamio subject directions;
-- mathematics is the second subject of the system;
-- physics is the third subject and may proceed in parallel only without slowing Russian or mathematics;
-- the historical official source target for each subject is 2022–2026;
-- all subjects reuse one PEIS architecture rather than creating subject-specific Student Model / evidence / mastery / readiness / retention / NBA engines.
+- Eksamio is one PEIS, not separate learner engines per subject.
+- Russian is subject #1, Mathematics #2, Physics #3.
+- Russian and Mathematics are P0 system subjects; Physics is P1 and may proceed in parallel without slowing P0 work.
+- Subject source target is 2022–2026 where applicable.
+- A subject may own verified source, semantic identities, prerequisites, exam routes and content, but not a separate Student Model / Evidence / Mastery / Readiness / Retention / NBA engine.
+- The base loop remains free: `diagnose -> model -> prioritize -> practice/help -> verify -> retain -> reassess -> replan`.
+- Eksamio runtime must not depend on a ChatGPT/OpenAI subscription. OpenAI/Codex may be development tools or replaceable AI providers, never canonical product infrastructure.
 
 ## Safety
 
-- Never modify existing Eksamio demo/trainer production files unless the current task explicitly authorizes exact paths.
-- Never delete, rename, move, or refactor existing files as a side effect.
-- Never silently fix unrelated problems discovered during an audit.
-- Record discovered conflicts/problems in the task result or validation report.
-- Unknown or unverified facts must be represented as `null`, `needs_review`, `NOT_CONFIRMED`, or another schema value explicitly allowed by the task. Do not guess.
-- Official exam facts, answers, criteria, task numbering and scoring are source-of-truth data and must not be synthesized by AI.
-- Difficulty must remain `null` unless supported by validated data or explicitly defined by a reviewed algorithm.
-- Preserve backward compatibility unless the task explicitly describes and tests a migration.
+- Never modify published/frozen demo or trainer files unless the current task explicitly authorizes exact paths.
+- Never silently delete, rename, move, refactor or fix unrelated files.
+- Unknown/unverified facts must remain `null`, `needs_review`, `NOT_CONFIRMED` or another task-approved unresolved state.
+- Official exam facts, answers, criteria, numbering and scoring must come from verified source authority, not AI reconstruction.
+- Difficulty remains `null` unless validated data or an explicitly reviewed algorithm supports it.
+- Preserve backward compatibility unless a migration is explicitly specified and tested.
+- A mergeable PR is not automatically acceptable.
 
-## Unified learning-system rule
+## Russian source policy
 
-Demonstrations, exam trainers, standalone thematic trainers, full subject programs and AI are not separate competing learning systems.
+For Russian rules/explanations/algorithms/examples, prefer verified materials in `russkiy-knigi/` plus official FIPI for exam-specific truth.
 
-They must converge on one stable semantic/skill identity principle and one Student Model. Do not introduce a second independent skill ontology, learner state, mastery model, readiness engine, retention engine or recommendation engine for a new course, subject, AI feature or trainer.
-
-Each subject may and must have its own verified subject authority, semantic identities, prerequisite relationships, exam-route mappings and content layer.
-
-AI must consume structured learner evidence and verified knowledge; AI must not become the owner of official scoring, exam facts or canonical skill identity.
-
-## Russian explanations and rules — source policy
-
-For Russian-language rules, explanations, algorithms, examples and error explanations, do not reinvent established subject matter and do not generate a new grammar methodology from scratch.
-
-Primary working source directory:
-
-`eksamio-learning-engine/russkiy-knigi/`
-
-Use the books and reference materials in this directory as the priority subject-matter corpus for explanation content, together with official current FIPI materials where exam-specific facts or wording are required.
-
-Rules:
-
-- derive explanations from verified existing linguistic/teaching sources rather than inventing rules;
-- preserve the meaning and correctness of the source rule while adapting presentation for a concise interactive trainer;
-- do not copy long copyrighted passages verbatim; summarize, normalize and rewrite into original concise instructional wording;
-- keep provenance for each explanation/rule block: source file, relevant section/topic, and any conflict between sources;
-- if sources disagree materially, do not resolve by guess; mark `needs_review` and document the conflict;
-- do not treat non-official books as source of truth for current EGE task numbering, scoring, criteria or official exam requirements; those must come from current verified FIPI sources;
-- explanation UX may be new, but the underlying linguistic rule should come from established verified sources;
-- whenever possible, separate `rule`, `short_rule`, `algorithm`, `examples`, `common_traps`, and `error_explanation`, so one verified rule can serve many trainer items without duplicating text.
-
-The product principle is: do not invent the wheel; build a better learning interface around verified knowledge.
+- Do not invent grammar methodology when verified sources exist.
+- Adapt and summarize; do not copy long copyrighted passages.
+- Preserve provenance.
+- Source conflicts remain `needs_review` until resolved.
+- Non-official books never override current FIPI exam numbering/scoring/criteria.
 
 ## Change workflow
 
-For implementation work that can affect existing behavior:
+Use the lightest workflow that preserves correctness and recovery.
 
-1. Work on a dedicated branch/worktree.
-2. Keep the change limited to the current task.
-3. Run the checks required by the task and applicable project tests.
-4. Produce a result report in `results/`.
-5. Open a PR rather than merging directly to `main`.
-6. Wait for review before further implementation that depends on the change.
+For behavior/source/identity/PEIS/production-affecting work:
 
-For documentation-only ADD-ONLY tasks, direct creation of new files is allowed if the task explicitly permits it.
+1. dedicated branch/worktree;
+2. narrow scope;
+3. required tests/validation;
+4. durable result/validation evidence;
+5. PR;
+6. review before merge where acceptance matters.
 
-Direct commits to `main` that touch source authority, identity, PEIS, runtime or production must be treated as an audit trigger. Do not automatically revert them, but verify what changed, provenance/intent where applicable, and whether downstream branches must resync.
+For small add-only governance/documentation work, do not manufacture extra task/result/review files when the commit/PR itself is sufficient evidence.
 
 ## Result contract
 
-Every completed task must produce a durable result artifact in the repository. Do not make the chat response the only record of work.
+Every completed implementation/audit task must leave durable evidence in GitHub. A chat response alone is insufficient.
 
-The result must contain at least:
+Minimum useful result data:
 
-- task ID;
-- status: `DONE`, `PARTIAL`, or `BLOCKED`;
-- files created;
-- files modified;
-- files deleted;
-- tests/checks run and outcomes;
-- unresolved `needs_review` items;
-- contradictions found;
-- exact branch/commit/PR when applicable;
-- explicit confirmation whether existing production files were changed.
+- status `DONE|PARTIAL|BLOCKED`;
+- files changed;
+- checks/tests and outcomes;
+- unresolved items/contradictions;
+- branch/commit/PR when applicable;
+- whether production files changed.
 
-## Review contract
+Do not duplicate the same information across multiple documents without a real need.
 
-If a review file exists for the task in `reviews/`, read it before continuing.
+## Parallel work
 
-Statuses:
+Parallel subject chats/agents may work on separate branches and subject scopes. They are execution lanes, not independent project brains.
 
-- `APPROVED` — task may be treated as accepted.
-- `CHANGES_REQUIRED` — make only the requested corrections, preferably in the same task branch/PR.
-- `HOLD` — do not continue dependent implementation.
+The Brain reviews meaningful deltas across lanes: significant merges, changed blockers, cross-subject/shared-core changes, production-impacting PRs and unsupported DONE claims. If nothing material changed, do not create another checkpoint or repeat an audit.
 
-Do not infer approval from silence.
+## Subscription/provider independence
 
-## Product rule
+No Eksamio product state or base learning function may require:
 
-The base Eksamio learning loop remains free:
+- ChatGPT Plus/Pro;
+- Codex subscription/credits;
+- an OpenAI end-user account;
+- one fixed AI provider/model.
 
-`diagnose -> model -> prioritize -> practice/help -> verify -> retain -> reassess -> replan`
-
-Premium features may add deep personalized computation/AI but must not be implemented by degrading or paywalling the base loop unless a future explicit product decision changes this rule through the product authority chain.
+Provider-dependent premium AI may fail over, be disabled, or use another approved adapter while deterministic/base PEIS continues to work.
