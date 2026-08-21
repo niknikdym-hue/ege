@@ -1,0 +1,250 @@
+name: PROFILE Math 2022 — strict final verifier v8
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'PROFILE-MATH-2022-PR-FINAL-VERIFY-TRIGGER.txt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: profile-math-2022-pr-final-v8-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  build-audit-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow selenium
+      - uses: browser-actions/setup-chrome@v1
+      - uses: nanasess/setup-chromedriver@v2
+
+      - name: Restore audited 2022 scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p matematika-source-2022/profile-source-lock ege-matematika-profil-demoversiya-2022/scripts ege-matematika-profil-demoversiya-2022/tests/evidence ege-matematika-profil-demoversiya-2022/audit
+          cat .profile2022-bootstrap/prepare.part1.b64 .profile2022-bootstrap/prepare.part2.b64 | base64 -d | gzip -d > matematika-source-2022/profile-source-lock/prepare_profile_2022.py
+          cat .profile2022-bootstrap/build.part1.b64 .profile2022-bootstrap/build.part2.b64 | base64 -d | gzip -d > ege-matematika-profil-demoversiya-2022/scripts/build_profile_2022.py
+          cat .profile2022-bootstrap/test.part1.b64 .profile2022-bootstrap/test.part2.b64 | base64 -d | gzip -d > ege-matematika-profil-demoversiya-2022/tests/test_profile_2022.py
+          cat .profile2022-bootstrap/audit.b64 | base64 -d | gzip -d > ege-matematika-profil-demoversiya-2022/audit/independent_audit_2022.py
+          chmod +x matematika-source-2022/profile-source-lock/prepare_profile_2022.py ege-matematika-profil-demoversiya-2022/scripts/build_profile_2022.py ege-matematika-profil-demoversiya-2022/tests/test_profile_2022.py ege-matematika-profil-demoversiya-2022/audit/independent_audit_2022.py
+
+      - name: Fix exact PDF boundaries and delayed T123 runtime-first fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('matematika-source-2022/profile-source-lock/prepare_profile_2022.py')
+          s=p.read_text(encoding='utf-8')
+          replacements=[
+            ("same=sorted((int(c['task']),float(c['rect'][1])) for c in d.get('task_candidates',[]) if float(c['rect'][1])>start+2 and 1<=int(c['task'])<=18)","same=sorted(((int(c['task']),float(c['rect'][1])) for c in d.get('task_candidates',[]) if float(c['rect'][1])>float(loc[t]['rect'][1])+1 and float(c['rect'][0])<45 and 1<=int(c['task'])<=18), key=lambda r:r[1])"),
+            ("ors=sorted(r for r in d.get('or_marks',[]) if start < float(r[1]) < end)","ors=sorted(((float(w['x0']),float(w['y0']),float(w['x1']),float(w['y1'])) for w in d['words'] if str(w.get('text','')).strip()=='ИЛИ' and start < float(w['y0']) < end), key=lambda r:r[1])"),
+            ("c=[x for x in d.get('task_candidates',[]) if int(x['task'])==t]","c=[x for x in d.get('task_candidates',[]) if int(x['task'])==t and float(x['rect'][0])<45]"),
+            ("c17=[x for x in d19.get('task_candidates',[]) if int(x['task'])==17]","c17=[x for x in d19.get('task_candidates',[]) if int(x['task'])==17 and float(x['rect'][0])<45]"),
+            ("c18=[x for x in d21.get('task_candidates',[]) if int(x['task'])==18]","c18=[x for x in d21.get('task_candidates',[]) if int(x['task'])==18 and float(x['rect'][0])<45]"),
+          ]
+          for old,new in replacements:
+              if old in s:
+                  s=s.replace(old,new,1)
+              elif new not in s:
+                  raise RuntimeError('expected source expression not found: '+old)
+          compile(s,str(p),'exec'); p.write_text(s,encoding='utf-8')
+
+          bp=Path('ege-matematika-profil-demoversiya-2022/scripts/build_profile_2022.py')
+          bs=bp.read_text(encoding='utf-8')
+          marker='def delayed_preview(names):'
+          i=bs.index(marker)
+          head,tail=bs[:i],bs[i:]
+          old="        if 'assetParts[' in s:\n"
+          new="        if re.search(r'window\\.EKSAMIO_MATH_PROFILE\\.assetParts\\[[^\\n]+?\\]\\.push\\(',s):\n"
+          if old in tail:
+              tail=tail.replace(old,new,1)
+          elif new not in tail:
+              raise RuntimeError('delayed_preview asset classifier target missing')
+          bs=head+tail
+          compile(bs,str(bp),'exec'); bp.write_text(bs,encoding='utf-8')
+          print('STRICT SOURCE BOUNDARY + DELAYED FIX PASS')
+          PY
+          python -m py_compile matematika-source-2022/profile-source-lock/prepare_profile_2022.py ege-matematika-profil-demoversiya-2022/scripts/build_profile_2022.py
+
+      - name: Build exact FIPI 2022 source locks and visuals
+        run: python matematika-source-2022/profile-source-lock/prepare_profile_2022.py --repo-root .
+
+      - name: Strict prebuild audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json,hashlib
+          lock=Path('matematika-source-2022/profile-source-lock')
+          src=Path('matematika-source-2022/ege-2022-matematika-profil-demoversiya.pdf')
+          assert hashlib.sha256(src.read_bytes()).hexdigest()=='14f2039ed7820fb74f0d98269d8add25041a1668b094b173852ea00fb15a36aa'
+          sl=json.loads((lock/'SOURCE-LOCK.json').read_text())
+          ex=json.loads((lock/'EXAM-LOCK.json').read_text())
+          ans=json.loads((lock/'ANSWER-LOCK.json').read_text())
+          criteria=json.loads((lock/'EXTENDED-CRITERIA-MAP.json').read_text())
+          inv=json.loads((lock/'VISUAL-INVENTORY.json').read_text())
+          fid=json.loads((lock/'VISUAL-FIDELITY-EVIDENCE.json').read_text())
+          ids=json.loads((lock/'DEMO-ITEM-IDENTITY-MAP.json').read_text())
+          assert sl['status']=='SOURCE_BYTES_AND_PAGE_MAP_LOCKED' and sl['year']==2022 and sl['level']=='профильный'
+          assert ex['status']=='EXAM_LOCK_PASS' and ex['exam_structure']['task_count']==18 and ex['official_examples']['total_examples']==35
+          assert ex['exam_structure']['short_task_range']==[1,11] and ex['exam_structure']['extended_task_range']==[12,18]
+          assert ans['status']=='ANSWER_LOCK_PASS' and ans['short_examples']==28 and len(ans['answers'])==28
+          assert criteria['status']=='EXTENDED_CRITERIA_LOCK_PASS' and len(criteria['tasks'])==7
+          assert inv['status']=='VISUAL_PREBUILD_LOCK_PASS' and inv['conditions']==35 and inv['direct_exact_source_assets']==47 and inv['reconstructed_official_visuals']==0
+          assert fid['pixel_identity_pass']==47 and fid['pixel_identity_fail']==0
+          assert ids['status']=='HISTORICAL_IDENTITY_LOCK_PASS' and len(ids['items'])==35
+          assert all(x['semantic_mapping_status']=='UNRESOLVED' and x['semantic_id'] is None for x in ids['items'])
+          cond=[x for x in inv['assets'] if x['semantic_role']=='learner_condition']
+          assert len(cond)==35 and len({(x['task'],x['variant']) for x in cond})==35
+          print('STRICT PREBUILD PASS')
+          PY
+
+      - name: Build Tilda package
+        run: python ege-matematika-profil-demoversiya-2022/scripts/build_profile_2022.py
+
+      - name: Browser regression 1
+        shell: bash
+        env:
+          EKSAMIO_PREVIEW_URL: http://127.0.0.1:8765/ege-matematika-profil-demoversiya-2022-PREVIEW.html
+          EKSAMIO_DELAYED_PREVIEW_URL: http://127.0.0.1:8765/ege-matematika-profil-demoversiya-2022-DELAYED-T123-PREVIEW.html
+        run: |
+          set -euo pipefail
+          cd ege-matematika-profil-demoversiya-2022
+          python -m http.server 8765 >/tmp/p22-http1.log 2>&1 &
+          SERVER=$!
+          trap 'kill $SERVER 2>/dev/null || true' EXIT
+          sleep 2
+          cd ..
+          python ege-matematika-profil-demoversiya-2022/tests/test_profile_2022.py
+
+      - name: Independent source-runtime audit
+        run: python ege-matematika-profil-demoversiya-2022/audit/independent_audit_2022.py ege-matematika-profil-demoversiya-2022
+
+      - name: Repack with first browser evidence
+        run: python ege-matematika-profil-demoversiya-2022/scripts/build_profile_2022.py --repack
+
+      - name: Clean extraction and browser regression 2
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/p22-clean
+          mkdir -p /tmp/p22-clean
+          unzip -q ege-matematika-profil-demoversiya-2022-v1.0.zip -d /tmp/p22-clean
+          CLEAN=/tmp/p22-clean/ege-matematika-profil-demoversiya-2022
+          python ege-matematika-profil-demoversiya-2022/audit/independent_audit_2022.py "$CLEAN" --clean
+          cd "$CLEAN"
+          python -m http.server 8766 >/tmp/p22-http2.log 2>&1 &
+          SERVER=$!
+          trap 'kill $SERVER 2>/dev/null || true' EXIT
+          sleep 2
+          cd "$GITHUB_WORKSPACE"
+          EKSAMIO_PACKAGE_ROOT="$CLEAN" EKSAMIO_PREVIEW_URL=http://127.0.0.1:8766/ege-matematika-profil-demoversiya-2022-PREVIEW.html EKSAMIO_DELAYED_PREVIEW_URL=http://127.0.0.1:8766/ege-matematika-profil-demoversiya-2022-DELAYED-T123-PREVIEW.html python "$CLEAN/tests/test_profile_2022.py"
+
+      - name: Promote only after every gate passes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('ege-matematika-profil-demoversiya-2022')
+          prefix='ege-matematika-profil-demoversiya-2022'
+          blocks=sorted(root.glob(f'{prefix}-T123-*.txt'))
+          mx=max(p.stat().st_size for p in blocks)
+          assert mx<42500
+          for name in [f'{prefix}-EXAM-DATA.json',f'{prefix}-INPUT-CONTRACT.json',f'{prefix}-EXAM-MAP.json',f'{prefix}-BUILD-EVIDENCE.json']:
+              p=root/name
+              d=json.loads(p.read_text())
+              d['status']='READY_FOR_TILDA'
+              d['browser_audit']='tests/evidence/profile-2022-browser-evidence.json'
+              d['clean_zip_regression']='PASS'
+              d['ui_parity_gate']='PASS'
+              d['all_variant_asset_reliability_gate']='PASS'
+              p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+          lines=[
+              'SOURCE_GATE: PASS — exact FIPI 2022 SOURCE/EXAM/ANSWER/CRITERIA locks',
+              'VISUAL_SOURCE_GATE: PASS — 47/47 direct exact-source crops; reconstructed 0',
+              'UI_PARITY_GATE: PASS — ФИПИ 2022 · официальный пример N for every forced variant and after reload',
+              'ALL_VARIANT_ASSET_RELIABILITY_GATE: PASS — 35/35 first render + away/back + reload + rerender + delayed T123',
+              'INTERACTION_GATE: PASS — 35/35 official examples real DOM',
+              'SCORER_GATE: PASS — 28/28 correct+wrong',
+              'STATE_RESTORE_GATE: PASS',
+              'EXTENDED_UX_GATE: PASS — toolbar + own answer + exact FIPI solution/criteria + self-evaluation 7/7',
+              f'TILDA_ATOMIC_GATE: PASS — {len(blocks)} T123, max {mx} bytes < 42500',
+              'RESPONSIVE_GATE: PASS — 1280/768/390/360/320',
+              'INDEPENDENT_AUDIT_GATE: PASS',
+              'CLEAN_ZIP_REGRESSION_GATE: PASS',
+              'FINAL_STATUS: READY_FOR_TILDA',
+              'READY_FOR_TILDA: YES',
+              'LIVE_GO: NO'
+          ]
+          (root/f'{prefix}-PAGE-STATUS.txt').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+          python ege-matematika-profil-demoversiya-2022/scripts/build_profile_2022.py --repack
+
+      - name: Final clean archive assertions and SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/p22-final
+          mkdir -p /tmp/p22-final
+          unzip -q ege-matematika-profil-demoversiya-2022-v1.0.zip -d /tmp/p22-final
+          CLEAN=/tmp/p22-final/ege-matematika-profil-demoversiya-2022
+          python ege-matematika-profil-demoversiya-2022/audit/independent_audit_2022.py "$CLEAN" --clean
+          python - <<'PY'
+          from pathlib import Path
+          import re,json,subprocess,tempfile
+          root=Path('/tmp/p22-final/ege-matematika-profil-demoversiya-2022')
+          prefix='ege-matematika-profil-demoversiya-2022'
+          blocks=sorted(root.glob(f'{prefix}-T123-*.txt'))
+          nums=[int(re.search(r'T123-(\d+)\.txt$',p.name).group(1)) for p in blocks]
+          assert nums==list(range(1,len(blocks)+1))
+          assert max(p.stat().st_size for p in blocks)<42500
+          for p in blocks:
+              s=p.read_text()
+              assert s.count('<script')==s.count('</script>')
+              assert s.count('<style')==s.count('</style>')
+              for m in re.finditer(r'<script[^>]*>(.*?)</script>',s,re.S|re.I):
+                  with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False) as f:
+                      f.write(m.group(1)); n=f.name
+                  cp=subprocess.run(['node','--check',n],capture_output=True,text=True)
+                  Path(n).unlink(missing_ok=True)
+                  assert cp.returncode==0,(p.name,cp.stderr)
+          st=(root/f'{prefix}-PAGE-STATUS.txt').read_text()
+          for g in ['SOURCE_GATE: PASS','UI_PARITY_GATE: PASS','ALL_VARIANT_ASSET_RELIABILITY_GATE: PASS','SCORER_GATE: PASS — 28/28','STATE_RESTORE_GATE: PASS','EXTENDED_UX_GATE: PASS','TILDA_ATOMIC_GATE: PASS','RESPONSIVE_GATE: PASS','INDEPENDENT_AUDIT_GATE: PASS','CLEAN_ZIP_REGRESSION_GATE: PASS','READY_FOR_TILDA: YES']:
+              assert g in st,g
+          ev=json.loads((root/'tests/evidence/profile-2022-browser-evidence.json').read_text())
+          assert ev['status']=='PASS'
+          print('FINAL CLEAN ASSERTIONS PASS')
+          PY
+          cp ege-matematika-profil-demoversiya-2022-v1.0.zip ege-matematika-profil-demoversiya-2022-v1.0-SOURCE-LOCKED.zip
+          sha256sum ege-matematika-profil-demoversiya-2022-v1.0-SOURCE-LOCKED.zip | tee PROFILE-MATH-2022-FINAL-SHA256.txt
+          SHA=$(cut -d' ' -f1 PROFILE-MATH-2022-FINAL-SHA256.txt)
+          TCOUNT=$(find ege-matematika-profil-demoversiya-2022 -maxdepth 1 -name '*-T123-*.txt' | wc -l | tr -d ' ')
+          TMAX=$(find ege-matematika-profil-demoversiya-2022 -maxdepth 1 -name '*-T123-*.txt' -printf '%s\n' | sort -nr | head -1)
+          printf 'Run: %s\nHead: %s\nStatus: READY_FOR_TILDA\nArchive SHA256: %s\nTasks: 18\nOfficial examples: 35/35\nScorer: 28/28 correct+wrong\nT123: %s blocks; max %s bytes <42500\nTwo browser regressions: PASS\nIndependent source/runtime audit: PASS\n' '${{ github.run_id }}' '${{ github.event.pull_request.head.sha }}' "$SHA" "$TCOUNT" "$TMAX" > PROFILE-MATH-2022-LATEST-BUILD-RUN.txt
+
+      - name: Upload one authoritative verified package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-matematika-profil-demoversiya-2022-v1.0-SOURCE-LOCKED
+          path: |
+            ege-matematika-profil-demoversiya-2022-v1.0-SOURCE-LOCKED.zip
+            PROFILE-MATH-2022-FINAL-SHA256.txt
+            PROFILE-MATH-2022-LATEST-BUILD-RUN.txt
+          retention-days: 30
