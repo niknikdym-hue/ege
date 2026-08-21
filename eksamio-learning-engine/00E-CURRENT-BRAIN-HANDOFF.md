@@ -174,7 +174,64 @@ Do **not** keep a permanent Mathematics historical-demo chat active. The known P
 
 A subject chat must not independently redesign shared PEIS contracts, learner identity, mastery, readiness, retention, NBA or cross-subject architecture.
 
-## 8. Durable communication with minimal bureaucracy
+## 8. Brain / Codex / Spark execution routing
+
+Use the strongest reasoning only where it changes decisions or quality. Do not spend expensive reasoning on mechanical work.
+
+### Brain
+
+Brain owns:
+
+- product and architecture decisions;
+- dependency order and bottleneck selection;
+- cross-subject/shared-PEIS decisions;
+- source/identity admission boundaries;
+- production/security gates;
+- review of risky or ambiguous PRs;
+- deciding when a result is actually accepted.
+
+Brain should not become a bulk file editor when a bounded executor can do the work safely.
+
+### Codex
+
+Use Codex for engineering-heavy work that benefits from repository execution:
+
+- multi-file implementation;
+- builders/materializers/migrations;
+- test suites and browser checks;
+- CI/debugging;
+- large deterministic transforms;
+- source/package assembly with explicit gates;
+- fixes that require running and iterating on code.
+
+Codex must still follow current `AGENTS.md`, branch/PR discipline and source/production boundaries. A strong model inside Codex is appropriate when the task is complex or architecture-sensitive.
+
+### Spark
+
+When available, Spark is an optional fast executor for **small, sharply bounded tasks** where the desired change is already known, for example:
+
+- one-file or very small localized fixes;
+- straightforward test additions;
+- mechanical refactors with exact boundaries;
+- quick repository inspection/probes;
+- narrow UI/label fixes such as the known PROFILE 2024 parity repair, if the task contract is exact.
+
+Do not use Spark to decide architecture, infer missing official source truth, approve semantic identities, or resolve ambiguous cross-system design.
+
+For Spark tasks, required tests/checks must be stated explicitly; never assume they will be run automatically. Spark availability/limits are an execution convenience only. Any Spark task must remain executable by normal Codex or another approved environment if Spark is unavailable.
+
+### Routing rule
+
+Choose by **risk + ambiguity + execution weight**, not by prestige of the model:
+
+- high ambiguity / architecture / irreversible decision -> Brain;
+- substantial implementation / testing / repo iteration -> Codex;
+- known answer + tiny bounded change -> Spark when available;
+- deterministic local check with no AI need -> ordinary script/tool first.
+
+The routing itself must reduce cost/time without lowering acceptance quality.
+
+## 9. Durable communication with minimal bureaucracy
 
 GitHub is the shared bus. Existing mechanisms are sufficient:
 
@@ -188,7 +245,7 @@ Do not create duplicate reports just to report that another report exists.
 
 A PR + its durable result/validation is normally enough evidence for a subject lane. A separate Brain checkpoint is needed only when project state meaningfully changes: major merge, blocker change, priority change, architecture decision, production gate change, or cross-lane conflict.
 
-## 9. Brain cross-lane review rule
+## 10. Brain cross-lane review rule
 
 The Brain periodically checks parallel work, but **not by rerunning broad audits from zero**.
 
@@ -210,7 +267,7 @@ Review cadence:
 
 If nothing material changed, do not manufacture a checkpoint or repeat an audit.
 
-## 10. Migration to the Pro account
+## 11. Migration to the Pro account
 
 The Pro account should become the primary **development/Brain working account** for Eksamio because stronger reasoning is useful for the project. This does not create any product dependency on the Pro plan.
 
@@ -227,7 +284,21 @@ A new Brain session on Pro should:
 
 Subject chats on Pro should receive only their subject scope plus a pointer to this handoff and the relevant subject authority. They do not need the full old conversation transcript.
 
-## 11. Current next gates
+### User action at migration time
+
+The user should not manually summarize the old project or copy long chat histories.
+
+For the new Pro account the required user actions are intentionally small:
+
+1. connect/authorize access to repository `niknikdym-hue/ege` if the new account does not already have it;
+2. open the new **Eksamio Brain** chat and instruct it to restore state from current `main` using `00-PRODUCT-MASTERPLAN.md`, `00E-CURRENT-BRAIN-HANDOFF.md` and current open PRs;
+3. open separate **Russian** and **Physics** chats only after Brain has restored and checked the current state;
+4. give each subject chat only its bounded subject role; do not paste the old conversations;
+5. keep the old account/chats only as historical reference until the new Brain confirms repository-based continuity.
+
+Everything else should be recoverable from GitHub.
+
+## 12. Current next gates
 
 Central platform:
 
@@ -245,7 +316,7 @@ Mathematics:
 
 close the one known PROFILE 2024 UI-parity defect with a bounded repair and regression/freeze; do not reopen the broad 2022–2026 lane. After that, resume Mathematics only for a real PEIS/base/product dependency.
 
-## 12. Anti-chaos rule
+## 13. Anti-chaos rule
 
 The project should become easier to reason about as it grows.
 
