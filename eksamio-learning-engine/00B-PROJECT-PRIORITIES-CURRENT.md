@@ -27,6 +27,8 @@ No public PEIS browser traffic should be enabled before this gate explicitly pas
 
 The production design must preserve the free deterministic/base learning loop and must not depend on ChatGPT Plus/Pro, Codex credits, an OpenAI end-user account or one fixed AI provider.
 
+Eksamio should operate at the leading edge of current educational technology while remaining economical: world-level educational outcomes are the benchmark; complexity and recurring cost without measurable gain are rejected.
+
 ## 3. Russian — active P0 lane
 
 Continue the current Russian subject-program / semantic / PEIS-integration work from actual `main` and current PR state.
@@ -35,19 +37,30 @@ Important current drafts include PR #72, PR #57 and PR #23. Drafts are not main 
 
 Do not restart broad 185×174 coverage auditing from zero. Resolve the concrete current semantic/content/integration gates and move forward.
 
-## 4. Mathematics — P0 system subject, historical PROFILE delivery lane closed
+## 4. Mathematics — P0 system subject; broad historical PROFILE build lane closed
 
-The PROFILE Mathematics EGE historical demo preparation lane for 2022–2026 is closed for normal work.
+The broad PROFILE Mathematics EGE historical preparation cycle for 2022–2026 is closed for normal work. Do not keep a permanent historical-demo chat alive merely because the old conversation exists.
 
-- PROFILE 2026 is an accepted technical reference.
-- PROFILE 2025 is an accepted technical reference.
-- PROFILE 2024 has a finalized source-locked Tilda package in `main`.
-- PROFILE 2023 is accepted/frozen and its regression lessons are carried forward.
-- PROFILE 2022 is `READY_FOR_TILDA / FROZEN` with 18 tasks and 35/35 official FIPI examples accepted.
+Current accepted/finalized state includes:
 
-Do not keep doing historical demo work merely because an old chat exists. Reopen a frozen year only with an explicit reason/version and full required regression gates.
+- PROFILE 2026 — accepted technical reference;
+- PROFILE 2025 — accepted technical reference;
+- PROFILE 2023 — accepted/frozen, with regression lessons carried forward;
+- PROFILE 2022 — `READY_FOR_TILDA / FROZEN`, 18 tasks, 35/35 official FIPI examples accepted.
 
-Next Mathematics work should be selected only when it closes a real current dependency: shared Mathematics Identity Model/PEIS integration, base-route work, telemetry or another explicitly approved product need.
+### One known narrow exception — PROFILE 2024
+
+`main` still contains `matematika-source-2024/PROFILE-2024-UI-PARITY-FINDING.txt` with `STATUS: DEFECT CONFIRMED`.
+
+The defect is narrowly defined: learner-facing source labels and extended-result headings lost the required official example number. This is a UI parity issue, not a source/content/scoring/criteria issue.
+
+Treat it as one surgical repair gate:
+
+`targeted fix -> exact regression/browser verification -> durable acceptance/freeze -> close`
+
+Do **not** reopen a broad 2022–2026 audit, rebuild other years, or restore a permanent Mathematics historical-demo lane because of this defect.
+
+After this repair, Mathematics work should resume only for a real current dependency: shared Mathematics Identity Model/PEIS integration, base-route work, telemetry or another explicitly approved product need.
 
 ## 5. Physics — active P1 lane with quality gate
 
@@ -65,7 +78,7 @@ Recommended active chats/lanes:
 - Russian — Russian-only execution lane.
 - Physics — Physics-only execution lane.
 
-No permanent Mathematics historical-demo chat is needed now. Start a new Mathematics lane only for a new real dependency.
+No permanent Mathematics historical-demo chat is needed. The known PROFILE 2024 UI defect may be handled by one short-lived bounded task/worker and then closed.
 
 Parallel lanes communicate through GitHub branches/PRs/results, not by copying chat histories.
 
