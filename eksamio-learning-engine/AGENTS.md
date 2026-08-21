@@ -30,6 +30,8 @@ Do not perform broad repository audits from zero when the task can be resolved b
 - Subject source target is 2022–2026 where applicable.
 - A subject may own verified source, semantic identities, prerequisites, exam routes and content, but not a separate Student Model / Evidence / Mastery / Readiness / Retention / NBA engine.
 - The base loop remains free: `diagnose -> model -> prioritize -> practice/help -> verify -> retain -> reassess -> replan`.
+- Eksamio must aim beyond the current world baseline in measurable educational outcomes, not by adding fashionable features. Use `PRODUCT-BENCHMARK-2026.md` and the Tutor world benchmark when a task affects product differentiation or AI tutoring.
+- Advanced architecture must remain economical: prefer deterministic tools, compact context, cheap model routing, reuse and on-demand infrastructure; reject complexity/cost without measurable learning or product gain.
 - Eksamio runtime must not depend on a ChatGPT/OpenAI subscription. OpenAI/Codex may be development tools or replaceable AI providers, never canonical product infrastructure.
 
 ## Safety
