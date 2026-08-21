@@ -17,7 +17,43 @@ Core free learning loop:
 
 The system optimizes for demonstrated change in learner knowledge state, not chat length, clicks or time on site.
 
-## 2. One shared PEIS
+## 2. Product bar: world-leading, measurable, economical
+
+Eksamio is designed to reach the **leading edge of current educational technology**, not merely reproduce the world baseline.
+
+The operating benchmark is `PRODUCT-BENCHMARK-2026.md` plus `270-EKSAMIO-AI-TUTOR-WORLD-BENCHMARK-2026-v1.0.txt`.
+
+The standard is not a marketing claim such as “best in the world” without evidence. Internally, every major product decision should be judged against measurable world-level outcomes, including:
+
+- exam/source fidelity;
+- next-item correctness;
+- transfer;
+- retention;
+- repeat-error reduction;
+- mastery gain / score gain per study minute;
+- calibrated forecast quality;
+- cost per successful learning intervention;
+- AI factual/source-grounding error rate;
+- measurable exam/control improvement.
+
+A feature that only reproduces generic chatbot, adaptive-plan, voice or dashboard behavior is not sufficient differentiation.
+
+At the same time, **advanced must not mean expensive**.
+
+Architecture should minimize recurring cost and moving parts:
+
+- deterministic tools before model calls where possible;
+- small/cheap models for simple grounded tasks and stronger models only when justified;
+- compact context, targeted retrieval and caching where useful;
+- no expensive frontier model for every event;
+- no always-on paid infrastructure without measured need;
+- provider adapters, fallback and kill switch;
+- reuse existing verified infrastructure instead of duplicating services;
+- optimize `cost per successful learning outcome`, not token usage or technical grandeur.
+
+If a proposed architecture is more expensive or complex without a measurable learning/product gain, reject or simplify it.
+
+## 3. One shared PEIS
 
 All subjects reuse one shared platform layer for:
 
@@ -31,7 +67,7 @@ All subjects reuse one shared platform layer for:
 
 A subject may own verified source truth, semantic identities, prerequisite relations, exam-route mappings and teaching/practice content. A subject must not create a parallel Student Model or PEIS engine.
 
-## 3. Subscription/provider independence
+## 4. Subscription/provider independence
 
 Eksamio production architecture must work **without any ChatGPT/OpenAI subscription**.
 
@@ -48,7 +84,7 @@ This means:
 
 Existing Tutor Core provider-neutral routing, fallback and kill-switch rules remain authority for AI integrations. The stronger product invariant here is that **OpenAI itself is optional to Eksamio runtime**.
 
-## 4. Current platform state
+## 5. Current platform state
 
 Merged/validated reference sequence already reaches:
 
@@ -73,7 +109,7 @@ The current central blocker is:
 
 Before any public PEIS browser traffic, the production deployment/security envelope must be explicitly chosen and validated. Do not treat reference HTTP, SQLite or reference HMAC identity as production infrastructure.
 
-## 5. Current subject lanes
+## 6. Current subject lanes
 
 ### Russian — P0 / active
 
@@ -117,7 +153,7 @@ Current facts:
 
 The active 2025 Physics lane requires concrete quality revalidation before acceptance: verify source truth, year isolation, task/example completeness, browser behavior, regression against the accepted 2026 technical reference where legitimately applicable, and absence of silent reconstruction. Correct concrete defects in the active PR; do not create another broad audit program around it.
 
-## 6. Parallel-chat operating model
+## 7. Parallel-chat operating model
 
 Parallel chats are allowed and useful, but they are execution lanes, not independent project brains.
 
@@ -131,7 +167,7 @@ Do **not** keep a permanent Mathematics historical-demo chat active after the 20
 
 A subject chat must not independently redesign shared PEIS contracts, learner identity, mastery, readiness, retention, NBA or cross-subject architecture.
 
-## 7. Durable communication with minimal bureaucracy
+## 8. Durable communication with minimal bureaucracy
 
 GitHub is the shared bus. Existing mechanisms are sufficient:
 
@@ -145,7 +181,7 @@ Do not create duplicate reports just to report that another report exists.
 
 A PR + its durable result/validation is normally enough evidence for a subject lane. A separate Brain checkpoint is needed only when project state meaningfully changes: major merge, blocker change, priority change, architecture decision, production gate change, or cross-lane conflict.
 
-## 8. Brain cross-lane review rule
+## 9. Brain cross-lane review rule
 
 The Brain periodically checks parallel work, but **not by rerunning broad audits from zero**.
 
@@ -167,7 +203,7 @@ Review cadence:
 
 If nothing material changed, do not manufacture a checkpoint or repeat an audit.
 
-## 9. Migration to the Pro account
+## 10. Migration to the Pro account
 
 The Pro account should become the primary **development/Brain working account** for Eksamio because stronger reasoning is useful for the project. This does not create any product dependency on the Pro plan.
 
@@ -184,7 +220,7 @@ A new Brain session on Pro should:
 
 Subject chats on Pro should receive only their subject scope plus a pointer to this handoff and the relevant subject authority. They do not need the full old conversation transcript.
 
-## 10. Current next gates
+## 11. Current next gates
 
 Central platform:
 
@@ -202,7 +238,7 @@ Mathematics:
 
 historical PROFILE 2022–2026 demo delivery is closed for normal work; resume only when the next real Mathematics/PEIS/product dependency is explicitly selected.
 
-## 11. Anti-chaos rule
+## 12. Anti-chaos rule
 
 The project should become easier to reason about as it grows.
 
@@ -213,4 +249,4 @@ Prefer:
 over
 `new audit -> new meta-document -> new audit of the audit -> repeated reconstruction`.
 
-If a proposed process does not reduce uncertainty, prevent a real class of mistakes, or unblock delivery, do not add it.
+If a proposed process does not reduce uncertainty, prevent a real class of mistakes, improve measurable learning outcome, or unblock delivery, do not add it.
