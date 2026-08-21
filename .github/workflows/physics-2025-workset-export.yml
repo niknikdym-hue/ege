@@ -1,0 +1,37 @@
+name: physics-2025-workset-export
+on:
+  push:
+    branches:
+      - chatgpt/physics-2025-archive-20260819
+    paths:
+      - '.github/workflows/physics-2025-workset-export.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build exact workset
+        run: |
+          set -euo pipefail
+          mkdir -p workset/source-2025 workset/reference-2026 workset/authority
+          cp ege-source-fizika/source-fizika-2025/ege-2025-fizika-demoversiya.pdf workset/source-2025/
+          cp ege-source-fizika/source-fizika-2025/ege-2025-fizika-specifikatsiya.pdf workset/source-2025/
+          cp ege-source-fizika/source-fizika-2025/ege-2025-fizika-kodifikator.pdf workset/source-2025/
+          cp ege-source-fizika/source-fizika-2025/fi_11_2025.zip workset/source-2025/
+          cp ege-source-fizika/source-fizika-2025/DERIVED-PDF-TEXT.txt workset/source-2025/
+          cp ege-source-fizika/source-fizika-2025/SOURCE-REGISTER.json workset/source-2025/
+          cp ege-source-fizika/source-fizika-2025/SOURCE-INVENTORY.txt workset/source-2025/
+          cp ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-PREVIEW.html workset/reference-2026/
+          cp ege-fizika-demoversiya-v3-1-fixed/ACCEPTED-TECHNICAL-REFERENCE-2026-08-19.txt workset/reference-2026/
+          cp ege-fizika-demoversiya-v3-1-fixed/PHYSICS-2026-CURRENT-ACCEPTANCE-EVIDENCE.json workset/reference-2026/
+          cp eksamio-learning-engine/00-PRODUCT-MASTERPLAN.md workset/authority/
+          sha256sum workset/source-2025/* > workset/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: physics-2025-workset
+          path: workset
+          if-no-files-found: error
+          compression-level: 0
