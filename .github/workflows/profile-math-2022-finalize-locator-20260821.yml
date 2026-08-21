@@ -1,0 +1,34 @@
+name: PROFILE Math 2022 — finalization run locator
+
+on:
+  push:
+    branches:
+      - chatgpt/profile-2022-finalize-20260821
+    paths:
+      - 'PROFILE-MATH-2022-FINALIZE-LOCATOR-20260821-TRIGGER.txt'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  locate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Record latest finalization runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh run list --repo "$GITHUB_REPOSITORY" --workflow profile-math-2022-finalize-20260821.yml --branch "$GITHUB_REF_NAME" --limit 5 --json databaseId,status,conclusion,headSha,url,createdAt > PROFILE-MATH-2022-FINALIZE-LIVE.json
+          cat PROFILE-MATH-2022-FINALIZE-LIVE.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add PROFILE-MATH-2022-FINALIZE-LIVE.json
+          git commit -m 'Record PROFILE 2022 finalization workflow state' || true
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin HEAD:"$GITHUB_REF_NAME"
