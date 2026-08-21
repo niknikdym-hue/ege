@@ -123,23 +123,30 @@ Current important open work:
 
 Do not restart the broad 185×174 audit as a new project. Continue from current Russian authorities and current PR state.
 
-### Mathematics — P0 system subject; PROFILE demo 2022–2026 delivery lane closed
+### Mathematics — P0 system subject; broad PROFILE build lane closed
 
 Mathematics remains the second P0 subject of the shared PEIS architecture.
 
-The separate historical **PROFILE Mathematics EGE demo preparation lane for 2022–2026 is now closed for normal work**. Do not keep a permanent chat working on those historical demo packages merely because the old conversation exists.
+The broad historical **PROFILE Mathematics EGE preparation cycle for 2022–2026 is closed for normal work**. Do not keep a permanent chat working on those historical demo packages merely because the old conversation exists.
 
-The latest explicit release freeze is PROFILE 2022:
+Current accepted/finalized state includes:
 
-- `results/PROFILE-MATH-2022-RELEASE-FREEZE-2026-08-21.md`
-- status `READY_FOR_TILDA / FROZEN`;
-- 18 tasks;
-- 35/35 official FIPI examples;
-- full acceptance and explicit reopen/version rule.
+- PROFILE 2026 — accepted technical reference;
+- PROFILE 2025 — accepted technical reference;
+- PROFILE 2023 — accepted/frozen, with its regression lessons carried forward;
+- PROFILE 2022 — `READY_FOR_TILDA / FROZEN`, 18 tasks, 35/35 official FIPI examples accepted.
 
-The repository also contains accepted/finalized historical work for PROFILE 2023–2026. Preserve each year's source truth, accepted behavior and regression gates; do not silently rewrite a frozen year from another year's technical reference.
+#### Known narrow exception: PROFILE 2024 UI parity
 
-Mathematics work should resume only for a real next dependency: Mathematics Identity Model / PEIS integration / base route / new explicitly approved product work. Do not reopen frozen historical demos without an explicit reopen reason and version.
+`main` still contains `matematika-source-2024/PROFILE-2024-UI-PARITY-FINDING.txt` with a confirmed defect: source labels and extended-result headings omit the assigned official example number.
+
+This is not permission to reopen Mathematics broadly. Handle it as one bounded repair:
+
+`targeted UI fix -> exact regression/browser verification -> durable acceptance/freeze -> close`
+
+Do not change 2024 source truth, answers, scoring, criteria, task order or semantic state as part of that repair.
+
+After the narrow 2024 repair, Mathematics work should resume only for a real next dependency: Mathematics Identity Model / PEIS integration / base route / telemetry / new explicitly approved product work.
 
 ### Physics — P1 / active quality gate
 
@@ -157,13 +164,13 @@ The active 2025 Physics lane requires concrete quality revalidation before accep
 
 Parallel chats are allowed and useful, but they are execution lanes, not independent project brains.
 
-Recommended active set on the Pro account:
+Recommended persistent active set on the Pro account:
 
 1. **Eksamio Brain** — architecture, priorities, cross-lane review, shared PEIS, merge decisions.
 2. **Russian** — Russian subject program/content/semantic lane only.
 3. **Physics** — Physics source/demo/identity lane only, currently quality-gated.
 
-Do **not** keep a permanent Mathematics historical-demo chat active after the 2022–2026 PROFILE delivery lane has closed. Open a new Mathematics chat later only when a real new math dependency is selected.
+Do **not** keep a permanent Mathematics historical-demo chat active. The known PROFILE 2024 UI defect should be handled by one short-lived bounded task/worker, then that lane closes again.
 
 A subject chat must not independently redesign shared PEIS contracts, learner identity, mastery, readiness, retention, NBA or cross-subject architecture.
 
@@ -236,7 +243,7 @@ quality-review and correct the active 2025 lane before merge; preserve accepted 
 
 Mathematics:
 
-historical PROFILE 2022–2026 demo delivery is closed for normal work; resume only when the next real Mathematics/PEIS/product dependency is explicitly selected.
+close the one known PROFILE 2024 UI-parity defect with a bounded repair and regression/freeze; do not reopen the broad 2022–2026 lane. After that, resume Mathematics only for a real PEIS/base/product dependency.
 
 ## 12. Anti-chaos rule
 
