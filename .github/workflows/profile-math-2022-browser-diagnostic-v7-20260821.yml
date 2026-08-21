@@ -1,0 +1,69 @@
+name: PROFILE Math 2022 — delayed T123 diagnostic v7
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'PROFILE-MATH-2022-PR-FINAL-VERIFY-TRIGGER.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow selenium
+      - name: Restore scripts and fix exact FIPI boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p matematika-source-2022/profile-source-lock ege-matematika-profil-demoversiya-2022/scripts ege-matematika-profil-demoversiya-2022/tests/evidence ege-matematika-profil-demoversiya-2022/audit
+          cat .profile2022-bootstrap/prepare.part1.b64 .profile2022-bootstrap/prepare.part2.b64 | base64 -d | gzip -d > matematika-source-2022/profile-source-lock/prepare_profile_2022.py
+          cat .profile2022-bootstrap/build.part1.b64 .profile2022-bootstrap/build.part2.b64 | base64 -d | gzip -d > ege-matematika-profil-demoversiya-2022/scripts/build_profile_2022.py
+          cat .profile2022-bootstrap/test.part1.b64 .profile2022-bootstrap/test.part2.b64 | base64 -d | gzip -d > ege-matematika-profil-demoversiya-2022/tests/test_profile_2022.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('matematika-source-2022/profile-source-lock/prepare_profile_2022.py'); s=p.read_text()
+          repl=[
+          ("same=sorted((int(c['task']),float(c['rect'][1])) for c in d.get('task_candidates',[]) if float(c['rect'][1])>start+2 and 1<=int(c['task'])<=18)","same=sorted(((int(c['task']),float(c['rect'][1])) for c in d.get('task_candidates',[]) if float(c['rect'][1])>float(loc[t]['rect'][1])+1 and float(c['rect'][0])<45 and 1<=int(c['task'])<=18), key=lambda r:r[1])"),
+          ("ors=sorted(r for r in d.get('or_marks',[]) if start < float(r[1]) < end)","ors=sorted(((float(w['x0']),float(w['y0']),float(w['x1']),float(w['y1'])) for w in d['words'] if str(w.get('text','')).strip()=='ИЛИ' and start < float(w['y0']) < end), key=lambda r:r[1])"),
+          ("c=[x for x in d.get('task_candidates',[]) if int(x['task'])==t]","c=[x for x in d.get('task_candidates',[]) if int(x['task'])==t and float(x['rect'][0])<45]"),
+          ("c17=[x for x in d19.get('task_candidates',[]) if int(x['task'])==17]","c17=[x for x in d19.get('task_candidates',[]) if int(x['task'])==17 and float(x['rect'][0])<45]"),
+          ("c18=[x for x in d21.get('task_candidates',[]) if int(x['task'])==18]","c18=[x for x in d21.get('task_candidates',[]) if int(x['task'])==18 and float(x['rect'][0])<45]"),]
+          for a,b in repl:
+              assert a in s or b in s,a
+              if a in s:s=s.replace(a,b,1)
+          compile(s,str(p),'exec'); p.write_text(s)
+          PY
+          python matematika-source-2022/profile-source-lock/prepare_profile_2022.py --repo-root .
+          python ege-matematika-profil-demoversiya-2022/scripts/build_profile_2022.py
+      - name: Print decoded browser test and delayed preview loader anatomy
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '===== TEST 1-140 ====='
+          nl -ba ege-matematika-profil-demoversiya-2022/tests/test_profile_2022.py | sed -n '1,140p'
+          echo '===== DELAYED PREVIEW MATCHES ====='
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('ege-matematika-profil-demoversiya-2022/ege-matematika-profil-demoversiya-2022-DELAYED-T123-PREVIEW.html')
+          s=p.read_text()
+          print('len',len(s),'test_api_index',s.find('EKSAMIO_MATH_PROFILE_TEST'),'setTimeout_count',s.count('setTimeout'),'script_count',s.count('<script'))
+          for needle in ['EKSAMIO_MATH_PROFILE_TEST','setTimeout','T123-','appendChild','innerHTML']:
+              print('\nNEEDLE',needle)
+              start=0
+              for _ in range(12):
+                  i=s.find(needle,start)
+                  if i<0:break
+                  print(i,repr(s[max(0,i-180):i+320]))
+                  start=i+1
+          PY
