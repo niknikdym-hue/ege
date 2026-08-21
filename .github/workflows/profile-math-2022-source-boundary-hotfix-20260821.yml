@@ -1,0 +1,150 @@
+name: PROFILE Math 2022 — strict PDF-boundary hotfix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'PROFILE-MATH-2022-SOURCE-BOUNDARY-HOTFIX-20260821.txt'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  patch-and-dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch official example boundaries in audited prepare bootstrap
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .profile2022-bootstrap/prepare.part1.b64 .profile2022-bootstrap/prepare.part2.b64 | base64 -d | gzip -d > /tmp/prepare_profile_2022.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/prepare_profile_2022.py')
+          s=p.read_text(encoding='utf-8')
+          a=s.index('def task_locations(lock:Path)->dict[int,dict]:')
+          b=s.index('\ndef derive_condition_regions',a)
+          task_fn='''def task_locations(lock:Path)->dict[int,dict]:
+              out={}
+              for p in sorted((lock/'demo').glob('page-*.json')):
+                  page=int(p.stem.rsplit('-',1)[-1])
+                  if page < 4 or page > 12:
+                      continue
+                  d=loadj(p); fy=footer_y(d)
+                  for c in d.get('task_candidates',[]):
+                      t=int(c['task']); x0=float(c['rect'][0]); y0=float(c['rect'][1])
+                      if not (1<=t<=18):
+                          continue
+                      # Exact FIPI page geometry: true task-number glyphs are in the left task-number gutter.
+                      # Formula/text numerals elsewhere remain candidates and cannot delimit official tasks.
+                      if not (20.0 <= x0 < 45.0 and 45.0 < y0 < fy-5):
+                          continue
+                      if t in out:
+                          raise RuntimeError(f'duplicate true task-label candidate {t}: {out[t]} vs page {page} rect {c["rect"]}')
+                      out[t]={'page':page,'rect':c['rect']}
+              if sorted(out)!=list(range(1,19)):
+                  raise RuntimeError(f'task candidate coverage fail: {sorted(out)}')
+              return out
+          '''.replace('          ','')
+          s=s[:a]+task_fn+s[b:]
+          a=s.index('def derive_condition_regions(lock:Path)->dict[str,tuple[int,float,float]]:')
+          b=s.index('\ndef trim(',a)
+          regions_fn='''def derive_condition_regions(lock:Path)->dict[str,tuple[int,float,float]]:
+              loc=task_locations(lock); regions={}
+              by_page={}
+              for task,row in loc.items():
+                  by_page.setdefault(int(row['page']),[]).append((float(row['rect'][1]),task))
+              for page in by_page:
+                  by_page[page].sort()
+              for t in range(1,19):
+                  page=int(loc[t]['page']); d=loadj(lock/'demo'/f'page-{page:02d}.json')
+                  label_y=float(loc[t]['rect'][1]); start=label_y-4
+                  next_labels=[y for y,task in by_page[page] if y>label_y+1]
+                  end=(min(next_labels)-5) if next_labels else footer_y(d)-6
+                  if not start < end:
+                      raise RuntimeError(f'bad task interval {t}: {start}..{end} page {page}')
+                  if t<=11:
+                      answers=sorted((float(w['y0']),float(w['y1'])) for w in d['words']
+                                     if str(w.get('text','')).strip()=='Ответ:' and start < float(w['y0']) < end)
+                      # Only the uppercase standalone FIPI separator is structural; lowercase instruction text is not.
+                      ors=sorted((float(w['y0']),float(w['y1'])) for w in d['words']
+                                 if str(w.get('text','')).strip()=='ИЛИ' and start < float(w['y0']) < end)
+                      expected=COUNTS[t]
+                      if len(answers)!=expected:
+                          raise RuntimeError(f'task {t}: expected {expected} official answer markers, got {len(answers)} page {page}')
+                      if len(ors)!=expected-1:
+                          raise RuntimeError(f'task {t}: expected {expected-1} official ИЛИ separators, got {len(ors)} page {page}')
+                      for i,(oy0,oy1) in enumerate(ors):
+                          if not (answers[i][0] < oy0 < answers[i+1][0]):
+                              raise RuntimeError(f'task {t}: non-alternating Ответ/ИЛИ source order at separator {i+1}')
+                      starts=[start]+[oy1+1.5 for oy0,oy1 in ors]
+                      for v,(sy,(ay0,ay1)) in enumerate(zip(starts,answers),1):
+                          ey=ay0-3
+                          if not sy<ey:
+                              raise RuntimeError(f'bad official condition interval {t}-{v}: {sy}..{ey}')
+                          regions[f'{t}-{v}']=(page,sy,ey)
+                  else:
+                      regions[f'{t}-1']=(page,start,end)
+              if len(regions)!=sum(COUNTS.values()):
+                  raise RuntimeError(f'condition region count {len(regions)} != {sum(COUNTS.values())}')
+              return regions
+          '''.replace('          ','')
+          s=s[:a]+regions_fn+s[b:]
+          compile(s,str(p),'exec')
+          p.write_text(s,encoding='utf-8')
+          print('STRICT SOURCE BOUNDARY PATCH PASS')
+          PY
+          python -m py_compile /tmp/prepare_profile_2022.py
+          cp /tmp/prepare_profile_2022.py matematika-source-2022/profile-source-lock/prepare_profile_2022.bootstrap-source.py
+          gzip -n -c /tmp/prepare_profile_2022.py | base64 -w0 > /tmp/prepare.b64
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('/tmp/prepare.b64').read_text().strip(); cut=len(s)//2
+          Path('.profile2022-bootstrap/prepare.part1.b64').write_text(s[:cut]+'\n',encoding='utf-8')
+          Path('.profile2022-bootstrap/prepare.part2.b64').write_text(s[cut:]+'\n',encoding='utf-8')
+          PY
+          cat .profile2022-bootstrap/prepare.part1.b64 .profile2022-bootstrap/prepare.part2.b64 | base64 -d | gzip -d > /tmp/verify.py
+          cmp /tmp/prepare_profile_2022.py /tmp/verify.py
+          python -m py_compile /tmp/verify.py
+
+      - name: Persist corrected bootstrap to current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .profile2022-bootstrap/prepare.part1.b64 .profile2022-bootstrap/prepare.part2.b64 matematika-source-2022/profile-source-lock/prepare_profile_2022.bootstrap-source.py
+          git commit -m 'Fix PROFILE 2022 official example boundaries from FIPI PDF structure'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Dispatch existing strict full build from corrected main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run profile-math-2022-full-build-v2.yml --repo "$GITHUB_REPOSITORY" --ref main
+          sleep 5
+          RUN_ID=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow profile-math-2022-full-build-v2.yml --branch main --event workflow_dispatch --limit 1 --json databaseId --jq '.[0].databaseId')
+          test -n "$RUN_ID"
+          gh run view "$RUN_ID" --repo "$GITHUB_REPOSITORY" --json databaseId,status,conclusion,headSha,url > /tmp/profile2022-run.json
+          cat /tmp/profile2022-run.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/profile2022-run.json').read_text())
+          Path('PROFILE-MATH-2022-ACTIVE-RUN.txt').write_text(
+              f"Run ID: {d['databaseId']}\nStatus: {d['status']}\nConclusion: {d.get('conclusion') or ''}\nHead SHA: {d['headSha']}\nURL: {d['url']}\n",
+              encoding='utf-8')
+          PY
+          git pull --rebase origin main
+          git add PROFILE-MATH-2022-ACTIVE-RUN.txt
+          git commit -m 'Record active strict PROFILE 2022 finalization run' || true
+          git push origin HEAD:main
