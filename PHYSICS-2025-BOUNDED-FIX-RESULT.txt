@@ -1,0 +1,58 @@
+PHYSICS 2025 BOUNDED FIX RESULT
+DATE=2026-08-22
+REPOSITORY=niknikdym-hue/ege
+PR=#48
+BRANCH=chatgpt/physics-2025-archive-20260819
+START_MAIN_SHA=d9ee4e06ec065ee2b310284e29364484e2f2004b
+START_PR_HEAD_SHA=af56a6e63552af337eb4e512324d88203420a886
+
+INPUT_V1_3_SHA256=4824df3e91e11a24d999ccc973f367150045a985b1f57e23adf0bb816155dc0e
+INPUT_HASH_DEFINITION=SHA-256 of sorted '<file-sha256>  <relative-path>\n' inventory for all 63 files in the supplied directory checkpoint.
+OUTPUT_BUILD_SHA256=2780a729967e70355a8ae52e726c67abe8597dff3ce2d5b0c55da635791f2e13
+OUTPUT_ZIP_SHA256=21a6fdeffa1696b5f134ce50eab10dd5b279c82764bfe5165ae3c50ab330c80d
+
+USER_FINDING_1=Result blocks after “Завершить экзамен” did not match the accepted generic Physics 2026 composition.
+ROOT_CAUSE=The supplied 2025 v1.3 hard-coded six review/summary sections plus a seventh actions-only panel in ege-fizika-demoversiya-2025-T123-01.txt:145-152, while the accepted 2026 reference has four panels in ege-fizika-demoversiya-v3-1-fixed/ege-fizika-demoversiya-T123-01.txt:145-153. The v1.3 renderer also targeted duplicated summary nodes and two separate review containers in ege-fizika-demoversiya-2025-T123-47.txt:95-97 instead of the accepted unified review flow shown at the 2026 reference runtime lines 77-79.
+AFFECTED_FILES=ege-fizika-demoversiya-2025-v1.4-TILDA-HQ-SOURCE/ege-fizika-demoversiya-2025-T123-01.txt; ege-fizika-demoversiya-2025-v1.4-TILDA-HQ-SOURCE/ege-fizika-demoversiya-2025-T123-48.txt; physics-2025-v1.4-build/build_v1_4.py
+EXACT_FIX=Replaced only the generic result DOM/order and renderer targets with summary → self-assessment → unified review → source/status+actions. Retained every Physics 2025 label, task definition, answer, solution, criterion, point value, official asset, scoring rule, storage key, finish handler, focus/scroll behavior, and restoration behavior.
+TEST_EVIDENCE=Static result-order comparison PASS; partial browser attempt 1/28 with unresolved total PASS; full browser attempt 26/26 produced 28/28 + 17/17 = 45/45; 26 unified review items; reload restored both partial and full result; accepted headings match four-panel 2026 structure; legacy result nodes absent.
+STATUS=PASS
+
+USER_FINDING_2=Foreign garbled content appeared physically above the Physics 2025 page and damaged layout.
+ROOT_CAUSE=The deployable v1.3 ege-fizika-demoversiya-2025-HEAD.txt:1-18 is plain prose, not head markup. On the live Tilda page the browser HTML parser moved this exact text out of head into a direct text node under body before #allrecords. This was confirmed from post-load document.documentElement.outerHTML and direct body childNodes. UTF-8 decoding, meta charset, BOM, T123 tag balance, escaped markup, script/template visibility, standalone preview, clean package, and console checks did not identify any competing cause.
+AFFECTED_FILES=ege-fizika-demoversiya-2025-v1.4-TILDA-HQ-SOURCE/ege-fizika-demoversiya-2025-HEAD.txt; ege-fizika-demoversiya-2025-v1.4-TILDA-HQ-SOURCE/00-README-TILDA.txt; physics-2025-v1.4-build/build_v1_4.py
+EXACT_FIX=The v1.4 HEAD file now contains only valid SEO head markup copied from the existing 2025 SEO-HEAD-CODE authority. The deployment README explicitly requires deleting the old raw prose and pasting only this valid markup. No CSS hiding, clipping, overlay, negative margin, or cosmetic mask was added.
+TEST_EVIDENCE=UTF-8 PASS; BOM absent; HTML/T123 lint 48/48 PASS; standalone preview PASS; clean extracted preview PASS; Tilda embedding shell PASS; direct text nodes under html/body/root are 0/0/0 at all five viewport widths; rendered top is clean; browser console errors/warnings 0.
+STATUS=PASS
+
+USER_FINDING_3=Task 12 official visual was truncated at the top.
+ROOT_CAUSE=The v1.3 crop [55,235,1309,523] began 18 rendered pixels below the first task row, whose ink begins at y=217; therefore the official upper line was physically absent from the payload.
+SOURCE_PAGE=ege-source-fizika/source-fizika-2025/ege-2025-fizika-demoversiya.pdf; SHA-256 ac9bcf8d54e2511e495ee33932acfecaf9bf9e04cdbe4c16e2258693838b31fc; physical PDF page 6; layout page 11; slot 1.
+CROP=[55,197,1309,523] at 240 dpi.
+OUTPUT_DIMENSIONS=1254x326 px.
+OUTPUT_HASH=89be94f5daab071bb7f7bdd3e77e7e025806ae49814ee0a3601f495aa6477a
+FOUR_EDGE_RESULT=PASS; ink margins left=17 px, top=20 px, right=20 px, bottom=27 px; no neighboring task content.
+STATUS=PASS
+
+USER_FINDING_4=The supplied v1.3 checkpoint and corrected final package needed durable PR provenance and deterministic reconstruction.
+BUILD_PROVENANCE=Immutable v1.3 is tracked as ege-fizika-demoversiya-2025-v1.3-TILDA-HQ-SOURCE. v1.4 is tracked separately as ege-fizika-demoversiya-2025-v1.4-TILDA-HQ-SOURCE. Build inputs, 26 corrected official crops, build script, verification script, responsive harness, regression reports, generated clean package, and deterministic ZIP are tracked.
+INPUT_MANIFEST=ege-fizika-demoversiya-2025-v1.4-TILDA-HQ-SOURCE/PROVENANCE/INPUT-V1.3-MANIFEST.sha256
+OUTPUT_MANIFEST=ege-fizika-demoversiya-2025-v1.4-TILDA-HQ-SOURCE/ege-fizika-demoversiya-2025-OUTPUT-MANIFEST.sha256
+REPRODUCIBILITY_RESULT=PASS; two clean builds with the canonical output directory name produced identical OUTPUT_BUILD_SHA256 and OUTPUT_ZIP_SHA256. unzip -t passed all 152 entries. Clean extraction was byte-identical to the tracked v1.4 directory by diff -qr.
+STATUS=PASS
+
+TECHNICAL_REFERENCE_2026_REGRESSION=PASS; only generic four-panel result composition/order and unified-review UX were mirrored. The normalized 2025 task-definition hash is unchanged at 38178f12a73ecfb68910a387f0f27bb900cb3e0016350ea161b598685414f810. No “ФИПИ 2026”, 2026 root ID, 2026 storage key, 2026 answers, solutions, criteria, visuals, scoring, or order appear in v1.4 T123.
+VISUAL_ALL_ASSETS_GATE=PASS 56/56. The bounded four-edge follow-up corrected 26 exact regions from the same official 2025 PDF; the other 30 already passed. No graphic was generated, redrawn, reconstructed, or borrowed from 2026. Deterministic white edge padding was used only on table slices where necessary to keep the official border from touching output edges.
+RESPONSIVE_MATRIX=PASS at exact browsing-context widths 1280, 768, 390, 360, 320 for idle, running/task-12, and partial-result states. At every width content and toolbar controls are visible, body scroll width is <= viewport width, no non-scroller interactive is clipped, panels do not overlap, and official images scale within their containers. Mobile symbol keys beyond the initial row remain reachable in an intentional overflow-x:auto scroller.
+SCORER_REGRESSION=PASS. scoreTask, calculateShortScore, selfDefinitions, extendedScore, validation/normalization helpers, and task JSON are byte-identical to immutable v1.3. Full official-key attempt: 28/28 automatic. Maximum self-assessment: 17/17. Total: 45/45.
+STATE_REGRESSION=PASS. Partial and complete attempts restored after reload; saved short and extended answers restored; task-26 variant persisted; 2025 key eksamio_ege_physics_demo_2025_v1 is isolated from accepted 2026 key eksamio_ege_physics_demo_2026_v2.
+CLEAN_PACKAGE_RESULT=PASS.
+
+CHANGED_FILES=Added immutable v1.3 checkpoint; added versioned v1.4 checkpoint; added physics-2025-v1.4-build with build/verify scripts, official crops, browser/static evidence, responsive harness, and deterministic ZIP; added this result; removed .github/workflows/physics-2025-content-probe.yml, physics-2025-workset-export.yml, physics-2025-layout-extract.yml, and .physics-2025-layout-trigger. Durable ege-source-fizika/source-fizika-2025 layout/source-lock evidence remains tracked and unchanged.
+EXECUTED_COMMANDS=git fetch origin main chatgpt/physics-2025-archive-20260819; deterministic SHA-256 inventories; Python build_v1_4.py; Python verify_v1_4.py; unzip -t; diff -qr clean extraction; browser DOM/screenshot/interaction tests at five exact iframe viewport widths; git diff/checks/status; commit; push existing branch.
+COMMIT_SHA=Recorded in the final handoff after commit; an exact commit cannot self-identify inside content that determines its own Git object hash.
+PR_HEAD_SHA=Recorded in the final handoff after push; the pushed ref is the durable authority.
+REMAINING_BLOCKERS=NONE
+
+FINAL_STATUS=READY_FOR_SUBJECT_REVIEW
+NEXT_ROUTE=EKSAMIO — ФИЗИКА subject acceptance, then Central Brain final decision.

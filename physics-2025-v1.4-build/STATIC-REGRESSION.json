@@ -1,0 +1,109 @@
+{
+  "immutable_input": {
+    "status": "PASS",
+    "evidence": "4824df3e91e11a24d999ccc973f367150045a985b1f57e23adf0bb816155dc0e"
+  },
+  "t123": {
+    "status": "PASS",
+    "evidence": {
+      "count": 48,
+      "max_bytes": 38946
+    }
+  },
+  "html_lint": {
+    "status": "PASS",
+    "evidence": true
+  },
+  "visual_assets": {
+    "status": "PASS",
+    "evidence": {
+      "asset_count": 56,
+      "corrected_crops": 26,
+      "four_edge": "56/56"
+    }
+  },
+  "task_definitions": {
+    "status": "PASS",
+    "evidence": "38178f12a73ecfb68910a387f0f27bb900cb3e0016350ea161b598685414f810"
+  },
+  "runtime_invariants": {
+    "status": "PASS",
+    "evidence": {
+      "loadState": "8c69f16813e880cd0b711611f8a9fead988bf16aafa7205739c45b076acf95bf",
+      "saveState": "084fd87e6bd505f853563d2621903a1ec4903ae941b539ea61fe545b58b2d1b1",
+      "strictNumberString": "12d498e3cef79a0fdb32b0440ec39af5590bf0c1173593ae1a722bc3f68cbd5c",
+      "orderedValues": "52c46fff52120bbf266e237c1f4fa541f2c222cd5d48f4b848f966421afd3087",
+      "unorderedScore": "f20f8006d902fea3ab15aa2766d25636ae4e14dd51e522e86af92116f7b77d49",
+      "scoreTask": "5150293986ad470f05fb375c249c2a0f976144869839a3584986fb2fb6dd375f",
+      "startExam": "d256d4f602ebfdc0b411e7d9427dc1bf8ef29ae30b0dbdbd68db69ad3d592a35",
+      "resumeExam": "67f3737159447acccc2f2b0f2093d4d848b1a86b5212a6a7d9c1cd6ee1a1eb5d",
+      "calculateShortScore": "48777b141fa456c4bced8e7b2d5fbf38a26fabcfe44e4a686359194127078ece",
+      "finishExam": "90722dc95baa465294c1a0fe926318e581ac7f9aa2b612bcd7c947dc1e0ced4b",
+      "selfDefinitions": "2b43b6357795877ccd0eed896a02d826ae19ceb3baf3738da52c69f80b700fc0",
+      "extendedScore": "bb193af2b08f1200bbb074aaf0a0fd313240cdcb1c88051de957da7e36f9dce8",
+      "installSymbolKeyboards": "8abd369a69276076ab2b6c5bd02f488c2d18441c8cd6e73e7b3f76ca791423d8",
+      "calcEvaluate": "b3fa17a45c2587a40b233499e41ec7a412e82084ad4f9cb9f3e3233591cbd55c"
+    }
+  },
+  "result_parity": {
+    "status": "PASS",
+    "evidence": {
+      "v1_3": [
+        "Результат попытки",
+        "Автоматически, №1–20",
+        "Самооценка, №21–26",
+        "Итого по самооценке",
+        "Краткая часть",
+        "Развёрнутая часть: официальные решения и критерии"
+      ],
+      "v1_4": [
+        "Результат попытки",
+        "Самооценка заданий 21–26",
+        "Проверка заданий",
+        "Источники и статус страницы"
+      ],
+      "reference_2026": [
+        "Результат попытки",
+        "Самооценка заданий 21–26",
+        "Проверка заданий",
+        "Источники и статус страницы"
+      ]
+    }
+  },
+  "no_2026_leak": {
+    "status": "PASS",
+    "evidence": "no 2026 year/content/runtime identifiers in v1.4 T123"
+  },
+  "storage_isolation": {
+    "status": "PASS",
+    "evidence": {
+      "2025": "eksamio_ege_physics_demo_2025_v1",
+      "2026": "eksamio_ege_physics_demo_2026_v2"
+    }
+  },
+  "top_of_page": {
+    "status": "PASS",
+    "evidence": {
+      "utf8": true,
+      "bom": false,
+      "direct_text_nodes": {
+        "html": [],
+        "body": [],
+        "root": []
+      }
+    }
+  },
+  "output_manifest": {
+    "status": "PASS",
+    "evidence": "2780a729967e70355a8ae52e726c67abe8597dff3ce2d5b0c55da635791f2e13"
+  },
+  "zip": {
+    "status": "PASS",
+    "evidence": {
+      "sha256": "21a6fdeffa1696b5f134ce50eab10dd5b279c82764bfe5165ae3c50ab330c80d",
+      "entries": 152,
+      "sorted": true
+    }
+  },
+  "status": "PASS"
+}
