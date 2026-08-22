@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Physics 2025 v1.4 responsive harness</title>
+  <style>
+    html, body { margin: 0; min-height: 100%; background: #ddd; }
+    iframe { display: block; height: 1800px; border: 0; background: white; }
+  </style>
+</head>
+<body>
+  <iframe id="case" title="Physics 2025 responsive case" src="../ege-fizika-demoversiya-2025-v1.4-TILDA-HQ-SOURCE/ege-fizika-demoversiya-2025-PREVIEW.html"></iframe>
+  <script>
+    const requested = Number(new URLSearchParams(location.search).get("width"));
+    const allowed = new Set([1280, 768, 390, 360, 320]);
+    document.getElementById("case").style.width = (allowed.has(requested) ? requested : 1280) + "px";
+  </script>
+</body>
+</html>
