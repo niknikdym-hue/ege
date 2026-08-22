@@ -1,8 +1,8 @@
 # Eksamio — Implementation Governance Guide
 
 **Статус:** EXECUTION / GOVERNANCE AUTHORITY  
-**Версия:** 1.0  
-**Дата:** 2026-08-19  
+**Версия:** 1.1
+**Дата:** 2026-08-22
 **Корень:** `eksamio-learning-engine/`
 
 ## 1. Назначение
@@ -38,13 +38,15 @@ Eksamio строится **строго по dependency graph**, а не по п
 
 `demo -> diagnosis -> EvidenceEvent -> StudentSkillState -> Mastery/Readiness -> Next Best Action -> trainer/help -> independent verify -> measured outcome`
 
-До его доказанной реализации не допускается смещение фокуса на декоративный AI, voice-first продукт, отдельный чат-бот, параллельные learner engines или несвязанные personalization-механики.
+До его доказанной реализации не допускается смещение фокуса на декоративный AI, voice-first обход PEIS, отдельный чат-бот, параллельные learner engines или несвязанные personalization-механики.
+
+При этом `OWNER-DECISIONS-2026-08-22.md` устанавливает отдельный P0 launch gate: первый paid Pro запрещён, пока text и realtime voice интерфейсы одного Tutor не прошли production gates. Это меняет старый delivery order, но не отменяет dependency-first построение closed loop.
 
 ## 4. Authority hierarchy
 
 При конфликте решений использовать следующий порядок:
 
-1. `00-PRODUCT-MASTERPLAN.md` — целевой продукт и архитектурные принципы.
+1. `00-PRODUCT-MASTERPLAN.md` и явно утверждённые owner decisions, включая `OWNER-DECISIONS-2026-08-22.md` — целевой продукт и архитектурные принципы.
 2. `00B-PROJECT-PRIORITIES-CURRENT.md` — текущая очередь реализации и приоритеты.
 3. Общие PEIS contracts и их validation/result artifacts.
 4. Subject-level identity/source/program authorities.
@@ -159,8 +161,8 @@ Eksamio строится **строго по dependency graph**, а не по п
 2. blocker P0 Russian/Mathematics identity/source readiness;
 3. blocker shared executable PEIS runtime;
 4. blocker measurable verification/telemetry;
-5. только затем AI/Tutor/platform expansion;
-6. voice/realtime — поздний слой.
+5. затем production AI Tutor foundations и единый text/realtime voice contour;
+6. первый paid Pro launch только после совместной readiness text + realtime voice и применимых production gates; richer multimodal expansion — после launch contour.
 
 ## 11. Периодическое подведение итогов
 

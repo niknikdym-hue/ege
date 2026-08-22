@@ -176,13 +176,13 @@ Official exam facts/scoring и canonical knowledge structure отделены о
 
 ## 6. Практическое следствие для roadmap
 
-Первый AI MVP не должен быть generic chat и не должен быть voice-first.
+Первый bounded AI implementation slice не должен быть generic chat и не должен быть voice-first обходом verified evidence/PEIS foundations.
 
 Правильный первый vertical slice:
 
 `verified attempt -> exact skill evidence -> grounded personalized explanation -> independent verification item -> measured outcome`
 
-После этого последовательно добавляются long-term Student Learning Twin, Recommendation Engine, essay/vision и realtime voice.
+Owner decision `OWNER-DECISIONS-2026-08-22.md` уточняет launch order: realtime voice является P0 gate первого paid Pro вместе с text Tutor. Ранний grounded AI slice может предшествовать полному Pro contour, но paid text-only или voice-only Pro launch запрещён. Long-term Student Learning Twin, Recommendation Engine и essay/vision развиваются по dependency/evidence order, не превращая voice в отдельный Tutor.
 
 ## 7. Связь с главным masterplan
 
