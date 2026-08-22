@@ -1,13 +1,15 @@
 # Eksamio — Current Brain Handoff
 
 **Status:** CURRENT OPERATING HANDOFF  
-**Date:** 2026-08-22
+**Date:** 2026-08-23  
 **Repository:** `niknikdym-hue/ege`  
-**Baseline when written:** `e9dfffae7275be9de829d1c5a5668e7715d8261f`
+**Baseline when refreshed:** `85b1f4316cf33dc6ab0eebce2e9281b6432e4bbb`
 
 > This file is the shortest current entry point for a new ChatGPT/Brain/Codex session. It does not replace the Product Masterplan or subject/source authorities. Always refresh `main` before acting. Where older documents contain stale operational start/read-order instructions, this current handoff plus current `AGENTS.md` supersede those pointers; their substantive architecture/content remains valid unless separately superseded.
 
 Current approved owner-decision addendum: `OWNER-DECISIONS-2026-08-22.md`. Read it for any work involving Pro launch, Tutor channels, product client, Russia accessibility, cloud, providers, audio privacy, identity/auth or payments.
+
+Latest execution checkpoint at this refresh: `worklog/2026-08-23-EKSAMIO-BRAIN-CHECKPOINT-11-EXECUTION-RESET.md`.
 
 ## 1. Product identity
 
@@ -97,6 +99,7 @@ Existing Tutor Core provider-neutral routing, fallback and kill-switch rules rem
 - Learner audio is never stored in any form; only transient realtime processing is allowed. Text/structured Tutor history may exist under privacy/retention controls.
 - Pro auth is passwordless by verified e-mail or phone; anonymous same-device progress must link safely to a later account without making the browser identity authority.
 - Robokassa + Robocheki SMZ is the first replaceable NPD payment candidate and still requires separate legal/API/webhook/receipt/SBP-card/refund/failure gates.
+- Routine/reversible evidence-backed implementation and pedagogical decisions should be resolved by Central Brain without owner-question spam; owner questions are reserved for genuinely material decisions.
 
 Full authority and learning-policy details: `OWNER-DECISIONS-2026-08-22.md`.
 
@@ -117,13 +120,15 @@ Merged/validated reference sequence already reaches:
 
 The latest central durable Brain checkpoint is:
 
-`worklog/2026-08-20-EKSAMIO-BRAIN-CHECKPOINT-10-PEIS-TRUSTED-HOST.md`
+`worklog/2026-08-23-EKSAMIO-BRAIN-CHECKPOINT-11-EXECUTION-RESET.md`
 
 The current central blocker is:
 
 `PEIS-DEPLOYMENT-SECURITY-001`
 
-Before any public PEIS browser traffic, the production deployment/security envelope must be explicitly chosen and validated. Do not treat reference HTTP, SQLite or reference HMAC identity as production infrastructure.
+Before any public PEIS browser traffic, the production deployment/security envelope must be explicitly chosen, implemented and validated. Do not treat reference HTTP, SQLite or reference HMAC identity as production infrastructure.
+
+Central work now starts from concrete sub-gaps of this blocker; do not create adjacent infrastructure unless it has an explicit `EXPECTED_UNLOCK`.
 
 ## 7. Current subject lanes
 
@@ -133,11 +138,11 @@ Russian remains the first subject and the main active subject-program / semantic
 
 Current important open work:
 
-- PR #72 — draft audit of the 121-card Exceptions bank for shared PEIS integration; read-only/product-safe scope; not yet main authority.
-- PR #57 — draft semantic Phase 2 canonicalization proposal; proposal/HOLD boundary remains important; no automatic admission of proposed `ru-*` identities.
-- PR #23 — valuable reviewed 121-card Exceptions bank, still draft and not production authority.
+- PR #72 — active draft/read-only integration ledger lane. Working invariants: `121 active / 88 exception IDs / 91 EXACT / 5 PARTIAL_COMPOSITE / 25 BLOCKED / 96 integration-ready / 0 live-connected / 35 existing canonical school identities / 0 new ru-* admitted`.
+- PR #57 — HOLD; draft semantic canonicalization proposal only. Proposed `ru-*` identities are not canonical authority.
+- PR #23 — valuable reviewed 121-card Exceptions content checkpoint, still draft and not blanket merge authority.
 
-Do not restart the broad 185×174 audit as a new project. Continue from current Russian authorities and current PR state.
+Do not restart the broad 185×174 audit as a new project. Continue by delta. The next Russian output should be a bounded decision/reconciliation packet; any required write/rebase/validator implementation goes through an explicit Codex task.
 
 ### Mathematics — P0 system subject; broad PROFILE build lane closed
 
@@ -164,26 +169,28 @@ Do not change 2024 source truth, answers, scoring, criteria, task order or seman
 
 After the narrow 2024 repair, Mathematics work should resume only for a real next dependency: Mathematics Identity Model / PEIS integration / base route / telemetry / new explicitly approved product work.
 
-### Physics — P1 / accepted 2025 and 2026 demo baselines
+### Physics — P1 / bounded 2024 lane active
 
-Physics is the third subject and may proceed in parallel without slowing P0 work.
+Physics is the third subject and may proceed in parallel without slowing P0/central blocker work.
 
 Current facts:
 
-- merged PR #49 — Physics 2026 accepted technical reference with official-source visuals and exam tools;
-- merged PR #48 — Physics 2025 exact source/archive, bounded fixes and current-main integration accepted.
+- Physics 2026 remains the frozen technical/runtime/layout reference (merged PR #49); it is not source authority for other years.
+- Physics 2025 v1.5 result-order fix was subject-accepted and merged through PR #96. 2025 is frozen/closed again unless a new concrete finding appears.
+- Physics 2024 official FIPI source contour exists under `ege-source-fizika/source-fizika-2024/`; derived source-access evidence landed through PR #97 outside the authority folder.
+- Active 2024 flow is bounded: `source lock -> source/layout/visual registry -> Physics subject build packet -> deterministic Codex build -> bounded subject acceptance -> Tilda delivery`.
 
-Do not reopen either accepted demo baseline without a new concrete finding. Further Physics work requires a real source/identity/PEIS dependency.
+Physics 2024 must preserve `2025_CONTENT_USED=0` and `2026_CONTENT_USED=0`; 2026 may be used only as technical/runtime/layout reference.
 
 ## 8. Parallel-chat operating model
 
 Parallel chats are allowed and useful, but they are execution lanes, not independent project brains.
 
-Recommended persistent active set on the Pro account:
+Recommended active set:
 
-1. **Eksamio Brain** — architecture, priorities, cross-lane review, shared PEIS, merge decisions.
+1. **Eksamio Brain** — architecture, priorities, central blocker, cross-lane review, shared PEIS, merge decisions.
 2. **Russian** — Russian subject program/content/semantic lane only.
-3. **Physics** — only when a bounded Physics source/identity/PEIS dependency is active.
+3. **Physics** — current bounded 2024 source/demo lane only.
 
 Do **not** keep a permanent Mathematics historical-demo chat active. The known PROFILE 2024 UI defect should be handled by one short-lived bounded task/worker, then that lane closes again.
 
@@ -192,6 +199,16 @@ A subject chat must not independently redesign shared PEIS contracts, learner id
 ## 9. Brain / Codex / Spark execution routing
 
 Use the strongest reasoning only where it changes decisions or quality. Do not spend expensive reasoning on mechanical work.
+
+### Mandatory task admission
+
+Before issuing a significant task, Central Brain must be able to state:
+
+`WHY_NOW -> ACTIVE_BLOCKER_OR_MILESTONE -> DEPENDENCY_IN -> MINIMAL_DELTA -> EXPECTED_UNLOCK -> cheapest sufficient EXECUTOR -> ACCEPTANCE_EVIDENCE -> STOP_CONDITIONS`.
+
+If `EXPECTED_UNLOCK` is unclear, do not issue the task.
+
+If an existing working process already solves the problem, reuse it. Do not invent a new CI, selector, staging layer, service or framework without a proven requirement. If a bounded task materially expands, stop and return the new blocker to Brain instead of turning it into an architecture project.
 
 ### Brain
 
@@ -205,7 +222,7 @@ Brain owns:
 - review of risky or ambiguous PRs;
 - deciding when a result is actually accepted.
 
-Brain should not become a bulk file editor when a bounded executor can do the work safely.
+Brain may directly perform small safe GitHub governance/evidence updates when write access exists; it should still use Codex for engineering-heavy implementation/testing rather than becoming a bulk code editor.
 
 ### Codex
 
@@ -219,17 +236,11 @@ Use Codex for engineering-heavy work that benefits from repository execution:
 - source/package assembly with explicit gates;
 - fixes that require running and iterating on code.
 
-Codex must still follow current `AGENTS.md`, branch/PR discipline and source/production boundaries. A strong model inside Codex is appropriate when the task is complex or architecture-sensitive.
+Codex must follow current `AGENTS.md`, branch/PR discipline and source/production boundaries.
 
 ### Spark
 
-When available, Spark is an optional fast executor for **small, sharply bounded tasks** where the desired change is already known, for example:
-
-- one-file or very small localized fixes;
-- straightforward test additions;
-- mechanical refactors with exact boundaries;
-- quick repository inspection/probes;
-- narrow UI/label fixes such as the known PROFILE 2024 parity repair, if the task contract is exact.
+When available, Spark is an optional fast executor for **small, sharply bounded tasks** where the desired change is already known.
 
 Do not use Spark to decide architecture, infer missing official source truth, approve semantic identities, or resolve ambiguous cross-system design.
 
@@ -253,7 +264,7 @@ GitHub is the shared bus. Existing mechanisms are sufficient:
 - task contract when a bounded task genuinely needs one;
 - implementation branch/PR;
 - validation/test evidence;
-- `results/` artifact for completed implementation work;
+- `results/` artifact for completed implementation work when useful;
 - review/status only when a real acceptance decision is needed.
 
 Do not create duplicate reports just to report that another report exists.
@@ -282,68 +293,55 @@ Review cadence:
 
 If nothing material changed, do not manufacture a checkpoint or repeat an audit.
 
-## 12. Migration to the Pro account
+## 12. New-session continuity
 
-The Pro account should become the primary **development/Brain working account** for Eksamio because stronger reasoning is useful for the project. This does not create any product dependency on the Pro plan.
+A new Brain session should:
 
-Do not attempt to recreate old chat history manually. The repository is the handoff.
-
-A new Brain session on Pro should:
-
-1. fetch current `main` HEAD;
+1. refresh current `main` HEAD;
 2. read `00-PRODUCT-MASTERPLAN.md`;
 3. read this file `00E-CURRENT-BRAIN-HANDOFF.md`;
-4. inspect current open PRs and the latest relevant worklog/result artifacts;
-5. read deeper governance/contracts only when the current task actually needs them;
-6. continue only from verified repository state.
+4. read the current approved owner-decision artifact named above;
+5. inspect current open PRs and the newest relevant worklog/result artifact;
+6. read deeper governance/contracts only when the current task actually needs them;
+7. continue only from verified repository state.
 
-Subject chats on Pro should receive only their subject scope plus a pointer to this handoff and the relevant subject authority. They do not need the full old conversation transcript.
-
-### User action at migration time
-
-The user should not manually summarize the old project or copy long chat histories.
-
-For the new Pro account the required user actions are intentionally small:
-
-1. connect/authorize access to repository `niknikdym-hue/ege` if the new account does not already have it;
-2. open the new **Eksamio Brain** chat and instruct it to restore state from current `main` using `00-PRODUCT-MASTERPLAN.md`, `00E-CURRENT-BRAIN-HANDOFF.md` and current open PRs;
-3. open separate **Russian** and **Physics** chats only after Brain has restored and checked the current state;
-4. give each subject chat only its bounded subject role; do not paste the old conversations;
-5. keep the old account/chats only as historical reference until the new Brain confirms repository-based continuity.
-
-Everything else should be recoverable from GitHub.
+Subject chats should receive only their subject scope plus a pointer to this handoff and the relevant subject authority. They do not need old conversation transcripts.
 
 ## 13. Current next gates
 
-Central platform:
+### Central platform
 
-`PEIS-DEPLOYMENT-SECURITY-001`, now constrained by the Russia/no-VPN, portable Yandex Cloud, provider-admission and learner-audio non-storage owner decisions.
+`PEIS-DEPLOYMENT-SECURITY-001` is the immediate central bottleneck, constrained by Russia/no-VPN, portable Yandex Cloud, provider-admission, passwordless identity/payment contours and learner-audio non-storage.
 
-First paid Pro launch:
+The next central task must close a concrete sub-gap of this blocker and name its `EXPECTED_UNLOCK`.
 
-shared PEIS + production foundations + passwordless identity/payment gates + one continuous Tutor with both text and realtime voice production-ready. Do not launch a single-channel Pro.
+### First paid Pro launch
 
-Russian:
+Requires shared PEIS + production foundations + passwordless identity/payment gates + one continuous Tutor with both text and realtime voice production-ready. Do not launch a single-channel Pro.
 
-continue current semantic/program integration from actual current-main/open-PR state without repeating broad historical audits.
+### Russian
 
-Physics:
+Continue PR #72 decision/reconciliation by delta; PR #57 remains HOLD; PR #23 is a content checkpoint, not automatic authority.
 
-accepted 2025/2026 demo baselines are closed; continue only from a new concrete source/identity/PEIS dependency.
+### Physics
 
-Mathematics:
+Continue the bounded Physics 2024 official-source lane through source lock and subject build packet. Physics 2025/2026 remain frozen references as described above.
 
-close the one known PROFILE 2024 UI-parity defect with a bounded repair and regression/freeze; do not reopen the broad 2022–2026 lane. After that, resume Mathematics only for a real PEIS/base/product dependency.
+### Mathematics
 
-## 14. Anti-chaos rule
+Close the one known PROFILE 2024 UI-parity defect only as a bounded repair when scheduled; do not reopen the broad 2022–2026 lane. After that, resume Mathematics only for a real PEIS/base/product dependency.
+
+## 14. Anti-chaos / efficiency rule
 
 The project should become easier to reason about as it grows.
 
 Prefer:
 
-`current authority -> narrow task -> evidence -> merge/reject -> next dependency`
+`current authority -> justified narrow task -> evidence -> merge/reject -> next dependency`
 
 over
-`new audit -> new meta-document -> new audit of the audit -> repeated reconstruction`.
+`new audit -> new meta-document -> new process -> audit of the process`.
 
-If a proposed process does not reduce uncertainty, prevent a real class of mistakes, improve measurable learning outcome, or unblock delivery, do not add it.
+If a proposed task/process does not reduce uncertainty, close a real gap, unlock the next dependency, prevent a demonstrated class of mistakes or improve measurable learning/production outcome, do not add it.
+
+A tooling/cache/authentication limitation is not automatically a new product/source blocker. First use the shortest existing way to obtain the same authority or resume the existing authenticated flow.
