@@ -16,7 +16,7 @@ GitHub is the durable source of truth. Chat history is navigation, not project a
 4. Read the exact task/scope supplied for this run.
 5. Read only the subject/source/contracts directly relevant to that task.
 
-For cross-subject architecture, PEIS, production, deployment/security, identity/auth, commerce or governance work, also read the relevant current authority named by `00E`, including `00B-PROJECT-PRIORITIES-CURRENT.md`, `00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md` and `00D-BRAIN-CONTINUITY-PROTOCOL.md` when needed.
+For cross-subject architecture, PEIS, production, deployment/security, identity/auth, commerce or governance work, also read the relevant current authority named by `00E`, including `OWNER-DECISIONS-2026-08-22.md`, `00B-PROJECT-PRIORITIES-CURRENT.md`, `00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md` and `00D-BRAIN-CONTINUITY-PROTOCOL.md` when needed.
 
 `00-WORK-STATUS.txt` and `00A-WORK-STATUS-CURRENT-ADDENDUM.txt` are historical checkpoints, not current operating state. Older files may contain valid substantive architecture but stale start/read-order instructions; current `00E` + this file supersede those operational pointers.
 
@@ -26,13 +26,38 @@ Do not perform broad repository audits from zero when the task can be resolved b
 
 - Eksamio is one PEIS, not separate learner engines per subject.
 - Russian is subject #1, Mathematics #2, Physics #3.
-- Russian and Mathematics are P0 system subjects; Physics is P1 and may proceed in parallel without slowing P0 work.
+- Russian and Mathematics are P0 system subjects; Physics is P1 and may proceed in parallel without slowing P0/central blocker work.
 - Subject source target is 2022–2026 where applicable.
 - A subject may own verified source, semantic identities, prerequisites, exam routes and content, but not a separate Student Model / Evidence / Mastery / Readiness / Retention / NBA engine.
 - The base loop remains free: `diagnose -> model -> prioritize -> practice/help -> verify -> retain -> reassess -> replan`.
 - Eksamio must aim beyond the current world baseline in measurable educational outcomes, not by adding fashionable features. Use `PRODUCT-BENCHMARK-2026.md` and the Tutor world benchmark when a task affects product differentiation or AI tutoring.
 - Advanced architecture must remain economical: prefer deterministic tools, compact context, cheap model routing, reuse and on-demand infrastructure; reject complexity/cost without measurable learning or product gain.
 - Eksamio runtime must not depend on a ChatGPT/OpenAI subscription. OpenAI/Codex may be development tools or replaceable AI providers, never canonical product infrastructure.
+
+## Task admission and efficiency
+
+A valid task contract should make the execution purpose obvious before code is touched.
+
+For significant implementation/audit work, require or infer from the supplied contract:
+
+- `WHY_NOW` — exact reason this is the next useful work;
+- `ACTIVE_BLOCKER_OR_MILESTONE`;
+- `BASELINE_MAIN_SHA`;
+- `DEPENDENCY_IN`;
+- `MINIMAL_DELTA`;
+- `EXPECTED_UNLOCK`;
+- `ALLOWED_PATHS` / `FORBIDDEN_PATHS` where applicable;
+- `ACCEPTANCE_EVIDENCE`;
+- `STOP_CONDITIONS`;
+- allowed final status values.
+
+If `EXPECTED_UNLOCK` is unclear, do not broaden the task to create work. Return the ambiguity/blocker.
+
+Use the lightest existing path that can safely meet acceptance. Reuse a working build/deploy/review flow instead of inventing a new CI, selector, staging layer, service or framework unless the existing path is proven insufficient for a concrete requirement.
+
+If a bounded task unexpectedly requires a materially wider architecture change, global configuration change, frozen-authority change or unrelated migration, STOP and report the exact new blocker. Do not expand the project on your own.
+
+When an interactive task only needs owner authentication and Browser/Computer control is available, surface the real login/2FA/CAPTCHA step to the owner and continue the same task after authentication. Do not replace a simple authentication dependency with a new deployment mechanism.
 
 ## Safety
 
@@ -75,12 +100,13 @@ Every completed implementation/audit task must leave durable evidence in GitHub.
 
 Minimum useful result data:
 
-- status `DONE|PARTIAL|BLOCKED`;
+- status `DONE|PARTIAL|BLOCKED` or task-specific bounded status;
 - files changed;
 - checks/tests and outcomes;
 - unresolved items/contradictions;
 - branch/commit/PR when applicable;
-- whether production files changed.
+- whether production files changed;
+- what dependency was actually unlocked.
 
 Do not duplicate the same information across multiple documents without a real need.
 
@@ -89,6 +115,8 @@ Do not duplicate the same information across multiple documents without a real n
 Parallel subject chats/agents may work on separate branches and subject scopes. They are execution lanes, not independent project brains.
 
 The Brain reviews meaningful deltas across lanes: significant merges, changed blockers, cross-subject/shared-core changes, production-impacting PRs and unsupported DONE claims. If nothing material changed, do not create another checkpoint or repeat an audit.
+
+Parallel work is only useful when each lane has a concrete bounded endpoint and does not steal resources from the active central blocker.
 
 ## Subscription/provider independence
 

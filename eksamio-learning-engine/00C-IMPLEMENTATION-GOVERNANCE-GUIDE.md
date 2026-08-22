@@ -1,8 +1,8 @@
 # Eksamio — Implementation Governance Guide
 
 **Статус:** EXECUTION / GOVERNANCE AUTHORITY  
-**Версия:** 1.1
-**Дата:** 2026-08-22
+**Версия:** 1.2  
+**Дата:** 2026-08-23  
 **Корень:** `eksamio-learning-engine/`
 
 ## 1. Назначение
@@ -12,7 +12,8 @@
 Он не заменяет продуктовую authority.
 
 Главная продуктовая authority:
-- `00-PRODUCT-MASTERPLAN.md`.
+- `00-PRODUCT-MASTERPLAN.md`;
+- явно утверждённые owner decisions, включая `OWNER-DECISIONS-2026-08-22.md`.
 
 Текущий порядок исполнения:
 - `00B-PROJECT-PRIORITIES-CURRENT.md`.
@@ -23,14 +24,33 @@
 
 Eksamio строится **строго по dependency graph**, а не по принципу «что проще сделать сейчас».
 
-Каждая новая работа должна отвечать хотя бы одному из вопросов:
+Каждая новая работа должна отвечать:
 
-1. Какой утверждённый milestone она приближает?
+1. Какой утверждённый milestone или blocker она приближает/закрывает?
 2. Какой конкретный gap она закрывает?
 3. Какой следующий dependency она разблокирует?
-4. Как она входит в общий PEIS closed loop?
+4. Как она входит в общий PEIS closed loop или обязательный production/launch gate?
+5. Почему выбран именно минимальный способ решения, а не более широкий проект?
 
 Если работа не приближает утверждённый milestone, не закрывает gap и не разблокирует dependency, она не должна становиться приоритетной только потому, что технически удобна или визуально эффектна.
+
+### Обязательный task-admission contract
+
+Перед выдачей любой значимой implementation/audit задачи Central Brain должен уметь записать:
+
+- `WHY_NOW` — почему задача нужна сейчас;
+- `ACTIVE_BLOCKER_OR_MILESTONE` — точный blocker/milestone;
+- `BASELINE_MAIN_SHA` — актуальный durable baseline;
+- `DEPENDENCY_IN` — что уже должно быть истинно;
+- `MINIMAL_DELTA` — минимальный требуемый change/evidence;
+- `EXPECTED_UNLOCK` — что станет возможно после PASS;
+- `EXECUTOR` — Brain / Codex / Spark / deterministic tool и почему это самый дешёвый достаточный вариант;
+- `ALLOWED_PATHS` / `FORBIDDEN_PATHS` для write-задач;
+- `ACCEPTANCE_EVIDENCE` — измеримый proof;
+- `STOP_CONDITIONS`;
+- допустимые `FINAL_STATUS`.
+
+Если `WHY_NOW` или `EXPECTED_UNLOCK` невозможно сформулировать конкретно, задача не допускается к исполнению.
 
 ## 3. Неподвижный системный milestone
 
@@ -46,7 +66,7 @@ Eksamio строится **строго по dependency graph**, а не по п
 
 При конфликте решений использовать следующий порядок:
 
-1. `00-PRODUCT-MASTERPLAN.md` и явно утверждённые owner decisions, включая `OWNER-DECISIONS-2026-08-22.md` — целевой продукт и архитектурные принципы.
+1. `00-PRODUCT-MASTERPLAN.md` и явно утверждённые owner decisions.
 2. `00B-PROJECT-PRIORITIES-CURRENT.md` — текущая очередь реализации и приоритеты.
 3. Общие PEIS contracts и их validation/result artifacts.
 4. Subject-level identity/source/program authorities.
@@ -59,17 +79,16 @@ Eksamio строится **строго по dependency graph**, а не по п
 
 ## 5. Обязательный execution gate для любой новой задачи
 
-Перед постановкой или принятием задачи необходимо проверить:
-
 ### GATE A — Product fit
 - соответствует ли работа PEIS Masterplan;
 - не превращает ли Eksamio в набор независимых страниц или generic AI chat;
-- направлена ли она на доказанное изменение learner knowledge state.
+- направлена ли она на доказанное изменение learner knowledge state или обязательный production/launch dependency.
 
 ### GATE B — Dependency fit
 - понятна ли предшествующая dependency;
 - не выполняется ли работа раньше обязательного нижележащего слоя;
-- не существует ли уже аналогичный contract / engine / registry.
+- не существует ли уже аналогичный contract / engine / registry;
+- указан ли конкретный `EXPECTED_UNLOCK`.
 
 ### GATE C — Shared-core fit
 - не создаёт ли работа отдельный Student Model, learner state, Evidence, Mastery, Readiness, Retention или NBA для одного предмета;
@@ -83,12 +102,25 @@ Eksamio строится **строго по dependency graph**, а не по п
 ### GATE E — Scope safety
 - отделена ли architecture/spec работа от production integration;
 - не меняются ли frozen runtime/Tilda/scoring/localStorage/production побочно;
-- определён ли rollback или HOLD там, где интеграция ещё не разрешена.
+- определён ли rollback или HOLD там, где интеграция ещё не разрешена;
+- не расширяется ли задача за пределы минимальной delta.
 
 ### GATE F — Completion evidence
 - есть ли валидатор, тест, аудит или result artifact;
 - можно ли доказать, что заявленный результат действительно достигнут;
 - ясно ли, что осталось незавершённым.
+
+### GATE G — Efficiency / existing-path reuse
+- проверен ли уже существующий рабочий путь;
+- можно ли решить задачу меньшим числом изменений/шагов;
+- не создаётся ли новый CI, staging layer, framework, service или документ без доказанной необходимости;
+- не используется ли дорогой AI/agent там, где достаточно deterministic tool или маленькой bounded модели.
+
+### GATE H — Scope expansion stop
+
+Если во время исполнения выясняется, что задача требует существенно большего объёма, новой архитектуры, новых global dependencies или изменения frozen authority, исполнитель обязан STOP и вернуть конкретный blocker Central Brain.
+
+Нельзя самостоятельно превращать небольшую delivery/fix задачу в новый infrastructure/project workstream.
 
 Задача, которая не проходит эти gates, должна быть переработана до исполнения.
 
@@ -114,9 +146,11 @@ Eksamio строится **строго по dependency graph**, а не по п
 
 Каждая значимая задача проходит жизненный цикл:
 
-`DECISION -> TASK CONTRACT -> BRANCH/WORKTREE -> IMPLEMENTATION/AUDIT -> VALIDATION -> RESULT ARTIFACT -> ARCHITECTURAL REVIEW -> PR -> MERGE -> STATUS UPDATE`
+`DECISION -> TASK CONTRACT -> BRANCH/WORKTREE -> IMPLEMENTATION/AUDIT -> VALIDATION -> RESULT/EVIDENCE -> ARCHITECTURAL REVIEW -> PR -> MERGE -> STATUS UPDATE`
 
 Для маленьких add-only governance/source задач допустим сокращённый цикл, но результат всё равно должен быть восстановим из GitHub.
+
+Не создавать отдельный task/result/review artifact, если branch/PR + tests уже являются достаточным durable evidence.
 
 ## 8. Branch / PR discipline
 
@@ -137,7 +171,7 @@ Eksamio строится **строго по dependency graph**, а не по п
 ### P1
 - Физика.
 
-Физика может развиваться параллельно только при отсутствии замедления P0.
+Физика может развиваться параллельно только при отсутствии замедления P0/central blocker.
 
 Каждый subject-layer может иметь собственные:
 - verified sources;
@@ -155,23 +189,21 @@ Eksamio строится **строго по dependency graph**, а не по п
 
 Следующая работа выбирается не по количеству незакрытых файлов, а по bottleneck проекта.
 
-Приоритет выбора:
+**Текущий central bottleneck:** `PEIS-DEPLOYMENT-SECURITY-001`.
 
-1. blocker первого PEIS vertical slice;
-2. blocker P0 Russian/Mathematics identity/source readiness;
-3. blocker shared executable PEIS runtime;
-4. blocker measurable verification/telemetry;
-5. затем production AI Tutor foundations и единый text/realtime voice contour;
-6. первый paid Pro launch только после совместной readiness text + realtime voice и применимых production gates; richer multimodal expansion — после launch contour.
+Пока он открыт, central/platform tasks должны либо закрывать конкретную часть этого gate, либо прямо готовить следующий обязательный dependency после него.
+
+Параллельно допускаются только bounded subject lanes с собственным доказуемым endpoint, если они не замедляют central P0 work.
+
+После production/deployment foundation следующий порядок определяется current authority и фактическим delta, но paid Pro остаётся запрещён до совместной production readiness text + realtime voice Tutor и применимых identity/payment/legal/security gates.
 
 ## 11. Периодическое подведение итогов
 
-Обязательное правило проекта: **после каждого существенного рабочего периода фиксируется durable checkpoint**.
+После каждого существенного рабочего периода фиксируется durable checkpoint.
 
 Базовый ритм:
 - не реже одного раза за рабочий день, если в этот день велась значимая работа;
-- дополнительно — перед окончанием длинной архитектурной сессии;
-- дополнительно — после крупного merge, смены milestone или важного архитектурного решения.
+- дополнительно после крупного merge, смены blocker/milestone или важного owner/architecture decision.
 
 Checkpoint должен содержать:
 
@@ -186,15 +218,15 @@ Checkpoint должен содержать:
 9. что запрещено делать до закрытия этого gate;
 10. какие документы являются authority для продолжения.
 
-Ежедневный checkpoint хранится в:
-- `eksamio-learning-engine/worklog/`.
+Ежедневный checkpoint хранится в `eksamio-learning-engine/worklog/`.
+
+Не создавать checkpoint, если существенной работы/изменения состояния не было.
 
 ## 12. Правило нового чата
 
 Новый ChatGPT/Codex/другой AI-сеанс не должен пытаться продолжить проект только по памяти пользователя или по пересказу прошлого чата.
 
-Он обязан восстановить рабочую точку из репозитория согласно:
-- `00D-BRAIN-CONTINUITY-PROTOCOL.md`.
+Он обязан восстановить рабочую точку из репозитория согласно `00D-BRAIN-CONTINUITY-PROTOCOL.md`.
 
 ## 13. Что считается качественным прогрессом
 
@@ -202,35 +234,45 @@ Checkpoint должен содержать:
 
 Качественный прогресс означает, что:
 - уменьшилось число архитектурных неизвестных;
-- закрыт реальный source/identity/runtime gap;
+- закрыт реальный source/identity/runtime/production gap;
 - разблокирован следующий dependency;
 - получен проверяемый learner signal;
 - заработала часть closed loop;
 - появилась измеримая связь intervention -> outcome;
-- система стала ближе к subject-neutral PEIS.
+- система стала ближе к production-ready subject-neutral PEIS.
 
 ## 14. Запрещённые паттерны управления
 
 Не допускаются:
-- повторное проектирование уже принятых решений без нового основания;
+- повторное проектирование уже принятых решений без нового evidence;
 - создание параллельных архитектур «на всякий случай»;
+- придумывание CI/staging/deployment layer, которого не требует реальный процесс;
+- превращение маленькой delivery-задачи в инфраструктурный проект;
+- повторный широкий audit из-за ограничения одного web/tool surface;
 - subject-specific копии PEIS engines;
 - AI-first вместо source/evidence/verification-first;
 - merge старого PR только потому, что он mergeable;
 - трактовка чата как единственного хранилища решений;
 - неконтролируемое накопление открытых PR без статуса;
 - выдача спецификации за работающий продукт;
-- смена milestone без обновления durable authority.
+- смена milestone без обновления durable authority;
+- перекладывание на owner ручной технической работы, которую исполнитель может безопасно сделать сам после минимального authentication step.
 
-## 15. Определение текущей точки проекта
+## 15. Текущая точка проекта — 2026-08-23
 
-На 2026-08-19 текущая системная задача — довести Eksamio от богатого набора source/identity/contracts к **первому доказанному end-to-end PEIS closed loop**.
+Durable main перед этим обновлением:
 
-Ключевые параллельные линии:
+`85b1f4316cf33dc6ab0eebce2e9281b6432e4bbb`
 
-1. Russian verified source-backed vertical slice.
-2. Unified Mathematics Identity Model для profile + base.
-3. Shared executable PEIS runtime поверх TASK-004/TASK-005.
-4. Physics source/identity work только без замедления P0.
+Состояние:
 
-Все последующие решения должны проверяться против этой точки.
+- owner decisions 2026-08-22 merged и являются authority;
+- Physics 2025 v1.5 result-order fix merged через PR #96;
+- Physics 2024 official source-access pack merged через PR #97; subject source-lock/build-spec lane активен;
+- Russian PR #72 остаётся активным read-only/decision lane, PR #57 HOLD, PR #23 reviewed content checkpoint;
+- central reference PEIS chain дошла до trusted-host identity boundary;
+- главный central production blocker — `PEIS-DEPLOYMENT-SECURITY-001`.
+
+Следующая central работа выбирается только из concrete gaps этого blocker. Physics/Russian идут параллельно bounded lanes и не должны оттягивать central execution.
+
+Все последующие решения проверяются против current `main`, owner authority, measurable learning outcome и `EXPECTED_UNLOCK` каждой задачи.
