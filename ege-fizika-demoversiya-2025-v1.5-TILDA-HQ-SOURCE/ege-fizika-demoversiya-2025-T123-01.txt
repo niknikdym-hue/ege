@@ -1,0 +1,154 @@
+
+<style>
+
+#ege-physics-demo-2025,#ege-physics-demo-2025 *{box-sizing:border-box}
+#ege-physics-demo-2025{color:#17324d;font-family:Arial,sans-serif;overflow-x:hidden}
+#ege-physics-demo-2025 .ep-page{max-width:1220px;margin:0 auto;padding:24px 20px}
+#ege-physics-demo-2025 .ep-stack{display:grid;gap:18px;min-width:0}
+#ege-physics-demo-2025 .ep-panel{background:#fff;border:1px solid #dfe4eb;border-radius:16px;padding:22px;min-width:0}
+#ege-physics-demo-2025 .ep-title{font-size:clamp(30px,5vw,52px);line-height:1.08;margin:12px 0 14px}
+#ege-physics-demo-2025 .ep-lead{font-size:18px;line-height:1.6;max-width:900px;margin:0}
+#ege-physics-demo-2025 .ep-meta{display:flex;gap:8px;flex-wrap:wrap}
+#ege-physics-demo-2025 .ep-pill{display:inline-flex;align-items:center;padding:7px 10px;border-radius:999px;background:#f0f3f7;font-size:14px;font-weight:800}
+#ege-physics-demo-2025 .ep-pill--blue{background:#eef6ff;color:#315fb5}
+#ege-physics-demo-2025 .ep-section-title{font-size:24px;line-height:1.2;margin:0 0 14px}
+#ege-physics-demo-2025 .ep-button{position:relative!important;isolation:isolate!important;appearance:none!important;-webkit-appearance:none!important;border:1px solid #315fb5!important;border-radius:11px!important;background:#315fb5!important;background-image:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 17px!important;font:inherit!important;font-weight:800!important;line-height:1.2!important;box-shadow:none!important;text-shadow:none!important;filter:none!important;opacity:1!important;cursor:pointer!important}
+#ege-physics-demo-2025 .ep-button::before,#ege-physics-demo-2025 .ep-button::after{content:none!important;display:none!important}
+#ege-physics-demo-2025 .ep-button:hover{background:#274f99!important}
+#ege-physics-demo-2025 .ep-button:focus-visible{outline:3px solid rgba(49,95,181,.25)!important;outline-offset:3px!important}
+#ege-physics-demo-2025 .ep-button--small{padding:9px 13px!important;font-size:14px!important}
+#ege-physics-demo-2025 .ep-button--secondary{background:#fff!important;color:#17324d!important;-webkit-text-fill-color:#17324d!important;border-color:#c9d3df!important}
+#ege-physics-demo-2025 .ep-button--secondary:hover{background:#f4f7fb!important;color:#17324d!important;-webkit-text-fill-color:#17324d!important}
+#ege-physics-demo-2025 .ep-button:disabled{background:#f4f5f7!important;color:#7b8794!important;-webkit-text-fill-color:#7b8794!important;border-color:#d9dee5!important;cursor:not-allowed!important}
+#ege-physics-demo-2025 .ephys-breadcrumbs{font-size:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#ege-physics-demo-2025 .ephys-breadcrumbs a{color:inherit}
+#ege-physics-demo-2025 .ephys-start-panel>p{line-height:1.62;margin:0 0 15px}
+#ege-physics-demo-2025 .ephys-notice{margin-top:22px;padding:16px 18px;border:1px solid #ead7a2;border-left:5px solid #b9891c;border-radius:12px;background:#fff8e8;line-height:1.55}
+#ege-physics-demo-2025 .ephys-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+#ege-physics-demo-2025 .ephys-hidden{display:none!important}
+#ege-physics-demo-2025 .ephys-exam-shell{display:none}
+#ege-physics-demo-2025[data-state="running"] .ephys-start-panel{display:none}
+#ege-physics-demo-2025[data-state="running"] .ephys-exam-shell{display:grid;gap:18px}
+#ege-physics-demo-2025[data-state="finished"] .ephys-start-panel,#ege-physics-demo-2025[data-state="finished"] .ephys-exam-shell{display:none}
+#ege-physics-demo-2025 .ephys-toolbar{position:sticky;top:10px;z-index:12;display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center}
+#ege-physics-demo-2025 .ephys-timer{font-variant-numeric:tabular-nums;font-weight:850;font-size:20px;white-space:nowrap}
+#ege-physics-demo-2025 .ephys-progress{height:10px;border-radius:999px;background:#eef1f5;overflow:hidden}
+#ege-physics-demo-2025 .ephys-progress>span{display:block;height:100%;width:0;background:#315fb5;transition:width .2s ease}
+#ege-physics-demo-2025 .ephys-finish{background:#8f2f40!important;border-color:#7f2635!important;color:#fff!important;-webkit-text-fill-color:#fff!important;box-shadow:0 4px 12px rgba(91,24,38,.20)!important}
+#ege-physics-demo-2025 .ephys-finish:hover{background:#772536!important;border-color:#67202f!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#ege-physics-demo-2025 .ephys-nav-grid{display:grid;grid-template-columns:repeat(9,minmax(36px,1fr));gap:7px}
+#ege-physics-demo-2025 .ephys-nav-btn{min-height:38px;border:1px solid #d9dee7;border-radius:10px;background:#fff;color:#27303f;font-weight:800;cursor:pointer;box-shadow:none}
+#ege-physics-demo-2025 .ephys-nav-btn:hover{border-color:#9da8b7;background:#f7f9fc}
+#ege-physics-demo-2025 .ephys-nav-btn[data-filled="true"]{border-color:#4d9469;background:#e7f6ed;color:#245b3b}
+#ege-physics-demo-2025 .ephys-nav-btn[data-flagged="true"]{border-color:#cf7a18;background:#fff0d6;color:#704009}
+#ege-physics-demo-2025 .ephys-nav-btn[aria-current="true"]{outline:3px solid rgba(49,96,181,.24);outline-offset:2px;border-color:#315fb5}
+#ege-physics-demo-2025 .ephys-task-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+#ege-physics-demo-2025 .ephys-task-number{font-size:14px;font-weight:850;letter-spacing:.04em;text-transform:uppercase}
+#ege-physics-demo-2025 .ephys-task-prompt{font-size:17px;line-height:1.62}
+#ege-physics-demo-2025 .ephys-task-prompt li{margin-bottom:10px}
+#ege-physics-demo-2025 .ephys-figure{margin:18px 0;padding:14px;border:1px solid #dfe4eb;border-radius:14px;background:#fff;text-align:center}
+#ege-physics-demo-2025 .ephys-figure__canvas svg,#ege-physics-demo-2025 .ephys-figure__canvas img{display:block;max-width:100%;width:auto;height:auto;max-height:520px;margin:0 auto}#ege-physics-demo-2025 .ephys-modal__body img{display:block;max-width:100%;height:auto;margin:0 auto}
+#ege-physics-demo-2025 .ephys-figure figcaption{font-size:13px;line-height:1.5;margin:10px 0;color:#5b6573}
+#ege-physics-demo-2025 .ephys-answer{margin-top:20px}
+#ege-physics-demo-2025 .ephys-answer label{display:block;font-weight:800;margin-bottom:8px}
+#ege-physics-demo-2025 .ephys-input,#ege-physics-demo-2025 .ephys-textarea{width:100%;border:1px solid #cdd4df;border-radius:12px;background:#fff;padding:14px 15px;font:inherit;color:#17324d}
+#ege-physics-demo-2025 .ephys-input{max-width:460px;font-size:18px}
+#ege-physics-demo-2025 .ephys-textarea{min-height:320px;resize:vertical;line-height:1.55}
+#ege-physics-demo-2025 .ephys-pair{display:grid;grid-template-columns:repeat(2,minmax(0,220px));gap:12px}
+#ege-physics-demo-2025 .ephys-help,#ege-physics-demo-2025 .ephys-mini{font-size:13px;opacity:.76;line-height:1.5}
+#ege-physics-demo-2025 .ephys-save-status{font-size:14px;margin-top:8px;font-weight:800}
+#ege-physics-demo-2025 .ephys-task-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-top:20px}
+#ege-physics-demo-2025 .ephys-task-actions__group{display:flex;gap:10px;flex-wrap:wrap}
+#ege-physics-demo-2025 .ephys-draft{margin-top:18px;padding:12px;border-radius:12px;background:#f6f8fb}
+#ege-physics-demo-2025 .ephys-draft summary{cursor:pointer}
+#ege-physics-demo-2025 .ephys-draft .ephys-textarea{min-height:160px;margin-top:12px}
+#ege-physics-demo-2025 .ephys-table-wrap{overflow-x:auto;margin:16px 0}
+#ege-physics-demo-2025 .ephys-table{border-collapse:collapse;min-width:620px;width:100%;font-size:14px}
+#ege-physics-demo-2025 .ephys-table th,#ege-physics-demo-2025 .ephys-table td{border:1px solid #aab4c1;padding:8px;text-align:center}
+#ege-physics-demo-2025 .ephys-result{display:none}
+#ege-physics-demo-2025[data-state="finished"] .ephys-result{display:grid;gap:18px}
+#ege-physics-demo-2025 .ephys-score-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#ege-physics-demo-2025 .ephys-score-card{border:1px solid #dfe4eb;border-radius:14px;padding:16px;background:#fff}
+#ege-physics-demo-2025 .ephys-score-value{font-size:30px;font-weight:850;line-height:1.15}
+#ege-physics-demo-2025 .ephys-review-list{display:grid;gap:12px}
+#ege-physics-demo-2025 .ephys-review-item{border:1px solid #dfe4eb;border-radius:14px;padding:16px;background:#fff;min-width:0}
+#ege-physics-demo-2025 .ephys-review-item[data-correct="true"]{border-left:5px solid #2f8a58}
+#ege-physics-demo-2025 .ephys-review-item[data-correct="false"]{border-left:5px solid #b84e4e}
+#ege-physics-demo-2025 .ephys-self-grid{display:grid;gap:10px}
+#ege-physics-demo-2025 .ephys-self-row{display:grid;grid-template-columns:1fr minmax(130px,190px);gap:12px;align-items:center;border:1px solid #dfe4eb;border-radius:12px;padding:12px}
+#ege-physics-demo-2025 .ephys-self-row select{width:100%;padding:10px;border:1px solid #cdd4df;border-radius:10px;background:#fff}
+#ege-physics-demo-2025 .ephys-solution{margin-top:14px;padding:16px;border-radius:12px;background:#f6f8fb;line-height:1.62;overflow-wrap:anywhere}
+#ege-physics-demo-2025 .ephys-criteria{margin-top:14px;padding:16px;border-left:5px solid #315fb5;background:#f3f7ff;border-radius:12px;line-height:1.55}
+#ege-physics-demo-2025 .ephys-modal{position:fixed;inset:0;z-index:9999;background:rgba(15,23,42,.72);display:none;align-items:center;justify-content:center;padding:18px}
+#ege-physics-demo-2025 .ephys-modal[data-open="true"]{display:flex}
+#ege-physics-demo-2025 .ephys-modal__card{background:#fff;border-radius:16px;max-width:1000px;width:100%;max-height:92vh;overflow:auto;padding:20px}
+#ege-physics-demo-2025 .ephys-modal__head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}
+#ege-physics-demo-2025 .ephys-modal__body svg{width:100%;height:auto}
+#ege-physics-demo-2025 .ephys-reference-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#ege-physics-demo-2025 .ephys-reference-grid section{border:1px solid #dfe4eb;border-radius:12px;padding:14px}
+#ege-physics-demo-2025 .ephys-reference-grid h3{margin:0 0 8px;font-size:17px}
+#ege-physics-demo-2025 .ephys-reference-grid p{margin:0;line-height:1.55}
+#ege-physics-demo-2025 .ephys-source-credit{line-height:1.58;overflow-wrap:anywhere}
+
+#ege-physics-demo-2025 .ephys-storage-warning{display:none;margin-top:10px;padding:11px 13px;border:1px solid #d87a7a;border-radius:10px;background:#fff0f0;color:#7a1f2b;font-size:14px;font-weight:700}
+#ege-physics-demo-2025 .ephys-storage-warning[data-show="true"]{display:block}
+#ege-physics-demo-2025 .ephys-input[aria-invalid="true"]{border-color:#b84e4e;box-shadow:0 0 0 3px rgba(184,78,78,.13)}
+#ege-physics-demo-2025 .ephys-validation{font-size:13px;color:#8a2634;margin-top:7px}
+#ege-physics-demo-2025 .ephys-criteria-table{border-collapse:collapse;width:100%;min-width:620px;background:#fff}
+#ege-physics-demo-2025 .ephys-criteria-table th,#ege-physics-demo-2025 .ephys-criteria-table td{border:1px solid #9ba7b5;padding:10px;vertical-align:top;text-align:left}
+#ege-physics-demo-2025 .ephys-criteria-table th:last-child,#ege-physics-demo-2025 .ephys-criteria-table td:last-child{width:72px;text-align:center;font-weight:800}
+#ege-physics-demo-2025 .ephys-official-note{padding:12px 14px;border-left:4px solid #7b8794;background:#f6f8fb;border-radius:8px}
+@media(max-width:900px){
+#ege-physics-demo-2025 .ephys-toolbar{grid-template-columns:1fr auto auto}
+#ege-physics-demo-2025 .ephys-progress{grid-column:1/-1}
+#ege-physics-demo-2025 .ephys-nav-grid{grid-template-columns:repeat(6,minmax(36px,1fr))}
+#ege-physics-demo-2025 .ephys-score-grid,#ege-physics-demo-2025 .ephys-reference-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+#ege-physics-demo-2025 .ep-page{padding-left:16px;padding-right:16px}
+#ege-physics-demo-2025 .ephys-toolbar{grid-template-columns:1fr 1fr}
+#ege-physics-demo-2025 .ephys-toolbar .ephys-timer-wrap,#ege-physics-demo-2025 .ephys-progress{grid-column:1/-1}
+#ege-physics-demo-2025 .ephys-toolbar button{width:100%;min-width:0}
+#ege-physics-demo-2025 .ephys-nav-grid{grid-template-columns:repeat(5,minmax(36px,1fr))}
+#ege-physics-demo-2025 .ephys-task-actions{display:block}
+#ege-physics-demo-2025 .ephys-task-actions__group{margin-top:10px}
+#ege-physics-demo-2025 .ephys-task-actions__group .ep-button{width:100%;justify-content:center}
+#ege-physics-demo-2025 .ephys-pair,#ege-physics-demo-2025 .ephys-self-row{grid-template-columns:1fr}
+#ege-physics-demo-2025 .ephys-start-panel,#ege-physics-demo-2025 .ephys-result>.ep-panel{padding:18px 16px}
+#ege-physics-demo-2025 .ephys-modal__head{align-items:flex-start}
+}
+
+#ege-physics-demo-2025 .ephys-source-crop{display:block!important;width:auto!important;height:auto!important;max-height:none!important;max-width:min(100%,var(--ephys-source-max,520px))!important;margin:0 auto;object-fit:contain}
+#ege-physics-demo-2025 .ephys-source-pair{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;justify-content:center}
+#ege-physics-demo-2025 .ephys-modal__body .ephys-source-crop{max-width:100%!important}
+@media(max-width:560px){#ege-physics-demo-2025 .ephys-source-pair{flex-direction:column;align-items:center}}
+
+#ege-physics-demo-2025 .ephys-official-label{font-size:14px;font-weight:850;letter-spacing:.02em;color:#315fb5;margin-bottom:6px}
+#ege-physics-demo-2025 .ephys-source-crop{display:block;max-width:100%;width:auto;height:auto;margin:0 auto}
+#ege-physics-demo-2025 .ephys-official-stack{display:grid;gap:10px}
+#ege-physics-demo-2025 .ephys-official-stack img{display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #e4e8ee;border-radius:8px}
+#ege-physics-demo-2025 .ephys-result-heading{margin:0 0 10px}
+#ege-physics-demo-2025 .ephys-auto-value,#ege-physics-demo-2025 .ephys-self-value{font-size:30px;font-weight:850}
+#ege-physics-demo-2025 .ephys-result-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+</style>
+<div class="ep-root ep-russian-index" id="ege-physics-demo-2025" data-state="idle">
+<div class="ep-page"><div class="ep-stack">
+<div class="ephys-breadcrumbs"><a href="https://eksamio.ru/">Главная</a><span>→</span><a href="https://eksamio.ru/ege/">ЕГЭ</a><span>→</span><a href="https://eksamio.ru/ege/demoversii/">Демоверсии</a><span>→</span><span>Демоверсия по физике</span></div>
+<section class="ep-panel"><div class="ep-meta"><span class="ep-pill ep-pill--blue">ЕГЭ 2025</span><span class="ep-pill">26 заданий</span><span class="ep-pill">235 минут</span><span class="ep-pill">45 первичных баллов</span></div><h1 class="ep-title">Интерактивная демоверсия ЕГЭ по физике</h1><p class="ep-lead">Официальный демонстрационный вариант ФИПИ 2025 в интерактивном экзаменационном режиме: таймер, сохранение ответов, автоматическая проверка краткой части и самооценка развёрнутых решений по официальным критериям.</p></section>
+<section class="ep-panel ephys-start-panel"><h2 class="ep-section-title">Перед началом</h2><p>Часть 1 — задания 1–20 с кратким ответом, максимум 28 первичных баллов. Часть 2 — задания 21–26 с развёрнутым ответом, максимум 17 баллов. На выполнение работы отводится 3 часа 55 минут (235 минут).</p><p>В официальной демоверсии ФИПИ для позиции 26 приведены три примера. При начале попытки один из них назначается случайно и сохраняется до завершения этой попытки.</p><div class="ephys-notice"><strong>Важно:</strong> таймер продолжает идти после закрытия страницы или сворачивания вкладки. Ответы, черновики, отметки и назначенный пример №26 сохраняются в браузере.</div><div class="ephys-actions"><button class="ep-button" id="ephys-start" type="button">Начать экзамен</button><button class="ep-button ep-button--secondary ephys-hidden" id="ephys-resume" type="button">Продолжить попытку</button><button class="ep-button ep-button--secondary ephys-hidden" id="ephys-reset-start" type="button">Начать заново</button></div><p class="ephys-mini">Эксамио не является официальным сайтом ФИПИ или Рособрнадзора. Содержание заданий, изображения, ответы, решения, критерии и справочные материалы на этой странице перенесены из byte-locked официальной демоверсии ФИПИ 2025.</p></section>
+<div class="ephys-exam-shell">
+<section class="ep-panel ephys-toolbar"><div class="ephys-storage-warning" id="ephys-storage-warning" role="alert">Не удалось сохранить данные в браузере. Не закрывайте страницу: ответы могут быть потеряны.</div><div class="ephys-timer-wrap"><div class="ephys-timer" id="ephys-timer">03:55:00</div><div class="ephys-mini">Оставшееся время</div></div><div class="ephys-progress" aria-label="Прогресс выполнения"><span id="ephys-progress-bar"></span></div><button class="ep-button ep-button--small ep-button--secondary" id="ephys-reference" type="button">Справочные материалы</button><button class="ep-button ep-button--small ephys-finish" id="ephys-finish-top" type="button">Завершить экзамен</button></section>
+<section class="ep-panel"><h2 class="ep-section-title">Навигация по заданиям</h2><div class="ephys-nav-grid" id="ephys-nav"></div><p class="ephys-mini"><strong>Белый</strong> — ответа нет. <strong>Зелёный</strong> — ответ сохранён. <strong>Оранжевый</strong> — к заданию нужно вернуться. Синяя рамка показывает открытое задание.</p></section>
+<section class="ep-panel" id="ephys-task-stage" aria-live="polite"></section>
+</div>
+<div class="ephys-result">
+<section class="ep-panel"><h2 class="ep-section-title">Результат попытки</h2><div class="ephys-score-grid"><div class="ephys-score-card"><div class="ephys-mini">Автоматически, №1–20</div><div class="ephys-score-value"><span id="ephys-short-score">0</span>/28</div></div><div class="ephys-score-card"><div class="ephys-mini">Самооценка, №21–26</div><div class="ephys-score-value"><span id="ephys-extended-score">—</span>/17</div></div><div class="ephys-score-card"><div class="ephys-mini">Итого</div><div class="ephys-score-value"><span id="ephys-total-score">—</span>/45</div></div></div><p id="ephys-result-note" class="ephys-mini"></p></section>
+<section class="ep-panel"><h2 class="ep-section-title">Проверка заданий</h2><div class="ephys-review-list" id="ephys-review"></div></section>
+<section class="ep-panel"><h2 class="ep-section-title">Самооценка заданий 21–26</h2><p>Сравните сохранённое решение с официальным возможным решением и критериями ФИПИ 2025, затем выберите балл для каждого задания. Пока оценены не все задания, общий результат не считается окончательным.</p><div class="ephys-self-grid" id="ephys-self-grid"></div><div class="ephys-review-list" id="ephys-extended-review"></div></section>
+<section class="ep-panel ephys-source-credit"><h2 class="ep-section-title">Источники и статус страницы</h2><p>Задания, ответы, возможные решения, критерии и изображения перенесены из официальной демоверсии ФИПИ ЕГЭ 2025 по физике. Эксамио не является официальным сайтом ФИПИ, Рособрнадзора или организаторов ЕГЭ.</p><div class="ephys-result-actions"><button class="ep-button ep-button--secondary" id="ephys-reset-result" type="button">Начать новую попытку</button><button class="ep-button ep-button--secondary" id="ephys-reference-result" type="button">Справочные материалы</button></div></section>
+</div>
+</div></div>
+<div class="ephys-modal" id="ephys-modal" aria-hidden="true"><div class="ephys-modal__card" role="dialog" aria-modal="true" aria-labelledby="ephys-modal-title" tabindex="-1"><div class="ephys-modal__head"><h2 class="ep-section-title" id="ephys-modal-title">Справочные материалы</h2><button class="ep-button ep-button--small ep-button--secondary" id="ephys-modal-close" type="button">Закрыть</button></div><div class="ephys-modal__body" id="ephys-modal-body"></div></div></div>
+<script type="application/json" id="ephys-task-definitions">{"tasks":[{"number":1,"title":"Задание 1","kind":"numeric","answer":"150","maxScore":1,"answerDisplay":"150","promptAsset":"prompt-1","answerHelp":"Введите число без единицы измерения."},{"number":2,"title":"Задание 2","kind":"numeric","answer":"0.4","maxScore":1,"answerDisplay":"0,4","promptAsset":"prompt-2","answerHelp":"Введите число без единицы измерения."},{"number":3,"title":"Задание 3","kind":"numeric","answer":"32","maxScore":1,"answerDisplay":"32","promptAsset":"prompt-3","answerHelp":"Введите число без единицы измерения."},{"number":4,"title":"Задание 4","kind":"numeric","answer":"0.27","maxScore":1,"answerDisplay":"0,27","promptAsset":"prompt-4","answerHelp":"Введите число без единицы измерения."},{"number":5,"title":"Задание 5","kind":"unordered_multi","answer":"24","maxScore":2,"answerDisplay":"24","promptAsset":"prompt-5"},{"number":6,"title":"Задание 6","kind":"ordered","answer":"32","maxScore":2,"answerDisplay":"32","promptAsset":"prompt-6"},{"number":7,"title":"Задание 7","kind":"numeric","answer":"900","maxScore":1,"answerDisplay":"900","promptAsset":"prompt-7","answerHelp":"Введите число без единицы измерения."},{"number":8,"title":"Задание 8","kind":"numeric","answer":"150","maxScore":1,"answerDisplay":"150","promptAsset":"prompt-8","answerHelp":"Введите число без единицы измерения."},{"number":9,"title":"Задание 9","kind":"unordered_multi","answer":"24","maxScore":2,"answerDisplay":"24","promptAsset":"prompt-9"},{"number":10,"title":"Задание 10","kind":"ordered","answer":"23","maxScore":2,"answerDisplay":"23","promptAsset":"prompt-10"},{"number":11,"title":"Задание 11","kind":"numeric","answer":"2.4","maxScore":1,"answerDisplay":"2,4","promptAsset":"prompt-11","answerHelp":"Введите число без единицы измерения."},{"number":12,"title":"Задание 12","kind":"numeric","answer":"0.25","maxScore":1,"answerDisplay":"0,25","promptAsset":"prompt-12","answerHelp":"Введите число без единицы измерения."},{"number":13,"title":"Задание 13","kind":"numeric","answer":"2.25","maxScore":1,"answerDisplay":"2,25","promptAsset":"prompt-13","answerHelp":"Введите число без единицы измерения."},{"number":14,"title":"Задание 14","kind":"unordered_multi","answer":"34","maxScore":2,"answerDisplay":"34","promptAsset":"prompt-14"},{"number":15,"title":"Задание 15","kind":"ordered","answer":"32","maxScore":2,"answerDisplay":"32","promptAsset":"prompt-15"},{"number":16,"title":"Задание 16","kind":"numeric","answer":"90","maxScore":1,"answerDisplay":"90","promptAsset":"prompt-16","answerHelp":"Введите число без единицы измерения."},{"number":17,"title":"Задание 17","kind":"ordered","answer":"13","maxScore":2,"answerDisplay":"13","promptAsset":"prompt-17"},{"number":18,"title":"Задание 18","kind":"unordered_multi","answer":"145","maxScore":2,"answerDisplay":"145","promptAsset":"prompt-18"},{"number":19,"title":"Задание 19","kind":"measurement","answer":{"value":"3.00","error":"0.2"},"maxScore":1,"answerDisplay":"3,00 ± 0,2","promptAsset":"prompt-19","answerHelp":"Заполните два поля: показание и абсолютную погрешность."},{"number":20,"title":"Задание 20","kind":"unordered_exact","answer":"13","maxScore":1,"answerDisplay":"13","promptAsset":"prompt-20"},{"number":21,"title":"Задание 21","kind":"extended","maxScore":3,"promptAsset":"prompt-21","solutionAssets":["sol-21-a"],"criteriaAssets":["crit-21-a","crit-21-b"]},{"number":22,"title":"Задание 22","kind":"extended","maxScore":2,"promptAsset":"prompt-22","solutionAssets":["sol-22-a"],"criteriaAssets":["crit-22-a","crit-22-b"]},{"number":23,"title":"Задание 23","kind":"extended","maxScore":2,"promptAsset":"prompt-23","solutionAssets":["sol-23-a"],"criteriaAssets":["crit-23-a","crit-23-b"]},{"number":24,"title":"Задание 24","kind":"extended","maxScore":3,"promptAsset":"prompt-24","solutionAssets":["sol-24-a"],"criteriaAssets":["crit-24-a","crit-24-b"]},{"number":25,"title":"Задание 25","kind":"extended","maxScore":3,"promptAsset":"prompt-25","solutionAssets":["sol-25-a"],"criteriaAssets":["crit-25-a","crit-25-b"]}],"variants26":[{"variant":1,"number":26,"title":"Задание 26","kind":"extended26","maxScore":4,"promptAsset":"prompt-26v1","solutionAssets":["sol-26v1-a","sol-26v1-b"],"criteriaAssets":["crit-26v1-a","crit-26v1-b"]},{"variant":2,"number":26,"title":"Задание 26","kind":"extended26","maxScore":4,"promptAsset":"prompt-26v2","solutionAssets":["sol-26v2-a"],"criteriaAssets":["crit-26v2-a","crit-26v2-b"]},{"variant":3,"number":26,"title":"Задание 26","kind":"extended26","maxScore":4,"promptAsset":"prompt-26v3","solutionAssets":["sol-26v3-a","sol-26v3-b"],"criteriaAssets":["crit-26v3-a","crit-26v3-b"]}]}</script>
+</div>
