@@ -1,10 +1,12 @@
 # Eksamio Learning Engine — Product Masterplan
 
 **Статус:** PRODUCT / ARCHITECTURE AUTHORITY  
-**Версия:** 1.1  
+**Версия:** 1.2
 **Дата исходной фиксации:** 2026-08-18  
-**Актуализация:** 2026-08-19  
+**Актуализация:** 2026-08-22
 **Корень системы:** `eksamio-learning-engine/`
+
+Утверждённые owner decisions по первому Pro launch, product client, production cloud, AI/provider boundary, audio privacy, identity, payments и Tutor policy зафиксированы в `OWNER-DECISIONS-2026-08-22.md`. Они являются частью текущей product/architecture authority и явно заменяют прежний порядок, в котором realtime voice относился к позднему/P3-слою после первого Pro launch.
 
 ## 1. Целевой продукт
 
@@ -211,25 +213,28 @@ Recommendation Engine оптимизирует ожидаемую полезно
 
 Базовый learning loop не должен деградировать ради paywall.
 
-### Eksamio Intelligence — платный персональный слой
+### Eksamio Pro — платный персональный слой
 
 - глубокий AI-разбор ошибки;
-- персональный text AI Tutor;
+- персональный AI Tutor с text и realtime voice как двумя интерфейсами одного Tutor и одного learning episode;
 - расширенный Error Fingerprint;
 - долгосрочная оптимизация маршрута;
 - расширенный score forecast;
 - AI-проверка сочинения/развёрнутого ответа как учебная оценка;
 - персональные аналитические отчёты.
 
-### Eksamio Live — поздний realtime/multimodal слой
+Первый paid Pro launch запрещён, пока одновременно не production-ready:
 
-- voice AI Tutor;
+- text AI Tutor;
+- realtime voice AI Tutor;
+
+Text-only и voice-only Pro launch запрещены. Переключение `voice -> text -> voice` внутри одной сессии не должно терять learning context или PEIS state. Voice является P0 launch capability, но не отдельным Tutor и не разрешением обходить shared PEIS dependency graph.
+
+### Позднее расширение Pro
+
 - vision/photo analysis;
-- разговорное занятие;
 - совместный разбор черновика/изображения;
-- realtime coaching.
-
-**Voice не является первым MVP.**
+- richer multimodal coaching после доказанного production contour text + realtime voice.
 
 ## 11. Роль AI
 
@@ -244,7 +249,8 @@ AI может:
 - выдвигать гипотезу причины ошибки с confidence;
 - вести диалог по verified knowledge base;
 - проверять развёрнутые ответы по явной rubric в учебном режиме;
-- позже работать с фото/голосом.
+- работать через text и realtime voice в общем Tutor session state;
+- позже расширяться на фото/vision и другие multimodal inputs.
 
 AI **не является source of truth** для:
 
@@ -267,6 +273,18 @@ AI **не является source of truth** для:
 `Attempt -> EvidenceEvent -> StudentSkillState -> Mastery -> Readiness -> Next Best Action -> Practice/Help -> Independent Verify -> Retention -> Reassess`
 
 Контракты mastery/readiness/retention/NBA не содержат предметную истину. Предметные prerequisite edges и semantic truth допускаются только через source-backed reviewed authority.
+
+Learning policy также фиксирует:
+
+- фраза ученика «я понял» не является mastery evidence;
+- существенная AI-помощь требует независимой проверки, а её провал меняет объяснение/диагностику вместо автоматического продвижения;
+- prerequisite repair может временно изменить маршрут, после чего система возвращается к исходной цели;
+- полный worked solution допустим после реальных попыток, но просмотр решения не считается mastery;
+- immediate mastery и retained mastery различаются; retention перепроверяется индивидуально, а failure снижает confidence и возвращает skill в review;
+- deadline/exam value могут менять приоритет, не отменяя critical prerequisites;
+- score forecast всегда range/probability, не гарантия;
+- ученик может отойти от рекомендованного маршрута; critical prerequisite даёт объяснимое предупреждение, но не hard lock;
+- Next Best Action имеет понятное человеку объяснение.
 
 ## 13. Приоритет реализации
 
@@ -291,9 +309,10 @@ AI **не является source of truth** для:
 
 Не начинать с универсального пустого чата.
 
+Этот ранний bounded AI-срез не является разрешением на text-only Pro launch. До первого paid Pro должны быть закрыты production gates для одного Tutor в обоих интерфейсах — text и realtime voice — поверх shared PEIS, deployment/security и verified knowledge foundations.
+
 ### P1
 
-- text AI Tutor;
 - account/server sync;
 - «Тренировка на сегодня»;
 - retention schedule;
@@ -314,8 +333,7 @@ AI **не является source of truth** для:
 
 ### P3
 
-- realtime voice tutor;
-- multimodal live sessions;
+- richer multimodal live sessions после первого Pro launch;
 - richer Student Learning Twin;
 - proactive replanning;
 - long-term cross-session personalization.
@@ -331,7 +349,7 @@ AI **не является source of truth** для:
 ## 14. Что не делать сейчас
 
 - не строить generic AI-чат для ЕГЭ;
-- не запускать voice первым AI-продуктом;
+- не трактовать P0 voice launch gate как voice-first обход PEIS: первый implementation slice остаётся verified attempt -> grounded help -> independent verify, но первый paid Pro не может быть text-only или voice-only;
 - не делать отдельные базы прогресса для demo/trainer/program;
 - не создавать вторую Skill Graph/ontology поверх current canonical layer;
 - не давать AI владеть official answers/scoring;
@@ -408,7 +426,7 @@ AI не является единственным судьёй собствен�
 - safety/moderation;
 - analytics/experimentation;
 - audit/logging;
-- media/audio storage.
+- transient speech/realtime transport без persistent learner audio storage.
 
 Предметное ядро Eksamio не надо преждевременно делать generic:
 
@@ -430,7 +448,22 @@ Provider-specific model/API не должен становиться часть�
 
 Нужны provider abstraction, model/version logging, prompt/policy version logging, cost telemetry, fallback policy и feature flags.
 
-## 19. Change control
+Production architecture должна обеспечивать работу в России без VPN, включая text и realtime voice Tutor; learner browser не обращается напрямую к foreign AI service. Primary production cloud — Yandex Cloud Russia, но canonical PEIS/learner/subject state и core business logic остаются portable/provider-neutral.
+
+OpenAI и Google являются principal candidates для conversational brain, а Yandex SpeechKit — priority candidate для Russian STT/TTS. Candidate не означает production approval. Admission требует применимых Russia/accessibility, legal, quality и security gates; automatic fallback допустим только между pre-approved production providers. Learner provider не выбирает.
+
+## 19. Production, client, identity, payment и privacy boundaries
+
+- Первый Pro client — отдельное Eksamio web application с качественным desktop/mobile-browser UX; native mobile apps не обязательны для первого launch.
+- Tilda остаётся public/site/free-demo layer и не владеет accounts, canonical learner state, PEIS, AI Tutor или payments.
+- Pro authentication passwordless: verified e-mail или phone по выбору пользователя; anonymous same-device free-demo progress безопасно связывается с permanent account, но browser не становится identity authority.
+- Первый payment candidate для self-employed/NPD contour — Robokassa + Robocheki SMZ; payment layer replaceable, а production admission требует legal/API/webhook-idempotency/receipt/SBP-card/refund/failure-retry validation. Плательщик — фактически платящее и юридически способное лицо; blanket parent-only rule отсутствует.
+- Tutor session text/structured history может сохраняться для continuity/PEIS по privacy/retention policy.
+- **Learner audio не хранится вообще и ни в какой форме.** Допустима только transient обработка текущего realtime pipeline; recordings/fragments/copies/backups/voiceprints/persistent speaker embeddings/audio datasets запрещены. Launch legal/privacy documentation должна явно сообщать отсутствие audio storage; выбор конкретного legal document остаётся отдельным review.
+
+Полный owner-decision contract: `OWNER-DECISIONS-2026-08-22.md`.
+
+## 20. Change control
 
 Следующие решения нельзя молча менять историческим checkpoint, локальной задачей или отдельным предметным чатом:
 
@@ -444,14 +477,15 @@ Provider-specific model/API не должен становиться часть�
 - исторический source-корпус каждого предмета — 2022–2026;
 - бесплатный базовый learning loop;
 - AI не является source of truth;
-- порядок Base -> Intelligence -> Live;
+- первый Pro launch только при совместной production readiness text + realtime voice одного Tutor;
+- learner audio non-storage;
 - learning outcome важнее engagement;
 - Eksamio-first / Living-Core-aware;
 - provider abstraction.
 
 Если требуется изменить одно из этих решений — обновить этот masterplan или создать явный ADR/product decision.
 
-## 20. Ближайшая обязательная последовательность
+## 21. Ближайшая обязательная последовательность
 
 Если нет более нового явно утверждённого product decision:
 
@@ -463,15 +497,15 @@ Provider-specific model/API не должен становиться часть�
 6. NIC/transfer/retention measurement;
 7. AI Review MVP на verified vertical slice;
 8. usage/cost/eval telemetry;
-9. account/server sync + entitlements;
-10. text AI Tutor;
-11. Student Learning Twin / Recommendation Engine expansion;
-12. essay/vision;
-13. realtime voice;
+9. production deployment/security + Russia/no-VPN + portable Yandex Cloud contour;
+10. passwordless account/server sync, anonymous-to-account linking, entitlements и replaceable payment contour gates;
+11. один production Tutor поверх shared PEIS: text + realtime voice с общей session continuity; paid Pro launch только после прохождения gates обоими интерфейсами;
+12. Student Learning Twin / Recommendation Engine expansion;
+13. essay/vision и richer multimodal capabilities;
 14. scale to further subjects;
 15. extract proven shared Living Core services.
 
-## 21. Короткая формула
+## 22. Короткая формула
 
 **Имеем:** verified exam sources + демоверсии + тренажёры + предметный контент + общие PEIS contracts.
 

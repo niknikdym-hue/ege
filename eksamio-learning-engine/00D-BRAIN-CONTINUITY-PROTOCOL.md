@@ -1,8 +1,8 @@
 # Eksamio — Brain Continuity Protocol
 
 **Статус:** CONTINUITY / HANDOFF AUTHORITY  
-**Версия:** 1.0  
-**Дата:** 2026-08-19  
+**Версия:** 1.1
+**Дата:** 2026-08-22
 **Назначение:** восстановление архитектурного контекста Eksamio в новом чате, у нового AI-сеанса или после длительного перерыва.
 
 ## 1. Принцип
@@ -40,12 +40,13 @@ Durable memory Eksamio хранится в GitHub через:
 Обязательный minimum:
 
 1. `00-PRODUCT-MASTERPLAN.md`
-2. `00B-PROJECT-PRIORITIES-CURRENT.md`
-3. `00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md`
-4. последний файл в `worklog/`
-5. relevant shared PEIS contracts/results
-6. relevant subject authority/source/identity files
-7. relevant open PRs / task result artifacts
+2. current approved owner-decision artifacts, including `OWNER-DECISIONS-2026-08-22.md`
+3. `00B-PROJECT-PRIORITIES-CURRENT.md`
+4. `00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md`
+5. последний файл в `worklog/`
+6. relevant shared PEIS contracts/results
+7. relevant subject authority/source/identity files
+8. relevant open PRs / task result artifacts
 
 `00-WORK-STATUS.txt` и `00A-WORK-STATUS-CURRENT-ADDENDUM.txt` являются исторически важными checkpoints, но новые decisions сверяются с более новой authority выше.
 
@@ -222,6 +223,9 @@ Codex должен получать через task contract:
 - Mathematics нуждается в одной Mathematics Identity Model для profile + base.
 - shared executable PEIS runtime — центральный platform dependency.
 - AI Review/Tutor подключается после structured learner state, verified knowledge и independent verification.
-- voice/realtime — поздний слой.
+- realtime voice — P0 gate первого paid Pro вместе с text Tutor, но не voice-first обход shared PEIS/deployment/security/verified-knowledge foundations;
+- learner audio не хранится вообще; text/structured Tutor history регулируется отдельно;
+- Pro client — отдельное web application, Russia/no-VPN обязателен, primary cloud — portable Yandex Cloud contour;
+- provider/auth/payment candidate status не равен production approval.
 
 Продолжение проекта должно исходить из актуального `main`, а не только из этого snapshot.
