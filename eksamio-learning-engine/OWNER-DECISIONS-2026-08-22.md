@@ -58,12 +58,12 @@ No persistent Eksamio state may contain or retain:
 - original recordings, audio files or fragments;
 - copies, archives, datasets or backups of learner audio;
 - voice samples or voiceprints;
-- speaker embeddings used for persistent voice identity;
-- any other persisted representation whose purpose is retaining the learner's voice/audio.
+- any persistent speaker/voice embedding, biometric feature, acoustic feature vector or other representation derived from learner audio, regardless of whether its intended purpose is identity, personalization, analytics, model improvement or another product function;
+- any other persisted representation that preserves, fingerprints, reconstructs or enables later reuse of the learner's voice/audio.
 
-Audio may exist only transiently as required by the current realtime processing pipeline. It must not become persistent Eksamio state.
+Audio may exist only transiently as required by the current realtime processing pipeline. It must not become persistent Eksamio state. The architecture should intentionally avoid learner-audio persistence rather than treat it as an optional future feature.
 
-The applicable launch/legal/privacy documentation must state explicitly and unambiguously that Eksamio does not store learner audio. The exact legal document for that statement remains subject to later legal/privacy review. This decision does not authorize a UI banner or flag.
+The applicable launch/legal/privacy documentation must state explicitly and unambiguously that Eksamio does not store learner audio. The exact legal document for that statement remains subject to later legal/privacy review. No special UI banner/flag is required by this product decision; the legal/privacy placement and wording are determined in the later legal review.
 
 Stored text or structured learning history is not learner audio and is governed separately by privacy and retention controls.
 
@@ -107,25 +107,29 @@ The deterministic-first, verified-source and independent-verification architectu
 - a learner saying “I understand” is not mastery evidence;
 - substantial AI help requires independent verification;
 - failed verification triggers a changed explanation and cause diagnosis rather than automatic advancement;
-- a prerequisite gap may automatically alter the route, followed by return to the original learning goal after the prerequisite closes;
+- if repeated explanations still fail, Tutor should test for an earlier prerequisite gap and may temporarily route to prerequisite repair, then return to the original learning goal after the prerequisite closes;
 - a full worked solution may be shown after genuine attempts when pedagogically useful, but viewing it never counts as mastery;
 - before giving an answer requested without an attempt, Tutor should first require or encourage an attempt or minimal guided step;
-- PEIS must distinguish guessing/mechanical clicking from durable knowledge;
+- PEIS must distinguish guessing/mechanical clicking from durable knowledge; a raw streak of correct answers alone is not sufficient mastery evidence when other evidence indicates guessing, instability or contradiction;
 - immediate mastery and retained mastery are distinct;
 - retention is re-tested later; failed retention lowers mastery confidence and returns the skill to review;
-- retention intervals are individualized;
-- near a known exam/control deadline, the plan becomes deadline-aware;
+- retention intervals are individualized based on relevant learner evidence, including mastery stability, skill difficulty, error history and prior retention results;
+- near a known exam/control deadline, the plan becomes deadline-aware and prioritizes high-risk/high-impact skills;
 - exam value and cost of error may affect priority without bypassing critical prerequisites;
 - score forecasts are probabilistic/range-based and never guarantees;
-- the learner may leave the recommended route and study another topic;
-- skipping a critical prerequisite may produce a warning but must not hard-lock the learner;
-- Next Best Action must have a human-understandable explanation.
+- the learner may leave the recommended route and study another topic; PEIS must account for that action and replan subsequent recommendations rather than forcing the learner back into a locked path;
+- skipping a critical prerequisite may produce a clear warning but must not hard-lock the learner;
+- Next Best Action must have a human-understandable explanation tied to relevant evidence such as errors, prerequisite dependency, retention risk, deadline or exam value.
 
-## 10. Pedagogical development principle
+## 10. Pedagogical development and owner-decision process
 
 Eksamio should adapt strong evidence and world practice rather than invent educational methodology from scratch. Relevant approaches include mastery learning, retrieval practice, spaced/temporal practice, formative assessment, worked examples/scaffolding, deliberate practice, adaptive learning/knowledge tracing, independent verification and tutoring dialogue.
 
-These approaches must be validated against measurable Eksamio learning outcomes. Owner approval is not required for routine, reversible pedagogical choices that follow established evidence and existing Eksamio invariants. Owner questions are reserved for genuinely material or irreversible product, legal, privacy, business, architecture or launch decisions.
+These approaches must be validated against measurable Eksamio learning outcomes.
+
+Central Brain should independently resolve routine, reversible or evidence-backed decisions that already follow from current authority, architecture and established educational practice. The owner must not be asked to approve decisions merely because a choice exists.
+
+Owner questions are reserved for genuinely material decisions that cannot be safely inferred from existing authority and that materially affect one or more of: money/commercial commitments, legal obligations, privacy/security, market/positioning, fundamental architecture, launch gates, or major user experience. Questions already answered must not be reopened without new evidence.
 
 ## 11. Preservation and non-implementation boundary
 
