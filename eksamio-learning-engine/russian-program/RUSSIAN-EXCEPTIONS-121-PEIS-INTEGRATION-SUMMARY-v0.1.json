@@ -1,0 +1,132 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-21",
+  "status": "AUDIT_COMPLETE_NO_LIVE_CONNECTION",
+  "subject": "russian",
+  "ledger_ref": "RUSSIAN-EXCEPTIONS-121-PEIS-INTEGRATION-LEDGER-v0.1.json",
+  "baseline_main_sha": "b1732041738f4f7ad342b0114cec04d9aa0cf548",
+  "corpus": {
+    "source_pr": 23,
+    "source_pr_status": "DRAFT_DO_NOT_MERGE_AS_ARCHITECTURE",
+    "source_pr_head_sha": "2215e47b5c211cbff7e12d5b823a0a835adb7480",
+    "denominator_manifest": "119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json",
+    "active_cards": 121,
+    "represented_exception_ids": 88,
+    "raw_cards": 123,
+    "disabled_historical_cards": 2
+  },
+  "classification": {
+    "EXACT": {"cards": 91, "share_percent": 75.21},
+    "PARTIAL_COMPOSITE": {"cards": 5, "share_percent": 4.13},
+    "BLOCKED": {"cards": 25, "share_percent": 20.66},
+    "integration_ready": {"cards": 96, "share_percent": 79.34},
+    "total": 121
+  },
+  "semantic_target_surface": {
+    "canonical_school_ids_used": 35,
+    "new_ru_ids_admitted": 0,
+    "draft_candidates_promoted": 0,
+    "item_level_candidate_reconciliations_to_existing_school_ids": 11
+  },
+  "partial_composite_rows": [
+    {
+      "practice_item_id": "ex-practice-and-compound-001",
+      "exception_id": "and_homogeneous_vs_compound",
+      "semantic_ids": ["school-ssp-comma-base", "school-homogeneous-single-conjunction-punctuation-base"],
+      "rule": "May emit only PARTIAL/COMPOSITE semantic evidence after the service gate; exact weakness attribution is forbidden."
+    },
+    {
+      "practice_item_id": "ex-practice-colon-rule-001",
+      "exception_id": "colon_explanation_vs_enumeration_vs_quote",
+      "semantic_ids": ["school-colon-bsp-vs-generalizing-word", "school-direct-speech-adjacent-author-words-system"],
+      "rule": "May emit only PARTIAL/COMPOSITE semantic evidence after the service gate; exact weakness attribution is forbidden."
+    },
+    {
+      "practice_item_id": "ex-practice-comma-multi-rule-001",
+      "exception_id": "comma_rule_analysis_multi_rule_sentence",
+      "semantic_ids": ["school-spp-main-subordinate-comma-base", "school-homogeneous-no-conjunction-punctuation-base"],
+      "rule": "May emit only PARTIAL/COMPOSITE semantic evidence after the service gate; exact weakness attribution is forbidden."
+    },
+    {
+      "practice_item_id": "ex-practice-dash-rules-001",
+      "exception_id": "dash_subject_predicate_vs_generalizing",
+      "semantic_ids": ["school-dash-subject-predicate-basic-placement", "school-generalizing-word-basic-colon-dash-position"],
+      "rule": "May emit only PARTIAL/COMPOSITE semantic evidence after the service gate; exact weakness attribution is forbidden."
+    },
+    {
+      "practice_item_id": "ex-practice-junction-001",
+      "exception_id": "junction_conjunction_if_then",
+      "semantic_ids": ["school-spp-multiple-subordinate-punctuation", "school-spp-complex-subordinator-comma-boundary"],
+      "rule": "May emit only PARTIAL/COMPOSITE semantic evidence after the service gate; exact weakness attribution is forbidden."
+    }
+  ],
+  "blocked_clusters": [
+    {
+      "cluster": "paronym_semantics",
+      "count": 9,
+      "candidate_refs": ["candidate-011"],
+      "practice_item_ids": ["ex-practice-garantirovannyy-context-001", "ex-practice-garantiynyy-context-001", "ex-practice-ledovyi-001", "ex-practice-otborochnyi-001", "ex-practice-pamyatnyi-001", "ex-practice-prazdnyi-001", "ex-practice-priznannyi-context-002", "ex-practice-priznatelnyi-context-001", "ex-practice-produktovyi-001"],
+      "gate": "admit/reuse canonical paronym semantic identity; do not auto-mint ru-*"
+    },
+    {
+      "cluster": "noun_plural_lexical_norms_doktora_kupola",
+      "count": 4,
+      "candidate_refs": ["candidate-025"],
+      "practice_item_ids": ["ex-practice-doktora-001", "ex-practice-doktora-context-002", "ex-practice-kupola-001", "ex-practice-kupola-context-002"],
+      "gate": "canonical owner needed for these lexical plural norms"
+    },
+    {
+      "cluster": "normative_stress",
+      "count": 4,
+      "candidate_refs": ["candidate-018", "candidate-019", "candidate-021"],
+      "practice_item_ids": ["ex-practice-stress-fem-past-dozhdalas-001", "ex-practice-stress-fem-past-klala-001", "ex-practice-stress-fem-past-zanyala-001", "ex-practice-stress-otzyv-001"],
+      "gate": "canonical orthoepic/stress identities must be admitted before semantic evidence"
+    },
+    {
+      "cluster": "indirect_speech",
+      "count": 1,
+      "candidate_refs": ["candidate-029"],
+      "practice_item_ids": ["ex-practice-indirect-speech-001"],
+      "gate": "canonical indirect-speech construction identity"
+    },
+    {
+      "cluster": "uncoordinated_apposition_title_declension",
+      "count": 1,
+      "candidate_refs": ["candidate-030"],
+      "practice_item_ids": ["ex-practice-apposition-001"],
+      "gate": "canonical uncoordinated-apposition norm identity"
+    },
+    {
+      "cluster": "introductory_nonintroductory_lexical_function_boundaries",
+      "count": 5,
+      "candidate_refs": [],
+      "practice_item_ids": ["ex-practice-konechno-001", "ex-practice-poetomu-001", "ex-practice-pravda-001", "ex-practice-slovno-001", "ex-practice-v-kontse-kontsov-context-002"],
+      "gate": "admit or reuse sufficiently precise lexical-function identities; generic introductory-word identities are not exact enough"
+    },
+    {
+      "cluster": "plyvuny_alternating_root_scope",
+      "count": 1,
+      "candidate_refs": [],
+      "practice_item_ids": ["ex-practice-plyvuny-001"],
+      "gate": "source-backed canonical decision for ПЛЫВУНЫ; do not silently broaden school-plav-plov-exception-set"
+    }
+  ],
+  "service_integration": {
+    "semantic_evidence_integration_ready_cards": 96,
+    "live_connected_cards": 0,
+    "why_zero_live": "The current shared PEIS service adapter/registry path is not connected to the PR #23 Exceptions practice bank.",
+    "legacy_design_adapter": "279 russian-exceptions-state-102-exact-events = DESIGN_READY_NOT_CONNECTED",
+    "next_gate": "Connect a versioned Exceptions practice mapping/service path without moving semantic truth, correctness, evaluator trust, mastery or NBA ownership to the client/product runtime."
+  },
+  "architecture_invariants": [
+    "PR #23 remains draft and is not merged as current PEIS architecture.",
+    "No new ru-* semantic identity is approved by this audit.",
+    "Candidate refs remain draft inputs and never become canonical mastery keys.",
+    "Broad or composite failure never becomes a guessed exact semantic error.",
+    "EvidenceEvent 277 is append-only; semantic mapping is versioned.",
+    "Adapter 279 preserves source identities/idempotency but does not own mastery.",
+    "Mastery, readiness, retention and Next Best Action remain shared PEIS/server-owned.",
+    "Runtime, production, scoring and localStorage are unchanged by this deliverable."
+  ],
+  "validation_ref": "RUSSIAN-EXCEPTIONS-121-PEIS-INTEGRATION-VALIDATION.txt"
+}
