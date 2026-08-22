@@ -1,0 +1,947 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-20",
+  "status": "SHARED_EVIDENCE_FIXTURES_READY_NO_PRODUCTION_INTEGRATION",
+  "slice_id": "RU-SLICE-001",
+  "shared_schema_ref": "../../277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+  "events": [
+    {
+      "event_id": "ru001.ev.composite.error.001",
+      "schema_version": "0.1.0",
+      "event_kind": "PERFORMANCE_OBSERVATION",
+      "learner_profile_id": "learner-fixture-ru001",
+      "identity_refs": {
+        "anonymous_identity_ref": "anon:ru-slice-001"
+      },
+      "subject_id": "russian",
+      "semantic_targets": [
+        {
+          "semantic_id": "school-verb-personal-ending-conjugation-base",
+          "target_role": "PRIMARY",
+          "mapping_resolution": "COMPOSITE",
+          "mapping_confidence": null,
+          "mapping_review_status": "source_verified"
+        },
+        {
+          "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "target_role": "SECONDARY",
+          "mapping_resolution": "COMPOSITE",
+          "mapping_confidence": null,
+          "mapping_review_status": "source_verified"
+        }
+      ],
+      "semantic_context": {
+        "semantic_registry_version": "russian-school-185-current",
+        "semantic_mapping_version": "0.1.0-draft",
+        "mapping_artifact_refs": [
+          "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+          "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+        ]
+      },
+      "source": {
+        "object_type": "trainer_card",
+        "object_id": "ege-ru-12-2026-12-01",
+        "content_version": "current-ege-ru-trainer",
+        "item_version": "0.1.0",
+        "route_metadata": {
+          "exam": "EGE",
+          "exam_year": 2026,
+          "task_route": "12",
+          "historical_format": false
+        }
+      },
+      "product": {
+        "source_type": "ege_oge_trainer",
+        "product_id": "eksamio-ru-slice-001",
+        "route": "ege-task-12"
+      },
+      "session_id": "session-ru-slice-001",
+      "timestamps": {
+        "occurred_at_client": "2026-08-20T00:05:00+03:00",
+        "received_at_server": "2026-08-20T00:05:00+03:00",
+        "server_sequence": 1,
+        "server_watermark": "wm-ru001-001"
+      },
+      "result": {
+        "attempt_index": 1,
+        "outcome": "INCORRECT",
+        "correctness": false,
+        "score": 0,
+        "max_score": 1,
+        "response_value": "25",
+        "result_details": {
+          "fixture_role": "composite_entry_error"
+        }
+      },
+      "response_mode": "UNORDERED_SET",
+      "assistance": {
+        "level": "UNASSISTED",
+        "help_event_refs": [],
+        "assistance_provider": null
+      },
+      "evaluator": {
+        "evaluator_type": "OFFICIAL_KEY_OR_RULE",
+        "evaluator_id": "ege-ru-task12-key",
+        "evaluator_version": "2026",
+        "trust_class": "OFFICIAL_SOURCE_HIGH",
+        "uncertainty": 0.0,
+        "review_status": "not_required",
+        "rubric_version": null,
+        "official_truth_status": "OFFICIAL_OR_DETERMINISTIC"
+      },
+      "provenance_refs": [
+        "russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-06.txt",
+        "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+      ],
+      "transfer_context": {
+        "kind": "NOT_APPLICABLE",
+        "origin_event_refs": []
+      },
+      "retention_context": {
+        "kind": "NONE",
+        "delay_seconds": null,
+        "scheduled_by_policy_version": null
+      },
+      "error_observations": [
+        {
+          "observation_type": "UNKNOWN_OR_INSUFFICIENT_PRECISION",
+          "semantic_id": null,
+          "candidate_ref": null,
+          "precision": "UNKNOWN",
+          "confidence": 1.0,
+          "source_locator": "ege-ru-12-2026-12-01",
+          "provenance_refs": [
+            "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+            "russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-06.txt"
+          ]
+        }
+      ],
+      "subject_extension": {
+        "subject_payload_schema_version": "ru-slice-001-subject-payload-v0.1",
+        "subject_payload": {
+          "slice_id": "RU-SLICE-001",
+          "fixture_role": "composite_entry_error",
+          "item_id": "ege-ru-12-2026-12-01",
+          "goal_context": "present-tense participle suffix selection"
+        }
+      },
+      "created_at": "2026-08-20T00:05:00+03:00"
+    },
+    {
+      "event_id": "ru001.ev.preq.diag.success",
+      "schema_version": "0.1.0",
+      "event_kind": "PERFORMANCE_OBSERVATION",
+      "learner_profile_id": "learner-fixture-ru001",
+      "identity_refs": {
+        "anonymous_identity_ref": "anon:ru-slice-001"
+      },
+      "subject_id": "russian",
+      "semantic_targets": [
+        {
+          "semantic_id": "school-verb-personal-ending-conjugation-base",
+          "target_role": "PRIMARY",
+          "mapping_resolution": "EXACT",
+          "mapping_confidence": 1.0,
+          "mapping_review_status": "source_verified"
+        }
+      ],
+      "semantic_context": {
+        "semantic_registry_version": "russian-school-185-current",
+        "semantic_mapping_version": "0.1.0-draft",
+        "mapping_artifact_refs": [
+          "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+          "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+        ]
+      },
+      "source": {
+        "object_type": "ru_slice_item",
+        "object_id": "RU1-CONJ-DIAG-01",
+        "content_version": "0.1.0",
+        "item_version": "0.1.0"
+      },
+      "product": {
+        "source_type": "diagnostic",
+        "product_id": "eksamio-ru-slice-001",
+        "route": "prerequisite_diagnostic"
+      },
+      "session_id": "session-ru-slice-001",
+      "timestamps": {
+        "occurred_at_client": "2026-08-20T00:06:00+03:00",
+        "received_at_server": "2026-08-20T00:06:00+03:00",
+        "server_sequence": 2,
+        "server_watermark": "wm-ru001-002"
+      },
+      "result": {
+        "attempt_index": 1,
+        "outcome": "CORRECT",
+        "correctness": true,
+        "score": 1,
+        "max_score": 1,
+        "response_value": "ю",
+        "result_details": {
+          "fixture_role": "prerequisite_diagnostic_success"
+        }
+      },
+      "response_mode": "TYPED_TEXT",
+      "assistance": {
+        "level": "UNASSISTED",
+        "help_event_refs": [],
+        "assistance_provider": null
+      },
+      "evaluator": {
+        "evaluator_type": "DETERMINISTIC_VALIDATOR",
+        "evaluator_id": "ru-slice-001-key",
+        "evaluator_version": "0.1.0",
+        "trust_class": "DETERMINISTIC_HIGH",
+        "uncertainty": 0.0,
+        "review_status": "not_required",
+        "rubric_version": null,
+        "official_truth_status": "OFFICIAL_OR_DETERMINISTIC"
+      },
+      "provenance_refs": [
+        "RU-SLICE-001-ITEM-BANK-v0.1.json",
+        "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+      ],
+      "transfer_context": {
+        "kind": "NOT_APPLICABLE",
+        "origin_event_refs": []
+      },
+      "retention_context": {
+        "kind": "NONE",
+        "delay_seconds": null,
+        "scheduled_by_policy_version": null
+      },
+      "error_observations": [],
+      "subject_extension": {
+        "subject_payload_schema_version": "ru-slice-001-subject-payload-v0.1",
+        "subject_payload": {
+          "slice_id": "RU-SLICE-001",
+          "fixture_role": "prerequisite_diagnostic_success",
+          "item_id": "RU1-CONJ-DIAG-01",
+          "goal_context": "present-tense participle suffix selection"
+        }
+      },
+      "created_at": "2026-08-20T00:06:00+03:00"
+    },
+    {
+      "event_id": "ru001.ev.preq.diag.failure",
+      "schema_version": "0.1.0",
+      "event_kind": "PERFORMANCE_OBSERVATION",
+      "learner_profile_id": "learner-fixture-ru001",
+      "identity_refs": {
+        "anonymous_identity_ref": "anon:ru-slice-001"
+      },
+      "subject_id": "russian",
+      "semantic_targets": [
+        {
+          "semantic_id": "school-verb-personal-ending-conjugation-base",
+          "target_role": "PRIMARY",
+          "mapping_resolution": "EXACT",
+          "mapping_confidence": 1.0,
+          "mapping_review_status": "source_verified"
+        }
+      ],
+      "semantic_context": {
+        "semantic_registry_version": "russian-school-185-current",
+        "semantic_mapping_version": "0.1.0-draft",
+        "mapping_artifact_refs": [
+          "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+          "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+        ]
+      },
+      "source": {
+        "object_type": "ru_slice_item",
+        "object_id": "RU1-CONJ-DIAG-02",
+        "content_version": "0.1.0",
+        "item_version": "0.1.0"
+      },
+      "product": {
+        "source_type": "diagnostic",
+        "product_id": "eksamio-ru-slice-001",
+        "route": "prerequisite_diagnostic"
+      },
+      "session_id": "session-ru-slice-001",
+      "timestamps": {
+        "occurred_at_client": "2026-08-20T00:07:00+03:00",
+        "received_at_server": "2026-08-20T00:07:00+03:00",
+        "server_sequence": 3,
+        "server_watermark": "wm-ru001-003"
+      },
+      "result": {
+        "attempt_index": 1,
+        "outcome": "INCORRECT",
+        "correctness": false,
+        "score": 0,
+        "max_score": 1,
+        "response_value": "е",
+        "result_details": {
+          "fixture_role": "prerequisite_diagnostic_failure"
+        }
+      },
+      "response_mode": "TYPED_TEXT",
+      "assistance": {
+        "level": "UNASSISTED",
+        "help_event_refs": [],
+        "assistance_provider": null
+      },
+      "evaluator": {
+        "evaluator_type": "DETERMINISTIC_VALIDATOR",
+        "evaluator_id": "ru-slice-001-key",
+        "evaluator_version": "0.1.0",
+        "trust_class": "DETERMINISTIC_HIGH",
+        "uncertainty": 0.0,
+        "review_status": "not_required",
+        "rubric_version": null,
+        "official_truth_status": "OFFICIAL_OR_DETERMINISTIC"
+      },
+      "provenance_refs": [
+        "RU-SLICE-001-ITEM-BANK-v0.1.json",
+        "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+      ],
+      "transfer_context": {
+        "kind": "NOT_APPLICABLE",
+        "origin_event_refs": []
+      },
+      "retention_context": {
+        "kind": "NONE",
+        "delay_seconds": null,
+        "scheduled_by_policy_version": null
+      },
+      "error_observations": [
+        {
+          "observation_type": "EXACT_RULE_ERROR",
+          "semantic_id": "school-verb-personal-ending-conjugation-base",
+          "candidate_ref": null,
+          "precision": "EXACT",
+          "confidence": 1.0,
+          "source_locator": "RU1-CONJ-DIAG-02",
+          "provenance_refs": [
+            "RU-SLICE-001-ITEM-BANK-v0.1.json"
+          ]
+        }
+      ],
+      "subject_extension": {
+        "subject_payload_schema_version": "ru-slice-001-subject-payload-v0.1",
+        "subject_payload": {
+          "slice_id": "RU-SLICE-001",
+          "fixture_role": "prerequisite_diagnostic_failure",
+          "item_id": "RU1-CONJ-DIAG-02",
+          "goal_context": "present-tense participle suffix selection"
+        }
+      },
+      "created_at": "2026-08-20T00:07:00+03:00"
+    },
+    {
+      "event_id": "ru001.ev.target.diag.success",
+      "schema_version": "0.1.0",
+      "event_kind": "PERFORMANCE_OBSERVATION",
+      "learner_profile_id": "learner-fixture-ru001",
+      "identity_refs": {
+        "anonymous_identity_ref": "anon:ru-slice-001"
+      },
+      "subject_id": "russian",
+      "semantic_targets": [
+        {
+          "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "target_role": "PRIMARY",
+          "mapping_resolution": "EXACT",
+          "mapping_confidence": 1.0,
+          "mapping_review_status": "source_verified"
+        }
+      ],
+      "semantic_context": {
+        "semantic_registry_version": "russian-school-185-current",
+        "semantic_mapping_version": "0.1.0-draft",
+        "mapping_artifact_refs": [
+          "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+          "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+        ]
+      },
+      "source": {
+        "object_type": "ru_slice_item",
+        "object_id": "RU1-PART-TARGET-01",
+        "content_version": "0.1.0",
+        "item_version": "0.1.0"
+      },
+      "product": {
+        "source_type": "diagnostic",
+        "product_id": "eksamio-ru-slice-001",
+        "route": "target_diagnostic"
+      },
+      "session_id": "session-ru-slice-001",
+      "timestamps": {
+        "occurred_at_client": "2026-08-20T00:08:00+03:00",
+        "received_at_server": "2026-08-20T00:08:00+03:00",
+        "server_sequence": 4,
+        "server_watermark": "wm-ru001-004"
+      },
+      "result": {
+        "attempt_index": 1,
+        "outcome": "CORRECT",
+        "correctness": true,
+        "score": 1,
+        "max_score": 1,
+        "response_value": "я",
+        "result_details": {
+          "fixture_role": "target_diagnostic_success"
+        }
+      },
+      "response_mode": "TYPED_TEXT",
+      "assistance": {
+        "level": "UNASSISTED",
+        "help_event_refs": [],
+        "assistance_provider": null
+      },
+      "evaluator": {
+        "evaluator_type": "DETERMINISTIC_VALIDATOR",
+        "evaluator_id": "ru-slice-001-key",
+        "evaluator_version": "0.1.0",
+        "trust_class": "DETERMINISTIC_HIGH",
+        "uncertainty": 0.0,
+        "review_status": "not_required",
+        "rubric_version": null,
+        "official_truth_status": "OFFICIAL_OR_DETERMINISTIC"
+      },
+      "provenance_refs": [
+        "RU-SLICE-001-ITEM-BANK-v0.1.json",
+        "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+      ],
+      "transfer_context": {
+        "kind": "NOT_APPLICABLE",
+        "origin_event_refs": []
+      },
+      "retention_context": {
+        "kind": "NONE",
+        "delay_seconds": null,
+        "scheduled_by_policy_version": null
+      },
+      "error_observations": [],
+      "subject_extension": {
+        "subject_payload_schema_version": "ru-slice-001-subject-payload-v0.1",
+        "subject_payload": {
+          "slice_id": "RU-SLICE-001",
+          "fixture_role": "target_diagnostic_success",
+          "item_id": "RU1-PART-TARGET-01",
+          "goal_context": "present-tense participle suffix selection"
+        }
+      },
+      "created_at": "2026-08-20T00:08:00+03:00"
+    },
+    {
+      "event_id": "ru001.ev.target.diag.failure",
+      "schema_version": "0.1.0",
+      "event_kind": "PERFORMANCE_OBSERVATION",
+      "learner_profile_id": "learner-fixture-ru001",
+      "identity_refs": {
+        "anonymous_identity_ref": "anon:ru-slice-001"
+      },
+      "subject_id": "russian",
+      "semantic_targets": [
+        {
+          "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "target_role": "PRIMARY",
+          "mapping_resolution": "EXACT",
+          "mapping_confidence": 1.0,
+          "mapping_review_status": "source_verified"
+        }
+      ],
+      "semantic_context": {
+        "semantic_registry_version": "russian-school-185-current",
+        "semantic_mapping_version": "0.1.0-draft",
+        "mapping_artifact_refs": [
+          "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+          "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+        ]
+      },
+      "source": {
+        "object_type": "ru_slice_item",
+        "object_id": "RU1-PART-TARGET-02",
+        "content_version": "0.1.0",
+        "item_version": "0.1.0"
+      },
+      "product": {
+        "source_type": "diagnostic",
+        "product_id": "eksamio-ru-slice-001",
+        "route": "target_diagnostic"
+      },
+      "session_id": "session-ru-slice-001",
+      "timestamps": {
+        "occurred_at_client": "2026-08-20T00:09:00+03:00",
+        "received_at_server": "2026-08-20T00:09:00+03:00",
+        "server_sequence": 5,
+        "server_watermark": "wm-ru001-005"
+      },
+      "result": {
+        "attempt_index": 1,
+        "outcome": "INCORRECT",
+        "correctness": false,
+        "score": 0,
+        "max_score": 1,
+        "response_value": "и",
+        "result_details": {
+          "fixture_role": "target_diagnostic_failure"
+        }
+      },
+      "response_mode": "TYPED_TEXT",
+      "assistance": {
+        "level": "UNASSISTED",
+        "help_event_refs": [],
+        "assistance_provider": null
+      },
+      "evaluator": {
+        "evaluator_type": "DETERMINISTIC_VALIDATOR",
+        "evaluator_id": "ru-slice-001-key",
+        "evaluator_version": "0.1.0",
+        "trust_class": "DETERMINISTIC_HIGH",
+        "uncertainty": 0.0,
+        "review_status": "not_required",
+        "rubric_version": null,
+        "official_truth_status": "OFFICIAL_OR_DETERMINISTIC"
+      },
+      "provenance_refs": [
+        "RU-SLICE-001-ITEM-BANK-v0.1.json",
+        "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+      ],
+      "transfer_context": {
+        "kind": "NOT_APPLICABLE",
+        "origin_event_refs": []
+      },
+      "retention_context": {
+        "kind": "NONE",
+        "delay_seconds": null,
+        "scheduled_by_policy_version": null
+      },
+      "error_observations": [
+        {
+          "observation_type": "EXACT_RULE_ERROR",
+          "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "candidate_ref": null,
+          "precision": "EXACT",
+          "confidence": 1.0,
+          "source_locator": "RU1-PART-TARGET-02",
+          "provenance_refs": [
+            "RU-SLICE-001-ITEM-BANK-v0.1.json"
+          ]
+        }
+      ],
+      "subject_extension": {
+        "subject_payload_schema_version": "ru-slice-001-subject-payload-v0.1",
+        "subject_payload": {
+          "slice_id": "RU-SLICE-001",
+          "fixture_role": "target_diagnostic_failure",
+          "item_id": "RU1-PART-TARGET-02",
+          "goal_context": "present-tense participle suffix selection"
+        }
+      },
+      "created_at": "2026-08-20T00:09:00+03:00"
+    },
+    {
+      "event_id": "ru001.ev.target.assisted.success",
+      "schema_version": "0.1.0",
+      "event_kind": "PERFORMANCE_OBSERVATION",
+      "learner_profile_id": "learner-fixture-ru001",
+      "identity_refs": {
+        "anonymous_identity_ref": "anon:ru-slice-001"
+      },
+      "subject_id": "russian",
+      "semantic_targets": [
+        {
+          "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "target_role": "PRIMARY",
+          "mapping_resolution": "EXACT",
+          "mapping_confidence": 1.0,
+          "mapping_review_status": "source_verified"
+        }
+      ],
+      "semantic_context": {
+        "semantic_registry_version": "russian-school-185-current",
+        "semantic_mapping_version": "0.1.0-draft",
+        "mapping_artifact_refs": [
+          "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+          "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+        ]
+      },
+      "source": {
+        "object_type": "ru_slice_item",
+        "object_id": "RU1-PART-TARGET-03",
+        "content_version": "0.1.0",
+        "item_version": "0.1.0"
+      },
+      "product": {
+        "source_type": "course_module",
+        "product_id": "eksamio-ru-slice-001",
+        "route": "guided_target_practice"
+      },
+      "session_id": "session-ru-slice-001",
+      "timestamps": {
+        "occurred_at_client": "2026-08-20T00:10:00+03:00",
+        "received_at_server": "2026-08-20T00:10:00+03:00",
+        "server_sequence": 6,
+        "server_watermark": "wm-ru001-006"
+      },
+      "result": {
+        "attempt_index": 1,
+        "outcome": "CORRECT",
+        "correctness": true,
+        "score": 1,
+        "max_score": 1,
+        "response_value": "я",
+        "result_details": {
+          "fixture_role": "assisted_learning_success_not_mastery"
+        }
+      },
+      "response_mode": "TYPED_TEXT",
+      "assistance": {
+        "level": "RULE_EXPLANATION",
+        "help_event_refs": [],
+        "assistance_provider": null
+      },
+      "evaluator": {
+        "evaluator_type": "DETERMINISTIC_VALIDATOR",
+        "evaluator_id": "ru-slice-001-key",
+        "evaluator_version": "0.1.0",
+        "trust_class": "DETERMINISTIC_HIGH",
+        "uncertainty": 0.0,
+        "review_status": "not_required",
+        "rubric_version": null,
+        "official_truth_status": "OFFICIAL_OR_DETERMINISTIC"
+      },
+      "provenance_refs": [
+        "RU-SLICE-001-ITEM-BANK-v0.1.json",
+        "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+      ],
+      "transfer_context": {
+        "kind": "NOT_APPLICABLE",
+        "origin_event_refs": []
+      },
+      "retention_context": {
+        "kind": "NONE",
+        "delay_seconds": null,
+        "scheduled_by_policy_version": null
+      },
+      "error_observations": [],
+      "subject_extension": {
+        "subject_payload_schema_version": "ru-slice-001-subject-payload-v0.1",
+        "subject_payload": {
+          "slice_id": "RU-SLICE-001",
+          "fixture_role": "assisted_learning_success_not_mastery",
+          "item_id": "RU1-PART-TARGET-03",
+          "goal_context": "present-tense participle suffix selection"
+        }
+      },
+      "created_at": "2026-08-20T00:10:00+03:00"
+    },
+    {
+      "event_id": "ru001.ev.preq.reverify.success",
+      "schema_version": "0.1.0",
+      "event_kind": "PERFORMANCE_OBSERVATION",
+      "learner_profile_id": "learner-fixture-ru001",
+      "identity_refs": {
+        "anonymous_identity_ref": "anon:ru-slice-001"
+      },
+      "subject_id": "russian",
+      "semantic_targets": [
+        {
+          "semantic_id": "school-verb-personal-ending-conjugation-base",
+          "target_role": "PRIMARY",
+          "mapping_resolution": "EXACT",
+          "mapping_confidence": 1.0,
+          "mapping_review_status": "source_verified"
+        }
+      ],
+      "semantic_context": {
+        "semantic_registry_version": "russian-school-185-current",
+        "semantic_mapping_version": "0.1.0-draft",
+        "mapping_artifact_refs": [
+          "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+          "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+        ]
+      },
+      "source": {
+        "object_type": "ru_slice_item",
+        "object_id": "RU1-VERIFY-CONJ-01",
+        "content_version": "0.1.0",
+        "item_version": "0.1.0"
+      },
+      "product": {
+        "source_type": "diagnostic",
+        "product_id": "eksamio-ru-slice-001",
+        "route": "independent_verification"
+      },
+      "session_id": "session-ru-slice-001",
+      "timestamps": {
+        "occurred_at_client": "2026-08-20T00:11:00+03:00",
+        "received_at_server": "2026-08-20T00:11:00+03:00",
+        "server_sequence": 7,
+        "server_watermark": "wm-ru001-007"
+      },
+      "result": {
+        "attempt_index": 1,
+        "outcome": "CORRECT",
+        "correctness": true,
+        "score": 1,
+        "max_score": 1,
+        "response_value": "а",
+        "result_details": {
+          "fixture_role": "prerequisite_independent_reverification_success"
+        }
+      },
+      "response_mode": "TYPED_TEXT",
+      "assistance": {
+        "level": "UNASSISTED",
+        "help_event_refs": [],
+        "assistance_provider": null
+      },
+      "evaluator": {
+        "evaluator_type": "DETERMINISTIC_VALIDATOR",
+        "evaluator_id": "ru-slice-001-key",
+        "evaluator_version": "0.1.0",
+        "trust_class": "DETERMINISTIC_HIGH",
+        "uncertainty": 0.0,
+        "review_status": "not_required",
+        "rubric_version": null,
+        "official_truth_status": "OFFICIAL_OR_DETERMINISTIC"
+      },
+      "provenance_refs": [
+        "RU-SLICE-001-ITEM-BANK-v0.1.json",
+        "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+      ],
+      "transfer_context": {
+        "kind": "SAME_SESSION_VERIFICATION",
+        "origin_event_refs": [
+          "ru001.ev.preq.diag.failure"
+        ]
+      },
+      "retention_context": {
+        "kind": "SAME_SESSION",
+        "delay_seconds": 0,
+        "scheduled_by_policy_version": null
+      },
+      "error_observations": [],
+      "subject_extension": {
+        "subject_payload_schema_version": "ru-slice-001-subject-payload-v0.1",
+        "subject_payload": {
+          "slice_id": "RU-SLICE-001",
+          "fixture_role": "prerequisite_independent_reverification_success",
+          "item_id": "RU1-VERIFY-CONJ-01",
+          "goal_context": "present-tense participle suffix selection"
+        }
+      },
+      "created_at": "2026-08-20T00:11:00+03:00"
+    },
+    {
+      "event_id": "ru001.ev.target.verify.success",
+      "schema_version": "0.1.0",
+      "event_kind": "PERFORMANCE_OBSERVATION",
+      "learner_profile_id": "learner-fixture-ru001",
+      "identity_refs": {
+        "anonymous_identity_ref": "anon:ru-slice-001"
+      },
+      "subject_id": "russian",
+      "semantic_targets": [
+        {
+          "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "target_role": "PRIMARY",
+          "mapping_resolution": "EXACT",
+          "mapping_confidence": 1.0,
+          "mapping_review_status": "source_verified"
+        }
+      ],
+      "semantic_context": {
+        "semantic_registry_version": "russian-school-185-current",
+        "semantic_mapping_version": "0.1.0-draft",
+        "mapping_artifact_refs": [
+          "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+          "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+        ]
+      },
+      "source": {
+        "object_type": "ru_slice_item",
+        "object_id": "RU1-VERIFY-PART-01",
+        "content_version": "0.1.0",
+        "item_version": "0.1.0"
+      },
+      "product": {
+        "source_type": "diagnostic",
+        "product_id": "eksamio-ru-slice-001",
+        "route": "independent_verification"
+      },
+      "session_id": "session-ru-slice-001",
+      "timestamps": {
+        "occurred_at_client": "2026-08-20T00:12:00+03:00",
+        "received_at_server": "2026-08-20T00:12:00+03:00",
+        "server_sequence": 8,
+        "server_watermark": "wm-ru001-008"
+      },
+      "result": {
+        "attempt_index": 1,
+        "outcome": "CORRECT",
+        "correctness": true,
+        "score": 1,
+        "max_score": 1,
+        "response_value": "ю",
+        "result_details": {
+          "fixture_role": "target_independent_verification_success"
+        }
+      },
+      "response_mode": "TYPED_TEXT",
+      "assistance": {
+        "level": "UNASSISTED",
+        "help_event_refs": [],
+        "assistance_provider": null
+      },
+      "evaluator": {
+        "evaluator_type": "DETERMINISTIC_VALIDATOR",
+        "evaluator_id": "ru-slice-001-key",
+        "evaluator_version": "0.1.0",
+        "trust_class": "DETERMINISTIC_HIGH",
+        "uncertainty": 0.0,
+        "review_status": "not_required",
+        "rubric_version": null,
+        "official_truth_status": "OFFICIAL_OR_DETERMINISTIC"
+      },
+      "provenance_refs": [
+        "RU-SLICE-001-ITEM-BANK-v0.1.json",
+        "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+      ],
+      "transfer_context": {
+        "kind": "SAME_SESSION_VERIFICATION",
+        "origin_event_refs": [
+          "ru001.ev.target.assisted.success"
+        ]
+      },
+      "retention_context": {
+        "kind": "SAME_SESSION",
+        "delay_seconds": 0,
+        "scheduled_by_policy_version": null
+      },
+      "error_observations": [],
+      "subject_extension": {
+        "subject_payload_schema_version": "ru-slice-001-subject-payload-v0.1",
+        "subject_payload": {
+          "slice_id": "RU-SLICE-001",
+          "fixture_role": "target_independent_verification_success",
+          "item_id": "RU1-VERIFY-PART-01",
+          "goal_context": "present-tense participle suffix selection"
+        }
+      },
+      "created_at": "2026-08-20T00:12:00+03:00"
+    },
+    {
+      "event_id": "ru001.ev.target.verify.failure",
+      "schema_version": "0.1.0",
+      "event_kind": "PERFORMANCE_OBSERVATION",
+      "learner_profile_id": "learner-fixture-ru001",
+      "identity_refs": {
+        "anonymous_identity_ref": "anon:ru-slice-001"
+      },
+      "subject_id": "russian",
+      "semantic_targets": [
+        {
+          "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "target_role": "PRIMARY",
+          "mapping_resolution": "EXACT",
+          "mapping_confidence": 1.0,
+          "mapping_review_status": "source_verified"
+        }
+      ],
+      "semantic_context": {
+        "semantic_registry_version": "russian-school-185-current",
+        "semantic_mapping_version": "0.1.0-draft",
+        "mapping_artifact_refs": [
+          "../../274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json",
+          "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+        ]
+      },
+      "source": {
+        "object_type": "ru_slice_item",
+        "object_id": "RU1-VERIFY-PART-02",
+        "content_version": "0.1.0",
+        "item_version": "0.1.0"
+      },
+      "product": {
+        "source_type": "diagnostic",
+        "product_id": "eksamio-ru-slice-001",
+        "route": "independent_verification"
+      },
+      "session_id": "session-ru-slice-001",
+      "timestamps": {
+        "occurred_at_client": "2026-08-20T00:13:00+03:00",
+        "received_at_server": "2026-08-20T00:13:00+03:00",
+        "server_sequence": 9,
+        "server_watermark": "wm-ru001-009"
+      },
+      "result": {
+        "attempt_index": 1,
+        "outcome": "INCORRECT",
+        "correctness": false,
+        "score": 0,
+        "max_score": 1,
+        "response_value": "е",
+        "result_details": {
+          "fixture_role": "target_independent_verification_failure"
+        }
+      },
+      "response_mode": "TYPED_TEXT",
+      "assistance": {
+        "level": "UNASSISTED",
+        "help_event_refs": [],
+        "assistance_provider": null
+      },
+      "evaluator": {
+        "evaluator_type": "DETERMINISTIC_VALIDATOR",
+        "evaluator_id": "ru-slice-001-key",
+        "evaluator_version": "0.1.0",
+        "trust_class": "DETERMINISTIC_HIGH",
+        "uncertainty": 0.0,
+        "review_status": "not_required",
+        "rubric_version": null,
+        "official_truth_status": "OFFICIAL_OR_DETERMINISTIC"
+      },
+      "provenance_refs": [
+        "RU-SLICE-001-ITEM-BANK-v0.1.json",
+        "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json"
+      ],
+      "transfer_context": {
+        "kind": "SAME_SESSION_VERIFICATION",
+        "origin_event_refs": [
+          "ru001.ev.target.assisted.success"
+        ]
+      },
+      "retention_context": {
+        "kind": "SAME_SESSION",
+        "delay_seconds": 0,
+        "scheduled_by_policy_version": null
+      },
+      "error_observations": [
+        {
+          "observation_type": "EXACT_RULE_ERROR",
+          "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+          "candidate_ref": null,
+          "precision": "EXACT",
+          "confidence": 1.0,
+          "source_locator": "RU1-VERIFY-PART-02",
+          "provenance_refs": [
+            "RU-SLICE-001-ITEM-BANK-v0.1.json"
+          ]
+        }
+      ],
+      "subject_extension": {
+        "subject_payload_schema_version": "ru-slice-001-subject-payload-v0.1",
+        "subject_payload": {
+          "slice_id": "RU-SLICE-001",
+          "fixture_role": "target_independent_verification_failure",
+          "item_id": "RU1-VERIFY-PART-02",
+          "goal_context": "present-tense participle suffix selection"
+        }
+      },
+      "created_at": "2026-08-20T00:13:00+03:00"
+    }
+  ],
+  "fixture_invariants": [
+    "Composite EGE-12 error maps both semantic targets as COMPOSITE and does not claim an exact rule error.",
+    "Exact diagnostic and verification fixtures contain one EXACT primary semantic target.",
+    "Assisted success is recorded as RULE_EXPLANATION and is not labeled mastery.",
+    "Independent verification uses fresh verification items and SAME_SESSION_VERIFICATION context."
+  ]
+}

@@ -1,0 +1,35 @@
+name: PROFILE Math 2022 — final orchestrator v11
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'PROFILE-MATH-2022-PR-FINAL-VERIFY-TRIGGER.txt'
+permissions:
+  contents: read
+jobs:
+  final-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow selenium
+      - uses: browser-actions/setup-chrome@v1
+      - uses: nanasess/setup-chromedriver@v2
+      - name: Run strict PROFILE 2022 final orchestrator
+        run: python .profile2022-ci/final_v11.py
+      - name: Upload authoritative Tilda package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ege-matematika-profil-demoversiya-2022-v1.0-SOURCE-LOCKED
+          path: |
+            ege-matematika-profil-demoversiya-2022-v1.0-SOURCE-LOCKED.zip
+            PROFILE-MATH-2022-FINAL-SHA256.txt
+            PROFILE-MATH-2022-LATEST-BUILD-RUN.txt
+          retention-days: 30

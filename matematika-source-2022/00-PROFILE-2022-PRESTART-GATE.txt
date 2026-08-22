@@ -1,6 +1,7 @@
 EKSAMIO — ЕГЭ ПРОФИЛЬНАЯ МАТЕМАТИКА 2022
 PRESTART GATE BEFORE ANY BUILD
 Дата: 2026-08-19
+Обновлено после финальной приёмки PROFILE 2023: 2026-08-20
 
 STATUS: READY_FOR_FIPI_SOURCE_PRELOCK
 READY_FOR_EXAM_LOCK: NO — exact PDF SHA/page-map prelock must pass first
@@ -36,7 +37,9 @@ MANDATORY DOCUMENTS
 - /MATEMATIKA-EGE-DEMOVERSII-REGLAMENT-SOZDANIYA-I-PROVERKI.md
 - /demo-production-standard/PROFILE-MATH-PRODUCTION-STANDARD.md
 - /demo-production-standard/PROFILE-MATH-YEAR-PREBUILD-LOCK-TEMPLATE.md
+- /demo-production-standard/PROFILE-MATH-HISTORICAL-UI-PARITY-CONTRACT.md
 - /eksamio-learning-engine/130-EXTENDED-ANSWER-INPUT-UX-STANDARD.txt
+- /matematika-source-2023/PROFILE-2023-ACCEPTED-FROZEN.txt — accepted regression lessons only; NEVER content authority for 2022
 
 FIRST REQUIRED ACTION
 Run exact FIPI 2022 PROFILE source prelock and persist SHA-256/bytes, physical/printed page map, full text, word coordinates and year/profile validation.
@@ -47,5 +50,41 @@ Build current-year EXAM-LOCK, ANSWER-LOCK, INPUT-CONTRACT, EXTENDED-CRITERIA-MAP
 BUILD ADMISSION
 READY_FOR_VERIFIED_BUILD = YES only after all prebuild locks pass without TODO/ASSUMED/UNVERIFIED.
 
+2025/2026 TECHNICAL UI PARITY — MANDATORY
+Accepted PROFILE 2025/2026 are the shared technical/UI behavior reference only after the exact 2022 source lock. PROFILE 2022 must preserve the same learner-visible variant metadata unless exact 2022 source rules require otherwise:
+- source label: `ФИПИ 2022 · официальный пример <variant_number>`;
+- learner does not select the variant;
+- assigned official variant persists after reload;
+- official example number remains visible;
+- extended-results heading preserves the assigned official example number.
+Generic `ФИПИ 2022 · официальный материал демоверсии` is forbidden when the system assigned a concrete official example.
+
+ALL-VARIANT IMAGE RELIABILITY GATE — MANDATORY
+The PROFILE 2023 manual acceptance exposed a Tilda timing/race defect: valid exact-source images could render intermittently. PROFILE 2022 must prevent this structurally, not patch it after publication.
+
+For EVERY task and EVERY official variant that contains an image/condition asset:
+1. Force that exact variant in the real DOM; random coverage is insufficient.
+2. Verify exact source-locked asset identity before rendering.
+3. Verify visible image on first render.
+4. Navigate away and back; verify again.
+5. Reload; verify assigned variant and image again.
+6. Trigger repeated rerenders/state updates; verify image remains visible.
+7. Test all variants of multi-variant tasks individually.
+8. Confirm runtime does not depend on a race between T123 asset-part blocks and renderer startup.
+9. Confirm every referenced asset is fully assembled/available before use, or renderer has a deterministic readiness mechanism.
+10. Fail release on any missing/intermittent image even if the same asset renders successfully in another run.
+
+TILDA-STREAM REGRESSION
+Before freeze, browser acceptance must use the exact final ordered T123 stream, not a simplified preview only. The audit must include a delayed-execution/rerender scenario sufficient to expose asset initialization races. A plain static HTML success is not enough evidence for asset reliability.
+
+UI PARITY REGRESSION
+For each official variant forced during the browser audit, assert the visible source tag exactly contains the current year and assigned official-example number. This assertion must survive reload.
+
 RELEASE ADMISSION
-READY_FOR_TILDA only after full source/formula/visual/UI-crop/DOM/state/responsive/zoom/T123 gates, frozen ZIP, clean extraction full regression and independent final audit.
+READY_FOR_TILDA only after full source/formula/visual/UI-crop/DOM/state/responsive/zoom/T123 gates, frozen ZIP, clean extraction full regression, independent final audit, UI-parity gate and all-variant image-reliability gate.
+
+LIVE_GO ADMISSION
+LIVE_GO remains NO until actual Tilda publication, production smoke on the public URL and manual student acceptance. Production smoke must revisit every task class that previously showed timing-sensitive asset behavior; no package-only test can substitute for this.
+
+PEIS BOUNDARY
+Historical year/task/example identity, content version and provenance are product/evidence metadata. Do not create a parallel mathematics learner mastery/state system. Do not invent final mathematics semantic IDs merely for the 2022 demo. Semantic mapping remains a future/shared PEIS adapter concern.

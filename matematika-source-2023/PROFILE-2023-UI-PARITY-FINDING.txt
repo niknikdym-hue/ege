@@ -1,0 +1,18 @@
+PROFILE 2023 UI PARITY FINDING
+
+STATUS: DEFECT CONFIRMED
+REFERENCE: accepted PROFILE Mathematics 2025/2026 UI behavior
+
+Defect:
+The 2023 builder intentionally replaced the inherited source tag `ФИПИ 2026 · официальный пример ${v.variant}` with the generic `ФИПИ 2023 · официальный материал демоверсии` and removed the official example number from the extended-results heading.
+
+This was an implementation deviation, not a FIPI year-specific requirement, and manual acceptance missed it.
+
+Required behavior:
+`ФИПИ 2023 · официальный пример <variant_number>`
+Extended results: `Задание <task_number> · официальный пример <variant_number>`
+
+Additional live defect reported by manual acceptance:
+Task 3 source image does not render correctly in Tilda although exact-source assets are valid. Final Tilda repair must be resilient to custom-block execution order and must use the exact locked FIPI 2023 task-3 asset bytes.
+
+No historical content, answers, scoring, criteria, task order, PEIS state/mastery or semantic IDs may be changed by this UI repair.

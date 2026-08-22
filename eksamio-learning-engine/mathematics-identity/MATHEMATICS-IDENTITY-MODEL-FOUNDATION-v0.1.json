@@ -1,0 +1,61 @@
+{
+  "artifact_id": "MATHEMATICS-IDENTITY-MODEL-FOUNDATION-v0.1",
+  "version": "0.1",
+  "date": "2026-08-20",
+  "status": "IDENTITY_MODEL_FOUNDATION / PRE-ADMISSION",
+  "mode": "ADD_ONLY / ARCHITECTURE_MATERIALIZATION / NO_PRODUCTION_INTEGRATION",
+  "baseline": {"ref": "main", "sha": "65640fc33fdd7c7e91899e47792254ebb1b2c645", "tree_sha": "646d56e1bcafba3d13a1542894a878924dce318b"},
+  "subject_id": "mathematics",
+  "identity_model_id": "mathematics-identity-v0.1",
+  "canonical_semantic_identity_count": 0,
+  "routes": {
+    "profile": {"route_id": "ege-mathematics-profile", "identity_model_id": "mathematics-identity-v0.1", "role": "EXAM_ROUTE_OVERLAY"},
+    "base": {"route_id": "ege-mathematics-base", "identity_model_id": "mathematics-identity-v0.1", "role": "EXAM_ROUTE_OVERLAY"}
+  },
+  "entity_model": {
+    "school_knowledge_skill": "Source-grounded curriculum knowledge or skill; not automatically a semantic identity.",
+    "semantic_identity": "Stable route-independent mathematical capability/concept identity admitted after source review.",
+    "prerequisite_relation": "Source-reviewed directional dependency between admitted semantic identities.",
+    "exam_route_mapping": "Mapping from a semantic identity to profile/base route and year-specific exam structure.",
+    "exam_task": "Exam-position/taxonomy entity; never sufficient alone to define semantic identity.",
+    "concrete_item": "Specific demo/trainer/verification problem instance.",
+    "learner_evidence": "Observed learner event expressed through the shared PEIS EvidenceEvent contract."
+  },
+  "identity_admission_rules": [
+    "Identity must be grounded in verified subject source material with provenance.",
+    "Identity must express route-independent mathematical meaning; profile/base task numbers are mappings, not IDs.",
+    "Identity admission requires explicit human/reviewer acceptance; AI suggestion alone cannot establish canonical truth.",
+    "Identity must have stable ID, label, scope, source provenance and route mapping evidence.",
+    "Different exam tasks may map to one identity; one exam task may require multiple identities.",
+    "Prerequisite edges require separate source review and provenance; course order and exam order are insufficient.",
+    "No canonical semantic identity is admitted by this foundation artifact."
+  ],
+  "shared_peis_reuse": {
+    "evidence_event_schema": "277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1",
+    "learner_state_schema": "278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1",
+    "mastery_contract": "282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1",
+    "readiness_contract": "283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1",
+    "retention_contract": "284-EKSAMIO-RETENTION-SCHEDULE-STATE-CONTRACT-v0.1",
+    "nba_contract": "285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1",
+    "reference_kernel": "peis-reference-kernel/"
+  },
+  "parallel_engine_guards": {
+    "math_learner_state_engine_created": false,
+    "math_mastery_engine_created": false,
+    "math_readiness_engine_created": false,
+    "math_retention_engine_created": false,
+    "math_nba_engine_created": false
+  },
+  "next_gate": {
+    "name": "MATHEMATICS-SEMANTIC-SLICE-001",
+    "requirements": [
+      "Resolve or explicitly isolate the BASE 2025 source gap so it cannot contaminate claims of historical completeness.",
+      "Select a narrow deterministic mathematical skill supported by verified source evidence.",
+      "Admit route-independent semantic identity or identities only after source review.",
+      "Admit at least one prerequisite relation only when source provenance supports it.",
+      "Map the identity to applicable base/profile route evidence without making task number the identity.",
+      "Create independent verification item(s) and shared EvidenceEvents.",
+      "Run the slice through the existing subject-neutral PEIS reference kernel and record measured state delta."
+    ]
+  }
+}

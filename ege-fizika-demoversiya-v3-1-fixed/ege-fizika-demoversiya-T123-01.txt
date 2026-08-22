@@ -116,6 +116,11 @@
 #ege-physics-demo-2026 .ephys-start-panel,#ege-physics-demo-2026 .ephys-result>.ep-panel{padding:18px 16px}
 #ege-physics-demo-2026 .ephys-modal__head{align-items:flex-start}
 }
+
+#ege-physics-demo-2026 .ephys-source-crop{display:block!important;width:auto!important;height:auto!important;max-height:none!important;max-width:min(100%,var(--ephys-source-max,520px))!important;margin:0 auto;object-fit:contain}
+#ege-physics-demo-2026 .ephys-source-pair{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;justify-content:center}
+#ege-physics-demo-2026 .ephys-modal__body .ephys-source-crop{max-width:100%!important}
+@media(max-width:560px){#ege-physics-demo-2026 .ephys-source-pair{flex-direction:column;align-items:center}}
 </style>
 <div class="ep-page"><div class="ep-stack">
 <div class="ephys-breadcrumbs"><a href="https://eksamio.ru/">Главная</a><span>→</span><a href="https://eksamio.ru/ege/">ЕГЭ</a><span>→</span><a href="https://eksamio.ru/ege/demoversii/">Демоверсии</a><span>→</span><span>Демоверсия по физике</span></div>
@@ -150,7 +155,7 @@
 </div><p id="ephys-result-note" class="ephys-mini"></p></section>
 <section class="ep-panel"><h2 class="ep-section-title">Самооценка заданий 21–26</h2><p>Выберите баллы после сравнения своего решения с возможным решением и критериями ФИПИ. Пока оценены не все задания, общий результат не считается окончательным.</p><div class="ephys-self-grid" id="ephys-self-grid"></div></section>
 <section class="ep-panel"><h2 class="ep-section-title">Проверка заданий</h2><div class="ephys-review-list" id="ephys-review"></div></section>
-<section class="ep-panel ephys-source-credit"><h2 class="ep-section-title">Источники и статус страницы</h2><p>Задания, ответы, возможные решения и критерии перенесены из официальной демоверсии ФИПИ ЕГЭ 2026 по физике; структура сверена со спецификацией и кодификатором. Простые графики и схемы адаптированы в векторный формат после визуальной сверки. Фотографические задания 19 и 26 (вариант 3) показаны как адаптированные реконструкции, а не как оригинальные фотографии.</p><p>Эксамио не является официальным сайтом ФИПИ, Рособрнадзора или организаторов ЕГЭ.</p><div class="ephys-actions"><button class="ep-button ep-button--secondary" id="ephys-reset-result" type="button">Начать новую попытку</button></div></section>
+<section class="ep-panel ephys-source-credit"><h2 class="ep-section-title">Источники и статус страницы</h2><p>Задания, ответы, возможные решения и критерии перенесены из официальной демоверсии ФИПИ ЕГЭ 2026 по физике; структура сверена со спецификацией и кодификатором. Все рисунки, графики, схемы и фотографии, воспроизводящие материалы КИМ и официальных решений, показаны как точные crop-фрагменты из зафиксированного официального PDF ФИПИ; реконструированные изображения в экзаменационном контенте не используются.</p><p>Эксамио не является официальным сайтом ФИПИ, Рособрнадзора или организаторов ЕГЭ.</p><div class="ephys-actions"><button class="ep-button ep-button--secondary" id="ephys-reset-result" type="button">Начать новую попытку</button></div></section>
 </div>
 </div></div>
 <div class="ephys-modal" id="ephys-modal" aria-hidden="true"><div class="ephys-modal__card" role="dialog" aria-modal="true" aria-labelledby="ephys-modal-title" tabindex="-1"><div class="ephys-modal__head"><h2 class="ep-section-title" id="ephys-modal-title">Справочные данные</h2><button class="ep-button ep-button--small ep-button--secondary" id="ephys-modal-close" type="button">Закрыть</button></div><div class="ephys-modal__body" id="ephys-modal-body"></div></div></div>

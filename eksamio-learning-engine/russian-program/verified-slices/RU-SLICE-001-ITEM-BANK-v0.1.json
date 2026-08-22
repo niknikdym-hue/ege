@@ -1,0 +1,428 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-20",
+  "status": "FIXTURE_READY_NO_PRODUCTION_INTEGRATION",
+  "slice_id": "RU-SLICE-001",
+  "subject": "russian",
+  "semantic_scope": {
+    "prerequisite_semantic_id": "school-verb-personal-ending-conjugation-base",
+    "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+    "conditional_goal_context": "present-tense participle suffix selection"
+  },
+  "authority_refs": [
+    "RU-SLICE-001-TASK12-CONJUGATION-PARTICIPLE-SOURCE-GATE-v0.1.json",
+    "../../253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+    "../../36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json"
+  ],
+  "content_invariants": [
+    "Every item has exactly one canonical semantic_id.",
+    "All responses are deterministically checkable without AI.",
+    "Verification items are fresh original contexts and have worked_example_exposure=false.",
+    "Target items are restricted to present-tense participle suffix selection.",
+    "Past-passive participle suffix branches are outside this item bank."
+  ],
+  "items": [
+    {
+      "item_id": "RU1-CONJ-DIAG-01",
+      "delivery_role": "PREREQUISITE_DIAGNOSTIC",
+      "semantic_id": "school-verb-personal-ending-conjugation-base",
+      "goal_context": null,
+      "prompt": "Вставьте одну букву: «На рассвете лодки медленно приближа..тся к пристани».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "ю"
+        ]
+      },
+      "deterministic_key": "ю",
+      "rationale": "«Приближаться» — I спряжение; в 3-м лице множественного числа пишется -ют.",
+      "rule_basis": "I conjugation personal ending",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O26_verb_personal_endings / Rosenthal §44",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[verb_conjugation_endings]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "regular",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": false,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-CONJ-DIAG-02",
+      "delivery_role": "PREREQUISITE_DIAGNOSTIC",
+      "semantic_id": "school-verb-personal-ending-conjugation-base",
+      "goal_context": null,
+      "prompt": "Вставьте одну букву: «Ты терпеливо держ..шь нить натянутой».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "и"
+        ]
+      },
+      "deterministic_key": "и",
+      "rationale": "«Держать» относится ко II спряжению; форма 2-го лица единственного числа — «держишь».",
+      "rule_basis": "II conjugation reviewed exception",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O26_verb_personal_endings / Rosenthal §44",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[verb_conjugation_endings]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "reviewed_exception",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": false,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-CONJ-DIAG-03",
+      "delivery_role": "PREREQUISITE_DIAGNOSTIC",
+      "semantic_id": "school-verb-personal-ending-conjugation-base",
+      "goal_context": null,
+      "prompt": "Вставьте одну букву: «Мы стел..м покрывало на траве».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "е"
+        ]
+      },
+      "deterministic_key": "е",
+      "rationale": "«Стелить» — исключение I спряжения; форма 1-го лица множественного числа — «стелем».",
+      "rule_basis": "I conjugation reviewed exception",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O26_verb_personal_endings / Rosenthal §44",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[verb_conjugation_endings]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "reviewed_exception",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": false,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-CONJ-DIAG-04",
+      "delivery_role": "PREREQUISITE_DIAGNOSTIC",
+      "semantic_id": "school-verb-personal-ending-conjugation-base",
+      "goal_context": null,
+      "prompt": "Вставьте одну букву: «Пастухи гон..т табун к реке».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "я"
+        ]
+      },
+      "deterministic_key": "я",
+      "rationale": "«Гнать» относится ко II спряжению; форма 3-го лица множественного числа — «гонят».",
+      "rule_basis": "II conjugation reviewed exception",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O26_verb_personal_endings / Rosenthal §44",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[verb_conjugation_endings]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "reviewed_exception",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": false,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-PART-TARGET-01",
+      "delivery_role": "TARGET_DIAGNOSTIC_PRACTICE",
+      "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+      "goal_context": "present-tense participle suffix selection",
+      "prompt": "Вставьте одну букву в суффикс причастия: «кле..щий афишу волонтёр».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "я"
+        ]
+      },
+      "deterministic_key": "я",
+      "rationale": "«Клеить» — II спряжение; действительное причастие настоящего времени — «клеящий».",
+      "rule_basis": "present active participle from II conjugation",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O29_participle_vowels / Rosenthal §47 / Lopatin §§58–60, 76",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[participle_suffixes]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "regular",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": false,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-PART-TARGET-02",
+      "delivery_role": "TARGET_DIAGNOSTIC_PRACTICE",
+      "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+      "goal_context": "present-tense participle suffix selection",
+      "prompt": "Вставьте одну букву в суффикс причастия: «колебл..мый ветром флажок».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "е"
+        ]
+      },
+      "deterministic_key": "е",
+      "rationale": "«Колебать» — I спряжение; страдательное причастие настоящего времени — «колеблемый».",
+      "rule_basis": "present passive participle from I conjugation",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O29_participle_vowels / Rosenthal §47 / Lopatin §§58–60, 76",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[participle_suffixes]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "regular",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": false,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-PART-TARGET-03",
+      "delivery_role": "TARGET_DIAGNOSTIC_PRACTICE",
+      "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+      "goal_context": "present-tense participle suffix selection",
+      "prompt": "Вставьте одну букву в суффикс причастия: «завис..щий от погоды маршрут».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "я"
+        ]
+      },
+      "deterministic_key": "я",
+      "rationale": "«Зависеть» относится ко II спряжению; действительное причастие настоящего времени — «зависящий».",
+      "rule_basis": "present active participle from II conjugation reviewed exception",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O29_participle_vowels / Rosenthal §47 / Lopatin §§58–60, 76",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[participle_suffixes]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "reviewed_exception",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": false,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-PART-TARGET-04",
+      "delivery_role": "TARGET_DIAGNOSTIC_PRACTICE",
+      "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+      "goal_context": "present-tense participle suffix selection",
+      "prompt": "Вставьте одну букву в суффикс причастия: «омыва..мый морем берег».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "е"
+        ]
+      },
+      "deterministic_key": "е",
+      "rationale": "«Омывать» — I спряжение; страдательное причастие настоящего времени — «омываемый».",
+      "rule_basis": "present passive participle from I conjugation",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O29_participle_vowels / Rosenthal §47 / Lopatin §§58–60, 76",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[participle_suffixes]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "regular",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": false,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-VERIFY-CONJ-01",
+      "delivery_role": "INDEPENDENT_VERIFICATION",
+      "semantic_id": "school-verb-personal-ending-conjugation-base",
+      "goal_context": null,
+      "prompt": "Вставьте одну букву: «Слыш..т ли они сигнал издалека?»",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "а"
+        ]
+      },
+      "deterministic_key": "а",
+      "rationale": "«Слышать» относится ко II спряжению; в 3-м лице множественного числа — «слышат».",
+      "rule_basis": "II conjugation reviewed exception",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O26_verb_personal_endings / Rosenthal §44",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[verb_conjugation_endings]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "reviewed_exception",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": true,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-VERIFY-CONJ-02",
+      "delivery_role": "INDEPENDENT_VERIFICATION",
+      "semantic_id": "school-verb-personal-ending-conjugation-base",
+      "goal_context": null,
+      "prompt": "Вставьте одну букву: «Полевой ветер ве..т с востока».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "е"
+        ]
+      },
+      "deterministic_key": "е",
+      "rationale": "«Веять» относится к I спряжению; форма 3-го лица единственного числа — «веет».",
+      "rule_basis": "I conjugation personal ending",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O26_verb_personal_endings / Rosenthal §44",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[verb_conjugation_endings]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "regular",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": true,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-VERIFY-PART-01",
+      "delivery_role": "INDEPENDENT_VERIFICATION",
+      "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+      "goal_context": "present-tense participle suffix selection",
+      "prompt": "Вставьте одну букву в суффикс причастия: «та..щий на солнце снег».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "ю"
+        ]
+      },
+      "deterministic_key": "ю",
+      "rationale": "«Таять» — I спряжение; действительное причастие настоящего времени — «тающий».",
+      "rule_basis": "present active participle from I conjugation",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O29_participle_vowels / Rosenthal §47 / Lopatin §§58–60, 76",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[participle_suffixes]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "regular",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": true,
+      "worked_example_exposure": false
+    },
+    {
+      "item_id": "RU1-VERIFY-PART-02",
+      "delivery_role": "INDEPENDENT_VERIFICATION",
+      "semantic_id": "school-participle-vowel-suffix-conjugation-base",
+      "goal_context": "present-tense participle suffix selection",
+      "prompt": "Вставьте одну букву в суффикс причастия: «стро..мый инженерами мост».",
+      "response_contract": {
+        "mode": "TYPED_SINGLE_CYRILLIC_LETTER",
+        "normalization": "trim + lowercase + Cyrillic ё preserved",
+        "accepted_answers": [
+          "и"
+        ]
+      },
+      "deterministic_key": "и",
+      "rationale": "«Строить» — II спряжение; страдательное причастие настоящего времени — «строимый».",
+      "rule_basis": "present passive participle from II conjugation",
+      "source_provenance": [
+        {
+          "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+          "source_locator": "O29_participle_vowels / Rosenthal §47 / Lopatin §§58–60, 76",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        },
+        {
+          "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+          "source_locator": "units[participle_suffixes]",
+          "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+        }
+      ],
+      "boundary_type": "regular",
+      "content_origin": "ORIGINAL_EKSAMIO_NOT_COPIED_FROM_FIPI_OR_CURRENT_TRAINER",
+      "independent_verification_safe": true,
+      "worked_example_exposure": false
+    }
+  ],
+  "counts": {
+    "prerequisite_diagnostic": 4,
+    "target_diagnostic_practice": 4,
+    "independent_verification": 4,
+    "total": 12
+  }
+}

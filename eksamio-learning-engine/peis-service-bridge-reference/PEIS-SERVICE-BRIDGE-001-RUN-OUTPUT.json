@@ -1,0 +1,60 @@
+{
+  "task": "PEIS-SERVICE-BRIDGE-001",
+  "result": "PASS",
+  "validated_at": "2026-08-20T15:20:24Z",
+  "github_actions": {
+    "workflow_run_id": 32385502262,
+    "job_id": 96478876744,
+    "conclusion": "success"
+  },
+  "service_core": {
+    "subject_neutral": true,
+    "registered_adapter": "russian-ege-trainer-task12-v0.1",
+    "reference_http": true,
+    "production_deployment_claimed": false,
+    "public_authentication_claimed": false,
+    "reference_sqlite_thread_affinity_preserved": true
+  },
+  "trust_boundary": {
+    "client_truth_fields_rejected": [
+      "correctness",
+      "evaluator",
+      "mastery",
+      "nba",
+      "score",
+      "semantic_targets",
+      "server_sequence",
+      "server_watermark"
+    ],
+    "server_owned_score": true,
+    "server_owned_semantic_mapping": true,
+    "server_owned_evaluator_trust": true,
+    "server_owned_position": true,
+    "email_identity_rejected": true
+  },
+  "first_response": {
+    "event_status": "ACCEPTED",
+    "server_sequence": 1,
+    "initial_nba": "DIAGNOSE_TARGET",
+    "mapping_resolution": "COMPOSITE"
+  },
+  "retry": {
+    "identical": "ALREADY_APPLIED",
+    "changed_payload": "INTEGRITY_CONFLICT",
+    "raw_event_count": 1
+  },
+  "http_transport": {
+    "fresh_event": "ACCEPTED",
+    "identical_retry": "ALREADY_APPLIED",
+    "missing_identity": "REJECTED",
+    "email_identity": "REJECTED"
+  },
+  "shared_invariants": {
+    "shared_persistence_reused": true,
+    "shared_kernel_reused": true,
+    "subject_specific_learner_engine_created": false,
+    "trainer_runtime_mutated": false,
+    "trainer_local_storage_mutated": false
+  },
+  "implementation_status": "REFERENCE_HTTP_SERVICE_VALIDATED_NOT_DEPLOYED_PRODUCTION"
+}

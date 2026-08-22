@@ -1,0 +1,45 @@
+EKSAMIO LEARNING ENGINE
+PEIS REFERENCE KERNEL VALIDATION
+DATE: 2026-08-20
+STATUS: PASS
+MODE: EXECUTABLE_REFERENCE / DETERMINISTIC / NO_PRODUCTION_INTEGRATION
+
+SHARED CONTRACT SCHEMA VALIDATION
+- input EvidenceEvent schema 277: PASS
+- learner state schema 278: PASS
+- mastery output contract 282: PASS
+- readiness state contract 283: PASS
+- retention state contract 284: PASS
+- NBA contract 285: PASS
+
+REFERENCE POLICY BOUNDARIES
+- inference_version: peis-reference-kernel-v0.1-ordinal-no-coefficients
+- numeric mastery estimate invented: NO
+- final mastery coefficients invented: NO
+- universal forgetting curve/constants invented: NO
+- same-session verification counted as delayed retention: NO
+- composite evidence converted to exact failure: NO
+- subject-specific learner/mastery/readiness/NBA engine: NO
+- AI required: NO
+
+FIRST VERIFIED SUBJECT CLOSED-LOOP FIXTURES
+- RU001-GOLDEN-A-PREREQUISITE-GAP: PASS / steps=6
+- RU001-GOLDEN-B-PREREQUISITE-ALREADY-MET: PASS / steps=5
+- RU001-GUARDRAIL-TARGET-VERIFY-FAILURE: PASS / steps=2
+
+CROSS-SUBJECT STRUCTURAL SMOKE
+- mathematics: PASS / STRUCTURAL_ONLY_NO_SUBJECT_TRUTH
+- mathematics NBA: VERIFY_UNCERTAIN_STATE
+- kernel source contains hard-coded Russian identity/rule branch: NO
+
+MEASURED OUTCOME
+- verified subject scenarios persist before/after qualitative state deltas at independent verification steps: PASS
+- recommendation decision is recomputed from accepted evidence at every step: PASS
+
+PRODUCTION SAFETY
+- production learner data touched: NO
+- Tilda/runtime/localStorage/scoring touched: NO
+- shared contracts mutated: NO
+
+VERDICT
+PASS. The first subject-neutral executable PEIS reference kernel now consumes shared EvidenceEvent data, recomputes learner state/mastery/readiness/retention, and emits schema-valid explainable NBA recommendations. The verified Russian slice executes both prerequisite-gap and prerequisite-met paths, and the same kernel passes a mathematics structural-only smoke. This is a reference implementation, not the production Platform API or persistent Student Learning Twin.

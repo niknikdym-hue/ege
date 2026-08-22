@@ -1,0 +1,96 @@
+EKSAMIO — PEIS-PERSISTENCE-001 VALIDATION
+DATE: 2026-08-20
+RESULT: PASS
+MODE: SUBJECT-NEUTRAL REFERENCE PERSISTENCE / NO LIVE PRODUCTION DEPLOYMENT
+
+BASELINE
+main@534ff07242e2304b75bf64e6bbac1fcadda22bc2
+
+VALIDATED IMPLEMENTATION HEAD
+237d4a75a9a89a2f8a14217a48808546d1aee5f1
+
+GITHUB ACTIONS
+Run: 32376949923
+Job: 96450555184
+Workflow: PEIS Persistence 001 Validation
+Conclusion: SUCCESS
+
+REUSE GATE
+PASS — repository audit found no approved shared persistence/event-store/state-service implementation to reuse.
+PASS — existing peis-reference-kernel remains inference owner.
+PASS — legacy Russian rex-state is not reused as a shared learner engine.
+
+RAW EVIDENCE / IDEMPOTENCY
+PASS — EvidenceEvent 277 payloads are stored append-only.
+PASS — exact event_id replay returns ALREADY_APPLIED and creates no extra event row.
+PASS — same event_id with changed payload is rejected as integrity conflict.
+PASS — idempotency_key suppresses regenerated transport identity while preserving logical event semantics.
+PASS — changed educational payload under an existing idempotency_key is rejected.
+PASS — SQLite trigger blocks in-place evidence mutation.
+
+DETERMINISTIC REPLAY
+PASS — Math events inserted out of order replay in server evidence order.
+PASS — Russian forward and reverse insertion produce identical PEIS snapshots.
+PASS — learner/subject/semantic query boundary returns the expected evidence history.
+
+MATHEMATICS CROSS-SUBJECT CHECK
+PASS — persisted MATH-SLICE-001 reproduces mastery DEVELOPING.
+PASS — persisted MATH-SLICE-001 reproduces NBA RETENTION_REVIEW.
+PASS — materialized snapshot exactly equals deterministic kernel recompute.
+PASS — mastery estimate remains null.
+PASS — retention_due_at remains null.
+
+RUSSIAN CROSS-SUBJECT CHECK
+PASS — canonical RU-SLICE-001 prerequisite edge is honored.
+PASS — prerequisite assessment = MET.
+PASS — target readiness = READY_TO_LEARN_OR_PRACTICE.
+PASS — target mastery = DEVELOPING.
+PASS — target NBA = RETENTION_REVIEW.
+PASS — assisted and same-session verification provenance survives persistence.
+
+IDENTITY CONTINUITY
+PASS — anonymous identity ref resolves to the existing learner history.
+PASS — later user identity can be linked to the same learner_profile_id.
+PASS — historical anonymous EvidenceEvent JSON is not rewritten when user identity is linked.
+PASS — email is not introduced as canonical academic-history identity.
+
+RECOMMENDATION OUTCOME LOGGING
+PASS — NBA proposal validates/persists append-only against contract 285.
+PASS — duplicate NBA proposal is idempotent.
+PASS — outcome_event validates/persists append-only against 285/$defs/outcome_event.
+PASS — duplicate outcome_event is idempotent.
+PASS — same outcome_event_id cannot be rewritten with a different outcome.
+PASS — outcome preserves evidence_event_refs for measured educational follow-up.
+
+TELEMETRY
+PASS — assistance.level is preserved.
+PASS — SAME_SESSION_VERIFICATION event refs are preserved.
+PASS — transfer/retention context remains raw observational telemetry.
+PASS — product source type, evaluator trust and provenance refs are queryable.
+PASS — telemetry does not directly write canonical mastery.
+
+CORRECTION BOUNDARY
+PASS — append-only CORRECTION is accepted only against an existing same learner/subject event.
+PASS — both original and correction remain in raw durable history.
+PASS — effective replay suppresses the superseded event without deleting it.
+PASS — production correction-chain revival semantics are deliberately not frozen by this reference task.
+
+MATERIALIZED STATE BOUNDARY
+PASS — materialized snapshots are mutable/rebuildable cache only.
+PASS — raw accepted evidence remains replay truth.
+PASS — mastery/readiness/retention/NBA logic is delegated to the existing shared kernel.
+PASS — no Russian-specific or Mathematics-specific learner-state table/engine is created.
+
+PRODUCTION SAFETY
+PASS — this is NOT a live production database or deployed service.
+PASS — no Tilda/demo runtime/scoring/localStorage change.
+PASS — no authentication implementation.
+PASS — no legacy production migration.
+PASS — no shared PEIS contract mutation.
+PASS — no AI Tutor or voice work.
+
+ARCHITECTURAL RESULT
+PEIS-PERSISTENCE-001 closes the first persistence/replay proof: the same append-only shared evidence store can deterministically rebuild learner semantic state for Russian and Mathematics while preserving idempotency, provenance, identity continuity and recommendation-outcome telemetry.
+
+NEXT GATE AFTER MERGE
+The next central gate should move from local persistence proof toward the first production integration boundary: define how a real product sensor writes accepted EvidenceEvent into the shared store/service boundary and how a learner-facing product reads the recomputed PEIS state/NBA without embedding a second state engine. Choose the first integration surface by lowest-risk, highest-information path; do not start AI Tutor or voice before that gate is closed.

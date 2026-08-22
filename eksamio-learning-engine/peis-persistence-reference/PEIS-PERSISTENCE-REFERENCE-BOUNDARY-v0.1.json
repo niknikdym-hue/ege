@@ -1,0 +1,65 @@
+{
+  "artifact_id": "PEIS-PERSISTENCE-REFERENCE-BOUNDARY-v0.1",
+  "version": "0.1",
+  "date": "2026-08-20",
+  "status": "REFERENCE_IMPLEMENTATION_VALIDATED_NOT_LIVE_PRODUCTION",
+  "task_ref": "../tasks/PEIS-PERSISTENCE-001.md",
+  "implementation_ref": "peis_persistence.py",
+  "inference_owner": "../peis-reference-kernel/peis_reference_kernel.py",
+  "shared_contract_refs": [
+    "../277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json",
+    "../278-EKSAMIO-LEARNER-STATE-MATERIALIZED-VIEW-SCHEMA-v0.1.json",
+    "../279-EKSAMIO-LEGACY-LEARNER-STATE-ADAPTER-MAP-v0.1.json",
+    "../282-EKSAMIO-MASTERY-INFERENCE-CONTRACT-v0.1.json",
+    "../283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json",
+    "../284-EKSAMIO-RETENTION-SCHEDULE-STATE-CONTRACT-v0.1.json",
+    "../285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json"
+  ],
+  "storage_roles": {
+    "evidence_events": "append-only canonical raw EvidenceEvent payloads; source of replay truth",
+    "event_semantic_targets": "append-only denormalized semantic query index derived atomically from accepted evidence",
+    "identity_links": "identity-to-academic-history links; later authenticated identity does not rewrite historical evidence",
+    "recommendations": "append-only NBA proposals; never canonical mastery truth",
+    "recommendation_outcomes": "append-only evaluation of recommendation delivery/outcome linked to evidence refs when available",
+    "materialized_snapshots": "mutable rebuildable cache/view only; never raw evidence truth"
+  },
+  "idempotency": {
+    "event_id": "same payload returns ALREADY_APPLIED; different payload is integrity conflict",
+    "idempotency_key": "logical replay ignores regenerated event_id/server receive identity but rejects changed educational payload",
+    "legacy_alignment": "preserves adapter-279 principle that replay appends no duplicate evidence/state delta"
+  },
+  "effective_history": {
+    "performance_and_legacy_events": "eligible as evidence after schema acceptance",
+    "correction": "append-only correction suppresses referenced superseded event in effective replay while preserving both raw records",
+    "retraction": "append-only retraction suppresses referenced event in effective replay; raw history remains durable",
+    "correction_chain_policy": "reference-conservative; no implicit revival semantics are frozen for production by this task"
+  },
+  "deterministic_recompute": {
+    "ordering": "server_sequence when present, then received_at_server/created_at, then event_id",
+    "mastery_readiness_retention_nba": "delegated to existing subject-neutral PEIS reference kernel",
+    "subject_specific_inference": false
+  },
+  "telemetry": {
+    "preserved_dimensions": [
+      "assistance.level",
+      "transfer_context.kind",
+      "retention_context.kind",
+      "same-session verification refs",
+      "exact error observation refs",
+      "product source_type",
+      "evaluator trust_class",
+      "provenance_refs"
+    ],
+    "policy": "raw telemetry summary is observational and does not directly mutate mastery"
+  },
+  "validated_subjects": ["russian", "mathematics"],
+  "production_boundary": {
+    "live_database": false,
+    "deployed_service": false,
+    "authentication": false,
+    "legacy_production_migration": false,
+    "tilda_or_demo_runtime_change": false,
+    "scoring_change": false,
+    "local_storage_change": false
+  }
+}

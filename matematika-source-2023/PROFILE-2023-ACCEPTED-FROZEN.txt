@@ -1,0 +1,56 @@
+EKSAMIO — ЕГЭ ПРОФИЛЬНАЯ МАТЕМАТИКА 2023
+FINAL USER ACCEPTANCE / PACKAGE FREEZE
+Дата фиксации: 2026-08-20
+
+STATUS: ACCEPTED_BY_USER
+PACKAGE_FROZEN: YES
+READY_FOR_TILDA: YES
+MANUAL_STUDENT_ACCEPTANCE: PASS
+LIVE_GO: production status is separate from this package freeze
+
+FINAL ACCEPTED PACKAGE
+ege-matematika-profil-demoversiya-2023-v1.0.4-TASK2-ALWAYS-LOAD.zip
+SHA256: d6a9264a0844cb9df97fb26e033b44d686ef935f45cf631c2d2a5fe99568d2c1
+BYTES: 2207348
+
+USER ACCEPTANCE
+User confirmed: “все ок. Фиксируй 2023 год.”
+
+FINAL RESOLVED DEFECTS
+1. Learner-facing official-example number restored to the accepted PROFILE 2025/2026 UI contract:
+   `ФИПИ 2023 · официальный пример <variant_number>`.
+2. Task 3 Tilda image rendering stabilized using exact source-locked FIPI 2023 assets.
+3. Task 2 rendering stabilized for ALL three official variants:
+   condition-2-1.webp
+   condition-2-2.webp
+   condition-2-3.webp
+   The final runtime repair preloads and reasserts exact locked asset bytes after Tilda/DOM mutations.
+
+FREEZE RULE
+Do not rebuild or alter accepted PROFILE 2023 unless:
+- a concrete production defect is reproduced;
+- an exact FIPI discrepancy is proven;
+- a compatibility requirement forces a change;
+- or the user explicitly instructs a change.
+
+2022 NON-REGRESSION HANDOFF
+The 2023 acceptance closes two classes of defects that MUST be prevented before PROFILE 2022 can become READY_FOR_TILDA:
+
+A. UI PARITY GATE
+- 2025/2026 are the accepted shared UI/interaction reference after exact-year source lock.
+- Every assigned variant must visibly show its official-example number.
+- Generic `официальный материал демоверсии` is forbidden where an assigned official example exists.
+- Extended results must preserve the assigned official-example number.
+
+B. TILDA ASSET RELIABILITY GATE
+- Every official variant that contains a source image must be forced individually in a real browser.
+- Each variant image must render on first open, after navigation away/back, after reload, and after repeated DOM rerenders.
+- Multi-variant tasks must be tested variant-by-variant; testing only one randomly assigned variant is insufficient.
+- Image reliability must not depend on T123 execution timing/order races.
+- Exact source-locked bytes remain the only allowed official visual content.
+
+C. RELEASE GATE
+PROFILE 2022 cannot be marked READY_FOR_TILDA until the exact-year source/content gates AND the UI-parity/all-variant asset-reliability gates pass.
+
+PEIS BOUNDARY
+This freeze does not create or modify a mathematics-specific mastery/state system. Historical task IDs/year/content/provenance remain product metadata; semantic mapping belongs to the shared Eksamio PEIS adapter/registry architecture.

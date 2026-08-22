@@ -1,0 +1,60 @@
+name: PROFILE Math 2022 — bootstrap source-locator hotfix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'PROFILE-MATH-2022-BOOTSTRAP-HOTFIX-TRIGGER.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch task candidate geometry filter and re-encode bootstrap
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .profile2022-bootstrap/prepare.part1.b64 .profile2022-bootstrap/prepare.part2.b64 | base64 -d | gzip -d > /tmp/prepare_profile_2022.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/prepare_profile_2022.py')
+          s=p.read_text(encoding='utf-8')
+          old="if 1<=t<=18:\n                if t in out: raise RuntimeError(f'duplicate task candidate {t}')"
+          new="if 1<=t<=18 and float(c['rect'][0])<45:\n                if t in out: raise RuntimeError(f'duplicate true task-label candidate {t}')"
+          if old not in s:
+              if new in s:
+                  print('bootstrap already patched')
+              else:
+                  raise RuntimeError('expected task_locations target not found')
+          else:
+              s=s.replace(old,new,1)
+              p.write_text(s,encoding='utf-8')
+          compile(s,str(p),'exec')
+          lines=s.splitlines()
+          for i,line in enumerate(lines,1):
+              if 38<=i<=55: print(f'{i:04d}: {line}')
+          PY
+          gzip -c /tmp/prepare_profile_2022.py | base64 -w0 > /tmp/prepare.b64
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('/tmp/prepare.b64').read_text().strip()
+          cut=len(s)//2
+          Path('.profile2022-bootstrap/prepare.part1.b64').write_text(s[:cut]+'\n',encoding='utf-8')
+          Path('.profile2022-bootstrap/prepare.part2.b64').write_text(s[cut:]+'\n',encoding='utf-8')
+          print('encoded chars',len(s),'split',cut,len(s)-cut)
+          PY
+          cat .profile2022-bootstrap/prepare.part1.b64 .profile2022-bootstrap/prepare.part2.b64 | base64 -d | gzip -d > /tmp/verify.py
+          cmp /tmp/prepare_profile_2022.py /tmp/verify.py
+          python -m py_compile /tmp/verify.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .profile2022-bootstrap/prepare.part1.b64 .profile2022-bootstrap/prepare.part2.b64
+          git commit -m 'Fix PROFILE 2022 task-label source geometry filter'
+          git pull --rebase origin main
+          git push origin HEAD:main

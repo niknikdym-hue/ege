@@ -1,0 +1,47 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-20",
+  "status": "SOURCE_VERIFIED_CANONICAL_GRAPH_CANDIDATE_FIXTURE",
+  "slice_id": "RU-SLICE-001",
+  "shared_edge_schema_ref": "../../283-EKSAMIO-PREREQUISITE-READINESS-CONTRACT-v0.1.json#/$defs/edge_schema",
+  "edge_id": "ru-prereq-conjugation-to-present-participle-suffix-v0.1",
+  "edge": {
+    "source_semantic_id": "school-verb-personal-ending-conjugation-base",
+    "target_semantic_id": "school-participle-vowel-suffix-conjugation-base",
+    "relation_type": "REQUIRED",
+    "provenance": [
+      {
+        "source_ref": "eksamio-learning-engine/russkiy-knigi/rozental.doc",
+        "source_locator": "Rosenthal §44: verb conjugation/personal endings; §47: participle suffixes",
+        "assertion_type": "VERIFIED_SUBJECT_SOURCE"
+      },
+      {
+        "source_ref": "253-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-C-O26-O35-v0.1.json",
+        "source_locator": "O26_verb_personal_endings + O29_participle_vowels",
+        "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+      },
+      {
+        "source_ref": "36-RUSSIAN-EXPLANATION-ORTHOGRAPHY-11-12-v0.1.json",
+        "source_locator": "verb_conjugation_endings.algorithm + participle_suffixes.rule/algorithm",
+        "assertion_type": "REVIEWED_CURRICULUM_SOURCE"
+      }
+    ],
+    "graph_version": "prerequisite-graph-v0.1-ru-slice-001-source-verified",
+    "review_status": "SOURCE_VERIFIED",
+    "conditional_scope": {
+      "subject_id": "russian",
+      "goal_context": "present-tense participle suffix selection",
+      "route_context": "any Russian route assessing present-tense participle suffix selection"
+    },
+    "admission_scope": "CANONICAL_GRAPH"
+  },
+  "materialization_boundary": {
+    "contract_283_mutated": false,
+    "embedded_in_283_canonical_edges": false,
+    "purpose": "Fixture/data input for the shared prerequisite graph materializer and reference PEIS runtime.",
+    "must_not_apply_when": [
+      "past-passive participle suffix selection",
+      "any goal context where target choice is driven by infinitive/model rather than present-tense conjugation"
+    ]
+  }
+}

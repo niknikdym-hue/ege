@@ -1,0 +1,107 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-20",
+  "status": "REFERENCE_EXECUTABLE_SERVICE_BOUNDARY_NOT_PUBLIC_PRODUCTION",
+  "task": "PEIS-SERVICE-BRIDGE-001",
+  "service_core": {
+    "subject_neutral": true,
+    "owns_inference": false,
+    "owns_subject_truth": false,
+    "owns_transport_position": true,
+    "persistence_owner": "../peis-persistence-reference/peis_persistence.py",
+    "inference_owner": "../peis-reference-kernel/peis_reference_kernel.py"
+  },
+  "flow": [
+    "browser_safe_product_observation",
+    "server_adapter_registry",
+    "canonical_evidence_event_277",
+    "shared_append_only_persistence",
+    "shared_peis_recompute",
+    "shared_nba_persistence",
+    "read_only_product_directive"
+  ],
+  "reference_http": {
+    "endpoints": [
+      "GET /healthz",
+      "POST /v0/checked-card"
+    ],
+    "network_scope": "LOOPBACK_REFERENCE_CI",
+    "public_authentication": "NOT_IMPLEMENTED",
+    "production_deployment": "NOT_CLAIMED"
+  },
+  "host_identity_contract": {
+    "required": [
+      "learner_profile_id",
+      "identity_refs"
+    ],
+    "allowed_identity_refs": [
+      "anonymous_identity_ref",
+      "user_identity_ref"
+    ],
+    "email_as_academic_identity": "FORBIDDEN",
+    "reference_header_transport": "CI_ONLY_NOT_AUTHENTICATION"
+  },
+  "browser_allowed_checked_card_fields": [
+    "card_id",
+    "session_started_at_ms",
+    "session_mode",
+    "answer",
+    "occurred_at_client",
+    "client_request_id"
+  ],
+  "browser_forbidden_truth_fields": [
+    "score",
+    "max_score",
+    "correctness",
+    "subject_id",
+    "semantic_targets",
+    "semantic_id",
+    "mapping_resolution",
+    "evaluator",
+    "evaluator_type",
+    "trust_class",
+    "mastery",
+    "readiness",
+    "retention",
+    "nba",
+    "reason_codes",
+    "server_sequence",
+    "server_watermark",
+    "received_at_server",
+    "prerequisite_edges"
+  ],
+  "server_owned_fields": [
+    "subject_id",
+    "semantic mapping and precision",
+    "deterministic correctness/score when adapter supports it",
+    "evaluator/trust provenance",
+    "received_at_server",
+    "server_sequence",
+    "server_watermark",
+    "mastery/readiness/retention",
+    "NBA/reason codes"
+  ],
+  "adapter_registry": {
+    "first_adapter": "russian-ege-trainer-task12-v0.1",
+    "adapter_module": "russian_checked_card_adapter.py",
+    "generic_service_must_not_embed_subject_semantics": true
+  },
+  "retry_policy": {
+    "same_stable_observation_same_payload": "IDEMPOTENT_RETURN_EXISTING_POSITION",
+    "same_stable_observation_changed_payload": "INTEGRITY_CONFLICT_NO_REWRITE"
+  },
+  "read_side": {
+    "canonical_state_owner": "shared_peis",
+    "product_mutation_api": "NONE",
+    "directive_fields": [
+      "recommendation_id",
+      "action_type",
+      "semantic_targets",
+      "prerequisite_targets",
+      "reason_codes",
+      "verification_required",
+      "learner_state_watermark",
+      "route"
+    ]
+  }
+}

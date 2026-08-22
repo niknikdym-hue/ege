@@ -1,0 +1,26 @@
+name: PROFILE Math 2022 — build source diagnostic v10
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'PROFILE-MATH-2022-PR-FINAL-VERIFY-TRIGGER.txt'
+permissions:
+  contents: read
+jobs:
+  diagnose-build-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Decode and print persistence bindings
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .profile2022-bootstrap/build.part1.b64 .profile2022-bootstrap/build.part2.b64 | base64 -d | gzip -d > /tmp/build_profile_2022.py
+          echo '===== BUILD LINES 66-104 ====='
+          nl -ba /tmp/build_profile_2022.py | sed -n '66,104p'
+          echo '===== PERSISTENCE MATCHES ====='
+          grep -n -C 8 -E 'oldbind|newbind|mp-short|mp-long|oninput|onchange|answers|function save|localStorage' /tmp/build_profile_2022.py | head -n 360
+          echo '===== BASE ENGINE LOCATION ====='
+          grep -n -C 5 -E 'load_base|load_engine|BASE|engine' /tmp/build_profile_2022.py | head -n 140
