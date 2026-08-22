@@ -298,6 +298,8 @@ Voice requirements:
 - learner can answer orally;
 - tutor can ask learner to explain concept aloud;
 - transcript/event representation available for evidence extraction;
+- learner audio is transient pipeline data only and is never persisted by Eksamio in any form;
+- text transcripts/structured learning events may be retained only under applicable privacy/retention controls and must not contain retained learner audio;
 - important canonical conclusions are derived from grounded Tutor Core context, not from free voice improvisation;
 - voice provider must be replaceable.
 

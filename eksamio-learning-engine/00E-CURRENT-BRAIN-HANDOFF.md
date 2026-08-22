@@ -1,11 +1,13 @@
 # Eksamio — Current Brain Handoff
 
 **Status:** CURRENT OPERATING HANDOFF  
-**Date:** 2026-08-21  
+**Date:** 2026-08-22
 **Repository:** `niknikdym-hue/ege`  
-**Baseline when written:** `e25259f3789ab0c813d5816910803f8b2e4042dc`
+**Baseline when written:** `e9dfffae7275be9de829d1c5a5668e7715d8261f`
 
 > This file is the shortest current entry point for a new ChatGPT/Brain/Codex session. It does not replace the Product Masterplan or subject/source authorities. Always refresh `main` before acting. Where older documents contain stale operational start/read-order instructions, this current handoff plus current `AGENTS.md` supersede those pointers; their substantive architecture/content remains valid unless separately superseded.
+
+Current approved owner-decision addendum: `OWNER-DECISIONS-2026-08-22.md`. Read it for any work involving Pro launch, Tutor channels, product client, Russia accessibility, cloud, providers, audio privacy, identity/auth or payments.
 
 ## 1. Product identity
 
@@ -84,7 +86,21 @@ This means:
 
 Existing Tutor Core provider-neutral routing, fallback and kill-switch rules remain authority for AI integrations. The stronger product invariant here is that **OpenAI itself is optional to Eksamio runtime**.
 
-## 5. Current platform state
+## 5. Owner decisions now in force
+
+- First paid Pro launch requires both text and realtime voice interfaces of one Tutor; text-only and voice-only launch are forbidden.
+- Voice is a P0 launch capability, not a separate Tutor and not permission to bypass the shared PEIS closed loop or production foundations.
+- First Pro client is a separate desktop/mobile-browser web application; Tilda remains public/free-demo and does not own accounts, PEIS, Tutor, payments or canonical learner state.
+- Russia/no-VPN operation is a hard invariant, including realtime voice; the learner browser does not call a foreign AI service directly.
+- Primary production cloud is Yandex Cloud Russia, while canonical state and core logic remain portable/provider-neutral.
+- OpenAI/Google conversational AI and Yandex SpeechKit are candidates, not production-approved providers. Admission and fallback are gate-controlled.
+- Learner audio is never stored in any form; only transient realtime processing is allowed. Text/structured Tutor history may exist under privacy/retention controls.
+- Pro auth is passwordless by verified e-mail or phone; anonymous same-device progress must link safely to a later account without making the browser identity authority.
+- Robokassa + Robocheki SMZ is the first replaceable NPD payment candidate and still requires separate legal/API/webhook/receipt/SBP-card/refund/failure gates.
+
+Full authority and learning-policy details: `OWNER-DECISIONS-2026-08-22.md`.
+
+## 6. Current platform state
 
 Merged/validated reference sequence already reaches:
 
@@ -109,7 +125,7 @@ The current central blocker is:
 
 Before any public PEIS browser traffic, the production deployment/security envelope must be explicitly chosen and validated. Do not treat reference HTTP, SQLite or reference HMAC identity as production infrastructure.
 
-## 6. Current subject lanes
+## 7. Current subject lanes
 
 ### Russian — P0 / active
 
@@ -148,19 +164,18 @@ Do not change 2024 source truth, answers, scoring, criteria, task order or seman
 
 After the narrow 2024 repair, Mathematics work should resume only for a real next dependency: Mathematics Identity Model / PEIS integration / base route / telemetry / new explicitly approved product work.
 
-### Physics — P1 / active quality gate
+### Physics — P1 / accepted 2025 and 2026 demo baselines
 
 Physics is the third subject and may proceed in parallel without slowing P0 work.
 
 Current facts:
 
 - merged PR #49 — Physics 2026 accepted technical reference with official-source visuals and exam tools;
-- open draft PR #48 — Physics 2025 exact source and archive build;
-- PR #48 must not be merged merely because it is mergeable.
+- merged PR #48 — Physics 2025 exact source/archive, bounded fixes and current-main integration accepted.
 
-The active 2025 Physics lane requires concrete quality revalidation before acceptance: verify source truth, year isolation, task/example completeness, browser behavior, regression against the accepted 2026 technical reference where legitimately applicable, and absence of silent reconstruction. Correct concrete defects in the active PR; do not create another broad audit program around it.
+Do not reopen either accepted demo baseline without a new concrete finding. Further Physics work requires a real source/identity/PEIS dependency.
 
-## 7. Parallel-chat operating model
+## 8. Parallel-chat operating model
 
 Parallel chats are allowed and useful, but they are execution lanes, not independent project brains.
 
@@ -168,13 +183,13 @@ Recommended persistent active set on the Pro account:
 
 1. **Eksamio Brain** — architecture, priorities, cross-lane review, shared PEIS, merge decisions.
 2. **Russian** — Russian subject program/content/semantic lane only.
-3. **Physics** — Physics source/demo/identity lane only, currently quality-gated.
+3. **Physics** — only when a bounded Physics source/identity/PEIS dependency is active.
 
 Do **not** keep a permanent Mathematics historical-demo chat active. The known PROFILE 2024 UI defect should be handled by one short-lived bounded task/worker, then that lane closes again.
 
 A subject chat must not independently redesign shared PEIS contracts, learner identity, mastery, readiness, retention, NBA or cross-subject architecture.
 
-## 8. Brain / Codex / Spark execution routing
+## 9. Brain / Codex / Spark execution routing
 
 Use the strongest reasoning only where it changes decisions or quality. Do not spend expensive reasoning on mechanical work.
 
@@ -231,7 +246,7 @@ Choose by **risk + ambiguity + execution weight**, not by prestige of the model:
 
 The routing itself must reduce cost/time without lowering acceptance quality.
 
-## 9. Durable communication with minimal bureaucracy
+## 10. Durable communication with minimal bureaucracy
 
 GitHub is the shared bus. Existing mechanisms are sufficient:
 
@@ -245,7 +260,7 @@ Do not create duplicate reports just to report that another report exists.
 
 A PR + its durable result/validation is normally enough evidence for a subject lane. A separate Brain checkpoint is needed only when project state meaningfully changes: major merge, blocker change, priority change, architecture decision, production gate change, or cross-lane conflict.
 
-## 10. Brain cross-lane review rule
+## 11. Brain cross-lane review rule
 
 The Brain periodically checks parallel work, but **not by rerunning broad audits from zero**.
 
@@ -267,7 +282,7 @@ Review cadence:
 
 If nothing material changed, do not manufacture a checkpoint or repeat an audit.
 
-## 11. Migration to the Pro account
+## 12. Migration to the Pro account
 
 The Pro account should become the primary **development/Brain working account** for Eksamio because stronger reasoning is useful for the project. This does not create any product dependency on the Pro plan.
 
@@ -298,11 +313,15 @@ For the new Pro account the required user actions are intentionally small:
 
 Everything else should be recoverable from GitHub.
 
-## 12. Current next gates
+## 13. Current next gates
 
 Central platform:
 
-`PEIS-DEPLOYMENT-SECURITY-001`
+`PEIS-DEPLOYMENT-SECURITY-001`, now constrained by the Russia/no-VPN, portable Yandex Cloud, provider-admission and learner-audio non-storage owner decisions.
+
+First paid Pro launch:
+
+shared PEIS + production foundations + passwordless identity/payment gates + one continuous Tutor with both text and realtime voice production-ready. Do not launch a single-channel Pro.
 
 Russian:
 
@@ -310,13 +329,13 @@ continue current semantic/program integration from actual current-main/open-PR s
 
 Physics:
 
-quality-review and correct the active 2025 lane before merge; preserve accepted 2026 reference.
+accepted 2025/2026 demo baselines are closed; continue only from a new concrete source/identity/PEIS dependency.
 
 Mathematics:
 
 close the one known PROFILE 2024 UI-parity defect with a bounded repair and regression/freeze; do not reopen the broad 2022–2026 lane. After that, resume Mathematics only for a real PEIS/base/product dependency.
 
-## 13. Anti-chaos rule
+## 14. Anti-chaos rule
 
 The project should become easier to reason about as it grows.
 
