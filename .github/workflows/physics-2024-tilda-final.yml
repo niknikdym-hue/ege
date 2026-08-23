@@ -1,0 +1,46 @@
+name: Physics 2024 final Tilda build
+
+on:
+  push:
+    branches:
+      - chatgpt/physics-2024-tilda-final-20260823
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pymupdf pillow playwright
+          python -m playwright install --with-deps chromium
+      - name: Build source-faithful Tilda archive
+        run: python physics-2024-final-build/build_physics_2024.py
+      - name: Browser and scorer verification
+        run: python physics-2024-final-build/verify_physics_2024.py
+      - name: Show final hashes
+        run: |
+          cat physics-2024-final-build/dist/SHA256.txt
+          cat physics-2024-final-build/dist/VERIFICATION.json
+      - name: Upload final Tilda archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: physics-2024-tilda-final
+          path: |
+            physics-2024-final-build/dist/ege-fizika-demoversiya-2024-v1.0-TILDA-HQ-SOURCE.zip
+            physics-2024-final-build/dist/SHA256.txt
+            physics-2024-final-build/dist/VERIFICATION.json
+          if-no-files-found: error
+          retention-days: 30
