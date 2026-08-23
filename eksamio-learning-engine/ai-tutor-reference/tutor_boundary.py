@@ -48,6 +48,7 @@ class PeisContextProjection:
     projection_version: str
     learning_summary: str
     target_refs: tuple[str, ...]
+    projection_ref: str = "server-projection:unspecified"
 
 
 @dataclass(frozen=True)
@@ -68,6 +69,8 @@ class ServerTutorTurn:
     peis_projection: PeisContextProjection
     history: tuple[TutorHistoryEntry, ...]
     learner_text: str
+    help_state: str = "GUIDED_HELP"
+    continuation_marker: str | None = None
 
 
 @dataclass(frozen=True)

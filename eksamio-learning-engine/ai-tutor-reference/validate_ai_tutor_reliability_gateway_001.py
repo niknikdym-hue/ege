@@ -6,7 +6,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sys
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -28,7 +28,7 @@ def require(value: bool, message: str) -> None:
 
 def episode(turn_id: str = "turn-001") -> EpisodeProjection:
     sample = turn()
-    return EpisodeProjection("episode-001", turn_id, sample.learning_goal, sample.peis_projection.target_refs, sample.verified_subject.source_refs, sample.peis_projection.projection_version, "peis:projection-001", "GUIDED_HELP", sample.policy.verification_required, tuple(entry.text for entry in sample.history), "buffered")
+    return EpisodeProjection("episode-001", turn_id, sample.learning_goal, sample.peis_projection.target_refs, sample.verified_subject.source_refs, sample.peis_projection.projection_version, sample.peis_projection.projection_ref, sample.help_state, sample.policy.verification_required, tuple(f"{entry.role}:{entry.text}" for entry in sample.history), sample.continuation_marker)
 
 
 def gateway(primary_outcomes, secondary_outcomes, config: GatewayConfig = GatewayConfig()):
@@ -69,8 +69,12 @@ def main() -> int:
         require(len(primary.attempts) == 2 and len(secondary.attempts) == 1, f"{name}: bounded retry then secondary fallback")
         require(result.learner_quota_debit_count == 1 and result.direct_canonical_peis_writes == 0, f"{name}: one quota debit and no direct PEIS write")
 
-    runner, primary, secondary, result = scenario("malformed", ["not-a-normalized-response", "still-malformed"], [healthy()])
+    malformed_response = healthy()
+    object.__setattr__(malformed_response, "text", 17)
+    runner, primary, secondary, result = scenario("malformed", [malformed_response, malformed_response], [healthy()])
     require(len(primary.attempts) == 2 and len(secondary.attempts) == 1 and result.status == "TUTOR_ADVISORY", "malformed adapter output is normalized, bounded, then falls back")
+    require(result.accepted_attempt_id == secondary.attempts[0].provider_attempt_id and sum(event.event_type == "logical_turn_accepted" and event.provider_id == "fake-primary" for event in runner.events) == 0, "malformed ProviderResponse never becomes an accepted primary attempt")
+    require(sum(event.event_type == "learner_quota_debit_committed" and event.provider_id == "fake-primary" for event in runner.events) == 0 and result.learner_quota_debit_count == result.evidence_verification_commit_count == 1, "malformed primary creates zero quota/evidence commits before secondary success")
 
     for name, failure, health in [("rate-limit", FailureClass.RATE_LIMIT, HealthState.HEALTHY), ("billing", FailureClass.QUOTA_OR_BILLING_EXHAUSTED, HealthState.BLOCKED_FINOPS), ("credential", FailureClass.CREDENTIAL_OR_ACCOUNT_FAILURE, HealthState.BLOCKED_CREDENTIAL), ("model", FailureClass.MODEL_UNAVAILABLE, HealthState.OPEN_CIRCUIT)]:
         runner, primary, secondary, result = scenario(name, [failed(failure)], [healthy()])
@@ -104,6 +108,21 @@ def main() -> int:
     sample = turn()
     require(secondary_request.learning_goal == sample.learning_goal and secondary_request.target_refs == sample.peis_projection.target_refs and result.tutor_result.verification_required is True, "learning goal, semantic targets, and verification requirement survive failover")
     require("fake-primary" not in json.dumps(asdict(secondary_request), sort_keys=True), "secondary completes without primary provider session identifier")
+
+    binding_runner, binding_primary, binding_secondary = gateway([healthy()], [healthy()])
+    base_episode = episode("binding")
+    for field, invalid in {
+        "learning_goal": "other-goal", "semantic_targets": ("other-target",), "verified_context_refs": ("source:other",),
+        "peis_projection_version": "other-version", "peis_projection_ref": "peis:other", "help_state": "OTHER_HELP",
+        "verification_required": False, "structured_history_summary": ("tutor:other",), "continuation_marker": "other-marker",
+    }.items():
+        try:
+            binding_runner.handle_turn(replace(base_episode, **{field: invalid}), turn())
+        except ValueError as error:
+            require(field in str(error), f"mismatched {field} is rejected before provider routing")
+        else:
+            raise AssertionError(f"mismatched {field} routed a provider")
+    require(not binding_primary.attempts and not binding_secondary.attempts, "all mismatched episode projections are rejected before provider routing")
 
     event_json = json.dumps([asdict(event) for event in result.events], sort_keys=True)
     forbidden = ("secret", "email", "phone", "payment", "audio", "token")

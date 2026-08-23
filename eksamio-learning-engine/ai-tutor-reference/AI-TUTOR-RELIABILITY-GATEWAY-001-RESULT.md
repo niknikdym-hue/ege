@@ -19,6 +19,24 @@ commit ledgers, and normalized metadata-only observability events.
 The provider fixtures are local, scripted, and deterministic. No provider can
 write PEIS; `DIRECT_CANONICAL_PEIS_WRITES=0`.
 
+## Bounded repair: continuity and malformed responses
+
+Before routing, the gateway now binds the episode projection to the
+server-owned Tutor turn: learning goal, semantic targets, verified-context refs,
+PEIS projection version/ref, help state, verification requirement, structured
+history summary, and continuation marker. Any mismatch raises before a provider
+attempt exists.
+
+Every `ProviderResponse`, including an instance with an invalid runtime `text`
+value, is first passed through the existing `TutorOrchestrator`. Only an
+advisory result may commit acceptance/quota/mock verification. Invalid response
+objects normalize to `MALFORMED_PROVIDER_OUTPUT`, follow bounded retry/failover,
+and leave the malformed primary with:
+
+- `MALFORMED_PRIMARY_ACCEPTED_ATTEMPTS=0`
+- `MALFORMED_PRIMARY_QUOTA_DEBITS=0`
+- `MALFORMED_PRIMARY_EVIDENCE_COMMITS=0`
+
 ## Deterministic acceptance evidence
 
 `validate_ai_tutor_reliability_gateway_001.py` covers healthy primary,

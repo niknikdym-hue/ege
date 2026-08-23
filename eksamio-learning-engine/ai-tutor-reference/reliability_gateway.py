@@ -208,11 +208,10 @@ class ReliabilityGateway:
             return False, False, HealthState.OPEN_CIRCUIT
         return failure in {FailureClass.TIMEOUT, FailureClass.NETWORK_FAILURE, FailureClass.PROVIDER_5XX, FailureClass.MALFORMED_PROVIDER_OUTPUT, FailureClass.TOOL_PROTOCOL_FAILURE}, False, None
 
-    def _commit_success(self, logical_key: tuple[str, str], attempt: ProviderAttempt, episode: EpisodeProjection, response: ProviderResponse, turn: ServerTutorTurn) -> ReliableTurnResult:
+    def _commit_success(self, logical_key: tuple[str, str], attempt: ProviderAttempt, episode: EpisodeProjection, tutor_result: TutorTurnResult) -> ReliableTurnResult:
         if logical_key in self.accepted:
             self._event("late_response_discarded", episode, attempt.provider_id)
             return self._result("TUTOR_UNAVAILABLE", None, episode)
-        tutor_result = TutorOrchestrator(_StaticResponseProvider(response)).handle_turn(turn)
         self.accepted[logical_key] = attempt.provider_attempt_id
         self.quota_debits.add(logical_key)
         self.evidence_commits.add(logical_key)  # mock deterministic post-verification commit boundary
@@ -226,8 +225,21 @@ class ReliabilityGateway:
 
     def handle_turn(self, episode: EpisodeProjection, turn: ServerTutorTurn, capability: str = "text") -> ReliableTurnResult:
         self.tick += 1
-        if episode.learning_goal != turn.learning_goal or episode.semantic_targets != turn.peis_projection.target_refs or episode.verification_required != turn.policy.verification_required:
-            raise ValueError("episode projection must match server-owned Tutor turn")
+        server_history_summary = tuple(f"{entry.role}:{entry.text}" for entry in turn.history)
+        server_owned_bindings = {
+            "learning_goal": (episode.learning_goal, turn.learning_goal),
+            "semantic_targets": (episode.semantic_targets, turn.peis_projection.target_refs),
+            "verified_context_refs": (episode.verified_context_refs, turn.verified_subject.source_refs),
+            "peis_projection_version": (episode.peis_projection_version, turn.peis_projection.projection_version),
+            "peis_projection_ref": (episode.peis_projection_ref, turn.peis_projection.projection_ref),
+            "help_state": (episode.help_state, turn.help_state),
+            "verification_required": (episode.verification_required, turn.policy.verification_required),
+            "structured_history_summary": (episode.structured_history_summary, server_history_summary),
+            "continuation_marker": (episode.continuation_marker, turn.continuation_marker),
+        }
+        mismatched = sorted(name for name, (episode_value, server_value) in server_owned_bindings.items() if episode_value != server_value)
+        if mismatched:
+            raise ValueError("episode projection mismatches server-owned Tutor turn: " + ", ".join(mismatched))
         logical_key = (episode.episode_id, episode.turn_id)
         if logical_key in self.accepted:
             return self._result("ALREADY_ACCEPTED", None, episode)
@@ -247,12 +259,15 @@ class ReliabilityGateway:
                     # exposed beyond this gateway boundary.
                     outcome = ProviderFault(FailureClass.MALFORMED_PROVIDER_OUTPUT)
                 if isinstance(outcome, ProviderResponse):
-                    self._event("provider_attempt_completed", episode, path.provider_id)
-                    result = self._commit_success(logical_key, attempt, episode, outcome, turn)
-                    self._success(key, episode)
-                    if path_index:
-                        self._event("fallback_succeeded", episode, path.provider_id)
-                    return self._result(result.status, result.tutor_result, episode)
+                    tutor_result = TutorOrchestrator(_StaticResponseProvider(outcome)).handle_turn(turn)
+                    if tutor_result.status == "TUTOR_ADVISORY":
+                        self._event("provider_attempt_completed", episode, path.provider_id)
+                        result = self._commit_success(logical_key, attempt, episode, tutor_result)
+                        self._success(key, episode)
+                        if path_index:
+                            self._event("fallback_succeeded", episode, path.provider_id)
+                        return self._result(result.status, result.tutor_result, episode)
+                    outcome = ProviderFault(FailureClass.MALFORMED_PROVIDER_OUTPUT)
                 if isinstance(outcome, DelayedProviderSuccess):
                     self.delayed[attempt.provider_attempt_id] = outcome
                     self._event("provider_attempt_failed", episode, path.provider_id, FailureClass.TIMEOUT)
