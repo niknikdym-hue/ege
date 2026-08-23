@@ -2,10 +2,11 @@
 
 **Status:** APPROVED OWNER / PRODUCT / ARCHITECTURE AUTHORITY
 **Date:** 2026-08-22
+**Updated:** 2026-08-23
 **Baseline:** `e9dfffae7275be9de829d1c5a5668e7715d8261f`
 **Scope:** governance and authority only; this document does not claim runtime or production implementation.
 
-This addendum records decisions made by the owner and Central Brain on 2026-08-22. It supplements `00-PRODUCT-MASTERPLAN.md` and explicitly supersedes older statements that classify realtime voice as an optional late/P3 capability or place it after the first paid Pro launch.
+This addendum records decisions made by the owner and Central Brain on 2026-08-22 and the explicit launch-deadline decision of 2026-08-23. It supplements `00-PRODUCT-MASTERPLAN.md` and explicitly supersedes older statements that classify realtime voice as an optional late/P3 capability or place it after the first paid Pro launch.
 
 The dependency meaning remains unchanged: the shared PEIS closed loop, verified source truth, independent verification, deployment/security and production Tutor foundations must be built correctly. This decision does not authorize a voice-first architecture that bypasses PEIS.
 
@@ -146,3 +147,41 @@ This decision does not weaken or replace:
 - frozen demo/source authority.
 
 No cloud, auth, payment, AI, speech, Tilda or application runtime is implemented or production-approved by this authority-only decision.
+
+## 12. Hard paid-launch deadline — 1 September 2026
+
+**Owner decision (2026-08-23): the full paid `Eksamio Pro — Russian` must launch by 1 September 2026.**
+
+This is the primary delivery deadline of the project. From this decision forward, Central Brain must rank implementation work by the shortest safe critical path to this launch rather than by convenience, document completeness, historical backlog size or visual polish.
+
+The required launch is the actual paid Russian Pro product, not a renamed demo, mock checkout, text-only preview or non-paying internal prototype.
+
+The deadline does not waive any hard launch invariant already approved. The September 1 release must still satisfy the current admitted launch gates, including where applicable:
+
+- verified Russian full-subject source/scope and content authority required for the offered complete subject;
+- shared PEIS closed learning loop and server-owned canonical learner state;
+- production deployment/security in the Russia/no-VPN contour;
+- passwordless identity and safe anonymous-to-account continuity;
+- real payment/entitlement/receipt path admitted for the NPD launch contour;
+- one production Tutor with both text and realtime voice interfaces and same-session `voice -> text -> voice` continuity;
+- independent verification after substantial Tutor help;
+- provider reliability/fallback/kill-switch behavior;
+- learner audio persistence = 0;
+- required privacy/legal/product disclosures and no false claims of completeness.
+
+The hard deadline changes scheduling, not truth. A mandatory gate may not be silently marked PASS to meet the date. Any launch-blocking failure must be surfaced immediately with one concrete blocker and the shortest repair path.
+
+Until September 1, work that does not materially reduce a launch blocker should normally be deferred. In particular, Mathematics/Physics full-subject acquisition, nonessential historical/demo work, speculative architecture and late product embellishments must not steal critical-path capacity from Russian Pro launch work.
+
+Central Brain may run independent launch-critical lanes in parallel when they do not conflict, especially:
+
+1. Russian source/scope/content completion;
+2. Russian PEIS live connection and end-to-end learning flow;
+3. Yandex staging/production deployment and security;
+4. Tutor provider evaluation/text/realtime voice/continuity;
+5. passwordless identity/session continuity;
+6. payment/entitlement/receipt integration;
+7. launch web client/mobile-browser acceptance;
+8. legal/privacy/operational readiness and final production acceptance.
+
+Success state for this decision is a real paid production launch available to the intended Russian launch cohort by 2026-09-01, with all mandatory acceptance evidence durable in GitHub/production records.
