@@ -43,7 +43,45 @@ Default rules:
 - a later move from Google Drive to private Yandex Object Storage/cold storage is allowed when scale, automation, retention or operational needs justify it;
 - do not build Yandex binary archival infrastructure early merely because it may be useful later.
 
-## 4. GitHub catalog requirements
+Google Drive is a source archive, not a production dependency.
+
+## 4. Runtime independence / Google outage rule
+
+**Mandatory invariant:** normal Eksamio runtime in Yandex must continue to function when Google Drive is unreachable, disconnected, rate-limited, credentials expire, or the archive provider has a temporary outage.
+
+Google Drive must never be on the hot path for:
+
+- learner login/session;
+- diagnostics;
+- PEIS evidence/state/readiness/retention/NBA;
+- trainers/homework;
+- AI Tutor grounded help after the relevant knowledge has been admitted;
+- independent verification;
+- production scoring;
+- normal subject-content delivery.
+
+After ingestion and subject acceptance, all knowledge required for normal learner operation must already exist in the approved Eksamio Product Knowledge / PEIS-serving contour in Yandex or another production-admitted provider-neutral store.
+
+Expected failure behavior when Google Drive is unavailable:
+
+- `LEARNER_RUNTIME_CONTINUES=true`;
+- `PEIS_CONTINUES=true`;
+- `TUTOR_USES_ADMITTED_PRODUCT_KNOWLEDGE=true`;
+- `SOURCE_REINGESTION_OR_DEEP_AUDIT_MAY_BE_DEFERRED=true`;
+- no emergency direct textbook fetch is introduced into production runtime.
+
+A Drive outage may block only operations that genuinely require the original binary, for example:
+
+- first ingestion of a not-yet-ingested source;
+- re-ingestion with a new extractor;
+- page-level source dispute/audit;
+- edition comparison requiring the original file.
+
+Those operations must fail explicitly/defer safely; they must not degrade already-admitted learner-facing product knowledge.
+
+If future operational requirements demand stronger source-archive continuity, add a secondary private archive/mirror (for example Yandex Object Storage/cold storage) through a separate bounded task. Do not create that infrastructure prematurely, but do not make Google Drive a single point of failure for production learning.
+
+## 5. GitHub catalog requirements
 
 For every archived source preserve, when available:
 
@@ -66,7 +104,7 @@ For every archived source preserve, when available:
 
 The catalog is durable authority for provenance even if the physical storage provider changes later.
 
-## 5. Rights / retention statuses
+## 6. Rights / retention statuses
 
 File possession or free download does not prove redistribution rights.
 
@@ -79,7 +117,7 @@ Use an explicit retention status, at minimum:
 
 These statuses concern source storage. They do not automatically authorize learner-facing reproduction.
 
-## 6. Product Knowledge Store
+## 7. Product Knowledge Store
 
 After ingestion and subject review, Eksamio should store/use structured derived knowledge rather than whole source books in the production learning path.
 
@@ -101,7 +139,7 @@ Production PEIS/Yandex services may persist this reviewed structured layer accor
 
 Do not treat long copied textbook passages or copied exercise banks as Eksamio Product Knowledge unless separate reproduction authority exists.
 
-## 7. Runtime / Tutor boundary
+## 8. Runtime / Tutor boundary
 
 The Tutor and normal PEIS runtime should not repeatedly read whole textbook PDFs merely because they are archived.
 
@@ -113,7 +151,7 @@ Tutor requests should receive only the smallest verified context needed for the 
 
 Raw full-book retrieval is an exceptional review/re-ingestion operation, not the normal learner runtime path.
 
-## 8. Deletion rule
+## 9. Deletion rule
 
 Source deletion is never an automatic post-ingestion step.
 
@@ -127,13 +165,13 @@ A source may be removed only when:
 
 If removal is required for rights reasons, mark the catalog clearly rather than silently deleting provenance.
 
-## 9. Integrity rule
+## 10. Integrity rule
 
 Whenever a source is admitted to the archive, compute and persist its SHA-256.
 
 If a file is later replaced by another edition/version, do not overwrite the historical identity silently. Create a new source/version record and mark the old one superseded/replaced where appropriate.
 
-## 10. Relationship to Full Subject ingestion
+## 11. Relationship to Full Subject ingestion
 
 This policy is mandatory together with:
 
@@ -147,7 +185,7 @@ For the current sequential wave:
 
 The current active step remains `RUSSIAN_TEXTBOOK_SELECTION_MATRIX`; no bulk Russian download is authorized before the matrix is reviewed.
 
-## 11. Operational consequence
+## 12. Operational consequence
 
 For every future download/ingestion task Codex/agents must answer separately:
 
@@ -156,6 +194,7 @@ For every future download/ingestion task Codex/agents must answer separately:
 - what retention/right status applies;
 - what structured knowledge is allowed to move into Eksamio/Yandex;
 - whether learner-facing reproduction rights exist;
-- whether the raw source remains needed after ingestion.
+- whether the raw source remains needed after ingestion;
+- whether normal Yandex runtime remains fully functional with the source archive unavailable.
 
 Never collapse these questions into a single vague status such as `IMPORTED`.
