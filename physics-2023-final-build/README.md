@@ -8,6 +8,7 @@ Deterministic, source-faithful Tilda package for the official FIPI Physics 2023 
 - Production task and criteria content is rasterized directly from the official demo PDF; no reconstructed task text is used.
 - Task 30 contains both official alternative examples in one task card.
 - The compact build emits 43 ordered T123 blocks, each below 42,500 bytes.
+- The archive includes `ege-fizika-demoversiya-2023-SEO.txt` with exact Tilda SEO settings for the 2023 route.
 
 Build:
 

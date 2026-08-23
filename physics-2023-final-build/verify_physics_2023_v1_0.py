@@ -203,6 +203,12 @@ def package_gate() -> dict:
     head = (OUT / f"{PREFIX}-HEAD.txt").read_text(encoding="utf-8")
     assert_true("<body" not in head.lower() and "<script" not in head.lower(), "deployable HEAD markup")
     assert_true("2025" not in head and "2026" not in head, "HEAD cross-year gate")
+    seo_path = OUT / f"{PREFIX}-SEO.txt"
+    assert_true(seo_path.exists(), "SEO file exists")
+    seo = seo_path.read_text(encoding="utf-8")
+    assert_true("/ege/fizika/demoversiya/2023/" in seo, "SEO canonical year")
+    assert_true("30 заданий" in seo and "235 минут" in seo, "SEO content facts")
+    assert_true("2024" not in seo and "2025" not in seo and "2026" not in seo, "SEO cross-year gate")
     assert_true(ARCHIVE.exists() and ARCHIVE.stat().st_size > 0, "archive exists")
     recorded = (DIST / "SHA256.txt").read_text(encoding="utf-8").split()[0]
     assert_true(recorded == sha256(ARCHIVE), "archive sha256")

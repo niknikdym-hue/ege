@@ -207,6 +207,47 @@ def head_html() -> str:
 '''
 
 
+def seo_text() -> str:
+    return '''EKSAMIO — ЕГЭ ФИЗИКА 2023 — SEO ДЛЯ TILDA
+
+СТРАНИЦА
+URL PATH: /ege/fizika/demoversiya/2023/
+CANONICAL: https://eksamio.ru/ege/fizika/demoversiya/2023/
+INDEXING: index, follow
+LANG: ru
+
+SEO TITLE
+Демоверсия ЕГЭ 2023 по физике — ФИПИ | Эксамио
+
+SEO DESCRIPTION
+Интерактивная демоверсия ЕГЭ 2023 по физике по материалам ФИПИ: 30 заданий, 235 минут, проверка кратких ответов, решения и критерии оценивания.
+
+KEYWORDS
+демоверсия ЕГЭ 2023 физика, ФИПИ физика 2023, ЕГЭ физика демоверсия, демоверсия по физике 2023, интерактивная демоверсия ЕГЭ
+
+H1 НА СТРАНИЦЕ
+Интерактивная демоверсия ЕГЭ по физике
+
+OPEN GRAPH
+OG:TYPE: website
+OG:TITLE: Демоверсия ЕГЭ 2023 по физике — ФИПИ | Эксамио
+OG:DESCRIPTION: Интерактивная демоверсия ЕГЭ 2023 по физике по материалам ФИПИ: 30 заданий, 235 минут, проверка кратких ответов, решения и критерии оценивания.
+OG:URL: https://eksamio.ru/ege/fizika/demoversiya/2023/
+
+TILDA — ЧТО ЗАДАТЬ В НАСТРОЙКАХ СТРАНИЦЫ
+1. Адрес страницы: ege/fizika/demoversiya/2023/
+2. Title: Демоверсия ЕГЭ 2023 по физике — ФИПИ | Эксамио
+3. Description: строка SEO DESCRIPTION выше.
+4. Keywords: строка KEYWORDS выше.
+5. Canonical URL: https://eksamio.ru/ege/fizika/demoversiya/2023/
+6. Разрешить индексацию страницы.
+7. Не ставить canonical на страницу другого года.
+
+ТЕХНИЧЕСКИЙ HEAD
+Готовые meta, canonical, robots и Open Graph уже находятся в файле ege-fizika-demoversiya-2023-HEAD.txt. Не вставляйте их повторно.
+'''
+
+
 def app_shell() -> str:
     return r'''<style>
 #ep23{--ink:#172033;--muted:#667085;--line:#e5e7eb;--soft:#f7f8fb;--accent:#3157d5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--ink);max-width:980px;margin:0 auto;padding:24px 16px 72px;box-sizing:border-box}
@@ -365,6 +406,7 @@ def main() -> None:
 
     assets, asset_manifest = build_assets(layout, scorer)
     write(OUT / f"{PREFIX}-HEAD.txt", head_html())
+    write(OUT / f"{PREFIX}-SEO.txt", seo_text())
 
     blocks: list[str] = [app_shell(), *pack_asset_blocks(assets), runtime_js(scorer)]
     if len(blocks) > MAX_T123_COUNT:
