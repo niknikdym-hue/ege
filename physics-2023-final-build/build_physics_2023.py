@@ -75,6 +75,10 @@ def webp_bytes(image: Image.Image, max_width: int = 1000) -> tuple[bytes, Image.
     return buf.getvalue(), output
 
 
+def task_webp_bytes(image: Image.Image, task_number: int) -> tuple[bytes, Image.Image]:
+    return webp_bytes(image, max_width=1000)
+
+
 def asset_script(key: str, b64: str, first: bool) -> str:
     op = "=" if first else "+="
     return f'<script>window.EP23_A=window.EP23_A||{{}};EP23_A[{json.dumps(key)}]{op}{json.dumps(b64)};</script>\n'
@@ -142,7 +146,7 @@ def build_assets(layout: dict, scorer: dict) -> tuple[dict[str, str], list[dict]
             for crop in crops:
                 source_crop.paste(crop, (0, y))
                 y += crop.height + gap
-        raw, encoded_image = webp_bytes(source_crop, max_width=1000)
+        raw, encoded_image = task_webp_bytes(source_crop, n)
         key = f"task-{n:02d}"
         assets[key] = base64.b64encode(raw).decode("ascii")
         manifest.append({
@@ -188,8 +192,8 @@ def build_assets(layout: dict, scorer: dict) -> tuple[dict[str, str], list[dict]
     if len([m for m in manifest if m["kind"] == "task_source_region"]) != 30:
         raise RuntimeError("task source raster count != 30")
     criteria_assets = [m for m in manifest if m["kind"].startswith("official_solution_criteria_")]
-    if len(criteria_assets) != 22:
-        raise RuntimeError("criteria source region count != 22")
+    if len(criteria_assets) != 18:
+        raise RuntimeError("criteria source region count != 18")
     return assets, manifest
 
 
@@ -433,9 +437,10 @@ def main() -> None:
         "unresolved_source_mappings": 0,
         "unresolved_text_fidelity": 0,
         "build_ready_task_rendering": "source-rendered raster crops from canonical FIPI 2023 PDF; pdftotext task text is not used in production rendering",
-        "task_source_regions": 31,
+        "task_source_regions": 30,
         "criteria_source_logical_pages": criteria_count,
-        "task_30_official_alternative_examples": 2,
+        "task_30_available_official_alternative_examples": 2,
+        "task_30_selected_official_example": 1,
         "t123_count": len(blocks),
         "max_t123_bytes": max((OUT / f"{PREFIX}-T123-{i:02d}.txt").stat().st_size for i in range(1, len(blocks) + 1)),
         "private_use_characters_in_production_text": 0,

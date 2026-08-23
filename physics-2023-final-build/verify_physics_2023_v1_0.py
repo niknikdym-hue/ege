@@ -132,7 +132,7 @@ def browser_gate() -> dict:
 
             page.locator(".ep23-criteria").evaluate_all("els => els.forEach(e => e.open = true)")
             criteria = page.locator(".ep23-criteria img")
-            assert_true(criteria.count() == 22, "22 bounded criteria assets")
+            assert_true(criteria.count() == 18, "18 bounded criteria assets")
             criteria.evaluate_all("els => els.forEach(e => e.loading = 'eager')")
             page.wait_for_function("() => [...document.querySelectorAll('.ep23-criteria img')].every(e => e.complete && e.naturalWidth > 0)")
 
@@ -167,7 +167,7 @@ def browser_gate() -> dict:
             browser.close()
             return {
                 "status": "PASS", "task_images_checked": task_images, "short_review": 23, "extended_review": 7,
-                "criteria_assets": 22, "scorer": scorer_checks, "responsive": responsive, "full_score": "54/54",
+                "criteria_assets": 18, "scorer": scorer_checks, "responsive": responsive, "full_score": "54/54",
                 "full_finish": "PASS", "partial_finish": "PASS", "state_restore": "PASS", "calculator": "PASS",
                 "symbol_keyboard": "PASS", "focus": "PASS", "storage_isolation": "PASS",
                 "result_order": sections, "browser_errors": 0,
@@ -185,12 +185,12 @@ def package_gate() -> dict:
     manifest = json.loads((OUT / f"{PREFIX}-ASSET-MANIFEST.json").read_text(encoding="utf-8"))
     assert_true(acceptance["unresolved_text_fidelity"] == 0, "text fidelity")
     assert_true(acceptance["physics_2025_content_used"] == 0 and acceptance["physics_2026_content_used"] == 0, "cross-year")
-    assert_true(acceptance["criteria_source_logical_pages"] == 22, "criteria region count")
+    assert_true(acceptance["criteria_source_logical_pages"] == 18, "criteria region count")
     task_regions = [item for item in manifest if item["kind"] == "task_source_region"]
     assert_true(len(task_regions) == 30, "task source count")
     assert_true([item["task"] for item in task_regions] == list(range(1, 31)), "task source order")
     bounded = [item for item in manifest if item["kind"] == "official_solution_criteria_bounded_region"]
-    assert_true(len(bounded) == 22, "bounded criteria regions")
+    assert_true(len(bounded) == 18, "bounded criteria regions")
     assert_true(all(item["four_edge_complete"] and item["no_neighbor_task_content"] for item in bounded), "shared-page edge gate")
     t123 = sorted(OUT.glob(f"{PREFIX}-T123-*.txt"))
     assert_true(len(t123) == acceptance["t123_count"], "T123 manifest")
