@@ -2,7 +2,7 @@
 
 **Status:** CURRENT PRODUCT / DELIVERY SNAPSHOT  
 **Updated:** 2026-08-23  
-**Baseline at update:** `63e916f86b1e024bb01cb879048b50cb9d1ccf30`
+**Baseline at update:** `c2100f26300590b3da390cd4a7ed37e792255cbd`
 
 This file does not replace `00-PRODUCT-MASTERPLAN.md` or `OWNER-DECISIONS-2026-08-22.md`. The owner decision of 2026-08-23 sets a hard delivery deadline: **full paid `Eksamio Pro — Russian` launch by 2026-09-01**.
 
@@ -61,7 +61,7 @@ Rules:
 
 ### RUSSIAN 121-CARD MAPPING / PEIS CONNECTION
 
-PR #112 was reviewed and merged on 2026-08-23 as merge commit `63e916f86b1e024bb01cb879048b50cb9d1ccf30`.
+PR #112 was reviewed and merged on 2026-08-23 as merge commit `c2100f26300590b3da390cd4a7ed37e792255cbd`.
 
 Accepted bounded result:
 
