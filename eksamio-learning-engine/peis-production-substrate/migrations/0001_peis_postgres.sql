@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS peis_schema_migrations (version TEXT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS evidence_events (ingest_seq BIGSERIAL PRIMARY KEY,event_id TEXT NOT NULL UNIQUE,idempotency_key TEXT UNIQUE,full_hash TEXT NOT NULL,replay_hash TEXT NOT NULL,learner_profile_id TEXT NOT NULL,subject_id TEXT NOT NULL,event_kind TEXT NOT NULL,server_sequence BIGINT,received_at_server TEXT NOT NULL,created_at TEXT NOT NULL,event_json TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_evidence_learner_subject ON evidence_events(learner_profile_id,subject_id);
+CREATE INDEX IF NOT EXISTS idx_evidence_server_sequence ON evidence_events(learner_profile_id,subject_id,server_sequence);
+CREATE TABLE IF NOT EXISTS event_semantic_targets (event_id TEXT NOT NULL REFERENCES evidence_events(event_id),semantic_id TEXT NOT NULL,target_role TEXT NOT NULL,mapping_resolution TEXT NOT NULL,PRIMARY KEY(event_id,semantic_id,target_role));
+CREATE INDEX IF NOT EXISTS idx_semantic_target_query ON event_semantic_targets(semantic_id,event_id);
+CREATE TABLE IF NOT EXISTS identity_links (identity_ref TEXT PRIMARY KEY,identity_kind TEXT NOT NULL,learner_profile_id TEXT NOT NULL,linked_at TEXT NOT NULL,source_event_id TEXT REFERENCES evidence_events(event_id));
+CREATE INDEX IF NOT EXISTS idx_identity_learner ON identity_links(learner_profile_id);
+CREATE TABLE IF NOT EXISTS recommendations (recommendation_id TEXT PRIMARY KEY,payload_hash TEXT NOT NULL,learner_profile_id TEXT NOT NULL,subject_id TEXT NOT NULL,created_at TEXT NOT NULL,recommendation_json TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS recommendation_outcomes (outcome_event_id TEXT PRIMARY KEY,recommendation_id TEXT NOT NULL REFERENCES recommendations(recommendation_id),payload_hash TEXT NOT NULL,event_type TEXT NOT NULL,occurred_at TEXT NOT NULL,outcome_json TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_outcome_recommendation ON recommendation_outcomes(recommendation_id,occurred_at);
+CREATE TABLE IF NOT EXISTS materialized_snapshots (learner_profile_id TEXT NOT NULL,subject_id TEXT NOT NULL,semantic_id TEXT NOT NULL,goal_context_key TEXT NOT NULL,evidence_fingerprint TEXT NOT NULL,effective_event_count INTEGER NOT NULL,snapshot_json TEXT NOT NULL,computed_at TEXT NOT NULL,PRIMARY KEY(learner_profile_id,subject_id,semantic_id,goal_context_key));
+CREATE OR REPLACE FUNCTION peis_reject_history_mutation() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'PEIS canonical history is append-only'; END; $$;
+DROP TRIGGER IF EXISTS no_update_evidence_events ON evidence_events; CREATE TRIGGER no_update_evidence_events BEFORE UPDATE OR DELETE ON evidence_events FOR EACH ROW EXECUTE FUNCTION peis_reject_history_mutation();
+DROP TRIGGER IF EXISTS no_update_event_semantic_targets ON event_semantic_targets; CREATE TRIGGER no_update_event_semantic_targets BEFORE UPDATE OR DELETE ON event_semantic_targets FOR EACH ROW EXECUTE FUNCTION peis_reject_history_mutation();
+DROP TRIGGER IF EXISTS no_update_recommendations ON recommendations; CREATE TRIGGER no_update_recommendations BEFORE UPDATE OR DELETE ON recommendations FOR EACH ROW EXECUTE FUNCTION peis_reject_history_mutation();
+DROP TRIGGER IF EXISTS no_update_recommendation_outcomes ON recommendation_outcomes; CREATE TRIGGER no_update_recommendation_outcomes BEFORE UPDATE OR DELETE ON recommendation_outcomes FOR EACH ROW EXECUTE FUNCTION peis_reject_history_mutation();
+INSERT INTO peis_schema_migrations(version) VALUES ('0001_peis_postgres') ON CONFLICT (version) DO NOTHING;
