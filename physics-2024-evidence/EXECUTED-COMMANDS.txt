@@ -1,0 +1,22 @@
+PHYSICS 2024 SUBJECT EVIDENCE - EXECUTED COMMAND CLASSES
+
+git fetch origin
+git ls-remote origin refs/heads/main
+gh pr list --repo niknikdym-hue/ege --state open --limit 100 --json number,title,headRefName,baseRefName,isDraft,url
+git worktree add -b codex/physics-2024-v1.0 <bounded-worktree> origin/main
+shasum -a 256 <canonical-pdf-or-access-zip>
+git hash-object <canonical-pdf>
+pdfinfo <canonical-pdf>
+pdftoppm -png -r 200 -f 1 -l <page-count> <canonical-pdf> <clean-temp-output-prefix>
+pdftotext -layout -enc UTF-8 <canonical-pdf> <layout-text>
+pdftotext -bbox-layout -enc UTF-8 <demo-pdf> <demo-bbox.html>
+pdfimages -list <demo-pdf>
+python3 physics-2024-source-access/materialized/generate-materialization.py --repo-root . --output <clean-temp-a>
+python3 physics-2024-source-access/materialized/generate-materialization.py --repo-root . --output <clean-temp-b>
+diff -qr <clean-temp-a> <clean-temp-b>
+python3 physics-2024-evidence/scripts/build-subject-evidence.py
+python3 physics-2024-evidence/scripts/build-subject-evidence.py
+cmp <subject-evidence-tree-run-1.sha256> <subject-evidence-tree-run-2.sha256>
+python3 <bounded JSON/provenance/hash/page-count consistency assertions>
+
+No Physics 2024 production build, deployment, merge, or cross-year content command was executed.
