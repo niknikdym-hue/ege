@@ -10,7 +10,6 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-ROOT = Path(__file__).resolve().parents[1]
 BUILD = Path(__file__).resolve().parent
 OUT = BUILD / "out" / "ege-fizika-demoversiya-2024-v1.0-TILDA-HQ-SOURCE"
 DIST = BUILD / "dist"
@@ -35,14 +34,18 @@ def browser_gate() -> dict:
         with sync_playwright() as p:
             browser = p.chromium.launch()
             page = browser.new_page(viewport={"width": 1280, "height": 900})
+            page_errors: list[str] = []
+            page.on("pageerror", lambda exc: page_errors.append(str(exc)))
             url = f"http://127.0.0.1:{PORT}/{PREVIEW.name}"
             page.goto(url, wait_until="networkidle")
-            assert_true(page.locator(".ep24-card").count() == 26, "26 task cards")
+            card_count = page.locator(".ep24-card").count()
+            if card_count != 26:
+                raise AssertionError(f"26 task cards: got {card_count}; ep24={page.locator('#ep24').count()}; runtime={page.evaluate('typeof window.EP24_TEST_SCORE')}; errors={page_errors[:10]}")
             assert_true(page.locator(".ep24-source").count() == 26, "26 official source task images")
+            assert_true(page.locator(".ep24-source").evaluate_all("els => els.every(e => e.complete && e.naturalWidth > 0)"), "all task images decode")
             assert_true(page.locator("#ep24-total").count() == 1, "result score node")
             assert_true(page.evaluate("document.documentElement.scrollWidth <= document.documentElement.clientWidth"), "desktop no horizontal overflow")
 
-            # exact scorer + official partial-credit rules
             checks = {
                 "task5_exact": page.evaluate("EP24_TEST_SCORE(5,'34')"),
                 "task5_reverse": page.evaluate("EP24_TEST_SCORE(5,'43')"),
@@ -63,12 +66,10 @@ def browser_gate() -> dict:
             }
             assert_true(checks == expected, f"scorer regression {checks}")
 
-            # persistence
             page.locator("#ep24-a-1").fill("-5")
             page.reload(wait_until="networkidle")
             assert_true(page.locator("#ep24-a-1").input_value() == "-5", "answer persistence")
 
-            # full 45/45 flow
             official = {
                 1:"-5",2:"24",3:"48",4:"2",5:"34",6:"12",7:"2",8:"400",9:"13",10:"13",
                 11:"3",12:"0,25",13:"3",14:"45",15:"42",16:"76",17:"21",18:"134",19:"3,40,2",20:"35"
@@ -88,11 +89,13 @@ def browser_gate() -> dict:
                 page.locator(f'.ep24-score-btn[data-n="{n}"][data-p="{pts}"]').click()
             assert_true(page.locator("#ep24-total").inner_text().strip() == "45 / 45", "45/45 total")
 
-            # criteria source pages: 1 each for 21-25, 4 for 26 = 9
-            page.locator(".ep24-criteria details").first.evaluate("el => el.open=true")
-            assert_true(page.locator(".ep24-criteria img").count() == 9, "9 official solution/criteria pages")
+            criteria = page.locator(".ep24-criteria img")
+            assert_true(criteria.count() == 17, "17 official solution/criteria logical pages")
+            page.locator(".ep24-criteria details").evaluate_all("els => els.forEach(e => e.open = true)")
+            criteria.evaluate_all("els => els.forEach(e => e.loading = 'eager')")
+            page.wait_for_function("() => [...document.querySelectorAll('.ep24-criteria img')].every(e => e.complete && e.naturalWidth > 0)")
+            assert_true(criteria.evaluate_all("els => els.every(e => e.complete && e.naturalWidth > 0)"), "all criteria images decode")
 
-            # responsive gates
             responsive = {}
             for width in (390, 320):
                 page.set_viewport_size({"width": width, "height": 820})
@@ -101,8 +104,9 @@ def browser_gate() -> dict:
                 responsive[str(width)] = bool(ok)
                 assert_true(ok, f"responsive {width} no horizontal overflow")
 
+            assert_true(not page_errors, f"browser page errors: {page_errors}")
             browser.close()
-            return {"status":"PASS","task_cards":26,"short_review":20,"extended_review":6,"criteria_pages":9,"scorer":checks,"responsive":responsive,"full_score":"45 / 45"}
+            return {"status":"PASS","task_cards":26,"short_review":20,"extended_review":6,"criteria_pages":17,"scorer":checks,"responsive":responsive,"full_score":"45 / 45","browser_errors":0}
     finally:
         server.terminate()
         try:
@@ -115,8 +119,10 @@ def package_gate() -> dict:
     acceptance = json.loads((OUT / f"{PREFIX}-ACCEPTANCE.json").read_text(encoding="utf-8"))
     assert_true(acceptance["unresolved_text_fidelity"] == 0, "text fidelity gate")
     assert_true(acceptance["physics_2025_content_used"] == 0 and acceptance["physics_2026_content_used"] == 0, "cross-year gate")
+    assert_true(acceptance["criteria_source_logical_pages"] == 17, "criteria source count")
     t123 = sorted(OUT.glob(f"{PREFIX}-T123-*.txt"))
     assert_true(len(t123) == acceptance["t123_count"], "T123 manifest count")
+    assert_true(len(t123) <= 80, "T123 practicality limit")
     assert_true(max(p.stat().st_size for p in t123) < 42500, "T123 size limit")
     archive = DIST / "ege-fizika-demoversiya-2024-v1.0-TILDA-HQ-SOURCE.zip"
     assert_true(archive.exists() and archive.stat().st_size > 0, "archive exists")
