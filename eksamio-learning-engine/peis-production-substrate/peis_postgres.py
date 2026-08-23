@@ -11,8 +11,11 @@ class _PsycopgQmarkConnection:
     """Lets inherited reference methods keep their SQLite qmark SQL unchanged."""
     def __init__(self, connection: Any): self.connection = connection
     def execute(self, sql: str, params: Any = None): return self.connection.execute(sql.replace("?", "%s"), params or ())
-    def __enter__(self): self.connection.__enter__(); return self
-    def __exit__(self, *args: Any): return self.connection.__exit__(*args)
+    def __enter__(self): return self
+    def __exit__(self, exc_type: Any, exc: Any, tb: Any):
+        if exc_type is None: self.connection.commit()
+        else: self.connection.rollback()
+        return False
     def close(self): self.connection.close()
 
 class PostgresPeisPersistenceStore(PeisPersistenceStore):
