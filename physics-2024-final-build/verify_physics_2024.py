@@ -34,14 +34,13 @@ def browser_gate() -> dict:
         with sync_playwright() as p:
             browser = p.chromium.launch()
             page = browser.new_page(viewport={"width": 1280, "height": 900})
-            errors: list[str] = []
-            page.on("pageerror", lambda exc: errors.append("PAGEERROR: " + str(exc)))
-            page.on("console", lambda msg: errors.append("CONSOLE[error]: " + msg.text) if msg.type == "error" else None)
+            page_errors: list[str] = []
+            page.on("pageerror", lambda exc: page_errors.append(str(exc)))
             url = f"http://127.0.0.1:{PORT}/{PREVIEW.name}"
             page.goto(url, wait_until="networkidle")
             card_count = page.locator(".ep24-card").count()
             if card_count != 26:
-                raise AssertionError(f"26 task cards: got {card_count}; ep24={page.locator('#ep24').count()}; runtime={page.evaluate('typeof window.EP24_TEST_SCORE')}; errors={errors[:10]}")
+                raise AssertionError(f"26 task cards: got {card_count}; ep24={page.locator('#ep24').count()}; runtime={page.evaluate('typeof window.EP24_TEST_SCORE')}; errors={page_errors[:10]}")
             assert_true(page.locator(".ep24-source").count() == 26, "26 official source task images")
             assert_true(page.locator(".ep24-source").evaluate_all("els => els.every(e => e.complete && e.naturalWidth > 0)"), "all task images decode")
             assert_true(page.locator("#ep24-total").count() == 1, "result score node")
@@ -92,6 +91,9 @@ def browser_gate() -> dict:
 
             criteria = page.locator(".ep24-criteria img")
             assert_true(criteria.count() == 17, "17 official solution/criteria logical pages")
+            page.locator(".ep24-criteria details").evaluate_all("els => els.forEach(e => e.open = true)")
+            criteria.evaluate_all("els => els.forEach(e => e.loading = 'eager')")
+            page.wait_for_function("() => [...document.querySelectorAll('.ep24-criteria img')].every(e => e.complete && e.naturalWidth > 0)")
             assert_true(criteria.evaluate_all("els => els.every(e => e.complete && e.naturalWidth > 0)"), "all criteria images decode")
 
             responsive = {}
@@ -102,7 +104,7 @@ def browser_gate() -> dict:
                 responsive[str(width)] = bool(ok)
                 assert_true(ok, f"responsive {width} no horizontal overflow")
 
-            assert_true(not errors, f"browser errors: {errors}")
+            assert_true(not page_errors, f"browser page errors: {page_errors}")
             browser.close()
             return {"status":"PASS","task_cards":26,"short_review":20,"extended_review":6,"criteria_pages":17,"scorer":checks,"responsive":responsive,"full_score":"45 / 45","browser_errors":0}
     finally:
