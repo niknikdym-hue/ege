@@ -1,9 +1,9 @@
 # Eksamio Learning Engine — Product Masterplan
 
 **Статус:** PRODUCT / ARCHITECTURE AUTHORITY  
-**Версия:** 1.2
+**Версия:** 1.3
 **Дата исходной фиксации:** 2026-08-18  
-**Актуализация:** 2026-08-22
+**Актуализация:** 2026-08-23
 **Корень системы:** `eksamio-learning-engine/`
 
 Утверждённые owner decisions по первому Pro launch, product client, production cloud, AI/provider boundary, audio privacy, identity, payments и Tutor policy зафиксированы в `OWNER-DECISIONS-2026-08-22.md`. Они являются частью текущей product/architecture authority и явно заменяют прежний порядок, в котором realtime voice относился к позднему/P3-слою после первого Pro launch.
@@ -514,3 +514,66 @@ OpenAI и Google являются principal candidates для conversational bra
 `точный экзамен -> semantic evidence -> Student Learning Twin -> следующий лучший шаг -> персональная помощь -> независимая проверка -> retention -> прогноз -> новый план`
 
 Именно эта система, а не отдельный AI-чат, является целевым продуктом Eksamio.
+
+## 23. Full Subject source completeness, source archive и runtime independence
+
+Это глобальные launch-инварианты Eksamio и они обязательны вместе с:
+
+- `FULL-SUBJECT-SOURCE-AND-TEXTBOOK-INGESTION-POLICY-v0.1.md`;
+- `FULL-SUBJECT-TEXTBOOK-INGESTION-PRIORITY-2026-08-23.md`;
+- `SOURCE-ARCHIVE-AND-PRODUCT-KNOWLEDGE-STORAGE-POLICY-v0.1.md`;
+- `LOCAL-WORKSPACE-POLICY.md`.
+
+### Full Subject scope — launch-blocking
+
+Полноценный платный предмет нельзя считать готовым только потому, что существуют демоверсии, ФИПИ-корпус, тренажёры или частичная semantic inventory.
+
+Для каждого полного предмета обязателен gate `FULL_SUBJECT_SCOPE_SOURCE_COMPLETE`: нормативная школьная программа должна быть полностью покрыта source-backed semantic model, а обязательные элементы не могут молча исчезать только потому, что они не встречаются в текущем ЕГЭ/ОГЭ.
+
+Источник полного предметного scope строится иерархически:
+
+`official school-program authority -> canonical semantic capabilities -> textbooks/pedagogical evidence -> exam/diagnostic overlays -> original Eksamio content -> shared PEIS`.
+
+Учебники являются knowledge/pedagogy evidence, но не автоматически canonical truth и не разрешением копировать learner-facing текст или банки задач.
+
+### Последовательность первой source/textbook wave
+
+Первая волна строго последовательная:
+
+`Russian -> Mathematics -> Physics`.
+
+Активный шаг на 2026-08-23: `RUSSIAN_TEXTBOOK_SELECTION_MATRIX`.
+
+Нельзя batch-download Русский до принятия матрицы. Нельзя начинать Mathematics source/textbook acquisition до `FULL_SUBJECT_SCOPE_SOURCE_COMPLETE` Русского. Нельзя начинать Physics source/textbook acquisition до такого же PASS Математики.
+
+Central PEIS/Tutor/infrastructure работа может идти параллельно, если она не подменяет отсутствующую предметную истину.
+
+### Source Archive != Product Knowledge Store
+
+Исходный выбранный учебник сохраняется как Source Archive для provenance, повторного ingestion, аудита и сравнения изданий, когда это допускается rights/retention policy.
+
+GitHub хранит каталог, hashes, locators, statuses и ingestion provenance. Production knowledge layer хранит уже проверенные структурированные Eksamio knowledge/artifacts, а не целые учебники по умолчанию.
+
+Google Drive допускается как начальный bounded Source Archive, но **никогда не является production hot path**.
+
+После успешного ingestion нормальная работа Eksamio в Yandex должна продолжаться при полной недоступности Google Drive:
+
+- PEIS работает;
+- Tutor работает на уже принятом structured knowledge;
+- диагностика и тренажёры работают;
+- learner-facing проверка и learning loop работают;
+- никакой emergency fetch целого PDF из Drive в runtime не допускается.
+
+Недоступность Drive может блокировать только операции, которым действительно нужен raw source binary: первичный ingestion, re-ingestion, page-level source audit, edition comparison или dispute resolution.
+
+Если Yandex runtime не способен продолжать normal learner operation без Google Drive после ingestion, соответствующий production gate считается FAIL.
+
+### Срочность перед учебным годом
+
+На 2026-08-23 до 1 сентября остаётся короткое launch-окно. Поэтому приоритет — не формальное закрытие документов, а получение **реально работающего первого контура Русского**, который опирается на проверенную предметную истину и не создаёт ложного claim полноты.
+
+До 1 сентября и в начале учебного года приоритеты должны оцениваться по тому, насколько они приближают работающий путь:
+
+`verified Russian scope -> PEIS evidence -> personalized practice/help -> independent verification -> retained state`.
+
+Нельзя ради календаря обходить source truth, security, identity, Tutor verification или privacy gates. Но нельзя и откладывать первый полезный working contour ради необязательной архитектурной полноты других предметов или поздних функций.
