@@ -1,15 +1,19 @@
 PROFILE 2024 UI PARITY FINDING
 
-STATUS: DEFECT CONFIRMED
+STATUS: SUPERSEDED_AS_ACTIVE_DEFECT_BY_OWNER_MANUAL_ACCEPTANCE_2026-08-23
 REFERENCE: accepted PROFILE Mathematics 2025/2026 UI behavior
+CURRENT_STATUS_AUTHORITY: eksamio-learning-engine/SUBJECT-DEMO-MANUAL-ACCEPTANCE-2026-08-23.md
 
-Defect:
+Historical finding:
 The 2024 builder intentionally replaced the inherited source tag `ФИПИ 2026 · официальный пример ${v.variant}` with the generic `ФИПИ 2024 · официальный материал демоверсии` and removed the official example number from the extended-results heading.
 
-This was an implementation deviation, not a FIPI year-specific requirement, and manual acceptance missed it.
+This was recorded as an implementation deviation and was previously treated as an open UI-parity repair candidate.
 
-Required behavior:
+Owner manual-acceptance correction (2026-08-23):
+All Mathematics BASE + PROFILE demos for 2022–2026 have passed full manual acceptance. Therefore this historical finding is retained for provenance but is NOT an active execution dependency and MUST NOT generate a repair/re-audit task unless Central Brain explicitly reopens it based on a new concrete defect/evidence.
+
+Historical proposed behavior (retained for provenance only):
 `ФИПИ 2024 · официальный пример <variant_number>`
 Extended results: `Задание <task_number> · официальный пример <variant_number>`
 
-No historical content, answers, scoring, criteria, task order, PEIS state/mastery or semantic IDs may be changed by this UI repair.
+No historical content, answers, scoring, criteria, task order, PEIS state/mastery or semantic IDs may be changed on the basis of this superseded finding without an explicit reopened task.
