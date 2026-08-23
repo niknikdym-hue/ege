@@ -60,7 +60,7 @@ def browser_gate() -> dict:
                 image = page.locator(".ep24-source")
                 assert_true(image.count() == 1, f"task {number} source image")
                 assert_true(image.evaluate("e => e.complete && e.naturalWidth > 0"), f"task {number} image decode")
-                assert_true(f"Задание {number} из 26" in page.locator(".ep24-task-number").inner_text(), f"task {number} identity")
+                assert_true(f"задание {number} из 26" in page.locator(".ep24-task-number").inner_text().lower(), f"task {number} identity")
                 task_images += 1
 
             scorer_checks = {
