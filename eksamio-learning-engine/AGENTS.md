@@ -13,8 +13,9 @@ GitHub is the durable source of truth. Chat history is navigation, not project a
 1. Refresh/check current `main`.
 2. Read `00-PRODUCT-MASTERPLAN.md`.
 3. Read `00E-CURRENT-BRAIN-HANDOFF.md`.
-4. Read the exact task/scope supplied for this run.
-5. Read only the subject/source/contracts directly relevant to that task.
+4. Read `LOCAL-WORKSPACE-POLICY.md`.
+5. Read the exact task/scope supplied for this run.
+6. Read only the subject/source/contracts directly relevant to that task.
 
 For cross-subject architecture, PEIS, production, deployment/security, identity/auth, commerce or governance work, also read the relevant current authority named by `00E`, including `OWNER-DECISIONS-2026-08-22.md`, `00B-PROJECT-PRIORITIES-CURRENT.md`, `00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md` and `00D-BRAIN-CONTINUITY-PROTOCOL.md` when needed.
 
@@ -33,6 +34,16 @@ Do not perform broad repository audits from zero when the task can be resolved b
 - Eksamio must aim beyond the current world baseline in measurable educational outcomes, not by adding fashionable features. Use `PRODUCT-BENCHMARK-2026.md` and the Tutor world benchmark when a task affects product differentiation or AI tutoring.
 - Advanced architecture must remain economical: prefer deterministic tools, compact context, cheap model routing, reuse and on-demand infrastructure; reject complexity/cost without measurable learning or product gain.
 - Eksamio runtime must not depend on a ChatGPT/OpenAI subscription. OpenAI/Codex may be development tools or replaceable AI providers, never canonical product infrastructure.
+
+## Owner local-workspace boundary
+
+`LOCAL-WORKSPACE-POLICY.md` is mandatory owner authority.
+
+- Default: create no new persistent owner-local folders.
+- Do not create new clones, Git worktrees, task-specific repository copies, checkout folders, report folders, export folders or other persistent workspace directories on the owner's computer unless the owner explicitly requests that local creation in the current task.
+- Parallel work should use cloud isolation plus GitHub branches/PRs instead of multiplying local repository copies.
+- Ephemeral directories inside a cloud/container sandbox are allowed when they are not materialized onto the owner's Mac.
+- If a task genuinely cannot continue without a new owner-local folder, stop with `BLOCKED_LOCAL_WORKSPACE_CREATION_REQUIRES_OWNER_PERMISSION`; do not create first and ask later.
 
 ## Task admission and efficiency
 
@@ -85,7 +96,7 @@ Use the lightest workflow that preserves correctness and recovery.
 
 For behavior/source/identity/PEIS/production-affecting work:
 
-1. dedicated branch/worktree;
+1. dedicated Git branch; use a Git worktree only when the owner explicitly authorizes local worktree creation for the current task;
 2. narrow scope;
 3. required tests/validation;
 4. durable result/validation evidence;
@@ -117,6 +128,8 @@ Parallel subject chats/agents may work on separate branches and subject scopes. 
 The Brain reviews meaningful deltas across lanes: significant merges, changed blockers, cross-subject/shared-core changes, production-impacting PRs and unsupported DONE claims. If nothing material changed, do not create another checkpoint or repeat an audit.
 
 Parallel work is only useful when each lane has a concrete bounded endpoint and does not steal resources from the active central blocker.
+
+Parallelism must not create additional owner-local repository folders unless the owner explicitly requests them; prefer cloud task isolation and GitHub branches/PRs.
 
 ## Subscription/provider independence
 
