@@ -126,8 +126,30 @@ CRITERIA_PAGES = {
     22: {"physical_pages": [11], "logical_pages": [21, 22], "max_points": 2},
     23: {"physical_pages": [12], "logical_pages": [23, 24], "max_points": 2},
     24: {"physical_pages": [13], "logical_pages": [25, 26], "max_points": 3},
-    25: {"physical_pages": [14], "logical_pages": [27, 28], "max_points": 3},
-    26: {"physical_pages": [15, 16, 17, 18], "logical_pages": [29, 30, 31, 32, 33, 34, 35], "max_points": 4},
+    25: {
+        "physical_pages": [14, 15],
+        "logical_pages": [27, 28, 29],
+        "max_points": 3,
+        "shared_logical_page_boundary": {
+            "logical_page": 29,
+            "physical_page": 15,
+            "role": "task_25_criteria_continuation",
+            "line_span_1_based_inclusive": [2, 20],
+            "next_task_starts_line": 25,
+        },
+    },
+    26: {
+        "physical_pages": [15, 16, 17, 18],
+        "logical_pages": [29, 30, 31, 32, 33, 34, 35],
+        "max_points": 4,
+        "shared_logical_page_boundary": {
+            "logical_page": 29,
+            "physical_page": 15,
+            "role": "task_26_prompt_start",
+            "line_span_1_based_inclusive": [25, 31],
+            "previous_task_criteria_ends_line": 20,
+        },
+    },
 }
 
 
@@ -285,6 +307,9 @@ def main() -> None:
     evidence_root = repo_root / EVIDENCE_ROOT
     page_text_dir = evidence_root / "official-page-text"
     logical_paths = extract_logical_pages(repo_root / SOURCES["demo"]["path"], page_text_dir, pdftotext)
+    shared_page_lines = logical_paths[29].read_text(encoding="utf-8").splitlines()
+    if "Максимальный балл" not in shared_page_lines[19] or not shared_page_lines[24].lstrip().startswith("26"):
+        raise RuntimeError("Task 25/26 shared logical-page boundary changed")
     materialized_root = repo_root / ACCESS_ROOT / "materialized"
     visual_records, crop_sheet, overlay_sheet = crop_assets(materialized_root, evidence_root / "official-crops", evidence_root / "review")
     visuals_by_task = {}
@@ -395,6 +420,11 @@ def main() -> None:
                 "criteria_logical_pages": CRITERIA_PAGES[task_number]["logical_pages"],
                 "criteria_text_paths": [logical_paths[page].relative_to(repo_root).as_posix() for page in CRITERIA_PAGES[task_number]["logical_pages"]],
                 "manual_subject_committee_scoring": True,
+                **(
+                    {"shared_logical_page_boundary": CRITERIA_PAGES[task_number]["shared_logical_page_boundary"]}
+                    if "shared_logical_page_boundary" in CRITERIA_PAGES[task_number]
+                    else {}
+                ),
             }
             for task_number in range(21, 27)
         ],
@@ -438,6 +468,13 @@ def main() -> None:
         ],
         "answers_and_short_scoring": {"physical_page": 9, "logical_page": 17},
         "extended_criteria": CRITERIA_PAGES,
+        "task_25_26_shared_page_validation": {
+            "logical_page": 29,
+            "physical_page": 15,
+            "task_25_criteria_line_span_1_based_inclusive": [2, 20],
+            "task_26_prompt_line_span_1_based_inclusive": [25, 31],
+            "status": "PASS",
+        },
         "specification_task_plan": {"physical_pages": [6, 7], "purpose": "task numbering, classification, and max points"},
         "unresolved_mappings": 0,
     }
@@ -483,6 +520,9 @@ No Physics 2024 production build, deployment, merge, or cross-year content comma
         "ALL_VISUAL_FOUR_EDGE=PASS",
         "ALL_VISUAL_NO_NEIGHBOR_CONTENT=PASS",
         "UNRESOLVED_SOURCE_MAPPINGS=0",
+        "TASK_25_26_SHARED_PAGE_BOUNDARY=PASS",
+        "TASK_25_CRITERIA_AUTHORITY=logical pages 27-29 / physical pages 14-15; logical page 29 lines 2-20 only",
+        "TASK_26_AUTHORITY_START=logical page 29 line 25 / physical page 15",
         "DETERMINISTIC_MATERIALIZATION_TWICE=PASS",
         "DETERMINISTIC_SUBJECT_EVIDENCE_TWICE=PASS",
         "SOURCE_AUTHORITY_FILES_CHANGED=0",

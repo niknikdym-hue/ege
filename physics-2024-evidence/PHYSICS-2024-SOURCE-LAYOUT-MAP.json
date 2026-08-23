@@ -53,12 +53,24 @@
     "25": {
       "logical_pages": [
         27,
-        28
+        28,
+        29
       ],
       "max_points": 3,
       "physical_pages": [
-        14
-      ]
+        14,
+        15
+      ],
+      "shared_logical_page_boundary": {
+        "line_span_1_based_inclusive": [
+          2,
+          20
+        ],
+        "logical_page": 29,
+        "next_task_starts_line": 25,
+        "physical_page": 15,
+        "role": "task_25_criteria_continuation"
+      }
     },
     "26": {
       "logical_pages": [
@@ -76,7 +88,17 @@
         16,
         17,
         18
-      ]
+      ],
+      "shared_logical_page_boundary": {
+        "line_span_1_based_inclusive": [
+          25,
+          31
+        ],
+        "logical_page": 29,
+        "physical_page": 15,
+        "previous_task_criteria_ends_line": 20,
+        "role": "task_26_prompt_start"
+      }
     }
   },
   "logical_page_rule": "Each physical page contains left/right logical document pages; task pages are physical 3-8 / logical 6-16.",
@@ -93,6 +115,19 @@
       7
     ],
     "purpose": "task numbering, classification, and max points"
+  },
+  "task_25_26_shared_page_validation": {
+    "logical_page": 29,
+    "physical_page": 15,
+    "status": "PASS",
+    "task_25_criteria_line_span_1_based_inclusive": [
+      2,
+      20
+    ],
+    "task_26_prompt_line_span_1_based_inclusive": [
+      25,
+      31
+    ]
   },
   "tasks": [
     {
