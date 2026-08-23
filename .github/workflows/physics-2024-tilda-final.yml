@@ -27,7 +27,7 @@ jobs:
           pip install pymupdf pillow playwright
           python -m playwright install --with-deps chromium
       - name: Build source-faithful Tilda archive
-        run: python physics-2024-final-build/build_physics_2024.py
+        run: python physics-2024-final-build/build_physics_2024_compact.py
       - name: Browser and scorer verification
         run: python physics-2024-final-build/verify_physics_2024.py
       - name: Show final hashes
