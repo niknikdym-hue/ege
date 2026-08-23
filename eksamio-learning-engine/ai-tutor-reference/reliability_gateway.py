@@ -6,11 +6,18 @@ It reuses ``TutorOrchestrator`` for the advisory-response policy boundary.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Callable, Mapping, Protocol
+from typing import Mapping, Protocol
 
-from tutor_boundary import ProviderRequest, ProviderResponse, ServerTutorTurn, TutorOrchestrator, TutorTurnResult, _provider_request
+from tutor_boundary import (
+    ProviderRequest,
+    ProviderResponse,
+    ServerTutorTurn,
+    TutorOrchestrator,
+    TutorTurnResult,
+    _provider_request,
+)
 
 
 RELIABILITY_CONTRACT_VERSION = "eksamio.tutor.reliability-gateway.v1"
@@ -109,12 +116,14 @@ class Circuit:
     state: CircuitState = CircuitState.CLOSED
     health: HealthState = HealthState.HEALTHY
     opened_at_tick: int | None = None
+    consecutive_failures: int = 0
 
 
 @dataclass(frozen=True)
 class GatewayConfig:
     max_same_path_retries: int = 1
     half_open_after_ticks: int = 2
+    transient_failures_before_open: int = 2
 
 
 @dataclass(frozen=True)
@@ -153,7 +162,22 @@ class _StaticResponseProvider:
 class ReliabilityGateway:
     """Server-owned routing/commit boundary; one instance represents an episode store."""
 
-    def __init__(self, registry: Mapping[tuple[str, str], ProviderPath], providers: Mapping[str, ReliableProvider], config: GatewayConfig = GatewayConfig()) -> None:
+    _TRANSIENT_CIRCUIT_FAILURES = {
+        FailureClass.TIMEOUT,
+        FailureClass.NETWORK_FAILURE,
+        FailureClass.PROVIDER_5XX,
+        FailureClass.MALFORMED_PROVIDER_OUTPUT,
+        FailureClass.TOOL_PROTOCOL_FAILURE,
+    }
+
+    def __init__(
+        self,
+        registry: Mapping[tuple[str, str], ProviderPath],
+        providers: Mapping[str, ReliableProvider],
+        config: GatewayConfig = GatewayConfig(),
+    ) -> None:
+        if config.transient_failures_before_open < 1:
+            raise ValueError("transient_failures_before_open must be >= 1")
         self.registry = dict(registry)
         self.providers = dict(providers)
         self.config = config
@@ -165,17 +189,40 @@ class ReliabilityGateway:
         self.delayed: dict[str, DelayedProviderSuccess] = {}
         self.events: list[GatewayEvent] = []
 
-    def _event(self, kind: str, episode: EpisodeProjection, provider_id: str | None = None, failure: FailureClass | None = None, circuit: CircuitState | None = None) -> None:
-        self.events.append(GatewayEvent(kind, episode.episode_id, episode.turn_id, provider_id, failure.value if failure else None, circuit.value if circuit else None))
+    def _event(
+        self,
+        kind: str,
+        episode: EpisodeProjection,
+        provider_id: str | None = None,
+        failure: FailureClass | None = None,
+        circuit: CircuitState | None = None,
+    ) -> None:
+        self.events.append(
+            GatewayEvent(
+                kind,
+                episode.episode_id,
+                episode.turn_id,
+                provider_id,
+                failure.value if failure else None,
+                circuit.value if circuit else None,
+            )
+        )
 
     def _eligible_paths(self, capability: str) -> list[ProviderPath]:
-        paths = [path for path in self.registry.values() if path.capability == capability and path.admission_status == "PRODUCTION_ADMITTED"]
+        paths = [
+            path
+            for path in self.registry.values()
+            if path.capability == capability and path.admission_status == "PRODUCTION_ADMITTED"
+        ]
         return sorted(paths, key=lambda path: path.priority)
 
     def _allow_path(self, key: tuple[str, str], episode: EpisodeProjection) -> bool:
         circuit = self.circuits[key]
         if circuit.state is CircuitState.OPEN:
-            if circuit.opened_at_tick is None or self.tick - circuit.opened_at_tick < self.config.half_open_after_ticks:
+            if (
+                circuit.opened_at_tick is None
+                or self.tick - circuit.opened_at_tick < self.config.half_open_after_ticks
+            ):
                 return False
             circuit.state = CircuitState.HALF_OPEN
             self._event("circuit_state_changed", episode, key[0], circuit=circuit.state)
@@ -183,19 +230,44 @@ class ReliabilityGateway:
 
     def _open(self, key: tuple[str, str], episode: EpisodeProjection, health: HealthState) -> None:
         circuit = self.circuits[key]
-        circuit.state, circuit.health, circuit.opened_at_tick = CircuitState.OPEN, health, self.tick
+        circuit.state = CircuitState.OPEN
+        circuit.health = health
+        circuit.opened_at_tick = self.tick
         self._event("circuit_state_changed", episode, key[0], circuit=circuit.state)
+
+    def _record_transient_failure(
+        self,
+        key: tuple[str, str],
+        episode: EpisodeProjection,
+        failure: FailureClass,
+    ) -> None:
+        if failure not in self._TRANSIENT_CIRCUIT_FAILURES:
+            return
+        circuit = self.circuits[key]
+        if circuit.state is CircuitState.HALF_OPEN:
+            circuit.consecutive_failures += 1
+            self._open(key, episode, HealthState.OPEN_CIRCUIT)
+            return
+        if circuit.state is not CircuitState.CLOSED:
+            return
+        circuit.consecutive_failures += 1
+        if circuit.consecutive_failures >= self.config.transient_failures_before_open:
+            self._open(key, episode, HealthState.OPEN_CIRCUIT)
+        else:
+            circuit.health = HealthState.DEGRADED
 
     def _success(self, key: tuple[str, str], episode: EpisodeProjection) -> None:
         circuit = self.circuits[key]
-        if circuit.state is CircuitState.HALF_OPEN:
-            circuit.state, circuit.health, circuit.opened_at_tick = CircuitState.CLOSED, HealthState.HEALTHY, None
+        was_half_open = circuit.state is CircuitState.HALF_OPEN
+        circuit.state = CircuitState.CLOSED
+        circuit.health = HealthState.HEALTHY
+        circuit.opened_at_tick = None
+        circuit.consecutive_failures = 0
+        if was_half_open:
             self._event("circuit_state_changed", episode, key[0], circuit=circuit.state)
-        elif circuit.state is CircuitState.CLOSED:
-            circuit.health = HealthState.HEALTHY
 
     def _failure_policy(self, failure: FailureClass) -> tuple[bool, bool, HealthState | None]:
-        """Return retryable, terminal-no-failover, and optional circuit health."""
+        """Return retryable, terminal-no-failover, and optional immediate-open health."""
         if failure is FailureClass.PLATFORM_SAFETY_BLOCK:
             return False, True, HealthState.BLOCKED_POLICY
         if failure is FailureClass.INVALID_PLATFORM_REQUEST:
@@ -206,9 +278,26 @@ class ReliabilityGateway:
             return False, False, HealthState.BLOCKED_CREDENTIAL
         if failure in {FailureClass.MODEL_UNAVAILABLE, FailureClass.CAPACITY_UNAVAILABLE}:
             return False, False, HealthState.OPEN_CIRCUIT
-        return failure in {FailureClass.TIMEOUT, FailureClass.NETWORK_FAILURE, FailureClass.PROVIDER_5XX, FailureClass.MALFORMED_PROVIDER_OUTPUT, FailureClass.TOOL_PROTOCOL_FAILURE}, False, None
+        return (
+            failure
+            in {
+                FailureClass.TIMEOUT,
+                FailureClass.NETWORK_FAILURE,
+                FailureClass.PROVIDER_5XX,
+                FailureClass.MALFORMED_PROVIDER_OUTPUT,
+                FailureClass.TOOL_PROTOCOL_FAILURE,
+            },
+            False,
+            None,
+        )
 
-    def _commit_success(self, logical_key: tuple[str, str], attempt: ProviderAttempt, episode: EpisodeProjection, tutor_result: TutorTurnResult) -> ReliableTurnResult:
+    def _commit_success(
+        self,
+        logical_key: tuple[str, str],
+        attempt: ProviderAttempt,
+        episode: EpisodeProjection,
+        tutor_result: TutorTurnResult,
+    ) -> ReliableTurnResult:
         if logical_key in self.accepted:
             self._event("late_response_discarded", episode, attempt.provider_id)
             return self._result("TUTOR_UNAVAILABLE", None, episode)
@@ -219,27 +308,62 @@ class ReliabilityGateway:
         self._event("learner_quota_debit_committed", episode, attempt.provider_id)
         return self._result(tutor_result.status, tutor_result, episode)
 
-    def _result(self, status: str, tutor_result: TutorTurnResult | None, episode: EpisodeProjection) -> ReliableTurnResult:
+    def _result(
+        self,
+        status: str,
+        tutor_result: TutorTurnResult | None,
+        episode: EpisodeProjection,
+    ) -> ReliableTurnResult:
         logical_key = (episode.episode_id, episode.turn_id)
-        return ReliableTurnResult(status, tutor_result, episode.episode_id, episode.turn_id, self.accepted.get(logical_key), int(logical_key in self.quota_debits), int(logical_key in self.evidence_commits), 0, tuple(self.events))
+        return ReliableTurnResult(
+            status,
+            tutor_result,
+            episode.episode_id,
+            episode.turn_id,
+            self.accepted.get(logical_key),
+            int(logical_key in self.quota_debits),
+            int(logical_key in self.evidence_commits),
+            0,
+            tuple(self.events),
+        )
 
-    def handle_turn(self, episode: EpisodeProjection, turn: ServerTutorTurn, capability: str = "text") -> ReliableTurnResult:
+    def handle_turn(
+        self,
+        episode: EpisodeProjection,
+        turn: ServerTutorTurn,
+        capability: str = "text",
+    ) -> ReliableTurnResult:
         self.tick += 1
         server_history_summary = tuple(f"{entry.role}:{entry.text}" for entry in turn.history)
         server_owned_bindings = {
             "learning_goal": (episode.learning_goal, turn.learning_goal),
             "semantic_targets": (episode.semantic_targets, turn.peis_projection.target_refs),
             "verified_context_refs": (episode.verified_context_refs, turn.verified_subject.source_refs),
-            "peis_projection_version": (episode.peis_projection_version, turn.peis_projection.projection_version),
+            "peis_projection_version": (
+                episode.peis_projection_version,
+                turn.peis_projection.projection_version,
+            ),
             "peis_projection_ref": (episode.peis_projection_ref, turn.peis_projection.projection_ref),
             "help_state": (episode.help_state, turn.help_state),
-            "verification_required": (episode.verification_required, turn.policy.verification_required),
-            "structured_history_summary": (episode.structured_history_summary, server_history_summary),
+            "verification_required": (
+                episode.verification_required,
+                turn.policy.verification_required,
+            ),
+            "structured_history_summary": (
+                episode.structured_history_summary,
+                server_history_summary,
+            ),
             "continuation_marker": (episode.continuation_marker, turn.continuation_marker),
         }
-        mismatched = sorted(name for name, (episode_value, server_value) in server_owned_bindings.items() if episode_value != server_value)
+        mismatched = sorted(
+            name
+            for name, (episode_value, server_value) in server_owned_bindings.items()
+            if episode_value != server_value
+        )
         if mismatched:
-            raise ValueError("episode projection mismatches server-owned Tutor turn: " + ", ".join(mismatched))
+            raise ValueError(
+                "episode projection mismatches server-owned Tutor turn: " + ", ".join(mismatched)
+            )
         logical_key = (episode.episode_id, episode.turn_id)
         if logical_key in self.accepted:
             return self._result("ALREADY_ACCEPTED", None, episode)
@@ -251,12 +375,17 @@ class ReliabilityGateway:
                 continue
             provider = self.providers[path.provider_id]
             for retry_index in range(self.config.max_same_path_retries + 1):
-                attempt = ProviderAttempt(f"attempt:{episode.episode_id}:{episode.turn_id}:{path.provider_id}:{retry_index}", episode.episode_id, episode.turn_id, path.provider_id, capability, retry_index)
+                attempt = ProviderAttempt(
+                    f"attempt:{episode.episode_id}:{episode.turn_id}:{path.provider_id}:{retry_index}",
+                    episode.episode_id,
+                    episode.turn_id,
+                    path.provider_id,
+                    capability,
+                    retry_index,
+                )
                 self._event("provider_attempt_started", episode, path.provider_id)
                 outcome = provider.generate(request, attempt)
                 if not isinstance(outcome, (ProviderResponse, ProviderFault, DelayedProviderSuccess)):
-                    # Adapter-local malformed values are normalized here and never
-                    # exposed beyond this gateway boundary.
                     outcome = ProviderFault(FailureClass.MALFORMED_PROVIDER_OUTPUT)
                 if isinstance(outcome, ProviderResponse):
                     tutor_result = TutorOrchestrator(_StaticResponseProvider(outcome)).handle_turn(turn)
@@ -270,18 +399,26 @@ class ReliabilityGateway:
                     outcome = ProviderFault(FailureClass.MALFORMED_PROVIDER_OUTPUT)
                 if isinstance(outcome, DelayedProviderSuccess):
                     self.delayed[attempt.provider_attempt_id] = outcome
-                    self._event("provider_attempt_failed", episode, path.provider_id, FailureClass.TIMEOUT)
+                    failure = FailureClass.TIMEOUT
+                    self._event("provider_attempt_failed", episode, path.provider_id, failure)
+                    self._record_transient_failure(key, episode, failure)
                     break
                 failure = outcome.failure_class
                 self._event("provider_attempt_failed", episode, path.provider_id, failure)
                 retryable, terminal, health = self._failure_policy(failure)
                 if health is not None:
                     self._open(key, episode, health)
+                else:
+                    self._record_transient_failure(key, episode, failure)
                 if terminal:
                     self._event("tutor_unavailable", episode, path.provider_id, failure)
                     self._event("learner_quota_debit_skipped", episode, path.provider_id)
                     return self._result("TUTOR_UNAVAILABLE", None, episode)
-                if retryable and retry_index < self.config.max_same_path_retries and self.circuits[key].state is CircuitState.CLOSED:
+                if (
+                    retryable
+                    and retry_index < self.config.max_same_path_retries
+                    and self.circuits[key].state is CircuitState.CLOSED
+                ):
                     continue
                 break
             if path_index < len(paths) - 1:
