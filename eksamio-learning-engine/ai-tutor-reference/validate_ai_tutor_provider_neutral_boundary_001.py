@@ -50,10 +50,12 @@ def turn() -> ServerTutorTurn:
             ("source:ru-rule-001",), ("Verified source excerpt.",)
         ),
         peis_projection=PeisContextProjection(
-            "peis-context-projection.v1", "Needs an independent check after help.", ("school:rule-001",)
+            "peis-context-projection.v1", "Needs an independent check after help.", ("school:rule-001",), "peis:projection-001"
         ),
         history=(TutorHistoryEntry("tutor", "Предыдущий проверенный шаг."),),
         learner_text="Почему здесь такое написание?",
+        help_state="GUIDED_HELP",
+        continuation_marker="buffered",
     )
 
 
