@@ -127,8 +127,8 @@ CRITERIA_PAGES = {
     23: {"physical_pages": [12], "logical_pages": [23, 24], "max_points": 2},
     24: {"physical_pages": [13], "logical_pages": [25, 26], "max_points": 3},
     25: {
-        "physical_pages": [14, 15],
-        "logical_pages": [27, 28, 29],
+        "physical_pages": [14],
+        "logical_pages": [27, 28],
         "max_points": 3,
         "shared_logical_page_boundary": {
             "logical_page": 29,
@@ -521,7 +521,7 @@ No Physics 2024 production build, deployment, merge, or cross-year content comma
         "ALL_VISUAL_NO_NEIGHBOR_CONTENT=PASS",
         "UNRESOLVED_SOURCE_MAPPINGS=0",
         "TASK_25_26_SHARED_PAGE_BOUNDARY=PASS",
-        "TASK_25_CRITERIA_AUTHORITY=logical pages 27-29 / physical pages 14-15; logical page 29 lines 2-20 only",
+        "TASK_25_CRITERIA_AUTHORITY=full logical pages 27-28 / physical page 14; bounded continuation on logical page 29 / physical page 15 lines 2-20",
         "TASK_26_AUTHORITY_START=logical page 29 line 25 / physical page 15",
         "DETERMINISTIC_MATERIALIZATION_TWICE=PASS",
         "DETERMINISTIC_SUBJECT_EVIDENCE_TWICE=PASS",
