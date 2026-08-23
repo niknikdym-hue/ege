@@ -5,7 +5,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 HERE = Path(__file__).resolve().parent; ENGINE = HERE.parent
-sys.path[:0] = [str(HERE), str(ENGINE / "peis-service-bridge-reference"), str(ENGINE / "peis-reference-kernel")]
+sys.path[:0] = [str(HERE), str(ENGINE / "peis-persistence-reference"), str(ENGINE / "peis-service-bridge-reference"), str(ENGINE / "peis-reference-kernel")]
 from peis_service_bridge import AdapterRegistry, HostIdentity, IntegrityConflict, MissingHostIdentity, PeisServiceBridge, ServiceRequestError, UnknownAdapter  # noqa: E402
 from peis_reference_kernel import snapshot as kernel_snapshot  # noqa: E402
 from peis_postgres import PostgresPeisPersistenceStore  # noqa: E402
