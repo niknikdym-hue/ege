@@ -35,14 +35,18 @@ def browser_gate() -> dict:
         with sync_playwright() as p:
             browser = p.chromium.launch()
             page = browser.new_page(viewport={"width": 1280, "height": 900})
+            errors = []
+            page.on("pageerror", lambda exc: errors.append("PAGEERROR: " + str(exc)))
+            page.on("console", lambda msg: errors.append("CONSOLE[error]: " + msg.text) if msg.type == "error" else None)
             url = f"http://127.0.0.1:{PORT}/{PREVIEW.name}"
             page.goto(url, wait_until="networkidle")
-            assert_true(page.locator(".ep24-card").count() == 26, "26 task cards")
+            card_count = page.locator(".ep24-card").count()
+            if card_count != 26:
+                raise AssertionError(f"26 task cards: got {card_count}; ep24={page.locator('#ep24').count()}; runtime={page.evaluate('typeof window.EP24_TEST_SCORE')}; errors={errors[:10]}")
             assert_true(page.locator(".ep24-source").count() == 26, "26 official source task images")
             assert_true(page.locator("#ep24-total").count() == 1, "result score node")
             assert_true(page.evaluate("document.documentElement.scrollWidth <= document.documentElement.clientWidth"), "desktop no horizontal overflow")
 
-            # exact scorer + official partial-credit rules
             checks = {
                 "task5_exact": page.evaluate("EP24_TEST_SCORE(5,'34')"),
                 "task5_reverse": page.evaluate("EP24_TEST_SCORE(5,'43')"),
@@ -63,12 +67,10 @@ def browser_gate() -> dict:
             }
             assert_true(checks == expected, f"scorer regression {checks}")
 
-            # persistence
             page.locator("#ep24-a-1").fill("-5")
             page.reload(wait_until="networkidle")
             assert_true(page.locator("#ep24-a-1").input_value() == "-5", "answer persistence")
 
-            # full 45/45 flow
             official = {
                 1:"-5",2:"24",3:"48",4:"2",5:"34",6:"12",7:"2",8:"400",9:"13",10:"13",
                 11:"3",12:"0,25",13:"3",14:"45",15:"42",16:"76",17:"21",18:"134",19:"3,40,2",20:"35"
@@ -88,11 +90,8 @@ def browser_gate() -> dict:
                 page.locator(f'.ep24-score-btn[data-n="{n}"][data-p="{pts}"]').click()
             assert_true(page.locator("#ep24-total").inner_text().strip() == "45 / 45", "45/45 total")
 
-            # criteria source pages: 1 each for 21-25, 4 for 26 = 9
-            page.locator(".ep24-criteria details").first.evaluate("el => el.open=true")
             assert_true(page.locator(".ep24-criteria img").count() == 9, "9 official solution/criteria pages")
 
-            # responsive gates
             responsive = {}
             for width in (390, 320):
                 page.set_viewport_size({"width": width, "height": 820})
@@ -102,7 +101,7 @@ def browser_gate() -> dict:
                 assert_true(ok, f"responsive {width} no horizontal overflow")
 
             browser.close()
-            return {"status":"PASS","task_cards":26,"short_review":20,"extended_review":6,"criteria_pages":9,"scorer":checks,"responsive":responsive,"full_score":"45 / 45"}
+            return {"status":"PASS","task_cards":26,"short_review":20,"extended_review":6,"criteria_pages":9,"scorer":checks,"responsive":responsive,"full_score":"45 / 45","browser_errors":errors}
     finally:
         server.terminate()
         try:
