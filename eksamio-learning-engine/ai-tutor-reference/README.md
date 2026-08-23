@@ -22,6 +22,17 @@ only returned for a later server mediation layer. Failure or malformed output
 returns the stable `TUTOR_UNAVAILABLE` result. This is not a provider SDK,
 production endpoint, or reliability/failover gateway.
 
+## T1 reliability gateway
+
+`reliability_gateway.py` extends this same boundary with
+`eksamio.tutor.reliability-gateway.v1`. It routes only server-registered,
+admitted provider paths and still passes accepted output back through
+`TutorOrchestrator`. The reference models normalized failures, per-path circuit
+state, bounded retry/failover, half-open recovery, provider-neutral episode
+projection, late-response discard, and exactly-once acceptance/quota/mock
+verification commit. It is deterministic and contains no external provider,
+network, persistence, or learner audio path.
+
 Run:
 
 ```sh
