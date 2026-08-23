@@ -17,6 +17,8 @@ GitHub is the durable source of truth. Chat history is navigation, not project a
 5. Read the exact task/scope supplied for this run.
 6. Read only the subject/source/contracts directly relevant to that task.
 
+For any task that builds, extends, inventories, source-closes or audits a **full subject**, also read `FULL-SUBJECT-SOURCE-AND-TEXTBOOK-INGESTION-POLICY-v0.1.md` before changing subject scope/identities/content.
+
 For cross-subject architecture, PEIS, production, deployment/security, identity/auth, commerce or governance work, also read the relevant current authority named by `00E`, including `OWNER-DECISIONS-2026-08-22.md`, `00B-PROJECT-PRIORITIES-CURRENT.md`, `00C-IMPLEMENTATION-GOVERNANCE-GUIDE.md` and `00D-BRAIN-CONTINUITY-PROTOCOL.md` when needed.
 
 `00-WORK-STATUS.txt` and `00A-WORK-STATUS-CURRENT-ADDENDUM.txt` are historical checkpoints, not current operating state. Older files may contain valid substantive architecture but stale start/read-order instructions; current `00E` + this file supersede those operational pointers.
@@ -34,6 +36,8 @@ Do not perform broad repository audits from zero when the task can be resolved b
 - Eksamio must aim beyond the current world baseline in measurable educational outcomes, not by adding fashionable features. Use `PRODUCT-BENCHMARK-2026.md` and the Tutor world benchmark when a task affects product differentiation or AI tutoring.
 - Advanced architecture must remain economical: prefer deterministic tools, compact context, cheap model routing, reuse and on-demand infrastructure; reject complexity/cost without measurable learning or product gain.
 - Eksamio runtime must not depend on a ChatGPT/OpenAI subscription. OpenAI/Codex may be development tools or replaceable AI providers, never canonical product infrastructure.
+- Full school-subject scope must follow `FULL-SUBJECT-SOURCE-AND-TEXTBOOK-INGESTION-POLICY-v0.1.md`: official school-program authority defines the scope skeleton; FIPI/assessment material is an exam/diagnostic overlay; verified textbooks/pedagogical sources are knowledge/pedagogy evidence and do not auto-admit canonical identities.
+- Do not call FIPI-only coverage, one textbook line, or an AI-generated ontology a complete school-subject scope.
 
 ## Owner local-workspace boundary
 
@@ -79,6 +83,7 @@ When an interactive task only needs owner authentication and Browser/Computer co
 - Difficulty remains `null` unless validated data or an explicitly reviewed algorithm supports it.
 - Preserve backward compatibility unless a migration is explicitly specified and tested.
 - A mergeable PR is not automatically acceptable.
+- Textbook possession/upload does not prove redistribution rights. Use verified books for scope/decomposition/pedagogy evidence and create original Eksamio learner-facing content unless reproduction is separately authorized.
 
 ## Russian source policy
 
