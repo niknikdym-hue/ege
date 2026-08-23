@@ -2,154 +2,208 @@
 
 **Status:** CURRENT PRODUCT / DELIVERY SNAPSHOT  
 **Updated:** 2026-08-23  
-**Baseline at update:** `85b1f4316cf33dc6ab0eebce2e9281b6432e4bbb`
+**Baseline at update:** `8ed1a34b514070f96c6e37333e61b9f9bb09aa32`
 
-This file does not replace `00-PRODUCT-MASTERPLAN.md`. For the shortest current operating state, read `00E-CURRENT-BRAIN-HANDOFF.md` and the newest relevant worklog checkpoint.
+This file does not replace `00-PRODUCT-MASTERPLAN.md` or `OWNER-DECISIONS-2026-08-22.md`. The owner decision of 2026-08-23 sets a hard delivery deadline: **full paid `Eksamio Pro — Russian` launch by 2026-09-01**.
 
 ## 1. Product priority
 
 Eksamio remains one **Personal Exam Intelligence System (PEIS)**.
 
-Subject order:
+Subject order remains:
 
-1. Russian — subject #1, P0.
-2. Mathematics — subject #2, P0 system subject.
-3. Physics — subject #3, P1.
+1. Russian — subject #1, P0 and the only Full Subject launch target before 2026-09-01.
+2. Mathematics — subject #2, P0 system subject, but non-launch-critical Full Subject acquisition is deferred until Russian source completeness.
+3. Physics — subject #3, P1; bounded accepted-demo closure may finish but must not consume Russian launch-critical capacity.
 
-P0/P1 describes product/architecture importance, not a requirement to keep obsolete workstreams alive.
+Until September 1, priority is determined by contribution to the real paid Russian Pro launch, not by historical P0/P1 labels alone.
 
-## 2. Current shared-system bottleneck
+## 2. Primary milestone and critical path
 
-The validated reference chain has reached trusted-host identity. The next central production gate is:
+Primary milestone:
 
-`PEIS-DEPLOYMENT-SECURITY-001`
+`PAID_EKSAMIO_PRO_RUSSIAN_PRODUCTION_LAUNCHED_BY_2026_09_01`
 
-No public PEIS browser traffic should be enabled before this gate explicitly passes.
+The deadline does not weaken hard product/security/source/privacy gates. It changes scheduling: every new task must reduce one concrete launch blocker or be deferred.
 
-The production design must preserve the free deterministic/base learning loop and must not depend on ChatGPT Plus/Pro, Codex credits, an OpenAI end-user account or one fixed AI provider.
+Current launch-critical lanes are:
 
-Current owner-decision authority: `OWNER-DECISIONS-2026-08-22.md`.
+1. **Russian subject truth/content** — normative scope coverage, textbook/source ingestion, canonical identities/prerequisites, complete launch-relevant content bundles and subject acceptance.
+2. **Russian PEIS connection** — land current 121-card mapping and move from integration-ready to real shared-PEIS evidence flow/end-to-end learning loop.
+3. **Yandex deployment/security** — staging -> production candidate, private service/persistence, secrets, monitoring, rollback and Russia/no-VPN operation.
+4. **Tutor** — provider-neutral/evaluation -> admitted text path -> realtime voice -> same-session continuity -> reliability/kill switch.
+5. **Identity/session** — passwordless e-mail/phone and safe anonymous -> account continuity with server-owned canonical identity.
+6. **Payments/entitlements** — real SBP/card paid path, NPD-compatible receipt, webhook idempotency, entitlement and refund/failure behavior.
+7. **Product client** — separate Eksamio Pro web application with strong desktop/mobile-browser flow; Tilda remains public/free-demo layer.
+8. **Legal/privacy/production acceptance** — required launch copy/controls, learner audio persisted = 0, final end-to-end production acceptance.
 
-This gate is now constrained by approved owner decisions:
+A task outside these lanes needs an explicit reason why it is still launch-critical before September 1.
 
-- first Pro client is a separate Eksamio web app; Tilda remains public/free-demo;
-- Russia/no-VPN operation is mandatory, including AI Tutor;
-- primary production cloud is Yandex Cloud Russia, while canonical state/core logic remain portable;
-- passwordless verified e-mail/phone identity;
-- replaceable payment/provider layers;
-- learner audio is never stored in any persistent form;
-- first paid Pro requires one Tutor production-ready in both text and realtime voice.
+## 3. Russian launch lane — immediate work
 
-## 3. Execution order — what should move now
+### RUSSIAN SOURCE / FULL SUBJECT
 
-### CENTRAL P0 — immediate bottleneck
+`FULL_SUBJECT_SCOPE_SOURCE_COMPLETE` is launch-blocking for a complete paid Russian subject offer.
 
-Close `PEIS-DEPLOYMENT-SECURITY-001` as the main platform dependency.
+Current active textbook/source step:
 
-Every central task must reduce one concrete part of this gate or directly unlock the next production dependency. Do not start unrelated infrastructure, provider experiments or UI work because they are convenient.
+`RUSSIAN_TEXTBOOK_SELECTION_MATRIX`
 
-### RUSSIAN P0 — parallel subject lane
+Rules:
 
-PR #72 remains the active Russian decision lane. Continue by delta, not by repeating the broad 185×174 audit.
+- official school-program authority defines scope skeleton;
+- FIPI/OGE/EGE are assessment overlays, not the whole subject;
+- selected textbooks are knowledge/pedagogy evidence;
+- no batch textbook download before matrix approval;
+- source PDFs belong in Source Archive, not product runtime;
+- Google Drive may be Source Archive but Yandex runtime must work without Drive after ingestion;
+- no persistent owner-local textbook folders unless explicitly requested.
 
-Current accepted working invariants remain:
+### RUSSIAN 121-CARD MAPPING
+
+PR #112 is a direct launch blocker/accelerator and must be resolved now.
+
+Its useful current claim is:
 
 - 121 active cards;
-- 88 exception IDs;
-- 91 EXACT;
+- 116 EXACT;
 - 5 PARTIAL_COMPOSITE;
-- 25 BLOCKED;
-- 96 integration-ready;
+- 121 integration-ready;
 - 0 live-connected;
-- 35 existing canonical school identities;
-- 0 new `ru-*` IDs admitted.
+- exactly 12 previously admitted new canonical `ru-*` identities in that reconciliation wave;
+- 185 canonical school identities preserved.
 
-PR #57 remains HOLD: proposed identities are not canonical authority.
+Because PR #112 was created from an old main and is currently non-mergeable, the next action is a bounded refresh/rebase/merge-conflict repair against current `main`, preserving the admitted semantic result and current source/textbook authorities. No broad Russian reaudit.
 
-PR #23 remains a valuable reviewed 121-card content checkpoint, but the whole historical branch is not automatically mergeable authority.
+After acceptance/merge, immediately proceed to production-shaped Russian shared-PEIS connection. Do not stop at `integration_ready`.
 
-The next Russian result should be a bounded decision/reconciliation packet that tells Central Brain exactly what can be admitted/landed and what remains blocked; any required write/rebase/validator implementation goes to Codex.
+## 4. Central platform lane
 
-### PHYSICS P1 — bounded parallel lane only
+The portable PostgreSQL/container substrate has passed and is merged.
 
-Physics 2026 remains the frozen technical/runtime/layout reference.
+Next platform milestone is real Yandex staging and then production-candidate admission. Public traffic remains OFF until security/identity gates pass.
 
-Physics 2025 v1.5 was subject-accepted and merged through PR #96. Its bounded result-page order fix is closed; do not reopen 2025 without a new concrete finding.
+Required production invariants include:
 
-Physics 2024 is an active bounded source/demo lane because a real official-source dependency exists. The official FIPI 2024 source contour is `ege-source-fizika/source-fizika-2024/`; the derived source-access pack landed through PR #97 outside the authority folder. Continue:
+- private runtime behind controlled API edge;
+- Managed PostgreSQL or admitted production persistence;
+- secrets outside Git/client/logs;
+- server-owned learner identity;
+- kill switches and fail-safe behavior;
+- monitoring/rollback;
+- Google Drive/source archive not on production hot path;
+- deterministic/base product survives Tutor/provider/source-archive outage.
 
-`source lock -> source/layout/visual registry -> Physics subject build packet -> deterministic Codex build -> bounded subject acceptance -> Tilda delivery`
+## 5. Tutor lane
 
-Physics 2024 must not slow the central P0 blocker or import content from 2025/2026.
+Merged foundations:
 
-### MATHEMATICS P0 — no broad historical lane
+- provider-neutral Tutor boundary;
+- reliability gateway;
+- transient-failure circuit repair;
+- bounded real OpenAI sandbox authority.
 
-The broad PROFILE Mathematics historical preparation cycle for 2022–2026 is closed for normal work.
+Active/next execution must produce repo-visible results, not only design notes:
 
-One known narrow exception remains: `matematika-source-2024/PROFILE-2024-UI-PARITY-FINDING.txt`. Handle only as a surgical repair when scheduled:
+- real-provider sandbox evidence;
+- provider-neutral evaluation harness;
+- production-eligible conversational provider admission for Russia/no-VPN contour;
+- grounded Russian text Tutor vertical slice;
+- realtime speech path with learner audio persistence = 0;
+- `voice -> text -> voice` same-session continuity;
+- independent verification and exactly-once PEIS evidence behavior;
+- provider failure/fallback/kill switch.
 
-`targeted fix -> exact regression/browser verification -> durable acceptance/freeze -> close`
+The first paid Pro launch remains forbidden if either text or realtime voice Tutor is not production-ready.
 
-After that, Mathematics work returns only to a real shared-PEIS/identity/base-route/telemetry dependency.
+## 6. Identity / payment / client lanes
 
-## 4. First Pro launch gate — P0 capability, not first dependency
+These are now immediate launch dependencies, not later backlog items.
 
-The shared PEIS closed loop, verified knowledge, deployment/security and production Tutor foundations remain prerequisite work. Voice P0 does not authorize a voice-first bypass of that dependency graph.
+### Identity
 
-The first paid Pro launch is forbidden until one Tutor is production-ready in both text and realtime voice, with `voice -> text -> voice` continuity in the same learning episode. Text-only and voice-only Pro launches are forbidden.
+- passwordless verified e-mail or phone;
+- browser is not canonical identity authority;
+- anonymous free-demo evidence can be safely linked to permanent account;
+- session/privacy/retention behavior tested.
 
-No cloud, provider, auth or payment runtime is declared implemented or production-approved merely because its architecture/candidate is documented.
+### Payments
 
-## 5. Mandatory task admission test
+First candidate remains `Robokassa + Robocheki SMZ` for the self-employed/NPD contour, subject to production acceptance.
 
-Before Central Brain issues any new implementation/audit task, it must be able to state all of the following in one short contract:
+Launch requires real:
 
-- `WHY_NOW` — why this task is the best next use of effort now;
-- `ACTIVE_BLOCKER_OR_MILESTONE` — exact blocker/milestone it serves;
-- `BASELINE_MAIN_SHA` — current durable baseline;
-- `DEPENDENCY_IN` — what must already be true before execution;
-- `MINIMAL_DELTA` — smallest change/evidence needed;
-- `EXPECTED_UNLOCK` — what becomes possible if PASS;
-- `EXECUTOR` — Brain / Codex / Spark / deterministic tool and why that is the cheapest sufficient choice;
-- `ALLOWED_PATHS` and `FORBIDDEN_PATHS` where repo changes are possible;
-- `ACCEPTANCE_EVIDENCE` — measurable proof of success;
-- `STOP_CONDITIONS` — when to stop rather than improvise;
-- `FINAL_STATUS` — bounded allowed outcomes.
+- SBP and bank-card flow;
+- legal receipt behavior;
+- no mandatory card saving/autocharging;
+- webhook replay/idempotency;
+- entitlement grant;
+- refund/failure/retry handling.
 
-If `EXPECTED_UNLOCK` is unclear, the task is not admitted.
+### Product client
 
-If an existing working process already solves the problem, reuse it. Do not invent a new CI, staging layer, framework or architecture unless the existing path is proven insufficient for a real requirement.
+- separate Pro web app;
+- desktop + mobile-browser acceptance;
+- demos remain anonymously usable through public layer;
+- Pro sections may be previewed/locked according to product authority;
+- no accounts/payments/PEIS/Tutor authority inside Tilda.
 
-If execution unexpectedly expands materially beyond the contract, STOP and return the new blocker to Central Brain. Do not turn a small delivery task into an architecture project.
+## 7. Deferred until after Russian launch unless directly blocking it
 
-## 6. Parallel execution
+Normally defer before September 1:
 
-Parallel lanes are useful only when they do not compete for the same blocker-critical resource and have a concrete accepted endpoint.
+- Mathematics Full Subject acquisition/ingestion;
+- Physics Full Subject acquisition/ingestion;
+- broad historical demo re-audits;
+- speculative infrastructure/framework work;
+- nonessential dashboard/report polish;
+- later vision/photo/multimodal features;
+- cross-subject expansion;
+- refactors without launch evidence;
+- new governance documents when existing authority can be updated instead.
 
-- Eksamio Brain — architecture, shared PEIS, priorities, cross-lane review and acceptance decisions.
-- Russian — Russian-only subject/semantic lane.
-- Physics — current bounded 2024 source/demo lane only.
-- Mathematics — no persistent historical-demo lane.
+## 8. Mandatory task admission test through September 1
 
-Parallel lanes communicate through GitHub branches/PRs/results, not by copying chat histories.
+Every significant task must state:
 
-## 7. Brain review cadence
+- `WHY_NOW`;
+- `SEP1_LAUNCH_BLOCKER` — exact launch blocker reduced;
+- `BASELINE_MAIN_SHA`;
+- `DEPENDENCY_IN`;
+- `MINIMAL_DELTA`;
+- `EXPECTED_UNLOCK`;
+- `EXECUTOR`;
+- `ALLOWED_PATHS` / `FORBIDDEN_PATHS`;
+- `ACCEPTANCE_EVIDENCE`;
+- `STOP_CONDITIONS`;
+- bounded `FINAL_STATUS`.
 
-Review deltas, not the entire project repeatedly.
+If a task cannot name the September 1 launch blocker it reduces, defer it.
 
-Brain cross-lane review is warranted after significant merges, blocker changes, production/shared-PEIS changes, cross-subject conflicts or unsupported DONE claims.
+Use existing working infrastructure and contracts. Do not turn a bounded launch task into a new architecture project.
 
-If nothing material changed, do not create another checkpoint or repeat an audit.
+## 9. Parallel execution rule
 
-## 8. Delivery rule
+Launch-critical independent lanes may run in parallel when they do not conflict:
 
-Choose the next work by **bottleneck + dependency + expected unlock**, not by the number of open files, ease of implementation or visual appeal.
+- Russian source/content;
+- Russian mapping/PEIS integration;
+- Yandex deployment/security;
+- Tutor;
+- identity;
+- payments;
+- client/legal acceptance.
 
-Prefer:
+This parallelism uses cloud isolation + GitHub branches/PRs. It must not create persistent owner-local clones/worktrees/folders without explicit owner permission.
 
-`current authority -> justified narrow task -> evidence -> accept/reject -> next dependency`
+## 10. Delivery rule
 
-over
-`re-audit -> meta-report -> new process -> re-audit the process`.
+Until paid Russian Pro is live, choose work by:
 
-A task is efficient only if it reduces uncertainty, closes a real gap, unlocks the next dependency or produces a measurable learning/production capability with the lightest safe method.
+`Sep 1 blocker -> smallest executable delta -> evidence -> accept/repair -> next blocker`.
+
+Avoid:
+
+`new paper -> re-audit -> process document -> another paper`.
+
+A repository document is justified only when it is necessary authority for executable work or records a material owner decision. The default next action is implementation, testing, integration or production acceptance.
