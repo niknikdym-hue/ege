@@ -33,8 +33,15 @@ class PostgresPeisPersistenceStore(PeisPersistenceStore):
         self._create_schema()
     def _create_schema(self):
         # The file is tracked, deterministic, and idempotent for empty DB/restart use.
+        migration = (HERE / "migrations" / "0001_peis_postgres.sql").read_text(encoding="utf-8")
+        before, function_and_after = migration.split("CREATE OR REPLACE FUNCTION", 1)
+        function_body, after = function_and_after.split("$$;", 1)
         with self.connection:
-            self.connection.execute((HERE / "migrations" / "0001_peis_postgres.sql").read_text(encoding="utf-8"))
+            for statement in before.split(";\n"):
+                if statement.strip(): self.connection.execute(statement)
+            self.connection.execute("CREATE OR REPLACE FUNCTION" + function_body + "$$;")
+            for statement in after.split(";\n"):
+                if statement.strip(): self.connection.execute(statement)
     def readiness(self) -> bool:
         try:
             return self.connection.execute("SELECT version FROM peis_schema_migrations WHERE version = %s", (self.migration_version,)).fetchone() is not None
