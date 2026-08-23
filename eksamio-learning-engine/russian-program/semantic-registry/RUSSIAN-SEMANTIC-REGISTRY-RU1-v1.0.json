@@ -1,0 +1,272 @@
+{
+  "admission_decision_ref": "RUSSIAN-RU1-121-CARD-ADMISSION-DECISION-v1.0.json",
+  "canonical_new_ru_identity_count": 12,
+  "identities": [
+    {
+      "admission_basis": "PR57 candidate-011 + RU1 subject acceptance",
+      "canonical_definition_ru": "Выбирать нормативный пароним по его значению и лексической сочетаемости в конкретном контексте.",
+      "canonical_label_ru": "Выбор паронима по значению и лексической сочетаемости",
+      "domain": "lexis",
+      "entity_type": "DISCRIMINATION_SKILL",
+      "excludes": [
+        "general lexical meaning diagnosis",
+        "dictionary-sense lookup",
+        "lexical redundancy"
+      ],
+      "includes": [
+        "context discrimination inside a concrete paronym pair",
+        "meaning and normative lexical collocation"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-lexis-paronym-context-choice",
+      "source_provenance_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[paronym_context_choice]",
+        "PR23 reviewed 121-card corpus source_refs for mapped paronym exceptions"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "RU1 narrowed subject proposal; broad PR57 candidate-025 explicitly not admitted",
+      "canonical_definition_ru": "Выбирать source-verified нормативную форму именительного падежа множественного числа для лексически закреплённых случаев, таких как ДОКТОРА и КУПОЛА.",
+      "canonical_label_ru": "Лексически закреплённые нормативные формы именительного падежа множественного числа существительных",
+      "domain": "morphological_norms",
+      "entity_type": "PROCEDURAL_SKILL",
+      "excludes": [
+        "genitive plural",
+        "noun gender",
+        "other cases",
+        "general productive plural formation"
+      ],
+      "includes": [
+        "source-verified lexical nominative plural norms such as доктора and купола"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-morphology-noun-nominative-plural-lexical-norms",
+      "source_provenance_refs": [
+        "PR23 reviewed 121-card corpus source_refs for morph_doktor_plural and morph_kupol_plural"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "PR57 candidate-021 + RU1 subject acceptance",
+      "canonical_definition_ru": "Определять нормативное ударение в глаголах и их личных и родовых формах.",
+      "canonical_label_ru": "Ударение в глаголах и личных/родовых формах",
+      "domain": "orthoepy",
+      "entity_type": "PROCEDURAL_SKILL",
+      "excludes": [
+        "noun stress",
+        "composite universal stress attribution"
+      ],
+      "includes": [
+        "verb-form stress including дождалАсь, клАла, занялА"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-orthoepy-verbs",
+      "source_provenance_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[stress_verbs]",
+        "PR23 reviewed 121-card corpus source_refs for stress_feminine_past_cluster"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "PR57 candidate-019 + RU1 subject acceptance",
+      "canonical_definition_ru": "Определять нормативное ударение в существительных и их формах с учётом значения слова, когда оно различает норму.",
+      "canonical_label_ru": "Ударение в существительных и их формах",
+      "domain": "orthoepy",
+      "entity_type": "PROCEDURAL_SKILL",
+      "excludes": [
+        "verb stress",
+        "composite universal stress attribution"
+      ],
+      "includes": [
+        "noun stress including Отзыв / отзЫв meaning pair"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-orthoepy-nouns",
+      "source_provenance_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[stress_nouns]",
+        "PR23 reviewed 121-card corpus source_refs for stress_otzyv_meaning_pair"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "PR57 candidate-029 + RU1 subject acceptance",
+      "canonical_definition_ru": "Нормативно перестраивать прямую речь в косвенную с корректной точкой зрения, лицом и временной перспективой.",
+      "canonical_label_ru": "Нормативное построение предложения с косвенной речью",
+      "domain": "syntactic_norms",
+      "entity_type": "PROCEDURAL_SKILL",
+      "excludes": [
+        "direct-speech punctuation as a separate skill"
+      ],
+      "includes": [
+        "person shift from narrator viewpoint",
+        "time perspective shift when required"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-syntax-indirect-speech-construction",
+      "source_provenance_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[indirect_speech_construction]",
+        "PR23 reviewed 121-card corpus source_refs for syntax_indirect_speech_person_shift"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "PR57 candidate-030 + RU1 subject acceptance",
+      "canonical_definition_ru": "Выбирать нормативную форму названия-несогласованного приложения в зависимости от наличия родового слова.",
+      "canonical_label_ru": "Нормативное употребление несогласованного приложения",
+      "domain": "syntactic_norms",
+      "entity_type": "PROCEDURAL_SKILL",
+      "excludes": [
+        "general case government"
+      ],
+      "includes": [
+        "с родовым словом: в романе «Война и мир»",
+        "без родового слова: в «Войне и мире»"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-syntax-uncoordinated-apposition-construction",
+      "source_provenance_refs": [
+        "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json#skills[uncoordinated_apposition_construction]",
+        "PR23 reviewed 121-card corpus source_refs for syntax_apposition_title_declension"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "RU1 source-backed subject proposal",
+      "canonical_definition_ru": "Распознавать случаи, где сравнительная частица, включая СЛОВНО, не является вводным словом и не обособляется как вводная конструкция.",
+      "canonical_label_ru": "Разграничение сравнительных частиц и вводных конструкций",
+      "domain": "punctuation",
+      "entity_type": "DISCRIMINATION_SKILL",
+      "excludes": [
+        "lexeme-specific rules for конечно, правда, наконец, однако"
+      ],
+      "includes": [
+        "словно as non-introductory comparison particle"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-punctuation-false-introductory-comparison-particles",
+      "source_provenance_refs": [
+        "PR23 reviewed 121-card corpus source_refs for false_introductory_comparison_particles"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "RU1 source-backed subject proposal",
+      "canonical_definition_ru": "Распознавать логические наречные связки, включая ПОЭТОМУ, которые сами по себе не являются вводными словами.",
+      "canonical_label_ru": "Разграничение логических наречных связок и вводных конструкций",
+      "domain": "punctuation",
+      "entity_type": "DISCRIMINATION_SKILL",
+      "excludes": [
+        "lexeme-specific dual-function rules for конечно, правда, наконец, однако"
+      ],
+      "includes": [
+        "поэтому as logical adverbial, not introductory"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-punctuation-false-introductory-logical-adverbials",
+      "source_provenance_refs": [
+        "PR23 reviewed 121-card corpus source_refs for false_introductory_logical_adverbials"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "RU1 source-backed subject proposal",
+      "canonical_definition_ru": "Различать вводное употребление КОНЕЧНО и усилительное/невводное употребление по функции в контексте.",
+      "canonical_label_ru": "КОНЕЧНО: функция и пунктуация по контексту",
+      "domain": "punctuation",
+      "entity_type": "DISCRIMINATION_SKILL",
+      "excludes": [
+        "other introductory lexemes"
+      ],
+      "includes": [
+        "introductory конечно",
+        "intensifying non-introductory use"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-punctuation-konechno-function-context",
+      "source_provenance_refs": [
+        "PR23 reviewed 121-card corpus source_refs for introductory_konechno_dual_function"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "RU1 source-backed subject proposal",
+      "canonical_definition_ru": "Различать вводное употребление ПРАВДА и невводное употребление как члена предложения или частицы по функции в контексте.",
+      "canonical_label_ru": "ПРАВДА: функция и пунктуация по контексту",
+      "domain": "punctuation",
+      "entity_type": "DISCRIMINATION_SKILL",
+      "excludes": [
+        "other introductory lexemes"
+      ],
+      "includes": [
+        "introductory правда",
+        "non-introductory member/particle use"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-punctuation-pravda-function-context",
+      "source_provenance_refs": [
+        "PR23 reviewed 121-card corpus source_refs for introductory_pravda_dual_function"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "RU1 source-backed subject proposal",
+      "canonical_definition_ru": "Различать метатекстовое заключительное употребление В КОНЦЕ КОНЦОВ и обстоятельственное значение результата/хода событий по контексту.",
+      "canonical_label_ru": "В КОНЦЕ КОНЦОВ: функция и пунктуация по контексту",
+      "domain": "punctuation",
+      "entity_type": "DISCRIMINATION_SKILL",
+      "excludes": [
+        "other introductory lexemes"
+      ],
+      "includes": [
+        "metatext conclusion",
+        "event-result adverbial use"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-punctuation-v-kontse-kontsov-function-context",
+      "source_provenance_refs": [
+        "PR23 reviewed 121-card corpus source_refs for introductory_v_kontse_kontsov_dual_function"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    },
+    {
+      "admission_basis": "RU1 source-backed subject proposal; existing school-plav-plov-exception-set intentionally preserved unchanged",
+      "canonical_definition_ru": "Применять source-verified специальное написание ПЛЫВУНЫ/корня ПЛЫВ- без расширения существующего правила о ПЛОВЕЦ/ПЛОВЧИХА.",
+      "canonical_label_ru": "ПЛЫВУНЫ как специальное написание в группе ПЛАВ-/ПЛОВ-/ПЛЫВ-",
+      "domain": "orthography",
+      "entity_type": "PROCEDURAL_SKILL",
+      "excludes": [
+        "пловец",
+        "пловчиха",
+        "general productive плав- model"
+      ],
+      "includes": [
+        "ПЛЫВУНЫ / root плыв- special lexical exception"
+      ],
+      "parent_ids": [],
+      "prerequisite_ids": [],
+      "semantic_id": "ru-orthography-plyvuny-exception",
+      "source_provenance_refs": [
+        "eksamio-learning-engine/russkiy-knigi/rozental.doc (PR23 verified source for ПЛЫВУНЫ)",
+        "PR23 reviewed 121-card corpus source_refs for alt_root_plyvuny"
+      ],
+      "status": "CANONICAL_ADMITTED_RU1"
+    }
+  ],
+  "preserved_school_identity_count": 185,
+  "registry_version": "RUSSIAN-SEMANTIC-REGISTRY-RU1-v1.0",
+  "schema_version": "1.0.0",
+  "status": "CANONICAL_RU1_MATERIALIZED",
+  "subject_id": "russian"
+}
