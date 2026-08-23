@@ -2,7 +2,7 @@
 
 **Status:** CURRENT PRODUCT / DELIVERY SNAPSHOT  
 **Updated:** 2026-08-23  
-**Baseline at update:** `8ed1a34b514070f96c6e37333e61b9f9bb09aa32`
+**Baseline at update:** `63e916f86b1e024bb01cb879048b50cb9d1ccf30`
 
 This file does not replace `00-PRODUCT-MASTERPLAN.md` or `OWNER-DECISIONS-2026-08-22.md`. The owner decision of 2026-08-23 sets a hard delivery deadline: **full paid `Eksamio Pro — Russian` launch by 2026-09-01**.
 
@@ -29,7 +29,7 @@ The deadline does not weaken hard product/security/source/privacy gates. It chan
 Current launch-critical lanes are:
 
 1. **Russian subject truth/content** — normative scope coverage, textbook/source ingestion, canonical identities/prerequisites, complete launch-relevant content bundles and subject acceptance.
-2. **Russian PEIS connection** — land current 121-card mapping and move from integration-ready to real shared-PEIS evidence flow/end-to-end learning loop.
+2. **Russian PEIS connection** — move the merged 121-card mapping from integration-ready to real shared-PEIS evidence flow/end-to-end learning loop.
 3. **Yandex deployment/security** — staging -> production candidate, private service/persistence, secrets, monitoring, rollback and Russia/no-VPN operation.
 4. **Tutor** — provider-neutral/evaluation -> admitted text path -> realtime voice -> same-session continuity -> reliability/kill switch.
 5. **Identity/session** — passwordless e-mail/phone and safe anonymous -> account continuity with server-owned canonical identity.
@@ -59,23 +59,25 @@ Rules:
 - Google Drive may be Source Archive but Yandex runtime must work without Drive after ingestion;
 - no persistent owner-local textbook folders unless explicitly requested.
 
-### RUSSIAN 121-CARD MAPPING
+### RUSSIAN 121-CARD MAPPING / PEIS CONNECTION
 
-PR #112 is a direct launch blocker/accelerator and must be resolved now.
+PR #112 was reviewed and merged on 2026-08-23 as merge commit `63e916f86b1e024bb01cb879048b50cb9d1ccf30`.
 
-Its useful current claim is:
+Accepted bounded result:
 
-- 121 active cards;
+- 121 active unique cards;
 - 116 EXACT;
 - 5 PARTIAL_COMPOSITE;
 - 121 integration-ready;
-- 0 live-connected;
+- 0 blocked;
+- 0 live-connected at the mapping artifact layer;
 - exactly 12 previously admitted new canonical `ru-*` identities in that reconciliation wave;
-- 185 canonical school identities preserved.
+- 185 canonical school identities preserved;
+- Russian demos/Tilda/shared PEIS contracts unchanged by the landing.
 
-Because PR #112 was created from an old main and is currently non-mergeable, the next action is a bounded refresh/rebase/merge-conflict repair against current `main`, preserving the admitted semantic result and current source/textbook authorities. No broad Russian reaudit.
+The mapping-landing blocker is CLOSED. Do not reopen the broad RU-1 reconciliation.
 
-After acceptance/merge, immediately proceed to production-shaped Russian shared-PEIS connection. Do not stop at `integration_ready`.
+**Next launch-critical action:** production-shaped Russian shared-PEIS connection using the already merged PEIS integration/service-bridge/browser-hook/trusted-host/substrate contracts. Move real Russian learner attempts through server-owned evidence/persistence/recompute/NBA while preserving current scoring/local fallback and source truth. Do not stop at `integration_ready`.
 
 ## 4. Central platform lane
 
