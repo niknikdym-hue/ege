@@ -3,6 +3,8 @@
 
 Validates current corrected canonical/runtime data, Skill Graph, explanation resolver,
 session/state logic, deterministic Exceptions T123 chunking, coverage/size and handoff checks.
+Uses the audited course-grade current practice builder so aggregate validation cannot
+silently overwrite reviewed learner feedback with an older checkpoint or stale card count.
 No network or production mutation.
 """
 
@@ -20,7 +22,7 @@ CHECKS = [
     ("EXPLANATION_RUNTIME", "build/build_russian_explanation_runtime.py"),
     ("EXPLANATION_RESOLVER_SYNTHETIC_TESTS", "build/tests/test_russian_explanation_resolver.py"),
     ("EXCEPTIONS_CURRENT_CORRECTED_V2", "build/build_russian_exceptions_bank_current_v2.py"),
-    ("EXCEPTIONS_PRACTICE_CURRENT_CORRECTED_V2", "build/build_russian_exceptions_practice_current_corrected_v2.py"),
+    ("EXCEPTIONS_PRACTICE_COURSE_GRADE", "build/build_russian_exceptions_practice_course_grade.py"),
     ("EXCEPTIONS_LAUNCH_PRIORITY", "build/build_russian_exceptions_launch_priority.py"),
     ("EXCEPTIONS_RUNTIME", "build/build_russian_exceptions_runtime.py"),
     ("EXCEPTIONS_T123_CHUNKS", "build/build_russian_exceptions_t123_chunks.py"),
@@ -60,6 +62,7 @@ def write_summary(root: Path, rows: list[dict[str, object]]) -> Path:
         f"CHECKS_TOTAL: {len(rows)}",
         "CURRENT_EXCEPTIONS_MANIFEST: 118-RUSSIAN-EXCEPTIONS-CURRENT-MANIFEST.json",
         "CURRENT_PRACTICE_MANIFEST: 119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json",
+        "CURRENT_PRACTICE_BUILDER: build/build_russian_exceptions_practice_course_grade.py",
         f"EXPECTED_ACTIVE_PRACTICE_ITEMS: {practice_manifest['expected_active_items']}",
         "",
         "CHECKS",
@@ -94,6 +97,9 @@ def write_summary(root: Path, rows: list[dict[str, object]]) -> Path:
         "- build/RUSSIAN-EXCEPTIONS-T123-CHUNKS-MANIFEST.json",
         "- audits/RUSSIAN-EXCEPTIONS-PRACTICE-COVERAGE.json",
         "- audits/RUSSIAN-RUNTIME-SIZE-AUDIT.txt",
+        "",
+        "CONTENT INVARIANT",
+        "- Aggregate validation MUST rebuild practice with the audited course-grade builder; older corrected_v2 checkpoints must not overwrite learner feedback.",
         "",
         "SAFETY",
         "- Current EGE trainer remains frozen/unchanged.",

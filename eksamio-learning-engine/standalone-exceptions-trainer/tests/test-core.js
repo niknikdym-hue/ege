@@ -13,7 +13,11 @@ const selector = require('../core/rex-selector.js');
 
 const ROOT = path.resolve(__dirname, '../..');
 const RUNTIME_PATH = path.join(ROOT, 'build/RUSSIAN-EXCEPTIONS-RUNTIME.json');
+const PRACTICE_MANIFEST_PATH = path.join(ROOT, '119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json');
 const runtime = JSON.parse(fs.readFileSync(RUNTIME_PATH, 'utf8'));
+const practiceManifest = JSON.parse(fs.readFileSync(PRACTICE_MANIFEST_PATH, 'utf8'));
+const EXPECTED_ACTIVE_PRACTICE_ITEMS = practiceManifest.expected_active_items;
+assert(Number.isInteger(EXPECTED_ACTIVE_PRACTICE_ITEMS) && EXPECTED_ACTIVE_PRACTICE_ITEMS > 0, 'manifest expected_active_items must be a positive integer');
 
 function readChunkPayloads() {
   const dir = path.join(ROOT, 'build/t123-exceptions-runtime');
@@ -63,7 +67,8 @@ function testEvaluators() {
     if (wrong) assert.strictEqual(evaluators.evaluatePractice(item, wrong).is_correct, false, `${item.practice_item_id} wrong must fail`);
     count += 1;
   }
-  assert.strictEqual(count, 80);
+  assert.strictEqual(count, EXPECTED_ACTIVE_PRACTICE_ITEMS, 'runtime practice count must match current manifest');
+  assert.strictEqual(Object.keys(runtime.practice_items).length, EXPECTED_ACTIVE_PRACTICE_ITEMS, 'runtime practice_items object must match current manifest');
   assert.strictEqual(evaluators.textMatches(' Доктора ', 'доктора'), true);
   assert.strictEqual(evaluators.textMatches('дождалась', 'дождалАсь'), false, 'stress marker case is meaningful');
   assert.strictEqual(evaluators.textMatches('дождалАсь', 'дождалАсь'), true);
@@ -178,7 +183,7 @@ function main() {
   testState();
   testSelectorParity();
   testStorageNamespaceIsolation();
-  console.log('PASS: browser core runtime/evaluator/state/selector tests');
+  console.log(`PASS: browser core runtime/evaluator/state/selector tests; practice=${EXPECTED_ACTIVE_PRACTICE_ITEMS}`);
 }
 
 main();
