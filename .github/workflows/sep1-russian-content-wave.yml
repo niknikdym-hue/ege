@@ -1,0 +1,42 @@
+name: SEP1 Russian content wave
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-content/**'
+      - '.github/workflows/sep1-russian-content-wave.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-russian-content-wave:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Parse content JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in sorted(Path('eksamio-learning-engine/russian-content/wave-001').glob('*.json')):
+              json.loads(path.read_text(encoding='utf-8'))
+              print(path)
+          PY
+      - name: Validate content wave
+        run: python eksamio-learning-engine/russian-content/validate_wave_001.py
+      - name: Scope and whitespace check
+        run: |
+          git fetch origin "${GITHUB_BASE_REF}"
+          git diff --check "origin/${GITHUB_BASE_REF}...HEAD"
+          bad=$(git diff --name-only "origin/${GITHUB_BASE_REF}...HEAD" | grep -Ev '^(eksamio-learning-engine/russian-content/|\.github/workflows/sep1-russian-content-wave\.yml$)' || true)
+          if [ -n "$bad" ]; then
+            echo "Unexpected changed paths:"
+            echo "$bad"
+            exit 1
+          fi
