@@ -50,7 +50,7 @@ jobs:
           fi
           exit "$rc"
 
-      - name: Verify isolated candidate invariants
+      - name: Verify promoted candidate invariants
         working-directory: eksamio-learning-engine
         run: |
           python - <<'PY'
@@ -73,7 +73,7 @@ jobs:
           assert len(represented) == 88, len(represented)
 
           current_manifest = json.loads(Path('119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json').read_text(encoding='utf-8'))
-          assert current_manifest['expected_active_items'] == 80, 'candidate gate must not promote current runtime manifest'
+          assert current_manifest['expected_active_items'] == 121, '121 manifest promotion must follow the isolated PASS before the full gate'
 
           mapping = json.loads(Path('russian-program/RUSSIAN-EXCEPTIONS-121-SEMANTIC-MAPPING-v1.0.json').read_text(encoding='utf-8'))
           mapping_rows = mapping.get('rows') or mapping.get('mappings') or mapping.get('items')
@@ -83,7 +83,7 @@ jobs:
           missing = sorted(set(mapped_ids) - set(ids))
           extra = sorted(set(ids) - set(mapped_ids))
           assert not missing and not extra, f'mapping/candidate mismatch missing={missing} extra={extra}'
-          print('PASS: isolated 121-card candidate, 88 exception IDs, 28 reviewed Wave6 cards, exact mapping ID coverage; current manifest remains 80')
+          print('PASS: reviewed 121-card candidate, 88 exception IDs, 28 reviewed Wave6 cards, exact mapping ID coverage; current manifest promoted to 121 for full gate')
           PY
 
       - name: Diff guard
