@@ -37,7 +37,18 @@ jobs:
 
       - name: Build isolated reviewed 121 candidate
         working-directory: eksamio-learning-engine
-        run: python build/build_russian_exceptions_practice_wave6_candidate.py
+        shell: bash
+        run: |
+          set +e
+          python build/build_russian_exceptions_practice_wave6_candidate.py
+          rc=$?
+          audit='audits/candidate-wave6/RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-VALIDATION.txt'
+          if [ -f "$audit" ]; then
+            echo '--- candidate audit ---'
+            cat "$audit"
+            echo '--- end candidate audit ---'
+          fi
+          exit "$rc"
 
       - name: Verify isolated candidate invariants
         working-directory: eksamio-learning-engine
