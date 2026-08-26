@@ -1,0 +1,49 @@
+{
+  "artifact": "RUSSIAN_EXCEPTIONS_121_REVIEWED_CHECKPOINT_IMPORT",
+  "version": "0.1",
+  "status": "REVIEWED_SOURCE_CHECKPOINT_PINNED_NOT_RUNTIME_PROMOTED",
+  "current_main_baseline": "1e6efeec45ee0f3560e4bc251ac89ba8a1d3e228",
+  "provenance": {
+    "pull_request": 23,
+    "head_sha": "2215e47b5c211cbff7e12d5b823a0a835adb7480",
+    "tree_sha": "3c9f68343090bd85756498f58b747bfb5b910d46"
+  },
+  "reviewed_checkpoint": {
+    "expected_active_items": 121,
+    "represented_exception_ids": 88,
+    "runtime_version": "sha256-f9e11fa4416492d0e062",
+    "runtime_data_blocks": 5,
+    "t123_blocks": 10
+  },
+  "current_runtime_unchanged": {
+    "expected_active_items": 80,
+    "represented_exception_ids": 62,
+    "runtime_version": "sha256-b01b42199fa15ab425a4",
+    "runtime_data_blocks": 3,
+    "t123_blocks": 8
+  },
+  "required_reviewed_machine_inputs": [
+    "eksamio-learning-engine/131-RUSSIAN-EXCEPTIONS-COURSE-GRADE-CORRECTIONS-v0.1.json",
+    "eksamio-learning-engine/136-RUSSIAN-EXCEPTIONS-LEARNER-FEEDBACK-POLISH-v0.1.json",
+    "eksamio-learning-engine/140-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE5-P0-TRANSFER-v1.0.json",
+    "eksamio-learning-engine/142-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-SOLID-SEPARATE-DRAFT-v0.1.json",
+    "eksamio-learning-engine/145-RUSSIAN-EXCEPTIONS-WAVE6-REVIEWED-OVERLAY-v0.1.json"
+  ],
+  "required_reviewed_evidence": [
+    "eksamio-learning-engine/130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt",
+    "eksamio-learning-engine/135-RUSSIAN-DRABKINA-METHOD-SOURCE-MAP.txt",
+    "eksamio-learning-engine/138-RUSSIAN-EXCEPTIONS-WAVE5-MANUAL-CONTENT-REVIEW.txt",
+    "eksamio-learning-engine/141-RUSSIAN-EXCEPTIONS-WAVE6-SOLID-SEPARATE-SOURCE-AUDIT.txt",
+    "eksamio-learning-engine/144-RUSSIAN-EXCEPTIONS-WAVE6-MANUAL-CONTENT-REVIEW.txt",
+    "eksamio-learning-engine/results/RESULT-005-russian-exceptions-wave6-solid-separate.md"
+  ],
+  "scope_guards": [
+    "current 80-card runtime and manifest remain unchanged",
+    "no Tilda changes",
+    "no shared PEIS contract changes",
+    "no frozen Russian scoring or source-truth changes",
+    "no Wave 7 or Wave 8 material",
+    "historical PR 23 must not be merged wholesale"
+  ],
+  "next_action": "Import exact reviewed machine inputs and evidence from the pinned historical head, adapt the current-main build path to materialize a 121-card candidate, then run deterministic build, coverage, browser, T123, aggregate and generated-payload gates before runtime promotion."
+}
