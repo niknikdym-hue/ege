@@ -13,6 +13,7 @@ FILES = [
     "RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json",
     "RU-PROG-05-WORD-FORMATION-WAVE-001-v0.1.json",
     "RU-PROG-06-MORPHOLOGY-WAVE-002-v0.1.json",
+    "RU-PROG-07-GRAMMAR-NORMS-WAVE-002-v0.1.json",
     "RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json",
     "RU-PROG-12-STYLES-GENRES-WAVE-002-v0.1.json",
     "RU-PROG-15-OGE-COMPRESSED-EXPOSITION-WAVE-001-v0.1.json",
@@ -24,6 +25,7 @@ EXPECTED_MODULES = {
     "RU-PROG-04",
     "RU-PROG-05",
     "RU-PROG-06",
+    "RU-PROG-07",
     "RU-PROG-11",
     "RU-PROG-12",
     "RU-PROG-15",
@@ -46,7 +48,22 @@ REQUIRED_UNIT_FIELDS = {
 
 
 def canonical_bytes(value: object) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+
+
+def load_json(path: Path) -> dict:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise AssertionError(
+            f"{path.name}: invalid JSON at line {exc.lineno}, "
+            f"column {exc.colno}, char {exc.pos}: {exc.msg}"
+        ) from exc
 
 
 def collect_item_ids(unit: dict) -> list[str]:
@@ -61,27 +78,39 @@ def collect_item_ids(unit: dict) -> list[str]:
         for item in unit[field]:
             item_id = item.get("id")
             if not isinstance(item_id, str) or not item_id:
-                raise AssertionError(f"{unit['proposed_semantic_id']}: {field} item without id")
+                raise AssertionError(
+                    f"{unit['proposed_semantic_id']}: {field} item without id"
+                )
             ids.append(item_id)
     return ids
 
 
 def validate_file(path: Path) -> tuple[dict, str, list[str], list[str]]:
-    data = json.loads(path.read_text(encoding="utf-8"))
+    data = load_json(path)
     assert data["status"] == "SUBJECT_ACCEPTANCE_REQUIRED", path.name
     assert data["module_id"] in EXPECTED_MODULES, path.name
     assert data["subject"] == "russian", path.name
+
     guard = data["copyright_guard"]
-    copied = guard.get("source_passages_copied", guard.get("official_source_passages_copied"))
+    copied = guard.get(
+        "source_passages_copied",
+        guard.get("official_source_passages_copied"),
+    )
     assert copied == 0, path.name
-    assert any(src.get("kind") == "official_program" for src in data["source_provenance"]), path.name
+    assert any(
+        src.get("kind") == "official_program"
+        for src in data["source_provenance"]
+    ), path.name
     assert data["units"], path.name
 
     all_ids: list[str] = []
     semantic_ids: list[str] = []
     for unit in data["units"]:
         missing = REQUIRED_UNIT_FIELDS - set(unit)
-        assert not missing, f"{path.name}:{unit.get('proposed_semantic_id')}: missing {sorted(missing)}"
+        assert not missing, (
+            f"{path.name}:{unit.get('proposed_semantic_id')}: "
+            f"missing {sorted(missing)}"
+        )
         semantic_id = unit["proposed_semantic_id"]
         assert semantic_id.startswith("ru-"), semantic_id
         semantic_ids.append(semantic_id)
@@ -94,19 +123,30 @@ def validate_file(path: Path) -> tuple[dict, str, list[str], list[str]]:
         assert unit["mixed_transfer_practice"], semantic_id
         assert unit["retention_items"], semantic_id
         assert unit["independent_verification"], semantic_id
-        assert unit["peis_evidence"]["semantic_ref_status"] == "PROPOSED_NOT_CANONICAL", semantic_id
-        assert unit["peis_evidence"]["independent_verification_required"] is True, semantic_id
+        assert (
+            unit["peis_evidence"]["semantic_ref_status"]
+            == "PROPOSED_NOT_CANONICAL"
+        ), semantic_id
+        assert (
+            unit["peis_evidence"]["independent_verification_required"] is True
+        ), semantic_id
         all_ids.extend(collect_item_ids(unit))
 
-    assert len(semantic_ids) == len(set(semantic_ids)), f"{path.name}: duplicate semantic ids"
-    assert len(all_ids) == len(set(all_ids)), f"{path.name}: duplicate learner item ids"
+    assert len(semantic_ids) == len(set(semantic_ids)), (
+        f"{path.name}: duplicate semantic ids"
+    )
+    assert len(all_ids) == len(set(all_ids)), (
+        f"{path.name}: duplicate learner item ids"
+    )
     digest = hashlib.sha256(canonical_bytes(data)).hexdigest()
     return data, digest, all_ids, semantic_ids
 
 
 def assert_global_unique(values: list[str], label: str) -> None:
     if len(values) != len(set(values)):
-        duplicates = sorted({value for value in values if values.count(value) > 1})
+        duplicates = sorted(
+            {value for value in values if values.count(value) > 1}
+        )
         raise AssertionError(f"duplicate {label}: {duplicates}")
 
 
@@ -116,6 +156,7 @@ def main() -> None:
     digests: list[str] = []
     learner_item_ids: list[str] = []
     semantic_ids: list[str] = []
+
     for filename in FILES:
         path = ROOT / filename
         if not path.exists():
@@ -128,20 +169,35 @@ def main() -> None:
         semantic_ids.extend(file_semantic_ids)
 
     assert modules == EXPECTED_MODULES, (modules, EXPECTED_MODULES)
-    assert_global_unique(learner_item_ids, "learner item ids across content waves")
-    assert_global_unique(semantic_ids, "proposed semantic ids across content waves")
+    assert_global_unique(
+        learner_item_ids,
+        "learner item ids across content waves",
+    )
+    assert_global_unique(
+        semantic_ids,
+        "proposed semantic ids across content waves",
+    )
 
-    oge = json.loads((ROOT / "RU-PROG-15-OGE-COMPRESSED-EXPOSITION-WAVE-001-v0.1.json").read_text(encoding="utf-8"))
+    oge = load_json(
+        ROOT / "RU-PROG-15-OGE-COMPRESSED-EXPOSITION-WAVE-001-v0.1.json"
+    )
     scoring = oge["official_exam_scoring_overlay_2026"]
     assert scoring["IK1_content"]["max_points"] == 2
     assert scoring["IK2_compression"]["max_points"] == 2
     assert scoring["IK3_logic"]["max_points"] == 2
     assert scoring["max_points_ik1_ik3"] == 6
 
-    orthoepy = json.loads((ROOT / "RU-PROG-02-ORTHOEPY-STRESS-WAVE-002-v0.1.json").read_text(encoding="utf-8"))
-    assert any(src.get("authority", "").startswith("FIPI Navigator EGE 2026") for src in orthoepy["source_provenance"])
+    orthoepy = load_json(
+        ROOT / "RU-PROG-02-ORTHOEPY-STRESS-WAVE-002-v0.1.json"
+    )
+    assert any(
+        src.get("authority", "").startswith("FIPI Navigator EGE 2026")
+        for src in orthoepy["source_provenance"]
+    )
 
-    wave_hash = hashlib.sha256("\n".join(sorted(digests)).encode("utf-8")).hexdigest()
+    wave_hash = hashlib.sha256(
+        "\n".join(sorted(digests)).encode("utf-8")
+    ).hexdigest()
     print("RU_FULL_CONTENT_WAVES_001_002_VALIDATION=PASS")
     print(f"modules={len(modules)}")
     print(f"learner_units={unit_total}")
