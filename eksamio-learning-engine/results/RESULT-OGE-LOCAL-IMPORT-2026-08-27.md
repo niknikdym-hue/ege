@@ -23,6 +23,7 @@ CREATED_FILES:
 - 10 assets under `russian-program/oge-local-import/assets/task-01/`
 
 MODIFIED_FILES:
+- `.github/workflows/validate-russian-production-learning-content.yml` — added OGE import path trigger and validator execution.
 - `russian-program/production-learning-content/RU-PROG-12-STYLES-GENRES-WAVE-002-v0.1.json` — restored one missing JSON string delimiter that caused the existing PR validator/CI to fail; no learner wording changed.
 
 DELETED_FILES: none
