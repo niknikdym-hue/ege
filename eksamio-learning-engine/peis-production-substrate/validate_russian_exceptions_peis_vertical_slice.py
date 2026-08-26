@@ -26,9 +26,11 @@ from russian_exceptions_practice_adapter import (  # noqa: E402
 )
 
 
-def _count(store: PostgresPeisPersistenceStore, table: str) -> int:
-    # Table names are internal constants in this validator, never user input.
-    row = store.connection.execute(f"SELECT COUNT(*) AS count FROM {table}").fetchone()
+def _recommendation_count(store: PostgresPeisPersistenceStore, learner_profile_id: str) -> int:
+    row = store.connection.execute(
+        "SELECT COUNT(*) AS count FROM recommendations WHERE learner_profile_id = %s",
+        (learner_profile_id,),
+    ).fetchone()
     return int(row["count"] if isinstance(row, dict) else row[0])
 
 
@@ -104,9 +106,9 @@ def main() -> int:
         raise AssertionError(f"identical replay is not idempotent: {replay['status']}")
     if replay["event_receipt"] != first["event_receipt"]:
         raise AssertionError("identical replay changed the canonical server position")
-    if _count(store, "evidence_events") != 1:
+    if len(store.list_events(identity.learner_profile_id, adapter.subject_id, effective=False)) != 1:
         raise AssertionError("identical replay duplicated canonical evidence")
-    if _count(store, "recommendations") != 1:
+    if _recommendation_count(store, identity.learner_profile_id) != 1:
         raise AssertionError("identical replay duplicated the persisted NBA")
 
     changed = dict(payload)
@@ -121,7 +123,7 @@ def main() -> int:
         pass
     else:
         raise AssertionError("changed educational payload under stable event identity was not rejected")
-    if _count(store, "evidence_events") != 1:
+    if len(store.list_events(identity.learner_profile_id, adapter.subject_id, effective=False)) != 1:
         raise AssertionError("integrity-conflict retry changed canonical evidence count")
 
     counts = adapter.mapping["counts"]
@@ -148,8 +150,10 @@ def main() -> int:
         "server_owned_semantic_mapping": True,
         "first_attempt": first["status"],
         "replay": replay["status"],
-        "canonical_event_count": _count(store, "evidence_events"),
-        "recommendation_count": _count(store, "recommendations"),
+        "canonical_event_count_for_fixture_learner": len(
+            store.list_events(identity.learner_profile_id, adapter.subject_id, effective=False)
+        ),
+        "recommendation_count_for_fixture_learner": _recommendation_count(store, identity.learner_profile_id),
         "nba_action": first["directive"]["action_type"],
         "canonical_state_owner": first["directive"]["canonical_state_owner"],
         "integrity_conflict_rejected": True,
