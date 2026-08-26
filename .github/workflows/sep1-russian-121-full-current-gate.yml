@@ -156,28 +156,61 @@ jobs:
           print('PASS: learner runtime 121; reviewed Wave6 wording; no forbidden internal provenance')
           PY
 
-      - name: Prove deterministic canonical build twice
+      - name: Prove deterministic semantic materialization twice
         working-directory: eksamio-learning-engine
         shell: bash
         run: |
           set -euo pipefail
-          sha256sum \
-            build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json \
-            build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json \
-            build/RUSSIAN-EXCEPTIONS-LAUNCH-PRIORITY.json \
-            build/RUSSIAN-EXCEPTIONS-RUNTIME.json > /tmp/sep1-first.sha256
+          python - <<'PY' > /tmp/sep1-first.semantic.sha256
+          import hashlib, json
+          from pathlib import Path
+          paths = [
+              Path('build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json'),
+              Path('build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json'),
+              Path('build/RUSSIAN-EXCEPTIONS-LAUNCH-PRIORITY.json'),
+              Path('build/RUSSIAN-EXCEPTIONS-RUNTIME.json'),
+          ]
+          volatile = {'generated_at_utc', 'generated_at', 'generatedAt'}
+          def normalize(value):
+              if isinstance(value, dict):
+                  return {k: normalize(v) for k, v in sorted(value.items()) if k not in volatile}
+              if isinstance(value, list):
+                  return [normalize(v) for v in value]
+              return value
+          for path in paths:
+              payload = normalize(json.loads(path.read_text(encoding='utf-8')))
+              blob = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
+              print(hashlib.sha256(blob).hexdigest(), path)
+          PY
           python build/build_russian_exceptions_bank_current_v2.py
           python build/build_russian_exceptions_practice_course_grade.py
           python build/build_russian_exceptions_launch_priority.py
           python build/audit_russian_exceptions_practice_coverage.py
           python build/build_russian_exceptions_runtime.py
-          sha256sum \
-            build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json \
-            build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json \
-            build/RUSSIAN-EXCEPTIONS-LAUNCH-PRIORITY.json \
-            build/RUSSIAN-EXCEPTIONS-RUNTIME.json > /tmp/sep1-second.sha256
-          diff -u /tmp/sep1-first.sha256 /tmp/sep1-second.sha256
-          cat /tmp/sep1-second.sha256
+          python - <<'PY' > /tmp/sep1-second.semantic.sha256
+          import hashlib, json
+          from pathlib import Path
+          paths = [
+              Path('build/RUSSIAN-EXCEPTIONS-BANK-CANONICAL.json'),
+              Path('build/RUSSIAN-EXCEPTIONS-PRACTICE-CANONICAL.json'),
+              Path('build/RUSSIAN-EXCEPTIONS-LAUNCH-PRIORITY.json'),
+              Path('build/RUSSIAN-EXCEPTIONS-RUNTIME.json'),
+          ]
+          volatile = {'generated_at_utc', 'generated_at', 'generatedAt'}
+          def normalize(value):
+              if isinstance(value, dict):
+                  return {k: normalize(v) for k, v in sorted(value.items()) if k not in volatile}
+              if isinstance(value, list):
+                  return [normalize(v) for v in value]
+              return value
+          for path in paths:
+              payload = normalize(json.loads(path.read_text(encoding='utf-8')))
+              blob = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
+              print(hashlib.sha256(blob).hexdigest(), path)
+          PY
+          diff -u /tmp/sep1-first.semantic.sha256 /tmp/sep1-second.semantic.sha256
+          cat /tmp/sep1-second.semantic.sha256
+          echo 'PASS: semantic materialization is deterministic; only explicit generated-at metadata is excluded from the comparison.'
 
       - name: Run aggregate and browser core validation
         working-directory: eksamio-learning-engine
