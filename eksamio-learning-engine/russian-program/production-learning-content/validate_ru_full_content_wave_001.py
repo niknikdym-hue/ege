@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 FILES = [
     "RU-PROG-01-PHONETICS-GRAPHICS-WAVE-001-v0.1.json",
+    "RU-PROG-03-LEXIS-PARONYMS-PHRASEOLOGY-WAVE-002-v0.1.json",
     "RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json",
     "RU-PROG-05-WORD-FORMATION-WAVE-001-v0.1.json",
     "RU-PROG-06-MORPHOLOGY-WAVE-002-v0.1.json",
@@ -17,6 +18,7 @@ FILES = [
 ]
 EXPECTED_MODULES = {
     "RU-PROG-01",
+    "RU-PROG-03",
     "RU-PROG-04",
     "RU-PROG-05",
     "RU-PROG-06",
