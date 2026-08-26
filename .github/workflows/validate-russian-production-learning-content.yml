@@ -20,6 +20,8 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -28,4 +30,10 @@ jobs:
       - name: Validate content wave
         run: python eksamio-learning-engine/russian-program/production-learning-content/validate_ru_full_content_wave_001.py
       - name: Reject whitespace errors
-        run: git diff --check origin/${{ github.base_ref || 'main' }}...HEAD
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --check "${{ github.event.pull_request.base.sha }}...HEAD"
+          else
+            git diff --check "${{ github.event.before }}...${{ github.sha }}"
+          fi
