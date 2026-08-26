@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 FILES = [
     "RU-PROG-01-PHONETICS-GRAPHICS-WAVE-001-v0.1.json",
+    "RU-PROG-02-ORTHOEPY-STRESS-WAVE-002-v0.1.json",
     "RU-PROG-03-LEXIS-PARONYMS-PHRASEOLOGY-WAVE-002-v0.1.json",
     "RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json",
     "RU-PROG-05-WORD-FORMATION-WAVE-001-v0.1.json",
@@ -18,6 +19,7 @@ FILES = [
 ]
 EXPECTED_MODULES = {
     "RU-PROG-01",
+    "RU-PROG-02",
     "RU-PROG-03",
     "RU-PROG-04",
     "RU-PROG-05",
@@ -135,6 +137,9 @@ def main() -> None:
     assert scoring["IK2_compression"]["max_points"] == 2
     assert scoring["IK3_logic"]["max_points"] == 2
     assert scoring["max_points_ik1_ik3"] == 6
+
+    orthoepy = json.loads((ROOT / "RU-PROG-02-ORTHOEPY-STRESS-WAVE-002-v0.1.json").read_text(encoding="utf-8"))
+    assert any(src.get("authority", "").startswith("FIPI Navigator EGE 2026") for src in orthoepy["source_provenance"])
 
     wave_hash = hashlib.sha256("\n".join(sorted(digests)).encode("utf-8")).hexdigest()
     print("RU_FULL_CONTENT_WAVES_001_002_VALIDATION=PASS")
