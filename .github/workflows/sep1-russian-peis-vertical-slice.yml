@@ -34,6 +34,7 @@ jobs:
           --health-retries 10
     env:
       PEIS_DATABASE_DSN: postgresql://peis_app:peis_ci@localhost:5432/peis
+      PEIS_TEST_POSTGRES_DSN: postgresql://peis_app:peis_ci@localhost:5432/peis
       # Synthetic CI-only fixture required by the existing trusted-host validator.
       # It is not a production credential and is never used outside the ephemeral runner.
       EKSAMIO_PEIS_TRUSTED_HOST_TEST_SECRET: sep1-ci-only-trusted-host-fixture-key-0001
