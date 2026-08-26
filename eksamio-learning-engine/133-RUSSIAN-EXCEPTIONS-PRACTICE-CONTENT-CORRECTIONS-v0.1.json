@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "subject": "russian",
+  "exam": "ege",
+  "purpose": "exceptions_practice_content_reaudit_replacements",
+  "integration_status": "not_connected_to_production",
+  "content_version": "0.1.0",
+  "items": [
+    {
+      "practice_item_id": "ex-practice-v-kontse-kontsov-context-002",
+      "exception_id": "introductory_v_kontse_kontsov_dual_function",
+      "mode": "context_choice",
+      "response_kind": "single_choice",
+      "prompt": {
+        "text": "В каком предложении сочетание В КОНЦЕ КОНЦОВ имеет обычное обстоятельственное значение результата событий и не является вводным?",
+        "options": [
+          "В конце концов, главное — понять правило, а не запомнить формулировку.",
+          "После долгих поисков мы в конце концов нашли нужный документ."
+        ]
+      },
+      "answer": {"option_index": 1},
+      "feedback": {
+        "correct_answer": "После долгих поисков мы в конце концов нашли нужный документ.",
+        "why": "Во втором предложении сочетание обозначает фактический итог событий и входит в структуру сообщения. В первом оно оформляет заключение рассуждения говорящего и может выступать как вводное. Решает функция в конкретном контексте.",
+        "rule_ref": "introductory_words_punctuation"
+      },
+      "context_signature": "v_kontse_kontsov_current_dual_context",
+      "transfer_level": "transfer",
+      "status": "source_verified"
+    },
+    {
+      "practice_item_id": "ex-practice-zarevat-current-001",
+      "exception_id": "alt_root_zarevat_current",
+      "mode": "recall_form",
+      "response_kind": "short_text",
+      "prompt": {"text": "Запишите современную нормативную форму: з..ревать на рассвете."},
+      "answer": {"text": "заревать"},
+      "feedback": {
+        "correct_answer": "заревать",
+        "why": "Современная орфографическая норма — ЗАРЕВАТЬ. Старое написание ЗОРЕВАТЬ рекомендовалось как исключение в прежних правилах, но в современной норме это исключение устранено.",
+        "rule_ref": "alternating_root_vowels"
+      },
+      "context_signature": "zarevat_current_norm_recall",
+      "transfer_level": "guided_recall",
+      "status": "source_verified"
+    }
+  ],
+  "disabled_practice_item_ids": [
+    "ex-practice-v-kontse-kontsov-corrected-001",
+    "ex-practice-zorevat-001"
+  ],
+  "source_audit_ref": "130-RUSSIAN-EXCEPTIONS-80-CARD-DRABKINA-AUDIT-v0.1.txt",
+  "review_notes": "Replaces two learner-unsafe active cards found by the 80/80 content audit. Does not modify Tilda."
+}
