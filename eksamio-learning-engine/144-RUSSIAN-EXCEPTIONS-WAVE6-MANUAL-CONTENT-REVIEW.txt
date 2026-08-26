@@ -1,0 +1,150 @@
+EKSAMIO LEARNING ENGINE
+RUSSIAN EXCEPTIONS — WAVE 6 SOLID / SEPARATE
+MANUAL CONTENT REVIEW
+DATE: 2026-08-12
+STATUS: REVIEWED 28/28 / PASS AFTER 3 EDITORIAL FIXES / CURRENT 93 UNCHANGED / TILDA HOLD
+
+SCOPE
+
+Draft:
+142-RUSSIAN-EXCEPTIONS-PRACTICE-WAVE6-SOLID-SEPARATE-DRAFT-v0.1.json
+
+Source audit:
+141-RUSSIAN-EXCEPTIONS-WAVE6-SOLID-SEPARATE-SOURCE-AUDIT.txt
+
+Reviewed overlay:
+145-RUSSIAN-EXCEPTIONS-WAVE6-REVIEWED-OVERLAY-v0.1.json
+
+Pairs: 14
+Cards: 28
+Design: exactly two directions per pair — solid and separate.
+
+REVIEW CONTRACT
+
+Each card was checked individually for:
+- natural prompt;
+- exact correct option and wrong contrast in that exact sentence;
+- part-of-speech / construction diagnosis;
+- valid diagnostic replacement/question;
+- feedback preserving the real rule boundary;
+- meaningful contrast with the other member of the pair;
+- no invented etymology or universal mnemonic;
+- unique context_signature;
+- transfer_level;
+- compatibility with linked source exception/explanation branch.
+
+Current academic/dictionary norm controls the final rule boundary. Drabkina/Subbotin remains the learner-method baseline: rule -> diagnostic table/algorithm -> application -> contrast -> trap -> independent context.
+
+CURRENT-NORM SPOT CHECK
+
+Additional current reference checking confirmed the boundaries used in this wave:
+- ПРИТОМ / ПРИ ТОМ;
+- НАЗАВТРА / НА ЗАВТРА;
+- ВВИДУ / В ВИДУ;
+- ВСЛЕДСТВИЕ and independently declined noun СЛЕДСТВИЕ;
+- ЗАТО / ЗА ТО;
+- ВРОДЕ and NASЧЁТ as service-word spellings vs nominal constructions.
+
+INITIAL MANUAL REVIEW
+
+PASS WITHOUT EDIT: 26
+EDITORIAL FIX BEFORE FIRST CANDIDATE PASS: 2
+HOLD: 0
+FAIL/REPLACE: 0
+
+FIX 1 — ex-practice-za-to-separate-w6-012
+Old context was grammatical but less natural for teaching.
+Approved context:
+«Я проголосовал за то предложение, которое поддержала группа.»
+Approved diagnostic:
+ЗА is a preposition; ТО is a demonstrative pronoun referring to ПРЕДЛОЖЕНИЕ. Contrast: conjunction ЗАТО ~ НО.
+
+FIX 2 — ex-practice-v-rode-separate-w6-022
+Old context «В роде этого мастера...» was rejected as pedagogically/artificially weak.
+Approved context:
+«Ошибка была в роде существительного: к слову подобрали неверную форму согласования.»
+Approved diagnostic:
+РОД is an independent noun: ошибка в чём? — в роде существительного. Contrast: ВРОДЕ = НАПОДОБИЕ.
+
+FIRST GENERATED-CANDIDATE ARTIFACT REVIEW
+
+The first technically successful 121-card candidate artifact was opened after Chromium PASS.
+Machine gates were green, but manual generated-payload inspection found one stale contrast in the reverse ВРОДЕ card:
+
+ex-practice-vrode-solid-w6-021 feedback still contained the discarded phrase
+«в его роде было несколько художников».
+
+This did not make the accepted answer wrong, but it violated the manual decision to remove that artificial example from the learner layer.
+
+FIX 3 — ex-practice-vrode-solid-w6-021
+Approved feedback contrast now uses the same clean noun example:
+«ошибка в роде существительного».
+
+This is why generated-payload inspection remains mandatory even after machine/Chromium PASS.
+
+FINAL CARD DECISIONS
+
+01 ex-practice-chtoby-solid-w6-001 — REVIEWED PASS
+02 ex-practice-chto-by-separate-w6-002 — REVIEWED PASS
+03 ex-practice-tozhe-solid-w6-003 — REVIEWED PASS
+04 ex-practice-to-zhe-separate-w6-004 — REVIEWED PASS
+05 ex-practice-takzhe-solid-w6-005 — REVIEWED PASS
+06 ex-practice-tak-zhe-separate-w6-006 — REVIEWED PASS
+07 ex-practice-prichem-solid-w6-007 — REVIEWED PASS
+08 ex-practice-pri-chem-separate-w6-008 — REVIEWED PASS
+09 ex-practice-pritom-solid-w6-009 — REVIEWED PASS
+10 ex-practice-pri-tom-separate-w6-010 — REVIEWED PASS
+11 ex-practice-zato-solid-w6-011 — REVIEWED PASS
+12 ex-practice-za-to-separate-w6-012 — REVIEWED PASS AFTER FIX 1
+13 ex-practice-itak-solid-w6-013 — REVIEWED PASS
+14 ex-practice-i-tak-separate-w6-014 — REVIEWED PASS
+15 ex-practice-vvidu-solid-w6-015 — REVIEWED PASS
+16 ex-practice-v-vidu-separate-w6-016 — REVIEWED PASS
+17 ex-practice-vsledstvie-solid-w6-017 — REVIEWED PASS
+18 ex-practice-v-sledstvie-separate-w6-018 — REVIEWED PASS
+19 ex-practice-naschet-solid-w6-019 — REVIEWED PASS
+20 ex-practice-na-schet-separate-w6-020 — REVIEWED PASS
+21 ex-practice-vrode-solid-w6-021 — REVIEWED PASS AFTER FIX 3
+22 ex-practice-v-rode-separate-w6-022 — REVIEWED PASS AFTER FIX 2
+23 ex-practice-vnachale-solid-w6-023 — REVIEWED PASS
+24 ex-practice-v-nachale-separate-w6-024 — REVIEWED PASS
+25 ex-practice-snachala-solid-w6-025 — REVIEWED PASS
+26 ex-practice-s-nachala-separate-w6-026 — REVIEWED PASS
+27 ex-practice-nazavtra-solid-w6-027 — REVIEWED PASS
+28 ex-practice-na-zavtra-separate-w6-028 — REVIEWED PASS
+
+SPECIAL BOUNDARY — ВСЛЕДСТВИЕ / В СЛЕДСТВИЕ
+
+Candidate separate-form context:
+«Вмешательство в следствие по делу недопустимо.»
+
+The noun СЛЕДСТВИЕ is independent here and is in the accusative after the target/directional relation «вмешательство во что?». Do not teach a fake invariant ending for every nominal use; a locative construction can instead have В СЛЕДСТВИИ. The card teaches solid vs separate construction, not one noun case for all contexts.
+
+FINAL MANUAL REVIEW RESULT
+
+CARDS REVIEWED: 28/28
+PASS AFTER EDIT: 28
+EDITORIAL FIXES RECORDED: 3
+HOLD: 0
+FAIL/REPLACE: 0
+BIDIRECTIONAL PAIRS: 14/14
+CURRENT 93 CHANGED: NO
+TILDA CHANGED: NO
+
+STATUS POLICY
+
+Historical draft items retain internal non-schema marker source_verified_draft.
+Candidate builder may expose them only after:
+- exact match to all 28 reviewed IDs;
+- transformation to schema-valid REVIEWED;
+- application of exactly the three explicit editorial patches in overlay 145.
+
+NEXT GATE
+
+1. Rebuild candidate expected active practice = 121.
+2. Validate schema / source practice_modes / 14x2 pair structure.
+3. Build learner-safe runtime and source-leak gate.
+4. Build T123/package and run Chromium.
+5. Open the regenerated artifact and verify all 28 Wave 6 cards, especially both ВРОДЕ / В РОДЕ feedbacks and ЗА ТО.
+6. Promote only after regenerated artifact review PASS.
+7. Current 93 and Tilda remain unchanged until promotion/publication decisions respectively.
