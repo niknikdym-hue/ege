@@ -114,11 +114,11 @@ jobs:
           mapped_ids = [r.get('practice_item_id') for r in mapping_rows]
           assert len(mapped_ids) == len(set(mapped_ids)) == 121
           assert set(mapped_ids) == id_set
-          statuses = Counter(r.get('mapping_status') or r.get('status') for r in mapping_rows)
-          exact = statuses.get('EXACT', 0)
-          partial = statuses.get('PARTIAL_COMPOSITE', 0)
-          assert exact == 116, statuses
-          assert partial == 5, statuses
+          statuses = Counter(r.get('mapping_resolution') for r in mapping_rows)
+          assert statuses == Counter({'EXACT': 116, 'PARTIAL_COMPOSITE': 5}), statuses
+          assert mapping.get('counts', {}).get('exact') == 116, mapping.get('counts')
+          assert mapping.get('counts', {}).get('partial_composite') == 5, mapping.get('counts')
+          assert mapping.get('counts', {}).get('active_cards') == 121, mapping.get('counts')
 
           print('PASS: 121 unique active cards; 88/127 covered; P0/P1 uncovered=0; Wave6=28 reviewed; PEIS mapping parity=121 with 116 EXACT + 5 PARTIAL_COMPOSITE')
           PY
