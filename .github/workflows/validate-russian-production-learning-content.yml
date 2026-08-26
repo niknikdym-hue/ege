@@ -1,0 +1,31 @@
+name: Validate Russian production learning content
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/production-learning-content/**'
+      - '.github/workflows/validate-russian-production-learning-content.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/production-learning-content/**'
+      - '.github/workflows/validate-russian-production-learning-content.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-wave-001:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile validator
+        run: python -m py_compile eksamio-learning-engine/russian-program/production-learning-content/validate_ru_full_content_wave_001.py
+      - name: Validate content wave
+        run: python eksamio-learning-engine/russian-program/production-learning-content/validate_ru_full_content_wave_001.py
+      - name: Reject whitespace errors
+        run: git diff --check origin/${{ github.base_ref || 'main' }}...HEAD
