@@ -9,6 +9,7 @@ import sys
 import time
 from pathlib import Path
 
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent
@@ -32,6 +33,17 @@ def wait_for_server() -> None:
     raise RuntimeError("Pro client HTTP server did not start")
 
 
+def wait_for_app_ready(page, console_errors: list[str], label: str) -> None:
+    try:
+        page.wait_for_function("document.documentElement.dataset.appReady === 'true'", timeout=5000)
+    except PlaywrightTimeoutError as exc:
+        state = page.evaluate("document.documentElement.dataset.appReady || 'unset'")
+        alert = page.locator("[role='alert']").all_inner_texts()
+        raise AssertionError(
+            f"app initialization failed at {label}: appReady={state}; alerts={alert}; console={console_errors}"
+        ) from exc
+
+
 def assert_no_overflow(page, label: str) -> None:
     values = page.evaluate(
         """() => ({
@@ -51,7 +63,7 @@ def run_viewport(browser, label: str, width: int, height: int) -> None:
     page.on("console", lambda msg: console_errors.append(msg.text) if msg.type == "error" else None)
     page.on("pageerror", lambda error: console_errors.append(str(error)))
     page.goto(BASE, wait_until="networkidle")
-    page.wait_for_selector("html[data-app-ready='true']")
+    wait_for_app_ready(page, console_errors, label)
 
     # Product scope must be visible and complete before authentication.
     assert page.locator("body").get_attribute("data-auth") == "anonymous"
