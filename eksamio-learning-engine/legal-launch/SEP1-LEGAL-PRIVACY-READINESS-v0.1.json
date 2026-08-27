@@ -1,0 +1,194 @@
+{
+  "schema_version": "0.1.0",
+  "as_of": "2026-08-27",
+  "product": "Eksamio Pro — Русский",
+  "market": "Russia",
+  "launch_deadline": "2026-09-01",
+  "status": "PACKET_MATERIALIZED_NOT_LEGALLY_ACCEPTED",
+  "not_legal_advice": true,
+  "launch_blockers": [
+    {
+      "id": "service_and_operator_classification",
+      "severity": "HARD",
+      "status": "NEEDS_LEGAL_REVIEW",
+      "question": "Can the launch contour be lawfully operated by an individual NPD taxpayer in its actual product form, or does the offered service constitute licensed educational activity / require IP or another operator form?",
+      "why": "Article 91 of Federal Law 273-FZ expressly excludes from education licensing individual entrepreneurs who conduct educational activity directly; the current owner authority names an NPD launch operator, not an admitted IP education contour.",
+      "must_be_true_before_go_live": [
+        "legal classification of the paid service is recorded",
+        "operator form is compatible with that classification",
+        "public offer/product claims match the accepted classification",
+        "no false claim of licensed educational-program status"
+      ]
+    },
+    {
+      "id": "personal_data_operator_and_rkn_notification",
+      "severity": "HARD",
+      "status": "NEEDS_OWNER_ACTION_OR_LEGAL_CONFIRMATION",
+      "question": "Is the operator notification/registry state under Article 22 of Federal Law 152-FZ complete for the actual launch processing?",
+      "must_be_true_before_go_live": [
+        "operator identity/address/contact are known",
+        "purposes/categories/data-subject categories/processors/databases are inventoried",
+        "RKN notification is filed before processing unless current counsel confirms a specific statutory exception",
+        "changes to notification are tracked"
+      ]
+    },
+    {
+      "id": "privacy_policy_publication",
+      "severity": "HARD",
+      "status": "DRAFT_REQUIRED",
+      "must_be_true_before_go_live": [
+        "policy is published with unrestricted access on every Eksamio page that collects personal data or by a persistent accessible link",
+        "policy identifies operator, purposes, data categories, legal grounds, processing actions, retention/deletion rules and processors",
+        "policy matches actual implementation"
+      ]
+    },
+    {
+      "id": "personal_data_consent_and_legal_bases",
+      "severity": "HARD",
+      "status": "DRAFT_REQUIRED",
+      "must_be_true_before_go_live": [
+        "legal basis is assigned per processing purpose rather than one blanket basis",
+        "where consent is used it is specific, informed and separately presented from the offer/other documents",
+        "consent fact/version/time can be proven and withdrawal path exists"
+      ]
+    },
+    {
+      "id": "russian_database_localization",
+      "severity": "HARD",
+      "status": "ARCHITECTURE_ALIGNED_NEEDS_DEPLOYMENT_ACCEPTANCE",
+      "must_be_true_before_go_live": [
+        "recording/systematization/accumulation/storage/update/extraction of Russian-citizen personal data use databases in Russia except a documented statutory exception",
+        "production PostgreSQL and canonical identity/PEIS storage are in the admitted Russia contour",
+        "browser or foreign-provider state never becomes the primary personal-data database"
+      ]
+    },
+    {
+      "id": "processor_and_provider_terms",
+      "severity": "HARD",
+      "status": "NEEDS_PROVIDER_TERMS_REVIEW",
+      "providers": [
+        "Yandex Cloud / AI Studio / SpeechKit / Postbox",
+        "SMS.RU",
+        "Robokassa / Robocheki",
+        "production hosting/network/logging providers"
+      ],
+      "must_be_true_before_go_live": [
+        "each provider role and data flow is documented",
+        "processor/third-party terms permit the intended processing",
+        "data minimization and retention settings match public disclosures",
+        "foreign or cross-border transfer, if any, is separately reviewed before activation"
+      ]
+    },
+    {
+      "id": "learner_audio_non_storage",
+      "severity": "HARD",
+      "status": "PRODUCT_RULE_READY_DISCLOSURE_REQUIRED",
+      "must_be_true_before_go_live": [
+        "public documents state that learner audio is processed only transiently for the current voice interaction and is not stored by Eksamio",
+        "no voiceprint, speaker embedding or reusable acoustic representation is persisted",
+        "provider configuration/terms are reviewed for unintended provider retention",
+        "production smoke confirms Eksamio persistence count remains zero"
+      ]
+    },
+    {
+      "id": "public_offer_and_consumer_information",
+      "severity": "HARD",
+      "status": "DRAFT_REQUIRED",
+      "must_be_true_before_go_live": [
+        "operator identity and contact details are disclosed",
+        "service scope and limitations are accurately described",
+        "30-day and 90-day access, price, payment methods, activation moment and no auto-renew are explicit",
+        "refund/cancellation/technical-failure rules do not reduce statutory consumer rights",
+        "payment action is linked to the current offer version and acts as an unambiguous acceptance only after legal review",
+        "no marketing promise guarantees an exam result"
+      ]
+    },
+    {
+      "id": "npd_receipt_contour",
+      "severity": "HARD",
+      "status": "CODE_READY_NEEDS_PROVIDER_AND_LEGAL_ACCEPTANCE",
+      "must_be_true_before_go_live": [
+        "every admitted NPD receipt-producing payment creates/transmits the required receipt through the accepted FNS/My Tax contour",
+        "receipt is delivered to the payer through an admitted electronic channel",
+        "refund/correction flow preserves fiscal correctness",
+        "Robokassa/Robocheki merchant settings are accepted against the actual operator status"
+      ]
+    },
+    {
+      "id": "minor_student_and_payer_flow",
+      "severity": "HARD",
+      "status": "NEEDS_LEGAL_AND_OWNER_DECISION",
+      "must_be_true_before_go_live": [
+        "student age and payer/contracting-party relationship are handled explicitly",
+        "the checkout does not assume that every 14-17-year-old can independently enter a paid contract outside statutory exceptions",
+        "for under-14 users, contracting/personal-data flow is handled through a lawful representative where required",
+        "the product may allow a minor learner with a separate legally capable payer without exposing learner drafts/dialogs to the payer by default"
+      ]
+    },
+    {
+      "id": "incident_response_and_subject_rights",
+      "severity": "HARD",
+      "status": "OPERATING_PROCEDURE_REQUIRED",
+      "must_be_true_before_go_live": [
+        "a personal-data incident contact and runbook exist",
+        "24-hour initial and 72-hour internal-investigation notification clocks are operationalized for qualifying incidents",
+        "subject requests for access/correction/cessation/deletion can be received and tracked",
+        "retention/deletion operations are executable"
+      ]
+    }
+  ],
+  "current_product_facts_to_preserve": {
+    "free_demos_anonymous": true,
+    "passwordless_email_or_phone": true,
+    "no_saved_card": true,
+    "no_auto_renew": true,
+    "launch_payment_methods": ["SBP", "BankCard"],
+    "learner_audio_persisted": 0,
+    "parent_default_access_to_child_drafts_or_tutor_dialogues": false,
+    "production_public_traffic_enabled": false,
+    "production_charges_enabled": false
+  },
+  "owner_data_needed_for_public_documents": [
+    "operator legal name/FIO exactly as used in contracts",
+    "operator status and registration details accepted for launch",
+    "operator postal/legal address required by the accepted service classification",
+    "support/contact e-mail",
+    "refund/support contact channel",
+    "final 30-day price",
+    "final 90-day price",
+    "final paid AI analysis price if offered at launch"
+  ],
+  "legal_sources_checked": [
+    {
+      "authority": "Federal Law 152-FZ on Personal Data, current consolidated text checked 2026-08-27",
+      "relevant": ["Art. 9", "Art. 18(5)", "Art. 18.1", "Art. 21(3.1)", "Art. 22"],
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_61801/"
+    },
+    {
+      "authority": "Federal Law 273-FZ on Education, Art. 91",
+      "relevant": ["licensing and direct-activity exception for individual entrepreneurs"],
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_140174/dda3cee5868d1739eb34ccd9e8a98085fa2c76e2/"
+    },
+    {
+      "authority": "Government Resolution 1441, Rules for paid educational services",
+      "relevant": ["consumer information", "contract/service obligations"],
+      "url": "https://publication.pravo.gov.ru/document/View/0001202009210004"
+    },
+    {
+      "authority": "Government Resolution 1053 dated 2026-08-21",
+      "relevant": ["extension of Resolution 1441 validity to 2032; verify effective status at go-live"],
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_542436/"
+    },
+    {
+      "authority": "Civil Code Articles 26 and 28",
+      "relevant": ["transactions by minors aged 14-18", "transactions for children under 14"],
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_5142/"
+    },
+    {
+      "authority": "FNS Russia current NPD receipt guidance, checked August 2026",
+      "relevant": ["receipt per income", "receipt delivery timing"],
+      "url": "https://www.nalog.gov.ru/rn19/news/activities_fts/16641439/"
+    }
+  ],
+  "go_live_legal_status": "BLOCKED_PENDING_REVIEW_AND_PUBLICATION"
+}
