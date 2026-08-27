@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Deterministically import the owner-authored local Russian OGE task bank."""
+"""Deterministically import the owner-local Russian OGE task bank.
+
+Task 1 local source bytes are preserved for audit, but their authorship and
+production rights are not proven by repository authority. They therefore stay
+fail-closed until a separate rights authority is admitted.
+"""
 
 from __future__ import annotations
 
@@ -22,6 +27,9 @@ TASK_MODULES = {
     7: ["RU-PROG-08"],
     8: ["RU-PROG-07"],
 }
+TASK1_RIGHTS_STATUS = "RIGHTS_BLOCKED"
+TASK1_PRODUCTION_ADMISSION = "EXCLUDED_RIGHTS_BLOCKED"
+TASK1_AUTHORSHIP = "NOT_PROVEN"
 
 
 def sha256(path: Path) -> str:
@@ -53,6 +61,26 @@ process.stdout.write(JSON.stringify(c.variants));
 
 def write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def task1_rights(asset_paths: list[str]) -> dict:
+    return {
+        "content_status": TASK1_RIGHTS_STATUS,
+        "production_admission": TASK1_PRODUCTION_ADMISSION,
+        "authorship": TASK1_AUTHORSHIP,
+        "rights_authority": None,
+        "reason": "Local Tilda presence is not independent authorship or distribution-rights authority.",
+        "assets": [
+            {
+                "path": path,
+                "rights_status": TASK1_RIGHTS_STATUS,
+                "production_admission": TASK1_PRODUCTION_ADMISSION,
+                "authorship": TASK1_AUTHORSHIP,
+                "rights_authority": None,
+            }
+            for path in asset_paths
+        ],
+    }
 
 
 def main() -> int:
@@ -93,8 +121,12 @@ def main() -> int:
             "answer": {"type": "reference_answer", "sample": original["sample"]},
             "content": original,
             "assets": asset_paths,
+            "rights": task1_rights(asset_paths),
             "provenance": {
-                "authorship": "OWNER_AUTHORED_LOCAL_MATERIAL",
+                "authorship": TASK1_AUTHORSHIP,
+                "rights_status": TASK1_RIGHTS_STATUS,
+                "production_admission": TASK1_PRODUCTION_ADMISSION,
+                "rights_authority": None,
                 "source": "exam-platform-tilda/tilda-ready/pages/oge-russkiy-zadanie-1/oge-russkiy-zadanie-1-T123.txt",
                 "adaptation": "mechanical extraction only; wording unchanged",
             },
@@ -138,6 +170,14 @@ def main() -> int:
         "status": "SUBJECT_ACCEPTANCE_REQUIRED",
         "source_scope": "exam-platform-tilda/tilda-ready/pages; Russian OGE only; EGE excluded",
         "inventory": {"task_numbers": list(range(1, 9)), "variants_per_task": 5, "items": 40},
+        "task1_rights_gate": {
+            "variants": 5,
+            "assets": 10,
+            "rights_status": TASK1_RIGHTS_STATUS,
+            "production_admission": TASK1_PRODUCTION_ADMISSION,
+            "authorship": TASK1_AUTHORSHIP,
+            "rights_authority": None,
+        },
         "items": sorted(manifest_items, key=lambda row: (row["task_number"], str(row["variant"]))),
     }
     write_json(import_root / "manifest.json", manifest)
@@ -145,7 +185,7 @@ def main() -> int:
 
 
 def manifest_row(repo_root: Path, source_root: Path, source_file: Path, dest: Path, payload: dict) -> dict:
-    return {
+    row = {
         "local_source": source_file.relative_to(source_root).as_posix(),
         "repository_path": dest.relative_to(repo_root).as_posix(),
         "task_number": payload["task_number"],
@@ -158,6 +198,9 @@ def manifest_row(repo_root: Path, source_root: Path, source_file: Path, dest: Pa
         "provenance": payload["provenance"],
         "content_hash": sha256(dest),
     }
+    if payload["task_number"] == 1:
+        row["rights"] = payload["rights"]
+    return row
 
 
 if __name__ == "__main__":
