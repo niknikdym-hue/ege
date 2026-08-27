@@ -29,21 +29,25 @@ EXTERNAL_REQUIREMENTS: dict[str, tuple[Requirement, ...]] = {
         Requirement("ROBOKASSA_FISCAL_PAYMENT_METHOD"),
         Requirement("ROBOKASSA_FISCAL_PAYMENT_OBJECT"),
         Requirement("ROBOKASSA_MERCHANT_TEST_ACCEPTED", kind="true"),
+        Requirement("ROBOKASSA_PRODUCTION_SETTINGS_ACCEPTED", kind="true"),
         Requirement("NPD_ROBOCHEKI_RECEIPT_ACCEPTED", kind="true"),
     ),
     "identity": (
-        Requirement("IDENTITY_DELIVERY_PROVIDER"),
-        Requirement("IDENTITY_DELIVERY_SECRET", secret=True, min_length=8),
         Requirement("IDENTITY_CONTACT_HMAC_KEY", secret=True, min_length=32),
         Requirement("IDENTITY_VERIFICATION_HMAC_KEY", secret=True, min_length=32),
+        Requirement("YANDEX_POSTBOX_SENDER_ADDRESS", kind="email"),
+        Requirement("YANDEX_POSTBOX_RUNTIME_CREDENTIAL_READY", kind="true"),
+        Requirement("YANDEX_POSTBOX_LIVE_ACCEPTED", kind="true"),
+        Requirement("SMSRU_API_ID", secret=True, min_length=8),
+        Requirement("SMSRU_LIVE_ACCEPTED", kind="true"),
         Requirement("IDENTITY_PRODUCTION_DELIVERY_ACCEPTED", kind="true"),
     ),
     "tutor": (
-        Requirement("TUTOR_LIVE_TEXT_PROVIDER"),
-        Requirement("TUTOR_LIVE_TEXT_PROVIDER_SECRET", secret=True, min_length=8),
-        Requirement("TUTOR_VOICE_PROVIDER"),
+        Requirement("YANDEX_AI_STUDIO_CREDENTIAL", secret=True, min_length=8),
+        Requirement("YANDEX_AI_STUDIO_MODEL_URI", kind="yandex_model_uri"),
         Requirement("YANDEX_SPEECHKIT_CREDENTIAL", secret=True, min_length=8),
         Requirement("YANDEX_SPEECHKIT_FOLDER_ID"),
+        Requirement("YANDEX_SPEECHKIT_VOICE"),
         Requirement("TUTOR_LIVE_TEXT_ACCEPTED", kind="true"),
         Requirement("TUTOR_LIVE_VOICE_ACCEPTED", kind="true"),
         Requirement("TUTOR_SAME_SESSION_ACCEPTED", kind="true"),
@@ -94,6 +98,7 @@ KILL_SWITCHES = {
 
 PLACEHOLDERS = {"changeme", "placeholder", "secret", "test", "todo", "xxx", "<secret>"}
 IMAGE_RE = re.compile(r"^cr\.yandex/[^\s]+@sha256:[0-9a-f]{64}$")
+EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
 
 def _truth(value: str | None) -> bool | None:
@@ -121,6 +126,10 @@ def _valid(requirement: Requirement, env: Mapping[str, str]) -> bool:
         return stripped.startswith("https://") and " " not in stripped
     if requirement.kind == "immutable_yandex_image":
         return bool(IMAGE_RE.fullmatch(stripped))
+    if requirement.kind == "yandex_model_uri":
+        return stripped.startswith("gpt://") and " " not in stripped
+    if requirement.kind == "email":
+        return bool(EMAIL_RE.fullmatch(stripped))
     return len(stripped) >= requirement.min_length
 
 
