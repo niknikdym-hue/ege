@@ -1,0 +1,212 @@
+{
+  "schema_version": "1.0.0",
+  "as_of": "2026-08-27",
+  "subject": "russian",
+  "program_scope": "grades 5-11 + OGE + EGE",
+  "status": "OFFICIAL_SCOPE_EXTRACTED_NOT_FULL_SOURCE_INGESTED",
+  "counts": {
+    "ru_prog_modules": 16,
+    "modules_with_official_scope_evidence": 16,
+    "official_source_records": 5,
+    "source_bytes_archived_to_drive": 0,
+    "full_knowledge_extraction_complete": 0,
+    "commercial_textbook_bytes_ingested": 0
+  },
+  "source_records": [
+    {
+      "source_id": "EDSOO-RU-5-9-2025",
+      "authority": "EDSOO Federal Working Program: Russian language grades 5-9",
+      "url": "https://edsoo.ru/wp-content/uploads/2025/07/2025_ooo_frp_russkij-yazyk_5-9.pdf",
+      "access_class": "PUBLIC_OFFICIAL_PDF",
+      "retention_status": "RIGHTS_NEEDS_REVIEW",
+      "processing_status": "SCOPE_AND_LOCATORS_EXTRACTED",
+      "bytes_archived": false,
+      "verified_structure": [
+        "grade-by-grade content 5-9",
+        "subject learning outcomes",
+        "thematic and lesson planning",
+        "grade-distributed content codifier",
+        "OGE checked requirements codifier",
+        "OGE content-elements codifier"
+      ]
+    },
+    {
+      "source_id": "EDSOO-RU-10-11-BASIC-2025",
+      "authority": "EDSOO Federal Working Program: Russian language grades 10-11, basic level",
+      "url": "https://edsoo.ru/wp-content/uploads/2025/07/2025_soo_frp_russkij-yazyk_10_11.pdf",
+      "access_class": "PUBLIC_OFFICIAL_PDF",
+      "retention_status": "RIGHTS_NEEDS_REVIEW",
+      "processing_status": "SCOPE_AND_LOCATORS_EXTRACTED",
+      "bytes_archived": false,
+      "verified_structure": [
+        "grade 10 and grade 11 content",
+        "subject learning outcomes",
+        "thematic and lesson planning",
+        "grade-distributed content codifier",
+        "EGE checked requirements and content elements"
+      ]
+    },
+    {
+      "source_id": "FIPI-OGE-RU-2026-FINAL",
+      "authority": "FIPI final OGE 2026 Russian demo/specification/codifier package",
+      "url": "https://fipi.ru/oge/demoversii-specifikacii-kodifikatory",
+      "access_class": "PUBLIC_OFFICIAL_EXAM_PACKAGE",
+      "retention_status": "RIGHTS_NEEDS_REVIEW",
+      "processing_status": "FINAL_PACKAGE_LOCATED_ON_OFFICIAL_PAGE",
+      "bytes_archived": false,
+      "canonical_exam_status": "FINAL_FOR_2026"
+    },
+    {
+      "source_id": "FIPI-OGE-RU-2027-PROJECT",
+      "authority": "FIPI OGE 2027 Russian project documents",
+      "url": "https://fipi.ru/oge/demoversii-specifikacii-kodifikatory",
+      "access_class": "PUBLIC_OFFICIAL_PROJECT",
+      "retention_status": "RIGHTS_NEEDS_REVIEW",
+      "processing_status": "PROJECT_ONLY_NOT_CANONICAL_FOR_LAUNCH_TRUTH",
+      "bytes_archived": false,
+      "canonical_exam_status": "PROVISIONAL_PUBLIC_DISCUSSION_THROUGH_2026-09-30"
+    },
+    {
+      "source_id": "FIPI-EGE-RU-2026-FINAL",
+      "authority": "FIPI EGE 2026 Russian demo/specification/codifier package",
+      "url": "https://fipi.ru/ege/demoversii-specifikacii-kodifikatory",
+      "access_class": "PUBLIC_OFFICIAL_EXAM_PACKAGE",
+      "retention_status": "RIGHTS_NEEDS_REVIEW",
+      "processing_status": "FINAL_PACKAGE_LOCATED_ON_OFFICIAL_PAGE",
+      "bytes_archived": false,
+      "canonical_exam_status": "FINAL_FOR_2026"
+    }
+  ],
+  "module_coverage": [
+    {
+      "module_id": "RU-PROG-01",
+      "title_ru": "Фонетика и графика",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025"],
+      "locators": ["5-9 PDF p.8: Фонетика. Графика. Орфоэпия", "10-11 PDF p.7: Фонетика. Орфоэпия. Орфоэпические нормы"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-02",
+      "title_ru": "Орфоэпия и ударение",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["5-9 PDF p.8: слог, ударение, свойства русского ударения", "10-11 PDF p.7: нормы произношения и ударения"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-03",
+      "title_ru": "Лексика, значение слова, паронимы и фразеология",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["5-9 PDF p.8: Лексикология; синонимы, антонимы, омонимы, паронимы", "10-11 PDF pp.7-8: лексика, стилистическая окраска, фразеология"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-04",
+      "title_ru": "Морфемика",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025"],
+      "locators": ["5-9 PDF pp.8-9: Морфемика", "10-11 PDF p.8 and thematic p.34: Морфемика и словообразование"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-05",
+      "title_ru": "Словообразование",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025"],
+      "locators": ["5-9 lesson planning: Словообразование. Культура речи. Орфография", "10-11 PDF p.8 / thematic p.34: словообразование и словообразовательный анализ"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-06",
+      "title_ru": "Морфология и части речи",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025"],
+      "locators": ["5-9 PDF p.9 onward: Морфология; система частей речи", "10-11 program: morphology review/generalization and grammatical forms"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-07",
+      "title_ru": "Морфологические и грамматические нормы",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["5-9 PDF p.9: pronunciation/stress/word-change norms for nouns and subsequent parts of speech", "10-11 PDF p.7: grammatical norms include morphological and syntactic norms"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-08",
+      "title_ru": "Орфография",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025", "FIPI-OGE-RU-2026-FINAL", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["5-9 PDF pp.8-9: Орфография and concrete orthograms", "10-11 program: orthographic rules review/generalization"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-09",
+      "title_ru": "Синтаксис и синтаксические нормы",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025", "FIPI-OGE-RU-2026-FINAL", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["5-9 PDF p.110: Система языка. Синтаксис. Культура речи. Пунктуация", "10-11 PDF p.10 / thematic p.50: Синтаксис. Синтаксические нормы"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-10",
+      "title_ru": "Пунктуация",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025", "FIPI-OGE-RU-2026-FINAL", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["5-9 PDF p.19 and p.111: Пунктуация; функции знаков препинания", "10-11 thematic p.55: Пунктуация. Основные правила пунктуации"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-11",
+      "title_ru": "Текст, смысл и межфразовая связь",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025", "FIPI-OGE-RU-2026-FINAL", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["5-9 PDF p.7: тема, главная мысль, микротема, средства связи, смысловой анализ", "10-11 program: text and information processing / speech activity"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-12",
+      "title_ru": "Стили, жанры и коммуникативная задача",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["5-9 PDF p.8: Функциональные разновидности языка", "10-11 pp.71/84: functional stylistics, styles and genres"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-13",
+      "title_ru": "Средства выразительности",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025", "FIPI-OGE-RU-2026-FINAL", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["5-9 lesson planning p.144: lexical expressive means, epithet, metaphor", "10-11 p.10: expressive syntactic means; lexical/stylistic expressive resources elsewhere in program"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-14",
+      "title_ru": "Культура речи, редактирование и исправление ошибок",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "EDSOO-RU-10-11-BASIC-2025", "FIPI-OGE-RU-2026-FINAL", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["5-9 program repeatedly binds system topics to Культура речи", "10-11 p.7: language norm types; later sections require correcting text against syntactic/stylistic norms"],
+      "scope_status": "EXTRACTED"
+    },
+    {
+      "module_id": "RU-PROG-15",
+      "title_ru": "ОГЭ: изложение, сжатие и письменный ответ",
+      "official_scope_sources": ["EDSOO-RU-5-9-2025", "FIPI-OGE-RU-2026-FINAL"],
+      "locators": ["5-9 PDF p.7: detailed/selective/compressed exposition; microthemes and text analysis", "5-9 PDF pp.233-252: OGE checked requirements and content codifier", "FIPI OGE 2026 final Russian package"],
+      "scope_status": "EXTRACTED",
+      "exam_authority_rule": "FIPI-OGE-RU-2027-PROJECT is provisional and must not silently replace final OGE 2026 launch truth"
+    },
+    {
+      "module_id": "RU-PROG-16",
+      "title_ru": "ЕГЭ: анализ текста и сочинение",
+      "official_scope_sources": ["EDSOO-RU-10-11-BASIC-2025", "FIPI-EGE-RU-2026-FINAL"],
+      "locators": ["10-11 thematic p.63: create and correct argumentation essay of at least 150 words", "10-11 program: text analysis, functional stylistics and culture of speech", "FIPI EGE 2026 Russian demo/specification/codifier"],
+      "scope_status": "EXTRACTED"
+    }
+  ],
+  "rights_and_ingestion_boundary": {
+    "official_public_download_does_not_equal_archive_permission": true,
+    "current_retention_default": "RIGHTS_NEEDS_REVIEW",
+    "drive_upload_claimed": false,
+    "commercial_textbook_full_bytes_allowed": false,
+    "commercial_textbook_rule": "LICENSE_REQUIRED / DO_NOT_COPY_FULL_BYTES_WITHOUT_LICENSE"
+  },
+  "next_processing_gate": {
+    "required": [
+      "resolve retention/archive decision per official source",
+      "materialize lawful source bytes only after retention decision",
+      "hash ingested bytes",
+      "extract deterministic requirement/content records beneath the 16-module scope",
+      "compare extracted official requirements against existing owner content and PR #139 without regenerating duplicates"
+    ],
+    "full_source_base_ready": false
+  }
+}
