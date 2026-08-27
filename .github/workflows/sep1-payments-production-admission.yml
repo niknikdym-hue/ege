@@ -1,0 +1,46 @@
+name: SEP1 Payments production admission
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/payments-reference/payments.py'
+      - 'eksamio-learning-engine/payments-reference/robokassa_production.py'
+      - 'eksamio-learning-engine/payments-reference/validate_payments_001.py'
+      - 'eksamio-learning-engine/payments-reference/validate_robokassa_production_admission.py'
+      - '.github/workflows/sep1-payments-production-admission.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/payments-reference/payments.py'
+      - 'eksamio-learning-engine/payments-reference/robokassa_production.py'
+      - 'eksamio-learning-engine/payments-reference/validate_payments_001.py'
+      - 'eksamio-learning-engine/payments-reference/validate_robokassa_production_admission.py'
+      - '.github/workflows/sep1-payments-production-admission.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-production-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile payment modules
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/payments-reference/payments.py \
+            eksamio-learning-engine/payments-reference/robokassa_production.py \
+            eksamio-learning-engine/payments-reference/validate_payments_001.py \
+            eksamio-learning-engine/payments-reference/validate_robokassa_production_admission.py
+      - name: Preserve merged test-mode gate
+        run: python eksamio-learning-engine/payments-reference/validate_payments_001.py
+      - name: Validate fail-closed production candidate
+        run: python eksamio-learning-engine/payments-reference/validate_robokassa_production_admission.py
+      - name: Reject whitespace errors
+        run: git diff --check "${{ github.event.pull_request.base.sha || github.event.before }}...HEAD"
