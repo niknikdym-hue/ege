@@ -89,8 +89,8 @@
   }
 
   class MockPaymentAdapter {
-    constructor(){ this.entitlement = null; this.orderCounter = 0; }
-    async entitlement(){ return clone(this.entitlement || {active:false}); }
+    constructor(){ this.currentEntitlement = null; this.orderCounter = 0; }
+    async entitlement(){ return clone(this.currentEntitlement || {active:false}); }
     async createSandboxOrder({offer_code,payment_method}){
       if(!['RU_PRO_30_TEST','RU_PRO_90_TEST'].includes(offer_code)) throw new Error('unknown offer');
       if(!['BankCard','SBP'].includes(payment_method)) throw new Error('unsupported method');
@@ -108,14 +108,14 @@
     async confirmSandboxOrder(order){
       if(!order || order.test_mode !== true || order.is_test !== '1') throw new Error('unsafe payment mode');
       const days = order.offer_code === 'RU_PRO_90_TEST' ? 90 : 30;
-      this.entitlement = {
+      this.currentEntitlement = {
         active:true,
         product_code:'EKSAMIO_PRO_RUSSIAN',
         duration_days:days,
         source_order_id:order.order_id,
         state:'ACTIVE'
       };
-      return clone(this.entitlement);
+      return clone(this.currentEntitlement);
     }
   }
 
