@@ -1,0 +1,27 @@
+openapi: "3.0.0"
+info:
+  title: Eksamio PEIS Staging
+  version: "1.0.0"
+
+paths:
+  /healthz:
+    get:
+      operationId: healthz
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /readyz:
+    get:
+      operationId: readyz
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /v0/checked-card:
+    post:
+      operationId: checkedCard
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
