@@ -4,7 +4,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from sep1_production_preflight import EXTERNAL_REQUIREMENTS, KILL_SWITCHES, evaluate
+from sep1_production_preflight import (
+    EXTERNAL_REQUIREMENTS,
+    KILL_SWITCHES,
+    evaluate,
+    legal_artifact_fingerprints,
+)
 
 HERE = Path(__file__).resolve().parent
 CAPABILITIES = HERE / "SEP1-PRODUCTION-CAPABILITIES-v0.1.json"
@@ -48,6 +53,17 @@ def fully_populated_env() -> dict[str, str]:
     return env
 
 
+def bind_exact_legal_artifacts(env: dict[str, str]) -> None:
+    for row in legal_artifact_fingerprints():
+        env[str(row["accepted_env"])] = "true"
+        env[str(row["accepted_version_env"])] = str(row["version"])
+        env[str(row["accepted_sha256_env"])] = str(row["sha256"])
+
+
+def legal_gate(result: dict[str, object]) -> dict[str, object]:
+    return next(row for row in result["gates"] if row["id"] == "legal_privacy_operational")
+
+
 def main() -> int:
     capabilities = json.loads(CAPABILITIES.read_text(encoding="utf-8"))
     gates = capabilities.get("gates", [])
@@ -88,11 +104,39 @@ def main() -> int:
         raise AssertionError("preflight output boundary drift")
 
     empty_statuses = {row["id"]: row["status"] for row in empty["gates"]}
-    for provider_gate in ("payments", "identity", "tutor", "yandex_private_staging", "pro_client_real_backend"):
-        if empty_statuses.get(provider_gate) != "BLOCKED_EXTERNAL":
-            raise AssertionError(f"{provider_gate} should now be code-ready and external-blocked")
+    for external_gate in (
+        "payments",
+        "identity",
+        "tutor",
+        "yandex_private_staging",
+        "pro_client_real_backend",
+        "legal_privacy_operational",
+    ):
+        if empty_statuses.get(external_gate) != "BLOCKED_EXTERNAL":
+            raise AssertionError(f"{external_gate} should be code-ready and external-blocked")
+
+    bare = fully_populated_env()
+    bare_legal = legal_gate(evaluate(bare))
+    bare_missing = set(bare_legal["missing_external_fields"])
+    if bare_legal["code_status"] != "READY" or bare_legal["status"] != "BLOCKED_EXTERNAL":
+        raise AssertionError("legal code-ready/external-blocked boundary drift")
+    if not any(name.endswith("_ACCEPTED_VERSION") for name in bare_missing):
+        raise AssertionError("bare legal acceptance illegally bypassed artifact version binding")
+    if not any(name.endswith("_ACCEPTED_SHA256") for name in bare_missing):
+        raise AssertionError("bare legal acceptance illegally bypassed artifact fingerprint binding")
+
+    mismatch = fully_populated_env()
+    for row in legal_artifact_fingerprints():
+        mismatch[str(row["accepted_env"])] = "true"
+        mismatch[str(row["accepted_version_env"])] = str(row["version"])
+        mismatch[str(row["accepted_sha256_env"])] = "0" * 64
+    mismatch_missing = set(legal_gate(evaluate(mismatch))["missing_external_fields"])
+    expected_sha_fields = {str(row["accepted_sha256_env"]) for row in legal_artifact_fingerprints()}
+    if not expected_sha_fields.issubset(mismatch_missing):
+        raise AssertionError("mismatched legal artifact SHA was not rejected")
 
     populated_env = fully_populated_env()
+    bind_exact_legal_artifacts(populated_env)
     populated = evaluate(populated_env)
     if populated["overall"] != "NOT_READY":
         raise AssertionError("external values must not override remaining source/content/legal/e2e blockers")
@@ -105,11 +149,20 @@ def main() -> int:
     for gate_id, expected in {
         "russian_source_knowledge": "BLOCKED_CODE",
         "russian_content": "BLOCKED_SUBJECT",
-        "legal_privacy_operational": "BLOCKED_CODE",
+        "legal_privacy_operational": "BLOCKED_EXTERNAL",
         "production_e2e": "BLOCKED_DEPENDENCY",
     }.items():
         if statuses.get(gate_id) != expected:
             raise AssertionError(f"external fixture illegally overrode {gate_id}: {statuses.get(gate_id)}")
+
+    resolved_missing = set(legal_gate(populated)["missing_external_fields"])
+    expected_resolution = {
+        f"LEGAL_ARTIFACT_CONTENT_RESOLUTION_REQUIRED:{row['id']}"
+        for row in legal_artifact_fingerprints()
+        if row["has_unresolved_markers"]
+    }
+    if not expected_resolution or not expected_resolution.issubset(resolved_missing):
+        raise AssertionError("unresolved legal artifact markers must remain explicit external blockers")
 
     serialized = json.dumps(populated, ensure_ascii=False)
     secret_fixture = "S" * 40
@@ -117,6 +170,7 @@ def main() -> int:
         raise AssertionError("secret value leaked into preflight output")
 
     unsafe_env = fully_populated_env()
+    bind_exact_legal_artifacts(unsafe_env)
     unsafe_env["PRODUCTION_CHARGES_ENABLED"] = "true"
     unsafe = evaluate(unsafe_env)
     if unsafe["overall"] != "FAIL_UNSAFE_ACTIVATION" or "PRODUCTION_CHARGES_ENABLED" not in unsafe["kill_switch_failures"]:
@@ -134,8 +188,10 @@ def main() -> int:
     print("current_overall=NOT_READY")
     print("gate_count=9")
     print("provider_code_ready_gates=5")
-    print("payments_identity_tutor_external_only=PASS")
-    print("yandex_pro_client_external_only=PASS")
+    print("legal_code_ready_external_blocked=PASS")
+    print("legal_bare_boolean_guard=PASS")
+    print("legal_version_sha_binding=PASS")
+    print("legal_unresolved_content_guard=PASS")
     print("remaining_source_content_legal_e2e_blockers=PASS")
     print("unsafe_activation_guard=PASS")
     print("secret_output_guard=PASS")

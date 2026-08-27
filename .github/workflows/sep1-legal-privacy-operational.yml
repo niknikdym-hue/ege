@@ -1,0 +1,56 @@
+name: SEP1 legal privacy operational
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/legal-privacy/**'
+      - 'eksamio-learning-engine/launch-preflight/**'
+      - 'eksamio-pro-client/index.html'
+      - 'eksamio-pro-client/legal/**'
+      - '.github/workflows/sep1-legal-privacy-operational.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/legal-privacy/**'
+      - 'eksamio-learning-engine/launch-preflight/**'
+      - 'eksamio-pro-client/index.html'
+      - 'eksamio-pro-client/legal/**'
+      - '.github/workflows/sep1-legal-privacy-operational.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  legal-privacy-operational:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile validators
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/legal-privacy/validate_legal_privacy_operational.py \
+            eksamio-learning-engine/launch-preflight/sep1_production_preflight.py \
+            eksamio-learning-engine/launch-preflight/validate_sep1_production_preflight.py \
+            eksamio-pro-client/validate_pro_client.py
+      - name: Validate legal privacy operational packet
+        run: python eksamio-learning-engine/legal-privacy/validate_legal_privacy_operational.py
+      - name: Validate production preflight binding
+        working-directory: eksamio-learning-engine/launch-preflight
+        run: python validate_sep1_production_preflight.py
+      - name: Validate Pro client static contract
+        run: python eksamio-pro-client/validate_pro_client.py
+      - name: Reject whitespace errors
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --check "${{ github.event.pull_request.base.sha }}...HEAD"
+          else
+            git diff --check "${{ github.event.before }}...${{ github.sha }}"
+          fi

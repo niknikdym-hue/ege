@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0.0",
+  "status": "CODE_READY_EXTERNAL_INPUTS_REQUIRED",
+  "product": "Eksamio Pro — Русский",
+  "unresolved_marker_prefix": "[[UNRESOLVED:",
+  "required_external_operator_fields": [
+    "LEGAL_OPERATOR_FULL_NAME",
+    "LEGAL_OPERATOR_INN",
+    "LEGAL_SUPPORT_CONTACT",
+    "LEGAL_SUPPORT_SLA"
+  ],
+  "artifacts": [
+    {
+      "id": "privacy",
+      "version": "0.1.0",
+      "path": "eksamio-pro-client/legal/privacy.html",
+      "accepted_env": "LEGAL_PRIVACY_ACCEPTED",
+      "accepted_version_env": "LEGAL_PRIVACY_ACCEPTED_VERSION",
+      "accepted_sha256_env": "LEGAL_PRIVACY_ACCEPTED_SHA256"
+    },
+    {
+      "id": "personal_data",
+      "version": "0.1.0",
+      "path": "eksamio-pro-client/legal/personal-data.html",
+      "accepted_env": "LEGAL_PERSONAL_DATA_ACCEPTED",
+      "accepted_version_env": "LEGAL_PERSONAL_DATA_ACCEPTED_VERSION",
+      "accepted_sha256_env": "LEGAL_PERSONAL_DATA_ACCEPTED_SHA256"
+    },
+    {
+      "id": "public_offer",
+      "version": "0.1.0",
+      "path": "eksamio-pro-client/legal/public-offer.html",
+      "accepted_env": "LEGAL_PUBLIC_OFFER_ACCEPTED",
+      "accepted_version_env": "LEGAL_PUBLIC_OFFER_ACCEPTED_VERSION",
+      "accepted_sha256_env": "LEGAL_PUBLIC_OFFER_ACCEPTED_SHA256"
+    },
+    {
+      "id": "audio_non_storage",
+      "version": "0.1.0",
+      "path": "eksamio-pro-client/legal/audio-non-storage.html",
+      "accepted_env": "LEGAL_AUDIO_NON_STORAGE_DISCLOSURE_ACCEPTED",
+      "accepted_version_env": "LEGAL_AUDIO_NON_STORAGE_DISCLOSURE_ACCEPTED_VERSION",
+      "accepted_sha256_env": "LEGAL_AUDIO_NON_STORAGE_DISCLOSURE_ACCEPTED_SHA256"
+    },
+    {
+      "id": "npd_payment_contour",
+      "version": "0.1.0",
+      "path": "eksamio-pro-client/legal/npd-receipts.html",
+      "accepted_env": "LEGAL_NPD_PAYMENT_CONTOUR_ACCEPTED",
+      "accepted_version_env": "LEGAL_NPD_PAYMENT_CONTOUR_ACCEPTED_VERSION",
+      "accepted_sha256_env": "LEGAL_NPD_PAYMENT_CONTOUR_ACCEPTED_SHA256"
+    }
+  ],
+  "runbook": "eksamio-learning-engine/legal-privacy/SEP1-LEGAL-OPERATOR-RUNBOOK-v0.1.md",
+  "rules": [
+    "A bare LEGAL_*_ACCEPTED=true is insufficient.",
+    "Each accepted artifact must match the exact current version and SHA-256.",
+    "Any unresolved marker keeps the runtime legal gate BLOCKED_EXTERNAL.",
+    "Code readiness is not external legal acceptance.",
+    "Public traffic and production charges remain disabled until final owner go-live."
+  ]
+}

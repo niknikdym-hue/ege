@@ -1,9 +1,9 @@
 {
-  "schema_version": "0.2.0",
+  "schema_version": "0.3.0",
   "as_of": "2026-08-27",
   "deadline": "2026-09-01",
   "product": "Eksamio Pro — Русский",
-  "baseline_main": "32bba42c9dea15af221bd5d4289e502db4a18a3e",
+  "baseline_main": "c6f18fa2ad95d3e794c27a2f0d31a0e5235db61e",
   "launch_status": "NOT_READY",
   "gates": [
     {
@@ -19,10 +19,10 @@
       "id": "russian_content",
       "status": "BLOCKED_SUBJECT",
       "evidence": [
-        "PR #139 remains open on current content wave",
-        "current-head review requires рук-/руч- repair and RIGHTS_BLOCKED treatment for unproven OGE Task-1 assets"
+        "PR #139 remains open at f16884ec4f8992ee9ad01c2930c42349f579bc70",
+        "bounded morphemics and OGE Task-1 rights repairs are accepted; full-subject subject acceptance is not"
       ],
-      "blocker": "PR #139 requires bounded repairs plus Russian subject acceptance; proposed ru-* identities remain non-canonical."
+      "blocker": "PR #139 remains SUBJECT_ACCEPTANCE_REQUIRED; proposed ru-* identities are non-canonical and measured full-subject coverage is incomplete."
     },
     {
       "id": "payments",
@@ -74,11 +74,13 @@
     },
     {
       "id": "legal_privacy_operational",
-      "status": "BLOCKED_CODE",
+      "status": "READY",
       "evidence": [
-        "OWNER-DECISIONS-2026-08-22.md defines mandatory launch boundaries"
+        "versioned production-facing privacy, personal-data, public-offer, learner-audio non-storage and NPD/receipt artifacts materialized",
+        "artifact acceptance is bound to exact version + SHA-256",
+        "operator runbook and Pro-client disclosure integration are validated fail-closed"
       ],
-      "blocker": "A durable launch legal/privacy/operational packet and its review/acceptance matrix have not yet been materialized."
+      "blocker": "Code gate is ready; unresolved operator fields, final legal review, exact accepted artifact fingerprints and launch-day support SLA remain external."
     },
     {
       "id": "production_e2e",
