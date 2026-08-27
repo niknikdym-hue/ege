@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -9,7 +10,9 @@ from pathlib import Path
 from typing import Mapping
 
 HERE = Path(__file__).resolve().parent
+REPO_ROOT = HERE.parents[1]
 CAPABILITIES_PATH = HERE / "SEP1-PRODUCTION-CAPABILITIES-v0.1.json"
+LEGAL_MANIFEST_PATH = REPO_ROOT / "eksamio-learning-engine" / "legal-privacy" / "SEP1-LEGAL-PRIVACY-ARTIFACTS-v0.1.json"
 
 
 @dataclass(frozen=True)
@@ -79,6 +82,10 @@ EXTERNAL_REQUIREMENTS: dict[str, tuple[Requirement, ...]] = {
         Requirement("LEGAL_PERSONAL_DATA_ACCEPTED", kind="true"),
         Requirement("LEGAL_AUDIO_NON_STORAGE_DISCLOSURE_ACCEPTED", kind="true"),
         Requirement("LEGAL_NPD_PAYMENT_CONTOUR_ACCEPTED", kind="true"),
+        Requirement("LEGAL_OPERATOR_FULL_NAME"),
+        Requirement("LEGAL_OPERATOR_INN"),
+        Requirement("LEGAL_SUPPORT_CONTACT"),
+        Requirement("LEGAL_SUPPORT_SLA"),
     ),
     "production_e2e": (
         Requirement("FINAL_ANON_TO_ACCOUNT_ACCEPTED", kind="true"),
@@ -99,6 +106,7 @@ KILL_SWITCHES = {
 PLACEHOLDERS = {"changeme", "placeholder", "secret", "test", "todo", "xxx", "<secret>"}
 IMAGE_RE = re.compile(r"^cr\.yandex/[^\s]+@sha256:[0-9a-f]{64}$")
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _truth(value: str | None) -> bool | None:
@@ -133,6 +141,50 @@ def _valid(requirement: Requirement, env: Mapping[str, str]) -> bool:
     return len(stripped) >= requirement.min_length
 
 
+def legal_artifact_fingerprints() -> list[dict[str, str | bool]]:
+    manifest = json.loads(LEGAL_MANIFEST_PATH.read_text(encoding="utf-8"))
+    marker = str(manifest["unresolved_marker_prefix"])
+    rows: list[dict[str, str | bool]] = []
+    for artifact in manifest["artifacts"]:
+        path = REPO_ROOT / str(artifact["path"])
+        raw = path.read_bytes()
+        text = raw.decode("utf-8")
+        rows.append(
+            {
+                "id": str(artifact["id"]),
+                "version": str(artifact["version"]),
+                "path": str(artifact["path"]),
+                "sha256": hashlib.sha256(raw).hexdigest(),
+                "has_unresolved_markers": marker in text,
+                "accepted_env": str(artifact["accepted_env"]),
+                "accepted_version_env": str(artifact["accepted_version_env"]),
+                "accepted_sha256_env": str(artifact["accepted_sha256_env"]),
+            }
+        )
+    return rows
+
+
+def _legal_missing(env: Mapping[str, str]) -> list[str]:
+    missing: list[str] = []
+    try:
+        rows = legal_artifact_fingerprints()
+    except (OSError, KeyError, ValueError, UnicodeDecodeError, json.JSONDecodeError):
+        return ["LEGAL_ARTIFACT_PACKET_INVALID"]
+
+    for row in rows:
+        if row["has_unresolved_markers"]:
+            missing.append(f"LEGAL_ARTIFACT_CONTENT_RESOLUTION_REQUIRED:{row['id']}")
+        if _truth(env.get(str(row["accepted_env"]))) is not True:
+            missing.append(str(row["accepted_env"]))
+        if env.get(str(row["accepted_version_env"]), "").strip() != row["version"]:
+            missing.append(str(row["accepted_version_env"]))
+        supplied_sha = env.get(str(row["accepted_sha256_env"]), "").strip().casefold()
+        if not SHA256_RE.fullmatch(supplied_sha) or supplied_sha != row["sha256"]:
+            missing.append(str(row["accepted_sha256_env"]))
+
+    return list(dict.fromkeys(missing))
+
+
 def evaluate(env: Mapping[str, str] | None = None) -> dict[str, object]:
     env = dict(os.environ if env is None else env)
     capabilities = json.loads(CAPABILITIES_PATH.read_text(encoding="utf-8"))
@@ -154,6 +206,9 @@ def evaluate(env: Mapping[str, str] | None = None) -> dict[str, object]:
             for requirement in EXTERNAL_REQUIREMENTS.get(gate_id, ())
             if not _valid(requirement, env)
         ]
+        if gate_id == "legal_privacy_operational":
+            missing.extend(_legal_missing(env))
+            missing = list(dict.fromkeys(missing))
         if code_status != "READY":
             status = code_status
         elif missing:
