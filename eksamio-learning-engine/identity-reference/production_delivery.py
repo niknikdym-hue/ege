@@ -3,21 +3,24 @@
 
 The adapters remain transport-injected and execution-disabled by default. They
 never persist contacts or verification codes and never become canonical identity
-authority; they only implement the existing DeliveryProvider contract.
+authority; they only implement the structural ``DeliveryProvider.deliver``
+contract used by the merged passwordless identity service.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any, Callable, Mapping, Protocol
 
-from passwordless_identity import IdentityError
 
-
-class DeliveryExecutionDisabled(IdentityError):
+class DeliveryError(ValueError):
     pass
 
 
-class DeliveryProviderFailure(IdentityError):
+class DeliveryExecutionDisabled(DeliveryError):
+    pass
+
+
+class DeliveryProviderFailure(DeliveryError):
     pass
 
 
@@ -124,7 +127,7 @@ class YandexPostboxDeliveryProvider:
                 body=body,
                 timeout_seconds=self.config.timeout_seconds,
             )
-        except Exception as exc:  # transport details must not leak secrets/contact/code
+        except Exception as exc:
             raise DeliveryProviderFailure("Postbox delivery transport failed") from exc
 
         message_id = response.get("MessageId") or response.get("messageId")
