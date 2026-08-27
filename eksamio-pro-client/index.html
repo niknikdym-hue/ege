@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Eksamio Pro — Русский</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">К основному содержанию</a>
+  <header class="topbar">
+    <a class="brand" href="#plan" aria-label="Eksamio Pro — Русский">
+      <span class="brand-mark" aria-hidden="true">Э</span>
+      <span><strong>Eksamio Pro</strong><small>Русский</small></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="status-pill" id="identityStatus">Гостевой режим</span>
+      <button class="ghost-button" id="identityButton" type="button">Продолжить</button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Навигация Pro">
+      <nav id="mainNav">
+        <button class="nav-item is-active" type="button" data-view="plan"><span aria-hidden="true">◎</span> Мой план</button>
+        <button class="nav-item" type="button" data-view="program"><span aria-hidden="true">▦</span> Программа</button>
+        <button class="nav-item" type="button" data-view="practice"><span aria-hidden="true">✎</span> Практика</button>
+        <button class="nav-item" type="button" data-view="tutor"><span aria-hidden="true">◉</span> Tutor <span class="lock" id="tutorNavLock">●</span></button>
+        <button class="nav-item" type="button" data-view="progress"><span aria-hidden="true">↗</span> Прогресс</button>
+      </nav>
+      <div class="sidebar-footer">
+        <p>Бесплатные демоверсии остаются анонимными.</p>
+        <a href="/ege/russkiy/demoversiya/">Вернуться к демоверсии</a>
+      </div>
+    </aside>
+
+    <main id="main" class="main-content">
+      <section class="view is-active" id="view-plan" data-view-panel="plan">
+        <div class="eyebrow">Персональный маршрут</div>
+        <div class="hero-row">
+          <div>
+            <h1>Добро пожаловать в русский Pro</h1>
+            <p class="lead">Один предметный маршрут: школьная программа 5–11, ОГЭ, ЕГЭ, диагностика, тренажёры, домашняя работа и Tutor.</p>
+          </div>
+          <div class="goal-controls" aria-label="Учебная цель">
+            <label>Класс
+              <select id="gradeSelect" aria-label="Класс"></select>
+            </label>
+            <label>Цель
+              <select id="routeSelect" aria-label="Учебная цель"></select>
+            </label>
+          </div>
+        </div>
+
+        <section class="entry-context card" aria-labelledby="entryTitle">
+          <div>
+            <div class="eyebrow">Вход после диагностики</div>
+            <h2 id="entryTitle">Слабое место уже можно превратить в план</h2>
+            <p id="entryText">Демо-результат можно продолжить в Pro без переноса аккаунтов в Tilda.</p>
+          </div>
+          <button class="primary-button" id="entryContinue" type="button">Продолжить в Pro</button>
+        </section>
+
+        <section class="metrics" aria-label="Сводка прогресса">
+          <article class="metric-card"><span>Готовность</span><strong id="readinessValue">42%</strong><small>по текущей цели</small></article>
+          <article class="metric-card"><span>В фокусе</span><strong id="focusValue">1 тема</strong><small>следующее действие</small></article>
+          <article class="metric-card"><span>Повторить</span><strong id="retentionValue">2</strong><small>до забывания</small></article>
+        </section>
+
+        <section class="content-grid">
+          <article class="card plan-card">
+            <div class="section-heading"><div><div class="eyebrow">Сегодня</div><h2>Следующие действия</h2></div><span class="badge">PEIS</span></div>
+            <ol class="plan-list" id="planList"></ol>
+            <button class="secondary-button" type="button" data-go="practice">Начать тренировку</button>
+          </article>
+          <article class="card nba-card">
+            <div class="eyebrow">Next Best Action</div>
+            <h2 id="nbaTitle">Закрепить правило на независимом ответе</h2>
+            <p id="nbaReason">Причина рекомендации появится из учебных evidence-событий, а не из браузера.</p>
+            <div class="source-chip">Состояние принадлежит shared PEIS</div>
+          </article>
+        </section>
+      </section>
+
+      <section class="view" id="view-program" data-view-panel="program">
+        <div class="eyebrow">Полный предмет</div>
+        <h1>Русский язык: 5–11 + ОГЭ + ЕГЭ</h1>
+        <p class="lead">16 модулей общей программы. Экзамены и продукты — маршруты поверх одного предметного слоя.</p>
+        <div class="route-strip" id="routeStrip" aria-label="Маршруты программы"></div>
+        <div class="program-grid" id="programGrid" aria-live="polite"></div>
+      </section>
+
+      <section class="view" id="view-practice" data-view-panel="practice">
+        <div class="eyebrow">Проверяемое действие</div>
+        <h1>Практика по следующему слабому месту</h1>
+        <div class="practice-layout">
+          <article class="card lesson-card">
+            <span class="badge" id="practiceSemantic">server semantic</span>
+            <h2 id="practiceRuleTitle">Правило</h2>
+            <p id="practiceExplanation">Загрузка проверенного материала…</p>
+            <div class="worked-box" id="practiceWorked"></div>
+          </article>
+          <article class="card task-card">
+            <div class="eyebrow">Независимая проверка</div>
+            <h2 id="practicePrompt">Загрузка задания…</h2>
+            <label class="answer-label" for="practiceAnswer">Ваш ответ</label>
+            <input id="practiceAnswer" autocomplete="off" spellcheck="false">
+            <button class="primary-button" id="checkAnswer" type="button">Проверить</button>
+            <div class="feedback" id="practiceFeedback" role="status" aria-live="polite"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-tutor" data-view-panel="tutor">
+        <div class="eyebrow">Grounded Tutor</div>
+        <h1>Разобрать ошибку с Tutor</h1>
+        <div class="locked-card card" id="tutorLocked">
+          <span class="lock-icon" aria-hidden="true">◇</span>
+          <h2>Tutor входит в Pro</h2>
+          <p>Сначала откройте доступ. В launch-срезе платеж проходит только через sandbox adapter.</p>
+          <button class="primary-button" id="purchaseButton" type="button">Открыть Pro в sandbox</button>
+          <small id="paymentStatus">Реального списания в этом клиентском gate нет.</small>
+        </div>
+        <div class="tutor-card card" id="tutorAvailable" hidden>
+          <div class="tutor-thread" id="tutorThread" aria-live="polite"></div>
+          <form id="tutorForm" class="tutor-form">
+            <label class="sr-only" for="tutorInput">Сообщение Tutor</label>
+            <input id="tutorInput" placeholder="Спросите, почему ответ неверен" autocomplete="off">
+            <button class="primary-button" type="submit">Отправить</button>
+          </form>
+          <div class="source-chip">Ответы только из допущенного grounding</div>
+        </div>
+      </section>
+
+      <section class="view" id="view-progress" data-view-panel="progress">
+        <div class="eyebrow">Измеримый прогресс</div>
+        <h1>Что изменилось после тренировки</h1>
+        <div class="progress-card card">
+          <div class="progress-head"><span>Готовность по текущей цели</span><strong id="progressPercent">42%</strong></div>
+          <div class="progress-track" aria-hidden="true"><span id="progressBar" style="width:42%"></span></div>
+          <div class="progress-events" id="progressEvents"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="adapters.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

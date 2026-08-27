@@ -1,0 +1,35 @@
+name: SEP1 Pro client browser gate
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-pro-client/**'
+      - '.github/workflows/sep1-pro-client.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-pro-client/**'
+      - '.github/workflows/sep1-pro-client.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-pro-client:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser harness
+        run: pip install 'playwright>=1.50,<2'
+      - name: Validate canonical full-Russian client bindings
+        run: python eksamio-pro-client/validate_pro_client.py
+      - name: Run Chrome responsive product e2e
+        run: python eksamio-pro-client/browser_test.py
+      - name: Reject whitespace errors
+        run: git diff --check "${{ github.event.pull_request.base.sha }}...HEAD"
