@@ -25,10 +25,18 @@ Import boundary: Russian OGE only; all EGE directories excluded.
 
 Totals before import: 40 variants, 40 answer/reference-answer records, 40 scorers (35 exact-match and 5 self-check), 10 required runtime/source assets.
 
+## Task 1 rights gate
+
+Repository history does not independently prove authorship or production/distribution authority for the five Task-1 source variants, their five MP3 files, or their five transcript TXT files. Local Tilda presence is not sufficient rights evidence.
+
+Therefore all five Task-1 variants are explicitly `RIGHTS_BLOCKED` and `EXCLUDED_RIGHTS_BLOCKED`, with authorship `NOT_PROVEN` and no asserted rights authority. The 10 MP3/TXT assets are preserved unchanged for audit/reference but are excluded from production admission. `TASK1-RIGHTS-GATE-v1.0.json` is the authoritative fail-closed rights decision and fingerprints the five repaired item records. It explicitly supersedes the pre-repair inferred Task-1 provenance fields that remain in the original import manifest rows.
+
+Tasks 2–8 are outside this bounded rights repair; their existing provenance remains subject to the normal Russian subject-acceptance process.
+
 ## Identity inventory
 
 The current accepted RU1 semantic registry contains no accepted learner-item identity equal to any of the 40 local task/variant IDs. No duplicate learner-item identity was found elsewhere in the repository. The import therefore preserves the local IDs as identity proposals and marks every one `PROPOSED_NOT_CANONICAL` / `SUBJECT_ACCEPTANCE_REQUIRED`; it does not admit new canonical identities.
 
 ## Recorded source issue
 
-The task-1 page loads MP3 files from an external GitHub Pages base URL although matching owner-local MP3 files are present. The imported items reference repository-relative copies only. No task wording, answer, scoring rule, microtheme, sample, explanation or source text was corrected or rewritten during import.
+The task-1 page loads MP3 files from an external GitHub Pages base URL although matching owner-local MP3 files are present. The imported items reference repository-relative copies only. No task wording, answer, scoring rule, microtheme, sample, explanation or source text was corrected or rewritten during the rights repair.
