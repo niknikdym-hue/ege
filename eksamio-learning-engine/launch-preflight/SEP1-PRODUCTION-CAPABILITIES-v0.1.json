@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1.0",
+  "as_of": "2026-08-27",
+  "deadline": "2026-09-01",
+  "product": "Eksamio Pro — Русский",
+  "baseline_main": "22700b83d662be60b4e8aa4186ab207b05e94350",
+  "launch_status": "NOT_READY",
+  "gates": [
+    {
+      "id": "russian_source_knowledge",
+      "status": "BLOCKED_CODE",
+      "evidence": ["PR #145 merged: source archive ready for controlled extraction"],
+      "blocker": "Full deterministic source knowledge extraction/crosswalk is still incomplete."
+    },
+    {
+      "id": "russian_content",
+      "status": "BLOCKED_SUBJECT",
+      "evidence": ["PR #139 HEAD 542a2fe70742a902a9d943230064c04c16aa5f00; CI green; current-head Codex review found blockers"],
+      "blocker": "PR #139 requires bounded fixes and subject acceptance; proposed ru-* identities remain non-canonical."
+    },
+    {
+      "id": "payments",
+      "status": "BLOCKED_CODE",
+      "evidence": ["PR #140 merged: Robokassa test-mode order-to-entitlement slice"],
+      "blocker": "Current merged adapter is test-only; production-candidate adapter and external merchant/NPD acceptance are not complete."
+    },
+    {
+      "id": "identity",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": ["PR #136 merged: passwordless server-owned identity core"],
+      "blocker": "Production email/SMS delivery provider and runtime credentials are not admitted."
+    },
+    {
+      "id": "tutor",
+      "status": "BLOCKED_CODE",
+      "evidence": ["PR #141 merged: grounded text + same-session deterministic voice slice"],
+      "blocker": "Live text provider and live Yandex SpeechKit STT/TTS adapters/provider acceptance are not complete."
+    },
+    {
+      "id": "yandex_private_staging",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": ["PR #143 merged: fail-closed private Yandex staging deploy bundle"],
+      "blocker": "Actual Yandex resource IDs, immutable image and private staging deployment/smoke acceptance are missing."
+    },
+    {
+      "id": "pro_client_real_backend",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": ["PR #142 merged: separate browser Pro client vertical slice"],
+      "blocker": "Real production/staging backend URL, TLS/cookie/CORS acceptance and real-adapter browser E2E are not complete."
+    },
+    {
+      "id": "legal_privacy_operational",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": ["OWNER-DECISIONS-2026-08-22.md defines mandatory legal/privacy/audio/payment boundaries"],
+      "blocker": "Launch legal/privacy/payment-disclosure acceptance is not durably recorded."
+    },
+    {
+      "id": "production_e2e",
+      "status": "BLOCKED_DEPENDENCY",
+      "evidence": [],
+      "blocker": "Final anonymous-demo -> identity -> payment -> entitlement -> learning -> PEIS -> Tutor -> refund/revoke production-candidate E2E cannot run until upstream gates close."
+    }
+  ],
+  "activation_invariants": {
+    "public_traffic_enabled": false,
+    "production_charges_enabled": false,
+    "peis_network_writes_enabled": false,
+    "yandex_gateway_apply_enabled": false,
+    "owner_go_live_approved": false
+  }
+}
