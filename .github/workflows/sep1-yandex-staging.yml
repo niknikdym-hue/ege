@@ -1,0 +1,63 @@
+name: SEP1 Yandex staging candidate
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/yandex-staging/**'
+      - 'eksamio-learning-engine/peis-production-substrate/**'
+      - '.github/workflows/sep1-yandex-staging.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/yandex-staging/**'
+      - 'eksamio-learning-engine/peis-production-substrate/**'
+      - '.github/workflows/sep1-yandex-staging.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-yandex-staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: eksamio
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d eksamio"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PEIS_DATABASE_DSN: postgresql://postgres:postgres@127.0.0.1:5432/eksamio
+      PEIS_TEST_POSTGRES_DSN: postgresql://postgres:postgres@127.0.0.1:5432/eksamio
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install production-substrate dependencies
+        run: pip install -r eksamio-learning-engine/peis-production-substrate/requirements.txt
+      - name: Validate Yandex staging package
+        run: python eksamio-learning-engine/yandex-staging/validate_yandex_staging.py
+      - name: Validate staging shell syntax
+        run: |
+          bash -n eksamio-learning-engine/yandex-staging/deploy_staging.sh
+          bash -n eksamio-learning-engine/yandex-staging/smoke_staging.sh
+          bash -n eksamio-learning-engine/yandex-staging/rollback_staging.sh
+      - name: Preserve PostgreSQL substrate gate
+        run: python eksamio-learning-engine/peis-production-substrate/validate_postgres_integration.py
+      - name: Preserve Russian to shared PEIS gate
+        run: python eksamio-learning-engine/peis-production-substrate/validate_russian_exceptions_peis_vertical_slice.py
+      - name: Build deployable runtime image
+        run: docker build -f eksamio-learning-engine/peis-production-substrate/Dockerfile eksamio-learning-engine
+      - name: Reject whitespace errors
+        run: git diff --check "${{ github.event.pull_request.base.sha || github.event.before }}...HEAD"
