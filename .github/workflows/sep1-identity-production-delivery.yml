@@ -1,0 +1,40 @@
+name: SEP1 Identity production delivery
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/identity-reference/production_delivery.py'
+      - 'eksamio-learning-engine/identity-reference/validate_production_delivery.py'
+      - '.github/workflows/sep1-identity-production-delivery.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/identity-reference/production_delivery.py'
+      - 'eksamio-learning-engine/identity-reference/validate_production_delivery.py'
+      - '.github/workflows/sep1-identity-production-delivery.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-production-delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      EKSAMIO_PRODUCTION_DELIVERY_EXECUTION: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile dependency-light delivery adapters
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/identity-reference/production_delivery.py \
+            eksamio-learning-engine/identity-reference/validate_production_delivery.py
+      - name: Validate mocked Postbox and SMS.RU delivery
+        run: python eksamio-learning-engine/identity-reference/validate_production_delivery.py
+      - name: Reject whitespace errors
+        run: git diff --check "${{ github.event.pull_request.base.sha || github.event.before }}...HEAD"
