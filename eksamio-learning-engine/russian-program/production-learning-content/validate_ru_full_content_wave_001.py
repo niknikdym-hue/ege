@@ -195,6 +195,24 @@ def main() -> None:
         for src in orthoepy["source_provenance"]
     )
 
+    morphemics = load_json(
+        ROOT / "RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json"
+    )
+    alternation_unit = next(
+        unit
+        for unit in morphemics["units"]
+        if unit["proposed_semantic_id"]
+        == "ru-morphemics-alternation-and-full-analysis"
+    )
+    alternation_item = next(
+        item
+        for item in alternation_unit["guided_practice"]
+        if item["id"] == "p04-u3-g1"
+    )
+    assert "рук-/руч-" in alternation_item["prompt"], alternation_item
+    assert "ру-/руч-" not in alternation_item["prompt"], alternation_item
+    assert "к/ч" in alternation_item["expected"], alternation_item
+
     wave_hash = hashlib.sha256(
         "\n".join(sorted(digests)).encode("utf-8")
     ).hexdigest()
