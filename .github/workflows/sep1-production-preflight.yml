@@ -1,0 +1,61 @@
+name: SEP1 production preflight
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/launch-preflight/**'
+      - '.github/workflows/sep1-production-preflight.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/launch-preflight/**'
+      - '.github/workflows/sep1-production-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile preflight
+        run: python -m py_compile eksamio-learning-engine/launch-preflight/sep1_production_preflight.py eksamio-learning-engine/launch-preflight/validate_sep1_production_preflight.py
+      - name: Validate fail-closed production gate
+        working-directory: eksamio-learning-engine/launch-preflight
+        run: python validate_sep1_production_preflight.py
+      - name: Show current blocker names only
+        working-directory: eksamio-learning-engine/launch-preflight
+        shell: bash
+        run: |
+          set +e
+          python sep1_production_preflight.py > /tmp/sep1-preflight.json
+          rc=$?
+          set -e
+          test "$rc" -eq 2
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/sep1-preflight.json').read_text())
+          print('overall=' + result['overall'])
+          for gate in result['gates']:
+              print(gate['id'] + '=' + gate['status'])
+              if gate['missing_external_fields']:
+                  print('missing:' + ','.join(gate['missing_external_fields']))
+          assert result['secret_values_emitted'] is False
+          PY
+      - name: Reject whitespace errors
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --check "${{ github.event.pull_request.base.sha }}...HEAD"
+          else
+            git diff --check "${{ github.event.before }}...${{ github.sha }}"
+          fi
