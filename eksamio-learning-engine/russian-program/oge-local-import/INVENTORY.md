@@ -1,7 +1,7 @@
 # Russian OGE local-source inventory
 
-Inventory date: 2026-08-27  
-Source boundary: `exam-platform-tilda/tilda-ready/pages/`  
+Inventory date: 2026-08-27
+Source boundary: `exam-platform-tilda/tilda-ready/pages/`
 Import boundary: Russian OGE only; all EGE directories excluded.
 
 ## Pages and files found
