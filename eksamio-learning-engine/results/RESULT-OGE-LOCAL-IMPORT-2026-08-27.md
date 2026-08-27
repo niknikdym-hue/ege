@@ -1,11 +1,11 @@
 # RESULT — Russian OGE owner-local material import
 
-TASK_ID: OGE-LOCAL-IMPORT-2026-08-27  
-STATUS: DONE  
-BRANCH: brain/ru-full-content-wave-001  
-IMPORT_COMMIT: 0206e7f0fca71d38a34af15c383256870b1df13d  
-PR: #139  
-MODE: IMPLEMENTATION  
+TASK_ID: OGE-LOCAL-IMPORT-2026-08-27
+STATUS: DONE
+BRANCH: brain/ru-full-content-wave-001
+IMPORT_COMMIT: 0206e7f0fca71d38a34af15c383256870b1df13d
+PR: #139
+MODE: IMPLEMENTATION
 
 ## Result
 
@@ -36,7 +36,7 @@ CHECKS_RUN:
 - `python3 russian-program/production-learning-content/validate_ru_full_content_wave_001.py` — PASS (9 modules, 26 units, 260 learner items)
 - GitHub Actions run `33021836489`, job `validate-wave-001` — PASS; both validators and `git diff --check` passed.
 
-NEEDS_REVIEW_COUNT: 40 proposed item identities require subject acceptance.  
-UNRESOLVED_MAPPING_COUNT: 0  
-PRODUCTION_FILES_CHANGED: NO  
+NEEDS_REVIEW_COUNT: 40 proposed item identities require subject acceptance.
+UNRESOLVED_MAPPING_COUNT: 0
+PRODUCTION_FILES_CHANGED: NO
 EXISTING_TILDA_FILES_CHANGED: NO
