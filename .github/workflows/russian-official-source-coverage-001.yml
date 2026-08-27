@@ -1,0 +1,33 @@
+name: Russian official source coverage 001
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/RUSSIAN-OFFICIAL-SOURCE-COVERAGE-v1.0.json'
+      - 'eksamio-learning-engine/russian-program/validate_official_source_coverage_001.py'
+      - '.github/workflows/russian-official-source-coverage-001.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/RUSSIAN-OFFICIAL-SOURCE-COVERAGE-v1.0.json'
+      - 'eksamio-learning-engine/russian-program/validate_official_source_coverage_001.py'
+      - '.github/workflows/russian-official-source-coverage-001.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-source-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate full Russian official scope mapping
+        run: python eksamio-learning-engine/russian-program/validate_official_source_coverage_001.py
+      - name: Reject whitespace errors
+        run: git diff --check "${{ github.event.pull_request.base.sha || github.event.before }}...HEAD"
