@@ -1,0 +1,74 @@
+{
+  "schema_version": "0.1.0",
+  "artifact_set_id": "eksamio-pro-russian-sep1-legal-v0.1",
+  "status": "CODE_READY_EXTERNAL_ACCEPTANCE_REQUIRED",
+  "not_legal_advice": true,
+  "artifacts": [
+    {
+      "id": "privacy_policy",
+      "version": "0.1",
+      "path": "legal-launch/PUBLIC-PRIVACY-POLICY-DRAFT-v0.1.md",
+      "publication_state": "BLOCKED_EXTERNAL"
+    },
+    {
+      "id": "public_offer",
+      "version": "0.1",
+      "path": "legal-launch/PUBLIC-OFFER-DRAFT-v0.1.md",
+      "publication_state": "BLOCKED_EXTERNAL"
+    },
+    {
+      "id": "learner_audio_non_storage",
+      "version": "0.1",
+      "path": "legal-launch/LEARNER-AUDIO-NON-STORAGE-DISCLOSURE-v0.1.md",
+      "publication_state": "BLOCKED_EXTERNAL"
+    },
+    {
+      "id": "npd_payment_receipt",
+      "version": "0.1",
+      "path": "legal-launch/NPD-PAYMENT-RECEIPT-DISCLOSURE-v0.1.md",
+      "publication_state": "BLOCKED_EXTERNAL"
+    },
+    {
+      "id": "operator_runbook",
+      "version": "0.1",
+      "path": "legal-launch/OPERATOR-RUNBOOK-v0.1.md",
+      "publication_state": "INTERNAL_OPERATIONAL"
+    },
+    {
+      "id": "legal_readiness",
+      "version": "0.1",
+      "path": "legal-launch/SEP1-LEGAL-PRIVACY-READINESS-v0.1.json",
+      "publication_state": "INTERNAL_AUTHORITY"
+    }
+  ],
+  "required_client_routes": [
+    {"id": "privacy", "href": "/legal/privacy"},
+    {"id": "offer", "href": "/legal/offer"},
+    {"id": "audio", "href": "/legal/audio"},
+    {"id": "payment", "href": "/legal/payment"}
+  ],
+  "external_acceptance_fields": [
+    "LEGAL_ARTIFACT_SET_ACCEPTED_FINGERPRINT",
+    "LEGAL_OPERATOR_IDENTITY_ACCEPTED",
+    "LEGAL_SERVICE_CLASSIFICATION_ACCEPTED",
+    "LEGAL_PERSONAL_DATA_CONTOUR_ACCEPTED",
+    "LEGAL_MINOR_PAYER_FLOW_ACCEPTED",
+    "LEGAL_PROVIDER_TERMS_ACCEPTED",
+    "LEGAL_PUBLICATION_ACCEPTED",
+    "LEGAL_SUPPORT_CONTACT_ACCEPTED"
+  ],
+  "owner_or_operator_values_required_before_publication": [
+    "operator legal name/FIO and accepted operator status",
+    "required operator address/registration details",
+    "support/privacy contact channel",
+    "final 30-day and 90-day prices",
+    "paid AI analysis price if offered at launch"
+  ],
+  "launch_invariants": {
+    "learner_audio_persisted": 0,
+    "saved_card": false,
+    "auto_renew": false,
+    "public_traffic_enabled": false,
+    "production_charges_enabled": false
+  }
+}
