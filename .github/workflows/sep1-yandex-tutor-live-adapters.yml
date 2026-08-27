@@ -1,0 +1,47 @@
+name: SEP1 Yandex Tutor live adapters
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/ai-tutor-reference/yandex_live_adapters.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_yandex_live_adapters.py'
+      - '.github/workflows/sep1-yandex-tutor-live-adapters.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/ai-tutor-reference/yandex_live_adapters.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_yandex_live_adapters.py'
+      - '.github/workflows/sep1-yandex-tutor-live-adapters.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-yandex-adapters:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      EKSAMIO_LIVE_PROVIDER_EXECUTION: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile Tutor adapters
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/ai-tutor-reference/tutor_boundary.py \
+            eksamio-learning-engine/ai-tutor-reference/reliability_gateway.py \
+            eksamio-learning-engine/ai-tutor-reference/sep1_russian_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_live_adapters.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_yandex_live_adapters.py
+      - name: Validate zero-network Yandex contract
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_yandex_live_adapters.py
+      - name: Preserve provider-neutral boundary
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_ai_tutor_provider_neutral_boundary_001.py
+      - name: Preserve reliability gateway
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_ai_tutor_reliability_gateway_001.py
+      - name: Reject whitespace errors
+        run: git diff --check "${{ github.event.pull_request.base.sha || github.event.before }}...HEAD"
