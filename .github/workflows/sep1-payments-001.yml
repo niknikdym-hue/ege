@@ -1,0 +1,31 @@
+name: SEP1 Payments sandbox
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/payments-reference/**'
+      - '.github/workflows/sep1-payments-001.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/payments-reference/**'
+      - '.github/workflows/sep1-payments-001.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-payments-sandbox:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile payment reference
+        run: python -m py_compile eksamio-learning-engine/payments-reference/payments.py eksamio-learning-engine/payments-reference/validate_payments_001.py
+      - name: Run payment vertical-slice validation
+        run: python eksamio-learning-engine/payments-reference/validate_payments_001.py
+      - name: Reject whitespace errors
+        run: git diff --check "${{ github.event.pull_request.base.sha }}...HEAD"
