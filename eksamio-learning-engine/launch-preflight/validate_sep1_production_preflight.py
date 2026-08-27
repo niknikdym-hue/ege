@@ -37,6 +37,10 @@ def fully_populated_env() -> dict[str, str]:
                 env[requirement.name] = "https://example.invalid"
             elif requirement.kind == "immutable_yandex_image":
                 env[requirement.name] = "cr.yandex/example/eksamio@sha256:" + "a" * 64
+            elif requirement.kind == "yandex_model_uri":
+                env[requirement.name] = "gpt://folder-fixture/yandexgpt/latest"
+            elif requirement.kind == "email":
+                env[requirement.name] = "login@eksamio.example"
             elif requirement.secret:
                 env[requirement.name] = "S" * max(40, requirement.min_length)
             else:
@@ -83,16 +87,25 @@ def main() -> int:
     if empty["secret_values_emitted"] is not False or empty["owner_go_live_approved"] is not False:
         raise AssertionError("preflight output boundary drift")
 
+    empty_statuses = {row["id"]: row["status"] for row in empty["gates"]}
+    for provider_gate in ("payments", "identity", "tutor", "yandex_private_staging", "pro_client_real_backend"):
+        if empty_statuses.get(provider_gate) != "BLOCKED_EXTERNAL":
+            raise AssertionError(f"{provider_gate} should now be code-ready and external-blocked")
+
     populated_env = fully_populated_env()
     populated = evaluate(populated_env)
     if populated["overall"] != "NOT_READY":
-        raise AssertionError("external values must not override unresolved code/subject gates")
+        raise AssertionError("external values must not override remaining source/content/legal/e2e blockers")
     statuses = {row["id"]: row["status"] for row in populated["gates"]}
+
+    for gate_id in ("payments", "identity", "tutor", "yandex_private_staging", "pro_client_real_backend"):
+        if statuses.get(gate_id) != "READY":
+            raise AssertionError(f"fully populated external fixture should make {gate_id} READY: {statuses.get(gate_id)}")
+
     for gate_id, expected in {
         "russian_source_knowledge": "BLOCKED_CODE",
         "russian_content": "BLOCKED_SUBJECT",
-        "payments": "BLOCKED_CODE",
-        "tutor": "BLOCKED_CODE",
+        "legal_privacy_operational": "BLOCKED_CODE",
         "production_e2e": "BLOCKED_DEPENDENCY",
     }.items():
         if statuses.get(gate_id) != expected:
@@ -120,9 +133,12 @@ def main() -> int:
     print("SEP1_PRODUCTION_PREFLIGHT=PASS")
     print("current_overall=NOT_READY")
     print("gate_count=9")
+    print("provider_code_ready_gates=5")
+    print("payments_identity_tutor_external_only=PASS")
+    print("yandex_pro_client_external_only=PASS")
+    print("remaining_source_content_legal_e2e_blockers=PASS")
     print("unsafe_activation_guard=PASS")
     print("secret_output_guard=PASS")
-    print("external_values_cannot_override_code_or_subject_blockers=PASS")
     return 0
 
 
