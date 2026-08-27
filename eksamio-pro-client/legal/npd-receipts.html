@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ru" data-legal-artifact="npd_payment_contour" data-legal-version="0.1.0" data-legal-status="EXTERNAL_REVIEW_REQUIRED">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Оплата и чеки — Eksamio Pro</title></head>
+<body>
+<main>
+<h1>Оплата и чеки Eksamio Pro</h1>
+<p><strong>Статус:</strong> операционный проект для внешней юридической/фискальной приёмки; не подтверждает, что production-контур уже принят провайдером или ФНС.</p>
+<p>Получатель платежа: <span data-unresolved="LEGAL_OPERATOR_FULL_NAME">[[UNRESOLVED:LEGAL_OPERATOR_FULL_NAME]]</span>. ИНН: <span data-unresolved="LEGAL_OPERATOR_INN">[[UNRESOLVED:LEGAL_OPERATOR_INN]]</span>. Поддержка: <span data-unresolved="LEGAL_SUPPORT_CONTACT">[[UNRESOLVED:LEGAL_SUPPORT_CONTACT]]</span>.</p>
+<h2>Планируемый стартовый контур</h2>
+<p>Оператор запуска рассматривается как плательщик НПД. Платёжный кандидат — Robokassa, чековый кандидат — Robocheki/SMZ. Production charges запрещены, пока merchant settings, фискальные параметры и корректное формирование чека для реального статуса оператора не пройдут внешнюю приёмку.</p>
+<h2>Методы оплаты</h2>
+<p>Стартовый набор: СБП и банковская карта. Сохранение карты, автоплатёж и автопродление не используются.</p>
+<h2>Контроль</h2>
+<p>Каждый успешный production-платёж должен иметь проверяемую связь заказ → подтверждение провайдера → entitlement → чек. Возврат должен иметь проверяемую связь refund → revoke entitlement. Никакой флаг в приложении не заменяет реальное подтверждение merchant/fiscal/NPD-контура.</p>
+</main>
+</body>
+</html>
