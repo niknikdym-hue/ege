@@ -1,0 +1,44 @@
+name: Russian source archive state 002
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/RUSSIAN-SOURCE-ARCHIVE-STATE-v1.0.json'
+      - 'eksamio-learning-engine/russian-program/validate_source_archive_state_002.py'
+      - 'eksamio-learning-engine/russian-program/RUSSIAN-OFFICIAL-SOURCE-COVERAGE-v1.0.json'
+      - '.github/workflows/russian-source-archive-state-002.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/RUSSIAN-SOURCE-ARCHIVE-STATE-v1.0.json'
+      - 'eksamio-learning-engine/russian-program/validate_source_archive_state_002.py'
+      - 'eksamio-learning-engine/russian-program/RUSSIAN-OFFICIAL-SOURCE-COVERAGE-v1.0.json'
+      - '.github/workflows/russian-source-archive-state-002.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-source-archive-state:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile validator
+        run: python -m py_compile eksamio-learning-engine/russian-program/validate_source_archive_state_002.py
+      - name: Validate verified Drive archive state
+        run: python eksamio-learning-engine/russian-program/validate_source_archive_state_002.py
+      - name: Reject whitespace errors
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --check "${{ github.event.pull_request.base.sha }}...HEAD"
+          else
+            git diff --check "${{ github.event.before }}...${{ github.sha }}"
+          fi
