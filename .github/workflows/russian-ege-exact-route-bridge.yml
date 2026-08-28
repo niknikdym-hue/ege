@@ -3,12 +3,14 @@ name: Russian EGE exact route bridge
 on:
   pull_request:
     paths:
+      - 'eksamio-learning-engine/russian-program/source-knowledge/**'
       - 'eksamio-learning-engine/russian-program/ege-task-code-relation/**'
       - 'eksamio-learning-engine/russian-program/ege-route-bridge/**'
       - '.github/workflows/russian-ege-exact-route-bridge.yml'
   push:
     branches: [main]
     paths:
+      - 'eksamio-learning-engine/russian-program/source-knowledge/**'
       - 'eksamio-learning-engine/russian-program/ege-task-code-relation/**'
       - 'eksamio-learning-engine/russian-program/ege-route-bridge/**'
       - '.github/workflows/russian-ege-exact-route-bridge.yml'
@@ -34,13 +36,17 @@ jobs:
             eksamio-learning-engine/russian-program/ege-task-code-relation/build_fipi_ege_task_code_relation.py \
             eksamio-learning-engine/russian-program/ege-task-code-relation/validate_fipi_ege_task_code_relation.py \
             eksamio-learning-engine/russian-program/ege-route-bridge/build_ege_exact_route_bridge.py \
-            eksamio-learning-engine/russian-program/ege-route-bridge/validate_ege_exact_route_bridge.py
+            eksamio-learning-engine/russian-program/ege-route-bridge/validate_ege_exact_route_bridge.py \
+            eksamio-learning-engine/russian-program/ege-route-bridge/validate_ege_route_bridge_state.py
       - name: Validate official FIPI EGE 2026 task-code relation
         working-directory: eksamio-learning-engine/russian-program/ege-task-code-relation
         run: python validate_fipi_ege_task_code_relation.py
       - name: Validate EGE route bridge through official relation
         working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
         run: python validate_ege_exact_route_bridge.py
+      - name: Validate pinned EGE route bridge v2 state
+        working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
+        run: python validate_ege_route_bridge_state.py
       - name: Prove task-code relation determinism
         working-directory: eksamio-learning-engine/russian-program/ege-task-code-relation
         shell: bash
@@ -72,14 +78,20 @@ jobs:
         working-directory: eksamio-learning-engine/launch-preflight
         run: python validate_sep1_production_preflight.py
       - name: Enforce bounded scope
+        if: github.event_name == 'pull_request'
         shell: bash
         run: |
           changed="$(git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD')"
           echo "$changed"
-          if echo "$changed" | grep -Ev '^(eksamio-learning-engine/russian-program/ege-task-code-relation/|eksamio-learning-engine/russian-program/ege-route-bridge/|\.github/workflows/russian-ege-exact-route-bridge\.yml$)' | grep -q .; then
-            echo 'FIPI EGE task-code relation PR changed files outside bounded lane.' >&2
+          if echo "$changed" | grep -Ev '^(eksamio-learning-engine/russian-program/source-knowledge/|eksamio-learning-engine/russian-program/ege-task-code-relation/|eksamio-learning-engine/russian-program/ege-route-bridge/|\.github/workflows/russian-ege-exact-route-bridge\.yml$)' | grep -q .; then
+            echo 'EGE route bridge validation changed files outside its source/relation/bridge dependency lanes.' >&2
             exit 1
           fi
       - name: Reject whitespace errors
         shell: bash
-        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
+          else
+            git diff --check '${{ github.event.before }}...${{ github.sha }}'
+          fi
