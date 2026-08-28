@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.0.0",
-  "status": "SOURCE_KNOWLEDGE_CODE_READY_CONTENT_ACCEPTANCE_PENDING",
+  "schema_version": "1.1.0",
+  "status": "SOURCE_KNOWLEDGE_CODE_READY_OBJECT_LEVEL_SUBJECT_REVIEW_PENDING",
   "baseline_main": "d0da4c9947b381d529cde65634a60147265ebd04",
   "pr_139_read_only_head": "f16884ec4f8992ee9ad01c2930c42349f579bc70",
   "requirements": {
@@ -17,15 +17,12 @@
   },
   "crosswalk": {
     "record_count": 1400,
-    "normalized_rows_sha256": "8c681ecd1b51b9c65ff362457b30f13e5514eb1123f2d72427d4a63294322506",
-    "emitted_json_sha256": "52c9ad6f18af7f1101c03d34eb31d9daf889c6c3345855efe3f83d54e03d59c2",
+    "normalized_rows_sha256": "d39a9c56c7cdff4b03d11d803ca49626911b87c0395863fcab424580973b2793",
+    "coverage_claims_emitted": 0,
     "counts": {
-      "COVERED_PROPOSED": 426,
-      "MISSING_CONTENT": 394,
-      "MISSING_SEMANTIC_IDENTITY": 127,
-      "PARTIAL": 444,
-      "SUBJECT_REVIEW_REQUIRED": 9
-    }
+      "SUBJECT_REVIEW_REQUIRED": 1400
+    },
+    "interpretation": "Module overlap supplies reviewer context only. No requirement is called covered/partial/missing until exact object-level source locator -> semantic/content admission is performed by Russian subject authority."
   },
   "guards": {
     "commercial_textbook_bytes_ingested": 0,
@@ -36,11 +33,5 @@
     "production_charges_enabled": false,
     "peis_network_writes_enabled": false,
     "yandex_gateway_apply_enabled": false
-  },
-  "accepted_ci_evidence": {
-    "workflow": "Russian official source knowledge",
-    "run_id": 33158279152,
-    "job_id": 98806235202,
-    "conclusion": "success"
   }
 }
