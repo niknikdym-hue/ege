@@ -30,10 +30,14 @@ jobs:
         run: |
           python -m py_compile \
             eksamio-learning-engine/russian-program/object-review/build_object_level_review_queue.py \
-            eksamio-learning-engine/russian-program/object-review/validate_object_level_review_queue.py
+            eksamio-learning-engine/russian-program/object-review/validate_object_level_review_queue.py \
+            eksamio-learning-engine/russian-program/object-review/validate_object_review_state.py
       - name: Validate deterministic object-level review queue
         working-directory: eksamio-learning-engine/russian-program/object-review
         run: python validate_object_level_review_queue.py
+      - name: Validate pinned object-review state
+        working-directory: eksamio-learning-engine/russian-program/object-review
+        run: python validate_object_review_state.py
       - name: Prove queue determinism and emit review artifact
         working-directory: eksamio-learning-engine/russian-program/object-review
         shell: bash
