@@ -1,6 +1,20 @@
 {
+  "schema_version": "1.1.0",
+  "status": "EXECUTABLE_FAIL_CLOSED_CROSSWALK_CURRENT_MAIN_PLUS_PR139_READ_ONLY",
   "baseline_main": "d0da4c9947b381d529cde65634a60147265ebd04",
+  "pr_139_read_only_head": "f16884ec4f8992ee9ad01c2930c42349f579bc70",
+  "generator": "build_source_semantic_crosswalk.py",
+  "record_source": "RUSSIAN-OFFICIAL-REQUIREMENTS-INDEX-v1.0.json",
+  "record_count": 1400,
+  "columns": ["record_id", "status_ref", "content_ref_refs"],
   "catalogs": {
+    "statuses": [
+      "COVERED_PROPOSED",
+      "MISSING_SEMANTIC_IDENTITY",
+      "PARTIAL",
+      "SUBJECT_REVIEW_REQUIRED",
+      "MISSING_CONTENT"
+    ],
     "content_refs": [
       {"pr_head":"f16884ec4f8992ee9ad01c2930c42349f579bc70","ref":"eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json","ref_state":"PR_139_ONLY_PROPOSED"},
       {"pr_head":"f16884ec4f8992ee9ad01c2930c42349f579bc70","ref":"eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-03-LEXIS-PARONYMS-PHRASEOLOGY-WAVE-002-v0.1.json","ref_state":"PR_139_ONLY_PROPOSED"},
@@ -13,26 +27,20 @@
       {"pr_head":"f16884ec4f8992ee9ad01c2930c42349f579bc70","ref":"eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-07-GRAMMAR-NORMS-WAVE-002-v0.1.json","ref_state":"PR_139_ONLY_PROPOSED"},
       {"pr_head":"f16884ec4f8992ee9ad01c2930c42349f579bc70","ref":"eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-PHONETICS-GRAPHICS-WAVE-001-v0.1.json","ref_state":"PR_139_ONLY_PROPOSED"},
       {"pr_head":"f16884ec4f8992ee9ad01c2930c42349f579bc70","ref":"eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json","ref_state":"PR_139_ONLY_PROPOSED"}
-    ],
-    "statuses": ["COVERED_PROPOSED","MISSING_SEMANTIC_IDENTITY","PARTIAL","SUBJECT_REVIEW_REQUIRED"]
+    ]
   },
-  "columns": ["record_id","status_ref","content_ref_refs"],
-  "counts": {"COVERED_PROPOSED":705,"MISSING_SEMANTIC_IDENTITY":231,"PARTIAL":82,"SUBJECT_REVIEW_REQUIRED":382},
-  "pr_139_read_only_head": "f16884ec4f8992ee9ad01c2930c42349f579bc70",
+  "classification_policy": {
+    "format_or_scoring_constraints": "SUBJECT_REVIEW_REQUIRED",
+    "pr139_content_with_unadmitted_semantics": "COVERED_PROPOSED or MISSING_SEMANTIC_IDENTITY according to module semantic boundary",
+    "canonical_school_module_without_exact_requirement_identity": "PARTIAL",
+    "no_precise_current_or_pr139_content_binding": "MISSING_CONTENT",
+    "canonical_semantic_ids_emitted": false
+  },
   "rules": [
+    "Every one of the 1400 official requirement records is classified by the generator on every run.",
     "No ru-* identity is created or admitted here.",
-    "Empty canonical_semantic_ids means exact canonical ownership has not been proved by this lane.",
-    "PR #139 content refs remain proposed/unaccepted until Russian subject acceptance."
-  ],
-  "schema_version": "1.0.0",
-  "shards": [
-    {"path":"crosswalk/crosswalk-01.json","record_count":200,"sha256":"68906bd50dd796c780426ddf667ee106a8549418de8c9c86ca49a3eff6f837e5"},
-    {"path":"crosswalk/crosswalk-02.json","record_count":200,"sha256":"697cca6f59ea2e748d2a5c60a35f5c4c0d33299f28360de9215e0c84190aae10"},
-    {"path":"crosswalk/crosswalk-03.json","record_count":200,"sha256":"101df9ad656ab85992ed97d20300f677ce8ac5e5c61aaaf03cf1202955cacdef"},
-    {"path":"crosswalk/crosswalk-04.json","record_count":200,"sha256":"35205b1e644e4017933d1d265dbbc6945d84d2dcabb9ae9cd5da851cef979dba"},
-    {"path":"crosswalk/crosswalk-05.json","record_count":200,"sha256":"2fe73db8da46f321dac5197c75969a77ddf8dcc3cf2cda2318dafdc60f14889b"},
-    {"path":"crosswalk/crosswalk-06.json","record_count":200,"sha256":"4ed3031d55dcace36a32d5df714b9cebef5cd3cb2061a978c008c309851e2a88"},
-    {"path":"crosswalk/crosswalk-07.json","record_count":200,"sha256":"ee407a132732242790a55b2587987b4f115bd5fe27c83b07bcba81dfe80562da"}
-  ],
-  "status": "FAIL_CLOSED_CROSSWALK_CURRENT_MAIN_PLUS_PR139_READ_ONLY"
+    "No generated row may claim canonical mastery ownership; exact semantic admission remains Russian subject authority.",
+    "PR #139 content refs remain proposed/unaccepted until Russian subject acceptance.",
+    "The executable crosswalk, not any historical partial shard, is authoritative."
+  ]
 }
