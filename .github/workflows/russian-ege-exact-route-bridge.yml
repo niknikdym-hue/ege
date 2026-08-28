@@ -27,10 +27,29 @@ jobs:
         with:
           python-version: '3.12'
       - name: Compile EGE bridge tools
-        run: python -m py_compile eksamio-learning-engine/russian-program/ege-route-bridge/diagnose_ege_unit_codes.py
-      - name: Inventory exact EGE source code patterns
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/russian-program/ege-route-bridge/build_ege_exact_route_bridge.py \
+            eksamio-learning-engine/russian-program/ege-route-bridge/validate_ege_exact_route_bridge.py
+      - name: Validate exact-only EGE route bridge
         working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
-        run: python diagnose_ege_unit_codes.py
+        run: python validate_ege_exact_route_bridge.py
+      - name: Prove bridge determinism and emit candidate artifact
+        working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
+        shell: bash
+        run: |
+          python build_ege_exact_route_bridge.py --emit > /tmp/ege-bridge-a.json
+          python build_ege_exact_route_bridge.py --emit > /tmp/ege-bridge-b.json
+          cmp /tmp/ege-bridge-a.json /tmp/ege-bridge-b.json
+          sha256sum /tmp/ege-bridge-a.json /tmp/ege-bridge-b.json
+          cp /tmp/ege-bridge-a.json ege-exact-route-bridge.json
+      - name: Upload deterministic EGE bridge candidate artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ege-exact-route-bridge
+          path: eksamio-learning-engine/russian-program/ege-route-bridge/ege-exact-route-bridge.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Validate launch preflight remains fail-closed
         working-directory: eksamio-learning-engine/launch-preflight
         run: python validate_sep1_production_preflight.py
