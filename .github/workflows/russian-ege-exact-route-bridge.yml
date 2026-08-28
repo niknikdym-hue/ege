@@ -3,11 +3,13 @@ name: Russian EGE exact route bridge
 on:
   pull_request:
     paths:
+      - 'eksamio-learning-engine/russian-program/ege-task-code-relation/**'
       - 'eksamio-learning-engine/russian-program/ege-route-bridge/**'
       - '.github/workflows/russian-ege-exact-route-bridge.yml'
   push:
     branches: [main]
     paths:
+      - 'eksamio-learning-engine/russian-program/ege-task-code-relation/**'
       - 'eksamio-learning-engine/russian-program/ege-route-bridge/**'
       - '.github/workflows/russian-ege-exact-route-bridge.yml'
   workflow_dispatch:
@@ -26,19 +28,29 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Compile EGE bridge tools
+      - name: Compile FIPI relation and EGE bridge tools
         run: |
           python -m py_compile \
+            eksamio-learning-engine/russian-program/ege-task-code-relation/build_fipi_ege_task_code_relation.py \
+            eksamio-learning-engine/russian-program/ege-task-code-relation/validate_fipi_ege_task_code_relation.py \
             eksamio-learning-engine/russian-program/ege-route-bridge/build_ege_exact_route_bridge.py \
-            eksamio-learning-engine/russian-program/ege-route-bridge/validate_ege_exact_route_bridge.py \
-            eksamio-learning-engine/russian-program/ege-route-bridge/validate_ege_route_bridge_state.py
-      - name: Validate exact-only EGE route bridge
+            eksamio-learning-engine/russian-program/ege-route-bridge/validate_ege_exact_route_bridge.py
+      - name: Validate official FIPI EGE 2026 task-code relation
+        working-directory: eksamio-learning-engine/russian-program/ege-task-code-relation
+        run: python validate_fipi_ege_task_code_relation.py
+      - name: Validate EGE route bridge through official relation
         working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
         run: python validate_ege_exact_route_bridge.py
-      - name: Validate pinned EGE route bridge blocker state
-        working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
-        run: python validate_ege_route_bridge_state.py
-      - name: Prove bridge determinism and emit candidate artifact
+      - name: Prove task-code relation determinism
+        working-directory: eksamio-learning-engine/russian-program/ege-task-code-relation
+        shell: bash
+        run: |
+          python build_fipi_ege_task_code_relation.py --emit > /tmp/ege-relation-a.json
+          python build_fipi_ege_task_code_relation.py --emit > /tmp/ege-relation-b.json
+          cmp /tmp/ege-relation-a.json /tmp/ege-relation-b.json
+          sha256sum /tmp/ege-relation-a.json /tmp/ege-relation-b.json
+          cp /tmp/ege-relation-a.json fipi-ege-2026-task-code-relation.json
+      - name: Prove bridge determinism
         working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
         shell: bash
         run: |
@@ -47,11 +59,13 @@ jobs:
           cmp /tmp/ege-bridge-a.json /tmp/ege-bridge-b.json
           sha256sum /tmp/ege-bridge-a.json /tmp/ege-bridge-b.json
           cp /tmp/ege-bridge-a.json ege-exact-route-bridge.json
-      - name: Upload deterministic EGE bridge candidate artifact
+      - name: Upload deterministic FIPI relation and EGE bridge artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: russian-ege-exact-route-bridge
-          path: eksamio-learning-engine/russian-program/ege-route-bridge/ege-exact-route-bridge.json
+          name: russian-ege-2026-task-code-relation-and-bridge
+          path: |
+            eksamio-learning-engine/russian-program/ege-task-code-relation/fipi-ege-2026-task-code-relation.json
+            eksamio-learning-engine/russian-program/ege-route-bridge/ege-exact-route-bridge.json
           if-no-files-found: error
           retention-days: 14
       - name: Validate launch preflight remains fail-closed
@@ -62,8 +76,8 @@ jobs:
         run: |
           changed="$(git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD')"
           echo "$changed"
-          if echo "$changed" | grep -Ev '^(eksamio-learning-engine/russian-program/ege-route-bridge/|\.github/workflows/russian-ege-exact-route-bridge\.yml$)' | grep -q .; then
-            echo 'EGE route bridge PR changed files outside bounded lane.' >&2
+          if echo "$changed" | grep -Ev '^(eksamio-learning-engine/russian-program/ege-task-code-relation/|eksamio-learning-engine/russian-program/ege-route-bridge/|\.github/workflows/russian-ege-exact-route-bridge\.yml$)' | grep -q .; then
+            echo 'FIPI EGE task-code relation PR changed files outside bounded lane.' >&2
             exit 1
           fi
       - name: Reject whitespace errors
