@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "status": "OBJECT_LEVEL_SUBJECT_REVIEW_QUEUE_READY_CONTENT_ADMISSION_PENDING",
+  "baseline_main": "400736e1c6b19689ef9535e0d801639f01d4e96e",
+  "pr_139_read_only_head": "f16884ec4f8992ee9ad01c2930c42349f579bc70",
+  "requirements_total": 1400,
+  "review_batches": {
+    "count": 354,
+    "authority": "WORK_BATCH_ONLY_NOT_SEMANTIC_ADMISSION",
+    "interpretation": "Review batches compress repeated semantic dimensions for efficient review but are never themselves an admission decision."
+  },
+  "admission_units": {
+    "count": 1325,
+    "authority": "OBJECT_LEVEL_DECISION_GRANULARITY",
+    "signature_fields": ["review_signature", "source_id", "document_id", "section", "code"],
+    "auto_resolved_canonical_units": 0,
+    "auto_resolved_canonical_requirements": 0,
+    "subject_review_required_units": 1325,
+    "subject_review_required_requirements": 1400
+  },
+  "proposed_context": {
+    "review_batches": 288,
+    "admission_units": 874,
+    "requirements": 920,
+    "authority": "PR139_CONTEXT_ONLY_PROPOSED_NOT_CANONICAL"
+  },
+  "priority_routes": {
+    "EGE": {"review_batches": 119, "admission_units": 259, "requirements": 275},
+    "OGE": {"review_batches": 143, "admission_units": 443, "requirements": 451},
+    "SCHOOL": {"review_batches": 92, "admission_units": 623, "requirements": 674}
+  },
+  "determinism": {
+    "normalized_queue_sha256": "aa334efc455c68707d2d31de48b4364c879a619cf18dd07c9183d53890be5309",
+    "emitted_json_sha256": "dbaf7f57026f389fcc02c1cb81f6d4b9e9d1814ca472f9d5bce7bca91d4a5f9a"
+  },
+  "accepted_ci_evidence": {
+    "workflow": "Russian object-level review queue",
+    "run_id": 33159484538,
+    "job_id": 98810200245,
+    "conclusion": "success"
+  },
+  "guards": {
+    "module_or_keyword_auto_resolution_allowed": false,
+    "review_batch_is_admission_authority": false,
+    "pr139_proposed_identity_admission": 0,
+    "russian_content_subject_accepted": false,
+    "public_traffic_enabled": false,
+    "production_charges_enabled": false,
+    "peis_network_writes_enabled": false,
+    "yandex_gateway_apply_enabled": false
+  }
+}
