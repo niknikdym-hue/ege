@@ -30,10 +30,14 @@ jobs:
         run: |
           python -m py_compile \
             eksamio-learning-engine/russian-program/ege-route-bridge/build_ege_exact_route_bridge.py \
-            eksamio-learning-engine/russian-program/ege-route-bridge/validate_ege_exact_route_bridge.py
+            eksamio-learning-engine/russian-program/ege-route-bridge/validate_ege_exact_route_bridge.py \
+            eksamio-learning-engine/russian-program/ege-route-bridge/validate_ege_route_bridge_state.py
       - name: Validate exact-only EGE route bridge
         working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
         run: python validate_ege_exact_route_bridge.py
+      - name: Validate pinned EGE route bridge blocker state
+        working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
+        run: python validate_ege_route_bridge_state.py
       - name: Prove bridge determinism and emit candidate artifact
         working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
         shell: bash
