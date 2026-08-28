@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "status": "EGE_ROUTE_BRIDGE_BLOCKED_ON_OFFICIAL_TASK_TO_CODE_RELATION",
+  "baseline_main": "33b9f296128f644dfda4f02da34fb70ac8026b75",
+  "ege_admission_units": 259,
+  "ege_requirements": 275,
+  "candidate_classes": {
+    "TASK_ID_NOT_PROVEN": 259
+  },
+  "proven_tasks": 0,
+  "semantic_admissions": 0,
+  "by_document": {
+    "EDSOO1011": 130,
+    "EGE_COD": 125,
+    "EGE_DEMO": 1,
+    "EGE_SPEC": 3
+  },
+  "locator_truth": {
+    "EDSOO1011": "distributed program/codifier codes such as 2.1.3; not EGE task numbers",
+    "EGE_COD": "checked-requirement/content-element codes such as 1.1.2 and 3.11; not EGE task numbers",
+    "EGE_DEMO": "DEMO-ROUTE only; no per-task identity in normalized requirement record",
+    "EGE_SPEC": "STRUCTURE/DURATION/MAX-POINTS only; no task-to-code relation in normalized requirement record"
+  },
+  "missing_authority_layer": "OFFICIAL_FIPI_EGE_2026_TASK_TO_REQUIREMENT_CONTENT_CODE_RELATION",
+  "determinism": {
+    "normalized_bridge_sha256": "346004b4c6144a35aeefb014fc47b7411ba639b34ef5521f8305a50ca21e8689",
+    "emitted_json_sha256": "dc5eb9bf796fdd70451063815f7fe53bc26211ae3a7b56f6c581818fea345068"
+  },
+  "accepted_ci_evidence": {
+    "workflow": "Russian EGE exact route bridge",
+    "run_id": 33160123504,
+    "job_id": 98812289245,
+    "artifact_id": 9681263948,
+    "conclusion": "success"
+  },
+  "guards": {
+    "dotted_codifier_code_can_be_task_id": false,
+    "module_meaning_keyword_inference_allowed": false,
+    "candidate_is_admission": false,
+    "russian_content_subject_accepted": false,
+    "public_traffic_enabled": false,
+    "production_charges_enabled": false,
+    "peis_network_writes_enabled": false,
+    "yandex_gateway_apply_enabled": false
+  }
+}
