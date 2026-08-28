@@ -1,0 +1,63 @@
+{
+  "schema_version": "2.0.0",
+  "status": "EGE_OFFICIAL_TASK_CODE_RELATION_BRIDGE_CANDIDATES_READY_FOR_SUBJECT_REVIEW",
+  "baseline_main": "06157de40df8faf59355a05950da761ce26aa7e7",
+  "source_relation": {
+    "source_id": "FIPI-EGE-RU-2026-FINAL",
+    "document_id": "EGE_SPEC",
+    "source_sha256": "3b71ec81f954bc32b574a0b3b997ee37bb3bc19ae8825f11217fd7149198b476",
+    "normalized_relation_sha256": "2212ddab59aa41e72c90247409c210d65cdec8730836d959af8bd28fc8fb2681",
+    "emitted_json_sha256": "fd0a9ff0668fa02b99d44ec9f56566c2dddf3194f9e6e43c938b63b30fafeadd",
+    "task_rows": 27,
+    "basic_tasks": 24,
+    "advanced_tasks": 3,
+    "max_primary_score_total": 50
+  },
+  "bridge": {
+    "ege_admission_units": 259,
+    "ege_requirements": 275,
+    "task_proven_units": 63,
+    "task_proven_requirements": 64,
+    "task_unproven_units": 196,
+    "task_unproven_requirements": 211,
+    "candidate_classes": {
+      "EXACT_MULTI_TASK_CANONICAL_CANDIDATE_SET": 10,
+      "EXACT_MULTI_TASK_ROUTE_WITHOUT_CANONICAL_TARGET": 10,
+      "EXACT_SINGLE_TASK_COMPOSITE_CANONICAL_SET": 16,
+      "EXACT_SINGLE_TASK_ROUTE_WITHOUT_CANONICAL_TARGET": 27,
+      "TASK_ID_NOT_PROVEN": 196
+    },
+    "by_document": {
+      "EDSOO1011": 130,
+      "EGE_COD": 125,
+      "EGE_DEMO": 1,
+      "EGE_SPEC": 3
+    },
+    "semantic_admissions": 0
+  },
+  "determinism": {
+    "normalized_bridge_sha256": "310bda33ea30ce10227b1cdf4303152d2496e957811f2dfa09db65e13444eaa5",
+    "emitted_json_sha256": "aaf52939fdb873e75c8ac12a1675c79027eca1e2ba582bb10e627cd2e17cf27b"
+  },
+  "accepted_ci_evidence": {
+    "workflow": "Russian EGE exact route bridge",
+    "run_id": 33161066005,
+    "job_id": 98815378705,
+    "artifact_id": 9681645143,
+    "conclusion": "success"
+  },
+  "subject_boundary": {
+    "all_candidates_require_subject_review": true,
+    "semantic_admissions": 0,
+    "russian_content_subject_accepted": false
+  },
+  "guards": {
+    "dotted_codifier_code_is_task_number": false,
+    "module_meaning_keyword_inference_allowed": false,
+    "candidate_is_admission": false,
+    "public_traffic_enabled": false,
+    "production_charges_enabled": false,
+    "peis_network_writes_enabled": false,
+    "yandex_gateway_apply_enabled": false
+  }
+}

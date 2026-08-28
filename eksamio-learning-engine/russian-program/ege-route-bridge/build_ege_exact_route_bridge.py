@@ -14,31 +14,22 @@ HERE = Path(__file__).resolve().parent
 PROGRAM = HERE.parent
 ENGINE = PROGRAM.parent
 OBJECT_REVIEW = PROGRAM / "object-review"
+TASK_RELATION = PROGRAM / "ege-task-code-relation"
 sys.path.insert(0, str(OBJECT_REVIEW))
+sys.path.insert(0, str(TASK_RELATION))
 from build_object_level_review_queue import build_queue  # noqa: E402
+from build_fipi_ege_task_code_relation import build_relation  # noqa: E402
 
 CROSSWALK_PATH = ENGINE / "274-RUSSIAN-SEMANTIC-CROSSWALK-DRAFT-v0.1.json"
-BASELINE_MAIN = "33b9f296128f644dfda4f02da34fb70ac8026b75"
+BASELINE_MAIN = "06157de40df8faf59355a05950da761ce26aa7e7"
 EXPECTED_EGE_UNITS = 259
 EXPECTED_EGE_REQUIREMENTS = 275
-TASK_ID_RE = re.compile(r"^(?:EGE-2026-)?TASK[-:]([1-9]|1[0-9]|2[0-7])$", re.IGNORECASE)
 SOURCE_TASK_ID_RE = re.compile(r"^ege-2026-task-([1-9]|1[0-9]|2[0-7])$")
 DOTTED_CODE_RE = re.compile(r"^\d+(?:\.\d+)+$")
 
 
 def canonical_json(value: Any) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
-
-
-def parse_explicit_task_id(document_id: str, section: str, code: str) -> int | None:
-    del document_id, section  # Task identity must be explicit in the code itself.
-    value = code.strip()
-    if DOTTED_CODE_RE.fullmatch(value):
-        return None
-    match = TASK_ID_RE.fullmatch(value)
-    if not match:
-        return None
-    return int(match.group(1))
 
 
 def reviewed_task_authority() -> dict[int, dict[str, Any]]:
@@ -80,19 +71,53 @@ def reviewed_task_authority() -> dict[int, dict[str, Any]]:
     }
 
 
-def classify(task: int | None, authority: dict[int, dict[str, Any]]) -> tuple[str, list[str], list[dict[str, Any]]]:
-    if task is None:
+def relation_indexes(relation: dict[str, Any]) -> dict[str, dict[str, set[int]]]:
+    indexes: dict[str, dict[str, set[int]]] = {
+        "content": defaultdict(set),
+        "requirement": defaultdict(set),
+    }
+    for row in relation["rows"]:
+        task = int(row["task"])
+        for code in row["content_codes_expanded"]:
+            indexes["content"][str(code)].add(task)
+        for code in row["requirement_codes_expanded"]:
+            indexes["requirement"][str(code)].add(task)
+    return indexes
+
+
+def proven_tasks_for_unit(document_id: str, section: str, code: str, indexes: dict[str, dict[str, set[int]]]) -> list[int]:
+    if document_id != "EGE_COD" or not DOTTED_CODE_RE.fullmatch(code):
+        return []
+    if section == "section_1_checked_requirements":
+        return sorted(indexes["requirement"].get(code, set()))
+    if section == "section_2_content_elements":
+        return sorted(indexes["content"].get(code, set()))
+    return []
+
+
+def classify_tasks(tasks: list[int], authority: dict[int, dict[str, Any]]) -> tuple[str, list[str], list[dict[str, Any]]]:
+    if not tasks:
         return "TASK_ID_NOT_PROVEN", [], []
-    row = authority.get(task)
-    if row is None:
-        return "ROUTE_WITHOUT_CANONICAL_TARGET", [], []
-    targets = list(row["canonical_targets"])
-    refs = list(row["authority_refs"])
-    if len(targets) == 1:
-        return "EXACT_SINGLE_CANONICAL_CANDIDATE", targets, refs
-    if len(targets) > 1:
-        return "COMPOSITE_CANONICAL_SET", targets, refs
-    return "ROUTE_WITHOUT_CANONICAL_TARGET", [], refs
+    targets: set[str] = set()
+    refs: list[dict[str, Any]] = []
+    for task in tasks:
+        row = authority.get(task, {"canonical_targets": [], "authority_refs": []})
+        targets.update(str(target) for target in row["canonical_targets"])
+        refs.append({
+            "task": task,
+            "canonical_targets": list(row["canonical_targets"]),
+            "authority_refs": list(row["authority_refs"]),
+        })
+    ordered_targets = sorted(targets)
+    if len(tasks) == 1:
+        if len(ordered_targets) == 1:
+            return "EXACT_SINGLE_TASK_SINGLE_CANONICAL_CANDIDATE", ordered_targets, refs
+        if len(ordered_targets) > 1:
+            return "EXACT_SINGLE_TASK_COMPOSITE_CANONICAL_SET", ordered_targets, refs
+        return "EXACT_SINGLE_TASK_ROUTE_WITHOUT_CANONICAL_TARGET", [], refs
+    if ordered_targets:
+        return "EXACT_MULTI_TASK_CANONICAL_CANDIDATE_SET", ordered_targets, refs
+    return "EXACT_MULTI_TASK_ROUTE_WITHOUT_CANONICAL_TARGET", [], refs
 
 
 def build_bridge() -> dict[str, Any]:
@@ -102,13 +127,17 @@ def build_bridge() -> dict[str, Any]:
         raise ValueError(f"EGE admission-unit drift: {len(units)}")
     if sum(int(unit["member_count"]) for unit in units) != EXPECTED_EGE_REQUIREMENTS:
         raise ValueError("EGE requirement-member drift")
+
+    relation = build_relation()
+    indexes = relation_indexes(relation)
     authority = reviewed_task_authority()
 
     records: list[dict[str, Any]] = []
     class_counts: Counter[str] = Counter()
     doc_counts: Counter[str] = Counter()
-    pattern_counts: Counter[str] = Counter()
     task_counts: Counter[str] = Counter()
+    proven_unit_count = 0
+    proven_requirement_count = 0
     seen: set[str] = set()
 
     for unit in units:
@@ -120,13 +149,14 @@ def build_bridge() -> dict[str, Any]:
         document_id = str(signature["document_id"])
         section = str(signature["section"])
         code = str(signature["code"])
-        task = parse_explicit_task_id(document_id, section, code)
-        candidate_class, targets, refs = classify(task, authority)
-        if task is not None:
-            task_counts[str(task)] += 1
+        tasks = proven_tasks_for_unit(document_id, section, code, indexes)
+        candidate_class, targets, refs = classify_tasks(tasks, authority)
+        if tasks:
+            proven_unit_count += 1
+            proven_requirement_count += int(unit["member_count"])
+            for task in tasks:
+                task_counts[str(task)] += 1
         doc_counts[document_id] += 1
-        shape = "DOTTED_REQUIREMENT_CODE" if DOTTED_CODE_RE.fullmatch(code) else code
-        pattern_counts[f"{document_id}::{shape}"] += 1
         class_counts[candidate_class] += 1
         records.append({
             "admission_unit_id": unit_id,
@@ -135,31 +165,45 @@ def build_bridge() -> dict[str, Any]:
             "document_id": document_id,
             "section": section,
             "code": code,
-            "proven_task": task,
+            "proven_tasks": tasks,
+            "task_relation_authority": {
+                "source_document_id": relation["source"]["document_id"],
+                "source_sha256": relation["source"]["sha256"],
+                "relation_hash": relation["normalized_sha256"],
+            } if tasks else None,
             "candidate_class": candidate_class,
             "canonical_candidate_targets": targets,
-            "reviewed_authority_refs": refs,
+            "reviewed_task_authority_refs": refs,
             "admission_status": "SUBJECT_REVIEW_REQUIRED",
         })
 
     records.sort(key=lambda row: row["admission_unit_id"])
     payload: dict[str, Any] = {
-        "schema_version": "1.0.0",
-        "status": "EGE_EXACT_ROUTE_BRIDGE_CANDIDATES_FAIL_CLOSED",
+        "schema_version": "2.0.0",
+        "status": "EGE_OFFICIAL_TASK_CODE_RELATION_BRIDGE_CANDIDATES",
         "baseline_main": BASELINE_MAIN,
         "source_object_review_state": "RUSSIAN-OBJECT-REVIEW-STATE-v1.0.json",
+        "task_code_relation": {
+            "path": "../ege-task-code-relation/FIPI-EGE-2026-TASK-CODE-RELATION-v1.0.json",
+            "normalized_sha256": relation["normalized_sha256"],
+            "tasks": 27,
+        },
         "matching_policy": {
-            "task_identity_source": "EXPLICIT_CODE_ONLY",
-            "dotted_codifier_codes_are_task_ids": False,
+            "task_identity_source": "EXPLICIT_FIPI_EGE_2026_TASK_CODE_TABLE",
+            "codifier_section_and_exact_code_required": True,
+            "dotted_codifier_code_is_not_itself_a_task_id": True,
             "module_meaning_keyword_inference_allowed": False,
             "candidate_is_admission": False,
         },
         "summary": {
             "ege_admission_units": len(records),
             "ege_requirements": sum(int(row["member_count"]) for row in records),
+            "task_proven_units": proven_unit_count,
+            "task_proven_requirements": proven_requirement_count,
+            "task_unproven_units": len(records) - proven_unit_count,
+            "task_unproven_requirements": sum(int(row["member_count"]) for row in records) - proven_requirement_count,
             "candidate_classes": dict(sorted(class_counts.items())),
             "by_document": dict(sorted(doc_counts.items())),
-            "by_code_pattern": dict(sorted(pattern_counts.items())),
             "proven_task_distribution": dict(sorted(task_counts.items(), key=lambda item: int(item[0]))),
             "semantic_admissions": 0,
         },
@@ -180,12 +224,8 @@ def main() -> int:
     else:
         print("RUSSIAN_EGE_EXACT_ROUTE_BRIDGE=PASS")
         print(f"normalized_sha256={bridge['normalized_sha256']}")
-        print(f"ege_admission_units={bridge['summary']['ege_admission_units']}")
-        print(f"ege_requirements={bridge['summary']['ege_requirements']}")
-        for key, value in bridge["summary"]["candidate_classes"].items():
-            print(f"candidate[{key}]={value}")
-        print(f"proven_tasks={sum(bridge['summary']['proven_task_distribution'].values())}")
-        print("semantic_admissions=0")
+        for key, value in bridge["summary"].items():
+            print(f"{key}={value}")
     return 0
 
 
