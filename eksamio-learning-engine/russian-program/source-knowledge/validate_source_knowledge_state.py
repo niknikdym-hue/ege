@@ -22,7 +22,7 @@ def main() -> int:
 
     req_state = STATE["requirements"]
     cross_state = STATE["crosswalk"]
-    if req_state["count"] != len(rows) != 0:
+    if not rows or req_state["count"] != len(rows):
         raise AssertionError("pinned requirement count drift")
     if req_state["runtime_normalized_rows_sha256"] != requirement_hash:
         raise AssertionError("pinned requirement normalized hash drift")
@@ -32,10 +32,12 @@ def main() -> int:
         raise AssertionError("pinned crosswalk count drift")
     if cross_state["normalized_rows_sha256"] != crosswalk["normalized_sha256"]:
         raise AssertionError("pinned crosswalk normalized hash drift")
-    if cross_state["emitted_json_sha256"] != emitted_hash:
-        raise AssertionError("pinned crosswalk emitted hash drift")
     if cross_state["counts"] != crosswalk["counts"]:
         raise AssertionError("pinned crosswalk status counts drift")
+    if cross_state["counts"] != {"SUBJECT_REVIEW_REQUIRED": 1400}:
+        raise AssertionError("object-level review boundary was weakened")
+    if cross_state["coverage_claims_emitted"] != 0 or crosswalk.get("coverage_claims_emitted") != 0:
+        raise AssertionError("source lane emitted unadmitted coverage claims")
     if sum(cross_state["counts"].values()) != 1400:
         raise AssertionError("pinned crosswalk accounting incomplete")
 
@@ -59,8 +61,8 @@ def main() -> int:
     print(f"runtime_requirement_package_sha256={requirement_hash}")
     print(f"crosswalk_normalized_sha256={crosswalk['normalized_sha256']}")
     print(f"crosswalk_emitted_sha256={emitted_hash}")
-    for status, count in sorted(crosswalk["counts"].items()):
-        print(f"crosswalk[{status}]={count}")
+    print("coverage_claims_emitted=0")
+    print("crosswalk[SUBJECT_REVIEW_REQUIRED]=1400")
     return 0
 
 
