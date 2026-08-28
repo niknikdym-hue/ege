@@ -1,19 +1,22 @@
 {
-  "schema_version": "0.3.0",
-  "as_of": "2026-08-27",
+  "schema_version": "0.4.0",
+  "as_of": "2026-08-28",
   "deadline": "2026-09-01",
   "product": "Eksamio Pro — Русский",
-  "baseline_main": "c6f18fa2ad95d3e794c27a2f0d31a0e5235db61e",
+  "baseline_main": "d0da4c9947b381d529cde65634a60147265ebd04",
   "launch_status": "NOT_READY",
   "gates": [
     {
       "id": "russian_source_knowledge",
-      "status": "BLOCKED_CODE",
+      "status": "READY",
       "evidence": [
         "PR #145 merged: verified Russian Drive source archive state",
-        "Drive INBOX classified to zero; official programs/FIPI and purchased textbook references are archived"
+        "8 canonical launch documents fingerprinted across EDSOO 5-9, EDSOO 10-11, FIPI OGE 2026 final and FIPI EGE 2026 final",
+        "1400 deterministic normalized official requirement records account for all 16 RU-PROG modules",
+        "executable fail-closed requirement-to-content/semantic crosswalk covers every requirement without self-admitting ru-* identities",
+        "commercial textbook bytes ingested into Git/source knowledge = 0"
       ],
-      "blocker": "Full deterministic requirement extraction and source-to-current-content crosswalk are still incomplete."
+      "blocker": "Source/code gate is ready. Crosswalk still reports proposed/partial/missing/subject-review states that must be resolved by the separate Russian subject/content gate."
     },
     {
       "id": "russian_content",
@@ -76,7 +79,7 @@
       "id": "legal_privacy_operational",
       "status": "READY",
       "evidence": [
-        "versioned production-facing privacy, personal-data, public-offer, learner-audio non-storage and NPD/receipt artifacts materialized",
+        "PR #153 merged: versioned production-facing privacy, personal-data, public-offer, learner-audio non-storage and NPD/receipt artifacts",
         "artifact acceptance is bound to exact version + SHA-256",
         "operator runbook and Pro-client disclosure integration are validated fail-closed"
       ],
@@ -86,7 +89,7 @@
       "id": "production_e2e",
       "status": "BLOCKED_DEPENDENCY",
       "evidence": [],
-      "blocker": "Final anonymous-demo -> identity -> payment -> entitlement -> learning -> PEIS -> Tutor -> refund/revoke production-candidate E2E cannot run until upstream subject/source/legal/live-provider gates close."
+      "blocker": "Final anonymous-demo -> identity -> payment -> entitlement -> learning -> PEIS -> Tutor -> refund/revoke production-candidate E2E cannot run until upstream subject/legal/live-provider gates close."
     }
   ],
   "activation_invariants": {
