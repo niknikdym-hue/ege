@@ -1,0 +1,48 @@
+name: Russian EGE exact route bridge
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/ege-route-bridge/**'
+      - '.github/workflows/russian-ege-exact-route-bridge.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/ege-route-bridge/**'
+      - '.github/workflows/russian-ege-exact-route-bridge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ege-route-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile EGE bridge tools
+        run: python -m py_compile eksamio-learning-engine/russian-program/ege-route-bridge/diagnose_ege_unit_codes.py
+      - name: Inventory exact EGE source code patterns
+        working-directory: eksamio-learning-engine/russian-program/ege-route-bridge
+        run: python diagnose_ege_unit_codes.py
+      - name: Validate launch preflight remains fail-closed
+        working-directory: eksamio-learning-engine/launch-preflight
+        run: python validate_sep1_production_preflight.py
+      - name: Enforce bounded scope
+        shell: bash
+        run: |
+          changed="$(git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD')"
+          echo "$changed"
+          if echo "$changed" | grep -Ev '^(eksamio-learning-engine/russian-program/ege-route-bridge/|\.github/workflows/russian-ege-exact-route-bridge\.yml$)' | grep -q .; then
+            echo 'EGE route bridge PR changed files outside bounded lane.' >&2
+            exit 1
+          fi
+      - name: Reject whitespace errors
+        shell: bash
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
