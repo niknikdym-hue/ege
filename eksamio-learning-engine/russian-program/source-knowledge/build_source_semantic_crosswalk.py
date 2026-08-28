@@ -11,12 +11,11 @@ HERE = Path(__file__).resolve().parent
 REQ_INDEX_PATH = HERE / "RUSSIAN-OFFICIAL-REQUIREMENTS-INDEX-v1.0.json"
 CROSSWALK_INDEX_PATH = HERE / "RUSSIAN-SOURCE-SEMANTIC-CROSSWALK-INDEX-v1.0.json"
 
+# These refs are context only. Module overlap may point reviewers toward current/proposed
+# learner material, but it must never be interpreted as object-level coverage.
 PROPOSED_MODULE_TO_REF = {1: 9, 2: 4, 3: 1, 4: 10, 5: 5, 6: 6, 7: 8, 11: 0, 12: 2, 15: 3}
 CANONICAL_MODULES = {8, 10}
 CANONICAL_INVENTORY_REF = 7
-UNRESOLVED_CONTENT_MODULES = {9, 13, 14, 16}
-MISSING_IDENTITY_MODULES = {1, 4, 5, 15}
-FORMAT_CLASSES = {"exam_format_constraint", "scoring_or_format_constraint"}
 EXPECTED_COLUMNS = [
     "record_id", "document_ref", "page", "code", "section_ref", "class_ref",
     "grades_ref", "routes_ref", "module_mask", "meaning_ref", "confidence_ref", "status_ref",
@@ -33,8 +32,7 @@ def load_requirement_rows() -> tuple[dict[str, object], list[list[object]]]:
     index = json.loads(REQ_INDEX_PATH.read_text(encoding="utf-8"))
     rows: list[list[object]] = []
     for shard in index["shards"]:
-        path = HERE / shard["path"]
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads((HERE / shard["path"]).read_text(encoding="utf-8"))
         if payload["columns"] != EXPECTED_COLUMNS:
             raise ValueError(f"requirement shard schema drift: {shard['path']}")
         if len(payload["records"]) != shard["record_count"]:
@@ -43,8 +41,7 @@ def load_requirement_rows() -> tuple[dict[str, object], list[list[object]]]:
     return index, rows
 
 
-def classify(row: list[object], req_index: dict[str, object]) -> tuple[str, list[int]]:
-    class_name = str(req_index["catalogs"]["classes"][int(row[5])])
+def review_context_refs(row: list[object]) -> list[int]:
     modules = set(decode_modules(int(row[8])))
     refs: list[int] = []
     for module in sorted(modules):
@@ -53,20 +50,17 @@ def classify(row: list[object], req_index: dict[str, object]) -> tuple[str, list
             refs.append(ref)
     if modules & CANONICAL_MODULES:
         refs.append(CANONICAL_INVENTORY_REF)
+    return refs
 
-    if class_name in FORMAT_CLASSES:
-        return "SUBJECT_REVIEW_REQUIRED", refs
-    if modules & UNRESOLVED_CONTENT_MODULES:
-        return ("PARTIAL" if refs else "MISSING_CONTENT"), refs
-    if modules & MISSING_IDENTITY_MODULES:
-        return "MISSING_SEMANTIC_IDENTITY", refs
-    if modules <= set(PROPOSED_MODULE_TO_REF):
-        return "COVERED_PROPOSED", refs
-    if modules <= CANONICAL_MODULES:
-        return "PARTIAL", refs
-    if refs:
-        return "PARTIAL", refs
-    return "SUBJECT_REVIEW_REQUIRED", refs
+
+def classify(row: list[object]) -> tuple[str, list[int]]:
+    # Issue #152 requires requirement-level crosswalk truth. PR #139 source_provenance
+    # currently establishes module/program scope, not an exact locator -> semantic/content
+    # identity for each of the 1400 normalized official requirements. Therefore module
+    # overlap is insufficient to claim COVERED_PROPOSED, PARTIAL, MISSING_CONTENT or
+    # MISSING_SEMANTIC_IDENTITY. Until Russian subject authority performs object-level
+    # admission, every requirement remains explicitly SUBJECT_REVIEW_REQUIRED.
+    return "SUBJECT_REVIEW_REQUIRED", review_context_refs(row)
 
 
 def build() -> dict[str, object]:
@@ -82,7 +76,7 @@ def build() -> dict[str, object]:
         if record_id in seen:
             raise ValueError(f"duplicate requirement record: {record_id}")
         seen.add(record_id)
-        status, refs = classify(row, req_index)
+        status, refs = classify(row)
         if status not in status_to_ref:
             raise ValueError(f"crosswalk index lacks status: {status}")
         counts[status] += 1
@@ -91,12 +85,13 @@ def build() -> dict[str, object]:
         raise ValueError("crosswalk does not cover every requirement")
     canonical = json.dumps(records, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "columns": ["record_id", "status_ref", "content_ref_refs"],
         "records": records,
         "counts": dict(sorted(counts.items())),
         "normalized_sha256": hashlib.sha256(canonical).hexdigest(),
         "record_count": len(records),
+        "coverage_claims_emitted": 0,
     }
 
 
@@ -111,6 +106,7 @@ def main() -> int:
         print("RUSSIAN_SOURCE_SEMANTIC_CROSSWALK=PASS")
         print(f"records={result['record_count']}")
         print(f"normalized_sha256={result['normalized_sha256']}")
+        print(f"coverage_claims_emitted={result['coverage_claims_emitted']}")
         for key, value in result["counts"].items():
             print(f"{key}={value}")
     return 0
