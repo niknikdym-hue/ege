@@ -48,10 +48,6 @@ def decode_modules(mask: int) -> list[str]:
     return [f"RU-PROG-{bit + 1:02d}" for bit in range(16) if mask & (1 << bit)]
 
 
-def module_numbers(mask: int) -> list[int]:
-    return [bit + 1 for bit in range(16) if mask & (1 << bit)]
-
-
 def load_requirements() -> tuple[dict[str, Any], list[list[Any]]]:
     index = json.loads(REQ_INDEX_PATH.read_text(encoding="utf-8"))
     rows: list[list[Any]] = []
@@ -83,8 +79,6 @@ def load_exact_canonical_authority() -> tuple[set[str], dict[str, set[str]]]:
         target = row.get("target_semantic_id")
         if target not in canonical_targets or row.get("review_status") != "reviewed":
             continue
-        # The auto-resolution boundary is deliberately strict: the existing authority
-        # must directly name the newly derived requirement ID as its source object.
         for key in ("source_id", "source_object_key"):
             source_key = row.get(key)
             if isinstance(source_key, str) and source_key.startswith("RSK-"):
@@ -95,7 +89,7 @@ def load_exact_canonical_authority() -> tuple[set[str], dict[str, set[str]]]:
     return canonical_targets, direct
 
 
-def group_signature(row: list[Any], index: dict[str, Any]) -> dict[str, Any]:
+def review_signature(row: list[Any], index: dict[str, Any]) -> dict[str, Any]:
     catalogs = index["catalogs"]
     return {
         "normalized_meaning": str(catalogs["meanings"][int(row[9])]),
@@ -105,8 +99,24 @@ def group_signature(row: list[Any], index: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def review_group_id(signature: dict[str, Any]) -> str:
-    return "RRG-" + hashlib.sha256(canonical_json(signature)).hexdigest()[:20]
+def admission_signature(row: list[Any], index: dict[str, Any]) -> dict[str, Any]:
+    catalogs = index["catalogs"]
+    document = catalogs["documents"][int(row[1])]
+    return {
+        "review_signature": review_signature(row, index),
+        "source_id": str(document["source_id"]),
+        "document_id": str(document["document_id"]),
+        "section": str(catalogs["sections"][int(row[4])]),
+        "code": str(row[3]),
+    }
+
+
+def review_batch_id(signature: dict[str, Any]) -> str:
+    return "RRB-" + hashlib.sha256(canonical_json(signature)).hexdigest()[:20]
+
+
+def admission_unit_id(signature: dict[str, Any]) -> str:
+    return "RAU-" + hashlib.sha256(canonical_json(signature)).hexdigest()[:20]
 
 
 def route_priority(routes: list[str]) -> tuple[int, str]:
@@ -132,7 +142,7 @@ def proposed_context_refs(modules: list[str]) -> list[dict[str, str]]:
     return refs
 
 
-def exact_group_resolution(member_ids: list[str], direct: dict[str, set[str]], canonical_targets: set[str]) -> str | None:
+def exact_unit_resolution(member_ids: list[str], direct: dict[str, set[str]], canonical_targets: set[str]) -> str | None:
     targets: set[str] = set()
     for requirement_id in member_ids:
         direct_targets = direct.get(requirement_id, set())
@@ -142,119 +152,143 @@ def exact_group_resolution(member_ids: list[str], direct: dict[str, set[str]], c
         if target not in canonical_targets:
             return None
         targets.add(target)
-    if len(targets) != 1:
-        return None
-    return next(iter(targets))
+    return next(iter(targets)) if len(targets) == 1 else None
+
+
+def member_object(row: list[Any], index: dict[str, Any]) -> dict[str, Any]:
+    catalogs = index["catalogs"]
+    document = catalogs["documents"][int(row[1])]
+    source_id = str(document["source_id"])
+    if source_id == FORBIDDEN_SOURCE:
+        raise ValueError("provisional 2027 source entered object review queue")
+    return {
+        "requirement_id": str(row[0]),
+        "source_id": source_id,
+        "document_id": str(document["document_id"]),
+        "source_sha256": str(document["sha256"]),
+        "page": int(row[2]),
+        "code": str(row[3]),
+        "section": str(catalogs["sections"][int(row[4])]),
+        "grades": sorted(str(v) for v in catalogs["grades"][int(row[6])]),
+        "confidence": str(catalogs["confidences"][int(row[10])]),
+    }
 
 
 def build_queue() -> dict[str, Any]:
     index, rows = load_requirements()
-    catalogs = index["catalogs"]
     canonical_targets, direct = load_exact_canonical_authority()
 
-    buckets: dict[bytes, list[list[Any]]] = defaultdict(list)
-    signatures: dict[bytes, dict[str, Any]] = {}
+    unit_buckets: dict[bytes, list[list[Any]]] = defaultdict(list)
+    unit_signatures: dict[bytes, dict[str, Any]] = {}
     for row in rows:
-        signature = group_signature(row, index)
+        signature = admission_signature(row, index)
         key = canonical_json(signature)
-        buckets[key].append(row)
-        signatures[key] = signature
+        unit_buckets[key].append(row)
+        unit_signatures[key] = signature
 
-    groups: list[dict[str, Any]] = []
-    for key, members in buckets.items():
-        signature = signatures[key]
-        member_objects: list[dict[str, Any]] = []
-        grades: set[str] = set()
-        source_ids: set[str] = set()
-        document_ids: set[str] = set()
-        member_ids: list[str] = []
-
-        for row in sorted(members, key=lambda item: str(item[0])):
-            requirement_id = str(row[0])
-            document = catalogs["documents"][int(row[1])]
-            source_id = str(document["source_id"])
-            if source_id == FORBIDDEN_SOURCE:
-                raise ValueError("provisional 2027 source entered object review queue")
-            row_grades = sorted(str(v) for v in catalogs["grades"][int(row[6])])
-            grades.update(row_grades)
-            source_ids.add(source_id)
-            document_ids.add(str(document["document_id"]))
-            member_ids.append(requirement_id)
-            member_objects.append({
-                "requirement_id": requirement_id,
-                "source_id": source_id,
-                "document_id": str(document["document_id"]),
-                "source_sha256": str(document["sha256"]),
-                "page": int(row[2]),
-                "code": str(row[3]),
-                "section": str(catalogs["sections"][int(row[4])]),
-                "grades": row_grades,
-                "confidence": str(catalogs["confidences"][int(row[10])]),
-            })
-
-        exact_target = exact_group_resolution(member_ids, direct, canonical_targets)
-        priority_rank, priority_route = route_priority(signature["routes"])
-        contexts = proposed_context_refs(signature["modules"])
-        group = {
-            "review_group_id": review_group_id(signature),
-            "signature": signature,
+    admission_units: list[dict[str, Any]] = []
+    for key, member_rows in unit_buckets.items():
+        signature = unit_signatures[key]
+        review = signature["review_signature"]
+        members = [member_object(row, index) for row in sorted(member_rows, key=lambda item: str(item[0]))]
+        member_ids = [str(member["requirement_id"]) for member in members]
+        exact_target = exact_unit_resolution(member_ids, direct, canonical_targets)
+        priority_rank, priority_route = route_priority(review["routes"])
+        unit = {
+            "admission_unit_id": admission_unit_id(signature),
+            "review_batch_id": review_batch_id(review),
+            "admission_signature": signature,
             "priority_route": priority_route,
             "priority_rank": priority_rank,
-            "member_count": len(member_objects),
-            "grades_represented": sorted(grades, key=lambda value: int(value) if value.isdigit() else 999),
-            "source_ids": sorted(source_ids),
-            "document_ids": sorted(document_ids),
-            "members": member_objects,
+            "member_count": len(members),
+            "grades_represented": sorted({grade for member in members for grade in member["grades"]}, key=lambda value: int(value) if value.isdigit() else 999),
+            "members": members,
             "exact_canonical_semantic_id": exact_target,
             "admission_status": "AUTO_RESOLVED_CANONICAL" if exact_target else "SUBJECT_REVIEW_REQUIRED",
-            "proposed_context_refs": contexts,
+            "proposed_context_refs": proposed_context_refs(review["modules"]),
         }
-        groups.append(group)
+        admission_units.append(unit)
 
-    groups.sort(key=lambda group: (
-        int(group["priority_rank"]),
-        -int(group["member_count"]),
-        str(group["review_group_id"]),
+    admission_units.sort(key=lambda unit: (
+        int(unit["priority_rank"]),
+        -int(unit["member_count"]),
+        str(unit["admission_unit_id"]),
     ))
 
-    resolved_groups = [g for g in groups if g["admission_status"] == "AUTO_RESOLVED_CANONICAL"]
-    proposed_context_groups = [g for g in groups if g["proposed_context_refs"]]
+    units_by_batch: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for unit in admission_units:
+        units_by_batch[str(unit["review_batch_id"])].append(unit)
+
+    review_batches: list[dict[str, Any]] = []
+    for batch_id, units in units_by_batch.items():
+        review = units[0]["admission_signature"]["review_signature"]
+        if any(unit["admission_signature"]["review_signature"] != review for unit in units):
+            raise ValueError("review batch mixed incompatible signatures")
+        priority_rank, priority_route = route_priority(review["routes"])
+        batch = {
+            "review_batch_id": batch_id,
+            "review_signature": review,
+            "priority_route": priority_route,
+            "priority_rank": priority_rank,
+            "admission_unit_count": len(units),
+            "requirement_count": sum(int(unit["member_count"]) for unit in units),
+            "admission_unit_ids": sorted(str(unit["admission_unit_id"]) for unit in units),
+            "proposed_context_refs": proposed_context_refs(review["modules"]),
+            "authority": "BATCH_ONLY_NOT_ADMISSION_DECISION",
+        }
+        review_batches.append(batch)
+
+    review_batches.sort(key=lambda batch: (
+        int(batch["priority_rank"]),
+        -int(batch["requirement_count"]),
+        str(batch["review_batch_id"]),
+    ))
+
+    resolved_units = [unit for unit in admission_units if unit["admission_status"] == "AUTO_RESOLVED_CANONICAL"]
+    context_units = [unit for unit in admission_units if unit["proposed_context_refs"]]
+    context_batches = [batch for batch in review_batches if batch["proposed_context_refs"]]
     summary = {
         "requirements_total": len(rows),
-        "review_groups_total": len(groups),
-        "auto_resolved_canonical_groups": len(resolved_groups),
-        "auto_resolved_canonical_requirements": sum(int(g["member_count"]) for g in resolved_groups),
-        "proposed_context_groups": len(proposed_context_groups),
-        "proposed_context_requirements": sum(int(g["member_count"]) for g in proposed_context_groups),
-        "subject_review_required_groups": sum(g["admission_status"] == "SUBJECT_REVIEW_REQUIRED" for g in groups),
-        "subject_review_required_requirements": sum(int(g["member_count"]) for g in groups if g["admission_status"] == "SUBJECT_REVIEW_REQUIRED"),
+        "review_batches_total": len(review_batches),
+        "admission_units_total": len(admission_units),
+        "auto_resolved_canonical_units": len(resolved_units),
+        "auto_resolved_canonical_requirements": sum(int(unit["member_count"]) for unit in resolved_units),
+        "proposed_context_batches": len(context_batches),
+        "proposed_context_units": len(context_units),
+        "proposed_context_requirements": sum(int(unit["member_count"]) for unit in context_units),
+        "subject_review_required_units": sum(unit["admission_status"] == "SUBJECT_REVIEW_REQUIRED" for unit in admission_units),
+        "subject_review_required_requirements": sum(int(unit["member_count"]) for unit in admission_units if unit["admission_status"] == "SUBJECT_REVIEW_REQUIRED"),
     }
 
-    by_priority = defaultdict(lambda: {"groups": 0, "requirements": 0})
-    by_module = defaultdict(lambda: {"groups": 0, "requirements": 0})
-    for group in groups:
-        by_priority[group["priority_route"]]["groups"] += 1
-        by_priority[group["priority_route"]]["requirements"] += int(group["member_count"])
-        for module in group["signature"]["modules"]:
-            by_module[module]["groups"] += 1
-            by_module[module]["requirements"] += int(group["member_count"])
+    by_priority: dict[str, dict[str, int]] = defaultdict(lambda: {"review_batches": 0, "admission_units": 0, "requirements": 0})
+    by_module: dict[str, dict[str, int]] = defaultdict(lambda: {"admission_units": 0, "requirements": 0})
+    for batch in review_batches:
+        by_priority[batch["priority_route"]]["review_batches"] += 1
+    for unit in admission_units:
+        by_priority[unit["priority_route"]]["admission_units"] += 1
+        by_priority[unit["priority_route"]]["requirements"] += int(unit["member_count"])
+        for module in unit["admission_signature"]["review_signature"]["modules"]:
+            by_module[module]["admission_units"] += 1
+            by_module[module]["requirements"] += int(unit["member_count"])
 
     payload: dict[str, Any] = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "status": "OBJECT_LEVEL_SUBJECT_REVIEW_QUEUE",
         "baseline_main": BASELINE_MAIN,
         "source_requirement_state": "RUSSIAN-SOURCE-KNOWLEDGE-STATE-v1.0.json",
         "pr_139_read_only_head": PR139_HEAD,
-        "group_signature_fields": ["normalized_meaning", "requirement_class", "modules", "routes"],
+        "review_batch_signature_fields": ["normalized_meaning", "requirement_class", "modules", "routes"],
+        "admission_unit_signature_fields": ["review_signature", "source_id", "document_id", "section", "code"],
+        "review_batch_authority": "WORK_BATCH_ONLY_NOT_SEMANTIC_ADMISSION",
         "auto_resolution_policy": "DIRECT_REVIEWED_REQUIREMENT_ID_TO_CANONICAL_SCHOOL_IDENTITY_ONLY",
         "module_or_keyword_auto_resolution_allowed": False,
         "summary": summary,
         "by_priority_route": dict(sorted(by_priority.items())),
         "by_module": dict(sorted(by_module.items())),
-        "groups": groups,
+        "review_batches": review_batches,
+        "admission_units": admission_units,
     }
-    digest_input = {key: value for key, value in payload.items() if key != "normalized_sha256"}
-    payload["normalized_sha256"] = hashlib.sha256(canonical_json(digest_input)).hexdigest()
+    payload["normalized_sha256"] = hashlib.sha256(canonical_json(payload)).hexdigest()
     return payload
 
 
@@ -271,7 +305,8 @@ def main() -> int:
         for key, value in queue["summary"].items():
             print(f"{key}={value}")
         for key, value in queue["by_priority_route"].items():
-            print(f"priority[{key}].groups={value['groups']}")
+            print(f"priority[{key}].review_batches={value['review_batches']}")
+            print(f"priority[{key}].admission_units={value['admission_units']}")
             print(f"priority[{key}].requirements={value['requirements']}")
     return 0
 
