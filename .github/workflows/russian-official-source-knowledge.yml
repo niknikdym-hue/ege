@@ -33,11 +33,15 @@ jobs:
           python -m py_compile \
             eksamio-learning-engine/russian-program/source-knowledge/build_source_semantic_crosswalk.py \
             eksamio-learning-engine/russian-program/source-knowledge/validate_russian_source_knowledge.py \
+            eksamio-learning-engine/russian-program/source-knowledge/validate_source_knowledge_state.py \
             eksamio-learning-engine/launch-preflight/sep1_production_preflight.py \
             eksamio-learning-engine/launch-preflight/validate_sep1_production_preflight.py
       - name: Validate deterministic official requirement package and crosswalk
         working-directory: eksamio-learning-engine/russian-program/source-knowledge
         run: python validate_russian_source_knowledge.py
+      - name: Validate pinned source-knowledge state
+        working-directory: eksamio-learning-engine/russian-program/source-knowledge
+        run: python validate_source_knowledge_state.py
       - name: Prove crosswalk determinism with two emitted runs
         working-directory: eksamio-learning-engine/russian-program/source-knowledge
         shell: bash
