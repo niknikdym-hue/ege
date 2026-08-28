@@ -1,0 +1,63 @@
+name: Russian official source knowledge
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/source-knowledge/**'
+      - 'eksamio-learning-engine/launch-preflight/**'
+      - '.github/workflows/russian-official-source-knowledge.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/source-knowledge/**'
+      - 'eksamio-learning-engine/launch-preflight/**'
+      - '.github/workflows/russian-official-source-knowledge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-knowledge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile source knowledge tools
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/russian-program/source-knowledge/build_source_semantic_crosswalk.py \
+            eksamio-learning-engine/russian-program/source-knowledge/validate_russian_source_knowledge.py \
+            eksamio-learning-engine/launch-preflight/sep1_production_preflight.py \
+            eksamio-learning-engine/launch-preflight/validate_sep1_production_preflight.py
+      - name: Validate deterministic official requirement package and crosswalk
+        working-directory: eksamio-learning-engine/russian-program/source-knowledge
+        run: python validate_russian_source_knowledge.py
+      - name: Prove crosswalk determinism with two emitted runs
+        working-directory: eksamio-learning-engine/russian-program/source-knowledge
+        shell: bash
+        run: |
+          python build_source_semantic_crosswalk.py --emit > /tmp/crosswalk-a.json
+          python build_source_semantic_crosswalk.py --emit > /tmp/crosswalk-b.json
+          cmp /tmp/crosswalk-a.json /tmp/crosswalk-b.json
+          sha256sum /tmp/crosswalk-a.json /tmp/crosswalk-b.json
+      - name: Validate launch preflight remains fail-closed
+        working-directory: eksamio-learning-engine/launch-preflight
+        run: python validate_sep1_production_preflight.py
+      - name: Reject source PDFs and commercial textbook bytes in Git delta
+        shell: bash
+        run: |
+          changed="$(git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD')"
+          echo "$changed"
+          if echo "$changed" | grep -E '^eksamio-learning-engine/russian-program/source-knowledge/.*\.(pdf|docx?|epub|fb2)$'; then
+            echo 'Binary/source-book bytes are forbidden in source-knowledge Git package.' >&2
+            exit 1
+          fi
+      - name: Reject whitespace errors
+        shell: bash
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
