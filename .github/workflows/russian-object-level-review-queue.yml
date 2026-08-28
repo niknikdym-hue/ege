@@ -1,0 +1,67 @@
+name: Russian object-level review queue
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/object-review/**'
+      - '.github/workflows/russian-object-level-review-queue.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/object-review/**'
+      - '.github/workflows/russian-object-level-review-queue.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  object-review-queue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile queue tools
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/russian-program/object-review/build_object_level_review_queue.py \
+            eksamio-learning-engine/russian-program/object-review/validate_object_level_review_queue.py
+      - name: Validate deterministic object-level review queue
+        working-directory: eksamio-learning-engine/russian-program/object-review
+        run: python validate_object_level_review_queue.py
+      - name: Prove queue determinism and emit review artifact
+        working-directory: eksamio-learning-engine/russian-program/object-review
+        shell: bash
+        run: |
+          python build_object_level_review_queue.py --emit > /tmp/russian-object-review-a.json
+          python build_object_level_review_queue.py --emit > /tmp/russian-object-review-b.json
+          cmp /tmp/russian-object-review-a.json /tmp/russian-object-review-b.json
+          sha256sum /tmp/russian-object-review-a.json /tmp/russian-object-review-b.json
+          cp /tmp/russian-object-review-a.json russian-object-review-queue.json
+      - name: Upload deterministic review queue
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-object-level-review-queue
+          path: eksamio-learning-engine/russian-program/object-review/russian-object-review-queue.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Validate launch preflight remains fail-closed
+        working-directory: eksamio-learning-engine/launch-preflight
+        run: python validate_sep1_production_preflight.py
+      - name: Enforce bounded scope
+        shell: bash
+        run: |
+          changed="$(git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD')"
+          echo "$changed"
+          if echo "$changed" | grep -Ev '^(eksamio-learning-engine/russian-program/object-review/|\.github/workflows/russian-object-level-review-queue\.yml$)' | grep -q .; then
+            echo 'Object-review PR changed files outside the bounded review-queue lane.' >&2
+            exit 1
+          fi
+      - name: Reject whitespace errors
+        shell: bash
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
