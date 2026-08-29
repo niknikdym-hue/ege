@@ -39,34 +39,83 @@ PAGE = r'''<!doctype html>
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Eksamio — приватный тест Тьютора</title>
+<title>Eksamio — тестовый AI-Тьютор</title>
 <style>
-:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#15171a;background:#f5f6f8}
-*{box-sizing:border-box}body{margin:0}.wrap{max-width:860px;margin:0 auto;padding:24px 16px 40px}
-.card{background:white;border:1px solid #e4e7ec;border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.05);overflow:hidden}
-.head{padding:20px 22px;border-bottom:1px solid #eceef2}.head h1{font-size:22px;margin:0 0 6px}.muted{color:#68707c;font-size:14px;line-height:1.45}
-.setup{padding:22px;display:grid;gap:14px}.setup label{font-weight:600}.setup select,.composer textarea{width:100%;font:inherit;border:1px solid #ccd2da;border-radius:12px;padding:12px;background:white}
-button{font:inherit;border:0;border-radius:12px;padding:11px 16px;cursor:pointer;background:#15171a;color:white;font-weight:650}button.secondary{background:#eef1f5;color:#20242a}button:disabled{opacity:.5;cursor:not-allowed}
-.chat{display:none;min-height:580px;flex-direction:column}.status{padding:10px 18px;background:#fafbfc;border-bottom:1px solid #eceef2;display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap;font-size:13px;color:#626a75}
-.messages{padding:18px;display:flex;flex-direction:column;gap:12px;flex:1;max-height:560px;overflow:auto}.msg{max-width:82%;padding:11px 14px;border-radius:15px;white-space:pre-wrap;line-height:1.48}.me{align-self:flex-end;background:#15171a;color:white;border-bottom-right-radius:5px}.tutor{align-self:flex-start;background:#eef1f5;border-bottom-left-radius:5px}.system{align-self:center;background:#fff5cf;color:#594600;font-size:13px;max-width:94%}
-.composer{padding:14px 18px 18px;border-top:1px solid #eceef2;display:grid;gap:10px}.composer textarea{resize:vertical;min-height:74px}.row{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}.row .actions{display:flex;gap:8px}.busy{display:none;color:#68707c;font-size:13px}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#e8f7ec;color:#17662b;font-size:12px;font-weight:650}
+:root{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#17202a;background:#f4f7fb;
+  --ink:#17202a;--muted:#667085;--line:#e5eaf1;--soft:#f7f9fc;
+  --brand:#4b5cf0;--brand2:#7656e8;--brand-soft:#eef0ff;
+  --success:#137a42;--success-bg:#eaf8ef;--warn:#775d00;--warn-bg:#fff8da;
+}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:
+  radial-gradient(circle at 8% 0%,rgba(75,92,240,.12),transparent 31rem),
+  radial-gradient(circle at 92% 8%,rgba(118,86,232,.10),transparent 28rem),#f4f7fb}
+button,select,textarea{font:inherit}.page{max-width:980px;margin:0 auto;padding:34px 18px 48px}
+.brandbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em;font-size:20px;color:var(--ink)}
+.logo{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:white;font-weight:850;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 8px 20px rgba(75,92,240,.24)}
+.mode{font-size:12px;font-weight:700;color:#475467;border:1px solid #dce2eb;background:rgba(255,255,255,.75);padding:6px 10px;border-radius:999px}
+.shell{background:rgba(255,255,255,.96);border:1px solid rgba(220,226,235,.95);border-radius:24px;box-shadow:0 24px 65px rgba(34,44,73,.10);overflow:hidden}
+.hero{padding:34px 34px 26px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff 0%,#fbfcff 100%)}
+.kicker{display:inline-flex;align-items:center;gap:7px;color:var(--success);background:var(--success-bg);font-size:12px;font-weight:750;padding:6px 10px;border-radius:999px;margin-bottom:14px}.dot{width:7px;height:7px;border-radius:50%;background:#21a45b}
+.hero h1{font-size:34px;line-height:1.08;letter-spacing:-.035em;margin:0 0 12px;max-width:680px}.hero p{margin:0;color:var(--muted);font-size:16px;line-height:1.55;max-width:720px}
+.setup{padding:28px 34px 34px;display:grid;gap:20px}.section-label{font-size:13px;font-weight:750;color:#475467;text-transform:uppercase;letter-spacing:.055em}
+.topic-card{border:1px solid var(--line);border-radius:18px;padding:18px;background:#fff;display:grid;gap:10px}.topic-card label{font-weight:750;font-size:17px}.topic-card select{width:100%;border:1px solid #cfd6e2;border-radius:12px;padding:12px 40px 12px 13px;background:white;color:var(--ink);outline:none}.topic-card select:focus,.composer textarea:focus{border-color:#8e99f7;box-shadow:0 0 0 4px rgba(75,92,240,.10)}
+.topic-info{color:var(--muted);font-size:14px;line-height:1.5}.how{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.how-item{border:1px solid var(--line);background:var(--soft);border-radius:16px;padding:15px}.num{width:27px;height:27px;border-radius:9px;background:var(--brand-soft);color:var(--brand);font-weight:800;display:grid;place-items:center;margin-bottom:9px}.how-item b{display:block;font-size:14px;margin-bottom:4px}.how-item span{color:var(--muted);font-size:13px;line-height:1.4}
+.limit{display:flex;align-items:flex-start;gap:11px;border-radius:15px;padding:14px 15px;background:#faf8ff;border:1px solid #ebe5ff;color:#51466c;font-size:14px;line-height:1.45}.limit strong{color:#342a52}
+.start-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.start-note{color:var(--muted);font-size:13px;line-height:1.45}.primary{border:0;border-radius:13px;padding:13px 19px;cursor:pointer;color:white;font-weight:750;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 9px 22px rgba(75,92,240,.24)}.primary:hover{filter:brightness(.98);transform:translateY(-1px)}button:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+.tech{border-top:1px solid var(--line);padding-top:15px;color:#7a8391;font-size:12px}.tech summary{cursor:pointer;font-weight:650;color:#667085}.tech p{margin:8px 0 0;line-height:1.45}
+.chat{display:none;min-height:670px;flex-direction:column}.chat-head{padding:17px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#fff}.tutor-id{display:flex;align-items:center;gap:11px}.avatar{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;color:white;background:linear-gradient(135deg,var(--brand),var(--brand2));font-size:18px;font-weight:850}.tutor-name{font-weight:800;line-height:1.15}.topic-name{font-size:12px;color:var(--muted);margin-top:4px;max-width:560px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.progress-wrap{min-width:150px;text-align:right}.progress-label{font-size:12px;color:var(--muted);margin-bottom:6px}.progress{height:7px;border-radius:99px;background:#edf0f5;overflow:hidden}.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .25s ease}.turn-text{font-size:12px;color:#475467;margin-top:5px;font-weight:650}
+.messages{padding:24px 22px;display:flex;flex-direction:column;gap:14px;flex:1;max-height:600px;overflow:auto;background:#fbfcfe}.line{display:flex;gap:9px;align-items:flex-end}.line.me-line{justify-content:flex-end}.mini-avatar{flex:0 0 30px;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--brand-soft);color:var(--brand)}.msg{max-width:76%;padding:12px 15px;border-radius:17px;white-space:pre-wrap;line-height:1.5;font-size:15px}.me{background:#283043;color:white;border-bottom-right-radius:5px}.tutor{background:white;border:1px solid var(--line);box-shadow:0 3px 9px rgba(21,32,43,.04);border-bottom-left-radius:5px}.system{align-self:center;background:var(--warn-bg);color:var(--warn);font-size:13px;max-width:94%;text-align:center;padding:10px 14px;border-radius:12px}
+.composer{padding:15px 20px 18px;border-top:1px solid var(--line);display:grid;gap:10px;background:white}.composer textarea{width:100%;resize:vertical;min-height:82px;max-height:190px;border:1px solid #cfd6e2;border-radius:14px;padding:13px;outline:none;color:var(--ink);background:#fff}.composer-foot{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}.hint{font-size:12px;color:#8a93a1}.actions{display:flex;gap:8px}.secondary{border:0;border-radius:12px;padding:11px 15px;cursor:pointer;background:#eef1f5;color:#303744;font-weight:700}.send{border:0;border-radius:12px;padding:11px 17px;cursor:pointer;background:linear-gradient(135deg,var(--brand),var(--brand2));color:white;font-weight:750}.busy{display:none;color:var(--muted);font-size:13px}
+.done-card{display:none;margin:18px 22px 22px;border:1px solid #d9eadf;background:#f4fbf6;border-radius:16px;padding:18px;color:#28533a}.done-card b{display:block;margin-bottom:5px}.done-card span{font-size:13px;line-height:1.45;color:#4d6b59}
+@media(max-width:700px){.page{padding:18px 10px 30px}.hero,.setup{padding-left:20px;padding-right:20px}.hero h1{font-size:29px}.how{grid-template-columns:1fr}.chat{min-height:640px}.msg{max-width:86%}.progress-wrap{min-width:120px}.topic-name{max-width:210px}}
 </style>
 </head>
-<body><div class="wrap"><div class="card">
-<div class="head"><h1>Приватный тест Тьютора Eksamio</h1><div class="muted">Настоящий OpenAI Tutor. Страница работает только на этом Mac. Публичный доступ и голос выключены. API-ключ в браузер не передаётся.</div></div>
-<div id="setup" class="setup"><div><span class="badge">PRIVATE · TEXT ONLY</span></div><label for="topic">Выберите тему</label><select id="topic"></select><div id="topicInfo" class="muted"></div><div class="muted">Лимит теста: <b id="limitText">20</b> платных реплик. Сценарий теста можно проходить свободно — специально ошибаться, спорить и просить объяснять проще.</div><div><button id="start">Начать тест</button></div></div>
-<div id="chat" class="chat"><div class="status"><span id="topicLabel"></span><span id="turns"></span></div><div id="messages" class="messages"></div><div class="composer"><textarea id="input" maxlength="2000" placeholder="Напишите сообщение Тьютору…"></textarea><div class="row"><span id="busy" class="busy">Тьютор отвечает…</span><div class="actions"><button id="finish" class="secondary">Завершить тест</button><button id="send">Отправить</button></div></div></div></div>
-</div></div>
+<body><main class="page">
+<div class="brandbar"><div class="brand"><div class="logo">E</div><span>Eksamio</span></div><span class="mode">Закрытый тест</span></div>
+<section class="shell">
+<div id="setupScreen">
+  <div class="hero">
+    <div class="kicker"><span class="dot"></span>Тестовый AI-Тьютор готов</div>
+    <h1>Проверим, как Тьютор учит в настоящем диалоге</h1>
+    <p>Выберите тему и общайтесь с ним как с обычным преподавателем: задавайте вопросы, ошибайтесь, спорьте и просите объяснить иначе.</p>
+  </div>
+  <div id="setup" class="setup">
+    <div class="section-label">Старт тестового Тьютора</div>
+    <div class="topic-card"><label for="topic">Тема разговора</label><select id="topic"></select><div id="topicInfo" class="topic-info"></div></div>
+    <div class="how">
+      <div class="how-item"><div class="num">1</div><b>Пишите естественно</b><span>Не нужно формулировать «правильные» вопросы. Ведите себя как реальный ученик.</span></div>
+      <div class="how-item"><div class="num">2</div><b>Проверяйте объяснение</b><span>Можно не понимать, ошибаться, просить пример или более простое объяснение.</span></div>
+      <div class="how-item"><div class="num">3</div><b>Не подыгрывайте</b><span>Наша задача — увидеть, действительно ли Тьютор умеет обучать, а не просто отвечать.</span></div>
+    </div>
+    <div class="limit"><div>●</div><div><strong>До <span id="limitText">20</span> сообщений ученика.</strong> Каждое отправленное сообщение вызывает один платный запрос к OpenAI. После достижения лимита новые запросы автоматически блокируются.</div></div>
+    <div class="start-row"><div class="start-note">Тест можно завершить раньше в любой момент.</div><button id="start" class="primary">Начать тест с Тьютором</button></div>
+    <details class="tech"><summary>Техническая безопасность теста</summary><p>Страница работает только на этом Mac. API-ключ в браузер не передаётся. Публичный доступ и голос выключены. Production PEIS-записи не выполняются.</p></details>
+  </div>
+</div>
+<div id="chat" class="chat">
+  <div class="chat-head">
+    <div class="tutor-id"><div class="avatar">E</div><div><div class="tutor-name">Eksamio Тьютор</div><div id="topicLabel" class="topic-name"></div></div></div>
+    <div class="progress-wrap"><div class="progress-label">Ход теста</div><div class="progress"><span id="progressBar"></span></div><div id="turns" class="turn-text"></div></div>
+  </div>
+  <div id="messages" class="messages"></div>
+  <div id="doneCard" class="done-card"><b>Тест завершён</b><span id="doneText">Результат сохранён локально.</span></div>
+  <div class="composer"><textarea id="input" maxlength="2000" placeholder="Напишите сообщение Тьютору…"></textarea><div class="composer-foot"><div><span id="busy" class="busy">Тьютор формулирует ответ…</span><span id="keyHint" class="hint">Enter — отправить · Shift+Enter — новая строка</span></div><div class="actions"><button id="finish" class="secondary">Завершить тест</button><button id="send" class="send">Отправить</button></div></div></div>
+</div>
+</section>
+</main>
 <script>
 const $=s=>document.querySelector(s); let session=null, maxTurns=20;
-function add(text,cls){const d=document.createElement('div');d.className='msg '+cls;d.textContent=text;$('#messages').appendChild(d);$('#messages').scrollTop=$('#messages').scrollHeight}
+function updateProgress(turn){$('#turns').textContent=`${turn} из ${maxTurns} сообщений`;$('#progressBar').style.width=`${Math.min(100,(turn/maxTurns)*100)}%`}
+function add(text,cls){if(cls==='system'){const d=document.createElement('div');d.className='msg system';d.textContent=text;$('#messages').appendChild(d)}else{const line=document.createElement('div');line.className='line '+(cls==='me'?'me-line':'');if(cls==='tutor'){const a=document.createElement('div');a.className='mini-avatar';a.textContent='E';line.appendChild(a)}const d=document.createElement('div');d.className='msg '+cls;d.textContent=text;line.appendChild(d);$('#messages').appendChild(line)}$('#messages').scrollTop=$('#messages').scrollHeight}
 async function api(path,body){const r=await fetch(path,{method:body?'POST':'GET',headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const j=await r.json();if(!r.ok)throw new Error(j.error||'Ошибка');return j}
 async function boot(){const s=await api('/api/status');maxTurns=s.max_turns;$('#limitText').textContent=maxTurns;const sel=$('#topic');s.topics.forEach(t=>{const o=document.createElement('option');o.value=t.semantic_id;o.textContent=t.title;o.dataset.desc=t.explanation;sel.appendChild(o)});function info(){const o=sel.selectedOptions[0];$('#topicInfo').textContent=o?o.dataset.desc:''}sel.onchange=info;info()}
-$('#start').onclick=async()=>{try{const j=await api('/api/start',{semantic_id:$('#topic').value});session=j.session_ref;$('#setup').style.display='none';$('#chat').style.display='flex';$('#topicLabel').textContent=j.title;$('#turns').textContent=`0 / ${maxTurns} реплик`;add('Можно начинать. Пишите так, как писал бы обычный ученик.','system');$('#input').focus()}catch(e){alert(e.message)}};
-async function send(){const text=$('#input').value.trim();if(!text||!session)return;$('#input').value='';$('#send').disabled=true;$('#busy').style.display='inline';add(text,'me');try{const j=await api('/api/turn',{session_ref:session,text});add(j.tutor_text,'tutor');$('#turns').textContent=`${j.turn_count} / ${maxTurns} реплик`;if(j.turn_count>=maxTurns){$('#input').disabled=true;$('#send').disabled=true;add('Лимит тестовой сессии достигнут. Завершите тест.','system')}}catch(e){add('Ошибка теста: '+e.message,'system')}finally{$('#busy').style.display='none';if(!$('#input').disabled)$('#send').disabled=false;$('#input').focus()}}
+$('#start').onclick=async()=>{try{$('#start').disabled=true;const j=await api('/api/start',{semantic_id:$('#topic').value});session=j.session_ref;$('#setupScreen').style.display='none';$('#chat').style.display='flex';$('#topicLabel').textContent=j.title;updateProgress(0);add('Тест начался. Пиши Тьютору так, как писал бы обычному преподавателю.','system');$('#input').focus()}catch(e){$('#start').disabled=false;alert(e.message)}};
+async function send(){const text=$('#input').value.trim();if(!text||!session)return;$('#input').value='';$('#send').disabled=true;$('#busy').style.display='inline';$('#keyHint').style.display='none';add(text,'me');try{const j=await api('/api/turn',{session_ref:session,text});add(j.tutor_text,'tutor');updateProgress(j.turn_count);if(j.turn_count>=maxTurns){$('#input').disabled=true;$('#send').disabled=true;add('Достигнут лимит этой тестовой сессии. Новые платные запросы заблокированы.','system')}}catch(e){add('Не удалось получить ответ: '+e.message,'system')}finally{$('#busy').style.display='none';$('#keyHint').style.display='inline';if(!$('#input').disabled)$('#send').disabled=false;$('#input').focus()}}
 $('#send').onclick=send;$('#input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
-$('#finish').onclick=async()=>{if(!session)return;try{const j=await api('/api/end',{session_ref:session});add('Тест завершён. Результат сохранён локально: '+j.report_name,'system');$('#input').disabled=true;$('#send').disabled=true;$('#finish').disabled=true}catch(e){alert(e.message)}};
+$('#finish').onclick=async()=>{if(!session)return;$('#finish').disabled=true;try{const j=await api('/api/end',{session_ref:session});$('#doneText').textContent='Диалог сохранён локально для последующего разбора качества. Файл: '+j.report_name;$('#doneCard').style.display='block';add('Сессия завершена. Спасибо — тест сохранён для анализа.','system');$('#input').disabled=true;$('#send').disabled=true;$('#composer')?.classList.add('ended')}catch(e){$('#finish').disabled=false;alert(e.message)}};
 boot().catch(e=>alert(e.message));
 </script></body></html>'''
 
