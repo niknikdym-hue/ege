@@ -1,0 +1,54 @@
+name: Russian subject semantic acceptance packet
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/**"
+      - ".github/workflows/russian-subject-semantic-packet.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-acceptance-packet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build semantic acceptance packet twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_semantic_acceptance_packet.py \
+            --output /tmp/packet-a.json > /tmp/packet-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_semantic_acceptance_packet.py \
+            --output /tmp/packet-b.json > /tmp/packet-report-b.txt
+          cmp /tmp/packet-a.json /tmp/packet-b.json
+          diff -u /tmp/packet-report-a.txt /tmp/packet-report-b.txt
+          cat /tmp/packet-report-a.txt
+          cp /tmp/packet-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-SEMANTIC-ACCEPTANCE-PACKET.json
+      - name: Validate semantic acceptance packet
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_semantic_acceptance_packet.py
+      - name: Upload semantic acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-subject-semantic-acceptance-packet
+          path: eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-SEMANTIC-ACCEPTANCE-PACKET.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed in semantic-packet slice.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
