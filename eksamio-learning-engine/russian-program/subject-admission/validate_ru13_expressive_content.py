@@ -156,7 +156,8 @@ def main() -> int:
     if dependency.get("existing_candidate") != "candidate-039" or dependency.get("decision") != "EXACT_BOUNDARY_REVIEW_REQUIRED_BEFORE_NEW_ID":
         raise AssertionError("candidate-039 rhetorical-address boundary was not preserved")
     candidate_039 = next(unit for unit in existing_units if unit["semantic_candidate_ref"] == "candidate-039")
-    if "duplicate" not in " ".join(candidate_039["canonical_explanation"]["boundaries"]).casefold():
+    address_boundaries = " ".join(candidate_039["canonical_explanation"]["boundaries"]).casefold()
+    if "дублиру" not in address_boundaries and "duplicate" not in address_boundaries:
         raise AssertionError("candidate-039 learner content lost no-duplicate rhetorical-address boundary")
 
     serialized = canonical_bytes(payloads)
