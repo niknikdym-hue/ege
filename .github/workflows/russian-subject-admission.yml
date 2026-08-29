@@ -7,7 +7,11 @@ on:
       - "eksamio-learning-engine/russian-program/production-learning-content/**"
       - "eksamio-learning-engine/russian-program/object-review/**"
       - "eksamio-learning-engine/russian-program/source-knowledge/**"
+      - "eksamio-learning-engine/russian-program/semantic-registry/**"
       - "eksamio-learning-engine/russian-program/ege-task-code-relation/**"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json"
+      - "eksamio-learning-engine/build/**"
       - ".github/workflows/russian-subject-admission.yml"
   workflow_dispatch:
 
@@ -17,7 +21,7 @@ permissions:
 jobs:
   subject-candidate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -79,6 +83,18 @@ jobs:
           cp /tmp/russian-ledger-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-AGGREGATE-LEDGER.json
       - name: Validate aggregate subject ledger
         run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_ledger.py
+      - name: Build RU08 RU09 RU10 RU14 reuse pool twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru08_09_10_14_reuse_pool.py \
+            --output /tmp/reuse-a.json > /tmp/reuse-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru08_09_10_14_reuse_pool.py \
+            --output /tmp/reuse-b.json > /tmp/reuse-report-b.txt
+          cmp /tmp/reuse-a.json /tmp/reuse-b.json
+          diff -u /tmp/reuse-report-a.txt /tmp/reuse-report-b.txt
+          cat /tmp/reuse-report-a.txt
+          cp /tmp/reuse-a.json eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-REUSE-POOL.json
       - name: Upload exact subject artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -86,6 +102,7 @@ jobs:
           path: |
             eksamio-learning-engine/russian-program/subject-admission/RU13-RU16-EXACT-REVIEW-SLICE.json
             eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-AGGREGATE-LEDGER.json
+            eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-REUSE-POOL.json
           if-no-files-found: error
           retention-days: 14
       - name: Protect accepted Russian production surfaces
