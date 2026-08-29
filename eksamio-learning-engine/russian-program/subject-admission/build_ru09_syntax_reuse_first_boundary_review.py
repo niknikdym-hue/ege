@@ -82,13 +82,27 @@ def build_review() -> dict[str, Any]:
 
     inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
     objects = [row for row in inventory.get("objects", []) if isinstance(row, dict)]
+
+    # The frozen 185-school set is the authoritative reuse pool, but individual
+    # inventory rows can intentionally carry review states other than
+    # source_verified. Do not turn that fact into a whole-module failure. Exact
+    # school-meaning suggestions below are restricted to current/source-verified
+    # rows only and remain review hints, never admissions.
+    school_identities = school_pool.get("identities")
+    if not isinstance(school_identities, list) or len(school_identities) != 185:
+        raise ValueError("RU09 frozen school identity list drift")
+    school_ids = [str(row.get("semantic_id") or "") for row in school_identities if isinstance(row, dict)]
+    if len(school_ids) != 185 or len(set(school_ids)) != 185 or any(not semantic_id for semantic_id in school_ids):
+        raise ValueError("RU09 frozen school identity IDs are invalid/non-unique")
     school_by_meaning: dict[str, list[str]] = defaultdict(list)
-    for row in objects:
-        if row.get("source_system") != "school_canonical":
-            continue
+    verified_school_identities = 0
+    for row in school_identities:
+        if not isinstance(row, dict):
+            raise ValueError("RU09 frozen school pool contains invalid row")
         if row.get("authority_status") != "current" or row.get("review_status") != "source_verified":
-            raise ValueError("RU09 canonical school pool contains non-current/non-verified identity")
-        school_by_meaning[str(row.get("observed_meaning") or "").strip()].append(str(row.get("source_id") or ""))
+            continue
+        verified_school_identities += 1
+        school_by_meaning[str(row.get("observed_meaning") or "").strip()].append(str(row.get("semantic_id") or ""))
 
     candidate_rows: list[dict[str, Any]] = []
     for candidate_id in sorted(EXPECTED_CANDIDATES):
@@ -234,6 +248,7 @@ def build_review() -> dict[str, Any]:
         "exact_normalized_meaning_groups": len({str(row.get("normalized_meaning") or "") for row in units}),
         "draft_subject_candidates": len(candidate_rows),
         "source_verified_taxonomy_backings": sum(row["taxonomy_source_status"] == "current_source_verified" for row in candidate_rows),
+        "source_verified_school_identities_eligible_for_exact_meaning_hint": verified_school_identities,
         "candidate_exact_school_meaning_overlap_count": sum(bool(row["exact_school_meaning_matches"]) for row in candidate_rows),
         "exact_object_bound_units_already_accepted": len(accepted_unit_ids),
         "exact_object_bound_requirements_already_accepted": len(accepted_requirement_ids),
@@ -257,6 +272,7 @@ def build_review() -> dict[str, Any]:
             "ege_taxonomy_node_is_universal_semantic_identity": False,
             "exact_taxonomy_backing_can_support_subject_review_but_not_self_admission": True,
             "canonical_school_pool_is_authoritative_identity_pool_not_coverage_proof": True,
+            "school_exact_meaning_hint_requires_current_source_verified_identity": True,
             "reviewed_exception_asset_is_practice_evidence_not_mastery_identity": True,
             "module_membership_implies_exact_mapping": False,
             "keyword_or_fuzzy_inference_allowed": False,
