@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_indirect_speech_exact_component_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-INDIRECT-SPEECH-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-REVIEWED-REUSE-COMPOSITE-MEANINGS-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
@@ -36,6 +37,7 @@ jobs:
           python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_indirect_speech_exact_component_acceptance.py --output /tmp/indirect-b.json > /tmp/indirect-report-b.txt
           cmp /tmp/indirect-a.json /tmp/indirect-b.json
           diff -u /tmp/indirect-report-a.txt /tmp/indirect-report-b.txt
+          cmp /tmp/indirect-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-INDIRECT-SPEECH-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
           cat /tmp/indirect-report-a.txt
       - name: Verify exact source and mastery boundary
         shell: bash
@@ -49,6 +51,7 @@ jobs:
           assert data['official_oge_codifier_sha256'] == '2d83e987ddad08d405827f98dfa490721f2d67b787b2803d8c499eea7b84858a'
           assert data['object_accounting_sha256'] == 'f3aef83dab99b554a4cdec9ef8d8fbc8036d557182259ae69db182efa11b925c'
           assert data['semantic_packet_sha256'] == 'b35fb420f7a6e96ea11f47e321cae0affe363dc5ed8d6fb79ea8640ac5ac94c4'
+          assert data['normalized_sha256'] == '15a46d0f300ba66d380d2039d7943589b5e7ad8e4a945f203d3d25285045c98e'
           s = data['summary']
           assert s['accepted_admission_units'] == 1
           assert s['accepted_requirements'] == 1
@@ -60,9 +63,11 @@ jobs:
           row = data['decisions'][0]
           assert row['content_code'] == '7.25'
           assert row['requirement_id'] == 'RSK-OGE_COD-7-25-P026'
+          assert row['admission_unit_id'] == 'RAU-6ca3e333fc26afdc06c5'
           assert row['source_locator'] == 'FIPI-OGE-RU-2026-FINAL/OGE_COD p.26 7.25'
           assert row['modules'] == ['RU-PROG-09', 'RU-PROG-14']
           assert row['routes'] == ['oge']
+          assert row['authority']['packet_group'] == 'RUS-SEM-REVIEW-016'
           assert row['authority']['reviewed_composite_meaning_authority'] == 'RUSSIAN-SUBJECT-REVIEWED-REUSE-COMPOSITE-MEANINGS-v0.1.json'
           assert row['subject_semantic_status'] == 'CENTRAL_BRAIN_ACCEPTED_CANONICAL_COMPONENT_SET'
           assert row['disposition'] == 'PARTIAL_OR_COMPOSITE'
