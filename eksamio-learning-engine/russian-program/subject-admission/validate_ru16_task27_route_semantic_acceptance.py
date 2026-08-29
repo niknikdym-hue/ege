@@ -37,7 +37,6 @@ def main() -> int:
     if tracked.get("canonical_school_registry_mutated") is not False or tracked.get("new_parallel_registry_created") is not False:
         raise AssertionError("RU16 acceptance must be an overlay, not a second/canonical registry mutation")
 
-    summary = tracked.get("summary")
     expected_summary = {
         "accepted_route_semantics": 4,
         "accepted_criteria_routes": 3,
@@ -48,8 +47,8 @@ def main() -> int:
         "k7_k10_acceptances": 0,
         "false_exact_mastery_admissions": 0,
     }
-    if summary != expected_summary:
-        raise AssertionError(f"RU16 tracked acceptance summary drift: {summary}")
+    if tracked.get("summary") != expected_summary:
+        raise AssertionError(f"RU16 tracked acceptance summary drift: {tracked.get('summary')}")
     if generated.get("summary", {}).get("accepted_route_semantics") != 4:
         raise AssertionError("derived RU16 acceptance no longer proves four semantics")
     if generated.get("summary", {}).get("false_exact_mastery_admissions") != 0:
@@ -87,7 +86,7 @@ def main() -> int:
     authority = tracked.get("authority", {})
     if authority.get("tier_a_fipi_spec_sha256") != "3b71ec81f954bc32b574a0b3b997ee37bb3bc19ae8825f11217fd7149198b476":
         raise AssertionError("RU16 Tier-A source fingerprint drift")
-    if authority.get("tier_a_locator") != "p20:panels[0,1]:task27":
+    if authority.get("tier_a_locator") != "printed_page=20;pdf_page=10;panel=right;task=27":
         raise AssertionError("RU16 Task-27 exact locator drift")
     if set(authority.get("tier_a_content_codes") or []) != {"1.4", "1.5"}:
         raise AssertionError("RU16 Task-27 content-code scope drift")
@@ -132,14 +131,14 @@ def main() -> int:
     if c053_guard.get("status") != "NARROW_GRAMMAR_CONTRIBUTOR_ONLY_NOT_K9_OWNER":
         raise AssertionError("RU16 candidate-053 boundary broadened")
 
-    serialized = canonical_json(tracked)
+    serialized = canonical_json(tracked).replace(b" ", b"")
     for forbidden in (
         b"ru-essay-language-correctness",
         b'"k4_k6_acceptances":1',
         b'"k7_k10_acceptances":1',
         b'"canonical_school_registry_mutated":true',
     ):
-        if forbidden in serialized.replace(b" ", b""):
+        if forbidden in serialized:
             raise AssertionError("RU16 bounded acceptance violated a hard boundary")
 
     print("RU16_TASK27_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE=PASS")
