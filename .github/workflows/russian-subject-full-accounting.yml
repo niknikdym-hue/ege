@@ -65,6 +65,18 @@ jobs:
           diff -u /tmp/reuse-probe-report-a.txt /tmp/reuse-probe-report-b.txt
           cat /tmp/reuse-probe-report-a.txt
           cp /tmp/reuse-probe-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EXACT-SEMANTIC-REUSE-PROBE.json
+      - name: Build exact EGE canonical component acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_ege_exact_component_acceptance.py \
+            --output /tmp/ege-component-acceptance-a.json > /tmp/ege-component-acceptance-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_ege_exact_component_acceptance.py \
+            --output /tmp/ege-component-acceptance-b.json > /tmp/ege-component-acceptance-report-b.txt
+          cmp /tmp/ege-component-acceptance-a.json /tmp/ege-component-acceptance-b.json
+          diff -u /tmp/ege-component-acceptance-report-a.txt /tmp/ege-component-acceptance-report-b.txt
+          cat /tmp/ege-component-acceptance-report-a.txt
+          cp /tmp/ege-component-acceptance-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
       - name: Preserve source and object-review authority
         shell: bash
         run: |
@@ -80,6 +92,7 @@ jobs:
             eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.json
             eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.md
             eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EXACT-SEMANTIC-REUSE-PROBE.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
           if-no-files-found: error
           retention-days: 14
       - name: Protect accepted Russian production surfaces
