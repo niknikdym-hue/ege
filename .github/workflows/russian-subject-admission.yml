@@ -119,6 +119,20 @@ jobs:
           cp /tmp/russian-ledger-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-AGGREGATE-LEDGER.json
       - name: Validate extended aggregate subject ledger
         run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_ledger_extended.py
+      - name: Build complete fail-closed object accounting twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py \
+            --output /tmp/russian-accounting-a.json > /tmp/russian-accounting-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py \
+            --output /tmp/russian-accounting-b.json > /tmp/russian-accounting-report-b.txt
+          cmp /tmp/russian-accounting-a.json /tmp/russian-accounting-b.json
+          diff -u /tmp/russian-accounting-report-a.txt /tmp/russian-accounting-report-b.txt
+          cat /tmp/russian-accounting-report-a.txt
+          cp /tmp/russian-accounting-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-COMPLETE-OBJECT-ACCOUNTING.json
+      - name: Validate complete object accounting remains semantic-blocked
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_accounting_complete.py
       - name: Upload exact subject artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -126,6 +140,7 @@ jobs:
           path: |
             eksamio-learning-engine/russian-program/subject-admission/RU13-RU16-EXACT-REVIEW-SLICE.json
             eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-AGGREGATE-LEDGER.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-COMPLETE-OBJECT-ACCOUNTING.json
             eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-REUSE-POOL.json
             eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-EXACT-REVIEW-SLICE.json
             eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-REMAINING-MODULE-EXACT-REVIEW-SLICE.json
