@@ -44,6 +44,14 @@ jobs:
           python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_content.py > /tmp/ru13-2.txt
           diff -u /tmp/ru13-1.txt /tmp/ru13-2.txt
           cat /tmp/ru13-1.txt
+      - name: Validate RU16 EGE essay learner content twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_essay_content.py > /tmp/ru16-1.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_essay_content.py > /tmp/ru16-2.txt
+          diff -u /tmp/ru16-1.txt /tmp/ru16-2.txt
+          cat /tmp/ru16-1.txt
       - name: Protect accepted Russian production surfaces
         shell: bash
         run: |
