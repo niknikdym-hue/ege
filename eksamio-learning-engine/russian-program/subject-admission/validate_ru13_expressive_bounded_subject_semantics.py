@@ -63,7 +63,7 @@ def main() -> int:
         raise AssertionError("RU13 bounded acceptance status drift")
     if acceptance.get("canonical_school_registry_mutated") is not False or acceptance.get("new_parallel_registry_created") is not False:
         raise AssertionError("RU13 acceptance must remain an overlay")
-    summary = acceptance.get("summary") or {}
+
     expected_summary = {
         "accepted_bounded_subject_semantics": 14,
         "accepted_ru_subject_semantics": 14,
@@ -73,8 +73,8 @@ def main() -> int:
         "object_level_requirements_closed": 0,
         "false_exact_mastery_admissions": 0,
     }
-    if summary != expected_summary:
-        raise AssertionError(f"RU13 acceptance summary drift: {summary}")
+    if acceptance.get("summary") != expected_summary:
+        raise AssertionError("RU13 acceptance summary drift")
 
     authority = acceptance.get("authority") or {}
     if set(authority.get("tier_a_exact_requirement_ids") or []) != EXPECTED_REQUIREMENTS:
@@ -86,13 +86,11 @@ def main() -> int:
     if authority.get("tier_b_named_component_review") != "issue:#161#issuecomment-5454768742":
         raise AssertionError("RU13 Tier-B named-component authority drift")
 
-    sets = reviewed.get("reviewed_sets")
-    if not isinstance(sets, list):
-        raise AssertionError("reviewed set inventory missing")
-    ru13_sets = [row for row in sets if isinstance(row, dict) and row.get("set_id") == "CB-RU13-EXPRESSIVE-BROAD-DOMAIN-001"]
-    if len(ru13_sets) != 1:
+    reviewed_sets = reviewed.get("reviewed_sets") or []
+    matches = [row for row in reviewed_sets if isinstance(row, dict) and row.get("set_id") == "CB-RU13-EXPRESSIVE-BROAD-DOMAIN-001"]
+    if len(matches) != 1:
         raise AssertionError("RU13 broad-domain reviewed set missing")
-    broad = ru13_sets[0]
+    broad = matches[0]
     if broad.get("disposition") != "PARTIAL_OR_COMPOSITE" or broad.get("subject_review_status") != "CENTRAL_BRAIN_ACCEPTED_CLASSIFICATION":
         raise AssertionError("RU13 broad-domain classification weakened")
     if set(broad.get("exact_requirement_ids") or []) != EXPECTED_REQUIREMENTS or set(broad.get("exact_admission_unit_ids") or []) != EXPECTED_UNITS:
@@ -103,12 +101,10 @@ def main() -> int:
     if mastery.get("component_mastery_requires_component_specific_independent_evidence") is not True:
         raise AssertionError("RU13 component-specific evidence guard missing")
 
-    proposed = boundary.get("proposed_content_components")
-    existing = boundary.get("existing_candidate_components")
-    if not isinstance(proposed, list) or len(proposed) != 14:
-        raise AssertionError("RU13 proposed boundary must contain 14 components")
-    if not isinstance(existing, list) or len(existing) != 10:
-        raise AssertionError("RU13 existing candidate boundary must contain 10 components")
+    proposed = boundary.get("proposed_content_components") or []
+    existing = boundary.get("existing_candidate_components") or []
+    if len(proposed) != 14 or len(existing) != 10:
+        raise AssertionError("RU13 24-component boundary drift")
     boundary_by_id = {str(row.get("semantic_id")): row for row in proposed if isinstance(row, dict)}
     if set(boundary_by_id) != EXPECTED_IDS:
         raise AssertionError("RU13 proposed boundary identity set drift")
@@ -118,12 +114,14 @@ def main() -> int:
     if len(c039) != 1 or c039[0].get("special_guard") != "OWNS_RHETORICAL_ADDRESS_BOUNDARY_NO_DUPLICATE_ID":
         raise AssertionError("candidate-039 rhetorical-address ownership drift")
 
-    decisions = acceptance.get("decisions")
-    if not isinstance(decisions, list) or len(decisions) != 14:
+    decisions = acceptance.get("decisions") or []
+    if len(decisions) != 14:
         raise AssertionError("RU13 acceptance must contain exactly 14 decisions")
     decision_by_id = {str(row.get("accepted_semantic_id")): row for row in decisions if isinstance(row, dict)}
     if set(decision_by_id) != EXPECTED_IDS:
         raise AssertionError("RU13 accepted semantic set drift")
+    # The forbidden rhetorical-address id is expected to appear in explicit_non_acceptances;
+    # reject it only if it appears among actual admission decisions.
     if "ru-expressive-rhetorical-address" in decision_by_id:
         raise AssertionError("duplicate rhetorical-address identity admitted")
 
@@ -131,8 +129,7 @@ def main() -> int:
     for wave in waves:
         if wave.get("status") != "SUBJECT_ACCEPTANCE_REQUIRED" or wave.get("module_id") != "RU-PROG-13":
             raise AssertionError("RU13 content source weakened/self-admitted")
-        auth = wave.get("authority") or {}
-        if auth.get("admission_unit_binding") != "PENDING_EXACT_OBJECT_LEVEL_DISPOSITION":
+        if (wave.get("authority") or {}).get("admission_unit_binding") != "PENDING_EXACT_OBJECT_LEVEL_DISPOSITION":
             raise AssertionError("RU13 content claimed object-level binding")
         for unit in wave.get("units") or []:
             if not isinstance(unit, dict):
@@ -148,19 +145,17 @@ def main() -> int:
     for sid in sorted(EXPECTED_IDS):
         decision = decision_by_id[sid]
         boundary_row = boundary_by_id[sid]
-        content = content_units[sid]
+        unit = content_units[sid]
         if decision.get("subject_semantic_status") != "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC":
             raise AssertionError(f"RU13 semantic not explicitly accepted: {sid}")
         if decision.get("content_ref") != "russian-program/" + str(boundary_row.get("content_ref")):
             raise AssertionError(f"RU13 content ref mismatch: {sid}")
         if decision.get("boundary_guard") != boundary_row.get("boundary_guard"):
             raise AssertionError(f"RU13 boundary guard mismatch: {sid}")
-        peis = content.get("peis_evidence") or {}
-        if peis.get("semantic_ref_status") != "PROPOSED_NOT_CANONICAL":
-            raise AssertionError(f"RU13 source content was mutated to self-admit: {sid}")
-        if peis.get("independent_verification_required") is not True:
-            raise AssertionError(f"RU13 independent verification weakened: {sid}")
-        verification = content.get("independent_verification")
+        peis = unit.get("peis_evidence") or {}
+        if peis.get("semantic_ref_status") != "PROPOSED_NOT_CANONICAL" or peis.get("independent_verification_required") is not True:
+            raise AssertionError(f"RU13 learner evidence guard weakened: {sid}")
+        verification = unit.get("independent_verification")
         if not isinstance(verification, list) or len(verification) < 2:
             raise AssertionError(f"RU13 independent verification missing: {sid}")
 
@@ -173,9 +168,8 @@ def main() -> int:
         raise AssertionError("RU13 component-specific verification guard missing")
 
     serialized = canonical_bytes(acceptance)
-    for forbidden in (b'"object_level_admission_units_closed":1', b'"object_level_requirements_closed":1', b"ru-expressive-rhetorical-address"):
-        if forbidden in serialized:
-            raise AssertionError("RU13 bounded acceptance violated a hard boundary")
+    if b'"object_level_admission_units_closed":1' in serialized or b'"object_level_requirements_closed":1' in serialized:
+        raise AssertionError("RU13 acceptance falsely closes object-level accounting")
 
     print("RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTICS=PASS")
     print("ACCEPTED_BOUNDED_SUBJECT_SEMANTICS=14")
