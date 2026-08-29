@@ -97,7 +97,11 @@ class YandexSpeechConfig:
     stt_endpoint: str = "https://stt.api.cloud.yandex.net/speech/v1/stt:recognize"
     tts_endpoint: str = "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize"
     language: str = "ru-RU"
+    # Backward-compatible default used when the direction-specific field is absent.
     audio_format: str = "oggopus"
+    stt_audio_format: str | None = None
+    tts_audio_format: str | None = None
+    stt_sample_rate_hertz: int | None = None
     timeout_seconds: float = 20.0
     max_input_audio_bytes: int = 1_000_000
     max_output_audio_bytes: int = 8_000_000
@@ -113,6 +117,23 @@ class YandexSpeechConfig:
             raise ValueError("speech timeout must be in (0, 60]")
         if self.max_input_audio_bytes > 1_000_000:
             raise ValueError("sync SpeechKit v1 STT input must remain <= 1 MB")
+        if self.resolved_stt_format not in {"oggopus", "lpcm"}:
+            raise ValueError("unsupported SpeechKit v1 STT audio format")
+        if self.resolved_tts_format not in {"oggopus", "lpcm", "mp3"}:
+            raise ValueError("unsupported SpeechKit TTS audio format")
+        if self.resolved_stt_format == "lpcm":
+            if self.stt_sample_rate_hertz not in {8_000, 16_000, 48_000}:
+                raise ValueError("LPCM SpeechKit STT requires an explicit supported sample rate")
+        elif self.stt_sample_rate_hertz is not None:
+            raise ValueError("STT sample rate is valid only for LPCM input")
+
+    @property
+    def resolved_stt_format(self) -> str:
+        return self.stt_audio_format or self.audio_format
+
+    @property
+    def resolved_tts_format(self) -> str:
+        return self.tts_audio_format or self.audio_format
 
 
 class YandexTextProvider:
@@ -214,6 +235,7 @@ class YandexSpeechKitProvider:
     def __repr__(self) -> str:
         return (
             f"YandexSpeechKitProvider(voice={self.config.voice!r}, language={self.config.language!r}, "
+            f"stt_format={self.config.resolved_stt_format!r}, tts_format={self.config.resolved_tts_format!r}, "
             f"execution_enabled={self.config.execution_enabled!r}, credential='<redacted>')"
         )
 
@@ -227,7 +249,9 @@ class YandexSpeechKitProvider:
             raise VoiceProviderFailure("invalid transient STT input")
         if len(audio) > self.config.max_input_audio_bytes:
             raise VoiceProviderFailure("transient STT input exceeds configured bound")
-        params = {"lang": self.config.language, "format": self.config.audio_format}
+        params = {"lang": self.config.language, "format": self.config.resolved_stt_format}
+        if self.config.resolved_stt_format == "lpcm" and self.config.stt_sample_rate_hertz:
+            params["sampleRateHertz"] = str(self.config.stt_sample_rate_hertz)
         if self.config.folder_id and self.config.credential.kind is CredentialKind.IAM_TOKEN:
             params["folderId"] = self.config.folder_id
         try:
@@ -256,7 +280,7 @@ class YandexSpeechKitProvider:
             "text": text,
             "lang": self.config.language,
             "voice": self.config.voice,
-            "format": self.config.audio_format,
+            "format": self.config.resolved_tts_format,
         }
         if self.config.folder_id and self.config.credential.kind is CredentialKind.IAM_TOKEN:
             fields["folderId"] = self.config.folder_id
