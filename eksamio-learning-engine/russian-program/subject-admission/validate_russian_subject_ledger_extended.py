@@ -8,7 +8,7 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 BUILDER = HERE / "build_russian_subject_ledger_extended.py"
-REUSE_COMPOSITES = HERE / "RUSSIAN-SUBJECT-REVIEWED-REUSE-COMPOSITES-v0.1.json"
+MEANING_AUTHORITY = HERE / "RUSSIAN-SUBJECT-REVIEWED-REUSE-COMPOSITE-MEANINGS-v0.1.json"
 EXPECTED_SUMMARY = {
     "admission_units_total": 1325,
     "requirements_total": 1400,
@@ -24,8 +24,8 @@ EXPECTED_DISPOSITIONS = {
     "PARTIAL_OR_COMPOSITE": {"admission_units": 486, "requirements": 513},
     "ROUTE_OR_FORMAT_ONLY": {"admission_units": 9, "requirements": 9},
 }
-EXPECTED_REUSE_SOURCE_SUMMARY = {
-    "reviewed_sets": 39,
+EXPECTED_MATERIALIZED = {
+    "reviewed_meanings": 39,
     "accepted_classification_units": 373,
     "accepted_classification_requirements": 397,
     "semantic_admissions": 0,
@@ -33,21 +33,40 @@ EXPECTED_REUSE_SOURCE_SUMMARY = {
 
 
 def main() -> int:
-    source = json.loads(REUSE_COMPOSITES.read_text(encoding="utf-8"))
-    if source.get("summary") != EXPECTED_REUSE_SOURCE_SUMMARY:
-        raise AssertionError(f"reviewed reuse composite source summary drift: {source.get('summary')}")
-    sets = source.get("reviewed_sets")
-    if not isinstance(sets, list) or len(sets) != 39:
-        raise AssertionError("reviewed reuse composite set count drift")
-    expected_set_ids = {f"CB-REUSE-COMPOSITE-{number:03d}" for number in range(1, 40)}
-    if {str(row.get("set_id")) for row in sets} != expected_set_ids:
-        raise AssertionError("reviewed reuse composite set-id coverage drift")
-    if any(row.get("disposition") != "PARTIAL_OR_COMPOSITE" for row in sets):
-        raise AssertionError("reviewed reuse composite source escaped PARTIAL_OR_COMPOSITE")
-    if any(row.get("subject_review_status") != "CENTRAL_BRAIN_ACCEPTED_CLASSIFICATION" for row in sets):
-        raise AssertionError("reviewed reuse composite source contains an unaccepted classification")
+    authority = json.loads(MEANING_AUTHORITY.read_text(encoding="utf-8"))
+    if authority.get("expected_materialized_summary") != EXPECTED_MATERIALIZED:
+        raise AssertionError("reuse composite meaning authority expected totals drift")
+    meanings = authority.get("exact_normalized_meanings")
+    if not isinstance(meanings, list) or len(meanings) != 39 or len(set(meanings)) != 39:
+        raise AssertionError("reuse composite meaning authority coverage drift")
+    if any(not isinstance(meaning, str) or ". " not in meaning for meaning in meanings):
+        raise AssertionError("reuse composite meaning authority contains an atomic/non-exact review meaning")
+    if authority.get("selection_rule") != "EXACT_NORMALIZED_MEANING_EQUALITY_WITHIN_PINNED_REVIEW_SLICE_ONLY":
+        raise AssertionError("reuse composite meaning selection rule weakened")
+    policy = authority.get("policy", {})
+    if policy.get("keyword_or_fuzzy_inference_allowed") is not False:
+        raise AssertionError("keyword/fuzzy review inference was enabled")
+    if policy.get("classification_only_no_semantic_admission") is not True:
+        raise AssertionError("reuse composite meaning authority escaped classification-only mode")
 
     namespace = runpy.run_path(str(BUILDER))
+    materialize = namespace["materialize_reviewed_sets"]
+    # The materializer itself needs the existing base ledger solely to subtract
+    # already dispositioned exact units before selecting exact normalized meanings.
+    base_namespace = runpy.run_path(str(HERE / "build_russian_subject_ledger.py"))
+    base_ledger = base_namespace["build_ledger"]()
+    materialized: dict[str, Any] = materialize(base_ledger)
+    if materialized.get("summary") != EXPECTED_MATERIALIZED:
+        raise AssertionError(f"reuse composite materialized totals drift: {materialized.get('summary')}")
+    materialized_sets = materialized.get("reviewed_sets")
+    if not isinstance(materialized_sets, list) or len(materialized_sets) != 39:
+        raise AssertionError("reuse composite materialization set count drift")
+    expected_set_ids = {f"CB-REUSE-COMPOSITE-{number:03d}" for number in range(1, 40)}
+    if {str(row.get("set_id")) for row in materialized_sets} != expected_set_ids:
+        raise AssertionError("reuse composite materialization set ids drift")
+    if {str(row.get("expected_normalized_meaning")) for row in materialized_sets} != set(meanings):
+        raise AssertionError("reuse composite materialization escaped exact accepted meanings")
+
     ledger: dict[str, Any] = namespace["build_ledger"]()
     if ledger.get("summary") != EXPECTED_SUMMARY:
         raise AssertionError(f"extended exact ledger totals drift: {ledger.get('summary')}")
@@ -56,7 +75,7 @@ def main() -> int:
 
     rows = ledger.get("dispositions")
     if not isinstance(rows, list) or len(rows) != 495:
-        raise AssertionError("extended ledger must contain exactly 495 admitted classification rows")
+        raise AssertionError("extended ledger must contain exactly 495 exact classification rows")
     unit_ids = [str(row.get("admission_unit_id", "")) for row in rows]
     if len(unit_ids) != len(set(unit_ids)):
         raise AssertionError("extended ledger duplicates admission units")
@@ -68,7 +87,10 @@ def main() -> int:
     if len(requirement_ids) != 522 or len(requirement_ids) != len(set(requirement_ids)):
         raise AssertionError("extended ledger duplicates or misses exact requirements")
 
-    reuse_rows = [row for row in rows if row.get("decision_source") == REUSE_COMPOSITES.name]
+    reuse_rows = [
+        row for row in rows
+        if str(row.get("decision_set_id", "")).startswith("CB-REUSE-COMPOSITE-")
+    ]
     if len(reuse_rows) != 373:
         raise AssertionError(f"reviewed reuse composite row count drift: {len(reuse_rows)}")
     if sum(len(row.get("members", [])) for row in reuse_rows) != 397:
@@ -82,8 +104,8 @@ def main() -> int:
         if row.get("semantic_identity_ref") is not None:
             raise AssertionError("reviewed reuse classification admitted a semantic identity")
         meaning = str(row.get("normalized_meaning", ""))
-        if ". " not in meaning:
-            raise AssertionError("reviewed reuse composite row is not an exact multi-capability meaning")
+        if meaning not in set(meanings):
+            raise AssertionError("reviewed reuse ledger row escaped exact accepted meaning authority")
         components = row.get("component_refs")
         if not isinstance(components, list) or len(components) < 2:
             raise AssertionError("reviewed reuse row lacks derived capability boundaries")
