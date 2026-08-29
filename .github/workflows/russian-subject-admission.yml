@@ -1,0 +1,37 @@
+name: Russian subject admission candidate
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/**"
+      - "eksamio-learning-engine/russian-program/object-review/**"
+      - "eksamio-learning-engine/russian-program/source-knowledge/**"
+      - ".github/workflows/russian-subject-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  route-format-dispositions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate accepted source knowledge
+        run: python3 eksamio-learning-engine/russian-program/source-knowledge/validate_russian_source_knowledge.py
+      - name: Validate object review queue
+        run: python3 eksamio-learning-engine/russian-program/object-review/validate_object_level_review_queue.py
+      - name: Validate exact route/format disposition slice twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_dispositions.py > /tmp/russian-subject-1.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_dispositions.py > /tmp/russian-subject-2.txt
+          diff -u /tmp/russian-subject-1.txt /tmp/russian-subject-2.txt
+          cat /tmp/russian-subject-1.txt
+      - name: Diff hygiene
+        run: git diff --check
