@@ -4,8 +4,8 @@
 The base 74-group packet stays the complete review universe. Object-bound
 canonical component-set acceptances reduce the remaining object count only when
 an exact admission-unit/requirement binding is proven. Bounded route-semantic
-acceptances (currently RU16 Task-27 K1-K3) are tracked separately and never
-subtract an object-level requirement until a separate exact binding exists.
+acceptances (currently RU16 Task-27 K1-K3 and K5) are tracked separately and
+never subtract an object-level requirement until a separate exact binding exists.
 """
 from __future__ import annotations
 
@@ -39,6 +39,12 @@ ROUTE_SEMANTIC_AUTHORITIES = (
         "CENTRAL_BRAIN_ACCEPTED_RU16_TASK27_K1_K3_ROUTE_SEMANTICS",
         4,
         "RU16_TASK27_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1",
+    ),
+    (
+        HERE / "RU16-TASK27-K5-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json",
+        "CENTRAL_BRAIN_ACCEPTED_RU16_TASK27_K5_ROUTE_SEMANTIC",
+        1,
+        "RU16_TASK27_K5_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1",
     ),
 )
 
@@ -93,6 +99,8 @@ def build_progress() -> dict[str, Any]:
         if authority.get("new_parallel_registry_created") is not False:
             raise ValueError(f"route-semantic authority created a parallel registry: {path.name}")
         rows = authority.get("decisions")
+        if rows is None and isinstance(authority.get("decision"), dict):
+            rows = [authority["decision"]]
         if not isinstance(rows, list) or len(rows) != expected_count:
             raise ValueError(f"unexpected route-semantic decision count: {path.name}")
         refs = {str(row.get("accepted_semantic_id", "")) for row in rows}
