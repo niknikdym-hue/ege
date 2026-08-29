@@ -68,6 +68,38 @@
         "generic_domain_attempt_can_emit_partial_or_composite_evidence": true,
         "component_mastery_requires_component_specific_independent_evidence": true
       }
+    },
+    {
+      "set_id": "CB-RU16-BROAD-ESSAY-COMPOSITE-001",
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED_CLASSIFICATION",
+      "disposition": "PARTIAL_OR_COMPOSITE",
+      "rationale": "The exact normalized review meaning combines two independently assessable learner operations: analysis of the source text and construction of a route essay. The six enumerated source-specific admission units span EGE, OGE and school authorities, so this set is classification-only: it prevents false exact mastery and does not claim one route-specific content bundle or semantic identity covers all six source rows.",
+      "expected_normalized_meaning": "Анализировать исходный текст и строить сочинение маршрута ЕГЭ.",
+      "exact_admission_unit_ids": [
+        "RAU-c898f2a0d0a257786030",
+        "RAU-f1a4cbdba923a06d22e5",
+        "RAU-99c275cbfd99491d687b",
+        "RAU-be06422d548c67f8956d",
+        "RAU-e27c1a25ffdf42be7cad",
+        "RAU-f5726a12a14447bfe44a"
+      ],
+      "exact_requirement_ids": [
+        "RSK-EGE_COD-2-1-3-P002",
+        "RSK-EGE_COD-1-2-4-P002",
+        "RSK-OGE_COD-2-1-2-P003",
+        "RSK-OGE_COD-3-1-1-P004",
+        "RSK-OGE_COD-1-2-5-P003",
+        "RSK-EDSOO59-1-5-P186"
+      ],
+      "components": [
+        {"ref_kind": "review_capability_boundary", "ref": "review-boundary:source-text-analysis", "label": "Анализировать исходный текст.", "status": "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION"},
+        {"ref_kind": "review_capability_boundary", "ref": "review-boundary:route-essay-construction", "label": "Строить сочинение маршрута ЕГЭ.", "status": "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION"}
+      ],
+      "mastery_boundary": {
+        "generic_domain_attempt_can_emit_exact_component_mastery": false,
+        "generic_domain_attempt_can_emit_partial_or_composite_evidence": true,
+        "component_mastery_requires_component_specific_independent_evidence": true
+      }
     }
   ]
 }
