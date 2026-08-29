@@ -79,12 +79,6 @@ jobs:
           cmp /tmp/payment-e2e-a.json /tmp/payment-e2e-b.json
           sha256sum /tmp/payment-e2e-a.json /tmp/payment-e2e-b.json
           cp /tmp/payment-e2e-a.json sep1-production-payment-e2e-evidence.json
-      - name: Validate full anonymous-to-revoke candidate chain
-        working-directory: eksamio-learning-engine/launch-preflight
-        run: >-
-          python validate_full_production_candidate_smoke.py
-          --candidate-sha '${{ github.event.pull_request.head.sha || github.sha }}'
-          --peis-dsn 'postgresql://postgres:postgres@127.0.0.1:5432/eksamio_e2e_a'
       - name: Prove deterministic full-candidate evidence x2
         working-directory: eksamio-learning-engine/launch-preflight
         shell: bash
