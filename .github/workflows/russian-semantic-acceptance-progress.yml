@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Review RU01 phonetics subject boundary without admission
+      - name: Review RU01 phonetics subject boundary
         shell: bash
         run: |
           set -euo pipefail
@@ -37,6 +37,7 @@ jobs:
           cmp /tmp/ru01-a.json /tmp/ru01-b.json
           diff -u /tmp/ru01-a.txt /tmp/ru01-b.txt
           cat /tmp/ru01-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru01_phonetics_bounded_subject_semantics.py
       - name: Build semantic acceptance progress twice
         shell: bash
         run: |
@@ -73,13 +74,17 @@ jobs:
               'RU16_TASK27_K5_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
               'RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
           }
-          assert len(data['accepted_authorities']) == 9
+          assert len(data['accepted_authorities']) == 10
           assert {a['id'] for a in data['accepted_authorities']} == expected_authorities
 
-          ru13 = next(a for a in data['accepted_authorities'] if a['id'] == 'RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1')
-          ru13_existing = next(a for a in data['accepted_authorities'] if a['id'] == 'RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1')
-          for authority, count in ((ru13, 14), (ru13_existing, 10)):
+          for authority_id, count in (
+              ('RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 14),
+              ('RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 10),
+              ('RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
+          ):
+              authority = next(a for a in data['accepted_authorities'] if a['id'] == authority_id)
               assert authority['authority_kind'] == 'BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_WITHOUT_OBJECT_BINDING'
               assert authority['accepted_admission_units'] == 0
               assert authority['accepted_requirements'] == 0
@@ -100,12 +105,12 @@ jobs:
           assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1372
           assert s['canonical_component_refs_reused_unique'] == 52
           assert s['accepted_bounded_ru_route_semantics'] == 5
-          assert s['accepted_bounded_ru_subject_semantics'] == 24
-          assert s['accepted_bounded_ru_semantics_total'] == 29
+          assert s['accepted_bounded_ru_subject_semantics'] == 27
+          assert s['accepted_bounded_ru_semantics_total'] == 32
           assert s['accepted_route_semantics_without_object_binding'] == 5
-          assert s['accepted_subject_semantics_without_object_binding'] == 24
+          assert s['accepted_subject_semantics_without_object_binding'] == 27
           assert s['new_semantic_identities_created'] == 0
-          assert s['ru_proposal_identities_admitted'] == 29
+          assert s['ru_proposal_identities_admitted'] == 32
           assert s['false_exact_mastery_admissions'] == 0
 
           expected_route = {
@@ -140,6 +145,9 @@ jobs:
               'ru-expressive-epithet',
               'ru-expressive-metaphor',
               'ru-expressive-comparison',
+              'ru-phonetics-sound-letter-relation',
+              'ru-phonetics-vowel-consonant-features',
+              'ru-phonetics-word-analysis-sequence',
           }
           assert set(data['accepted_route_semantic_refs']) == expected_route
           assert set(data['accepted_subject_semantic_refs']) == expected_subject
