@@ -1,17 +1,20 @@
 {
-  "schema_version": "0.1.0",
-  "status": "CENTRAL_BRAIN_COMPONENT_BOUNDARY_REVIEW_PARTIAL",
+  "schema_version": "0.1.1",
+  "status": "CENTRAL_BRAIN_COMPONENT_BOUNDARY_REVIEW_PARTIAL_WITH_K1_K3_ROUTE_SEMANTICS_ACCEPTED",
   "authority_issue": 161,
   "route": "EGE_2026_TASK_27",
   "normalized_meaning": "Анализировать исходный текст и строить сочинение маршрута ЕГЭ.",
-  "admission_effect": "NONE_UNTIL_EXPLICIT_CANONICAL_SEMANTIC_ACCEPTANCE",
+  "admission_effect": "FOUR_K1_K3_ROUTE_SEMANTICS_ACCEPTED_REMAINDER_FAIL_CLOSED",
+  "acceptance_overlay_ref": "RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json",
   "summary": {
     "route_criteria": 10,
     "explicit_assessment_components": 11,
     "candidate_bound_learner_components": 7,
     "cross_module_quality_dimensions": 4,
-    "canonical_semantic_admissions": 0,
-    "ru_proposal_admissions": 0,
+    "accepted_route_semantics": 4,
+    "pending_candidate_bound_components": 3,
+    "canonical_school_semantic_admissions": 0,
+    "ru_proposal_admissions": 4,
     "new_essay_specific_quality_identities": 0
   },
   "policy": {
@@ -22,7 +25,8 @@
     "generic_essay_attempt_can_emit_component_mastery": false,
     "component_specific_independent_evidence_required": true,
     "k2_components_must_remain_separate": true,
-    "k7_k10_must_reuse_cross_module_semantics": true
+    "k7_k10_must_reuse_cross_module_semantics": true,
+    "tier_b_may_refine_but_not_expand_tier_a": true
   },
   "candidate_bound_components": [
     {
@@ -31,7 +35,8 @@
       "proposed_semantic_id": "ru-ege-essay-author-position",
       "criterion_route": "K1",
       "content_ref": "production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json",
-      "status": "SOURCE_VERIFIED_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_ADMITTED"
+      "acceptance_ref": "RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-048",
+      "status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC"
     },
     {
       "candidate_ref": "candidate-049",
@@ -39,7 +44,8 @@
       "proposed_semantic_id": "ru-ege-essay-source-examples-explanation",
       "criterion_route": "K2_COMPONENT",
       "content_ref": "production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json",
-      "status": "SOURCE_VERIFIED_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_ADMITTED"
+      "acceptance_ref": "RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-049",
+      "status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC"
     },
     {
       "candidate_ref": "candidate-050",
@@ -47,7 +53,8 @@
       "proposed_semantic_id": "ru-ege-essay-example-semantic-relation",
       "criterion_route": "K2_COMPONENT",
       "content_ref": "production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json",
-      "status": "SOURCE_VERIFIED_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_ADMITTED"
+      "acceptance_ref": "RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-050",
+      "status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC"
     },
     {
       "candidate_ref": "candidate-051",
@@ -55,7 +62,8 @@
       "proposed_semantic_id": "ru-ege-essay-own-relation-justification",
       "criterion_route": "K3",
       "content_ref": "production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json",
-      "status": "SOURCE_VERIFIED_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_ADMITTED"
+      "acceptance_ref": "RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-051",
+      "status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC"
     },
     {
       "candidate_ref": "candidate-054",
@@ -67,7 +75,7 @@
         "53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json#criteria[K4]",
         "55-RUSSIAN-ESSAY-27-EXPLANATION-COMPONENTS-v0.1.json#essay_fact_logic_review"
       ],
-      "status": "CRITERION_PROVEN_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_ADMITTED"
+      "status": "GRANULARITY_REVIEW_OPEN_NOT_ADMITTED"
     },
     {
       "candidate_ref": "candidate-052",
@@ -96,6 +104,7 @@
       "ru-ege-essay-source-examples-explanation",
       "ru-ege-essay-example-semantic-relation"
     ],
+    "component_acceptance_status": "BOTH_COMPONENTS_ACCEPTED_SEPARATELY",
     "mastery_rule": "Neither component alone may be represented as complete K2 mastery; independent evidence must preserve both abilities."
   },
   "cross_module_quality_dimensions": [
@@ -138,8 +147,9 @@
   "cross_boundary_guards": [
     "K1 author position is distinct from the learner's own K3 relation/justification",
     "K2 source examples/explanation is distinct from K2 semantic relation between the examples",
-    "K4 factual accuracy is distinct from K5 logic/composition/cohesion",
-    "K6 ethical compliance is a bounded route criterion and must not expand into unrestricted moral judgement",
+    "K4 factual accuracy remains unaccepted while candidate-054 granularity is needs_review",
+    "K5 logic/composition/cohesion remains a separate bounded acceptance decision",
+    "K6 ethical compliance remains a bounded route criterion and must not expand into unrestricted moral judgement",
     "K7-K10 reuse exact cross-module semantic evidence and never create essay-specific duplicates",
     "candidate-053 is a narrow grammar contributor and cannot own generic K9 or essay correctness"
   ]
