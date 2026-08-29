@@ -26,7 +26,7 @@ EXPECTED_CONTENT_IDS = {
     "ru-grammar-comparative-degree-norm",
     "ru-grammar-form-selection-common-norms",
 }
-ALLOWED_CANDIDATE_REVIEW_STATES = {"draft", "source_verified"}
+ALLOWED_CANDIDATE_REVIEW_STATES = {"draft", "needs_review"}
 
 
 def canonical_json(value: Any) -> bytes:
@@ -126,6 +126,9 @@ def build_review() -> dict[str, Any]:
             "provenance_refs": list(row.get("evidence_provenance_refs") or []),
         })
 
+    if candidate_rows["candidate-053"].get("review_status") != "needs_review":
+        raise ValueError("RU07 candidate-053 review state changed; comparative-degree relation must be re-reviewed")
+
     relation_decisions = [
         {
             "candidate_ref": "candidate-026",
@@ -137,9 +140,9 @@ def build_review() -> dict[str, Any]:
         {
             "candidate_ref": "candidate-053",
             "content_semantic_id": "ru-grammar-comparative-degree-norm",
-            "relation": "MEANING_ALIGNMENT_CANDIDATE_EXACT_ACCEPTANCE_REVIEW_REQUIRED",
+            "relation": "MEANING_ALIGNMENT_WITH_NEEDS_REVIEW_CANDIDATE_NO_ACCEPTANCE",
             "acceptance_effect": "NONE",
-            "reason": "The candidate explicitly names normative comparative-degree forms, but a candidate ref is not a canonical id even when its source evidence is verified; exact semantic admission requires a separate acceptance authority bound to source evidence and the content boundary.",
+            "reason": "The observed meanings align around normative comparative-degree forms, but candidate-053 is explicitly needs_review and is not a canonical id; no semantic admission is permitted until its source/identity boundary is separately resolved and accepted.",
         },
         {
             "candidate_ref": "candidate-025+candidate-027+other_RU07_norm_families",
@@ -151,7 +154,7 @@ def build_review() -> dict[str, Any]:
     ]
 
     result: dict[str, Any] = {
-        "schema_version": "0.1.1",
+        "schema_version": "0.1.2",
         "status": "CENTRAL_BRAIN_RU07_GRAMMAR_NORMS_REUSE_FIRST_BOUNDARY_REVIEW_ACCEPTANCE_NOT_ADMITTED",
         "authority_issue": 161,
         "module_id": TARGET_MODULE,
@@ -164,7 +167,7 @@ def build_review() -> dict[str, Any]:
         "reuse_review": {
             "current_proposed_id_collisions": 0,
             "exact_existing_owner_reuses_admitted": 0,
-            "meaning_alignment_candidates_requiring_separate_acceptance": 1,
+            "needs_review_candidates_blocking_exact_alignment": 1,
             "bounded_subset_relations": 1,
             "composite_no_single_owner_relations": 1,
             "school_registry_mutation_required": False,
@@ -173,12 +176,12 @@ def build_review() -> dict[str, Any]:
         "policy": {
             "reuse_first": True,
             "candidate_ref_is_canonical_id": False,
-            "source_verified_candidate_ref_is_canonical_id": False,
+            "needs_review_candidate_ref_is_canonical_id": False,
             "content_presence_implies_acceptance": False,
             "module_membership_implies_exact_owner": False,
             "subset_evidence_can_admit_broader_candidate": False,
             "composite_content_can_emit_single_candidate_mastery": False,
-            "candidate_alignment_requires_explicit_acceptance_authority": True,
+            "needs_review_candidate_can_be_admitted": False,
             "component_specific_independent_evidence_required": True,
             "semantic_acceptance_can_reduce_object_counts_without_exact_binding": False,
             "keyword_or_fuzzy_inference_allowed": False,
@@ -211,9 +214,9 @@ def main() -> int:
         print("CANDIDATE_RECORDS_REVIEWED=4")
         print("CONTENT_SEMANTICS_REVIEWED=3")
         print("DRAFT_CANDIDATE_RECORDS=" + str(result["candidate_review_status_counts"].get("draft", 0)))
-        print("SOURCE_VERIFIED_CANDIDATE_RECORDS=" + str(result["candidate_review_status_counts"].get("source_verified", 0)))
+        print("NEEDS_REVIEW_CANDIDATE_RECORDS=" + str(result["candidate_review_status_counts"].get("needs_review", 0)))
         print("EXACT_EXISTING_OWNER_REUSES_ADMITTED=0")
-        print("MEANING_ALIGNMENT_CANDIDATES_REQUIRING_SEPARATE_ACCEPTANCE=1")
+        print("NEEDS_REVIEW_CANDIDATES_BLOCKING_EXACT_ALIGNMENT=1")
         print("BOUNDED_SUBSET_RELATIONS=1")
         print("COMPOSITE_NO_SINGLE_OWNER_RELATIONS=1")
         print("SEMANTIC_ADMISSIONS=0")
