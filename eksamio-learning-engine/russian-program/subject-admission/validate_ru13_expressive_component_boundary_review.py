@@ -14,7 +14,18 @@ WAVES = (
     PROGRAM / "production-learning-content" / "RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json",
 )
 
-EXPECTED_CANDIDATES = {f"candidate-{number:03d}" for number in range(33, 43)}
+EXPECTED_CANDIDATE_SOURCES = {
+    "candidate-033": "device_assonance",
+    "candidate-034": "device_hyperbole",
+    "candidate-035": "device_metonymy",
+    "candidate-036": "device_anaphora",
+    "candidate-037": "device_parcellation",
+    "candidate-038": "device_homogeneous_rows",
+    "candidate-039": "device_address",
+    "candidate-040": "device_epithet",
+    "candidate-041": "device_metaphor",
+    "candidate-042": "device_comparison",
+}
 EXPECTED_PROPOSED = {
     "ru-expressive-alliteration",
     "ru-expressive-personification",
@@ -67,20 +78,21 @@ def main() -> int:
     proposed = review.get("proposed_content_components")
     if not isinstance(existing, list) or not isinstance(proposed, list):
         raise AssertionError("RU13 component arrays are invalid")
-    if {str(row.get("ref")) for row in existing} != EXPECTED_CANDIDATES:
-        raise AssertionError("RU13 existing candidate set drift")
+    actual_sources = {str(row.get("ref")): str(row.get("source_id")) for row in existing}
+    if actual_sources != EXPECTED_CANDIDATE_SOURCES:
+        raise AssertionError(f"RU13 existing candidate/source mapping drift: {actual_sources}")
     proposed_ids = {str(row.get("semantic_id")) for row in proposed}
     if proposed_ids != EXPECTED_PROPOSED:
         raise AssertionError("RU13 proposed content semantic set drift")
-    if len({str(row.get("semantic_id")) for row in existing} | proposed_ids) != 24:
-        raise AssertionError("RU13 component semantic ids overlap")
+    if set(actual_sources.values()).intersection(proposed_ids):
+        raise AssertionError("RU13 existing source ids overlap proposed semantic ids")
 
     for row in existing:
         if row.get("status") != "EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED":
             raise AssertionError("existing RU13 candidate was silently admitted/boundary-accepted")
-        if not str(row.get("semantic_id", "")).startswith("ru-expressive-"):
-            raise AssertionError("existing RU13 candidate semantic id drift")
     address = next(row for row in existing if row.get("ref") == "candidate-039")
+    if address.get("source_id") != "device_address":
+        raise AssertionError("candidate-039 source boundary drift")
     if address.get("special_guard") != "OWNS_RHETORICAL_ADDRESS_BOUNDARY_NO_DUPLICATE_ID":
         raise AssertionError("candidate-039 rhetorical-address ownership guard drift")
 
@@ -91,12 +103,26 @@ def main() -> int:
         if len(guard) < 20:
             raise AssertionError(f"RU13 proposed semantic lacks bounded scope: {row.get('semantic_id')}")
 
-    inventory_text = INVENTORY.read_text(encoding="utf-8")
-    for row in existing:
-        if str(row["ref"]) not in inventory_text or str(row["semantic_id"]) not in inventory_text:
-            raise AssertionError(f"existing RU13 candidate evidence missing from inventory: {row['ref']}")
-    if "candidate-039" not in inventory_text or "ru-expressive-address" not in inventory_text:
-        raise AssertionError("existing address semantic evidence missing")
+    inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
+    inventory_objects = inventory.get("objects", [])
+    for candidate_ref, source_id in EXPECTED_CANDIDATE_SOURCES.items():
+        matches = [
+            row for row in inventory_objects
+            if isinstance(row, dict)
+            and row.get("candidate_canonical_owner") == candidate_ref
+            and row.get("source_id") == source_id
+        ]
+        if len(matches) != 1:
+            raise AssertionError(f"exact existing candidate/source evidence mismatch: {candidate_ref}/{source_id}")
+        row = matches[0]
+        if row.get("authority_status") != "current" or row.get("review_status") != "source_verified":
+            raise AssertionError(f"existing RU13 source evidence is not current/source-verified: {candidate_ref}")
+        if row.get("audit_classification") != "EGE_TAXONOMY_NODE":
+            raise AssertionError(f"existing RU13 source evidence classification drift: {candidate_ref}")
+        refs = row.get("evidence_provenance_refs")
+        expected_ref = f"03-RUSSIAN-SKILL-GRAPH.json#skills[{source_id}]"
+        if not isinstance(refs, list) or expected_ref not in refs:
+            raise AssertionError(f"existing RU13 source provenance drift: {candidate_ref}")
 
     wave_texts = [path.read_text(encoding="utf-8") for path in WAVES]
     for semantic_id in EXPECTED_PROPOSED:
@@ -123,6 +149,7 @@ def main() -> int:
     print("EXPLICIT_COMPONENTS=24")
     print("PROPOSED_DEFINITION_BOUNDARIES_READY=14")
     print("EXISTING_CANDIDATE_BOUNDARIES_NEED_EXACT_EVIDENCE=10")
+    print("EXISTING_CANDIDATE_SOURCE_EVIDENCE_VERIFIED=10")
     print("CANONICAL_SEMANTIC_ADMISSIONS=0")
     print("RU_PROPOSAL_ADMISSIONS=0")
     print("RHETORICAL_ADDRESS_DUPLICATES=0")
