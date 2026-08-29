@@ -53,6 +53,7 @@ jobs:
             eksamio-learning-engine/ai-tutor-reference/stdlib_speechkit_transport.py \
             eksamio-learning-engine/ai-tutor-reference/resilient_voice_tutor.py \
             eksamio-learning-engine/ai-tutor-reference/private_staging_multi_provider_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/private_multi_provider_tutor_test_ui.py \
             eksamio-learning-engine/ai-tutor-reference/validate_multi_provider_tutor.py
 
       - name: Validate OpenAI Qwen Yandex parity and failover
@@ -66,6 +67,16 @@ jobs:
 
       - name: Preserve existing OpenAI plus Yandex staging boundary
         run: python eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py
+
+      - name: Prove live-test UI cannot start without owner gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if python eksamio-learning-engine/ai-tutor-reference/private_multi_provider_tutor_test_ui.py --max-turns 20 --no-browser; then
+            echo 'ERROR: UI started without owner authorization'
+            exit 1
+          fi
+          echo 'PRIVATE_MULTI_PROVIDER_UI_OWNER_GATE=PASS'
 
       - name: Whitespace gate
         run: git diff --check HEAD^ HEAD
