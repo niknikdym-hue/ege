@@ -1,0 +1,45 @@
+name: Russian RU13 component boundary review
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU13-EXPRESSIVE-COMPONENT-BOUNDARY-REVIEW-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_component_boundary_review.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - ".github/workflows/russian-ru13-component-boundary-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  component-boundary-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate RU13 component boundary review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_component_boundary_review.py > /tmp/ru13-boundary-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_component_boundary_review.py > /tmp/ru13-boundary-b.txt
+          diff -u /tmp/ru13-boundary-a.txt /tmp/ru13-boundary-b.txt
+          cat /tmp/ru13-boundary-a.txt
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed in RU13 boundary review.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
