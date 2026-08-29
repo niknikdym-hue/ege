@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
-ENGINE = HERE.parents[2]
+ENGINE = HERE.parents[1]
 PACKET_BUILDER = HERE / "build_russian_semantic_acceptance_packet.py"
 INVENTORY = ENGINE / "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
 RU1_REGISTRY = ENGINE / "russian-program/semantic-registry/RUSSIAN-SEMANTIC-REGISTRY-RU1-v1.0.json"
