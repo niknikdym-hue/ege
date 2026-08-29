@@ -1,0 +1,48 @@
+name: Russian RU16 Task27 K5 semantic acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU16-TASK27-K5-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru16_task27_k5_route_semantic_acceptance.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/ege-task-code-relation/FIPI-EGE-2026-TASK-CODE-RELATION-v1.0.json"
+      - "eksamio-learning-engine/53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - ".github/workflows/russian-ru16-task27-k5-semantic-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru16-task27-k5:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile K5 acceptance validator
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru16_task27_k5_route_semantic_acceptance.py
+      - name: Validate K5 bounded semantic twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_task27_k5_route_semantic_acceptance.py > /tmp/k5-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_task27_k5_route_semantic_acceptance.py > /tmp/k5-b.txt
+          diff -u /tmp/k5-a.txt /tmp/k5-b.txt
+          cat /tmp/k5-a.txt
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed in K5 acceptance.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
