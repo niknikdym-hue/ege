@@ -44,7 +44,7 @@ jobs:
           import json
           from pathlib import Path
           data = json.loads(Path('RU07-GRAMMAR-NORMS-CANDIDATE-BOUNDARY-REVIEW.json').read_text(encoding='utf-8'))
-          assert data['schema_version'] == '0.1.1'
+          assert data['schema_version'] == '0.1.2'
           assert data['status'] == 'CENTRAL_BRAIN_RU07_GRAMMAR_NORMS_REUSE_FIRST_BOUNDARY_REVIEW_ACCEPTANCE_NOT_ADMITTED'
           assert data['module_id'] == 'RU-PROG-07'
           assert data['module_binding_mode'] == 'DRAFT_CANDIDATE_BINDING'
@@ -56,18 +56,21 @@ jobs:
           }
           assert len(data['candidate_inventory_snapshot']) == 4
           statuses = data['candidate_review_status_counts']
-          assert set(statuses) == {'draft', 'source_verified'}
-          assert statuses['draft'] + statuses['source_verified'] == 4
+          assert set(statuses) == {'draft', 'needs_review'}
+          assert statuses['draft'] + statuses['needs_review'] == 4
+          assert statuses['needs_review'] == 1
+          needs_review_refs = {row['candidate_ref'] for row in data['candidate_inventory_snapshot'] if row['review_status'] == 'needs_review'}
+          assert needs_review_refs == {'candidate-053'}
           relations = {row['relation'] for row in data['candidate_relation_decisions']}
           assert relations == {
               'CONTENT_IS_BOUNDED_SUBSET_OF_DRAFT_CANDIDATE',
-              'MEANING_ALIGNMENT_CANDIDATE_EXACT_ACCEPTANCE_REVIEW_REQUIRED',
+              'MEANING_ALIGNMENT_WITH_NEEDS_REVIEW_CANDIDATE_NO_ACCEPTANCE',
               'COMPOSITE_CROSS_CANDIDATE_CONTENT_NO_SINGLE_EXACT_OWNER',
           }
           reuse = data['reuse_review']
           assert reuse['current_proposed_id_collisions'] == 0
           assert reuse['exact_existing_owner_reuses_admitted'] == 0
-          assert reuse['meaning_alignment_candidates_requiring_separate_acceptance'] == 1
+          assert reuse['needs_review_candidates_blocking_exact_alignment'] == 1
           assert reuse['bounded_subset_relations'] == 1
           assert reuse['composite_no_single_owner_relations'] == 1
           assert reuse['school_registry_mutation_required'] is False
@@ -75,12 +78,12 @@ jobs:
           policy = data['policy']
           assert policy['reuse_first'] is True
           assert policy['candidate_ref_is_canonical_id'] is False
-          assert policy['source_verified_candidate_ref_is_canonical_id'] is False
+          assert policy['needs_review_candidate_ref_is_canonical_id'] is False
           assert policy['content_presence_implies_acceptance'] is False
           assert policy['module_membership_implies_exact_owner'] is False
           assert policy['subset_evidence_can_admit_broader_candidate'] is False
           assert policy['composite_content_can_emit_single_candidate_mastery'] is False
-          assert policy['candidate_alignment_requires_explicit_acceptance_authority'] is True
+          assert policy['needs_review_candidate_can_be_admitted'] is False
           assert policy['component_specific_independent_evidence_required'] is True
           assert policy['semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
           assert policy['keyword_or_fuzzy_inference_allowed'] is False
