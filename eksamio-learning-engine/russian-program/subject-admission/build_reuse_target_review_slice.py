@@ -19,8 +19,14 @@ def canonical_json(value: Any) -> bytes:
 
 def build_slice() -> dict[str, Any]:
     namespace = runpy.run_path(str(BASE_BUILDER))
-    namespace["TARGET_MODULES"] = set(TARGET_MODULES)
-    payload = namespace["build_slice"]()
+    payload = namespace["build_slice"](target_modules=TARGET_MODULES)
+    if payload.get("target_modules") != sorted(TARGET_MODULES):
+        raise ValueError(f"reuse review slice target drift: {payload.get('target_modules')}")
+    foreign_modules = set(payload.get("by_module", {})) - TARGET_MODULES
+    if foreign_modules:
+        raise ValueError(f"reuse review slice contains foreign module counters: {sorted(foreign_modules)}")
+    if any(not set(row.get("modules", [])).intersection(TARGET_MODULES) for row in payload.get("admission_units", [])):
+        raise ValueError("reuse review slice contains a unit outside the requested modules")
     payload["status"] = "EXACT_REUSE_TARGET_REVIEW_SLICE_NOT_ADMISSION_DECISION"
     payload["reuse_policy"] = {
         "reuse_pool_required_before_new_content": True,
