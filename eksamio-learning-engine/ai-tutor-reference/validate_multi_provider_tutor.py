@@ -2,11 +2,12 @@
 """Offline acceptance validator for OpenAI -> Qwen -> Yandex Tutor routing."""
 from __future__ import annotations
 
+import base64
 import os
 import sys
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 HERE = Path(__file__).resolve().parent
 ENGINE = HERE.parent
@@ -78,29 +79,33 @@ class FakeSTT:
         self.transcript = transcript
         self.fail = fail
         self.calls = 0
+        self.params: list[dict[str, str]] = []
 
     def post_binary(self, **kwargs: Any) -> Mapping[str, Any]:
         self.calls += 1
+        self.params.append(dict(kwargs.get("params") or {}))
         if self.fail:
             raise TimeoutError("fixture STT timeout")
         return {"result": self.transcript}
 
 
-class FakeTTS:
+class FakeV3TTS:
     def __init__(self, *, fail: bool = False) -> None:
         self.fail = fail
         self.calls = 0
+        self.requests: list[dict[str, Any]] = []
 
-    def post_form_bytes(self, **kwargs: Any) -> bytes:
+    def post_json_stream(self, **kwargs: Any) -> Sequence[Mapping[str, object]]:
         self.calls += 1
+        self.requests.append({"url": kwargs["url"], "headers": dict(kwargs["headers"]), "body": dict(kwargs["body"])})
         if self.fail:
             raise TimeoutError("fixture TTS timeout")
-        return b"OggS-fake-yandex-speechkit-audio"
+        data = base64.b64encode(b"ID3-fake-yandex-speechkit-v3-mp3").decode("ascii")
+        return ({"audioChunk": {"data": data}},)
 
 
 def config(mode: str, *, speech: bool = False) -> PrivateMultiProviderTutorConfig:
     return PrivateMultiProviderTutorConfig(
-        yandex_voice="fixture-voice",
         text_provider_mode=mode,  # type: ignore[arg-type]
         qwen_base_url=QWEN_BASE,
         yandex_folder_id="fixture-folder",
@@ -208,17 +213,21 @@ def voice_checks() -> None:
     with fake_credentials():
         openai = ScriptedJsonTransport([openai_success("VOICE_TEXT_OK")])
         stt = FakeSTT()
-        tts = FakeTTS()
+        tts = FakeV3TTS()
         assembly = assemble_private_multi_provider_tutor(
             engine_root=ENGINE,
             config=config("openai", speech=True),
             openai_transport=openai,
             stt_transport=stt,
-            tts_transport=tts,
+            tts_v3_transport=tts,
         )
         result = assembly.tutor.voice_turn(open_session(assembly, "voice-ok"), b"fake-transient-pcm")
         require(result.audio is not None and result.tts_provider_id == "yandex-speechkit", "voice Tutor uses Yandex SpeechKit TTS")
         require(result.asr_provider_id == "yandex-speechkit" and result.modality == "voice", "voice Tutor uses Yandex SpeechKit STT")
+        require(stt.params[0].get("format") == "lpcm" and stt.params[0].get("sampleRateHertz") == "16000", "browser voice input is sent as mono LPCM 16 kHz")
+        tts_body = tts.requests[0]["body"]
+        require({"voice": "lera"} in tts_body["hints"] and {"role": "neutral"} in tts_body["hints"] and {"speed": "1.04"} in tts_body["hints"], "SpeechKit v3 uses accepted Lera / neutral / 1.04 profile")
+        require(tts_body["outputAudioSpec"] == {"containerAudio": {"containerAudioType": "MP3"}}, "SpeechKit v3 returns browser-safe MP3")
 
         openai = ScriptedJsonTransport([openai_success("TEXT_SURVIVES_TTS")])
         assembly = assemble_private_multi_provider_tutor(
@@ -226,7 +235,7 @@ def voice_checks() -> None:
             config=config("openai", speech=True),
             openai_transport=openai,
             stt_transport=FakeSTT(),
-            tts_transport=FakeTTS(fail=True),
+            tts_v3_transport=FakeV3TTS(fail=True),
         )
         result = assembly.tutor.voice_turn(open_session(assembly, "tts-down"), b"fake-transient-pcm")
         require(result.audio is None and result.modality == "voice-text-fallback", "TTS outage degrades to text instead of losing Tutor answer")
@@ -238,7 +247,7 @@ def voice_checks() -> None:
             config=config("openai", speech=True),
             openai_transport=untouched_llm,
             stt_transport=FakeSTT(fail=True),
-            tts_transport=FakeTTS(),
+            tts_v3_transport=FakeV3TTS(),
         )
         try:
             assembly.tutor.voice_turn(open_session(assembly, "stt-down"), b"fake-transient-pcm")
@@ -253,12 +262,13 @@ def safety_checks() -> None:
     # Execution OFF must construct without reading any provider credential or requiring live endpoint/folder config.
     assembly = assemble_private_multi_provider_tutor(
         engine_root=ENGINE,
-        config=PrivateMultiProviderTutorConfig(yandex_voice="fixture-voice"),
+        config=PrivateMultiProviderTutorConfig(),
     )
     snapshot = assembly.safety_snapshot()
     require(snapshot["public_traffic_enabled"] is False, "multi-provider test assembly keeps public traffic off")
     require(snapshot["text_provider_order"] == ["openai-responses", "qwen-model-studio", "yandex-alice-ai"], "AUTO priority is OpenAI -> Qwen -> Yandex")
     require(snapshot["tts_provider"] == "yandex-speechkit" and snapshot["stt_provider"] == "yandex-speechkit", "Russian voice path is Yandex SpeechKit only")
+    require(snapshot["tts_api"] == "v3-rest" and snapshot["tts_voice"] == "lera" and snapshot["tts_role"] == "neutral" and snapshot["tts_speed"] == 1.04, "private voice path is locked to accepted Lera v3 profile")
     require(snapshot["learner_audio_persisted_bytes"] == 0, "Tutor assembly persists zero learner audio bytes")
 
 
