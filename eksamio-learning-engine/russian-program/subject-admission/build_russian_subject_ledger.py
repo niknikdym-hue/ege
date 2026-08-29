@@ -12,7 +12,10 @@ HERE = Path(__file__).resolve().parent
 PROGRAM = HERE.parent
 ENGINE = PROGRAM.parent
 LEGACY_PATH = HERE / "RUSSIAN-SUBJECT-DISPOSITIONS-v0.1.json"
-SETS_PATH = HERE / "RUSSIAN-SUBJECT-REVIEWED-SETS-v0.1.json"
+SET_PATHS = (
+    HERE / "RUSSIAN-SUBJECT-REVIEWED-SETS-v0.1.json",
+    HERE / "RUSSIAN-SUBJECT-REVIEWED-COMPOSITES-v0.1.json",
+)
 QUEUE_BUILDER = PROGRAM / "object-review" / "build_object_level_review_queue.py"
 SEMANTIC_INVENTORY = ENGINE / "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
 
@@ -28,6 +31,7 @@ ALLOWED_DISPOSITIONS = {
     "ROUTE_OR_FORMAT_ONLY",
     "RIGHTS_BLOCKED",
 }
+DERIVED_COMPOSITE_STATUS = "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION"
 
 
 def canonical_json(value: Any) -> bytes:
@@ -77,9 +81,7 @@ def load_candidate_refs() -> set[str]:
     payload = json.loads(SEMANTIC_INVENTORY.read_text(encoding="utf-8"))
     refs: set[str] = set()
     for row in payload.get("objects", []):
-        if not isinstance(row, dict):
-            continue
-        if row.get("source_system") == "semantic_candidate":
+        if isinstance(row, dict) and row.get("source_system") == "semantic_candidate":
             source_id = row.get("source_id")
             if isinstance(source_id, str):
                 refs.add(source_id)
@@ -91,17 +93,75 @@ def content_contains_semantic(content_ref: str, semantic_ref: str) -> bool:
     if not path.is_file():
         return False
     payload = json.loads(path.read_text(encoding="utf-8"))
-    for unit in payload.get("units", []):
-        if isinstance(unit, dict) and unit.get("proposed_semantic_id") == semantic_ref:
-            return True
-    return False
+    return any(
+        isinstance(unit, dict) and unit.get("proposed_semantic_id") == semantic_ref
+        for unit in payload.get("units", [])
+    )
+
+
+def derived_capability_components(meaning: str) -> list[dict[str, str]]:
+    clauses = [clause.strip() for clause in meaning.split(". ") if clause.strip()]
+    if len(clauses) < 2:
+        raise ValueError("derived composite classification requires multiple exact capability clauses")
+    result: list[dict[str, str]] = []
+    for clause in clauses:
+        label = clause if clause.endswith(".") else clause + "."
+        digest = hashlib.sha256(label.encode("utf-8")).hexdigest()[:12]
+        result.append(
+            {
+                "ref_kind": "review_capability_boundary",
+                "ref": f"review-boundary:{digest}",
+                "label": label,
+                "status": DERIVED_COMPOSITE_STATUS,
+            }
+        )
+    return result
+
+
+def normalize_components(
+    components: Any,
+    *,
+    disposition: str,
+    expected_meaning: str | None,
+    candidate_refs: set[str],
+    set_id: str,
+) -> list[dict[str, Any]]:
+    if components is None and disposition == "PARTIAL_OR_COMPOSITE" and expected_meaning:
+        components = derived_capability_components(expected_meaning)
+    if disposition == "PARTIAL_OR_COMPOSITE" and (not isinstance(components, list) or not components):
+        raise ValueError(f"PARTIAL_OR_COMPOSITE requires component refs: {set_id}")
+
+    normalized: list[dict[str, Any]] = []
+    for component in components or []:
+        if not isinstance(component, dict):
+            raise ValueError(f"invalid component in {set_id}")
+        kind = str(component.get("ref_kind", ""))
+        ref = str(component.get("ref", ""))
+        status = str(component.get("status", ""))
+        if kind == "existing_semantic_candidate":
+            if ref not in candidate_refs or not status.endswith("NOT_ADMITTED_BY_THIS_SET"):
+                raise ValueError(f"invalid existing candidate component {ref} in {set_id}")
+        elif kind == "proposed_semantic_with_content":
+            content_ref = str(component.get("content_ref", ""))
+            if not ref.startswith("ru-") or status != "PROPOSED_NOT_CANONICAL":
+                raise ValueError(f"proposed component self-admitted in {set_id}: {ref}")
+            if not content_contains_semantic(content_ref, ref):
+                raise ValueError(f"content ref does not materialize {ref}: {content_ref}")
+        elif kind == "review_capability_boundary":
+            if not ref.startswith("review-boundary:") or status != DERIVED_COMPOSITE_STATUS:
+                raise ValueError(f"invalid non-semantic review boundary in {set_id}: {ref}")
+            if not isinstance(component.get("label"), str) or not component["label"].strip():
+                raise ValueError(f"review capability boundary lacks exact label in {set_id}")
+        else:
+            raise ValueError(f"unsupported component kind in {set_id}: {kind}")
+        normalized.append(dict(component))
+    return normalized
 
 
 def build_ledger() -> dict[str, Any]:
     queue = load_queue()
     units = {str(unit["admission_unit_id"]): unit for unit in queue["admission_units"]}
     legacy = json.loads(LEGACY_PATH.read_text(encoding="utf-8"))
-    reviewed = json.loads(SETS_PATH.read_text(encoding="utf-8"))
     candidate_refs = load_candidate_refs()
 
     aggregate: list[dict[str, Any]] = []
@@ -130,7 +190,7 @@ def build_ledger() -> dict[str, Any]:
                 "subject_review_status": "CENTRAL_BRAIN_ACCEPTED",
                 "semantic_identity_ref": None,
                 "component_refs": [],
-                "decision_source": "RUSSIAN-SUBJECT-DISPOSITIONS-v0.1.json",
+                "decision_source": LEGACY_PATH.name,
                 "decision_set_id": None,
                 "rationale": "Exam structure/scoring/resource/route metadata; no learner semantic mastery.",
             }
@@ -141,95 +201,103 @@ def build_ledger() -> dict[str, Any]:
                 raise ValueError(f"duplicate requirement disposition {requirement_id}")
             seen_requirements.add(requirement_id)
 
-    sets = reviewed.get("reviewed_sets")
-    if not isinstance(sets, list):
-        raise ValueError("reviewed_sets must be a list")
     seen_set_ids: set[str] = set()
-    for decision in sets:
-        if not isinstance(decision, dict):
-            raise ValueError("invalid reviewed-set row")
-        set_id = str(decision.get("set_id", ""))
-        if not set_id or set_id in seen_set_ids:
-            raise ValueError(f"invalid/duplicate reviewed set id {set_id!r}")
-        seen_set_ids.add(set_id)
-        disposition = str(decision.get("disposition", ""))
-        if disposition not in ALLOWED_DISPOSITIONS:
-            raise ValueError(f"unsupported disposition in {set_id}: {disposition}")
-        if decision.get("subject_review_status") != "CENTRAL_BRAIN_ACCEPTED_CLASSIFICATION":
-            raise ValueError(f"reviewed set lacks Central Brain acceptance: {set_id}")
-        unit_ids = decision.get("exact_admission_unit_ids")
-        expected_requirement_ids = decision.get("exact_requirement_ids")
-        if not isinstance(unit_ids, list) or not unit_ids:
-            raise ValueError(f"reviewed set has no exact unit ids: {set_id}")
-        if len(unit_ids) != len(set(unit_ids)):
-            raise ValueError(f"duplicate exact unit ids inside {set_id}")
-        if not isinstance(expected_requirement_ids, list) or len(expected_requirement_ids) != len(set(expected_requirement_ids)):
-            raise ValueError(f"invalid exact requirement list in {set_id}")
+    for set_path in SET_PATHS:
+        reviewed = json.loads(set_path.read_text(encoding="utf-8"))
+        if reviewed.get("object_review_queue_sha256") != EXPECTED_QUEUE_SHA256:
+            raise ValueError(f"reviewed-set queue authority drift: {set_path.name}")
+        sets = reviewed.get("reviewed_sets")
+        if not isinstance(sets, list):
+            raise ValueError(f"reviewed_sets must be a list: {set_path.name}")
+        if set_path.name == "RUSSIAN-SUBJECT-REVIEWED-COMPOSITES-v0.1.json":
+            summary = reviewed.get("summary", {})
+            if summary != {
+                "reviewed_sets": 26,
+                "accepted_classification_units": 102,
+                "accepted_classification_requirements": 104,
+                "semantic_admissions": 0,
+            }:
+                raise ValueError("composite reviewed-set summary drift")
 
-        components = decision.get("components")
-        if disposition == "PARTIAL_OR_COMPOSITE" and (not isinstance(components, list) or not components):
-            raise ValueError(f"PARTIAL_OR_COMPOSITE requires component refs: {set_id}")
-        normalized_components: list[dict[str, Any]] = []
-        for component in components or []:
-            if not isinstance(component, dict):
-                raise ValueError(f"invalid component in {set_id}")
-            kind = str(component.get("ref_kind", ""))
-            ref = str(component.get("ref", ""))
-            status = str(component.get("status", ""))
-            if kind == "existing_semantic_candidate":
-                if ref not in candidate_refs or not status.endswith("NOT_ADMITTED_BY_THIS_SET"):
-                    raise ValueError(f"invalid existing candidate component {ref} in {set_id}")
-            elif kind == "proposed_semantic_with_content":
-                content_ref = str(component.get("content_ref", ""))
-                if not ref.startswith("ru-") or status != "PROPOSED_NOT_CANONICAL":
-                    raise ValueError(f"proposed component self-admitted in {set_id}: {ref}")
-                if not content_contains_semantic(content_ref, ref):
-                    raise ValueError(f"content ref does not materialize {ref}: {content_ref}")
-            else:
-                raise ValueError(f"unsupported component kind in {set_id}: {kind}")
-            normalized_components.append(dict(component))
+        for decision in sets:
+            if not isinstance(decision, dict):
+                raise ValueError("invalid reviewed-set row")
+            set_id = str(decision.get("set_id", ""))
+            if not set_id or set_id in seen_set_ids:
+                raise ValueError(f"invalid/duplicate reviewed set id {set_id!r}")
+            seen_set_ids.add(set_id)
+            disposition = str(decision.get("disposition", ""))
+            if disposition not in ALLOWED_DISPOSITIONS:
+                raise ValueError(f"unsupported disposition in {set_id}: {disposition}")
+            if decision.get("subject_review_status") != "CENTRAL_BRAIN_ACCEPTED_CLASSIFICATION":
+                raise ValueError(f"reviewed set lacks Central Brain acceptance: {set_id}")
+            unit_ids = decision.get("exact_admission_unit_ids")
+            if not isinstance(unit_ids, list) or not unit_ids or len(unit_ids) != len(set(unit_ids)):
+                raise ValueError(f"invalid exact unit ids in {set_id}")
 
-        actual_requirement_ids: set[str] = set()
-        for raw_unit_id in unit_ids:
-            unit_id = str(raw_unit_id)
-            if unit_id in seen_units:
-                raise ValueError(f"unit is dispositioned twice: {unit_id}")
-            unit = units.get(unit_id)
-            if unit is None:
-                raise ValueError(f"reviewed set references unknown unit {unit_id}")
-            exact = queue_row(unit)
             expected_meaning = decision.get("expected_normalized_meaning")
-            if expected_meaning is not None and exact["normalized_meaning"] != expected_meaning:
-                raise ValueError(f"normalized meaning mismatch for {unit_id} in {set_id}")
-            for member in exact["members"]:
-                requirement_id = str(member["requirement_id"])
-                if requirement_id in seen_requirements:
-                    raise ValueError(f"requirement is dispositioned twice: {requirement_id}")
-                actual_requirement_ids.add(requirement_id)
-            aggregate.append(
-                {
-                    **exact,
-                    "disposition": disposition,
-                    "subject_review_status": "CENTRAL_BRAIN_ACCEPTED_CLASSIFICATION",
-                    "semantic_identity_ref": None,
-                    "component_refs": normalized_components,
-                    "decision_source": "RUSSIAN-SUBJECT-REVIEWED-SETS-v0.1.json",
-                    "decision_set_id": set_id,
-                    "rationale": str(decision.get("rationale", "")),
-                    "mastery_boundary": decision.get("mastery_boundary"),
-                    "route_authority_refs": decision.get("route_authority_refs", []),
+            if expected_meaning is not None and not isinstance(expected_meaning, str):
+                raise ValueError(f"invalid expected normalized meaning in {set_id}")
+            normalized_components = normalize_components(
+                decision.get("components"),
+                disposition=disposition,
+                expected_meaning=expected_meaning,
+                candidate_refs=candidate_refs,
+                set_id=set_id,
+            )
+            mastery_boundary = decision.get("mastery_boundary")
+            if mastery_boundary is None and disposition == "PARTIAL_OR_COMPOSITE":
+                mastery_boundary = {
+                    "generic_domain_attempt_can_emit_exact_component_mastery": False,
+                    "generic_domain_attempt_can_emit_partial_or_composite_evidence": True,
+                    "component_mastery_requires_component_specific_independent_evidence": True,
                 }
-            )
-            seen_units.add(unit_id)
-            for requirement_id in [str(member["requirement_id"]) for member in exact["members"]]:
-                seen_requirements.add(requirement_id)
 
-        if actual_requirement_ids != {str(value) for value in expected_requirement_ids}:
-            raise ValueError(
-                f"exact requirement set mismatch in {set_id}: "
-                f"expected={sorted(str(value) for value in expected_requirement_ids)} "
-                f"actual={sorted(actual_requirement_ids)}"
-            )
+            actual_requirement_ids: set[str] = set()
+            for raw_unit_id in unit_ids:
+                unit_id = str(raw_unit_id)
+                if unit_id in seen_units:
+                    raise ValueError(f"unit is dispositioned twice: {unit_id}")
+                unit = units.get(unit_id)
+                if unit is None:
+                    raise ValueError(f"reviewed set references unknown unit {unit_id}")
+                exact = queue_row(unit)
+                if expected_meaning is not None and exact["normalized_meaning"] != expected_meaning:
+                    raise ValueError(f"normalized meaning mismatch for {unit_id} in {set_id}")
+                for member in exact["members"]:
+                    requirement_id = str(member["requirement_id"])
+                    if requirement_id in seen_requirements:
+                        raise ValueError(f"requirement is dispositioned twice: {requirement_id}")
+                    actual_requirement_ids.add(requirement_id)
+                aggregate.append(
+                    {
+                        **exact,
+                        "disposition": disposition,
+                        "subject_review_status": "CENTRAL_BRAIN_ACCEPTED_CLASSIFICATION",
+                        "semantic_identity_ref": None,
+                        "component_refs": normalized_components,
+                        "decision_source": set_path.name,
+                        "decision_set_id": set_id,
+                        "rationale": str(
+                            decision.get(
+                                "rationale",
+                                "Exact official meaning spans multiple independently assessable capability boundaries; classification only, no semantic admission.",
+                            )
+                        ),
+                        "mastery_boundary": mastery_boundary,
+                        "route_authority_refs": decision.get("route_authority_refs", []),
+                    }
+                )
+                seen_units.add(unit_id)
+                for requirement_id in [str(member["requirement_id"]) for member in exact["members"]]:
+                    seen_requirements.add(requirement_id)
+
+            expected_requirement_ids = decision.get("exact_requirement_ids")
+            if expected_requirement_ids is not None:
+                if not isinstance(expected_requirement_ids, list) or len(expected_requirement_ids) != len(set(expected_requirement_ids)):
+                    raise ValueError(f"invalid exact requirement list in {set_id}")
+                if actual_requirement_ids != {str(value) for value in expected_requirement_ids}:
+                    raise ValueError(f"exact requirement set mismatch in {set_id}")
 
     aggregate.sort(key=lambda row: str(row["admission_unit_id"]))
     by_disposition: dict[str, dict[str, int]] = {}
@@ -239,7 +307,7 @@ def build_ledger() -> dict[str, Any]:
         bucket["requirements"] += len(row["members"])
 
     payload: dict[str, Any] = {
-        "schema_version": "0.2.0",
+        "schema_version": "0.3.0",
         "status": "RUSSIAN_FULL_SUBJECT_ACCEPTANCE_LEDGER_PARTIAL",
         "baseline_main": legacy.get("baseline_main"),
         "object_review_queue_sha256": queue["normalized_sha256"],
