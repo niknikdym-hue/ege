@@ -15,10 +15,10 @@ TASK_RELATION = PROGRAM / "ege-task-code-relation" / "FIPI-EGE-2026-TASK-CODE-RE
 EXPECTED = {
     "admission_units_total": 1325,
     "requirements_total": 1400,
-    "accepted_classification_units": 116,
-    "accepted_classification_requirements": 119,
-    "remaining_subject_review_units": 1209,
-    "remaining_subject_review_requirements": 1281,
+    "accepted_classification_units": 122,
+    "accepted_classification_requirements": 125,
+    "remaining_subject_review_units": 1203,
+    "remaining_subject_review_requirements": 1275,
     "canonical_semantic_admissions": 0,
     "ru_proposal_admissions": 0,
     "false_exact_mastery_admissions": 0,
@@ -30,6 +30,24 @@ EXPECTED_EXPRESSIVE_SET = {
     "RAU-b5712ae284c6178d10fd",
     "RAU-f8b3979c6b1889dbb949",
 }
+EXPECTED_BROAD_ESSAY_SET = {
+    "RAU-c898f2a0d0a257786030",
+    "RAU-f1a4cbdba923a06d22e5",
+    "RAU-99c275cbfd99491d687b",
+    "RAU-be06422d548c67f8956d",
+    "RAU-e27c1a25ffdf42be7cad",
+    "RAU-f5726a12a14447bfe44a",
+}
+
+
+def _assert_partial_boundary(row: dict[str, Any]) -> None:
+    boundary = row.get("mastery_boundary")
+    if not isinstance(boundary, dict):
+        raise AssertionError("composite mastery boundary missing")
+    if boundary.get("generic_domain_attempt_can_emit_exact_component_mastery") is not False:
+        raise AssertionError("composite evidence may not emit exact component mastery")
+    if boundary.get("component_mastery_requires_component_specific_independent_evidence") is not True:
+        raise AssertionError("component-specific evidence guard weakened")
 
 
 def main() -> int:
@@ -40,14 +58,14 @@ def main() -> int:
     if ledger.get("summary") != EXPECTED:
         raise AssertionError(f"aggregate ledger progress drift: {ledger.get('summary')}")
     if ledger.get("by_disposition") != {
-        "PARTIAL_OR_COMPOSITE": {"admission_units": 107, "requirements": 110},
+        "PARTIAL_OR_COMPOSITE": {"admission_units": 113, "requirements": 116},
         "ROUTE_OR_FORMAT_ONLY": {"admission_units": 9, "requirements": 9},
     }:
         raise AssertionError(f"unexpected disposition totals: {ledger.get('by_disposition')}")
 
     rows = ledger.get("dispositions")
-    if not isinstance(rows, list) or len(rows) != 116:
-        raise AssertionError("aggregate ledger must contain 116 exact unit rows")
+    if not isinstance(rows, list) or len(rows) != 122:
+        raise AssertionError("aggregate ledger must contain 122 exact unit rows")
     unit_ids = [str(row.get("admission_unit_id", "")) for row in rows]
     if len(unit_ids) != len(set(unit_ids)):
         raise AssertionError("aggregate ledger duplicates admission units")
@@ -61,7 +79,7 @@ def main() -> int:
             raise AssertionError(f"ledger member lacks source locator: {row.get('admission_unit_id')}")
         if row.get("semantic_identity_ref") is not None:
             raise AssertionError("current aggregate slice must not directly admit a semantic identity")
-    if len(requirement_ids) != len(set(requirement_ids)) or len(requirement_ids) != 119:
+    if len(requirement_ids) != len(set(requirement_ids)) or len(requirement_ids) != 125:
         raise AssertionError("aggregate ledger duplicates/misses exact requirements")
 
     expressive = [row for row in rows if row.get("decision_set_id") == "CB-RU13-EXPRESSIVE-BROAD-DOMAIN-001"]
@@ -76,6 +94,32 @@ def main() -> int:
     }
     if len(component_signatures) != 24:
         raise AssertionError(f"RU13 component inventory drift: {len(component_signatures)}")
+    for row in expressive:
+        _assert_partial_boundary(row)
+
+    broad_essay = [row for row in rows if row.get("decision_set_id") == "CB-RU16-BROAD-ESSAY-COMPOSITE-001"]
+    if {str(row["admission_unit_id"]) for row in broad_essay} != EXPECTED_BROAD_ESSAY_SET:
+        raise AssertionError("broad essay composite exact-unit set drift")
+    if len(broad_essay) != 6 or sum(len(row["members"]) for row in broad_essay) != 6:
+        raise AssertionError("broad essay composite count drift")
+    if any(row.get("normalized_meaning") != "Анализировать исходный текст и строить сочинение маршрута ЕГЭ." for row in broad_essay):
+        raise AssertionError("broad essay set escaped exact normalized meaning boundary")
+    if {str(row.get("priority_route")) for row in broad_essay} != {"EGE", "OGE", "SCHOOL"}:
+        raise AssertionError("broad essay route/source heterogeneity was lost")
+    broad_component_signatures = {
+        (str(component.get("ref_kind", "")), str(component.get("ref", "")), str(component.get("status", "")))
+        for row in broad_essay
+        for component in row.get("component_refs", [])
+    }
+    if broad_component_signatures != {
+        ("review_capability_boundary", "review-boundary:source-text-analysis", "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION"),
+        ("review_capability_boundary", "review-boundary:route-essay-construction", "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION"),
+    }:
+        raise AssertionError("broad essay review boundaries drifted or became semantic authority")
+    for row in broad_essay:
+        if row.get("disposition") != "PARTIAL_OR_COMPOSITE":
+            raise AssertionError("broad essay set escaped PARTIAL_OR_COMPOSITE")
+        _assert_partial_boundary(row)
 
     composite_source = json.loads(COMPOSITES.read_text(encoding="utf-8"))
     if composite_source.get("summary") != {
@@ -106,13 +150,7 @@ def main() -> int:
                 raise AssertionError("derived composite component became semantic authority")
             if component.get("status") != "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION":
                 raise AssertionError("review capability boundary admission guard weakened")
-        boundary = row.get("mastery_boundary")
-        if not isinstance(boundary, dict):
-            raise AssertionError("composite mastery boundary missing")
-        if boundary.get("generic_domain_attempt_can_emit_exact_component_mastery") is not False:
-            raise AssertionError("composite evidence may not emit exact component mastery")
-        if boundary.get("component_mastery_requires_component_specific_independent_evidence") is not True:
-            raise AssertionError("component-specific evidence guard weakened")
+        _assert_partial_boundary(row)
 
     relation = json.loads(TASK_RELATION.read_text(encoding="utf-8"))
     task22 = next(row for row in relation["rows"] if row["task"] == 22)
@@ -131,9 +169,11 @@ def main() -> int:
     for key, value in EXPECTED.items():
         print(f"{key}={value}")
     print("ROUTE_OR_FORMAT_ONLY_UNITS=9")
-    print("PARTIAL_OR_COMPOSITE_UNITS=107")
+    print("PARTIAL_OR_COMPOSITE_UNITS=113")
     print("EXACT_MULTI_CAPABILITY_COMPOSITE_UNITS=102")
     print("EXACT_MULTI_CAPABILITY_COMPOSITE_REQUIREMENTS=104")
+    print("BROAD_ESSAY_COMPOSITE_UNITS=6")
+    print("BROAD_ESSAY_COMPOSITE_REQUIREMENTS=6")
     print("CANONICAL_SEMANTIC_ADMISSIONS=0")
     print("RU_PROPOSAL_ADMISSIONS=0")
     print("FALSE_MASTERY_ADMISSIONS=0")
