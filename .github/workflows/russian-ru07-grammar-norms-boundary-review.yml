@@ -44,6 +44,7 @@ jobs:
           import json
           from pathlib import Path
           data = json.loads(Path('RU07-GRAMMAR-NORMS-CANDIDATE-BOUNDARY-REVIEW.json').read_text(encoding='utf-8'))
+          assert data['schema_version'] == '0.1.1'
           assert data['status'] == 'CENTRAL_BRAIN_RU07_GRAMMAR_NORMS_REUSE_FIRST_BOUNDARY_REVIEW_ACCEPTANCE_NOT_ADMITTED'
           assert data['module_id'] == 'RU-PROG-07'
           assert data['module_binding_mode'] == 'DRAFT_CANDIDATE_BINDING'
@@ -54,6 +55,9 @@ jobs:
               'ru-grammar-form-selection-common-norms',
           }
           assert len(data['candidate_inventory_snapshot']) == 4
+          statuses = data['candidate_review_status_counts']
+          assert set(statuses) == {'draft', 'source_verified'}
+          assert statuses['draft'] + statuses['source_verified'] == 4
           relations = {row['relation'] for row in data['candidate_relation_decisions']}
           assert relations == {
               'CONTENT_IS_BOUNDED_SUBSET_OF_DRAFT_CANDIDATE',
@@ -71,6 +75,7 @@ jobs:
           policy = data['policy']
           assert policy['reuse_first'] is True
           assert policy['candidate_ref_is_canonical_id'] is False
+          assert policy['source_verified_candidate_ref_is_canonical_id'] is False
           assert policy['content_presence_implies_acceptance'] is False
           assert policy['module_membership_implies_exact_owner'] is False
           assert policy['subset_evidence_can_admit_broader_candidate'] is False
@@ -79,9 +84,8 @@ jobs:
           assert policy['component_specific_independent_evidence_required'] is True
           assert policy['semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
           assert policy['keyword_or_fuzzy_inference_allowed'] is False
-          summary = data['summary']
-          assert summary == {
-              'draft_candidates_reviewed': 4,
+          assert data['summary'] == {
+              'candidate_records_reviewed': 4,
               'content_semantics_reviewed': 3,
               'semantic_admissions': 0,
               'object_level_admission_units_closed': 0,
