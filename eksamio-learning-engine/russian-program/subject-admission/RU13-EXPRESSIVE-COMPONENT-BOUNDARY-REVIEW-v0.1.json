@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.1.1",
   "status": "CENTRAL_BRAIN_COMPONENT_BOUNDARY_REVIEW_PARTIAL",
   "authority_issue": 161,
   "normalized_meaning": "Распознавать и интерпретировать средства выразительности.",
@@ -20,16 +20,16 @@
     "rhetorical_address_duplicate_forbidden": true
   },
   "existing_candidate_components": [
-    {"ref":"candidate-033","semantic_id":"ru-expressive-assonance","label":"Ассонанс","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-034","semantic_id":"ru-expressive-hyperbole","label":"Гипербола","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-035","semantic_id":"ru-expressive-metonymy","label":"Метонимия","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-036","semantic_id":"ru-expressive-anaphora","label":"Анафора","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-037","semantic_id":"ru-expressive-parceling","label":"Парцелляция","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-038","semantic_id":"ru-expressive-homogeneous-row","label":"Ряды однородных членов","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-039","semantic_id":"ru-expressive-address","label":"Обращение как средство выразительности","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED","special_guard":"OWNS_RHETORICAL_ADDRESS_BOUNDARY_NO_DUPLICATE_ID"},
-    {"ref":"candidate-040","semantic_id":"ru-expressive-epithet","label":"Эпитет","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-041","semantic_id":"ru-expressive-metaphor","label":"Метафора","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-042","semantic_id":"ru-expressive-comparison","label":"Сравнение","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"}
+    {"ref":"candidate-033","source_id":"device_assonance","label":"Ассонанс","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
+    {"ref":"candidate-034","source_id":"device_hyperbole","label":"Гипербола","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
+    {"ref":"candidate-035","source_id":"device_metonymy","label":"Метонимия","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
+    {"ref":"candidate-036","source_id":"device_anaphora","label":"Анафора","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
+    {"ref":"candidate-037","source_id":"device_parcellation","label":"Парцелляция","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
+    {"ref":"candidate-038","source_id":"device_homogeneous_rows","label":"Ряды однородных членов","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
+    {"ref":"candidate-039","source_id":"device_address","label":"Обращение как средство выразительности","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED","special_guard":"OWNS_RHETORICAL_ADDRESS_BOUNDARY_NO_DUPLICATE_ID"},
+    {"ref":"candidate-040","source_id":"device_epithet","label":"Эпитет","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
+    {"ref":"candidate-041","source_id":"device_metaphor","label":"Метафора","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"},
+    {"ref":"candidate-042","source_id":"device_comparison","label":"Сравнение","status":"EXACT_BOUNDARY_EVIDENCE_REQUIRED_NOT_ADMITTED"}
   ],
   "proposed_content_components": [
     {"semantic_id":"ru-expressive-alliteration","status":"DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"consonant sound repetition; distinct from assonance and accidental graphic coincidence"},
@@ -53,6 +53,6 @@
     "lexical repetition vs anaphora/epiphora: general repetition vs position-specific repetition",
     "question-answer form vs rhetorical question: developed answer structure vs answer-not-required expressive question",
     "syntactic parallelism vs anaphora/antithesis: structural similarity vs positional repetition/semantic opposition",
-    "candidate-039 address owns rhetorical-address territory; no duplicate rhetorical-address semantic id"
+    "candidate-039 / device_address owns rhetorical-address territory; no duplicate rhetorical-address semantic id"
   ]
 }
