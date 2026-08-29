@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Overlay accepted exact component-set decisions onto the finite semantic packet.
+"""Overlay accepted exact subject decisions onto the finite semantic packet.
 
-The base 74-group packet stays the complete review universe. This overlay records
-only subject decisions already accepted by explicit exact authorities. A group
-is never marked fully accepted merely because one or more units inside it have
-accepted component sets.
+The base 74-group packet stays the complete review universe. Object-bound
+canonical component-set acceptances reduce the remaining object count only when
+an exact admission-unit/requirement binding is proven. Bounded route-semantic
+acceptances (currently RU16 Task-27 K1-K3) are tracked separately and never
+subtract an object-level requirement until a separate exact binding exists.
 """
 from __future__ import annotations
 
@@ -18,7 +19,7 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 PACKET_BUILDER = HERE / "build_russian_semantic_acceptance_packet.py"
-AUTHORITIES = (
+OBJECT_AUTHORITIES = (
     (
         HERE / "RUSSIAN-EGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json",
         "CENTRAL_BRAIN_ACCEPTED_EXACT_EGE_CANONICAL_COMPONENT_SLICE",
@@ -30,6 +31,14 @@ AUTHORITIES = (
         "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_CANONICAL_COMPONENT_SLICE",
         4,
         "RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+    ),
+)
+ROUTE_SEMANTIC_AUTHORITIES = (
+    (
+        HERE / "RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json",
+        "CENTRAL_BRAIN_ACCEPTED_RU16_TASK27_K1_K3_ROUTE_SEMANTICS",
+        4,
+        "RU16_TASK27_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1",
     ),
 )
 
@@ -47,7 +56,7 @@ def build_progress() -> dict[str, Any]:
 
     authorities: list[dict[str, Any]] = []
     decisions: list[dict[str, Any]] = []
-    for path, expected_status, expected_count, authority_id in AUTHORITIES:
+    for path, expected_status, expected_count, authority_id in OBJECT_AUTHORITIES:
         authority = json.loads(path.read_text(encoding="utf-8"))
         if authority.get("status") != expected_status:
             raise ValueError(f"exact component authority status drift: {path.name}")
@@ -61,16 +70,50 @@ def build_progress() -> dict[str, Any]:
         authorities.append(
             {
                 "id": authority_id,
+                "authority_kind": "OBJECT_BOUND_CANONICAL_COMPONENT_SET",
                 "sha256": str(authority["normalized_sha256"]),
                 "status": str(authority["status"]),
                 "accepted_admission_units": expected_count,
                 "accepted_requirements": expected_count,
+                "accepted_route_semantics": 0,
             }
         )
         for row in rows:
             decision = deepcopy(row)
             decision["accepted_authority_id"] = authority_id
             decisions.append(decision)
+
+    accepted_route_semantics: set[str] = set()
+    for path, expected_status, expected_count, authority_id in ROUTE_SEMANTIC_AUTHORITIES:
+        authority = json.loads(path.read_text(encoding="utf-8"))
+        if authority.get("status") != expected_status:
+            raise ValueError(f"bounded route-semantic authority status drift: {path.name}")
+        if authority.get("canonical_school_registry_mutated") is not False:
+            raise ValueError(f"route-semantic authority mutated the school registry: {path.name}")
+        if authority.get("new_parallel_registry_created") is not False:
+            raise ValueError(f"route-semantic authority created a parallel registry: {path.name}")
+        rows = authority.get("decisions")
+        if not isinstance(rows, list) or len(rows) != expected_count:
+            raise ValueError(f"unexpected route-semantic decision count: {path.name}")
+        refs = {str(row.get("accepted_semantic_id", "")) for row in rows}
+        if len(refs) != expected_count or any(not ref.startswith("ru-") for ref in refs):
+            raise ValueError(f"invalid bounded ru route-semantic set: {path.name}")
+        if any(row.get("subject_semantic_status") != "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC" for row in rows):
+            raise ValueError(f"route-semantic decision is not explicitly accepted: {path.name}")
+        if accepted_route_semantics & refs:
+            raise ValueError("route-semantic authorities overlap")
+        accepted_route_semantics.update(refs)
+        authorities.append(
+            {
+                "id": authority_id,
+                "authority_kind": "BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_WITHOUT_OBJECT_BINDING",
+                "sha256": hashlib.sha256(canonical_json(authority)).hexdigest(),
+                "status": str(authority["status"]),
+                "accepted_admission_units": 0,
+                "accepted_requirements": 0,
+                "accepted_route_semantics": expected_count,
+            }
+        )
 
     unit_ids = [str(row.get("admission_unit_id")) for row in decisions]
     requirement_ids = [str(row.get("requirement_id")) for row in decisions]
@@ -153,7 +196,7 @@ def build_progress() -> dict[str, Any]:
     partial_units = int(packet["object_accounting"]["partial_or_composite_units"])
     partial_requirements = int(packet["object_accounting"]["partial_or_composite_requirements"])
     result: dict[str, Any] = {
-        "schema_version": "0.2.0",
+        "schema_version": "0.3.0",
         "status": "CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS",
         "russian_content_ready": False,
         "base_packet_sha256": str(packet["normalized_sha256"]),
@@ -168,10 +211,13 @@ def build_progress() -> dict[str, Any]:
             "semantic_units_remaining_without_accepted_component_set": partial_units - len(accepted_units),
             "semantic_requirements_remaining_without_accepted_component_set": partial_requirements - len(accepted_requirements),
             "canonical_component_refs_reused_unique": len(accepted_refs),
+            "accepted_bounded_ru_route_semantics": len(accepted_route_semantics),
+            "accepted_route_semantics_without_object_binding": len(accepted_route_semantics),
             "new_semantic_identities_created": 0,
-            "ru_proposal_identities_admitted": 0,
+            "ru_proposal_identities_admitted": len(accepted_route_semantics),
             "false_exact_mastery_admissions": 0,
         },
+        "accepted_route_semantic_refs": sorted(accepted_route_semantics),
         "policy": {
             "reuse_first": True,
             "whole_group_acceptance_from_partial_unit_progress": False,
@@ -179,6 +225,7 @@ def build_progress() -> dict[str, Any]:
             "component_specific_independent_evidence_required": True,
             "keyword_or_fuzzy_inference_allowed": False,
             "module_only_mapping_allowed": False,
+            "route_semantic_acceptance_can_reduce_object_counts_without_exact_binding": False,
         },
         "semantic_review_groups": groups,
     }
