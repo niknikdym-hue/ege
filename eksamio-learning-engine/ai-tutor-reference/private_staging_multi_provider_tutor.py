@@ -11,15 +11,16 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal
+from typing import Literal
 
-from accepted_russian_semantic_tutor import AcceptedSemanticRussianTutorVerticalSlice
 from openai_live_adapter import OpenAICredential, OpenAITextConfig, OpenAITextProvider
 from openai_secret_provider import OpenAISecretProvider
 from qwen_live_adapter import QwenTextProvider, QwenTutorConfig
 from reliability_gateway import ProviderPath, ReliabilityGateway
+from resilient_voice_tutor import ResilientAcceptedSemanticTutor
 from sep1_russian_tutor import VoiceGateway
 from stdlib_json_transport import UrllibJsonTransport
+from stdlib_speechkit_transport import UrllibBinaryTransport, UrllibFormBytesTransport
 from yandex_alice_live_adapter import YandexAliceTextProvider, YandexAliceTutorConfig
 from yandex_live_adapters import (
     BinaryTransport,
@@ -37,16 +38,6 @@ TextProviderMode = Literal["auto", "openai", "qwen", "yandex"]
 
 class PrivateMultiProviderConfigurationError(ValueError):
     pass
-
-
-class _DisabledBinaryTransport:
-    def post_binary(self, **kwargs: Any):
-        raise AssertionError("SpeechKit STT transport is not configured")
-
-
-class _DisabledFormTransport:
-    def post_form_bytes(self, **kwargs: Any):
-        raise AssertionError("SpeechKit TTS transport is not configured")
 
 
 @dataclass(frozen=True)
@@ -83,7 +74,7 @@ class PrivateMultiProviderTutorConfig:
 
 @dataclass(frozen=True)
 class PrivateMultiProviderTutorAssembly:
-    tutor: AcceptedSemanticRussianTutorVerticalSlice
+    tutor: ResilientAcceptedSemanticTutor
     text_providers: tuple[object, ...]
     speech_provider: YandexSpeechKitProvider
     config: PrivateMultiProviderTutorConfig
@@ -102,7 +93,9 @@ class PrivateMultiProviderTutorAssembly:
             "speech_execution_enabled": self.config.speech_execution_enabled,
             "text_provider_mode": self.config.text_provider_mode,
             "text_provider_order": [path.provider_id for path in ordered],
+            "stt_provider": self.speech_provider.provider_id,
             "tts_provider": self.speech_provider.provider_id,
+            "voice_text_fallback_enabled": True,
             "accepted_semantic_count": len(self.tutor.accepted_semantics.semantic_ids),
             "learner_audio_persisted_bytes": 0,
         }
@@ -119,11 +112,6 @@ def assemble_private_multi_provider_tutor(
     tts_transport: FormBytesTransport | None = None,
     session_ref_factory=None,
 ) -> PrivateMultiProviderTutorAssembly:
-    if config.speech_execution_enabled and (stt_transport is None or tts_transport is None):
-        raise PrivateMultiProviderConfigurationError(
-            "live SpeechKit execution requires explicit transient STT/TTS transports"
-        )
-
     def text_enabled(name: str) -> bool:
         return config.text_execution_enabled and config.text_provider_mode in {"auto", name}
 
@@ -157,10 +145,7 @@ def assemble_private_multi_provider_tutor(
         "qwen": qwen_provider,
         "yandex": yandex_provider,
     }
-    if config.text_provider_mode == "auto":
-        selected_names = ("openai", "qwen", "yandex")
-    else:
-        selected_names = (config.text_provider_mode,)
+    selected_names = ("openai", "qwen", "yandex") if config.text_provider_mode == "auto" else (config.text_provider_mode,)
 
     registry: dict[tuple[str, str], ProviderPath] = {}
     providers: dict[str, object] = {}
@@ -184,12 +169,12 @@ def assemble_private_multi_provider_tutor(
             folder_id=config.resolved_yandex_folder_id,
             execution_enabled=config.speech_execution_enabled,
         ),
-        stt_transport=stt_transport or _DisabledBinaryTransport(),
-        tts_transport=tts_transport or _DisabledFormTransport(),
+        stt_transport=stt_transport or UrllibBinaryTransport(),
+        tts_transport=tts_transport or UrllibFormBytesTransport(),
     )
     voice_gateway = VoiceGateway([speech_provider])
 
-    tutor = AcceptedSemanticRussianTutorVerticalSlice(
+    tutor = ResilientAcceptedSemanticTutor(
         engine_root=engine_root,
         text_gateway=text_gateway,
         voice_gateway=voice_gateway,
