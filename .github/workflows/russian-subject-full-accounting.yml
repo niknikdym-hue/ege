@@ -53,6 +53,18 @@ jobs:
           cp /tmp/semantic-packet-a.md eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.md
       - name: Validate finite semantic acceptance packet
         run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_semantic_acceptance_packet.py
+      - name: Build exact semantic reuse evidence twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_exact_semantic_reuse_probe.py \
+            --output /tmp/reuse-probe-a.json > /tmp/reuse-probe-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_exact_semantic_reuse_probe.py \
+            --output /tmp/reuse-probe-b.json > /tmp/reuse-probe-report-b.txt
+          cmp /tmp/reuse-probe-a.json /tmp/reuse-probe-b.json
+          diff -u /tmp/reuse-probe-report-a.txt /tmp/reuse-probe-report-b.txt
+          cat /tmp/reuse-probe-report-a.txt
+          cp /tmp/reuse-probe-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EXACT-SEMANTIC-REUSE-PROBE.json
       - name: Preserve source and object-review authority
         shell: bash
         run: |
@@ -67,6 +79,7 @@ jobs:
             eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-FULL-SUBJECT-OBJECT-ACCOUNTING.json
             eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.json
             eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.md
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EXACT-SEMANTIC-REUSE-PROBE.json
           if-no-files-found: error
           retention-days: 14
       - name: Protect accepted Russian production surfaces
