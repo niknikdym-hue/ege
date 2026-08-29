@@ -7,7 +7,7 @@ import json
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 HERE = Path(__file__).resolve().parent
 PROGRAM = HERE.parent
@@ -19,13 +19,21 @@ from build_object_level_review_queue import build_queue, canonical_json  # noqa:
 TARGET_MODULES = {"RU-PROG-13", "RU-PROG-16"}
 
 
-def build_slice() -> dict[str, Any]:
+def _normalize_target_modules(target_modules: Iterable[str] | None) -> set[str]:
+    selected = set(TARGET_MODULES if target_modules is None else target_modules)
+    if not selected or any(not isinstance(module, str) or not module.startswith("RU-PROG-") for module in selected):
+        raise ValueError("target_modules must contain explicit RU-PROG module ids")
+    return selected
+
+
+def build_slice(target_modules: Iterable[str] | None = None) -> dict[str, Any]:
+    selected_modules = _normalize_target_modules(target_modules)
     queue = build_queue()
     selected: list[dict[str, Any]] = []
     for unit in queue["admission_units"]:
         review = unit["admission_signature"]["review_signature"]
         modules = set(review["modules"])
-        if not modules.intersection(TARGET_MODULES):
+        if not modules.intersection(selected_modules):
             continue
         selected.append(
             {
@@ -68,7 +76,7 @@ def build_slice() -> dict[str, Any]:
     meanings: dict[str, list[str]] = defaultdict(list)
     requirement_ids: set[str] = set()
     for row in selected:
-        for module in set(row["modules"]).intersection(TARGET_MODULES):
+        for module in set(row["modules"]).intersection(selected_modules):
             by_module[module]["admission_units"] += 1
             by_module[module]["requirements"] += int(row["member_count"])
         by_route[row["priority_route"]]["admission_units"] += 1
@@ -80,10 +88,10 @@ def build_slice() -> dict[str, Any]:
             requirement_ids.add(str(member["requirement_id"]))
 
     payload: dict[str, Any] = {
-        "schema_version": "0.1.0",
+        "schema_version": "0.2.0",
         "status": "EXACT_REVIEW_SLICE_NOT_ADMISSION_DECISION",
         "source_queue_normalized_sha256": queue["normalized_sha256"],
-        "target_modules": sorted(TARGET_MODULES),
+        "target_modules": sorted(selected_modules),
         "selection_rule": "EXACT_MODULE_MEMBERSHIP_ONLY_NO_SEMANTIC_INFERENCE",
         "semantic_auto_mapping_allowed": False,
         "summary": {
