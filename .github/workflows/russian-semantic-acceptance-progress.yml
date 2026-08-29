@@ -53,11 +53,12 @@ jobs:
           assert data['schema_version'] == '0.3.0'
           assert data['status'] == 'CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS'
           assert data['russian_content_ready'] is False
-          assert len(data['accepted_authorities']) == 5
+          assert len(data['accepted_authorities']) == 6
           assert {a['id'] for a in data['accepted_authorities']} == {
               'RUSSIAN_EGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RUSSIAN_OGE_PUNCTUATION_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_DIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RU16_TASK27_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
               'RU16_TASK27_K5_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
           }
@@ -72,11 +73,11 @@ jobs:
           assert s['finite_semantic_review_groups'] == 74
           assert s['fully_accepted_semantic_groups'] == 0
           assert s['review_groups_with_accepted_component_sets'] == 10
-          assert s['semantic_units_with_accepted_component_sets'] == 17
-          assert s['semantic_requirements_with_accepted_component_sets'] == 17
-          assert s['semantic_units_remaining_without_accepted_component_set'] == 1299
-          assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1374
-          assert s['canonical_component_refs_reused_unique'] == 46
+          assert s['semantic_units_with_accepted_component_sets'] == 18
+          assert s['semantic_requirements_with_accepted_component_sets'] == 18
+          assert s['semantic_units_remaining_without_accepted_component_set'] == 1298
+          assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1373
+          assert s['canonical_component_refs_reused_unique'] == 52
           assert s['accepted_bounded_ru_route_semantics'] == 5
           assert s['accepted_route_semantics_without_object_binding'] == 5
           assert s['new_semantic_identities_created'] == 0
@@ -92,7 +93,7 @@ jobs:
           assert data['policy']['route_semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
           touched = [g for g in data['semantic_review_groups'] if g['accepted_component_set_count']]
           assert len(touched) == 10
-          assert sum(g['accepted_component_set_count'] for g in touched) == 17
+          assert sum(g['accepted_component_set_count'] for g in touched) == 18
           assert all(g['status'] == 'SUBJECT_ACCEPTANCE_REQUIRED_WITH_ACCEPTED_COMPONENT_SET' for g in touched)
           assert all(g['remaining_group_action'].startswith('CONTINUE_EXACT_COMPONENT_REVIEW') for g in touched)
           print('RUSSIAN_SEMANTIC_ACCEPTANCE_PROGRESS_GUARD=PASS')
