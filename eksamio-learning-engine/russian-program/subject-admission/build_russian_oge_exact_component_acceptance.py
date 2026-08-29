@@ -51,6 +51,12 @@ EXPECTED_EXACT: dict[str, tuple[str, ...]] = {
         "school-abbreviations-capitalization-formation",
     ),
 }
+EXPECTED_CLASSIFICATION = {
+    "6.3": "SCHOOL_IDENTITY_ROUTE",
+    "6.5": "SCHOOL_IDENTITY_ROUTE",
+    "6.10": "EXAM_ONLY_COMPOSITE",
+    "6.13": "EXAM_ONLY_COMPOSITE",
+}
 
 
 def canonical_json(value: Any) -> bytes:
@@ -104,7 +110,7 @@ def build_acceptance() -> dict[str, Any]:
         row = by_position.get(position)
         if row is None:
             raise ValueError(f"expected OGE position missing: {position}")
-        if row.get("classification") != "SCHOOL_IDENTITY_ROUTE":
+        if row.get("classification") != EXPECTED_CLASSIFICATION[position]:
             raise ValueError(f"exact OGE position classification drift: {position}")
         owners = row.get("owners")
         if not isinstance(owners, list) or tuple(owners) != expected_owners:
@@ -136,12 +142,10 @@ def build_acceptance() -> dict[str, Any]:
             and str(req.get("code")) == code
         ]
         if len(matches) != 1:
-            # Exact source/code must identify exactly one current launch requirement.
             continue
         requirement_id, group, req = matches[0]
         units = accounting_by_requirement.get(requirement_id, [])
         if len(units) != 1 or len(units[0].get("members", [])) != 1:
-            # Multi-member admission units are not admitted by this narrow slice.
             continue
         unit = units[0]
         if unit.get("disposition") != "PARTIAL_OR_COMPOSITE" or unit.get("semantic_identity_ref") is not None:
@@ -155,6 +159,7 @@ def build_acceptance() -> dict[str, Any]:
                 "document_id": str(req["document_id"]),
                 "source_locator": str(req["source_locator"]),
                 "content_code": code,
+                "overlay_classification": EXPECTED_CLASSIFICATION[code],
                 "normalized_meaning": str(unit["normalized_meaning"]),
                 "modules": list(unit.get("modules", [])),
                 "routes": list(unit.get("routes", [])),
@@ -167,7 +172,7 @@ def build_acceptance() -> dict[str, Any]:
                     "school_denominator": "266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json#final_school_canonical_denominator=185",
                     "packet_group": str(group["group_id"]),
                 },
-                "acceptance_reason": "The final OGE-2026 overlay classifies this exact codifier position as SCHOOL_IDENTITY_ROUTE and enumerates only exact current reviewed canonical school owners from the frozen 185 denominator, with no family/other/all-applicable placeholder.",
+                "acceptance_reason": "The final OGE-2026 overlay provides a complete owner list made only of exact current reviewed canonical school identities from the frozen 185 denominator, with no family/other/all-applicable placeholder. SCHOOL_IDENTITY_ROUTE and EXAM_ONLY_COMPOSITE remain route classifications; neither turns the composite into atomic mastery.",
                 "mastery_boundary": {
                     "route_or_broad_composite_attempt_can_emit_exact_component_mastery": False,
                     "component_specific_independent_evidence_required": True,
@@ -191,6 +196,8 @@ def build_acceptance() -> dict[str, Any]:
         "policy": {
             "final_oge_overlay_required": True,
             "all_owners_must_be_exact_current_reviewed_canonical_school_ids": True,
+            "school_identity_route_allowed_with_complete_exact_owners": True,
+            "exam_only_composite_allowed_with_complete_exact_owners": True,
             "family_placeholders_allowed": False,
             "all_applicable_placeholders_allowed": False,
             "keyword_or_fuzzy_mapping_allowed": False,
