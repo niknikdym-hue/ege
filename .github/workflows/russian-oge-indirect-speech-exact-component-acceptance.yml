@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - "eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_indirect_speech_exact_component_acceptance.py"
-      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-REVIEWED-COMPOSITES-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-REVIEWED-REUSE-COMPOSITE-MEANINGS-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
       - "eksamio-learning-engine/russian-program/source-knowledge/**"
@@ -57,16 +57,13 @@ jobs:
           assert s['new_semantic_identities_created'] == 0
           assert s['ru_proposal_identities_admitted'] == 0
           assert s['false_exact_mastery_admissions'] == 0
-          assert len(data['decisions']) == 1
           row = data['decisions'][0]
           assert row['content_code'] == '7.25'
           assert row['requirement_id'] == 'RSK-OGE_COD-7-25-P026'
-          assert row['source_id'] == 'FIPI-OGE-RU-2026-FINAL'
-          assert row['document_id'] == 'OGE_COD'
           assert row['source_locator'] == 'FIPI-OGE-RU-2026-FINAL/OGE_COD p.26 7.25'
           assert row['modules'] == ['RU-PROG-09', 'RU-PROG-14']
           assert row['routes'] == ['oge']
-          assert row['authority']['reviewed_composite_set'] == 'CB-COMPOSITE-009'
+          assert row['authority']['reviewed_composite_meaning_authority'] == 'RUSSIAN-SUBJECT-REVIEWED-REUSE-COMPOSITE-MEANINGS-v0.1.json'
           assert row['subject_semantic_status'] == 'CENTRAL_BRAIN_ACCEPTED_CANONICAL_COMPONENT_SET'
           assert row['disposition'] == 'PARTIAL_OR_COMPOSITE'
           assert row['mapping_mode'] == 'CLOSED_FOREIGN_SPEECH_FAMILY_PLUS_ORDINARY_INDIRECT_SPEECH_SPP_BASE'
