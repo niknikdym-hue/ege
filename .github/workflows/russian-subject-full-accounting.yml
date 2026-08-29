@@ -35,17 +35,38 @@ jobs:
           cp /tmp/accounting-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-FULL-SUBJECT-OBJECT-ACCOUNTING.json
       - name: Validate full accounting remains semantic-blocked
         run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_accounting_complete.py
+      - name: Build finite semantic acceptance packet twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py \
+            --json-output /tmp/semantic-packet-a.json \
+            --markdown-output /tmp/semantic-packet-a.md > /tmp/semantic-packet-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py \
+            --json-output /tmp/semantic-packet-b.json \
+            --markdown-output /tmp/semantic-packet-b.md > /tmp/semantic-packet-report-b.txt
+          cmp /tmp/semantic-packet-a.json /tmp/semantic-packet-b.json
+          cmp /tmp/semantic-packet-a.md /tmp/semantic-packet-b.md
+          diff -u /tmp/semantic-packet-report-a.txt /tmp/semantic-packet-report-b.txt
+          cat /tmp/semantic-packet-report-a.txt
+          cp /tmp/semantic-packet-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.json
+          cp /tmp/semantic-packet-a.md eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.md
+      - name: Validate finite semantic acceptance packet
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_semantic_acceptance_packet.py
       - name: Preserve source and object-review authority
         shell: bash
         run: |
           set -euo pipefail
           python3 eksamio-learning-engine/russian-program/source-knowledge/validate_russian_source_knowledge.py
           python3 eksamio-learning-engine/russian-program/object-review/validate_object_level_review_queue.py
-      - name: Upload full accounting evidence
+      - name: Upload full accounting and semantic-review evidence
         uses: actions/upload-artifact@v4
         with:
           name: russian-full-subject-object-accounting
-          path: eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-FULL-SUBJECT-OBJECT-ACCOUNTING.json
+          path: |
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-FULL-SUBJECT-OBJECT-ACCOUNTING.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.md
           if-no-files-found: error
           retention-days: 14
       - name: Protect accepted Russian production surfaces
