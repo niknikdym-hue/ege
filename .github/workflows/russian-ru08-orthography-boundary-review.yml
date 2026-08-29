@@ -1,0 +1,93 @@
+name: Russian RU08 orthography boundary review
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/**"
+      - "eksamio-learning-engine/russian-program/object-review/**"
+      - "eksamio-learning-engine/russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json"
+      - "eksamio-learning-engine/russian-program/semantic-registry/RUSSIAN-RU1-121-CARD-ADMISSION-DECISION-v1.0.json"
+      - ".github/workflows/russian-ru08-orthography-boundary-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru08-orthography-boundary-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU08 boundary builder
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru08_orthography_reuse_first_boundary_review.py
+      - name: Build deterministic RU08 boundary review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru08_orthography_reuse_first_boundary_review.py --output /tmp/ru08-a.json > /tmp/ru08-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru08_orthography_reuse_first_boundary_review.py --output /tmp/ru08-b.json > /tmp/ru08-b.txt
+          cmp /tmp/ru08-a.json /tmp/ru08-b.json
+          diff -u /tmp/ru08-a.txt /tmp/ru08-b.txt
+          cat /tmp/ru08-a.txt
+          cp /tmp/ru08-a.json eksamio-learning-engine/russian-program/subject-admission/RU08-ORTHOGRAPHY-REUSE-FIRST-BOUNDARY-REVIEW.json
+      - name: Validate fail-closed RU08 review contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('eksamio-learning-engine/russian-program/subject-admission/RU08-ORTHOGRAPHY-REUSE-FIRST-BOUNDARY-REVIEW.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          s = data['summary']
+          assert data['schema_version'] == '0.1.0'
+          assert data['status'] == 'CENTRAL_BRAIN_RU08_ORTHOGRAPHY_REUSE_FIRST_OBJECT_REVIEW_IN_PROGRESS_NO_NEW_ADMISSION'
+          assert data['module_id'] == 'RU-PROG-08'
+          assert data['module_binding_mode'] == 'CANONICAL_185_SCHOOL_SET_CROSSWALK_BINDING'
+          assert data['reuse_pool']['canonical_school_identities'] == 185
+          assert data['reuse_pool']['reviewed_active_exception_practice_cards'] == 121
+          assert data['reuse_pool']['asset_presence_is_coverage'] is False
+          assert s['official_admission_units_in_module_slice'] > 0
+          assert s['official_unique_requirements_in_module_slice'] > 0
+          assert s['exact_object_bound_units_already_accepted'] >= 0
+          assert s['exact_object_bound_requirements_already_accepted'] >= 0
+          assert s['pending_exact_reuse_units'] + s['exact_object_bound_units_already_accepted'] == s['official_admission_units_in_module_slice']
+          assert s['pending_exact_reuse_requirements'] + s['exact_object_bound_requirements_already_accepted'] == s['official_unique_requirements_in_module_slice']
+          assert s['new_semantic_admissions'] == 0
+          assert s['new_object_level_closures'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          assert data['policy']['reuse_first'] is True
+          assert data['policy']['canonical_school_pool_is_authoritative_identity_pool_not_coverage_proof'] is True
+          assert data['policy']['reviewed_exception_asset_is_practice_evidence_not_mastery_identity'] is True
+          assert data['policy']['module_membership_implies_exact_mapping'] is False
+          assert data['policy']['keyword_or_fuzzy_inference_allowed'] is False
+          assert data['policy']['semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
+          assert len(data['reviewed_units']) == s['official_admission_units_in_module_slice']
+          assert len({row['admission_unit_id'] for row in data['reviewed_units']}) == len(data['reviewed_units'])
+          print('RU08_ORTHOGRAPHY_FAIL_CLOSED_CONTRACT=PASS')
+          PY
+      - name: Upload RU08 review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru08-orthography-boundary-review
+          path: eksamio-learning-engine/russian-program/subject-admission/RU08-ORTHOGRAPHY-REUSE-FIRST-BOUNDARY-REVIEW.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
