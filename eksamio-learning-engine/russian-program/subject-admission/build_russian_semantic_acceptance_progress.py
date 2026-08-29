@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Canonical semantic-progress builder with exact OGE 7.25 and accepted RU13 overlays."""
+"""Canonical semantic-progress builder with exact OGE 7.25 and accepted bounded subject overlays."""
 from __future__ import annotations
 
 import runpy
@@ -20,11 +20,18 @@ RU13_EXISTING_CANDIDATE_AUTHORITY = (
     10,
     "RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1",
 )
+RU01_PHONETICS_AUTHORITY = (
+    HERE / "RU01-PHONETICS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
+    "CENTRAL_BRAIN_ACCEPTED_RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTICS",
+    3,
+    "RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1",
+)
 
 _namespace: dict[str, Any] = runpy.run_path(str(BASE))
 _namespace["OBJECT_AUTHORITIES"] = tuple(_namespace["OBJECT_AUTHORITIES"]) + (INDIRECT_AUTHORITY,)
 _namespace["SUBJECT_SEMANTIC_AUTHORITIES"] = tuple(_namespace["SUBJECT_SEMANTIC_AUTHORITIES"]) + (
     RU13_EXISTING_CANDIDATE_AUTHORITY,
+    RU01_PHONETICS_AUTHORITY,
 )
 _namespace["build_progress"].__globals__["OBJECT_AUTHORITIES"] = _namespace["OBJECT_AUTHORITIES"]
 _namespace["main"].__globals__["OBJECT_AUTHORITIES"] = _namespace["OBJECT_AUTHORITIES"]
