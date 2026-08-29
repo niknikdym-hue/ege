@@ -15,6 +15,7 @@ on:
       - "eksamio-learning-engine/ai-tutor-reference/private_staging_openai_yandex_tutor.py"
       - "eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py"
       - "eksamio-learning-engine/ai-tutor-reference/run_private_openai_text_smoke.py"
+      - "eksamio-learning-engine/ai-tutor-reference/private_tutor_test_ui.py"
       - "eksamio-learning-engine/russian-program/subject-admission/RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RU16-TASK27-K5-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json"
@@ -51,7 +52,8 @@ jobs:
             eksamio-learning-engine/ai-tutor-reference/stdlib_json_transport.py \
             eksamio-learning-engine/ai-tutor-reference/private_staging_openai_yandex_tutor.py \
             eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py \
-            eksamio-learning-engine/ai-tutor-reference/run_private_openai_text_smoke.py
+            eksamio-learning-engine/ai-tutor-reference/run_private_openai_text_smoke.py \
+            eksamio-learning-engine/ai-tutor-reference/private_tutor_test_ui.py
       - name: Validate accepted-semantic Tutor twice
         shell: bash
         run: |
@@ -93,6 +95,29 @@ jobs:
           set -e
           test "$code" -eq 2
           grep -q '^PRIVATE_OPENAI_TEXT_SMOKE=BLOCKED_OWNER_AUTHORIZATION$' <<<"$out"
+      - name: Prove user-test UI is localhost and owner-gated
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          out="$(python3 eksamio-learning-engine/ai-tutor-reference/private_tutor_test_ui.py 2>&1)"
+          code=$?
+          set -e
+          test "$code" -eq 2
+          grep -q '^PRIVATE_TUTOR_UI=BLOCKED_OWNER_AUTHORIZATION$' <<<"$out"
+          python3 - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          p=Path('eksamio-learning-engine/ai-tutor-reference/private_tutor_test_ui.py')
+          spec=importlib.util.spec_from_file_location('private_tutor_test_ui',p)
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          assert m.HOST == '127.0.0.1'
+          assert m.DEFAULT_MAX_TURNS == 20
+          assert m.MAX_MESSAGE_CHARS == 2000
+          assert 'API-ключ в браузер не передаётся' in m.PAGE
+          assert 'Публичный доступ и голос выключены' in m.PAGE
+          print('PRIVATE_TUTOR_UI_LOCALHOST_GUARD=PASS')
+          PY
       - name: Preserve existing Yandex adapter contract
         run: python3 eksamio-learning-engine/ai-tutor-reference/validate_yandex_live_adapters.py
       - name: Prove execution remains off without owner authorization
