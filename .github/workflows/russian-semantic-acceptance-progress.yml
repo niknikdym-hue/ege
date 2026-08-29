@@ -47,14 +47,14 @@ jobs:
           python3 - <<'PY'
           import json
           from pathlib import Path
-          path = Path('eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json')
-          data = json.loads(path.read_text(encoding='utf-8'))
+
+          data = json.loads(Path('eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json').read_text(encoding='utf-8'))
           s = data['progress_summary']
-          assert data['schema_version'] == '0.3.0'
+          assert data['schema_version'] == '0.4.0'
           assert data['status'] == 'CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS'
           assert data['russian_content_ready'] is False
-          assert len(data['accepted_authorities']) == 7
-          assert {a['id'] for a in data['accepted_authorities']} == {
+
+          expected_authorities = {
               'RUSSIAN_EGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RUSSIAN_OGE_PUNCTUATION_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
@@ -62,20 +62,23 @@ jobs:
               'RUSSIAN_OGE_INDIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RU16_TASK27_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
               'RU16_TASK27_K5_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
           }
+          assert len(data['accepted_authorities']) == 8
+          assert {a['id'] for a in data['accepted_authorities']} == expected_authorities
+
+          ru13 = next(a for a in data['accepted_authorities'] if a['id'] == 'RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1')
+          assert ru13['authority_kind'] == 'BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_WITHOUT_OBJECT_BINDING'
+          assert ru13['accepted_admission_units'] == 0
+          assert ru13['accepted_requirements'] == 0
+          assert ru13['accepted_subject_semantics'] == 14
+          assert ru13['accepted_route_semantics'] == 0
+
           indirect = next(a for a in data['accepted_authorities'] if a['id'] == 'RUSSIAN_OGE_INDIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1')
           assert indirect['authority_kind'] == 'OBJECT_BOUND_CANONICAL_COMPONENT_SET'
           assert indirect['accepted_admission_units'] == 1
           assert indirect['accepted_requirements'] == 1
-          assert indirect['accepted_route_semantics'] == 0
-          route_auth = next(a for a in data['accepted_authorities'] if a['id'] == 'RU16_TASK27_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1')
-          k5_auth = next(a for a in data['accepted_authorities'] if a['id'] == 'RU16_TASK27_K5_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1')
-          for authority in (route_auth, k5_auth):
-              assert authority['authority_kind'] == 'BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_WITHOUT_OBJECT_BINDING'
-              assert authority['accepted_admission_units'] == 0
-              assert authority['accepted_requirements'] == 0
-          assert route_auth['accepted_route_semantics'] == 4
-          assert k5_auth['accepted_route_semantics'] == 1
+
           assert s['finite_semantic_review_groups'] == 74
           assert s['fully_accepted_semantic_groups'] == 0
           assert s['review_groups_with_accepted_component_sets'] == 10
@@ -85,18 +88,43 @@ jobs:
           assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1372
           assert s['canonical_component_refs_reused_unique'] == 52
           assert s['accepted_bounded_ru_route_semantics'] == 5
+          assert s['accepted_bounded_ru_subject_semantics'] == 14
+          assert s['accepted_bounded_ru_semantics_total'] == 19
           assert s['accepted_route_semantics_without_object_binding'] == 5
+          assert s['accepted_subject_semantics_without_object_binding'] == 14
           assert s['new_semantic_identities_created'] == 0
-          assert s['ru_proposal_identities_admitted'] == 5
+          assert s['ru_proposal_identities_admitted'] == 19
           assert s['false_exact_mastery_admissions'] == 0
-          assert data['accepted_route_semantic_refs'] == [
+
+          expected_route = {
               'ru-ege-essay-author-position',
               'ru-ege-essay-example-semantic-relation',
               'ru-ege-essay-logical-composition-cohesion',
               'ru-ege-essay-own-relation-justification',
               'ru-ege-essay-source-examples-explanation',
-          ]
+          }
+          expected_subject = {
+              'ru-expressive-alliteration',
+              'ru-expressive-personification',
+              'ru-expressive-syntactic-parallelism',
+              'ru-expressive-question-answer-form',
+              'ru-expressive-gradation',
+              'ru-expressive-inversion',
+              'ru-expressive-lexical-repetition',
+              'ru-expressive-epiphora',
+              'ru-expressive-antithesis',
+              'ru-expressive-rhetorical-question',
+              'ru-expressive-rhetorical-exclamation',
+              'ru-expressive-polysyndeton',
+              'ru-expressive-asyndeton',
+              'ru-expressive-litotes',
+          }
+          assert set(data['accepted_route_semantic_refs']) == expected_route
+          assert set(data['accepted_subject_semantic_refs']) == expected_subject
+          assert set(data['accepted_bounded_ru_semantic_refs']) == expected_route | expected_subject
           assert data['policy']['route_semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
+          assert data['policy']['subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
+
           touched = [g for g in data['semantic_review_groups'] if g['accepted_component_set_count']]
           assert len(touched) == 10
           assert sum(g['accepted_component_set_count'] for g in touched) == 19
