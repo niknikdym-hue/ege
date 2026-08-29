@@ -21,9 +21,12 @@ class CompatibleCredential:
             raise ValueError("unsupported provider authorization scheme")
 
     def authorization_header(self) -> str:
-        secret = self.secret_provider()
+        try:
+            secret = self.secret_provider()
+        except Exception as exc:
+            raise PermissionError("provider credential unavailable") from exc
         if not isinstance(secret, str) or not secret.strip():
-            raise ValueError("provider credential unavailable")
+            raise PermissionError("provider credential unavailable")
         return f"{self.authorization_scheme} {secret.strip()}"
 
 
