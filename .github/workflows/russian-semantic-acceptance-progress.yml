@@ -1,0 +1,87 @@
+name: Russian semantic acceptance progress
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/**"
+      - "eksamio-learning-engine/russian-program/object-review/**"
+      - "eksamio-learning-engine/russian-program/source-knowledge/**"
+      - "eksamio-learning-engine/russian-program/ege-task-code-relation/**"
+      - "eksamio-learning-engine/264-RUSSIAN-FIPI-2026-EGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - ".github/workflows/russian-semantic-acceptance-progress.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-progress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build semantic acceptance progress twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress.py \
+            --output /tmp/progress-a.json > /tmp/progress-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress.py \
+            --output /tmp/progress-b.json > /tmp/progress-report-b.txt
+          cmp /tmp/progress-a.json /tmp/progress-b.json
+          diff -u /tmp/progress-report-a.txt /tmp/progress-report-b.txt
+          cat /tmp/progress-report-a.txt
+          cp /tmp/progress-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json
+      - name: Verify fail-closed progress summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          s = data['progress_summary']
+          assert data['status'] == 'CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS'
+          assert data['russian_content_ready'] is False
+          assert s['finite_semantic_review_groups'] == 74
+          assert s['fully_accepted_semantic_groups'] == 0
+          assert s['review_groups_with_accepted_component_sets'] == 5
+          assert s['semantic_units_with_accepted_component_sets'] == 5
+          assert s['semantic_requirements_with_accepted_component_sets'] == 5
+          assert s['semantic_units_remaining_without_accepted_component_set'] == 1311
+          assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1386
+          assert s['canonical_component_refs_reused_unique'] == 22
+          assert s['new_semantic_identities_created'] == 0
+          assert s['ru_proposal_identities_admitted'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          touched = [g for g in data['semantic_review_groups'] if g['accepted_component_set_count']]
+          assert len(touched) == 5
+          assert all(g['status'] == 'SUBJECT_ACCEPTANCE_REQUIRED_WITH_ACCEPTED_COMPONENT_SET' for g in touched)
+          assert all(g['remaining_group_action'].startswith('CONTINUE_EXACT_COMPONENT_REVIEW') for g in touched)
+          print('RUSSIAN_SEMANTIC_ACCEPTANCE_PROGRESS_GUARD=PASS')
+          PY
+      - name: Upload semantic progress artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-semantic-acceptance-progress
+          path: eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
