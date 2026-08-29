@@ -14,12 +14,17 @@ from yandex_live_adapters import JsonTransport
 @dataclass(frozen=True)
 class CompatibleCredential:
     secret_provider: Callable[[], str] = field(repr=False, compare=False)
+    authorization_scheme: str = "Bearer"
+
+    def __post_init__(self) -> None:
+        if self.authorization_scheme not in {"Bearer", "Api-Key"}:
+            raise ValueError("unsupported provider authorization scheme")
 
     def authorization_header(self) -> str:
         secret = self.secret_provider()
         if not isinstance(secret, str) or not secret.strip():
             raise ValueError("provider credential unavailable")
-        return f"Bearer {secret.strip()}"
+        return f"{self.authorization_scheme} {secret.strip()}"
 
 
 @dataclass(frozen=True)
@@ -32,6 +37,7 @@ class CompatibleChatConfig:
     max_request_chars: int = 60_000
     max_response_chars: int = 12_000
     max_output_tokens: int = 900
+    temperature: float = 0.2
     execution_enabled: bool = False
 
     def __post_init__(self) -> None:
@@ -43,6 +49,8 @@ class CompatibleChatConfig:
             raise ValueError("provider timeout must be in (0, 60]")
         if not 64 <= self.max_output_tokens <= 4096:
             raise ValueError("provider output-token bound is invalid")
+        if not 0 <= self.temperature <= 1:
+            raise ValueError("Tutor temperature must be in [0, 1]")
 
 
 class OpenAICompatibleChatProvider:
@@ -63,6 +71,8 @@ class OpenAICompatibleChatProvider:
             "model": self.config.model,
             "messages": chat_messages(request),
             "max_tokens": self.config.max_output_tokens,
+            "temperature": self.config.temperature,
+            "stream": False,
         }
         if len(repr(body)) > self.config.max_request_chars:
             raise ValueError("compatible Tutor request exceeds configured bound")
