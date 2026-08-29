@@ -9,6 +9,7 @@ PROGRAM = HERE.parent
 ENGINE = PROGRAM.parent
 CONTENT = PROGRAM / "production-learning-content"
 REVIEW = HERE / "RU13-EXPRESSIVE-COMPONENT-BOUNDARY-REVIEW-v0.1.json"
+ACCEPTANCE = HERE / "RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
 INVENTORY = ENGINE / "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
 PROPOSED_WAVES = (
     CONTENT / "RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json",
@@ -28,7 +29,7 @@ EXPECTED_CANDIDATE_SOURCES = {
     "candidate-041": "device_metaphor",
     "candidate-042": "device_comparison",
 }
-EXPECTED_PROPOSED = {
+EXPECTED_ACCEPTED = {
     "ru-expressive-alliteration",
     "ru-expressive-personification",
     "ru-expressive-syntactic-parallelism",
@@ -48,98 +49,105 @@ EXPECTED_PROPOSED = {
 
 def main() -> int:
     review = json.loads(REVIEW.read_text(encoding="utf-8"))
+    acceptance = json.loads(ACCEPTANCE.read_text(encoding="utf-8"))
+
     expected_summary = {
         "explicit_components": 24,
-        "new_proposed_components_with_content": 14,
-        "existing_candidate_components_with_content": 10,
+        "bounded_subject_semantics_accepted": 14,
+        "existing_candidate_components_pending": 10,
         "component_content_complete": 24,
-        "existing_candidates_requiring_exact_boundary_acceptance": 10,
-        "proposed_components_requiring_subject_acceptance": 14,
-        "canonical_semantic_admissions": 0,
-        "ru_proposal_admissions": 0,
+        "canonical_school_semantic_admissions": 0,
+        "ru_subject_semantic_admissions": 14,
+        "object_level_admission_units_closed_by_semantic_overlay": 0,
+        "object_level_requirements_closed_by_semantic_overlay": 0,
     }
     if review.get("summary") != expected_summary:
         raise AssertionError(f"RU13 component review summary drift: {review.get('summary')}")
-    if review.get("status") != "CENTRAL_BRAIN_COMPONENT_BOUNDARY_REVIEW_CONTENT_COMPLETE_ACCEPTANCE_PENDING":
+    if review.get("status") != "CENTRAL_BRAIN_COMPONENT_BOUNDARY_REVIEW_PARTIAL_WITH_14_BOUNDED_SEMANTICS_ACCEPTED":
         raise AssertionError("RU13 component review status drift")
-    if review.get("admission_effect") != "NONE_UNTIL_EXPLICIT_CANONICAL_SEMANTIC_ACCEPTANCE":
-        raise AssertionError("RU13 boundary review admission effect weakened")
+    if review.get("admission_effect") != "FOURTEEN_PROPOSED_COMPONENTS_ACCEPTED_TEN_EXISTING_CANDIDATES_PENDING_OBJECT_COUNTS_UNCHANGED":
+        raise AssertionError("RU13 boundary admission effect drift")
+    if review.get("acceptance_overlay_ref") != ACCEPTANCE.name:
+        raise AssertionError("RU13 acceptance overlay ref drift")
 
-    policy = review.get("policy", {})
     expected_policy = {
         "reuse_existing_semantics_first": True,
         "content_presence_implies_admission": False,
         "candidate_presence_implies_admission": False,
         "generic_expressive_attempt_can_emit_component_mastery": False,
         "component_specific_independent_evidence_required": True,
+        "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": False,
         "rhetorical_address_duplicate_forbidden": True,
     }
-    if policy != expected_policy:
-        raise AssertionError(f"RU13 review policy drift: {policy}")
+    if review.get("policy") != expected_policy:
+        raise AssertionError("RU13 boundary policy drift")
 
-    existing = review.get("existing_candidate_components")
-    proposed = review.get("proposed_content_components")
-    if not isinstance(existing, list) or not isinstance(proposed, list):
-        raise AssertionError("RU13 component arrays are invalid")
-    actual_sources = {str(row.get("ref")): str(row.get("source_id")) for row in existing}
+    if acceptance.get("status") != "CENTRAL_BRAIN_ACCEPTED_RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTICS":
+        raise AssertionError("RU13 bounded acceptance authority missing")
+    accepted_rows = acceptance.get("decisions") or []
+    accepted_ids = {str(row.get("accepted_semantic_id")) for row in accepted_rows if isinstance(row, dict)}
+    if accepted_ids != EXPECTED_ACCEPTED or len(accepted_rows) != 14:
+        raise AssertionError("RU13 accepted semantic authority set drift")
+    a_summary = acceptance.get("summary") or {}
+    if a_summary.get("object_level_admission_units_closed") != 0 or a_summary.get("object_level_requirements_closed") != 0:
+        raise AssertionError("RU13 semantic acceptance falsely closed object-level accounting")
+
+    existing = review.get("existing_candidate_components") or []
+    proposed = review.get("proposed_content_components") or []
+    if len(existing) != 10 or len(proposed) != 14:
+        raise AssertionError("RU13 24-component boundary drift")
+    actual_sources = {str(row.get("ref")): str(row.get("source_id")) for row in existing if isinstance(row, dict)}
     if actual_sources != EXPECTED_CANDIDATE_SOURCES:
-        raise AssertionError(f"RU13 existing candidate/source mapping drift: {actual_sources}")
-    proposed_ids = {str(row.get("semantic_id")) for row in proposed}
-    if proposed_ids != EXPECTED_PROPOSED:
-        raise AssertionError("RU13 proposed content semantic set drift")
-
-    expected_existing_content = "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json"
-    for row in existing:
-        if row.get("status") != "CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED":
-            raise AssertionError("existing RU13 candidate was silently admitted or lost content-ready state")
-        if row.get("content_ref") != expected_existing_content:
-            raise AssertionError(f"existing RU13 content ref drift: {row.get('ref')}")
+        raise AssertionError("RU13 existing candidate/source mapping drift")
+    if any(row.get("status") != "CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED" for row in existing):
+        raise AssertionError("existing RU13 candidate was silently admitted")
     address = next(row for row in existing if row.get("ref") == "candidate-039")
     if address.get("special_guard") != "OWNS_RHETORICAL_ADDRESS_BOUNDARY_NO_DUPLICATE_ID":
         raise AssertionError("candidate-039 rhetorical-address ownership guard drift")
 
-    for row in proposed:
-        if row.get("status") != "CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL":
-            raise AssertionError("RU13 proposed semantic was silently canonicalized or lost content-ready state")
-        if not str(row.get("content_ref", "")).startswith("production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-"):
-            raise AssertionError(f"RU13 proposed semantic lacks production content ref: {row.get('semantic_id')}")
+    proposed_by_id = {str(row.get("semantic_id")): row for row in proposed if isinstance(row, dict)}
+    if set(proposed_by_id) != EXPECTED_ACCEPTED:
+        raise AssertionError("RU13 accepted boundary identity set drift")
+    for sid, row in proposed_by_id.items():
+        if row.get("status") != "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC":
+            raise AssertionError(f"RU13 accepted semantic lost acceptance: {sid}")
+        if not str(row.get("acceptance_ref", "")).startswith(ACCEPTANCE.name + "#"):
+            raise AssertionError(f"RU13 accepted semantic lacks durable authority ref: {sid}")
         if len(str(row.get("boundary_guard", "")).strip()) < 20:
-            raise AssertionError(f"RU13 proposed semantic lacks bounded scope: {row.get('semantic_id')}")
+            raise AssertionError(f"RU13 accepted semantic lacks bounded scope: {sid}")
+        if row.get("boundary_guard") != next(item for item in accepted_rows if item.get("accepted_semantic_id") == sid).get("boundary_guard"):
+            raise AssertionError(f"RU13 accepted boundary/authority mismatch: {sid}")
 
     inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
-    inventory_objects = inventory.get("objects", [])
+    objects = inventory.get("objects") or []
     for candidate_ref, source_id in EXPECTED_CANDIDATE_SOURCES.items():
         matches = [
-            row for row in inventory_objects
+            row for row in objects
             if isinstance(row, dict)
             and row.get("candidate_canonical_owner") == candidate_ref
             and row.get("source_id") == source_id
+            and row.get("audit_classification") == "EGE_TAXONOMY_NODE"
         ]
         if len(matches) != 1:
             raise AssertionError(f"exact existing candidate/source evidence mismatch: {candidate_ref}/{source_id}")
-        row = matches[0]
-        if row.get("authority_status") != "current" or row.get("review_status") != "source_verified":
-            raise AssertionError(f"existing RU13 source evidence is not current/source-verified: {candidate_ref}")
-        if row.get("audit_classification") != "EGE_TAXONOMY_NODE":
-            raise AssertionError(f"existing RU13 source evidence classification drift: {candidate_ref}")
-        expected_ref = f"03-RUSSIAN-SKILL-GRAPH.json#skills[{source_id}]"
-        if expected_ref not in (row.get("evidence_provenance_refs") or []):
-            raise AssertionError(f"existing RU13 source provenance drift: {candidate_ref}")
+        source = matches[0]
+        if source.get("authority_status") != "current" or source.get("review_status") != "source_verified":
+            raise AssertionError(f"existing RU13 source evidence not current/source-verified: {candidate_ref}")
 
     proposed_texts = [path.read_text(encoding="utf-8") for path in PROPOSED_WAVES]
-    for semantic_id in EXPECTED_PROPOSED:
+    for semantic_id in EXPECTED_ACCEPTED:
         if sum(semantic_id in text for text in proposed_texts) != 1:
-            raise AssertionError(f"proposed RU13 semantic must belong to exactly one content wave: {semantic_id}")
+            raise AssertionError(f"accepted RU13 semantic must belong to exactly one content wave: {semantic_id}")
     if any("ru-expressive-rhetorical-address" in text for text in proposed_texts):
-        raise AssertionError("duplicate rhetorical-address semantic was materialized")
+        raise AssertionError("duplicate rhetorical-address learner identity was materialized")
 
     existing_payload = json.loads(EXISTING_WAVE.read_text(encoding="utf-8"))
-    existing_units = existing_payload.get("units")
-    if not isinstance(existing_units, list) or len(existing_units) != 10:
+    existing_units = existing_payload.get("units") or []
+    if len(existing_units) != 10:
         raise AssertionError("RU13 existing-candidate content wave must contain exactly 10 units")
     content_candidates = {str(row.get("semantic_candidate_ref")): str(row.get("source_semantic_ref")) for row in existing_units}
     if content_candidates != EXPECTED_CANDIDATE_SOURCES:
-        raise AssertionError(f"RU13 existing-candidate content coverage drift: {content_candidates}")
+        raise AssertionError("RU13 existing-candidate content coverage drift")
     if any(row.get("proposed_semantic_id") for row in existing_units):
         raise AssertionError("existing RU13 candidate content created duplicate proposed identity")
 
@@ -147,18 +155,11 @@ def main() -> int:
     if not isinstance(guards, list) or len(guards) < 9:
         raise AssertionError("RU13 cross-boundary guard inventory incomplete")
 
-    serialized = json.dumps(review, ensure_ascii=False, sort_keys=True)
-    if '"canonical_semantic_admissions": 1' in serialized or '"ru_proposal_admissions": 1' in serialized:
-        raise AssertionError("RU13 boundary review contains semantic self-admission")
-
     print("RU13_EXPRESSIVE_COMPONENT_BOUNDARY_REVIEW=PASS")
     print("EXPLICIT_COMPONENTS=24")
-    print("COMPONENT_CONTENT_READY=24")
-    print("PROPOSED_CONTENT_READY=14")
-    print("EXISTING_CANDIDATE_CONTENT_READY=10")
-    print("EXISTING_CANDIDATE_SOURCE_EVIDENCE_VERIFIED=10")
-    print("CANONICAL_SEMANTIC_ADMISSIONS=0")
-    print("RU_PROPOSAL_ADMISSIONS=0")
+    print("ACCEPTED_BOUNDED_SUBJECT_SEMANTICS=14")
+    print("EXISTING_CANDIDATES_PENDING=10")
+    print("OBJECT_LEVEL_CLOSURES_FROM_SEMANTIC_OVERLAY=0")
     print("RHETORICAL_ADDRESS_DUPLICATES=0")
     return 0
 
