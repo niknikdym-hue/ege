@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1.1",
+  "schema_version": "0.1.2",
   "status": "CENTRAL_BRAIN_COMPONENT_BOUNDARY_REVIEW_PARTIAL_WITH_K1_K3_ROUTE_SEMANTICS_ACCEPTED",
   "authority_issue": 161,
   "route": "EGE_2026_TASK_27",
@@ -75,7 +75,7 @@
         "53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json#criteria[K4]",
         "55-RUSSIAN-ESSAY-27-EXPLANATION-COMPONENTS-v0.1.json#essay_fact_logic_review"
       ],
-      "status": "GRANULARITY_REVIEW_OPEN_NOT_ADMITTED"
+      "status": "CRITERION_PROVEN_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_ADMITTED"
     },
     {
       "candidate_ref": "candidate-052",
@@ -108,34 +108,10 @@
     "mastery_rule": "Neither component alone may be represented as complete K2 mastery; independent evidence must preserve both abilities."
   },
   "cross_module_quality_dimensions": [
-    {
-      "criterion_route": "K7",
-      "quality_dimension": "orthographic_norms",
-      "module_refs": ["RU-PROG-08"],
-      "status": "REUSE_EXACT_ADMITTED_COMPONENTS_REQUIRED_NOT_ADMITTED",
-      "forbidden": "essay-specific spelling identity"
-    },
-    {
-      "criterion_route": "K8",
-      "quality_dimension": "punctuation_norms",
-      "module_refs": ["RU-PROG-10"],
-      "status": "REUSE_EXACT_ADMITTED_COMPONENTS_REQUIRED_NOT_ADMITTED",
-      "forbidden": "essay-specific punctuation identity"
-    },
-    {
-      "criterion_route": "K9",
-      "quality_dimension": "grammar_norms",
-      "module_refs": ["RU-PROG-07", "RU-PROG-09"],
-      "status": "REUSE_EXACT_ADMITTED_COMPONENTS_REQUIRED_NOT_ADMITTED",
-      "forbidden": "one broad essay grammar identity"
-    },
-    {
-      "criterion_route": "K10",
-      "quality_dimension": "speech_norms",
-      "module_refs": ["RU-PROG-14"],
-      "status": "REUSE_EXACT_ADMITTED_COMPONENTS_REQUIRED_NOT_ADMITTED",
-      "forbidden": "one broad essay language-correctness identity"
-    }
+    {"criterion_route":"K7","quality_dimension":"orthographic_norms","module_refs":["RU-PROG-08"],"status":"REUSE_EXACT_ADMITTED_COMPONENTS_REQUIRED_NOT_ADMITTED","forbidden":"essay-specific spelling identity"},
+    {"criterion_route":"K8","quality_dimension":"punctuation_norms","module_refs":["RU-PROG-10"],"status":"REUSE_EXACT_ADMITTED_COMPONENTS_REQUIRED_NOT_ADMITTED","forbidden":"essay-specific punctuation identity"},
+    {"criterion_route":"K9","quality_dimension":"grammar_norms","module_refs":["RU-PROG-07","RU-PROG-09"],"status":"REUSE_EXACT_ADMITTED_COMPONENTS_REQUIRED_NOT_ADMITTED","forbidden":"one broad essay grammar identity"},
+    {"criterion_route":"K10","quality_dimension":"speech_norms","module_refs":["RU-PROG-14"],"status":"REUSE_EXACT_ADMITTED_COMPONENTS_REQUIRED_NOT_ADMITTED","forbidden":"one broad essay language-correctness identity"}
   ],
   "candidate_053_guard": {
     "candidate_ref": "candidate-053",
@@ -147,7 +123,7 @@
   "cross_boundary_guards": [
     "K1 author position is distinct from the learner's own K3 relation/justification",
     "K2 source examples/explanation is distinct from K2 semantic relation between the examples",
-    "K4 factual accuracy remains unaccepted while candidate-054 granularity is needs_review",
+    "K4 factual accuracy remains criterion-proven but is not admitted by the source-verified-taxonomy-first K1-K3 slice",
     "K5 logic/composition/cohesion remains a separate bounded acceptance decision",
     "K6 ethical compliance remains a bounded route criterion and must not expand into unrestricted moral judgement",
     "K7-K10 reuse exact cross-module semantic evidence and never create essay-specific duplicates",
