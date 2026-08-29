@@ -1,18 +1,19 @@
 {
-  "schema_version": "0.1.2",
-  "status": "CENTRAL_BRAIN_COMPONENT_BOUNDARY_REVIEW_CONTENT_COMPLETE_ACCEPTANCE_PENDING",
+  "schema_version": "0.1.3",
+  "status": "CENTRAL_BRAIN_COMPONENT_BOUNDARY_REVIEW_PARTIAL_WITH_14_BOUNDED_SEMANTICS_ACCEPTED",
   "authority_issue": 161,
   "normalized_meaning": "Распознавать и интерпретировать средства выразительности.",
-  "admission_effect": "NONE_UNTIL_EXPLICIT_CANONICAL_SEMANTIC_ACCEPTANCE",
+  "admission_effect": "FOURTEEN_PROPOSED_COMPONENTS_ACCEPTED_TEN_EXISTING_CANDIDATES_PENDING_OBJECT_COUNTS_UNCHANGED",
+  "acceptance_overlay_ref": "RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
   "summary": {
     "explicit_components": 24,
-    "new_proposed_components_with_content": 14,
-    "existing_candidate_components_with_content": 10,
+    "bounded_subject_semantics_accepted": 14,
+    "existing_candidate_components_pending": 10,
     "component_content_complete": 24,
-    "existing_candidates_requiring_exact_boundary_acceptance": 10,
-    "proposed_components_requiring_subject_acceptance": 14,
-    "canonical_semantic_admissions": 0,
-    "ru_proposal_admissions": 0
+    "canonical_school_semantic_admissions": 0,
+    "ru_subject_semantic_admissions": 14,
+    "object_level_admission_units_closed_by_semantic_overlay": 0,
+    "object_level_requirements_closed_by_semantic_overlay": 0
   },
   "policy": {
     "reuse_existing_semantics_first": true,
@@ -20,6 +21,7 @@
     "candidate_presence_implies_admission": false,
     "generic_expressive_attempt_can_emit_component_mastery": false,
     "component_specific_independent_evidence_required": true,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
     "rhetorical_address_duplicate_forbidden": true
   },
   "existing_candidate_components": [
@@ -35,20 +37,20 @@
     {"ref":"candidate-042","source_id":"device_comparison","label":"Сравнение","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED"}
   ],
   "proposed_content_components": [
-    {"semantic_id":"ru-expressive-alliteration","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"consonant sound repetition; distinct from assonance and accidental graphic coincidence"},
-    {"semantic_id":"ru-expressive-personification","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"human action/state/intention assigned to nonhuman; not every metaphor"},
-    {"semantic_id":"ru-expressive-syntactic-parallelism","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"similar syntactic organization; not lexical repetition/anaphora/antithesis alone"},
-    {"semantic_id":"ru-expressive-question-answer-form","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"question plus developed answer/reasoning; distinct from rhetorical question"},
-    {"semantic_id":"ru-expressive-gradation","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"ordered increase/decrease of intensity; list without scale is insufficient"},
-    {"semantic_id":"ru-expressive-inversion","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"deliberate expressive deviation from neutral word order; not any word-order variant/error"},
-    {"semantic_id":"ru-expressive-lexical-repetition","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"deliberate lexical repetition; broader than position-specific anaphora/epiphora"},
-    {"semantic_id":"ru-expressive-epiphora","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"repetition at endings; distinct from anaphora/general lexical repetition"},
-    {"semantic_id":"ru-expressive-antithesis","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"deliberately structured opposition; antonyms alone are insufficient"},
-    {"semantic_id":"ru-expressive-rhetorical-question","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"expressive question not requiring literal answer; distinct from ordinary question/Q&A form"},
-    {"semantic_id":"ru-expressive-rhetorical-exclamation","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"expressive intensified exclamatory construction; punctuation mark alone is insufficient"},
-    {"semantic_id":"ru-expressive-polysyndeton","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"deliberate repeated conjunctions; ordinary required coordination is insufficient"},
-    {"semantic_id":"ru-expressive-asyndeton","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"deliberate conjunction omission between enumerated/parallel parts; punctuation alone is insufficient"},
-    {"semantic_id":"ru-expressive-litotes","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","status":"CONTENT_READY_DEFINITION_BOUNDARY_READY_FOR_SUBJECT_ACCEPTANCE_NOT_CANONICAL","boundary_guard":"deliberate expressive understatement; ordinary factual smallness/weakness is insufficient"}
+    {"semantic_id":"ru-expressive-alliteration","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-alliteration","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"consonant sound repetition; distinct from assonance and accidental graphic coincidence"},
+    {"semantic_id":"ru-expressive-personification","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-personification","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"human action/state/intention assigned to nonhuman; not every metaphor"},
+    {"semantic_id":"ru-expressive-syntactic-parallelism","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-syntactic-parallelism","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"similar syntactic organization; not lexical repetition/anaphora/antithesis alone"},
+    {"semantic_id":"ru-expressive-question-answer-form","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-question-answer-form","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"question plus developed answer/reasoning; distinct from rhetorical question"},
+    {"semantic_id":"ru-expressive-gradation","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-gradation","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"ordered increase/decrease of intensity; list without scale is insufficient"},
+    {"semantic_id":"ru-expressive-inversion","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-inversion","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"deliberate expressive deviation from neutral word order; not any word-order variant/error"},
+    {"semantic_id":"ru-expressive-lexical-repetition","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-lexical-repetition","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"deliberate lexical repetition; broader than position-specific anaphora/epiphora"},
+    {"semantic_id":"ru-expressive-epiphora","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-epiphora","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"repetition at endings; distinct from anaphora/general lexical repetition"},
+    {"semantic_id":"ru-expressive-antithesis","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-antithesis","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"deliberately structured opposition; antonyms alone are insufficient"},
+    {"semantic_id":"ru-expressive-rhetorical-question","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-rhetorical-question","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"expressive question not requiring literal answer; distinct from ordinary question/Q&A form"},
+    {"semantic_id":"ru-expressive-rhetorical-exclamation","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-rhetorical-exclamation","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"expressive intensified exclamatory construction; punctuation mark alone is insufficient"},
+    {"semantic_id":"ru-expressive-polysyndeton","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-polysyndeton","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"deliberate repeated conjunctions; ordinary required coordination is insufficient"},
+    {"semantic_id":"ru-expressive-asyndeton","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-asyndeton","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"deliberate conjunction omission between enumerated/parallel parts; punctuation alone is insufficient"},
+    {"semantic_id":"ru-expressive-litotes","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-litotes","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"deliberate expressive understatement; ordinary factual smallness/weakness is insufficient"}
   ],
   "cross_boundary_guards": [
     "alliteration vs assonance: consonant vs vowel sound repetition",
