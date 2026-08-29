@@ -106,16 +106,15 @@ jobs:
           test "$code" -eq 2
           grep -q '^PRIVATE_TUTOR_UI=BLOCKED_OWNER_AUTHORIZATION$' <<<"$out"
           python3 - <<'PY'
-          import importlib.util
           from pathlib import Path
-          p=Path('eksamio-learning-engine/ai-tutor-reference/private_tutor_test_ui.py')
-          spec=importlib.util.spec_from_file_location('private_tutor_test_ui',p)
-          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
-          assert m.HOST == '127.0.0.1'
-          assert m.DEFAULT_MAX_TURNS == 20
-          assert m.MAX_MESSAGE_CHARS == 2000
-          assert 'API-ключ в браузер не передаётся' in m.PAGE
-          assert 'Публичный доступ и голос выключены' in m.PAGE
+          text=Path('eksamio-learning-engine/ai-tutor-reference/private_tutor_test_ui.py').read_text(encoding='utf-8')
+          assert 'HOST = "127.0.0.1"' in text
+          assert 'DEFAULT_MAX_TURNS = 20' in text
+          assert 'MAX_MESSAGE_CHARS = 2_000' in text
+          assert 'API-ключ в браузер не передаётся' in text
+          assert 'Публичный доступ и голос выключены' in text
+          assert 'public_traffic_enabled=False' in text
+          assert 'speech_execution_enabled=False' in text
           print('PRIVATE_TUTOR_UI_LOCALHOST_GUARD=PASS')
           PY
       - name: Preserve existing Yandex adapter contract
