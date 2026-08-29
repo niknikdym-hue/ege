@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Canonical semantic-progress builder with exact OGE 7.25 and accepted bounded subject overlays."""
+"""Canonical semantic-progress builder with exact OGE 7.25 and accepted bounded subject/route overlays."""
 from __future__ import annotations
 
 import runpy
@@ -13,6 +13,12 @@ INDIRECT_AUTHORITY = (
     "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_INDIRECT_SPEECH_CANONICAL_COMPONENT_SLICE",
     1,
     "RUSSIAN_OGE_INDIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+)
+RU15_OGE_EXPOSITION_ROUTE_AUTHORITY = (
+    HERE / "RU15-OGE-EXPOSITION-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json",
+    "CENTRAL_BRAIN_ACCEPTED_RU15_OGE_EXPOSITION_BOUNDED_ROUTE_SEMANTICS",
+    4,
+    "RU15_OGE_EXPOSITION_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1",
 )
 RU13_EXISTING_CANDIDATE_AUTHORITY = (
     HERE / "RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
@@ -53,6 +59,9 @@ RU09_SYNTAX_AUTHORITY = (
 
 _namespace: dict[str, Any] = runpy.run_path(str(BASE))
 _namespace["OBJECT_AUTHORITIES"] = tuple(_namespace["OBJECT_AUTHORITIES"]) + (INDIRECT_AUTHORITY,)
+_namespace["ROUTE_SEMANTIC_AUTHORITIES"] = tuple(_namespace["ROUTE_SEMANTIC_AUTHORITIES"]) + (
+    RU15_OGE_EXPOSITION_ROUTE_AUTHORITY,
+)
 _namespace["SUBJECT_SEMANTIC_AUTHORITIES"] = tuple(_namespace["SUBJECT_SEMANTIC_AUTHORITIES"]) + (
     RU13_EXISTING_CANDIDATE_AUTHORITY,
     RU01_PHONETICS_AUTHORITY,
@@ -63,6 +72,8 @@ _namespace["SUBJECT_SEMANTIC_AUTHORITIES"] = tuple(_namespace["SUBJECT_SEMANTIC_
 )
 _namespace["build_progress"].__globals__["OBJECT_AUTHORITIES"] = _namespace["OBJECT_AUTHORITIES"]
 _namespace["main"].__globals__["OBJECT_AUTHORITIES"] = _namespace["OBJECT_AUTHORITIES"]
+_namespace["build_progress"].__globals__["ROUTE_SEMANTIC_AUTHORITIES"] = _namespace["ROUTE_SEMANTIC_AUTHORITIES"]
+_namespace["main"].__globals__["ROUTE_SEMANTIC_AUTHORITIES"] = _namespace["ROUTE_SEMANTIC_AUTHORITIES"]
 _namespace["build_progress"].__globals__["SUBJECT_SEMANTIC_AUTHORITIES"] = _namespace["SUBJECT_SEMANTIC_AUTHORITIES"]
 _namespace["main"].__globals__["SUBJECT_SEMANTIC_AUTHORITIES"] = _namespace["SUBJECT_SEMANTIC_AUTHORITIES"]
 _base_build_progress = _namespace["build_progress"]
