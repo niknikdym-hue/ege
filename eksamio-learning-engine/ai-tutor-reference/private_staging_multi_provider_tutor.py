@@ -49,6 +49,9 @@ class PrivateMultiProviderTutorConfig:
     qwen_base_url: str | None = None
     yandex_folder_id: str | None = None
     yandex_model_id: str = "aliceai-llm"
+    speech_stt_audio_format: str = "lpcm"
+    speech_tts_audio_format: str = "oggopus"
+    speech_stt_sample_rate_hertz: int = 16_000
     private_staging: bool = True
     public_traffic_enabled: bool = False
     owner_live_authorized: bool = False
@@ -66,6 +69,14 @@ class PrivateMultiProviderTutorConfig:
             raise PrivateMultiProviderConfigurationError("live provider execution requires explicit owner authorization")
         if not self.yandex_voice:
             raise PrivateMultiProviderConfigurationError("Yandex Tutor voice must be configured")
+        if self.speech_stt_audio_format != "lpcm" or self.speech_stt_sample_rate_hertz != 16_000:
+            raise PrivateMultiProviderConfigurationError(
+                "private browser voice test is locked to mono LPCM 16 kHz input"
+            )
+        if self.speech_tts_audio_format != "oggopus":
+            raise PrivateMultiProviderConfigurationError(
+                "private browser voice test is locked to Ogg Opus output"
+            )
 
     @property
     def resolved_yandex_folder_id(self) -> str | None:
@@ -95,6 +106,9 @@ class PrivateMultiProviderTutorAssembly:
             "text_provider_order": [path.provider_id for path in ordered],
             "stt_provider": self.speech_provider.provider_id,
             "tts_provider": self.speech_provider.provider_id,
+            "stt_format": self.speech_provider.config.resolved_stt_format,
+            "tts_format": self.speech_provider.config.resolved_tts_format,
+            "stt_sample_rate_hertz": self.speech_provider.config.stt_sample_rate_hertz,
             "voice_text_fallback_enabled": True,
             "accepted_semantic_count": len(self.tutor.accepted_semantics.semantic_ids),
             "learner_audio_persisted_bytes": 0,
@@ -167,6 +181,9 @@ def assemble_private_multi_provider_tutor(
             credential=YandexCredential(CredentialKind.API_KEY, YandexSpeechSecretProvider()),
             voice=config.yandex_voice,
             folder_id=config.resolved_yandex_folder_id,
+            stt_audio_format=config.speech_stt_audio_format,
+            tts_audio_format=config.speech_tts_audio_format,
+            stt_sample_rate_hertz=config.speech_stt_sample_rate_hertz,
             execution_enabled=config.speech_execution_enabled,
         ),
         stt_transport=stt_transport or UrllibBinaryTransport(),
