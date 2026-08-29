@@ -1,0 +1,71 @@
+name: SEP1 production E2E payment harness
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/payments-reference/**'
+      - 'eksamio-learning-engine/launch-preflight/**'
+      - '.github/workflows/sep1-production-e2e-harness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  payment-e2e-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile bounded payment E2E code
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/payments-reference/payments.py \
+            eksamio-learning-engine/payments-reference/robokassa_production.py \
+            eksamio-learning-engine/payments-reference/production_e2e_boundary.py \
+            eksamio-learning-engine/payments-reference/validate_production_e2e_boundary.py
+      - name: Validate existing Robokassa production admission
+        working-directory: eksamio-learning-engine/payments-reference
+        run: python validate_robokassa_production_admission.py
+      - name: Validate exact-candidate payment boundary
+        working-directory: eksamio-learning-engine/payments-reference
+        run: python validate_production_e2e_boundary.py --candidate-sha '${{ github.event.pull_request.head.sha || github.sha }}'
+      - name: Prove deterministic exact-candidate evidence x2
+        working-directory: eksamio-learning-engine/payments-reference
+        shell: bash
+        run: |
+          python validate_production_e2e_boundary.py --candidate-sha '${{ github.event.pull_request.head.sha || github.sha }}' --emit > /tmp/payment-e2e-a.json
+          python validate_production_e2e_boundary.py --candidate-sha '${{ github.event.pull_request.head.sha || github.sha }}' --emit > /tmp/payment-e2e-b.json
+          cmp /tmp/payment-e2e-a.json /tmp/payment-e2e-b.json
+          sha256sum /tmp/payment-e2e-a.json /tmp/payment-e2e-b.json
+          cp /tmp/payment-e2e-a.json sep1-production-payment-e2e-evidence.json
+      - name: Reject network-capable code in new CI boundary
+        shell: bash
+        run: |
+          if grep -En '(requests\.|urlopen\(|httpx\.|aiohttp\.|socket\.)' \
+            eksamio-learning-engine/payments-reference/production_e2e_boundary.py \
+            eksamio-learning-engine/payments-reference/validate_production_e2e_boundary.py; then
+            echo 'Network-capable code is forbidden in CI simulated acceptance boundary.' >&2
+            exit 1
+          fi
+      - name: Validate launch preflight stays fail-closed
+        working-directory: eksamio-learning-engine/launch-preflight
+        run: python validate_sep1_production_preflight.py
+      - name: Upload simulated exact-candidate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sep1-production-payment-e2e-evidence
+          path: eksamio-learning-engine/payments-reference/sep1-production-payment-e2e-evidence.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Reject whitespace errors
+        shell: bash
+        run: |
+          if [[ '${{ github.event_name }}' == 'pull_request' ]]; then
+            git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
+          else
+            git diff --check
+          fi
