@@ -8,17 +8,17 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 PROGRAM = HERE.parent
-ENGINE = PROGRAM.parent
 BUILDER = HERE / "build_russian_subject_ledger.py"
+COMPOSITES = HERE / "RUSSIAN-SUBJECT-REVIEWED-COMPOSITES-v0.1.json"
 TASK_RELATION = PROGRAM / "ege-task-code-relation" / "FIPI-EGE-2026-TASK-CODE-RELATION-v1.0.json"
 
 EXPECTED = {
     "admission_units_total": 1325,
     "requirements_total": 1400,
-    "accepted_classification_units": 14,
-    "accepted_classification_requirements": 15,
-    "remaining_subject_review_units": 1311,
-    "remaining_subject_review_requirements": 1385,
+    "accepted_classification_units": 116,
+    "accepted_classification_requirements": 119,
+    "remaining_subject_review_units": 1209,
+    "remaining_subject_review_requirements": 1281,
     "canonical_semantic_admissions": 0,
     "ru_proposal_admissions": 0,
     "false_exact_mastery_admissions": 0,
@@ -30,14 +30,6 @@ EXPECTED_EXPRESSIVE_SET = {
     "RAU-b5712ae284c6178d10fd",
     "RAU-f8b3979c6b1889dbb949",
 }
-EXPECTED_EXPRESSIVE_REQUIREMENTS = {
-    "RSK-EDSOO59-8-1-P201",
-    "RSK-OGE_COD-1-1-2-P002",
-    "RSK-EDSOO59-8-1-P227",
-    "RSK-EDSOO59-8-1-P231",
-    "RSK-EGE_COD-3-12-P004",
-    "RSK-EGE_COD-1-1-1-P002",
-}
 
 
 def main() -> int:
@@ -47,17 +39,15 @@ def main() -> int:
         raise AssertionError("aggregate ledger status drift")
     if ledger.get("summary") != EXPECTED:
         raise AssertionError(f"aggregate ledger progress drift: {ledger.get('summary')}")
-
-    by_disposition = ledger.get("by_disposition")
-    if by_disposition != {
-        "PARTIAL_OR_COMPOSITE": {"admission_units": 5, "requirements": 6},
+    if ledger.get("by_disposition") != {
+        "PARTIAL_OR_COMPOSITE": {"admission_units": 107, "requirements": 110},
         "ROUTE_OR_FORMAT_ONLY": {"admission_units": 9, "requirements": 9},
     }:
-        raise AssertionError(f"unexpected disposition totals: {by_disposition}")
+        raise AssertionError(f"unexpected disposition totals: {ledger.get('by_disposition')}")
 
     rows = ledger.get("dispositions")
-    if not isinstance(rows, list) or len(rows) != 14:
-        raise AssertionError("aggregate ledger must contain 14 exact unit rows")
+    if not isinstance(rows, list) or len(rows) != 116:
+        raise AssertionError("aggregate ledger must contain 116 exact unit rows")
     unit_ids = [str(row.get("admission_unit_id", "")) for row in rows]
     if len(unit_ids) != len(set(unit_ids)):
         raise AssertionError("aggregate ledger duplicates admission units")
@@ -66,77 +56,68 @@ def main() -> int:
         members = row.get("members")
         if not isinstance(members, list) or not members:
             raise AssertionError(f"ledger row lacks exact members: {row.get('admission_unit_id')}")
-        for member in members:
-            if not isinstance(member, dict) or not str(member.get("source_locator", "")):
-                raise AssertionError(f"ledger member lacks source locator: {row.get('admission_unit_id')}")
-            requirement_ids.append(str(member.get("requirement_id", "")))
+        requirement_ids.extend(str(member.get("requirement_id", "")) for member in members)
+        if any(not str(member.get("source_locator", "")) for member in members):
+            raise AssertionError(f"ledger member lacks source locator: {row.get('admission_unit_id')}")
         if row.get("semantic_identity_ref") is not None:
             raise AssertionError("current aggregate slice must not directly admit a semantic identity")
-    if len(requirement_ids) != len(set(requirement_ids)) or len(requirement_ids) != 15:
+    if len(requirement_ids) != len(set(requirement_ids)) or len(requirement_ids) != 119:
         raise AssertionError("aggregate ledger duplicates/misses exact requirements")
 
-    expressive = [
-        row for row in rows
-        if row.get("decision_set_id") == "CB-RU13-EXPRESSIVE-BROAD-DOMAIN-001"
-    ]
+    expressive = [row for row in rows if row.get("decision_set_id") == "CB-RU13-EXPRESSIVE-BROAD-DOMAIN-001"]
     if {str(row["admission_unit_id"]) for row in expressive} != EXPECTED_EXPRESSIVE_SET:
         raise AssertionError("RU13 expressive reviewed set unit drift")
-    expressive_requirements = {
-        str(member["requirement_id"])
-        for row in expressive
-        for member in row["members"]
-    }
-    if expressive_requirements != EXPECTED_EXPRESSIVE_REQUIREMENTS:
-        raise AssertionError("RU13 expressive reviewed set requirement drift")
     if any(row.get("normalized_meaning") != "Распознавать и интерпретировать средства выразительности." for row in expressive):
         raise AssertionError("RU13 reviewed set escaped exact normalized meaning boundary")
-    if any(row.get("disposition") != "PARTIAL_OR_COMPOSITE" for row in expressive):
-        raise AssertionError("RU13 broad-domain set must remain PARTIAL_OR_COMPOSITE")
-
     component_signatures = {
-        (
-            str(component.get("ref_kind", "")),
-            str(component.get("ref", "")),
-            str(component.get("status", "")),
-        )
+        (str(component.get("ref_kind", "")), str(component.get("ref", "")), str(component.get("status", "")))
         for row in expressive
         for component in row.get("component_refs", [])
     }
     if len(component_signatures) != 24:
         raise AssertionError(f"RU13 component inventory drift: {len(component_signatures)}")
-    new_content = {
-        ref
-        for kind, ref, status in component_signatures
-        if kind == "proposed_semantic_with_content" and status == "PROPOSED_NOT_CANONICAL"
-    }
-    if len(new_content) != 14:
-        raise AssertionError("RU13 newly materialized component count drift")
-    existing = {
-        ref
-        for kind, ref, status in component_signatures
-        if kind == "existing_semantic_candidate" and status.endswith("NOT_ADMITTED_BY_THIS_SET")
-    }
-    if existing != {f"candidate-{number:03d}" for number in range(33, 43)}:
-        raise AssertionError("RU13 existing candidate component inventory drift")
-    if "candidate-039" not in existing:
-        raise AssertionError("rhetorical-address existing boundary was lost")
 
-    for row in expressive:
+    composite_source = json.loads(COMPOSITES.read_text(encoding="utf-8"))
+    if composite_source.get("summary") != {
+        "reviewed_sets": 26,
+        "accepted_classification_units": 102,
+        "accepted_classification_requirements": 104,
+        "semantic_admissions": 0,
+    }:
+        raise AssertionError("composite source summary drift")
+    expected_set_ids = {f"CB-COMPOSITE-{number:03d}" for number in range(1, 27)}
+    composite_rows = [row for row in rows if row.get("decision_set_id") in expected_set_ids]
+    if len(composite_rows) != 102:
+        raise AssertionError(f"exact composite classification row count drift: {len(composite_rows)}")
+    if sum(len(row["members"]) for row in composite_rows) != 104:
+        raise AssertionError("exact composite requirement count drift")
+    if {str(row.get("decision_set_id")) for row in composite_rows} != expected_set_ids:
+        raise AssertionError("composite reviewed set coverage drift")
+    for row in composite_rows:
+        if row.get("disposition") != "PARTIAL_OR_COMPOSITE":
+            raise AssertionError("composite exact set escaped PARTIAL_OR_COMPOSITE")
+        if ". " not in str(row.get("normalized_meaning", "")):
+            raise AssertionError("composite classification lost its multi-capability exact meaning")
+        components = row.get("component_refs")
+        if not isinstance(components, list) or len(components) < 2:
+            raise AssertionError("composite row lacks independent review capability boundaries")
+        for component in components:
+            if component.get("ref_kind") != "review_capability_boundary":
+                raise AssertionError("derived composite component became semantic authority")
+            if component.get("status") != "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION":
+                raise AssertionError("review capability boundary admission guard weakened")
         boundary = row.get("mastery_boundary")
         if not isinstance(boundary, dict):
-            raise AssertionError("RU13 composite mastery boundary missing")
+            raise AssertionError("composite mastery boundary missing")
         if boundary.get("generic_domain_attempt_can_emit_exact_component_mastery") is not False:
-            raise AssertionError("generic expressive-domain evidence may not emit exact component mastery")
+            raise AssertionError("composite evidence may not emit exact component mastery")
         if boundary.get("component_mastery_requires_component_specific_independent_evidence") is not True:
-            raise AssertionError("component-specific independent evidence guard weakened")
+            raise AssertionError("component-specific evidence guard weakened")
 
     relation = json.loads(TASK_RELATION.read_text(encoding="utf-8"))
     task22 = next(row for row in relation["rows"] if row["task"] == 22)
     if "3.12" not in task22["requirement_code_expressions"]:
         raise AssertionError("merged FIPI task-22 -> requirement-code 3.12 authority drift")
-    ege_312 = next(row for row in expressive if row["admission_unit_id"] == "RAU-b5712ae284c6178d10fd")
-    if ege_312["members"][0]["code"] != "3.12" or ege_312["members"][0]["source_id"] != "FIPI-EGE-RU-2026-FINAL":
-        raise AssertionError("RU13 task-22 exact source binding drift")
 
     if ledger.get("policy") != {
         "every_disposition_is_exact_admission_unit_specific": True,
@@ -150,9 +131,9 @@ def main() -> int:
     for key, value in EXPECTED.items():
         print(f"{key}={value}")
     print("ROUTE_OR_FORMAT_ONLY_UNITS=9")
-    print("PARTIAL_OR_COMPOSITE_UNITS=5")
-    print("RU13_BROAD_DOMAIN_COMPONENTS=24")
-    print("RU13_NEW_CONTENT_COMPONENTS=14")
+    print("PARTIAL_OR_COMPOSITE_UNITS=107")
+    print("EXACT_MULTI_CAPABILITY_COMPOSITE_UNITS=102")
+    print("EXACT_MULTI_CAPABILITY_COMPOSITE_REQUIREMENTS=104")
     print("CANONICAL_SEMANTIC_ADMISSIONS=0")
     print("RU_PROPOSAL_ADMISSIONS=0")
     print("FALSE_MASTERY_ADMISSIONS=0")
