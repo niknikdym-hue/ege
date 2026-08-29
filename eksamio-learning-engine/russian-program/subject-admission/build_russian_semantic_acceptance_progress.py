@@ -2,9 +2,9 @@
 """Overlay accepted exact component-set decisions onto the finite semantic packet.
 
 The base 74-group packet stays the complete review universe. This overlay records
-only subject decisions already accepted by explicit exact authority. A group is
-not marked fully accepted merely because one admission unit inside it has an
-accepted component set.
+only subject decisions already accepted by explicit exact authorities. A group
+is never marked fully accepted merely because one or more units inside it have
+accepted component sets.
 """
 from __future__ import annotations
 
@@ -18,7 +18,20 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 PACKET_BUILDER = HERE / "build_russian_semantic_acceptance_packet.py"
-EGE_ACCEPTANCE = HERE / "RUSSIAN-EGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+AUTHORITIES = (
+    (
+        HERE / "RUSSIAN-EGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json",
+        "CENTRAL_BRAIN_ACCEPTED_EXACT_EGE_CANONICAL_COMPONENT_SLICE",
+        5,
+        "RUSSIAN_EGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+    ),
+    (
+        HERE / "RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json",
+        "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_CANONICAL_COMPONENT_SLICE",
+        4,
+        "RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+    ),
+)
 
 
 def canonical_json(value: Any) -> bytes:
@@ -27,26 +40,44 @@ def canonical_json(value: Any) -> bytes:
 
 def build_progress() -> dict[str, Any]:
     packet = runpy.run_path(str(PACKET_BUILDER))["build_packet"]()
-    authority = json.loads(EGE_ACCEPTANCE.read_text(encoding="utf-8"))
-
     if packet.get("status") != "CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_REQUIRED":
         raise ValueError("base semantic packet is not fail-closed")
     if packet.get("russian_content_ready") is not False:
         raise ValueError("base packet is unexpectedly content-ready")
-    if authority.get("status") != "CENTRAL_BRAIN_ACCEPTED_EXACT_EGE_CANONICAL_COMPONENT_SLICE":
-        raise ValueError("exact EGE component authority status drift")
-    if authority.get("semantic_packet_sha256") != packet.get("normalized_sha256"):
-        raise ValueError("exact EGE authority is not bound to this semantic packet")
-    if authority.get("object_accounting_sha256") != packet.get("object_accounting", {}).get("normalized_sha256"):
-        raise ValueError("exact EGE authority is not bound to this object accounting")
 
-    decisions = authority.get("decisions")
-    if not isinstance(decisions, list) or len(decisions) != 5:
-        raise ValueError("expected exactly five accepted EGE component-set decisions")
-    if len({str(row.get("admission_unit_id")) for row in decisions}) != 5:
-        raise ValueError("accepted EGE admission units are not unique")
-    if len({str(row.get("requirement_id")) for row in decisions}) != 5:
-        raise ValueError("accepted EGE requirements are not unique")
+    authorities: list[dict[str, Any]] = []
+    decisions: list[dict[str, Any]] = []
+    for path, expected_status, expected_count, authority_id in AUTHORITIES:
+        authority = json.loads(path.read_text(encoding="utf-8"))
+        if authority.get("status") != expected_status:
+            raise ValueError(f"exact component authority status drift: {path.name}")
+        if authority.get("semantic_packet_sha256") != packet.get("normalized_sha256"):
+            raise ValueError(f"authority is not bound to this semantic packet: {path.name}")
+        if authority.get("object_accounting_sha256") != packet.get("object_accounting", {}).get("normalized_sha256"):
+            raise ValueError(f"authority is not bound to this object accounting: {path.name}")
+        rows = authority.get("decisions")
+        if not isinstance(rows, list) or len(rows) != expected_count:
+            raise ValueError(f"unexpected accepted decision count: {path.name}")
+        authorities.append(
+            {
+                "id": authority_id,
+                "sha256": str(authority["normalized_sha256"]),
+                "status": str(authority["status"]),
+                "accepted_admission_units": expected_count,
+                "accepted_requirements": expected_count,
+            }
+        )
+        for row in rows:
+            decision = deepcopy(row)
+            decision["accepted_authority_id"] = authority_id
+            decisions.append(decision)
+
+    unit_ids = [str(row.get("admission_unit_id")) for row in decisions]
+    requirement_ids = [str(row.get("requirement_id")) for row in decisions]
+    if len(unit_ids) != len(set(unit_ids)):
+        raise ValueError("accepted component authorities overlap on an admission unit")
+    if len(requirement_ids) != len(set(requirement_ids)):
+        raise ValueError("accepted component authorities overlap on a requirement")
 
     by_group = {str(group["group_id"]): deepcopy(group) for group in packet["semantic_review_groups"]}
     accepted_units: set[str] = set()
@@ -88,20 +119,26 @@ def build_progress() -> dict[str, Any]:
             raise ValueError(f"accepted requirement locator drift: {requirement_id}")
 
         projection = {
+            "accepted_authority_id": str(decision["accepted_authority_id"]),
             "admission_unit_id": unit_id,
             "requirement_id": requirement_id,
             "content_code": str(decision["content_code"]),
-            "official_ege_task": int(decision["official_ege_task"]),
+            "source_id": str(decision["source_id"]),
+            "document_id": str(decision["document_id"]),
             "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_CANONICAL_COMPONENT_SET",
             "canonical_component_refs": list(refs),
             "component_count": len(refs),
             "mastery_boundary": deepcopy(mastery),
             "authority": deepcopy(decision["authority"]),
         }
+        if "official_ege_task" in decision:
+            projection["official_ege_task"] = int(decision["official_ege_task"])
+        if "overlay_classification" in decision:
+            projection["overlay_classification"] = str(decision["overlay_classification"])
         group.setdefault("accepted_component_sets", []).append(projection)
         group["status"] = "SUBJECT_ACCEPTANCE_REQUIRED_WITH_ACCEPTED_COMPONENT_SET"
         group["accepted_component_set_count"] = len(group["accepted_component_sets"])
-        group["remaining_group_action"] = "CONTINUE_EXACT_COMPONENT_REVIEW; DO_NOT TREAT PARTIAL GROUP PROGRESS AS WHOLE-GROUP ACCEPTANCE"
+        group["remaining_group_action"] = "CONTINUE_EXACT_COMPONENT_REVIEW; DO NOT TREAT PARTIAL GROUP PROGRESS AS WHOLE-GROUP ACCEPTANCE"
         touched_groups.add(group_id)
         accepted_units.add(unit_id)
         accepted_requirements.add(requirement_id)
@@ -116,18 +153,12 @@ def build_progress() -> dict[str, Any]:
     partial_units = int(packet["object_accounting"]["partial_or_composite_units"])
     partial_requirements = int(packet["object_accounting"]["partial_or_composite_requirements"])
     result: dict[str, Any] = {
-        "schema_version": "0.1.0",
+        "schema_version": "0.2.0",
         "status": "CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS",
         "russian_content_ready": False,
         "base_packet_sha256": str(packet["normalized_sha256"]),
         "object_accounting_sha256": str(packet["object_accounting"]["normalized_sha256"]),
-        "accepted_authorities": [
-            {
-                "id": "RUSSIAN_EGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
-                "sha256": str(authority["normalized_sha256"]),
-                "status": str(authority["status"]),
-            }
-        ],
+        "accepted_authorities": authorities,
         "progress_summary": {
             "finite_semantic_review_groups": len(groups),
             "fully_accepted_semantic_groups": 0,
