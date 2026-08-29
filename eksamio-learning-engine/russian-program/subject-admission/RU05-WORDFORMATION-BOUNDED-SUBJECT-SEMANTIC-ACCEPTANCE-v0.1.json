@@ -1,0 +1,95 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTICS",
+  "authority_issue": 161,
+  "scope": "RU05_SOURCE_BACKED_WORDFORMATION_COMPONENTS_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "authority": {
+    "subject_program": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#module=RU-PROG-05",
+    "subject_program_binding_mode": "SOURCE_BACKED_SUBJECT_EXPANSION_REQUIRED",
+    "subject_program_candidate_refs": [],
+    "official_broad_domain_meaning": "Определять словообразовательные связи и способы образования слов.",
+    "exact_broad_domain_admission_unit_ids": [
+      "RAU-27b21978dee10bc480a1",
+      "RAU-4052217ec2ef20095867",
+      "RAU-4ddceafa702c3061cf76",
+      "RAU-99ae58e573bf746fa97d",
+      "RAU-b6339961589e623de0ec",
+      "RAU-cc366622224225174911"
+    ],
+    "exact_broad_domain_requirement_ids": [
+      "RSK-EDSOO1011-2-4-3-P075",
+      "RSK-EDSOO1011-2-4-3-P079",
+      "RSK-EDSOO59-4-2-P199",
+      "RSK-EGE_COD-3-4-2-P006",
+      "RSK-OGE_COD-3-3-P014",
+      "RSK-OGE_COD-4-4-3-P021",
+      "RSK-OGE_COD-4-4-P021"
+    ],
+    "boundary_review_builder": "russian-program/subject-admission/build_ru05_wordformation_subject_boundary_review.py",
+    "boundary_review_normalized_sha256": "402494962b145dfdf2773cc068f6e99a8a6e1f7a1d2d1deef1538d29d63246cd",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-05-WORD-FORMATION-WAVE-001-v0.1.json",
+    "official_program_provenance": "EDSOO Federal Working Program Russian 5-9, 2025 / PUBLIC_OFFICIAL_PDF"
+  },
+  "policy": {
+    "source_backed_subject_expansion_required": true,
+    "content_presence_alone_implies_acceptance": false,
+    "module_membership_implies_object_binding": false,
+    "broad_domain_attempt_can_emit_exact_component_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "keyword_or_fuzzy_inference_allowed": false,
+    "morphemic_analysis_implies_wordformation_mastery": false,
+    "school_registry_replacement_or_mutation_allowed": false
+  },
+  "decisions": [
+    {
+      "accepted_semantic_id": "ru-wordformation-word-vs-form-building",
+      "label_ru": "Новое слово или новая форма: главный первый выбор",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-05-WORD-FORMATION-WAVE-001-v0.1.json#ru-wordformation-word-vs-form-building",
+      "boundary_guard": "Establish whether a new lexeme exists versus only an inflectional or grammatical form before assigning any derivational method; visible ending or letter changes alone are insufficient, and this bounded semantic does not grant derivational-method or orthographic mastery.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    },
+    {
+      "accepted_semantic_id": "ru-wordformation-method-identification",
+      "label_ru": "Основные способы словообразования",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-05-WORD-FORMATION-WAVE-001-v0.1.json#ru-wordformation-method-identification",
+      "boundary_guard": "Determine the formation method relative to the nearest producing word or base by comparing producing and derived bases; presence of a prefix or suffix alone is insufficient, non-suffixal analysis requires positive derivational evidence, and part-of-speech transition requires functional and semantic proof.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    },
+    {
+      "accepted_semantic_id": "ru-wordformation-analysis-chain",
+      "label_ru": "Словообразовательный анализ и цепочка",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-05-WORD-FORMATION-WAVE-001-v0.1.json#ru-wordformation-analysis-chain",
+      "boundary_guard": "Derivational analysis identifies the immediate producing word and formation step, while a derivational chain requires each adjacent step to be directly motivated; this is not the same as morphemic parsing, and remote common-root kinship cannot skip intermediate derivational steps.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    }
+  ],
+  "explicit_non_acceptances": [
+    {
+      "semantic_or_object_ref": "RU05 broad-domain 6 admission units / 7 requirements",
+      "reason": "The broad official domain establishes word-formation scope but does not prove one-to-one object binding for the three bounded components; object accounting remains unchanged."
+    },
+    {
+      "semantic_or_object_ref": "RU-PROG-04 morphemics",
+      "reason": "Morphemic analysis is a prerequisite and evidence source for word-formation analysis but does not itself grant derivational mastery."
+    },
+    {
+      "semantic_or_object_ref": "RU-PROG-08 orthography",
+      "reason": "Using derivational structure to explain spelling does not by itself grant exact orthographic mastery."
+    },
+    {
+      "semantic_or_object_ref": "method identification without nearest producing-base comparison",
+      "reason": "A visible affix or common root is insufficient to assign a formation method without proving the immediate producing relation."
+    }
+  ],
+  "summary": {
+    "accepted_bounded_subject_semantics": 3,
+    "accepted_ru_subject_semantics": 3,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
