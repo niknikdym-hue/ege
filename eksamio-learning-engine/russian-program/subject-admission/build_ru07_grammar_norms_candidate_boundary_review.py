@@ -26,6 +26,7 @@ EXPECTED_CONTENT_IDS = {
     "ru-grammar-comparative-degree-norm",
     "ru-grammar-form-selection-common-norms",
 }
+ALLOWED_CANDIDATE_REVIEW_STATES = {"draft", "source_verified"}
 
 
 def canonical_json(value: Any) -> bytes:
@@ -81,13 +82,11 @@ def build_review() -> dict[str, Any]:
         raise ValueError("semantic inventory objects missing")
 
     candidate_rows: dict[str, dict[str, Any]] = {}
-    current_refs: set[str] = set()
     proposed_collisions: dict[str, list[str]] = {sid: [] for sid in EXPECTED_CONTENT_IDS}
     for row in objects:
         if not isinstance(row, dict) or row.get("authority_status") != "current":
             continue
         refs = {str(ref) for ref in (row.get("current_semantic_refs") or [])}
-        current_refs.update(refs)
         for sid in EXPECTED_CONTENT_IDS & refs:
             proposed_collisions[sid].append(str(row.get("object_key")))
         if row.get("source_system") == "semantic_candidate" and row.get("source_id") in EXPECTED_CANDIDATES:
@@ -102,14 +101,17 @@ def build_review() -> dict[str, Any]:
         raise ValueError("RU07 current candidate inventory incomplete")
 
     candidate_snapshot: list[dict[str, Any]] = []
+    status_counts = {status: 0 for status in sorted(ALLOWED_CANDIDATE_REVIEW_STATES)}
     for candidate_id in sorted(EXPECTED_CANDIDATES):
         row = candidate_rows[candidate_id]
         if row.get("candidate_canonical_owner") != candidate_id:
             raise ValueError(f"RU07 candidate owner drift: {candidate_id}")
         if row.get("audit_classification") != "MISSING_SUBJECT_SEMANTIC_CANDIDATE":
             raise ValueError(f"RU07 candidate classification drift: {candidate_id}")
-        if row.get("review_status") != "draft":
-            raise ValueError(f"RU07 candidate unexpectedly ceased to be draft: {candidate_id}")
+        review_status = str(row.get("review_status"))
+        if review_status not in ALLOWED_CANDIDATE_REVIEW_STATES:
+            raise ValueError(f"RU07 candidate has unsupported review state {review_status}: {candidate_id}")
+        status_counts[review_status] += 1
         if row.get("observed_label") != EXPECTED_CANDIDATES[candidate_id]:
             raise ValueError(f"RU07 candidate observed-label drift: {candidate_id}")
         refs = [str(ref) for ref in (row.get("current_semantic_refs") or [])]
@@ -120,7 +122,7 @@ def build_review() -> dict[str, Any]:
             "observed_label": str(row.get("observed_label")),
             "observed_meaning": str(row.get("observed_meaning")),
             "current_semantic_refs": refs,
-            "review_status": str(row.get("review_status")),
+            "review_status": review_status,
             "provenance_refs": list(row.get("evidence_provenance_refs") or []),
         })
 
@@ -137,19 +139,19 @@ def build_review() -> dict[str, Any]:
             "content_semantic_id": "ru-grammar-comparative-degree-norm",
             "relation": "MEANING_ALIGNMENT_CANDIDATE_EXACT_ACCEPTANCE_REVIEW_REQUIRED",
             "acceptance_effect": "NONE",
-            "reason": "The draft candidate explicitly names normative comparative-degree forms, but candidate refs are not canonical ids; exact semantic admission requires a separate acceptance authority bound to source evidence and the content boundary.",
+            "reason": "The candidate explicitly names normative comparative-degree forms, but a candidate ref is not a canonical id even when its source evidence is verified; exact semantic admission requires a separate acceptance authority bound to source evidence and the content boundary.",
         },
         {
             "candidate_ref": "candidate-025+candidate-027+other_RU07_norm_families",
             "content_semantic_id": "ru-grammar-form-selection-common-norms",
             "relation": "COMPOSITE_CROSS_CANDIDATE_CONTENT_NO_SINGLE_EXACT_OWNER",
             "acceptance_effect": "NONE",
-            "reason": "The common form-selection procedure spans noun, verb and other norm-sensitive forms; no single draft candidate can be promoted as its exact owner from module membership or examples alone.",
+            "reason": "The common form-selection procedure spans noun, verb and other norm-sensitive forms; no single candidate can be promoted as its exact owner from module membership or examples alone.",
         },
     ]
 
     result: dict[str, Any] = {
-        "schema_version": "0.1.0",
+        "schema_version": "0.1.1",
         "status": "CENTRAL_BRAIN_RU07_GRAMMAR_NORMS_REUSE_FIRST_BOUNDARY_REVIEW_ACCEPTANCE_NOT_ADMITTED",
         "authority_issue": 161,
         "module_id": TARGET_MODULE,
@@ -157,6 +159,7 @@ def build_review() -> dict[str, Any]:
         "program_candidate_refs": sorted(EXPECTED_CANDIDATES),
         "proposed_subject_semantic_ids": sorted(EXPECTED_CONTENT_IDS),
         "candidate_inventory_snapshot": candidate_snapshot,
+        "candidate_review_status_counts": status_counts,
         "candidate_relation_decisions": relation_decisions,
         "reuse_review": {
             "current_proposed_id_collisions": 0,
@@ -170,6 +173,7 @@ def build_review() -> dict[str, Any]:
         "policy": {
             "reuse_first": True,
             "candidate_ref_is_canonical_id": False,
+            "source_verified_candidate_ref_is_canonical_id": False,
             "content_presence_implies_acceptance": False,
             "module_membership_implies_exact_owner": False,
             "subset_evidence_can_admit_broader_candidate": False,
@@ -180,7 +184,7 @@ def build_review() -> dict[str, Any]:
             "keyword_or_fuzzy_inference_allowed": False,
         },
         "summary": {
-            "draft_candidates_reviewed": 4,
+            "candidate_records_reviewed": 4,
             "content_semantics_reviewed": 3,
             "semantic_admissions": 0,
             "object_level_admission_units_closed": 0,
@@ -204,8 +208,10 @@ def main() -> int:
         print(json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
     else:
         print("RU07_GRAMMAR_NORMS_REUSE_FIRST_BOUNDARY_REVIEW=PASS")
-        print("DRAFT_CANDIDATES_REVIEWED=4")
+        print("CANDIDATE_RECORDS_REVIEWED=4")
         print("CONTENT_SEMANTICS_REVIEWED=3")
+        print("DRAFT_CANDIDATE_RECORDS=" + str(result["candidate_review_status_counts"].get("draft", 0)))
+        print("SOURCE_VERIFIED_CANDIDATE_RECORDS=" + str(result["candidate_review_status_counts"].get("source_verified", 0)))
         print("EXACT_EXISTING_OWNER_REUSES_ADMITTED=0")
         print("MEANING_ALIGNMENT_CANDIDATES_REQUIRING_SEPARATE_ACCEPTANCE=1")
         print("BOUNDED_SUBSET_RELATIONS=1")
