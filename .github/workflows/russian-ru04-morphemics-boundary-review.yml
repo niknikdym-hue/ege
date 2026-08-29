@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "eksamio-learning-engine/russian-program/subject-admission/build_ru04_morphemics_subject_boundary_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU04-MORPHEMICS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru04_morphemics_bounded_subject_semantics.py"
       - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json"
       - "eksamio-learning-engine/russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
       - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
@@ -26,8 +28,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Compile RU04 review builder
-        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru04_morphemics_subject_boundary_review.py
+      - name: Compile RU04 review and acceptance validator
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru04_morphemics_subject_boundary_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru04_morphemics_bounded_subject_semantics.py
       - name: Build RU04 boundary review twice
         shell: bash
         run: |
@@ -49,8 +53,8 @@ jobs:
           assert data['status'] == 'CENTRAL_BRAIN_RU04_MORPHEMICS_BOUNDARY_READY_ACCEPTANCE_NOT_ADMITTED'
           assert data['module_id'] == 'RU-PROG-04'
           assert data['module_binding_mode'] == 'SOURCE_BACKED_SUBJECT_EXPANSION_REQUIRED'
-          assert len(data['exact_broad_domain_admission_unit_ids']) > 0
-          assert len(data['exact_broad_domain_requirement_ids']) > 0
+          assert len(data['exact_broad_domain_admission_unit_ids']) == 15
+          assert len(data['exact_broad_domain_requirement_ids']) == 16
           assert set(data['proposed_subject_semantic_ids']) == {
               'ru-morphemics-morpheme-base-ending',
               'ru-morphemics-root-prefix-suffix-analysis',
@@ -74,6 +78,14 @@ jobs:
           }
           print('RU04_MORPHEMICS_BOUNDARY_FAIL_CLOSED_GUARD=PASS')
           PY
+      - name: Validate bounded RU04 semantics twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru04_morphemics_bounded_subject_semantics.py > /tmp/ru04-accept-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru04_morphemics_bounded_subject_semantics.py > /tmp/ru04-accept-b.txt
+          diff -u /tmp/ru04-accept-a.txt /tmp/ru04-accept-b.txt
+          cat /tmp/ru04-accept-a.txt
       - name: Upload RU04 review evidence
         uses: actions/upload-artifact@v4
         with:
