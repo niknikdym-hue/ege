@@ -48,6 +48,16 @@ jobs:
           diff -u /tmp/ru04-a.txt /tmp/ru04-b.txt
           cat /tmp/ru04-a.txt
           python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru04_morphemics_bounded_subject_semantics.py
+      - name: Review RU05 word-formation subject boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru05_wordformation_subject_boundary_review.py --output /tmp/ru05-a.json > /tmp/ru05-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru05_wordformation_subject_boundary_review.py --output /tmp/ru05-b.json > /tmp/ru05-b.txt
+          cmp /tmp/ru05-a.json /tmp/ru05-b.json
+          diff -u /tmp/ru05-a.txt /tmp/ru05-b.txt
+          cat /tmp/ru05-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru05_wordformation_bounded_subject_semantics.py
       - name: Build semantic acceptance progress twice
         shell: bash
         run: |
@@ -86,8 +96,9 @@ jobs:
               'RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU04_MORPHEMICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
           }
-          assert len(data['accepted_authorities']) == 11
+          assert len(data['accepted_authorities']) == 12
           assert {a['id'] for a in data['accepted_authorities']} == expected_authorities
 
           for authority_id, count in (
@@ -95,6 +106,7 @@ jobs:
               ('RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 10),
               ('RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
               ('RU04_MORPHEMICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
+              ('RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
           ):
               authority = next(a for a in data['accepted_authorities'] if a['id'] == authority_id)
               assert authority['authority_kind'] == 'BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_WITHOUT_OBJECT_BINDING'
@@ -117,12 +129,12 @@ jobs:
           assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1372
           assert s['canonical_component_refs_reused_unique'] == 52
           assert s['accepted_bounded_ru_route_semantics'] == 5
-          assert s['accepted_bounded_ru_subject_semantics'] == 30
-          assert s['accepted_bounded_ru_semantics_total'] == 35
+          assert s['accepted_bounded_ru_subject_semantics'] == 33
+          assert s['accepted_bounded_ru_semantics_total'] == 38
           assert s['accepted_route_semantics_without_object_binding'] == 5
-          assert s['accepted_subject_semantics_without_object_binding'] == 30
+          assert s['accepted_subject_semantics_without_object_binding'] == 33
           assert s['new_semantic_identities_created'] == 0
-          assert s['ru_proposal_identities_admitted'] == 35
+          assert s['ru_proposal_identities_admitted'] == 38
           assert s['false_exact_mastery_admissions'] == 0
 
           expected_route = {
@@ -163,6 +175,9 @@ jobs:
               'ru-morphemics-morpheme-base-ending',
               'ru-morphemics-root-prefix-suffix-analysis',
               'ru-morphemics-alternation-and-full-analysis',
+              'ru-wordformation-word-vs-form-building',
+              'ru-wordformation-method-identification',
+              'ru-wordformation-analysis-chain',
           }
           assert set(data['accepted_route_semantic_refs']) == expected_route
           assert set(data['accepted_subject_semantic_refs']) == expected_subject
