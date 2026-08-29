@@ -1,19 +1,23 @@
 {
-  "schema_version": "0.1.3",
-  "status": "CENTRAL_BRAIN_COMPONENT_BOUNDARY_REVIEW_PARTIAL_WITH_14_BOUNDED_SEMANTICS_ACCEPTED",
+  "schema_version": "0.1.4",
+  "status": "CENTRAL_BRAIN_COMPONENT_BOUNDARY_REVIEW_24_OF_24_BOUNDED_SEMANTICS_ACCEPTED",
   "authority_issue": 161,
   "normalized_meaning": "Распознавать и интерпретировать средства выразительности.",
-  "admission_effect": "FOURTEEN_PROPOSED_COMPONENTS_ACCEPTED_TEN_EXISTING_CANDIDATES_PENDING_OBJECT_COUNTS_UNCHANGED",
-  "acceptance_overlay_ref": "RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
+  "admission_effect": "TWENTY_FOUR_COMPONENT_SEMANTICS_ACCEPTED_OBJECT_COUNTS_UNCHANGED",
+  "acceptance_overlay_refs": [
+    "RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
+    "RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+  ],
   "summary": {
     "explicit_components": 24,
-    "bounded_subject_semantics_accepted": 14,
-    "existing_candidate_components_pending": 10,
+    "bounded_subject_semantics_accepted": 24,
+    "existing_candidate_components_pending": 0,
     "component_content_complete": 24,
     "canonical_school_semantic_admissions": 0,
-    "ru_subject_semantic_admissions": 14,
+    "ru_subject_semantic_admissions": 24,
     "object_level_admission_units_closed_by_semantic_overlay": 0,
-    "object_level_requirements_closed_by_semantic_overlay": 0
+    "object_level_requirements_closed_by_semantic_overlay": 0,
+    "false_exact_mastery_admissions": 0
   },
   "policy": {
     "reuse_existing_semantics_first": true,
@@ -22,19 +26,21 @@
     "generic_expressive_attempt_can_emit_component_mastery": false,
     "component_specific_independent_evidence_required": true,
     "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
-    "rhetorical_address_duplicate_forbidden": true
+    "rhetorical_address_duplicate_forbidden": true,
+    "exam_taxonomy_id_promoted_unchanged": false,
+    "candidate_id_used_as_semantic_id": false
   },
   "existing_candidate_components": [
-    {"ref":"candidate-033","source_id":"device_assonance","label":"Ассонанс","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-034","source_id":"device_hyperbole","label":"Гипербола","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-035","source_id":"device_metonymy","label":"Метонимия","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-036","source_id":"device_anaphora","label":"Анафора","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-037","source_id":"device_parcellation","label":"Парцелляция","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-038","source_id":"device_homogeneous_rows","label":"Ряды однородных членов как средство выразительности","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-039","source_id":"device_address","label":"Обращение как средство выразительности","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED","special_guard":"OWNS_RHETORICAL_ADDRESS_BOUNDARY_NO_DUPLICATE_ID"},
-    {"ref":"candidate-040","source_id":"device_epithet","label":"Эпитет","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-041","source_id":"device_metaphor","label":"Метафора","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED"},
-    {"ref":"candidate-042","source_id":"device_comparison","label":"Сравнение","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","status":"CONTENT_READY_EXACT_BOUNDARY_ACCEPTANCE_REQUIRED_NOT_ADMITTED"}
+    {"ref":"candidate-033","source_id":"device_assonance","accepted_semantic_id":"ru-expressive-assonance","label":"Ассонанс","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-033","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"},
+    {"ref":"candidate-034","source_id":"device_hyperbole","accepted_semantic_id":"ru-expressive-hyperbole","label":"Гипербола","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-034","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"},
+    {"ref":"candidate-035","source_id":"device_metonymy","accepted_semantic_id":"ru-expressive-metonymy","label":"Метонимия","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-035","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"},
+    {"ref":"candidate-036","source_id":"device_anaphora","accepted_semantic_id":"ru-expressive-anaphora","label":"Анафора","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-036","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"},
+    {"ref":"candidate-037","source_id":"device_parcellation","accepted_semantic_id":"ru-expressive-parcellation","label":"Парцелляция","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-037","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"},
+    {"ref":"candidate-038","source_id":"device_homogeneous_rows","accepted_semantic_id":"ru-expressive-homogeneous-rows","label":"Ряды однородных членов как средство выразительности","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-038","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"},
+    {"ref":"candidate-039","source_id":"device_address","accepted_semantic_id":"ru-expressive-address","label":"Обращение как средство выразительности","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-039","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","special_guard":"OWNS_RHETORICAL_ADDRESS_BOUNDARY_NO_DUPLICATE_ID"},
+    {"ref":"candidate-040","source_id":"device_epithet","accepted_semantic_id":"ru-expressive-epithet","label":"Эпитет","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-040","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"},
+    {"ref":"candidate-041","source_id":"device_metaphor","accepted_semantic_id":"ru-expressive-metaphor","label":"Метафора","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-041","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"},
+    {"ref":"candidate-042","source_id":"device_comparison","accepted_semantic_id":"ru-expressive-comparison","label":"Сравнение","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-003-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-EXISTING-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#candidate-042","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"}
   ],
   "proposed_content_components": [
     {"semantic_id":"ru-expressive-alliteration","content_ref":"production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json","acceptance_ref":"RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json#ru-expressive-alliteration","status":"CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC","boundary_guard":"consonant sound repetition; distinct from assonance and accidental graphic coincidence"},
@@ -59,7 +65,7 @@
     "lexical repetition vs anaphora/epiphora: general repetition vs position-specific repetition",
     "question-answer form vs rhetorical question: developed answer structure vs answer-not-required expressive question",
     "syntactic parallelism vs anaphora/antithesis: structural similarity vs positional repetition/semantic opposition",
-    "candidate-039 / device_address owns rhetorical-address territory; no duplicate rhetorical-address semantic id",
+    "ru-expressive-address owns rhetorical-address territory; no duplicate ru-expressive-rhetorical-address identity",
     "comparison requires actual figurative comparison; conjunction как alone is insufficient",
     "epithet requires contextual figurative/evaluative function; adjective alone is insufficient"
   ]
