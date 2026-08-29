@@ -14,6 +14,7 @@ on:
       - "eksamio-learning-engine/ai-tutor-reference/stdlib_json_transport.py"
       - "eksamio-learning-engine/ai-tutor-reference/private_staging_openai_yandex_tutor.py"
       - "eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py"
+      - "eksamio-learning-engine/ai-tutor-reference/run_private_openai_text_smoke.py"
       - "eksamio-learning-engine/russian-program/subject-admission/RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RU16-TASK27-K5-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json"
@@ -49,7 +50,8 @@ jobs:
             eksamio-learning-engine/ai-tutor-reference/yandex_speech_secret_provider.py \
             eksamio-learning-engine/ai-tutor-reference/stdlib_json_transport.py \
             eksamio-learning-engine/ai-tutor-reference/private_staging_openai_yandex_tutor.py \
-            eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py
+            eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/run_private_openai_text_smoke.py
       - name: Validate accepted-semantic Tutor twice
         shell: bash
         run: |
@@ -81,6 +83,16 @@ jobs:
           grep -q '^SECRET_READS_WHILE_OFF=0$' /tmp/openai-a.txt
           grep -q '^PUBLIC_TRAFFIC=OFF$' /tmp/openai-a.txt
           grep -q '^LEARNER_AUDIO_PERSISTED_BYTES=0$' /tmp/openai-a.txt
+      - name: Prove live smoke cannot run in CI without owner flag
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          out="$(python3 eksamio-learning-engine/ai-tutor-reference/run_private_openai_text_smoke.py 2>&1)"
+          code=$?
+          set -e
+          test "$code" -eq 2
+          grep -q '^PRIVATE_OPENAI_TEXT_SMOKE=BLOCKED_OWNER_AUTHORIZATION$' <<<"$out"
       - name: Preserve existing Yandex adapter contract
         run: python3 eksamio-learning-engine/ai-tutor-reference/validate_yandex_live_adapters.py
       - name: Prove execution remains off without owner authorization
