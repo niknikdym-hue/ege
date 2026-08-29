@@ -28,6 +28,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Review RU01 phonetics subject boundary without admission
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_subject_boundary_review.py --output /tmp/ru01-a.json > /tmp/ru01-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_subject_boundary_review.py --output /tmp/ru01-b.json > /tmp/ru01-b.txt
+          cmp /tmp/ru01-a.json /tmp/ru01-b.json
+          diff -u /tmp/ru01-a.txt /tmp/ru01-b.txt
+          cat /tmp/ru01-a.txt
       - name: Build semantic acceptance progress twice
         shell: bash
         run: |
