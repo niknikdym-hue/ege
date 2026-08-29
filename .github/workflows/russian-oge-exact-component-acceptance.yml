@@ -1,0 +1,68 @@
+name: Russian OGE exact component acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/**"
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      - ".github/workflows/russian-oge-exact-component-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-exact-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build exact OGE canonical component acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_exact_component_acceptance.py \
+            --output /tmp/oge-a.json > /tmp/oge-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_exact_component_acceptance.py \
+            --output /tmp/oge-b.json > /tmp/oge-report-b.txt
+          cmp /tmp/oge-a.json /tmp/oge-b.json
+          diff -u /tmp/oge-report-a.txt /tmp/oge-report-b.txt
+          cat /tmp/oge-report-a.txt
+          cp /tmp/oge-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE.json
+      - name: Verify fail-closed OGE acceptance
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          s=d['summary']
+          assert d['status']=='CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_CANONICAL_COMPONENT_SLICE'
+          assert s['accepted_content_codes']==4
+          assert s['accepted_admission_units']==4
+          assert s['accepted_requirements']==4
+          assert s['new_semantic_identities_created']==0
+          assert s['ru_proposal_identities_admitted']==0
+          assert s['false_exact_mastery_admissions']==0
+          assert {x['content_code'] for x in d['decisions']}=={'6.3','6.5','6.10','6.13'}
+          assert all(x['disposition']=='PARTIAL_OR_COMPOSITE' for x in d['decisions'])
+          assert all(x['mastery_boundary']['route_or_broad_composite_attempt_can_emit_exact_component_mastery'] is False for x in d['decisions'])
+          print('RUSSIAN_OGE_EXACT_COMPONENT_ACCEPTANCE_GUARD=PASS')
+          PY
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
