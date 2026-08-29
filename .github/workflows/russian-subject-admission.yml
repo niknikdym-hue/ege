@@ -95,6 +95,18 @@ jobs:
           diff -u /tmp/reuse-report-a.txt /tmp/reuse-report-b.txt
           cat /tmp/reuse-report-a.txt
           cp /tmp/reuse-a.json eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-REUSE-POOL.json
+      - name: Build exact RU08 RU09 RU10 RU14 review slice twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_reuse_target_review_slice.py \
+            --output /tmp/reuse-targets-a.json > /tmp/reuse-targets-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_reuse_target_review_slice.py \
+            --output /tmp/reuse-targets-b.json > /tmp/reuse-targets-report-b.txt
+          cmp /tmp/reuse-targets-a.json /tmp/reuse-targets-b.json
+          diff -u /tmp/reuse-targets-report-a.txt /tmp/reuse-targets-report-b.txt
+          cat /tmp/reuse-targets-report-a.txt
+          cp /tmp/reuse-targets-a.json eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-EXACT-REVIEW-SLICE.json
       - name: Upload exact subject artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -103,6 +115,7 @@ jobs:
             eksamio-learning-engine/russian-program/subject-admission/RU13-RU16-EXACT-REVIEW-SLICE.json
             eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-AGGREGATE-LEDGER.json
             eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-REUSE-POOL.json
+            eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-EXACT-REVIEW-SLICE.json
           if-no-files-found: error
           retention-days: 14
       - name: Protect accepted Russian production surfaces
