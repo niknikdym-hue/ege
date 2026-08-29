@@ -5,6 +5,9 @@ on:
     paths:
       - "eksamio-learning-engine/ai-tutor-reference/accepted_russian_semantic_tutor.py"
       - "eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py"
+      - "eksamio-learning-engine/ai-tutor-reference/private_staging_russian_tutor.py"
+      - "eksamio-learning-engine/ai-tutor-reference/validate_private_staging_russian_tutor.py"
+      - "eksamio-learning-engine/ai-tutor-reference/yandex_live_adapters.py"
       - "eksamio-learning-engine/russian-program/subject-admission/RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RU16-TASK27-K5-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json"
@@ -28,11 +31,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Compile accepted-semantic Tutor boundary
+      - name: Compile Tutor private-staging boundaries
         run: |
           python3 -m py_compile \
             eksamio-learning-engine/ai-tutor-reference/accepted_russian_semantic_tutor.py \
-            eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py
+            eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/private_staging_russian_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_private_staging_russian_tutor.py
       - name: Validate accepted-semantic Tutor twice
         shell: bash
         run: |
@@ -41,21 +46,35 @@ jobs:
           python3 eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py > /tmp/tutor-b.txt
           diff -u /tmp/tutor-a.txt /tmp/tutor-b.txt
           cat /tmp/tutor-a.txt
-      - name: Prove no provider execution or audio persistence in this gate
+      - name: Validate Yandex private-staging assembly twice
         shell: bash
         run: |
           set -euo pipefail
-          out="$(python3 eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py)"
-          grep -q '^PROVIDER_NETWORK_REQUESTS=0$' <<<"$out"
-          grep -q '^PAID_PROVIDER_REQUESTS=0$' <<<"$out"
-          grep -q '^RAW_AUDIO_PERSISTED_BYTES=0$' <<<"$out"
-          grep -q '^UNACCEPTED_SEMANTIC_SESSION=DENIED$' <<<"$out"
+          python3 eksamio-learning-engine/ai-tutor-reference/validate_private_staging_russian_tutor.py > /tmp/staging-a.txt
+          python3 eksamio-learning-engine/ai-tutor-reference/validate_private_staging_russian_tutor.py > /tmp/staging-b.txt
+          diff -u /tmp/staging-a.txt /tmp/staging-b.txt
+          cat /tmp/staging-a.txt
+      - name: Preserve existing Yandex adapter contract
+        run: python3 eksamio-learning-engine/ai-tutor-reference/validate_yandex_live_adapters.py
+      - name: Prove execution remains off without owner authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$(python3 eksamio-learning-engine/ai-tutor-reference/validate_private_staging_russian_tutor.py)"
+          grep -q '^PROVIDER_EXECUTION_DEFAULT=OFF$' <<<"$out"
+          grep -q '^OWNER_LIVE_AUTHORIZATION_REQUIRED=PASS$' <<<"$out"
+          grep -q '^PUBLIC_TRAFFIC=OFF$' <<<"$out"
+          grep -q '^SECRET_READS_WHILE_OFF=0$' <<<"$out"
+          grep -q '^TEXT_TRANSPORT_CALLS_WHILE_OFF=0$' <<<"$out"
+          grep -q '^STT_TRANSPORT_CALLS_WHILE_OFF=0$' <<<"$out"
+          grep -q '^TTS_TRANSPORT_CALLS_WHILE_OFF=0$' <<<"$out"
+          grep -q '^LEARNER_AUDIO_PERSISTED_BYTES=0$' <<<"$out"
       - name: Protect public and accepted demo surfaces
         shell: bash
         run: |
           set -euo pipefail
           if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor|payments-reference'; then
-            echo 'Tutor private-staging allowlist PR changed protected/public/payment surfaces.' >&2
+            echo 'Tutor private-staging PR changed protected/public/payment surfaces.' >&2
             exit 1
           fi
       - name: Diff hygiene
