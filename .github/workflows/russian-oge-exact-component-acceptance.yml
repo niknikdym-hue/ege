@@ -56,6 +56,13 @@ jobs:
           assert all(x['mastery_boundary']['route_or_broad_composite_attempt_can_emit_exact_component_mastery'] is False for x in d['decisions'])
           print('RUSSIAN_OGE_EXACT_COMPONENT_ACCEPTANCE_GUARD=PASS')
           PY
+      - name: Upload exact OGE acceptance authority
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-exact-component-acceptance
+          path: eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Protect accepted Russian production surfaces
         shell: bash
         run: |
