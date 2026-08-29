@@ -57,6 +57,14 @@ jobs:
           python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_essay_content.py > /tmp/ru16-2.txt
           diff -u /tmp/ru16-1.txt /tmp/ru16-2.txt
           cat /tmp/ru16-1.txt
+      - name: Validate RU16 essay component boundary review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_essay_component_boundary_review.py > /tmp/ru16-boundary-1.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_essay_component_boundary_review.py > /tmp/ru16-boundary-2.txt
+          diff -u /tmp/ru16-boundary-1.txt /tmp/ru16-boundary-2.txt
+          cat /tmp/ru16-boundary-1.txt
       - name: Build exact RU13 RU16 admission review slice twice
         shell: bash
         run: |
