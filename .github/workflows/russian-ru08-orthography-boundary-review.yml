@@ -5,6 +5,7 @@ on:
     paths:
       - "eksamio-learning-engine/russian-program/subject-admission/**"
       - "eksamio-learning-engine/russian-program/object-review/**"
+      - "eksamio-learning-engine/russian-program/production-learning-content/**"
       - "eksamio-learning-engine/russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
       - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
       - "eksamio-learning-engine/119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json"
@@ -26,10 +27,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Compile RU08 and RU09 boundary builders
+      - name: Compile RU08 and RU09 review builders
         run: |
           python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru08_orthography_reuse_first_boundary_review.py
           python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru09_syntax_reuse_first_boundary_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru09_candidate_content_gap_review.py
       - name: Build deterministic RU08 boundary review twice
         shell: bash
         run: |
@@ -122,6 +124,48 @@ jobs:
           assert data['policy']['semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
           print('RU09_SYNTAX_FAIL_CLOSED_CONTRACT=PASS')
           PY
+      - name: Prove RU09 production content gaps twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru09_candidate_content_gap_review.py --output /tmp/ru09-gap-a.json > /tmp/ru09-gap-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru09_candidate_content_gap_review.py --output /tmp/ru09-gap-b.json > /tmp/ru09-gap-b.txt
+          cmp /tmp/ru09-gap-a.json /tmp/ru09-gap-b.json
+          diff -u /tmp/ru09-gap-a.txt /tmp/ru09-gap-b.txt
+          cat /tmp/ru09-gap-a.txt
+          cp /tmp/ru09-gap-a.json eksamio-learning-engine/russian-program/subject-admission/RU09-CANDIDATE-CONTENT-GAP-REVIEW.json
+      - name: Validate RU09 content-gap boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('eksamio-learning-engine/russian-program/subject-admission/RU09-CANDIDATE-CONTENT-GAP-REVIEW.json').read_text(encoding='utf-8'))
+          s = data['summary']
+          assert data['schema_version'] == '0.1.0'
+          assert data['status'] == 'CENTRAL_BRAIN_RU09_CONTENT_GAP_REVIEW_COMPLETE_NO_ADMISSION'
+          assert data['module_id'] == 'RU-PROG-09'
+          assert s['draft_candidates_reviewed'] == 5
+          assert s['candidates_with_source_verified_taxonomy_backing'] == 5
+          assert s['new_semantic_admissions'] == 0
+          assert s['new_object_level_closures'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          assert len(data['candidates']) == 5
+          assert {row['candidate_ref'] for row in data['candidates']} == {
+              'candidate-028', 'candidate-029', 'candidate-030', 'candidate-031', 'candidate-032'
+          }
+          assert all(row['candidate_status'] == 'draft_not_admitted' for row in data['candidates'])
+          assert all(row['admission_effect'] == 'NONE' for row in data['candidates'])
+          assert data['policy']['reuse_check_precedes_new_content'] is True
+          assert data['policy']['supporting_exception_or_practice_item_is_full_production_bundle'] is False
+          assert data['policy']['trainer_item_semantic_ref_is_subject_admission'] is False
+          assert data['policy']['content_presence_is_semantic_admission'] is False
+          assert data['policy']['content_gap_proves_semantic_uniqueness'] is False
+          assert data['policy']['new_content_may_self_admit_candidate'] is False
+          assert data['policy']['keyword_or_fuzzy_semantic_inference_allowed'] is False
+          print('RU09_CONTENT_GAP_FAIL_CLOSED_CONTRACT=PASS')
+          PY
       - name: Upload RU08 and RU09 review evidence
         uses: actions/upload-artifact@v4
         with:
@@ -129,6 +173,7 @@ jobs:
           path: |
             eksamio-learning-engine/russian-program/subject-admission/RU08-ORTHOGRAPHY-REUSE-FIRST-BOUNDARY-REVIEW.json
             eksamio-learning-engine/russian-program/subject-admission/RU09-SYNTAX-REUSE-FIRST-BOUNDARY-REVIEW.json
+            eksamio-learning-engine/russian-program/subject-admission/RU09-CANDIDATE-CONTENT-GAP-REVIEW.json
           if-no-files-found: error
           retention-days: 14
       - name: Protect accepted Russian production surfaces
