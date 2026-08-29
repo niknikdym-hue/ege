@@ -1,0 +1,116 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTICS",
+  "authority_issue": 161,
+  "scope": "RU01_SOURCE_BACKED_PHONETICS_GRAPHICS_COMPONENTS_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "authority": {
+    "subject_program": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#module=RU-PROG-01",
+    "subject_program_binding_mode": "SOURCE_BACKED_SUBJECT_EXPANSION_REQUIRED",
+    "subject_program_candidate_refs": [],
+    "official_broad_domain_meaning": "Анализировать звуковую и буквенную форму языковых единиц.",
+    "exact_broad_domain_admission_unit_ids": [
+      "RAU-043ae3d307ad5fd95639",
+      "RAU-0985ee43535361c09cd9",
+      "RAU-0a6c57b411726cc7cf0c",
+      "RAU-23a73ecd845411739f6d",
+      "RAU-2725ee5b709b70502748",
+      "RAU-3916b5e3da77ed038830",
+      "RAU-3e5308ed79e62fc16e94",
+      "RAU-532ee826fbf30b195484",
+      "RAU-5a6511267f156745f93c",
+      "RAU-5dec2ed9657f263f91ff",
+      "RAU-6c959b5c82028e50dd34",
+      "RAU-8e357e9bbe18a741725c",
+      "RAU-b1ba48cb81e96255122a",
+      "RAU-b6f5dff93864358672bc",
+      "RAU-cb307f6635d27f73fa88",
+      "RAU-df45aa3b99e1baefca01",
+      "RAU-ee34e4676a578b003696",
+      "RAU-f12c55d19d60877d22ef",
+      "RAU-f2beb8071d88472ac727",
+      "RAU-f3896151ffac143c05da",
+      "RAU-f709f1855bb0b8d104bc"
+    ],
+    "exact_broad_domain_requirement_ids": [
+      "RSK-EDSOO1011-2-2-1-P074",
+      "RSK-EDSOO1011-2-2-2-P078",
+      "RSK-EDSOO1011-2-6-6-P079",
+      "RSK-EDSOO59-4-1-3-P187",
+      "RSK-EDSOO59-4-1-4-P187",
+      "RSK-EDSOO59-4-1-7-P187",
+      "RSK-EDSOO59-4-1-P181",
+      "RSK-EDSOO59-4-1-P187",
+      "RSK-EDSOO59-4-2-P181",
+      "RSK-EDSOO59-4-24-P196",
+      "RSK-EDSOO59-4-29-P205",
+      "RSK-EDSOO59-4-9-4-P210",
+      "RSK-EDSOO59-6-1-P191",
+      "RSK-EGE_COD-3-7-1-P007",
+      "RSK-OGE_COD-2-1-P010",
+      "RSK-OGE_COD-3-1-P014",
+      "RSK-OGE_COD-4-1-3-P021",
+      "RSK-OGE_COD-4-1-4-P021",
+      "RSK-OGE_COD-4-1-7-P021",
+      "RSK-OGE_COD-4-1-P020",
+      "RSK-OGE_COD-4-18-4-P022",
+      "RSK-OGE_COD-6-1-P024"
+    ],
+    "boundary_review_builder": "russian-program/subject-admission/build_ru01_phonetics_subject_boundary_review.py",
+    "boundary_review_normalized_sha256": "ea5d4ac01fcb8a51847a8a278746dccb6ac455e8720c795c839fdefe0a8e8f3f",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-01-PHONETICS-GRAPHICS-WAVE-001-v0.1.json",
+    "official_program_provenance": "EDSOO Federal Working Program Russian 5-9, 2025 / PUBLIC_OFFICIAL_PDF"
+  },
+  "policy": {
+    "source_backed_subject_expansion_required": true,
+    "content_presence_alone_implies_acceptance": false,
+    "module_membership_implies_object_binding": false,
+    "broad_domain_attempt_can_emit_exact_component_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "keyword_or_fuzzy_inference_allowed": false,
+    "school_registry_replacement_or_mutation_allowed": false
+  },
+  "decisions": [
+    {
+      "accepted_semantic_id": "ru-phonetics-sound-letter-relation",
+      "label_ru": "Соотношение звуков и букв",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-01-PHONETICS-GRAPHICS-WAVE-001-v0.1.json#ru-phonetics-sound-letter-relation",
+      "boundary_guard": "Distinguish written letters from speech sounds and apply position-dependent sound-letter relations, including the non-sound status of ь/ъ and context-dependent е/ё/ю/я; this does not by itself admit full phonetic analysis or disputed pronunciation claims.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    },
+    {
+      "accepted_semantic_id": "ru-phonetics-vowel-consonant-features",
+      "label_ru": "Фонетические признаки гласных и согласных",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-01-PHONETICS-GRAPHICS-WAVE-001-v0.1.json#ru-phonetics-vowel-consonant-features",
+      "boundary_guard": "Classify properties of the actually pronounced sound: stress for vowels and voicing/devoicing plus hardness/softness for consonants; letter identity alone is insufficient and positional pronunciation does not change spelling automatically.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    },
+    {
+      "accepted_semantic_id": "ru-phonetics-word-analysis-sequence",
+      "label_ru": "Последовательность фонетического анализа слова",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-01-PHONETICS-GRAPHICS-WAVE-001-v0.1.json#ru-phonetics-word-analysis-sequence",
+      "boundary_guard": "Perform the school phonetic-analysis procedure from pronunciation and stress through sound sequence/features to final sound-letter comparison; it does not substitute for spelling or morphemic analysis, and disputed pronunciation requires normative authority.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    }
+  ],
+  "explicit_non_acceptances": [
+    {
+      "semantic_or_object_ref": "RU01 broad-domain 21 admission units / 22 requirements",
+      "reason": "The broad official domain establishes subject scope but does not prove a one-to-one object binding for any of the three bounded components; object accounting remains unchanged."
+    },
+    {
+      "semantic_or_object_ref": "additional RU01 phonetics identities",
+      "reason": "No extra identity for transcription, syllabification, stress, orthoepy, spelling, or morphemics is created by this authority; those boundaries require their own exact source review or existing canonical ownership."
+    }
+  ],
+  "summary": {
+    "accepted_bounded_subject_semantics": 3,
+    "accepted_ru_subject_semantics": 3,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
