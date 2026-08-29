@@ -68,6 +68,13 @@ def _objects(inventory: dict[str, Any]) -> list[dict[str, Any]]:
     return [row for row in rows if isinstance(row, dict)]
 
 
+def _task_locator(task27: dict[str, Any]) -> str:
+    return (
+        f"printed_page={task27['printed_page']};pdf_page={task27['pdf_page']};"
+        f"panel={task27['panel']};task={task27['task']}"
+    )
+
+
 def build_acceptance() -> dict[str, Any]:
     relation = json.loads(TASK_RELATION.read_text(encoding="utf-8"))
     criteria = json.loads(CRITERIA.read_text(encoding="utf-8"))
@@ -79,20 +86,27 @@ def build_acceptance() -> dict[str, Any]:
         raise ValueError("official Task-27 route authority is not current")
     if relation.get("relation_policy", {}).get("semantic_admission_implied") is not False:
         raise ValueError("task-code relation must not self-admit semantics")
+    source = relation.get("source")
+    if not isinstance(source, dict) or source.get("source_id") != "FIPI-EGE-RU-2026-FINAL" or source.get("document_id") != "EGE_SPEC":
+        raise ValueError("official Task-27 source identity drift")
+    if source.get("sha256") != EXPECTED_SPEC_SHA:
+        raise ValueError("Task-27 FIPI specification fingerprint drift")
     task_rows = [row for row in relation.get("rows", []) if row.get("task") == 27]
     if len(task_rows) != 1:
         raise ValueError("Task 27 must have exactly one official relation row")
     task27 = task_rows[0]
-    if task27.get("source_sha256") != EXPECTED_SPEC_SHA:
-        raise ValueError("Task-27 FIPI specification fingerprint drift")
-    if task27.get("physical_page") != 20 or task27.get("max_primary_score") != 22:
-        raise ValueError("Task-27 page/score authority drift")
+    if (
+        task27.get("printed_page") != 20
+        or task27.get("pdf_page") != 10
+        or task27.get("panel") != "right"
+        or task27.get("max_primary_score") != 22
+    ):
+        raise ValueError("Task-27 page/panel/score authority drift")
     if set(task27.get("content_code_expressions") or []) != {"1.4", "1.5"}:
         raise ValueError("Task-27 content-code scope drift")
-    if set(task27.get("checked_requirement_code_expressions") or []) != {"1.5", "1.7"}:
+    if set(task27.get("requirement_code_expressions") or []) != {"1.5", "1.7"}:
         raise ValueError("Task-27 requirement-code scope drift")
-    if "task27" not in str(task27.get("locator", "")):
-        raise ValueError("Task-27 exact official locator missing")
+    locator = _task_locator(task27)
 
     if criteria.get("task_number") != 27 or criteria.get("criteria_year") != 2026 or criteria.get("max_score") != 22:
         raise ValueError("official Task-27 criteria route drift")
@@ -192,9 +206,9 @@ def build_acceptance() -> dict[str, Any]:
                 "authority": {
                     "tier_a_route_scope": "FIPI-EGE-2026-TASK-CODE-RELATION-v1.0.json#task=27",
                     "tier_a_source_sha256": EXPECTED_SPEC_SHA,
-                    "tier_a_source_locator": str(task27["locator"]),
+                    "tier_a_source_locator": locator,
                     "tier_a_content_codes": list(task27["content_code_expressions"]),
-                    "tier_a_requirement_codes": list(task27["checked_requirement_code_expressions"]),
+                    "tier_a_requirement_codes": list(task27["requirement_code_expressions"]),
                     "tier_b_component_boundary": f"53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json#criteria[{criterion}]",
                     "source_verified_taxonomy": provenance,
                 },
