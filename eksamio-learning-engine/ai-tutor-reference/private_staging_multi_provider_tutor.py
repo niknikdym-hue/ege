@@ -25,12 +25,18 @@ from yandex_alice_live_adapter import YandexAliceTextProvider, YandexAliceTutorC
 from yandex_live_adapters import (
     BinaryTransport,
     CredentialKind,
-    FormBytesTransport,
     YandexCredential,
     YandexSpeechConfig,
     YandexSpeechKitProvider,
 )
 from yandex_speech_secret_provider import YandexSpeechSecretProvider
+from yandex_speechkit_v3_tts import (
+    StreamingJsonTransport,
+    UrllibStreamingJsonTransport,
+    YandexHybridSpeechProvider,
+    YandexSpeechKitV3TTS,
+    YandexSpeechKitV3TTSConfig,
+)
 
 
 TextProviderMode = Literal["auto", "openai", "qwen", "yandex"]
@@ -42,7 +48,9 @@ class PrivateMultiProviderConfigurationError(ValueError):
 
 @dataclass(frozen=True)
 class PrivateMultiProviderTutorConfig:
-    yandex_voice: str
+    yandex_voice: str = "lera"
+    yandex_voice_role: str = "neutral"
+    yandex_voice_speed: float = 1.04
     text_provider_mode: TextProviderMode = "auto"
     openai_model: str = "gpt-5.6-terra"
     qwen_model: str = "qwen3.8-max"
@@ -50,7 +58,6 @@ class PrivateMultiProviderTutorConfig:
     yandex_folder_id: str | None = None
     yandex_model_id: str = "aliceai-llm"
     speech_stt_audio_format: str = "lpcm"
-    speech_tts_audio_format: str = "oggopus"
     speech_stt_sample_rate_hertz: int = 16_000
     private_staging: bool = True
     public_traffic_enabled: bool = False
@@ -67,15 +74,11 @@ class PrivateMultiProviderTutorConfig:
             raise PrivateMultiProviderConfigurationError("Tutor private staging cannot enable public traffic")
         if (self.text_execution_enabled or self.speech_execution_enabled) and not self.owner_live_authorized:
             raise PrivateMultiProviderConfigurationError("live provider execution requires explicit owner authorization")
-        if not self.yandex_voice:
-            raise PrivateMultiProviderConfigurationError("Yandex Tutor voice must be configured")
+        if self.yandex_voice != "lera" or self.yandex_voice_role != "neutral" or abs(self.yandex_voice_speed - 1.04) > 0.0001:
+            raise PrivateMultiProviderConfigurationError("Tutor Yandex voice profile is locked to Lera / neutral / 1.04")
         if self.speech_stt_audio_format != "lpcm" or self.speech_stt_sample_rate_hertz != 16_000:
             raise PrivateMultiProviderConfigurationError(
                 "private browser voice test is locked to mono LPCM 16 kHz input"
-            )
-        if self.speech_tts_audio_format != "oggopus":
-            raise PrivateMultiProviderConfigurationError(
-                "private browser voice test is locked to Ogg Opus output"
             )
 
     @property
@@ -87,7 +90,7 @@ class PrivateMultiProviderTutorConfig:
 class PrivateMultiProviderTutorAssembly:
     tutor: ResilientAcceptedSemanticTutor
     text_providers: tuple[object, ...]
-    speech_provider: YandexSpeechKitProvider
+    speech_provider: YandexHybridSpeechProvider
     config: PrivateMultiProviderTutorConfig
 
     def safety_snapshot(self) -> dict[str, object]:
@@ -106,9 +109,13 @@ class PrivateMultiProviderTutorAssembly:
             "text_provider_order": [path.provider_id for path in ordered],
             "stt_provider": self.speech_provider.provider_id,
             "tts_provider": self.speech_provider.provider_id,
-            "stt_format": self.speech_provider.config.resolved_stt_format,
-            "tts_format": self.speech_provider.config.resolved_tts_format,
-            "stt_sample_rate_hertz": self.speech_provider.config.stt_sample_rate_hertz,
+            "stt_format": self.speech_provider.stt_provider.config.resolved_stt_format,
+            "stt_sample_rate_hertz": self.speech_provider.stt_provider.config.stt_sample_rate_hertz,
+            "tts_api": "v3-rest",
+            "tts_voice": self.speech_provider.tts_provider.config.voice,
+            "tts_role": self.speech_provider.tts_provider.config.role,
+            "tts_speed": self.speech_provider.tts_provider.config.speed,
+            "tts_container": self.speech_provider.tts_provider.config.container_audio_type,
             "voice_text_fallback_enabled": True,
             "accepted_semantic_count": len(self.tutor.accepted_semantics.semantic_ids),
             "learner_audio_persisted_bytes": 0,
@@ -123,7 +130,7 @@ def assemble_private_multi_provider_tutor(
     qwen_transport=None,
     yandex_text_transport=None,
     stt_transport: BinaryTransport | None = None,
-    tts_transport: FormBytesTransport | None = None,
+    tts_v3_transport: StreamingJsonTransport | None = None,
     session_ref_factory=None,
 ) -> PrivateMultiProviderTutorAssembly:
     def text_enabled(name: str) -> bool:
@@ -176,20 +183,33 @@ def assemble_private_multi_provider_tutor(
         providers[provider_id] = provider
     text_gateway = ReliabilityGateway(registry, providers)  # type: ignore[arg-type]
 
-    speech_provider = YandexSpeechKitProvider(
+    speech_credential = YandexCredential(CredentialKind.API_KEY, YandexSpeechSecretProvider())
+    stt_provider = YandexSpeechKitProvider(
         config=YandexSpeechConfig(
-            credential=YandexCredential(CredentialKind.API_KEY, YandexSpeechSecretProvider()),
-            voice=config.yandex_voice,
+            credential=speech_credential,
+            voice="lera",
             folder_id=config.resolved_yandex_folder_id,
             stt_audio_format=config.speech_stt_audio_format,
-            tts_audio_format=config.speech_tts_audio_format,
+            tts_audio_format="oggopus",
             stt_sample_rate_hertz=config.speech_stt_sample_rate_hertz,
             execution_enabled=config.speech_execution_enabled,
         ),
         stt_transport=stt_transport or UrllibBinaryTransport(),
-        tts_transport=tts_transport or UrllibFormBytesTransport(),
+        # v1 synthesis is deliberately not used; this satisfies the retained adapter contract only.
+        tts_transport=UrllibFormBytesTransport(),
     )
-    voice_gateway = VoiceGateway([speech_provider])
+    tts_provider = YandexSpeechKitV3TTS(
+        config=YandexSpeechKitV3TTSConfig(
+            credential=speech_credential,
+            voice=config.yandex_voice,
+            role=config.yandex_voice_role,
+            speed=config.yandex_voice_speed,
+            execution_enabled=config.speech_execution_enabled,
+        ),
+        transport=tts_v3_transport or UrllibStreamingJsonTransport(),
+    )
+    speech_provider = YandexHybridSpeechProvider(stt_provider=stt_provider, tts_provider=tts_provider)
+    voice_gateway = VoiceGateway([speech_provider])  # type: ignore[list-item]
 
     tutor = ResilientAcceptedSemanticTutor(
         engine_root=engine_root,
