@@ -112,6 +112,7 @@ jobs:
               'RUSSIAN_OGE_INDIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RU16_TASK27_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
               'RU16_TASK27_K5_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU15_OGE_EXPOSITION_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
               'RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
@@ -120,7 +121,7 @@ jobs:
               'RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
           }
-          assert len(data['accepted_authorities']) == 14
+          assert len(data['accepted_authorities']) == 15
           assert {a['id'] for a in data['accepted_authorities']} == expected_authorities
 
           for authority_id, count in (
@@ -139,6 +140,13 @@ jobs:
               assert authority['accepted_subject_semantics'] == count
               assert authority['accepted_route_semantics'] == 0
 
+          ru15 = next(a for a in data['accepted_authorities'] if a['id'] == 'RU15_OGE_EXPOSITION_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1')
+          assert ru15['authority_kind'] == 'BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_WITHOUT_OBJECT_BINDING'
+          assert ru15['accepted_admission_units'] == 0
+          assert ru15['accepted_requirements'] == 0
+          assert ru15['accepted_route_semantics'] == 4
+          assert ru15['accepted_subject_semantics'] == 0
+
           indirect = next(a for a in data['accepted_authorities'] if a['id'] == 'RUSSIAN_OGE_INDIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1')
           assert indirect['authority_kind'] == 'OBJECT_BOUND_CANONICAL_COMPONENT_SET'
           assert indirect['accepted_admission_units'] == 1
@@ -152,13 +160,13 @@ jobs:
           assert s['semantic_units_remaining_without_accepted_component_set'] == 1297
           assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1372
           assert s['canonical_component_refs_reused_unique'] == 52
-          assert s['accepted_bounded_ru_route_semantics'] == 5
+          assert s['accepted_bounded_ru_route_semantics'] == 9
           assert s['accepted_bounded_ru_subject_semantics'] == 41
-          assert s['accepted_bounded_ru_semantics_total'] == 46
-          assert s['accepted_route_semantics_without_object_binding'] == 5
+          assert s['accepted_bounded_ru_semantics_total'] == 50
+          assert s['accepted_route_semantics_without_object_binding'] == 9
           assert s['accepted_subject_semantics_without_object_binding'] == 41
           assert s['new_semantic_identities_created'] == 0
-          assert s['ru_proposal_identities_admitted'] == 46
+          assert s['ru_proposal_identities_admitted'] == 50
           assert s['false_exact_mastery_admissions'] == 0
 
           expected_route = {
@@ -167,6 +175,10 @@ jobs:
               'ru-ege-essay-logical-composition-cohesion',
               'ru-ege-essay-own-relation-justification',
               'ru-ege-essay-source-examples-explanation',
+              'ru-oge-exposition-microtheme-preservation',
+              'ru-oge-exposition-compression-across-text',
+              'ru-oge-exposition-logical-cohesion',
+              'ru-oge-exposition-full-draft-verification',
           }
           expected_subject = {
               'ru-expressive-alliteration',
