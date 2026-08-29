@@ -21,9 +21,12 @@ class OpenAICredential:
     secret_provider: Callable[[], str] = field(repr=False, compare=False)
 
     def authorization_header(self) -> str:
-        secret = self.secret_provider()
+        try:
+            secret = self.secret_provider()
+        except Exception as exc:
+            raise PermissionError("OpenAI credential unavailable") from exc
         if not isinstance(secret, str) or not secret.strip():
-            raise ValueError("OpenAI credential unavailable")
+            raise PermissionError("OpenAI credential unavailable")
         return f"Bearer {secret.strip()}"
 
 
@@ -116,6 +119,13 @@ class OpenAITextProvider:
             return ProviderFault(FailureClass.INVALID_PLATFORM_REQUEST, "invalid grounded OpenAI request")
         except PermissionError:
             return ProviderFault(FailureClass.CREDENTIAL_OR_ACCOUNT_FAILURE, "OpenAI credential rejected")
+        except RuntimeError as exc:
+            text = str(exc)
+            if "429" in text:
+                return ProviderFault(FailureClass.RATE_LIMIT, "OpenAI rate limit")
+            if any(f" {code}" in text for code in range(500, 600)):
+                return ProviderFault(FailureClass.PROVIDER_5XX, "OpenAI provider 5xx")
+            return ProviderFault(FailureClass.NETWORK_FAILURE, "OpenAI HTTP failure")
         except Exception:
             return ProviderFault(FailureClass.NETWORK_FAILURE, "OpenAI text transport failure")
 
