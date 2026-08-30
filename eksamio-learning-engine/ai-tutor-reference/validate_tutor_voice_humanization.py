@@ -27,6 +27,18 @@ EXAMPLE = (
     "Попробуйте ещё раз: восстановите букву и запишите слово целиком — соч..тать."
 )
 
+RHYTHM_EXAMPLE = (
+    "Обычно перед «а» пишется «и», но в словах «сочетать», «сочетание» сохраняется «е»."
+)
+
+PROSODY_CASES = (
+    ("Сначала найдите корень. Затем проверьте исключение.", ". sil<[260]> Затем"),
+    ("Правило такое: если после корня есть а, обычно пишется и.", ": <[small]> если"),
+    ("Сравните два случая; затем сформулируйте вывод.", "; <[medium]> затем"),
+    ("Ответ верный, однако объяснение неполное.", ", <[small]> однако"),
+    ("Ответ почти верный, но правило применено слишком широко.", ", <[small]> но"),
+)
+
 
 class CaptureTTS:
     def __init__(self) -> None:
@@ -68,9 +80,31 @@ def main() -> int:
     assert "/" not in spoken
     assert "[[t͡ɕ ɛ t]] или [[t͡ɕ i t]]" in spoken
     assert "буквы а sil<[180]> после" in spoken
+    assert ". sil<[260]> Слово" in spoken
     assert ". sil<[260]> Попробуйте" in spoken
     assert "сочетание" in spoken
     assert EXAMPLE.startswith("Вы почти правы")  # visible text is untouched
+
+    rhythm = normalize_tutor_text_for_speech(RHYTHM_EXAMPLE)
+    # Human-listening target: never pause before the named letter. The first
+    # semantic pause belongs after the completed clause "пишется и".
+    assert "перед а пишется и, <[small]> но" in rhythm
+    # The examples form one spoken group, followed by a small pause before the
+    # conclusion "сохраняется е".
+    assert "в словах сочетать, сочетание <[small]> сохраняется е" in rhythm
+    assert "перед <[" not in rhythm
+    assert "перед sil<[" not in rhythm
+
+    for source, marker in PROSODY_CASES:
+        rendered = normalize_tutor_text_for_speech(source)
+        assert marker in rendered, (source, rendered, marker)
+
+    # Markdown and school notation are visual-only and must never leak to speech.
+    markdown = normalize_tutor_text_for_speech(
+        "В корнях *‑чет‑*/*‑чит‑* пишется **е**. Подробнее: https://example.invalid/rule"
+    )
+    assert "*" not in markdown and "/" not in markdown and "http" not in markdown
+    assert "[[t͡ɕ ɛ t]] или [[t͡ɕ i t]]" in markdown
 
     transport = CaptureTTS()
     tts = YandexSpeechKitV3TTS(
@@ -80,20 +114,18 @@ def main() -> int:
         ),
         transport=transport,
     )
-    audio = tts.synthesize(EXAMPLE, session_ref="tutor:humanization")
+    audio = tts.synthesize(RHYTHM_EXAMPLE, session_ref="tutor:humanization")
     assert audio
     sent = " ".join(str(body["text"]) for body in transport.bodies)
-    assert "*" not in sent and "/" not in sent
-    assert "[[t͡ɕ ɛ t]] или [[t͡ɕ i t]]" in sent
-    assert "sil<[180]>" in sent
-    assert "sil<[260]>" in sent
+    assert "перед а пишется и, <[small]> но" in sent
+    assert "сочетать, сочетание <[small]> сохраняется е" in sent
     assert all(len(str(body["text"])) <= 240 for body in transport.bodies)
 
     long_text = normalize_tutor_text_for_speech("Первая законченная фраза. " * 20)
     chunks = _split_text(long_text, 240)
     assert chunks and all(len(chunk) <= 240 for chunk in chunks)
-    # Pause tags must remain attached to the preceding sentence, not start a chunk.
-    assert all(not chunk.startswith("sil<[") for chunk in chunks)
+    # TTS markup must remain attached to its phrase, never become a chunk by itself.
+    assert all(not chunk.startswith(("sil<[", "<[")) for chunk in chunks)
 
     page = base_ui.PAGE
     assert "function stopTutorPlayback()" in page
@@ -105,15 +137,22 @@ def main() -> int:
     first_prompt = grounded_system_text(_request()).lower()
     assert "не добавляй шаблонную фразу" in first_prompt
     assert "не более одного раза за всю сессию" in first_prompt
+    assert "естественным русским учебным языком" in first_prompt
+    assert "логичная пунктуация" in first_prompt
     repeated_prompt = grounded_system_text(
         _request((HistoryEntry("tutor", f"{VERIFICATION_REMINDER}."),))
     ).lower()
     assert "больше её не повторяй" in repeated_prompt
 
+    print("RUSSIAN_PEDAGOGICAL_PROSODY=PASS")
     print("TUTOR_TTS_MARKDOWN_NORMALIZATION=PASS")
     print("TUTOR_TTS_ROOT_CHET_PHONEME=PASS")
-    print("TUTOR_TTS_LETTER_PAUSE_AFTER_A=PASS")
+    print("TUTOR_TTS_NO_PAUSE_BEFORE_NAMED_LETTER=PASS")
+    print("TUTOR_TTS_CONTRASTIVE_CLAUSE_PAUSE=PASS")
+    print("TUTOR_TTS_EXAMPLE_GROUP_PAUSE=PASS")
     print("TUTOR_TTS_SENTENCE_PAUSE=PASS")
+    print("TUTOR_TTS_COLON_PAUSE=PASS")
+    print("TUTOR_TTS_SEMICOLON_PAUSE=PASS")
     print("TUTOR_TTS_COMPLETE_PHRASE_CHUNKING=PASS")
     print("TUTOR_VERIFICATION_REMINDER_MAX_ONCE=PASS")
     print("TUTOR_VOICE_HALF_DUPLEX=PASS")
