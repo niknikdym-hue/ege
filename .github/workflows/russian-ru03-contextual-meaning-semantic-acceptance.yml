@@ -1,0 +1,92 @@
+name: Russian RU03 contextual-meaning semantic acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-03-CONTEXTUAL-MEANING-DETERMINATION-WAVE-009-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU03-CONTEXTUAL-MEANING-CONTENT-ADEQUACY-REVIEW-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU03-CONTEXTUAL-MEANING-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU03-LEXIS-CANDIDATE-BOUNDARY-REVIEW-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru03_contextual_meaning_bounded_subject_semantics.py"
+      - ".github/workflows/russian-ru03-contextual-meaning-semantic-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru03-contextual-meaning:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate bounded semantic twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          validator="$root/validate_ru03_contextual_meaning_bounded_subject_semantics.py"
+          python3 -m py_compile "$validator"
+          python3 "$validator" > /tmp/ru03-contextual-meaning-a.txt
+          python3 "$validator" > /tmp/ru03-contextual-meaning-b.txt
+          diff -u /tmp/ru03-contextual-meaning-a.txt /tmp/ru03-contextual-meaning-b.txt
+          cat /tmp/ru03-contextual-meaning-a.txt
+
+      - name: Verify fail-closed candidate-008 boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('eksamio-learning-engine/russian-program')
+          review = json.loads((root / 'subject-admission/RU03-CONTEXTUAL-MEANING-CONTENT-ADEQUACY-REVIEW-v0.1.json').read_text(encoding='utf-8'))
+          acceptance = json.loads((root / 'subject-admission/RU03-CONTEXTUAL-MEANING-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json').read_text(encoding='utf-8'))
+          content = json.loads((root / 'production-learning-content/RU-PROG-03-CONTEXTUAL-MEANING-DETERMINATION-WAVE-009-v0.1.json').read_text(encoding='utf-8'))
+
+          assert review['reuse_first_result']['existing_content_exact_for_candidate_008'] is False
+          assert review['reuse_first_result']['silent_reuse_as_exact_mastery_forbidden'] is True
+          assert review['review_decision']['new_content_exact_for_candidate_008'] is True
+          assert review['review_decision']['semantic_admission_by_this_review'] is False
+          assert review['review_decision']['object_level_admission_units_closed'] == 0
+          assert review['review_decision']['object_level_requirements_closed'] == 0
+          assert review['review_decision']['false_exact_mastery_admissions'] == 0
+
+          decision = acceptance['decisions'][0]
+          assert decision['candidate_ref'] == 'candidate-008'
+          assert decision['accepted_semantic_id'] == 'ru-lexis-contextual-meaning-determination'
+          assert decision['object_binding_status'] == 'NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT'
+          assert acceptance['policy']['generic_task2_result_can_emit_exact_component_mastery'] is False
+          assert acceptance['policy']['broader_existing_content_can_emit_exact_candidate_mastery'] is False
+          assert acceptance['summary']['object_level_admission_units_closed'] == 0
+          assert acceptance['summary']['object_level_requirements_closed'] == 0
+          assert acceptance['summary']['false_exact_mastery_admissions'] == 0
+
+          unit = content['units'][0]
+          assert unit['candidate_ref'] == 'candidate-008'
+          assert unit['proposed_semantic_id'] == 'ru-lexis-contextual-meaning-determination'
+          assert unit['peis_evidence']['semantic_ref_status'] == 'PROPOSED_NOT_CANONICAL'
+          assert unit['peis_evidence']['generic_task_result_can_emit_exact_mastery'] is False
+          assert content['copyright_guard']['source_passages_copied'] == 0
+          assert content['copyright_guard']['commercial_textbook_bytes'] == 0
+          print('RU03_CONTEXTUAL_MEANING_FAIL_CLOSED_GUARD=PASS')
+          PY
+
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
