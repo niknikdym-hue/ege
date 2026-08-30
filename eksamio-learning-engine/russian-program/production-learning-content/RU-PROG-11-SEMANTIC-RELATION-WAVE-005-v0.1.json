@@ -11,12 +11,15 @@
   },
   "source_provenance": [
     {
-      "kind": "current_source_identity",
-      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-047"
+      "kind": "current_draft_subject_semantic_candidate",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-047",
+      "review_status": "draft",
+      "audit_classification": "MISSING_SUBJECT_SEMANTIC_CANDIDATE"
     },
     {
       "kind": "confirmed_skill_graph",
-      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[semantic_relation_between_sentences]"
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[semantic_relation_between_sentences]",
+      "evidence_status": "confirmed"
     },
     {
       "kind": "program_authority",
@@ -28,49 +31,54 @@
     "existing_unit_reused_as_scope_and_explanation_evidence": true,
     "existing_unit_reused_as_exact_candidate_047_mastery_evidence": false,
     "direct_relation_bearing_independent_checks_in_existing_unit": 1,
-    "reason": "The existing cohesion unit correctly teaches that a linking device has to be interpreted together with the semantic relation, but only one independent-verification item directly requires a relation-bearing explanation and that check is coupled to identifying the linking device. Candidate-047 needs independent component-specific evidence for semantic_relation_between_sentences so link-means performance cannot masquerade as exact semantic-relation mastery.",
+    "reason": "The existing cohesion unit correctly teaches that a linking device has to be interpreted together with the semantic relation, but only one independent-verification item directly requires a relation-bearing explanation and that check is coupled to identifying the linking device. Candidate-047 therefore still lacks independent component-specific verification; the broader unit must not masquerade as exact semantic-relation mastery.",
     "new_content_materialized_only_for_proven_component_verification_gap": true
   },
   "copyright_guard": {
     "source_passages_copied": 0,
     "commercial_textbook_bytes": 0,
     "learner_examples": "ORIGINAL_EKSAMIO",
-    "rule": "Current repository authorities define only the skill boundary; all learner-facing fragments, explanations and practice in this unit are original Eksamio content."
+    "rule": "Current repository authorities define only the bounded skill meaning; all learner-facing fragments, explanations and practice in this unit are original Eksamio content."
   },
-  "identity_boundary": "The ru-* semantic below is a bounded subject-acceptance identity proposal for candidate-047. It is not a school-* canonical identity, does not replace semantic_relation_between_sentences, and does not admit means-of-link selection, generic text-cohesion mastery, speech-type classification or the whole EGE Task 24.",
+  "identity_boundary": "The ru-* semantic below is only a bounded subject-acceptance proposal for candidate-047 while the inventory candidate itself remains draft. It is not a school-* canonical identity, does not replace semantic_relation_between_sentences, and does not admit link-means selection, generic text-cohesion mastery, speech-type classification or the whole EGE Task 24. Its positive semantic scope is limited to the four relation families explicitly named by candidate-047 and the confirmed skill-graph node: causal, consequential, explanatory and adversative relations.",
   "units": [
     {
       "proposed_semantic_id": "ru-text-semantic-relation-between-sentences",
-      "title_ru": "Смысловые отношения между предложениями",
+      "title_ru": "Причинные, следственные, пояснительные и противительные отношения между предложениями",
       "canonical_explanation": {
-        "short": "Смысловое отношение показывает, какую работу одно предложение выполняет по отношению к другому: объясняет причину, называет следствие, уточняет, противопоставляет, добавляет, продолжает последовательность или подводит к выводу. Отношение определяют по содержанию двух предложений, а не по одному слову-сигналу.",
+        "short": "Нужно определить, как второе предложение связано по смыслу с первым: называет причину, сообщает следствие, поясняет уже названную мысль или противопоставляет ей другое содержание. Отношение устанавливают по смыслу обоих предложений, а не по одному слову-сигналу.",
         "boundaries": [
+          "Положительная область этого unit ограничена четырьмя отношениями из source truth: причинным, следственным, пояснительным и противительным.",
           "Союз, наречие или местоимение может подсказывать связь, но само по себе не доказывает её тип: смысл должен сохраняться при перефразировании.",
           "Определение смыслового отношения не равно выбору средства связи; это отдельный компонент.",
-          "Навык не включает общее доказательство связности текста, классификацию типов речи или полное владение заданием ЕГЭ №24.",
-          "Если между предложениями возможны несколько оттенков, exact-ответ должен называть отношение, которое непосредственно подтверждается содержанием и направлением связи."
+          "Навык не включает добавочное, временное, последовательное, итоговое и другие отношения, пока для них нет отдельной принятой source/semantic authority в этом bounded slice.",
+          "Навык не включает общее доказательство связности текста, классификацию типов речи или полное владение заданием ЕГЭ №24."
         ]
       },
       "decision_algorithm": [
         "Сожми первое предложение до одной смысловой опоры: что в нём утверждается.",
-        "Сожми второе предложение до одной смысловой опоры: что нового оно делает с первой мыслью.",
-        "Сформулируй связь простым вопросом: почему, что из этого следует, что уточняется, чему противопоставляется, что добавляется или что происходит дальше.",
-        "Проверь направление отношения: причина и следствие нельзя менять местами только из-за слова-маркера.",
+        "Сожми второе предложение до одной смысловой опоры: что оно делает с первой мыслью.",
+        "Проверь четыре допустимых отношения: объясняет ли второе причину первого; сообщает ли следствие первого; раскрывает ли или поясняет уже названную мысль; противопоставляет ли ей другое содержание.",
+        "Для причины и следствия обязательно проверь направление: что является основанием, а что результатом.",
         "Мысленно убери союз или наречие-сигнал и проверь, остаётся ли выбранное отношение понятным из содержания.",
-        "Только после смысловой проверки назови тип отношения; средство связи, если оно есть, фиксируй отдельно."
+        "Если связь не укладывается точно ни в одно из четырёх отношений, не присваивай этот semantic: такой случай находится вне bounded scope."
       ],
       "worked_examples": [
         {
-          "prompt": "Ночью температура резко упала. Утром лужи покрылись тонким льдом.",
-          "answer": "Первое предложение называет причину, второе — её следствие: похолодание привело к появлению льда."
+          "prompt": "Ночью температура резко упала. Поэтому утром лужи покрылись тонким льдом.",
+          "answer": "Второе предложение сообщает следствие первого: похолодание привело к появлению льда. Маркер «поэтому» помогает, но направление подтверждается содержанием."
+        },
+        {
+          "prompt": "Утром лужи покрылись тонким льдом. Ночью температура резко упала.",
+          "answer": "Второе предложение называет причину первого: появление льда объясняется ночным похолоданием."
+        },
+        {
+          "prompt": "В отчёте не хватало одного обязательного показателя. Иными словами, автор не сообщил число повторных обращений.",
+          "answer": "Второе предложение поясняет первую мысль: раскрывает, какой именно обязательный показатель отсутствовал."
         },
         {
           "prompt": "Маршрут казался коротким. Однако подъём занял почти три часа.",
-          "answer": "Противопоставление ожидания и фактического результата. Слово «однако» помогает, но отношение подтверждается самим смысловым контрастом."
-        },
-        {
-          "prompt": "В отчёте не хватало одного показателя. Точнее, автор не указал число повторных обращений.",
-          "answer": "Второе предложение уточняет содержание первого, называя конкретно отсутствующий показатель."
+          "answer": "Между предложениями противительное отношение: фактическая длительность подъёма противопоставлена ожиданию, возникшему из оценки маршрута."
         }
       ],
       "misconceptions": [
@@ -85,6 +93,10 @@
         {
           "wrong": "Причина и следствие — одно и то же отношение независимо от направления.",
           "correction": "Направление принципиально: одно предложение может объяснять причину другого или, наоборот, сообщать следствие названной причины."
+        },
+        {
+          "wrong": "Любое уточнение, добавление или вывод можно засчитать как пояснительное отношение этого semantic.",
+          "correction": "Нет. В этом bounded slice пояснение должно непосредственно раскрывать уже названную мысль; другие типы отношений не принимаются без отдельной authority."
         }
       ],
       "guided_practice": [
@@ -95,8 +107,13 @@
         },
         {
           "id": "p11-rel-g2",
-          "prompt": "Пара: «Проект не закрыли. Напротив, команда расширила его ещё на два этапа». Что нужно доказать кроме слова «напротив»?",
-          "expected": "Смысловой контраст: ожиданию завершения противопоставлено продолжение и расширение проекта."
+          "prompt": "Пара: «Проект собирались закрыть. Напротив, команда расширила его ещё на два этапа». Что нужно доказать кроме слова «напротив»?",
+          "expected": "Смысловой контраст: ожидаемому завершению противопоставлено фактическое продолжение и расширение проекта."
+        },
+        {
+          "id": "p11-rel-g3",
+          "prompt": "Пара: «Экспедицию перенесли. То есть выход группы состоится не в мае, а в июне». Какое отношение проверяем?",
+          "expected": "Пояснительное: второе предложение раскрывает, что именно означает перенос экспедиции."
         }
       ],
       "independent_practice": [
@@ -112,8 +129,13 @@
         },
         {
           "id": "p11-rel-i3",
-          "prompt": "Чем уточнение отличается от простого добавления?",
-          "answer": "Уточнение сужает или конкретизирует уже названное содержание, а добавление вводит ещё один самостоятельный смысловой компонент."
+          "prompt": "Что должно происходить при пояснительном отношении?",
+          "answer": "Второе предложение должно непосредственно раскрывать или переформулировать смысл, уже названный в первом."
+        },
+        {
+          "id": "p11-rel-i4",
+          "prompt": "Что делать, если между предложениями видно отношение, не относящееся к причине, следствию, пояснению или противопоставлению?",
+          "answer": "Не присваивать этот bounded semantic: такой случай находится за его принятой границей."
         }
       ],
       "mixed_transfer_practice": [
@@ -124,8 +146,8 @@
         },
         {
           "id": "p11-rel-t2",
-          "prompt": "Во втором предложении есть местоимение «это». Достаточно ли этого, чтобы назвать смысловое отношение?",
-          "answer": "Нет. Местоимение может быть средством связи, но тип смыслового отношения устанавливается по тому, что второе предложение делает с содержанием первого."
+          "prompt": "Во втором предложении есть местоимение «это». Достаточно ли этого, чтобы назвать одно из четырёх отношений?",
+          "answer": "Нет. Местоимение может быть средством связи, но причинное, следственное, пояснительное или противительное отношение устанавливается по содержанию обоих предложений."
         }
       ],
       "retention_items": [
@@ -140,17 +162,23 @@
           "delay_hint": "7d",
           "prompt": "Почему при причинно-следственной связи важно направление?",
           "answer": "Потому что одно содержание является основанием, а другое результатом; перестановка ролей меняет точный ответ."
+        },
+        {
+          "id": "p11-rel-r3",
+          "delay_hint": "14d",
+          "prompt": "Какие четыре отношения входят именно в этот bounded semantic?",
+          "answer": "Причинное, следственное, пояснительное и противительное."
         }
       ],
       "independent_verification": [
         {
           "id": "p11-rel-v1",
           "type": "constructed_response",
-          "prompt": "Фрагмент: «В мастерской отключили вентиляцию. Через несколько минут в помещении стало душно». Назови смысловое отношение между предложениями и докажи направление связи без ссылки на специальное слово-маркер.",
+          "prompt": "Фрагмент: «В мастерской отключили вентиляцию. Через несколько минут в помещении стало душно». Назови смысловое отношение второго предложения к первому и докажи направление связи без ссылки на специальное слово-маркер.",
           "scoring": {
             "max_points": 3,
             "criteria": [
-              "1: названа причинно-следственная связь",
+              "1: названо следственное отношение",
               "1: отключение вентиляции определено как причина",
               "1: духота определена как следствие и связь объяснена содержанием предложений"
             ]
@@ -163,32 +191,62 @@
           "scoring": {
             "max_points": 3,
             "criteria": [
-              "1: названо противопоставление/контраст ожидания и факта",
+              "1: названо противительное отношение",
               "1: выделено ожидание пустого зала",
-              "1: показано, что заполненный зал противоречит этому ожиданию"
+              "1: показано, что заполненный зал противопоставлен этому ожиданию"
+            ]
+          }
+        },
+        {
+          "id": "p11-rel-v3",
+          "type": "constructed_response",
+          "prompt": "Фрагмент: «Встречу пришлось отменить. Организатор внезапно заболел». Назови смысловое отношение второго предложения к первому и докажи его.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: названо причинное отношение",
+              "1: болезнь организатора определена как причина отмены",
+              "1: направление связи объяснено по содержанию"
+            ]
+          }
+        },
+        {
+          "id": "p11-rel-v4",
+          "type": "constructed_response",
+          "prompt": "Фрагмент: «Решение оказалось временным. Иными словами, через месяц вопрос придётся рассматривать заново». Назови смысловое отношение второго предложения к первому и объясни его.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: названо пояснительное отношение",
+              "1: показано, что второе предложение раскрывает смысл слова «временным»",
+              "1: ответ опирается на содержание, а не только на «иными словами»"
             ]
           }
         }
       ],
       "peis_evidence": {
         "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "source_candidate_review_status": "draft",
         "independent_verification_required": true,
         "assistance_must_be_recorded": true,
-        "exact_mastery_requires_two_component_specific_semantic_relation_checks": true,
+        "exact_mastery_requires_component_specific_checks_across_accepted_four_relation_scope": true,
         "generic_task24_result_can_emit_exact_component_mastery": false,
         "link_means_unit_result_can_emit_exact_component_mastery": false,
         "speech_type_result_can_emit_this_mastery": false,
+        "out_of_scope_relation_result_can_emit_this_mastery": false,
         "object_closure_implied": false
       },
       "tutor_grounding": {
         "allowed": [
           "ask what the second sentence does to the meaning of the first",
-          "distinguish cause, consequence, clarification, contrast, addition, sequence and conclusion from content",
-          "check directionality and require a short semantic justification",
-          "separate semantic relation from the grammatical or lexical means that signals it"
+          "distinguish only causal, consequential, explanatory and adversative relations in this bounded unit",
+          "check cause/effect directionality and require a short semantic justification",
+          "separate semantic relation from the grammatical or lexical means that signals it",
+          "fail closed when the relation is outside the four source-authorized families"
         ],
         "forbidden": [
           "infer a relation from one marker word without reading both meanings",
+          "teach or admit addition, sequence, conclusion or another relation as part of this bounded semantic without separate source authority",
           "treat correct link-means selection as exact semantic-relation mastery",
           "treat generic Task-24 correctness as exact component mastery",
           "claim mastery of speech types or whole-text cohesion from this bounded semantic"
