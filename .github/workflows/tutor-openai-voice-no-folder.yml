@@ -18,6 +18,8 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -38,7 +40,6 @@ jobs:
         shell: bash
         run: |
           bash -n eksamio-learning-engine/ai-tutor-reference/launch_openai_voice_no_folder_test.command
-          grep -q 'YANDEX_FOLDER_ID for this run' eksamio-learning-engine/ai-tutor-reference/private_openai_voice_no_folder_ui.py || true
           grep -q 'private_openai_voice_no_folder_ui.py --owner-authorized --port 8767' eksamio-learning-engine/ai-tutor-reference/launch_openai_voice_no_folder_test.command
           echo 'OPENAI_VOICE_LAUNCHER=PASS'
       - name: Diff hygiene
