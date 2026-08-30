@@ -39,7 +39,7 @@ class SimulatedUnavailableTransport:
         raise TimeoutError(f"simulated {self.provider_name} outage")
 
 
-def _four_brain_page() -> str:
+def _four_brain_page(*, default_provider: str, lock_provider: bool) -> str:
     page = base_ui.PAGE
     page = page.replace("трёх AI-мозгов", "четырёх AI-мозгов")
     page = page.replace(
@@ -54,6 +54,21 @@ def _four_brain_page() -> str:
         "for(const k of ['openai','qwen','yandex'])",
         "for(const k of ['openai','qwen','deepseek','yandex'])",
     )
+    labels = {
+        "openai": "OpenAI",
+        "qwen": "Qwen",
+        "deepseek": "DeepSeek",
+        "yandex": "Яндекс (Alice AI)",
+        "auto": "Авто: OpenAI → Qwen → DeepSeek → Яндекс",
+    }
+    marker = f'<option value="{default_provider}">{labels[default_provider]}</option>'
+    page = page.replace(marker, marker.replace(">", " selected>"), 1)
+    if lock_provider:
+        page = page.replace('<select id="provider">', '<select id="provider" disabled>', 1)
+        page = page.replace(
+            "При отказе одного AI система продолжит ход через следующий backend.",
+            "Failover-тест: AUTO зафиксирован; недоступные backend'ы имитируются локально, следующий backend вызывается реально.",
+        )
     return page
 
 
@@ -124,6 +139,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--port", type=int, default=base_ui.DEFAULT_PORT)
     parser.add_argument("--qwen-base-url", default=None)
     parser.add_argument("--yandex-folder-id", default=None)
+    parser.add_argument("--default-provider", choices=sorted(FOUR_PROVIDER_MODES), default="openai")
+    parser.add_argument("--lock-provider", action="store_true")
     parser.add_argument(
         "--simulate-unavailable",
         default="",
@@ -148,6 +165,9 @@ def main() -> int:
     if not simulated.issubset({"openai", "qwen", "deepseek", "yandex"}):
         print("PRIVATE_FOUR_BRAIN_TUTOR_UI=BLOCKED_INVALID_FAILOVER_PROVIDER")
         return 2
+    if simulated and args.default_provider != "auto":
+        print("PRIVATE_FOUR_BRAIN_TUTOR_UI=BLOCKED_FAILOVER_TEST_REQUIRES_AUTO")
+        return 2
 
     local_config = load_private_provider_config()
     qwen_base_url = args.qwen_base_url or local_config.qwen_base_url
@@ -160,12 +180,14 @@ def main() -> int:
         yandex_folder_id=yandex_folder_id,
         simulated_unavailable=simulated,
     )
-    base_ui.PAGE = _four_brain_page()
+    base_ui.PAGE = _four_brain_page(default_provider=args.default_provider, lock_provider=args.lock_provider)
     base_ui.Handler.app = app
     server = ThreadingHTTPServer((base_ui.HOST, args.port), base_ui.Handler)
     url = f"http://{base_ui.HOST}:{args.port}/"
     print(f"PRIVATE_FOUR_BRAIN_TUTOR_UI=READY {url}")
     print("PROVIDER_MODES=openai,qwen,deepseek,yandex,auto")
+    print("DEFAULT_PROVIDER=" + args.default_provider)
+    print(f"PROVIDER_SELECTION_LOCKED={int(args.lock_provider)}")
     print("AUTO_ORDER=PROVISIONAL_NOT_PRODUCT_RANKING")
     print("SIMULATED_UNAVAILABLE=" + (",".join(sorted(simulated)) if simulated else "none"))
     print("PUBLIC_TRAFFIC_ENABLED=0")
