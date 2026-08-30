@@ -60,11 +60,22 @@ jobs:
           statuses = data['candidate_review_status_counts']
           assert set(statuses) == {'draft', 'needs_review'}
           assert statuses['draft'] + statuses['needs_review'] == 7
-          relations = {row['relation'] for row in data['candidate_relation_decisions']}
-          assert relations == {
-              'CONTENT_SPANS_GENERIC_STRESS_SELECTION_AND_MULTIPLE_POS_CANDIDATES_NO_EXACT_OWNER',
-              'SOURCE_VERIFICATION_PROCEDURE_NO_EXACT_DRAFT_CANDIDATE_OWNER',
+          decisions = {row['content_semantic_id']: row for row in data['candidate_relation_decisions']}
+          assert set(decisions) == {
+              'ru-orthoepy-stress-form-sensitive',
+              'ru-orthoepy-norm-source-check',
           }
+          form = decisions['ru-orthoepy-stress-form-sensitive']
+          assert form['candidate_ref'] == 'candidate-018+candidate-021'
+          assert form['relation'] == 'FORM_SENSITIVE_GENERIC_STRESS_WITH_VERB_EXAMPLE_OVERLAP_NO_EXACT_OWNER'
+          assert form['acceptance_effect'] == 'NONE'
+          assert form['no_direct_content_evidence_for_candidate_refs'] == [
+              'candidate-019', 'candidate-020', 'candidate-022', 'candidate-023', 'candidate-024'
+          ]
+          procedure = decisions['ru-orthoepy-norm-source-check']
+          assert procedure['candidate_ref'] == 'none_exact'
+          assert procedure['relation'] == 'SOURCE_VERIFICATION_PROCEDURE_NO_EXACT_DRAFT_CANDIDATE_OWNER'
+          assert procedure['acceptance_effect'] == 'NONE'
           reuse = data['reuse_review']
           assert reuse['current_proposed_id_collisions'] == 0
           assert reuse['exact_existing_owner_reuses_admitted'] == 0
