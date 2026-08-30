@@ -1,0 +1,130 @@
+name: Russian RU02 orthoepy content adequacy review
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_content_adequacy_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_source_identity_resolution.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_candidate_boundary_review.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-02-ORTHOEPY-STRESS-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json"
+      - ".github/workflows/russian-ru02-orthoepy-content-adequacy-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru02-content-adequacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU02 content adequacy review
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_content_adequacy_review.py
+      - name: Build RU02 content adequacy review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_content_adequacy_review.py --output /tmp/ru02-content-a.json > /tmp/ru02-content-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_content_adequacy_review.py --output /tmp/ru02-content-b.json > /tmp/ru02-content-b.txt
+          cmp /tmp/ru02-content-a.json /tmp/ru02-content-b.json
+          diff -u /tmp/ru02-content-a.txt /tmp/ru02-content-b.txt
+          cat /tmp/ru02-content-a.txt
+          cp /tmp/ru02-content-a.json RU02-ORTHOEPY-CONTENT-ADEQUACY-REVIEW.json
+      - name: Verify exact candidate content gaps remain fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path('RU02-ORTHOEPY-CONTENT-ADEQUACY-REVIEW.json').read_text(encoding='utf-8'))
+          assert data['schema_version'] == '0.1.0'
+          assert data['status'] == 'CENTRAL_BRAIN_RU02_EXISTING_CONTENT_ADEQUACY_REVIEW_COMPLETE_EXACT_CANDIDATE_CONTENT_GAPS_PROVEN_NO_ADMISSION'
+          assert data['module_id'] == 'RU-PROG-02'
+          decisions = {row['content_semantic_id']: row for row in data['content_adequacy_decisions']}
+          assert set(decisions) == {
+              'ru-orthoepy-stress-form-sensitive',
+              'ru-orthoepy-norm-source-check',
+          }
+          form = decisions['ru-orthoepy-stress-form-sensitive']
+          assert form['adequacy_class'] == 'PARTIAL_CROSS_CANDIDATE_IMPLEMENTATION_NOT_EXACT_CANDIDATE_CONTENT'
+          assert form['exact_candidate_owner'] is None
+          assert form['candidate_overlap'] == {
+              'candidate-018': 'PARTIAL_GENERIC_STRESS_SELECTION_IMPLEMENTATION',
+              'candidate-021': 'PARTIAL_VERB_FORM_EXAMPLE_OVERLAP',
+          }
+          assert form['no_direct_content_evidence_for'] == [
+              'candidate-019', 'candidate-020', 'candidate-022', 'candidate-023', 'candidate-024'
+          ]
+          assert form['evidence']['worked_examples'] == ['отбылА', 'отдалА', 'перезвонИт']
+          assert form['evidence']['worked_example_part_of_speech_scope'] == 'VERB_FORMS_ONLY'
+          procedure = decisions['ru-orthoepy-norm-source-check']
+          assert procedure['adequacy_class'] == 'NORMATIVE_SOURCE_CHECK_META_PROCEDURE_NOT_EXACT_CANDIDATE_CONTENT'
+          assert procedure['exact_candidate_owner'] is None
+          assert procedure['candidate_overlap'] == {}
+          assert procedure['no_direct_content_evidence_for'] == [
+              'candidate-018', 'candidate-019', 'candidate-020', 'candidate-021',
+              'candidate-022', 'candidate-023', 'candidate-024'
+          ]
+          gaps = data['candidate_gap_status']
+          assert len(gaps) == 7
+          assert {row['candidate_ref'] for row in gaps} == {
+              'candidate-018', 'candidate-019', 'candidate-020', 'candidate-021',
+              'candidate-022', 'candidate-023', 'candidate-024'
+          }
+          assert all(row['exact_candidate_content_status'] == 'MISSING_EXACT_CANDIDATE_LEARNER_CONTENT' for row in gaps)
+          assert all(row['semantic_admission_effect'] == 'NONE' for row in gaps)
+          policy = data['policy']
+          assert policy['content_example_overlap_is_exact_semantic_equivalence'] is False
+          assert policy['meta_procedure_is_subject_component'] is False
+          assert policy['partial_content_can_admit_candidate'] is False
+          assert policy['candidate_content_gap_proof_is_semantic_admission'] is False
+          assert policy['candidate_content_gap_proof_is_object_closure'] is False
+          assert policy['component_specific_independent_evidence_required_for_mastery'] is True
+          assert policy['keyword_or_fuzzy_inference_allowed'] is False
+          assert data['summary'] == {
+              'existing_learner_units_reviewed': 2,
+              'exact_candidate_content_units': 0,
+              'partial_cross_candidate_units': 1,
+              'meta_procedure_units': 1,
+              'candidate_exact_content_gaps_proven': 7,
+              'semantic_admissions': 0,
+              'object_level_admission_units_closed': 0,
+              'object_level_requirements_closed': 0,
+              'false_exact_mastery_admissions': 0,
+          }
+          assert data['next_exact_work'] == {
+              'candidate_source_identities_unresolved': 0,
+              'candidate_exact_content_gaps_remaining': 7,
+              'candidates_with_partial_skill_graph_evidence_requiring_semantic_acceptance_review': 6,
+              'first_candidate_with_confirmed_skill_graph_evidence_and_proven_exact_content_gap': 'candidate-018',
+              'new_content_may_self_admit_semantics': False,
+          }
+          print('RU02_ORTHOEPY_CONTENT_ADEQUACY_FAIL_CLOSED_GUARD=PASS')
+          PY
+      - name: Upload RU02 content adequacy evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru02-orthoepy-content-adequacy-review
+          path: RU02-ORTHOEPY-CONTENT-ADEQUACY-REVIEW.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
