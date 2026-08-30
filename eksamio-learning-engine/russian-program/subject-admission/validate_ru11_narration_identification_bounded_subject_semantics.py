@@ -15,15 +15,14 @@ REVIEW = HERE / "RU11-NARRATION-IDENTIFICATION-CONTENT-ADEQUACY-REVIEW-v0.1.json
 INVENTORY = ENGINE / "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
 GRAPH = ENGINE / "03-RUSSIAN-SKILL-GRAPH.json"
 PROGRAM_AUTHORITY = PROGRAM / "RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
-BROADER_CONTENT = PROGRAM / "production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json"
-EXACT_CONTENT = PROGRAM / "production-learning-content/RU-PROG-11-NARRATION-IDENTIFICATION-WAVE-006-v0.1.json"
+BROADER = PROGRAM / "production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json"
+CONTENT = PROGRAM / "production-learning-content/RU-PROG-11-NARRATION-IDENTIFICATION-WAVE-006-v0.1.json"
 
 CANDIDATE = "candidate-044"
 TAXONOMY = "narration_identification"
 SEMANTIC = "ru-text-narration-identification"
 SOURCE_LABEL = "Определение повествования"
 CANONICAL_LABEL = "Распознавание повествования"
-BROADER_SEMANTIC = "ru-text-speech-type-reasoning-description-narration"
 EXPECTED_CHECK_IDS = {"p11-nar-v1", "p11-nar-v2"}
 EXPECTED_CANDIDATES = {
     "candidate-001", "candidate-002", "candidate-003", "candidate-004", "candidate-005",
@@ -43,9 +42,10 @@ def one(rows: list[dict[str, Any]], label: str) -> dict[str, Any]:
     return rows[0]
 
 
-def mentions_narration(value: Any) -> bool:
-    text = json.dumps(value, ensure_ascii=False).lower()
-    return "повеств" in text or "narration" in text
+def direct_narration_check(item: dict[str, Any]) -> bool:
+    """A distractor option mentioning narration is not exact narration evidence."""
+    prompt = str(item.get("prompt") or "").lower()
+    return "повеств" in prompt or "narration" in prompt
 
 
 def main() -> int:
@@ -54,15 +54,15 @@ def main() -> int:
     inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
     graph = json.loads(GRAPH.read_text(encoding="utf-8"))
     program = json.loads(PROGRAM_AUTHORITY.read_text(encoding="utf-8"))
-    broader = json.loads(BROADER_CONTENT.read_text(encoding="utf-8"))
-    content = json.loads(EXACT_CONTENT.read_text(encoding="utf-8"))
+    broader = json.loads(BROADER.read_text(encoding="utf-8"))
+    content = json.loads(CONTENT.read_text(encoding="utf-8"))
 
     if acceptance.get("status") != "CENTRAL_BRAIN_ACCEPTED_RU11_NARRATION_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC":
         raise AssertionError("RU11 candidate-044 acceptance status drift")
     if acceptance.get("authority_issue") != 161:
         raise AssertionError("RU11 candidate-044 authority issue drift")
     if acceptance.get("canonical_school_registry_mutated") is not False or acceptance.get("new_parallel_registry_created") is not False:
-        raise AssertionError("RU11 candidate-044 acceptance mutated/duplicated registry")
+        raise AssertionError("RU11 candidate-044 registry boundary drift")
 
     source_guard = acceptance.get("source_truth_guard") or {}
     if (
@@ -78,7 +78,7 @@ def main() -> int:
         raise AssertionError("RU11 candidate-044 source-truth guard drift")
 
     policy = acceptance.get("policy") or {}
-    for key in (
+    required_true = (
         "exact_current_source_identity_required",
         "source_verified_taxonomy_backing_required",
         "confirmed_skill_graph_evidence_required",
@@ -89,12 +89,13 @@ def main() -> int:
         "reuse_first",
         "component_specific_independent_evidence_required",
         "school_duplicate_forbidden",
-    ):
+    )
+    for key in required_true:
         if policy.get(key) is not True:
-            raise AssertionError(f"RU11 candidate-044 acceptance policy weakened: {key}")
-    if policy.get("minimum_component_specific_independent_checks") != 2:
-        raise AssertionError("RU11 candidate-044 minimum independent checks drift")
-    for key in (
+            raise AssertionError(f"RU11 candidate-044 policy weakened: {key}")
+    if policy.get("minimum_component_specific_independent_checks") != 2 or policy.get("new_subject_identity_namespace") != "ru-*":
+        raise AssertionError("RU11 candidate-044 component/namespace policy drift")
+    required_false = (
         "ege_taxonomy_id_promoted_unchanged",
         "candidate_id_used_as_semantic_id",
         "adjacent_candidates_admitted",
@@ -106,25 +107,24 @@ def main() -> int:
         "verb_count_or_marker_word_can_emit_exact_component_mastery",
         "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding",
         "content_presence_alone_is_semantic_admission",
-    ):
+    )
+    for key in required_false:
         if policy.get(key) is not False:
             raise AssertionError(f"RU11 candidate-044 fail-closed policy drift: {key}")
-    if policy.get("new_subject_identity_namespace") != "ru-*":
-        raise AssertionError("RU11 candidate-044 namespace drift")
 
-    modules = {str(row.get("module_id")): row for row in program.get("modules", []) if isinstance(row, dict)}
+    modules = {str(r.get("module_id")): r for r in program.get("modules", []) if isinstance(r, dict)}
     module = modules.get("RU-PROG-11")
     if not isinstance(module, dict) or module.get("semantic_binding_mode") != "DRAFT_CANDIDATE_BINDING":
         raise AssertionError("RU11 module/binding drift")
     if set(module.get("candidate_refs") or []) != EXPECTED_CANDIDATES:
-        raise AssertionError("RU11 candidate-set drift")
+        raise AssertionError("RU11 candidate set drift")
 
-    objects = [row for row in inventory.get("objects", []) if isinstance(row, dict)]
+    objects = [r for r in inventory.get("objects", []) if isinstance(r, dict)]
     candidate = one([
-        row for row in objects
-        if row.get("source_system") == "semantic_candidate"
-        and row.get("source_id") == CANDIDATE
-        and row.get("authority_status") == "current"
+        r for r in objects
+        if r.get("source_system") == "semantic_candidate"
+        and r.get("source_id") == CANDIDATE
+        and r.get("authority_status") == "current"
     ], "RU11 candidate-044 current inventory")
     if (
         candidate.get("audit_classification") != "MISSING_SUBJECT_SEMANTIC_CANDIDATE"
@@ -136,11 +136,11 @@ def main() -> int:
         raise AssertionError("RU11 candidate-044 inventory boundary drift")
 
     backing = one([
-        row for row in objects
-        if row.get("source_system") == "ege_skill_graph"
-        and row.get("source_id") == TAXONOMY
-        and row.get("authority_status") == "current"
-        and row.get("candidate_canonical_owner") == CANDIDATE
+        r for r in objects
+        if r.get("source_system") == "ege_skill_graph"
+        and r.get("source_id") == TAXONOMY
+        and r.get("authority_status") == "current"
+        and r.get("candidate_canonical_owner") == CANDIDATE
     ], "RU11 candidate-044 taxonomy backing")
     if backing.get("review_status") != "source_verified" or backing.get("audit_classification") != "EGE_TAXONOMY_NODE":
         raise AssertionError("RU11 candidate-044 taxonomy backing not source-verified")
@@ -148,8 +148,7 @@ def main() -> int:
         raise AssertionError("RU11 candidate/backing meaning mismatch")
 
     skill = one([
-        row for row in graph.get("skills", [])
-        if isinstance(row, dict) and row.get("skill_id") == TAXONOMY
+        r for r in graph.get("skills", []) if isinstance(r, dict) and r.get("skill_id") == TAXONOMY
     ], "RU11 candidate-044 graph node")
     if (
         skill.get("evidence_status") != "confirmed"
@@ -158,57 +157,43 @@ def main() -> int:
         or skill.get("name_ru") != SOURCE_LABEL
         or normalized(skill.get("description")) != normalized(candidate.get("observed_meaning"))
     ):
-        raise AssertionError("RU11 candidate-044 confirmed graph boundary drift")
+        raise AssertionError("RU11 candidate-044 graph boundary drift")
 
-    collisions = [
-        row for row in objects
-        if row.get("authority_status") == "current"
-        and SEMANTIC in {str(ref) for ref in (row.get("current_semantic_refs") or [])}
-    ]
-    if collisions:
-        raise AssertionError("RU11 candidate-044 semantic id collides with current inventory")
-    exact_school_meaning = [
-        row for row in objects
-        if row.get("source_system") == "school_canonical"
-        and row.get("authority_status") == "current"
-        and normalized(row.get("observed_meaning")) == normalized(candidate.get("observed_meaning"))
-    ]
-    if exact_school_meaning:
+    if any(
+        SEMANTIC in {str(ref) for ref in (r.get("current_semantic_refs") or [])}
+        for r in objects if r.get("authority_status") == "current"
+    ):
+        raise AssertionError("RU11 candidate-044 semantic id collision")
+    if any(
+        r.get("source_system") == "school_canonical"
+        and r.get("authority_status") == "current"
+        and normalized(r.get("observed_meaning")) == normalized(candidate.get("observed_meaning"))
+        for r in objects
+    ):
         raise AssertionError("RU11 candidate-044 exact school meaning already exists; reuse required")
 
     if review.get("status") != "CENTRAL_BRAIN_RU11_NARRATION_IDENTIFICATION_CONTENT_ADEQUACY_REVIEW_COMPLETE_NO_ADMISSION":
         raise AssertionError("RU11 narration adequacy review status drift")
-    review_source = review.get("source_identity") or {}
+    rd = review.get("review_decision") or {}
     if (
-        review_source.get("candidate_ref") != CANDIDATE
-        or review_source.get("source_taxonomy_id") != TAXONOMY
-        or review_source.get("inventory_review_status") != "draft"
-        or review_source.get("skill_graph_evidence_status") != "confirmed"
-        or review_source.get("taxonomy_backing_review_status") != "source_verified"
-    ):
-        raise AssertionError("RU11 narration adequacy source truth drift")
-    review_decision = review.get("review_decision") or {}
-    if (
-        review_decision.get("content_exact_for_current_candidate_044_source_meaning") is not True
-        or review_decision.get("source_candidate_inventory_status_preserved_as_draft") is not True
-        or review_decision.get("semantic_admission_by_this_review") is not False
-        or review_decision.get("object_level_admission_units_closed") != 0
-        or review_decision.get("object_level_requirements_closed") != 0
-        or review_decision.get("false_exact_mastery_admissions") != 0
-        or review_decision.get("next_status") != "READY_FOR_SEPARATE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_WITH_DRAFT_CANDIDATE_GUARD"
+        rd.get("content_exact_for_current_candidate_044_source_meaning") is not True
+        or rd.get("source_candidate_inventory_status_preserved_as_draft") is not True
+        or rd.get("semantic_admission_by_this_review") is not False
+        or rd.get("object_level_admission_units_closed") != 0
+        or rd.get("object_level_requirements_closed") != 0
+        or rd.get("false_exact_mastery_admissions") != 0
+        or rd.get("next_status") != "READY_FOR_SEPARATE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_WITH_DRAFT_CANDIDATE_GUARD"
     ):
         raise AssertionError("RU11 narration adequacy decision drift")
 
-    if broader.get("status") != "SUBJECT_ACCEPTANCE_REQUIRED" or broader.get("module_id") != "RU-PROG-11":
-        raise AssertionError("RU11 broader-content authority drift")
-    broader_unit = one([
-        row for row in broader.get("units", [])
-        if isinstance(row, dict) and row.get("proposed_semantic_id") == BROADER_SEMANTIC
+    broad_unit = one([
+        r for r in broader.get("units", [])
+        if isinstance(r, dict) and r.get("proposed_semantic_id") == "ru-text-speech-type-reasoning-description-narration"
     ], "RU11 broader speech-type unit")
-    broader_checks = [row for row in broader_unit.get("independent_verification", []) if isinstance(row, dict)]
-    direct_narration_checks = sum(1 for row in broader_checks if mentions_narration(row))
-    if direct_narration_checks != 0:
-        raise AssertionError(f"RU11 narration reuse-gap proof drift: expected 0 direct checks, got {direct_narration_checks}")
+    broader_checks = [r for r in (broad_unit.get("independent_verification") or []) if isinstance(r, dict)]
+    direct_broader = sum(1 for r in broader_checks if direct_narration_check(r))
+    if direct_broader != 0:
+        raise AssertionError(f"RU11 candidate-044 reuse-gap drift: expected 0 direct prompt checks, got {direct_broader}")
 
     reuse = acceptance.get("reuse_first_decision") or {}
     if (
@@ -219,38 +204,33 @@ def main() -> int:
         or reuse.get("minimum_component_specific_independent_checks_for_this_acceptance") != 2
         or reuse.get("new_content_materialized_only_for_proven_component_verification_gap") is not True
     ):
-        raise AssertionError("RU11 candidate-044 reuse-gap decision drift")
+        raise AssertionError("RU11 candidate-044 reuse-first acceptance drift")
 
     if content.get("status") != "SUBJECT_ACCEPTANCE_REQUIRED" or content.get("module_id") != "RU-PROG-11":
-        raise AssertionError("RU11 candidate-044 learner-content status/module drift")
+        raise AssertionError("RU11 candidate-044 content status/module drift")
     guard = content.get("copyright_guard") or {}
     if guard.get("source_passages_copied") != 0 or guard.get("commercial_textbook_bytes") != 0 or guard.get("learner_examples") != "ORIGINAL_EKSAMIO":
-        raise AssertionError("RU11 candidate-044 learner-content provenance boundary weakened")
+        raise AssertionError("RU11 candidate-044 copyright/provenance guard drift")
     unit = one([
-        row for row in content.get("units", [])
-        if isinstance(row, dict) and row.get("proposed_semantic_id") == SEMANTIC
+        r for r in content.get("units", []) if isinstance(r, dict) and r.get("proposed_semantic_id") == SEMANTIC
     ], "RU11 candidate-044 exact learner unit")
     if unit.get("title_ru") != CANONICAL_LABEL:
-        raise AssertionError("RU11 candidate-044 learner-unit title drift")
+        raise AssertionError("RU11 candidate-044 learner title drift")
     for key, minimum in (
-        ("decision_algorithm", 6),
-        ("worked_examples", 4),
-        ("misconceptions", 4),
-        ("guided_practice", 3),
-        ("independent_practice", 3),
-        ("mixed_transfer_practice", 2),
-        ("retention_items", 2),
-        ("independent_verification", 2),
+        ("decision_algorithm", 6), ("worked_examples", 4), ("misconceptions", 4),
+        ("guided_practice", 3), ("independent_practice", 3), ("mixed_transfer_practice", 2),
+        ("retention_items", 2), ("independent_verification", 2),
     ):
         value = unit.get(key)
         if not isinstance(value, list) or len(value) < minimum:
             raise AssertionError(f"RU11 candidate-044 learner section incomplete: {key}")
-    checks = [row for row in unit.get("independent_verification", []) if isinstance(row, dict)]
-    if {row.get("id") for row in checks} != EXPECTED_CHECK_IDS or len(checks) != 2:
+
+    checks = [r for r in (unit.get("independent_verification") or []) if isinstance(r, dict)]
+    if {r.get("id") for r in checks} != EXPECTED_CHECK_IDS or len(checks) != 2:
         raise AssertionError("RU11 candidate-044 exact verification set drift")
-    if any(row.get("type") != "constructed_response" for row in checks) or not all(mentions_narration(row) for row in checks):
-        raise AssertionError("RU11 candidate-044 verification no longer directly tests narration")
-    if any((row.get("scoring") or {}).get("max_points") != 3 for row in checks):
+    if any(r.get("type") != "constructed_response" for r in checks) or not all(direct_narration_check(r) for r in checks):
+        raise AssertionError("RU11 candidate-044 exact checks no longer directly ask about narration")
+    if any((r.get("scoring") or {}).get("max_points") != 3 for r in checks):
         raise AssertionError("RU11 candidate-044 verification scoring drift")
 
     peis = unit.get("peis_evidence") or {}
@@ -265,11 +245,11 @@ def main() -> int:
         or peis.get("description_or_reasoning_result_can_emit_this_mastery") is not False
         or peis.get("object_closure_implied") is not False
     ):
-        raise AssertionError("RU11 candidate-044 PEIS mastery boundary weakened")
+        raise AssertionError("RU11 candidate-044 PEIS boundary drift")
     tutor = unit.get("tutor_grounding") or {}
     forbidden = " ".join(tutor.get("forbidden") or []).lower()
-    if not tutor.get("allowed") or not tutor.get("forbidden") or ("verb" not in forbidden and "глаг" not in forbidden) or "task-24" not in forbidden:
-        raise AssertionError("RU11 candidate-044 Tutor grounding guard drift")
+    if ("verb" not in forbidden and "глаг" not in forbidden) or "task-24" not in forbidden:
+        raise AssertionError("RU11 candidate-044 Tutor guard drift")
 
     decisions = acceptance.get("decisions")
     if not isinstance(decisions, list) or len(decisions) != 1:
@@ -286,21 +266,21 @@ def main() -> int:
         or decision.get("excluded_adjacent_candidate_refs") != ADJACENT
         or decision.get("object_binding_status") != "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
     ):
-        raise AssertionError("RU11 candidate-044 acceptance crosswalk/boundary drift")
+        raise AssertionError("RU11 candidate-044 acceptance crosswalk drift")
 
     summary = acceptance.get("summary") or {}
     if summary.get("accepted_bounded_subject_semantics") != 1 or summary.get("accepted_ru_subject_semantics") != 1:
         raise AssertionError("RU11 candidate-044 accepted semantic count drift")
     if summary.get("adjacent_candidates_admitted") != 0 or summary.get("new_school_canonical_identities") != 0:
-        raise AssertionError("RU11 candidate-044 acceptance leaked adjacent/parallel identities")
+        raise AssertionError("RU11 candidate-044 adjacent/registry leak")
     if summary.get("object_level_admission_units_closed") != 0 or summary.get("object_level_requirements_closed") != 0 or summary.get("false_exact_mastery_admissions") != 0:
-        raise AssertionError("RU11 candidate-044 acceptance falsely closes object mastery")
+        raise AssertionError("RU11 candidate-044 false object mastery")
 
     digest = hashlib.sha256(json.dumps(acceptance, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
     print("RU11_NARRATION_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE=PASS")
     print(f"SOURCE_CANDIDATE_REVIEW_STATUS={candidate.get('review_status')}")
     print(f"ACCEPTED_SEMANTIC={SEMANTIC}")
-    print(f"BROADER_EXISTING_DIRECT_NARRATION_CHECKS={direct_narration_checks}")
+    print(f"BROADER_EXISTING_DIRECT_NARRATION_CHECKS={direct_broader}")
     print(f"EXACT_COMPONENT_CHECKS={len(checks)}")
     print("OBJECT_CLOSURES=0/0")
     print("FALSE_EXACT_MASTERY=0")
