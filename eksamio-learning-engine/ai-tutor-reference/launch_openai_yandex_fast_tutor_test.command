@@ -51,4 +51,4 @@ fi
 cd "$SCRIPT_DIR"
 export PYTHONDONTWRITEBYTECODE=1
 export EKSAMIO_TUTOR_CANDIDATE_SHA="$CANDIDATE_SHA"
-exec "$PYTHON" ./private_openai_yandex_121_tutor_ui.py --owner-authorized
+exec "$PYTHON" ./private_openai_yandex_resilient_human_ui.py --owner-authorized
