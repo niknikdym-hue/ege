@@ -1,0 +1,209 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-03",
+  "module_title_ru": "Лексика, значение слова, паронимы и фразеология",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "thematic_trainer", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "repository_audited_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[phraseologism_identification]",
+      "coverage_note": "Current repository-audited source identity: locating a phraseologism inside the specified text fragment; evidence_status=confirmed. Exam task numbers remain route metadata, not semantic identity."
+    },
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-014"
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-03"
+    },
+    {
+      "kind": "reuse_first_boundary",
+      "ref": "russian-program/subject-admission/RU03-LEXIS-CANDIDATE-BOUNDARY-REVIEW-v0.1.json#candidate_review[candidate_ref=candidate-014]",
+      "coverage_note": "Existing ru-lexis-phraseology-free-combination is broader than the exact candidate because it trains classification and phraseological properties beyond locating the expression in a supplied fragment. This unit narrows practice and verification to the exact candidate boundary."
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Repository authorities define only the target boundary. Explanations, fragments, examples and practice below are original Eksamio wording and are not copied from FIPI, EDSOO, commercial dictionaries or textbooks."
+  },
+  "identity_boundary": "The semantic id below is a source-backed proposal for bounded subject acceptance. It is not a school canonical identity and cannot close an official admission unit or requirement without a separate exact object binding.",
+  "units": [
+    {
+      "proposed_semantic_id": "ru-lexis-phraseologism-fragment-identification",
+      "candidate_ref": "candidate-014",
+      "source_taxonomy_id": "phraseologism_identification",
+      "title_ru": "Поиск фразеологизма в заданном фрагменте текста",
+      "canonical_explanation": {
+        "short": "В этой задаче нужно не перечислить свойства фразеологизмов вообще, а найти в указанном фрагменте точную последовательность слов, которая воспроизводится как устойчивое выражение. Ответ должен указывать сам фразеологизм и его границы в тексте.",
+        "boundaries": [
+          "Навык ограничен поиском фразеологизма внутри заданного фрагмента: требуется назвать или выписать конкретное устойчивое выражение из этого фрагмента.",
+          "Признаки устойчивости, воспроизводимости и целостного или переосмысленного значения используются как диагностические опоры, но отдельное полное объяснение значения фразеологизма не является целью этого навыка.",
+          "Не каждое образное, частотное или многословное сочетание является фразеологизмом; кандидат должен быть устойчивой языковой единицей, а не свободно построенным сочетанием слов.",
+          "Нужно установить точные границы выражения: нельзя добавлять соседние слова текста, которые не входят во фразеологизм, или обрезать обязательный компонент.",
+          "Сравнение фразеологизма со свободным сочетанием может использоваться только как проверочный приём; mastery общего навыка phraseology-free-combination из этого юнита не выдаётся.",
+          "Успешный поиск одного выражения не доказывает generic Task-25 mastery, contextual synonym selection или другие соседние лексические навыки."
+        ]
+      },
+      "decision_algorithm": [
+        "Прочитай только тот фрагмент, границы которого указаны в задании, и не ищи ответ вне него.",
+        "Отметь сочетания из двух и более слов, которые могут восприниматься как готовые устойчивые выражения, а не как свободное описание ситуации.",
+        "Для каждого кандидата проверь, есть ли целостное или переосмысленное значение и ограничена ли произвольная замена его компонентов.",
+        "Отбрось обычные свободные сочетания, даже если они часто встречаются или звучат образно.",
+        "Установи точные словесные границы найденного фразеологизма в исходном фрагменте.",
+        "Если устойчивость или состав выражения неочевидны, не угадывай: требуется словарная проверка до принятия ответа."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Фрагмент: «Он понимал, что спор только ухудшит ситуацию, поэтому решил держать язык за зубами и слушать». Найди фразеологизм.",
+          "answer": "«держать язык за зубами». Это устойчивое выражение; в ответ не нужно включать соседние слова «решил» или «и слушать»."
+        },
+        {
+          "prompt": "Фрагмент: «Перед выходом на сцену она взяла себя в руки и спокойно начала доклад». Найди фразеологизм.",
+          "answer": "«взяла себя в руки». Требуется выписать само устойчивое выражение в форме, в которой оно дано в тексте."
+        },
+        {
+          "prompt": "Фрагмент: «После урока ученик быстро собрал тетради и вышел из класса». Есть ли здесь доказанный фразеологизм?",
+          "answer": "Нет. «собрал тетради» и «вышел из класса» — обычные свободные сочетания в прямом значении."
+        },
+        {
+          "prompt": "Фрагмент: «Вместо прямого ответа собеседник долго ходил вокруг да около». Каковы границы фразеологизма?",
+          "answer": "«ходил вокруг да около». Слово «долго» описывает длительность действия и не входит в устойчивое выражение."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Нужно выбрать самое образное сочетание в тексте.",
+          "correction": "Образность не является достаточным признаком. Нужна устойчивость и воспроизводимость выражения как языковой единицы."
+        },
+        {
+          "wrong": "Если сочетание часто встречается, оно автоматически фразеологизм.",
+          "correction": "Частотность обычного свободного сочетания не превращает его во фразеологизм."
+        },
+        {
+          "wrong": "Можно выписать всё предложение, если внутри есть фразеологизм.",
+          "correction": "Навык требует найти и указать точные границы самого устойчивого выражения."
+        },
+        {
+          "wrong": "Чтобы найти фразеологизм, обязательно сначала подробно объяснить его значение.",
+          "correction": "Понимание целостности помогает проверке, но целевой ответ здесь — идентификация выражения в заданном фрагменте."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p03-ph-u1-g1",
+          "prompt": "Во фрагменте «Он взял себя в руки перед разговором» ученик выписал «перед разговором». Какой шаг алгоритма нарушен?",
+          "expected": "Не проверена устойчивость кандидата: «перед разговором» — свободное сочетание, а фразеологизм здесь «взял себя в руки»."
+        },
+        {
+          "id": "p03-ph-u1-g2",
+          "prompt": "Почему в ответе «долго ходил вокруг да около» слово «долго» нужно отделить от фразеологизма?",
+          "expected": "Оно свободно уточняет длительность и не является обязательным компонентом устойчивого выражения «ходил вокруг да около»."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p03-ph-u1-i1",
+          "prompt": "Фрагмент: «После замечания он прикусил язык и больше не спорил». Выпиши фразеологизм.",
+          "answer": "«прикусил язык»."
+        },
+        {
+          "id": "p03-ph-u1-i2",
+          "prompt": "Фрагмент: «Мы открыли окно, включили свет и начали читать». Есть ли доказанный фразеологизм?",
+          "answer": "Нет: все сочетания употреблены свободно и буквально."
+        },
+        {
+          "id": "p03-ph-u1-i3",
+          "prompt": "Фрагмент: «Она не стала падать духом после первой неудачи». Выпиши фразеологизм без лишних слов.",
+          "answer": "«падать духом»."
+        },
+        {
+          "id": "p03-ph-u1-i4",
+          "prompt": "Фрагмент: «Он молча держал тяжёлую сумку у двери». Является ли «держал тяжёлую сумку» фразеологизмом?",
+          "answer": "Нет. Это свободное сочетание с буквальным значением компонентов."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p03-ph-u1-t1",
+          "prompt": "Ученик нашёл в одном фрагменте фразеологизм и решил, что теперь можно засчитать ему весь Task-25. Почему это неверно?",
+          "answer": "Этот юнит доказывает только component-specific умение найти фразеологизм в заданном фрагменте; общий результат задания может включать и другие лексические семантики."
+        },
+        {
+          "id": "p03-ph-u1-t2",
+          "prompt": "Во фрагменте есть устойчивое выражение, но ученик сомневается, входит ли одно соседнее слово в его состав. Как действовать?",
+          "answer": "Не расширять границы по догадке: проверить нормативный состав выражения и затем выписать только его компоненты в форме исходного текста."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p03-ph-u1-r1",
+          "delay_hint": "24h",
+          "prompt": "Что является конечным ответом в навыке phraseologism_identification?",
+          "answer": "Конкретный фразеологизм из заданного фрагмента с точными словесными границами."
+        },
+        {
+          "id": "p03-ph-u1-r2",
+          "delay_hint": "7d",
+          "prompt": "Достаточно ли образности для признания сочетания фразеологизмом?",
+          "answer": "Нет. Нужны признаки устойчивости и воспроизводимости; при сомнении требуется нормативная проверка."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p03-ph-u1-v1",
+          "type": "single_choice",
+          "prompt": "Фрагмент: «После неожиданной новости он сначала растерялся, но быстро взял себя в руки и продолжил разговор». Что нужно выписать как фразеологизм?",
+          "options": ["неожиданной новости", "быстро взял", "взял себя в руки", "продолжил разговор"],
+          "correct_option_index": 2,
+          "feedback": "«взял себя в руки» — устойчивое выражение; остальные варианты являются свободными сочетаниями или неполными границами."
+        },
+        {
+          "id": "p03-ph-u1-v2",
+          "type": "constructed_response",
+          "prompt": "Фрагмент: «В трудный момент он не опустил руки и продолжил работу». Выпиши фразеологизм и коротко объясни, почему соседнее «в трудный момент» не входит в его границы.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: точно выписано «не опустил руки»",
+              "1: указано, что «в трудный момент» свободно задаёт обстоятельство ситуации и не является компонентом устойчивого выражения"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "generic_task_result_can_emit_exact_mastery": false,
+        "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "ask the learner to locate the exact phraseologism inside the supplied fragment",
+          "require exact word boundaries for the expression",
+          "use stability, reproducibility and semantic wholeness only as diagnostic cues",
+          "route uncertain phraseological form or boundaries to a normative dictionary check"
+        ],
+        "forbidden": [
+          "calling any figurative or frequent collocation a phraseologism without evidence",
+          "expanding the answer to neighboring words that are not components of the expression",
+          "treating general free-vs-fixed classification as exact mastery of this candidate",
+          "emitting mastery for contextual_synonym_selection or generic Task-25 from this unit alone"
+        ],
+        "source_refs": [
+          "03-RUSSIAN-SKILL-GRAPH.json#skills[phraseologism_identification]",
+          "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-014"
+        ]
+      }
+    }
+  ]
+}
