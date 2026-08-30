@@ -130,11 +130,18 @@ def build_review() -> dict[str, Any]:
 
     relation_decisions = [
         {
-            "candidate_ref": "candidate-018+candidate-019..024",
+            "candidate_ref": "candidate-018+candidate-021",
             "content_semantic_id": "ru-orthoepy-stress-form-sensitive",
-            "relation": "CONTENT_SPANS_GENERIC_STRESS_SELECTION_AND_MULTIPLE_POS_CANDIDATES_NO_EXACT_OWNER",
+            "relation": "FORM_SENSITIVE_GENERIC_STRESS_WITH_VERB_EXAMPLE_OVERLAP_NO_EXACT_OWNER",
             "acceptance_effect": "NONE",
-            "reason": "The learner unit teaches the cross-cutting operation 'identify the exact form, then verify its normative stress' and uses examples from several parts of speech. That is not exact one-to-one evidence for candidate-018 or any one POS-specific candidate, so neither the generic nor the granular draft candidate may be silently admitted.",
+            "reason": "The learner unit teaches the cross-cutting operation 'identify the exact form, then verify its normative stress'. Its worked and independent normative-form examples are verb forms, so it overlaps the generic stress-selection candidate and the verb-form candidate only. It does not prove the full identity of either candidate and provides no direct noun, adjectival, participial, gerund or adverb component coverage.",
+            "no_direct_content_evidence_for_candidate_refs": [
+                "candidate-019",
+                "candidate-020",
+                "candidate-022",
+                "candidate-023",
+                "candidate-024",
+            ],
         },
         {
             "candidate_ref": "none_exact",
