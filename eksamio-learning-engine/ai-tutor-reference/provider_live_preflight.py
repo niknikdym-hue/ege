@@ -8,7 +8,6 @@ availability. Secret values are never printed.
 from __future__ import annotations
 
 import json
-import os
 import sys
 from pathlib import Path
 from typing import Callable
@@ -18,6 +17,7 @@ sys.path.insert(0, str(HERE))
 
 from deepseek_secret_provider import DeepSeekSecretProvider  # noqa: E402
 from openai_secret_provider import OpenAISecretProvider  # noqa: E402
+from private_provider_config import load_private_provider_config  # noqa: E402
 from qwen_live_adapter import resolve_qwen_chat_endpoint  # noqa: E402
 from qwen_secret_provider import QwenSecretProvider  # noqa: E402
 from yandex_ai_secret_provider import YandexAISecretProvider  # noqa: E402
@@ -32,10 +32,9 @@ def credential_present(provider: Callable[[], str]) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
 
-def qwen_endpoint_state() -> tuple[bool, str]:
-    raw = os.environ.get("QWEN_BASE_URL") or os.environ.get("DASHSCOPE_BASE_URL") or ""
-    if not raw.strip():
-        return False, "missing QWEN_BASE_URL/DASHSCOPE_BASE_URL"
+def qwen_endpoint_state(raw: str | None) -> tuple[bool, str]:
+    if not isinstance(raw, str) or not raw.strip():
+        return False, "missing Qwen base URL in env/private provider config"
     try:
         endpoint = resolve_qwen_chat_endpoint(raw, execution_enabled=True)
     except Exception as exc:
@@ -45,8 +44,9 @@ def qwen_endpoint_state() -> tuple[bool, str]:
 
 
 def main() -> int:
-    qwen_endpoint_ok, qwen_endpoint_detail = qwen_endpoint_state()
-    folder_present = bool(os.environ.get("YANDEX_FOLDER_ID", "").strip())
+    local_config = load_private_provider_config()
+    qwen_endpoint_ok, qwen_endpoint_detail = qwen_endpoint_state(local_config.qwen_base_url)
+    folder_present = bool(local_config.yandex_folder_id)
     states = {
         "openai_credential_present": credential_present(OpenAISecretProvider()),
         "qwen_credential_present": credential_present(QwenSecretProvider()),
