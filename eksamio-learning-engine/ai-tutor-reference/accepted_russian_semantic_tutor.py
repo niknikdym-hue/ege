@@ -112,7 +112,12 @@ class AcceptedRussianSemanticAllowlist:
             raise TutorSemanticNotAccepted("accepted semantic authority decisions are invalid")
         return rows
 
-    def _content_unit(self, content_ref: str, semantic_id: str) -> dict[str, Any]:
+    def _content_unit(
+        self,
+        content_ref: str,
+        semantic_id: str,
+        decision: dict[str, Any],
+    ) -> dict[str, Any]:
         content_path_ref = content_ref.split("#", 1)[0]
         path = self.engine_root / content_path_ref
         try:
@@ -131,13 +136,49 @@ class AcceptedRussianSemanticAllowlist:
         ]
         if not byte_guards or any(value != 0 for value in byte_guards):
             raise TutorSemanticNotAccepted("Tutor semantic grounding violates source-byte guard")
-        units = [
-            row for row in payload.get("units", [])
-            if isinstance(row, dict) and row.get("proposed_semantic_id") == semantic_id
+
+        raw_units = payload.get("units")
+        if not isinstance(raw_units, list) or any(not isinstance(row, dict) for row in raw_units):
+            raise TutorSemanticNotAccepted(f"accepted semantic learner units are invalid: {semantic_id}")
+        units: list[dict[str, Any]] = list(raw_units)
+
+        # Preferred path: the learner unit already carries the accepted/proposed
+        # ru-* identity directly.
+        direct_matches = [
+            unit
+            for unit in units
+            if any(
+                unit.get(identity_key) == semantic_id
+                for identity_key in ("proposed_semantic_id", "accepted_semantic_id", "semantic_id")
+            )
         ]
-        if len(units) != 1:
+
+        # Candidate-based content intentionally keeps its legacy candidate/source
+        # identity until Central Brain accepts the ru-* overlay. Resolve that case
+        # only through the exact two-part authority crosswalk; candidate-only
+        # matching is forbidden because it could silently bind the wrong content.
+        candidate_ref = decision.get("candidate_ref")
+        source_taxonomy_id = decision.get("source_taxonomy_id")
+        crosswalk_matches: list[dict[str, Any]] = []
+        if candidate_ref is not None or source_taxonomy_id is not None:
+            if not isinstance(candidate_ref, str) or not candidate_ref.strip():
+                raise TutorSemanticNotAccepted(f"candidate semantic authority lacks candidate_ref: {semantic_id}")
+            if not isinstance(source_taxonomy_id, str) or not source_taxonomy_id.strip():
+                raise TutorSemanticNotAccepted(f"candidate semantic authority lacks source_taxonomy_id: {semantic_id}")
+            crosswalk_matches = [
+                unit
+                for unit in units
+                if unit.get("semantic_candidate_ref") == candidate_ref
+                and unit.get("source_semantic_ref") == source_taxonomy_id
+            ]
+
+        matches = list(direct_matches)
+        for unit in crosswalk_matches:
+            if unit not in matches:
+                matches.append(unit)
+        if len(matches) != 1:
             raise TutorSemanticNotAccepted(f"accepted semantic must map to exactly one learner unit: {semantic_id}")
-        return units[0]
+        return matches[0]
 
     def _load(self) -> dict[str, AcceptedSemanticGrounding]:
         entries: dict[str, AcceptedSemanticGrounding] = {}
@@ -165,7 +206,7 @@ class AcceptedRussianSemanticAllowlist:
                 content_ref = str(row.get("content_ref", ""))
                 if not content_ref.startswith("russian-program/production-learning-content/"):
                     raise TutorSemanticNotAccepted(f"semantic lacks production learner-content ref: {semantic_id}")
-                unit = self._content_unit(content_ref, semantic_id)
+                unit = self._content_unit(content_ref, semantic_id, row)
                 explanation = unit.get("canonical_explanation") or {}
                 short = explanation.get("short")
                 boundaries = explanation.get("boundaries")
