@@ -8,6 +8,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 LAUNCHER = HERE / "launch_private_tutor_live_test.command"
+GATE = HERE / "private_tutor_runtime_gate.zsh"
 
 
 def require(condition: bool, message: str) -> None:
@@ -18,13 +19,15 @@ def require(condition: bool, message: str) -> None:
 def main() -> int:
     mode = LAUNCHER.stat().st_mode
     text = LAUNCHER.read_text(encoding="utf-8")
+    gate = GATE.read_text(encoding="utf-8")
 
     require(bool(mode & stat.S_IXUSR), "launcher must retain executable owner bit")
     require(text.startswith("#!/bin/zsh\n"), "launcher must use zsh shebang")
     require("set -euo pipefail" in text, "launcher must fail closed")
     require("python3.12" in text and "sys.version_info >= (3, 12)" in text, "launcher must require Python 3.12+")
-    require("git -C \"$REPO_ROOT\" rev-parse HEAD" in text, "launcher must resolve exact local candidate SHA")
-    require("EKSAMIO_TUTOR_CANDIDATE_SHA" in text, "launcher must pass candidate SHA to evidence wrapper")
+    require('source "$SCRIPT_DIR/private_tutor_runtime_gate.zsh"' in text, "launcher must use the common exact-build runtime gate")
+    require(text.index("private_tutor_runtime_gate.zsh") < text.index("Разрешаю тест"), "launcher must bind exact build before owner live authorization")
+    require("rev-parse --verify HEAD" in gate and "EKSAMIO_TUTOR_CANDIDATE_SHA" in gate, "common runtime gate must resolve/export exact candidate SHA")
     require("osascript" in text, "launcher must use local macOS owner confirmation")
     require("Разрешаю тест" in text and "Отмена" in text, "launcher must present explicit owner allow/cancel controls")
     require("API-расходы" in text, "launcher confirmation must disclose possible provider spend")
@@ -42,6 +45,7 @@ def main() -> int:
         "OPENAI_API_KEY=",
         "QWEN_API_KEY=",
         "DASHSCOPE_API_KEY=",
+        "DEEPSEEK_API_KEY=",
         "YANDEX_AI_STUDIO_API_KEY=",
         "YANDEX_SPEECHKIT_API_KEY=",
     )
