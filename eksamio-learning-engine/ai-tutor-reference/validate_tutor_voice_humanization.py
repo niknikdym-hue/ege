@@ -10,6 +10,8 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 from private_openai_yandex_resilient_human_ui import base_ui  # noqa: E402
+from tutor_boundary import ProviderRequest  # noqa: E402
+from tutor_provider_prompt import VERIFICATION_REMINDER, grounded_system_text  # noqa: E402
 from yandex_live_adapters import CredentialKind, YandexCredential  # noqa: E402
 from yandex_speechkit_v3_tts import (  # noqa: E402
     YandexSpeechKitV3TTS,
@@ -20,10 +22,9 @@ from yandex_speechkit_v3_tts import (  # noqa: E402
 
 
 EXAMPLE = (
-    "Вы на правильном пути, но есть важный нюанс. В корнях *‑чет‑*/*‑чит‑* "
-    "действительно обычно пишется «и», если дальше идёт «а» (*вычитать*), и «е» — "
-    "в остальных случаях (*вычет*). Однако слово «сочетание» — **исключение** из этого "
-    "правила, в нём сохраняется буква «е»."
+    "Вы почти правы, но здесь есть важный нюанс. Слово «сочетание» — исключение "
+    "в группе корней ЧЕТ-/ЧИТ-: несмотря на наличие буквы «а» после корня, пишется «е». "
+    "Попробуйте ещё раз: восстановите букву и запишите слово целиком — соч..тать."
 )
 
 
@@ -37,15 +38,39 @@ class CaptureTTS:
         return ({"audioChunk": {"data": encoded}},)
 
 
+class HistoryEntry:
+    def __init__(self, role: str, text: str) -> None:
+        self.role = role
+        self.text = text
+
+
+def _request(history: tuple[HistoryEntry, ...] = ()) -> ProviderRequest:
+    return ProviderRequest(
+        contract_version="test",
+        correlation_ref="turn:test",
+        subject_id="russian",
+        learning_goal="understand:test",
+        policy_instruction="Stay in the current learning task.",
+        verified_source_refs=("source:test",),
+        verified_excerpts=("Проверенный контекст",),
+        peis_learning_summary="test",
+        target_refs=("test",),
+        history=history,  # type: ignore[arg-type]
+        learner_text="test",
+        allowed_tool_names=(),
+    )
+
+
 def main() -> int:
     spoken = normalize_tutor_text_for_speech(EXAMPLE)
     assert "*" not in spoken
     assert "`" not in spoken
     assert "/" not in spoken
-    assert "чет или чит" in spoken
-    assert "исключение" in spoken
-    assert "вычитать" in spoken and "вычет" in spoken
-    assert EXAMPLE.startswith("Вы на правильном пути")  # visible text is untouched
+    assert "[[t͡ɕ ɛ t]] или [[t͡ɕ i t]]" in spoken
+    assert "буквы а sil<[180]> после" in spoken
+    assert ". sil<[260]> Попробуйте" in spoken
+    assert "сочетание" in spoken
+    assert EXAMPLE.startswith("Вы почти правы")  # visible text is untouched
 
     transport = CaptureTTS()
     tts = YandexSpeechKitV3TTS(
@@ -59,13 +84,16 @@ def main() -> int:
     assert audio
     sent = " ".join(str(body["text"]) for body in transport.bodies)
     assert "*" not in sent and "/" not in sent
-    assert "чет или чит" in sent
+    assert "[[t͡ɕ ɛ t]] или [[t͡ɕ i t]]" in sent
+    assert "sil<[180]>" in sent
+    assert "sil<[260]>" in sent
     assert all(len(str(body["text"])) <= 240 for body in transport.bodies)
 
-    long_text = "Первая законченная фраза. " * 20
+    long_text = normalize_tutor_text_for_speech("Первая законченная фраза. " * 20)
     chunks = _split_text(long_text, 240)
     assert chunks and all(len(chunk) <= 240 for chunk in chunks)
-    assert all(chunk[-1] in ".!?;:" for chunk in chunks[:-1])
+    # Pause tags must remain attached to the preceding sentence, not start a chunk.
+    assert all(not chunk.startswith("sil<[") for chunk in chunks)
 
     page = base_ui.PAGE
     assert "function stopTutorPlayback()" in page
@@ -74,9 +102,20 @@ def main() -> int:
     assert "Tutor говорит…" in page
     assert "$('#mic').disabled=true" in page
 
+    first_prompt = grounded_system_text(_request()).lower()
+    assert "не добавляй шаблонную фразу" in first_prompt
+    assert "не более одного раза за всю сессию" in first_prompt
+    repeated_prompt = grounded_system_text(
+        _request((HistoryEntry("tutor", f"{VERIFICATION_REMINDER}."),))
+    ).lower()
+    assert "больше её не повторяй" in repeated_prompt
+
     print("TUTOR_TTS_MARKDOWN_NORMALIZATION=PASS")
-    print("TUTOR_TTS_ROOT_NOTATION=чет_или_чит")
+    print("TUTOR_TTS_ROOT_CHET_PHONEME=PASS")
+    print("TUTOR_TTS_LETTER_PAUSE_AFTER_A=PASS")
+    print("TUTOR_TTS_SENTENCE_PAUSE=PASS")
     print("TUTOR_TTS_COMPLETE_PHRASE_CHUNKING=PASS")
+    print("TUTOR_VERIFICATION_REMINDER_MAX_ONCE=PASS")
     print("TUTOR_VOICE_HALF_DUPLEX=PASS")
     print("PREVIOUS_TUTOR_AUDIO_AUTOPLAY_ON_MIC=BLOCKED")
     print("VISIBLE_TUTOR_TEXT_MUTATED=0")
