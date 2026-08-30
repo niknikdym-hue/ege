@@ -22,6 +22,9 @@ from private_openai_yandex_121_tutor import (
     assemble_fast_tutor,
     open_benchmark_session,
 )
+from resilient_speechkit_transports import RetryingBinaryTransport, RetryingStreamingJsonTransport
+from stdlib_speechkit_transport import UrllibBinaryTransport
+from yandex_speechkit_v3_tts import UrllibStreamingJsonTransport
 
 
 class OpenAIVoiceConfig(FastTutorConfig):
@@ -70,7 +73,14 @@ class OpenAIVoiceApp(base_ui.App):
             text_execution_enabled=True,
             speech_execution_enabled=True,
         )
-        assembly = assemble_fast_tutor(engine_root=base_ui.ENGINE, config=config)
+        stt_transport = RetryingBinaryTransport(UrllibBinaryTransport())
+        tts_transport = RetryingStreamingJsonTransport(UrllibStreamingJsonTransport())
+        assembly = assemble_fast_tutor(
+            engine_root=base_ui.ENGINE,
+            config=config,
+            stt_transport=stt_transport,
+            tts_v3_transport=tts_transport,
+        )
         learner_profile_id = "private-openai-voice-" + secrets.token_hex(6)
         tutor_state = open_benchmark_session(assembly, learner_profile_id)
         public_session = secrets.token_urlsafe(24)
@@ -107,6 +117,7 @@ def main() -> int:
     print(f"OPENAI_VOICE_UI=READY {url}")
     print("BRAIN_PROVIDER=openai")
     print("SPEECH_PROVIDER=yandex-speechkit")
+    print("SPEECHKIT_TRANSIENT_RETRIES=2")
     print("YANDEX_FOLDER_ID_REQUIRED_FOR_THIS_RUN=0")
     print("PUBLIC_TRAFFIC_ENABLED=0")
     print("PRODUCTION_PEIS_WRITES_ENABLED=0")
