@@ -1,6 +1,7 @@
 #!/bin/zsh
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/private_tutor_runtime_gate.zsh"
 PYTHON=""
 for candidate in python3.12 python3; do
   if command -v "$candidate" >/dev/null 2>&1 && "$candidate" - <<'PY' >/dev/null 2>&1
