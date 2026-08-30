@@ -1,0 +1,60 @@
+name: Russian RU11 description-identification content adequacy
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU11-DESCRIPTION-IDENTIFICATION-CONTENT-ADEQUACY-REVIEW-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru11_description_identification_content_adequacy.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-11-DESCRIPTION-IDENTIFICATION-WAVE-007-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json"
+      - ".github/workflows/russian-ru11-description-identification-content-adequacy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru11-description-content:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU11 description content validator
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru11_description_identification_content_adequacy.py
+      - name: Validate candidate-045 content adequacy twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/validate_ru11_description_identification_content_adequacy.py" > /tmp/ru11-desc-a.txt
+          python3 "$root/validate_ru11_description_identification_content_adequacy.py" > /tmp/ru11-desc-b.txt
+          diff -u /tmp/ru11-desc-a.txt /tmp/ru11-desc-b.txt
+          grep -Fx 'RU11_DESCRIPTION_CANDIDATE=candidate-045' /tmp/ru11-desc-a.txt
+          grep -Fx 'RU11_DESCRIPTION_SOURCE_TAXONOMY=description_identification' /tmp/ru11-desc-a.txt
+          grep -Fx 'RU11_DESCRIPTION_SOURCE_EVIDENCE=confirmed' /tmp/ru11-desc-a.txt
+          grep -Fx 'RU11_DESCRIPTION_INVENTORY_REVIEW_STATUS=draft' /tmp/ru11-desc-a.txt
+          grep -Fx 'BROADER_EXISTING_DIRECT_DESCRIPTION_CHECKS=1' /tmp/ru11-desc-a.txt
+          grep -Fx 'EXACT_COMPONENT_CHECKS=2' /tmp/ru11-desc-a.txt
+          grep -Fx 'SEMANTIC_ADMISSIONS=0' /tmp/ru11-desc-a.txt
+          grep -Fx 'OBJECT_CLOSURES=0/0' /tmp/ru11-desc-a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/ru11-desc-a.txt
+          grep -Fx 'RU11_DESCRIPTION_CONTENT_ADEQUACY=PASS' /tmp/ru11-desc-a.txt
+          cat /tmp/ru11-desc-a.txt
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed in RU11 description content review.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
