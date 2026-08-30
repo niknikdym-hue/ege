@@ -27,7 +27,7 @@ if ! command -v git >/dev/null 2>&1; then
   exit 2
 fi
 CANDIDATE_SHA="$(git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || true)"
-if [[ ! "$CANDIDATE_SHA" =~ '^[0-9a-f]{40}$' ]]; then
+if [[ ${#CANDIDATE_SHA} -ne 40 || "$CANDIDATE_SHA" == *[^0-9a-f]* ]]; then
   osascript -e 'display alert "Eksamio Tutor" message "Не удалось подтвердить exact build candidate. Тест не запущен." as critical'
   exit 2
 fi
