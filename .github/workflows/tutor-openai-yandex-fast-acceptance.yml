@@ -5,6 +5,7 @@ on:
     paths:
       - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py'
       - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py'
       - 'eksamio-learning-engine/ai-tutor-reference/validate_private_openai_yandex_121_tutor.py'
       - 'eksamio-learning-engine/ai-tutor-reference/TUTOR-BRAIN-HUMAN-ACCEPTANCE-FAST-v0.1.md'
       - 'eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command'
@@ -47,6 +48,7 @@ jobs:
           python -m py_compile \
             eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py \
             eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py \
             eksamio-learning-engine/ai-tutor-reference/validate_private_openai_yandex_121_tutor.py
 
       - name: Validate forced OpenAI Yandex text and voice parity
@@ -60,6 +62,7 @@ jobs:
           paths = [
               root / 'private_openai_yandex_121_tutor.py',
               root / 'private_openai_yandex_121_tutor_ui.py',
+              root / 'private_openai_yandex_resilient_human_ui.py',
               root / 'validate_private_openai_yandex_121_tutor.py',
           ]
           text = '\n'.join(path.read_text(encoding='utf-8').lower() for path in paths)
@@ -87,7 +90,7 @@ jobs:
         run: |
           set -euo pipefail
           set +e
-          out="$(python eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor_ui.py --no-browser 2>&1)"
+          out="$(python eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py --no-browser 2>&1)"
           code=$?
           set -e
           test "$code" -eq 2
@@ -98,11 +101,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Ubuntu Actions runners do not ship zsh. The launcher is intentionally
-          # syntax-compatible with bash for CI parsing and executes via zsh on macOS.
           bash -n eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
           grep -q '^#!/bin/zsh$' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
-          grep -q 'private_openai_yandex_121_tutor_ui.py --owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          grep -q 'private_openai_yandex_resilient_human_ui.py --owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
           grep -q 'EKSAMIO_TUTOR_CANDIDATE_SHA' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
           echo 'FAST_TUTOR_LAUNCHER=PASS'
 
@@ -111,11 +112,13 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           text = Path('eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py').read_text(encoding='utf-8')
-          ui = Path('eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor_ui.py').read_text(encoding='utf-8')
+          ui = Path('eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py').read_text(encoding='utf-8')
+          base_ui = Path('eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor_ui.py').read_text(encoding='utf-8')
           assert 'learner_audio_persisted_bytes' in text
           assert 'production_peis_writes_enabled' in text
-          assert 'HOST = "127.0.0.1"' in ui
-          assert 'PERSISTENT_EVIDENCE=0' in ui
+          assert '127.0.0.1' in base_ui
+          assert 'PERSISTENT_EVIDENCE=0' in base_ui
+          assert 'stopTutorPlayback' in ui
           print('RAW_AUDIO_PERSISTED_BYTES=0')
           print('PUBLIC_TRAFFIC_ENABLED=0')
           print('PRODUCTION_PEIS_WRITES_ENABLED=0')
