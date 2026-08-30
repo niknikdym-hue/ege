@@ -4,11 +4,14 @@
 This private-staging boundary is additive: the existing reviewed 121-card Tutor
 path remains unchanged. A semantic session can open only when a Central-Brain
 acceptance authority exists and an original Eksamio learner-content unit with
-independent verification is present. No network/provider execution occurs here.
+independent verification is present. The accepted denominator is derived from
+the canonical Russian semantic-progress builder rather than duplicated here.
+No network/provider execution occurs in this module.
 """
 from __future__ import annotations
 
 import json
+import runpy
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -46,32 +49,52 @@ class AcceptedSemanticGrounding:
 
 
 class AcceptedRussianSemanticAllowlist:
-    """Load accepted RU13/RU16 semantics and their original Eksamio grounding."""
+    """Load every bounded Russian semantic admitted by canonical progress authority."""
 
-    AUTHORITY_SPECS = (
-        (
-            "russian-program/subject-admission/RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
-            "CENTRAL_BRAIN_ACCEPTED_RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTICS",
-            "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
-            14,
-        ),
-        (
-            "russian-program/subject-admission/RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json",
-            "CENTRAL_BRAIN_ACCEPTED_RU16_TASK27_K1_K3_ROUTE_SEMANTICS",
-            "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
-            4,
-        ),
-        (
-            "russian-program/subject-admission/RU16-TASK27-K5-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json",
-            "CENTRAL_BRAIN_ACCEPTED_RU16_TASK27_K5_ROUTE_SEMANTIC",
-            "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
-            1,
-        ),
-    )
+    PROGRESS_BUILDER_REF = "russian-program/subject-admission/build_russian_semantic_acceptance_progress.py"
 
     def __init__(self, engine_root: str | Path) -> None:
-        self.engine_root = Path(engine_root)
+        self.engine_root = Path(engine_root).resolve()
+        self.authority_specs = self._authority_specs()
+        self.expected_semantic_count = sum(spec[3] for spec in self.authority_specs)
         self._entries = self._load()
+
+    def _authority_specs(self) -> tuple[tuple[str, str, str, int], ...]:
+        builder_path = self.engine_root / self.PROGRESS_BUILDER_REF
+        try:
+            namespace = runpy.run_path(str(builder_path))
+        except (OSError, RuntimeError, ValueError) as exc:
+            raise TutorSemanticNotAccepted("canonical Russian semantic-progress builder is unavailable") from exc
+
+        specs: list[tuple[str, str, str, int]] = []
+        groups = (
+            ("SUBJECT_SEMANTIC_AUTHORITIES", "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"),
+            ("ROUTE_SEMANTIC_AUTHORITIES", "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC"),
+        )
+        for key, expected_semantic_status in groups:
+            raw_specs = namespace.get(key)
+            if not isinstance(raw_specs, tuple) or not raw_specs:
+                raise TutorSemanticNotAccepted(f"canonical progress builder has no {key}")
+            for raw_spec in raw_specs:
+                if not isinstance(raw_spec, tuple) or len(raw_spec) != 4:
+                    raise TutorSemanticNotAccepted(f"invalid canonical authority spec in {key}")
+                raw_path, expected_status, expected_count, _authority_id = raw_spec
+                if not isinstance(raw_path, Path):
+                    raise TutorSemanticNotAccepted(f"canonical authority path type drift in {key}")
+                try:
+                    relative = raw_path.resolve().relative_to(self.engine_root)
+                except ValueError as exc:
+                    raise TutorSemanticNotAccepted("canonical authority escaped the learning-engine root") from exc
+                if not isinstance(expected_status, str) or not expected_status.startswith("CENTRAL_BRAIN_ACCEPTED_"):
+                    raise TutorSemanticNotAccepted("canonical authority status is not accepted")
+                if not isinstance(expected_count, int) or expected_count <= 0:
+                    raise TutorSemanticNotAccepted("canonical authority count is invalid")
+                specs.append((relative.as_posix(), expected_status, expected_semantic_status, expected_count))
+
+        refs = [spec[0] for spec in specs]
+        if len(refs) != len(set(refs)):
+            raise TutorSemanticNotAccepted("canonical progress builder contains duplicate semantic authorities")
+        return tuple(specs)
 
     @staticmethod
     def _rows(authority: dict[str, Any]) -> list[dict[str, Any]]:
@@ -83,15 +106,23 @@ class AcceptedRussianSemanticAllowlist:
         return rows
 
     def _content_unit(self, content_ref: str, semantic_id: str) -> dict[str, Any]:
-        path = self.engine_root / content_ref
+        content_path_ref = content_ref.split("#", 1)[0]
+        path = self.engine_root / content_path_ref
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise TutorSemanticNotAccepted(f"accepted semantic content is unavailable: {semantic_id}") from exc
         if payload.get("status") != "SUBJECT_ACCEPTANCE_REQUIRED":
             raise TutorSemanticNotAccepted("source learner bundle must remain fail-closed; acceptance belongs to overlay authority")
-        copyright_guard = payload.get("copyright_guard") or {}
-        if copyright_guard.get("source_passages_copied") != 0 or copyright_guard.get("commercial_source_bytes_in_git") != 0:
+        copyright_guard = payload.get("copyright_guard")
+        if not isinstance(copyright_guard, dict) or copyright_guard.get("source_passages_copied") != 0:
+            raise TutorSemanticNotAccepted("Tutor semantic grounding violates source-passage guard")
+        byte_guards = [
+            value
+            for key, value in copyright_guard.items()
+            if isinstance(key, str) and key.endswith("_bytes_in_git")
+        ]
+        if not byte_guards or any(value != 0 for value in byte_guards):
             raise TutorSemanticNotAccepted("Tutor semantic grounding violates source-byte guard")
         units = [
             row for row in payload.get("units", [])
@@ -103,9 +134,12 @@ class AcceptedRussianSemanticAllowlist:
 
     def _load(self) -> dict[str, AcceptedSemanticGrounding]:
         entries: dict[str, AcceptedSemanticGrounding] = {}
-        for authority_ref, expected_status, expected_semantic_status, expected_count in self.AUTHORITY_SPECS:
+        for authority_ref, expected_status, expected_semantic_status, expected_count in self.authority_specs:
             authority_path = self.engine_root / authority_ref
-            authority = json.loads(authority_path.read_text(encoding="utf-8"))
+            try:
+                authority = json.loads(authority_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                raise TutorSemanticNotAccepted(f"canonical semantic authority is unavailable: {authority_ref}") from exc
             if authority.get("status") != expected_status:
                 raise TutorSemanticNotAccepted(f"semantic authority status drift: {authority_ref}")
             if authority.get("canonical_school_registry_mutated") is not False or authority.get("new_parallel_registry_created") is not False:
@@ -151,8 +185,10 @@ class AcceptedRussianSemanticAllowlist:
                     authority_ref=f"{authority_ref}#{semantic_id}",
                     content_ref=content_ref,
                 )
-        if len(entries) != 19:
-            raise TutorSemanticNotAccepted(f"private-staging accepted semantic denominator drift: {len(entries)}")
+        if len(entries) != self.expected_semantic_count:
+            raise TutorSemanticNotAccepted(
+                f"private-staging accepted semantic denominator drift: {len(entries)} != {self.expected_semantic_count}"
+            )
         return entries
 
     @property
