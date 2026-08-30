@@ -77,7 +77,8 @@ jobs:
             eksamio-learning-engine/ai-tutor-reference/validate_four_brain_tutor.py \
             eksamio-learning-engine/ai-tutor-reference/validate_brain_reasoning_contracts.py \
             eksamio-learning-engine/ai-tutor-reference/validate_four_brain_test_prep.py \
-            eksamio-learning-engine/ai-tutor-reference/validate_blind_four_brain_test.py
+            eksamio-learning-engine/ai-tutor-reference/validate_blind_four_brain_test.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_private_tutor_runtime_gate.py
 
       - name: Validate canonical Russian Tutor semantic denominator
         run: python eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py
@@ -102,6 +103,9 @@ jobs:
 
       - name: Validate blind A-B-C-D comparison boundaries
         run: python eksamio-learning-engine/ai-tutor-reference/validate_blind_four_brain_test.py
+
+      - name: Validate exact-build runtime gate for all live launchers
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_private_tutor_runtime_gate.py
 
       - name: Validate reliability gateway
         run: python eksamio-learning-engine/ai-tutor-reference/validate_ai_tutor_reliability_gateway_001.py
