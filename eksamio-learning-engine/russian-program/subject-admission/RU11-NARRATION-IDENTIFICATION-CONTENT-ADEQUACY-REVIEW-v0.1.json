@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_RU11_NARRATION_IDENTIFICATION_CONTENT_ADEQUACY_REVIEW_COMPLETE_NO_ADMISSION",
+  "authority_issue": 161,
+  "scope": "CANDIDATE_044_NARRATION_IDENTIFICATION_NEW_ORIGINAL_CONTENT_EXACTNESS_REVIEW_FAIL_CLOSED_NO_OBJECT_BINDING",
+  "source_identity": {
+    "candidate_ref": "candidate-044",
+    "source_taxonomy_id": "narration_identification",
+    "label_ru": "Определение повествования",
+    "inventory_classification": "MISSING_SUBJECT_SEMANTIC_CANDIDATE",
+    "inventory_review_status": "draft",
+    "skill_graph_evidence_status": "confirmed",
+    "taxonomy_backing_review_status": "source_verified",
+    "exam_task_numbers": [24]
+  },
+  "reuse_first_review": {
+    "reviewed_existing_unit": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-speech-type-reasoning-description-narration]",
+    "existing_unit_reused_for_explanation_and_boundary": true,
+    "existing_unit_exact_candidate_044_mastery": false,
+    "direct_narration_independent_checks_observed": 0,
+    "why_not_exact": "The combined speech-type unit explains narration, description and reasoning, but its independent-verification block contains no direct narration-identification check. Generic speech-type or Task-24 performance therefore cannot prove exact candidate-044 mastery."
+  },
+  "learner_content": {
+    "ref": "russian-program/production-learning-content/RU-PROG-11-NARRATION-IDENTIFICATION-WAVE-006-v0.1.json#units[proposed_semantic_id=ru-text-narration-identification]",
+    "proposed_semantic_id": "ru-text-narration-identification",
+    "copyright_status": "ORIGINAL_EKSAMIO_ZERO_SOURCE_PASSAGES_COPIED_ZERO_COMMERCIAL_TEXTBOOK_BYTES",
+    "exact_positive_scope": [
+      "identify narration from event sequence",
+      "identify narration from change of states over time"
+    ],
+    "explicit_exclusions": [
+      "description identification",
+      "reasoning identification",
+      "generic combined speech-type mastery",
+      "generic EGE Task-24 mastery",
+      "classification from verb count or one marker word"
+    ],
+    "independent_verification_checks": 2,
+    "assistance_recording_required": true,
+    "tutor_grounding_bounded": true
+  },
+  "review_decision": {
+    "content_exact_for_current_candidate_044_source_meaning": true,
+    "source_candidate_inventory_status_preserved_as_draft": true,
+    "content_duplicate_of_existing_ru11_unit": false,
+    "exact_school_meaning_collision_observed": false,
+    "semantic_admission_by_this_review": false,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0,
+    "next_status": "READY_FOR_SEPARATE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_WITH_DRAFT_CANDIDATE_GUARD"
+  }
+}
