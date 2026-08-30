@@ -19,14 +19,14 @@ from accepted_russian_semantic_tutor import (  # noqa: E402
 from reliability_gateway import ProviderPath, ReliabilityGateway  # noqa: E402
 from sep1_russian_tutor import MockSpeechProvider, VoiceGateway  # noqa: E402
 
-EXPECTED_RU16 = {
+# These 19 semantics were the first accepted private-staging slice. They must
+# remain available, but they are no longer treated as the complete denominator.
+MUST_RETAIN = {
     "ru-ege-essay-author-position",
     "ru-ege-essay-source-examples-explanation",
     "ru-ege-essay-example-semantic-relation",
     "ru-ege-essay-own-relation-justification",
     "ru-ege-essay-logical-composition-cohesion",
-}
-EXPECTED_RU13 = {
     "ru-expressive-alliteration",
     "ru-expressive-personification",
     "ru-expressive-syntactic-parallelism",
@@ -43,9 +43,6 @@ EXPECTED_RU13 = {
     "ru-expressive-litotes",
 }
 REJECTED = {
-    "ru-ege-essay-factual-accuracy",
-    "ru-ege-essay-ethical-norm",
-    "ru-expressive-rhetorical-address",
     "candidate-039",
     "school-ne-verb-gerund-spelling-base",
     "ru-not-accepted-fixture",
@@ -69,11 +66,14 @@ def build_text_gateway() -> tuple[ReliabilityGateway, AcceptedSemanticGroundedTe
 def main() -> int:
     allowlist = AcceptedRussianSemanticAllowlist(ENGINE)
     actual = set(allowlist.semantic_ids)
-    expected = EXPECTED_RU13 | EXPECTED_RU16
-    if actual != expected or len(actual) != 19:
-        raise AssertionError(f"Tutor accepted-semantic denominator drift: {sorted(actual)}")
+    if len(actual) != allowlist.expected_semantic_count:
+        raise AssertionError(
+            f"Tutor accepted-semantic denominator drift: {len(actual)} != {allowlist.expected_semantic_count}"
+        )
+    if not MUST_RETAIN.issubset(actual):
+        raise AssertionError(f"Tutor lost previously accepted semantics: {sorted(MUST_RETAIN - actual)}")
 
-    for semantic_id in sorted(expected):
+    for semantic_id in sorted(actual):
         grounding = allowlist.require(semantic_id)
         if grounding.semantic_id != semantic_id:
             raise AssertionError(f"Tutor allowlist semantic mismatch: {semantic_id}")
@@ -132,7 +132,7 @@ def main() -> int:
     try:
         tutor.open_semantic_session(
             learner_profile_id="learner:private-staging-rejected",
-            semantic_id="ru-ege-essay-factual-accuracy",
+            semantic_id="ru-not-accepted-fixture",
         )
     except TutorSemanticNotAccepted:
         pass
@@ -141,9 +141,10 @@ def main() -> int:
 
     evidence = {
         "accepted_semantics": sorted(actual),
-        "accepted_count": 19,
-        "ru13_count": 14,
-        "ru16_count": 5,
+        "accepted_count": len(actual),
+        "canonical_authority_count": len(allowlist.authority_specs),
+        "canonical_expected_semantic_count": allowlist.expected_semantic_count,
+        "retained_original_slice": len(MUST_RETAIN),
         "rejected_fixture_count": len(REJECTED),
         "text_voice_same_session": True,
         "raw_audio_persisted_bytes": 0,
@@ -155,9 +156,10 @@ def main() -> int:
         json.dumps(evidence, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
     print("ACCEPTED_RUSSIAN_SEMANTIC_TUTOR=PASS")
-    print("ACCEPTED_SEMANTICS=19")
-    print("RU13_ACCEPTED_SEMANTICS=14")
-    print("RU16_ACCEPTED_SEMANTICS=5")
+    print(f"ACCEPTED_SEMANTICS={len(actual)}")
+    print(f"CANONICAL_AUTHORITY_FILES={len(allowlist.authority_specs)}")
+    print(f"CANONICAL_EXPECTED_SEMANTICS={allowlist.expected_semantic_count}")
+    print("ORIGINAL_19_SEMANTICS_RETAINED=PASS")
     print("UNACCEPTED_SEMANTIC_SESSION=DENIED")
     print("TEXT_VOICE_SAME_SESSION=PASS")
     print("RAW_AUDIO_PERSISTED_BYTES=0")
