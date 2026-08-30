@@ -87,6 +87,15 @@ jobs:
           python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_paronym_bounded_subject_semantics.py > /tmp/ru03-accept-b.txt
           diff -u /tmp/ru03-accept-a.txt /tmp/ru03-accept-b.txt
           cat /tmp/ru03-accept-a.txt
+      - name: Validate RU03 dictionary-sense bounded semantic twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru03_dictionary_sense_bounded_subject_semantics.py
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_dictionary_sense_bounded_subject_semantics.py > /tmp/ru03-dss-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_dictionary_sense_bounded_subject_semantics.py > /tmp/ru03-dss-b.txt
+          diff -u /tmp/ru03-dss-a.txt /tmp/ru03-dss-b.txt
+          cat /tmp/ru03-dss-a.txt
       - name: Validate RU09 bounded syntax semantics twice
         shell: bash
         run: |
@@ -136,12 +145,13 @@ jobs:
               'RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU02_NORMATIVE_STRESS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU03_PARONYM_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU03_DICTIONARY_SENSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU04_MORPHEMICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
           }
-          assert len(data['accepted_authorities']) == 17
+          assert len(data['accepted_authorities']) == 18
           assert {a['id'] for a in data['accepted_authorities']} == expected_authorities
 
           for authority_id, count in (
@@ -150,6 +160,7 @@ jobs:
               ('RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
               ('RU02_NORMATIVE_STRESS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 1),
               ('RU03_PARONYM_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 1),
+              ('RU03_DICTIONARY_SENSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 1),
               ('RU04_MORPHEMICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
               ('RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
               ('RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
@@ -183,12 +194,12 @@ jobs:
           assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1372
           assert s['canonical_component_refs_reused_unique'] == 52
           assert s['accepted_bounded_ru_route_semantics'] == 9
-          assert s['accepted_bounded_ru_subject_semantics'] == 43
-          assert s['accepted_bounded_ru_semantics_total'] == 52
+          assert s['accepted_bounded_ru_subject_semantics'] == 44
+          assert s['accepted_bounded_ru_semantics_total'] == 53
           assert s['accepted_route_semantics_without_object_binding'] == 9
-          assert s['accepted_subject_semantics_without_object_binding'] == 43
+          assert s['accepted_subject_semantics_without_object_binding'] == 44
           assert s['new_semantic_identities_created'] == 0
-          assert s['ru_proposal_identities_admitted'] == 52
+          assert s['ru_proposal_identities_admitted'] == 53
           assert s['false_exact_mastery_admissions'] == 0
 
           expected_route = {
@@ -232,6 +243,7 @@ jobs:
               'ru-phonetics-word-analysis-sequence',
               'ru-orthoepy-normative-stress-selection',
               'ru-lexis-paronym-collocation-choice',
+              'ru-lexis-dictionary-sense-selection',
               'ru-morphemics-morpheme-base-ending',
               'ru-morphemics-root-prefix-suffix-analysis',
               'ru-morphemics-alternation-and-full-analysis',
