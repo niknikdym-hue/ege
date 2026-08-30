@@ -27,6 +27,35 @@ from stdlib_speechkit_transport import UrllibBinaryTransport
 from yandex_speechkit_v3_tts import UrllibStreamingJsonTransport
 
 
+def _install_voice_capture_guard() -> None:
+    """Prevent Tutor playback from being captured by the learner microphone."""
+
+    start_marker = "async function startRec(){try{stream=await navigator.mediaDevices.getUserMedia"
+    guarded_start = (
+        "function stopTutorPlayback(){for(const a of document.querySelectorAll('audio')){"
+        "try{a.pause();a.currentTime=0}catch(_){}}}\n"
+        "async function startRec(){try{stopTutorPlayback();stream=await navigator.mediaDevices.getUserMedia"
+    )
+    audio_marker = (
+        "if(r.audio_b64){const a=document.createElement('audio');a.controls=true;a.autoplay=true;"
+        "a.src='data:audio/mpeg;base64,'+r.audio_b64;$('#messages').appendChild(a)}"
+    )
+    guarded_audio = (
+        "if(r.audio_b64){const a=document.createElement('audio');a.controls=true;a.autoplay=true;"
+        "a.dataset.tutorAudio='1';a.src='data:audio/mpeg;base64,'+r.audio_b64;"
+        "a.onplay=()=>{$('#mic').disabled=true;$('#busy').textContent='Tutor говорит…';};"
+        "const releaseMic=()=>{$('#mic').disabled=false;if(!recording)$('#busy').textContent='';};"
+        "a.onended=releaseMic;a.onpause=releaseMic;a.onerror=releaseMic;$('#messages').appendChild(a)}"
+    )
+    if base_ui.PAGE.count(start_marker) != 1 or base_ui.PAGE.count(audio_marker) != 1:
+        raise RuntimeError("voice capture guard could not find the benchmark UI markers")
+    base_ui.PAGE = base_ui.PAGE.replace(start_marker, guarded_start, 1)
+    base_ui.PAGE = base_ui.PAGE.replace(audio_marker, guarded_audio, 1)
+
+
+_install_voice_capture_guard()
+
+
 class OpenAIVoiceConfig(FastTutorConfig):
     """FastTutorConfig variant: folder ID is not required for SpeechKit API-key voice."""
 
@@ -118,6 +147,7 @@ def main() -> int:
     print("BRAIN_PROVIDER=openai")
     print("SPEECH_PROVIDER=yandex-speechkit")
     print("SPEECHKIT_TRANSIENT_RETRIES=2")
+    print("TUTOR_PLAYBACK_MIC_OVERLAP=BLOCKED")
     print("YANDEX_FOLDER_ID_REQUIRED_FOR_THIS_RUN=0")
     print("PUBLIC_TRAFFIC_ENABLED=0")
     print("PRODUCTION_PEIS_WRITES_ENABLED=0")
