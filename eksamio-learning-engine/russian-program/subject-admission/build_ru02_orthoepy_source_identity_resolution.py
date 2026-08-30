@@ -15,14 +15,42 @@ INVENTORY = ENGINE / "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
 SKILL_GRAPH = ENGINE / "03-RUSSIAN-SKILL-GRAPH.json"
 BOUNDARY_BUILDER = HERE / "build_ru02_orthoepy_candidate_boundary_review.py"
 
-EXPECTED: dict[str, tuple[str, str]] = {
-    "candidate-018": ("normative_stress_selection", "Определение нормативной позиции ударения"),
-    "candidate-019": ("stress_nouns", "Ударение в существительных и их формах"),
-    "candidate-020": ("stress_adjectival_forms", "Ударение в прилагательных, кратких формах и степенях сравнения"),
-    "candidate-021": ("stress_verbs", "Ударение в глаголах и личных/родовых формах"),
-    "candidate-022": ("stress_participles", "Ударение в причастиях и кратких причастиях"),
-    "candidate-023": ("stress_gerunds", "Ударение в деепричастиях"),
-    "candidate-024": ("stress_adverbs", "Ударение в наречиях"),
+EXPECTED: dict[str, tuple[str, str, str]] = {
+    "candidate-018": (
+        "normative_stress_selection",
+        "Определение нормативной позиции ударения",
+        "confirmed",
+    ),
+    "candidate-019": (
+        "stress_nouns",
+        "Ударение в существительных и их формах",
+        "partial",
+    ),
+    "candidate-020": (
+        "stress_adjectival_forms",
+        "Ударение в прилагательных, кратких формах и степенях сравнения",
+        "partial",
+    ),
+    "candidate-021": (
+        "stress_verbs",
+        "Ударение в глаголах и личных/родовых формах",
+        "partial",
+    ),
+    "candidate-022": (
+        "stress_participles",
+        "Ударение в причастиях и кратких причастиях",
+        "partial",
+    ),
+    "candidate-023": (
+        "stress_gerunds",
+        "Ударение в деепричастиях",
+        "partial",
+    ),
+    "candidate-024": (
+        "stress_adverbs",
+        "Ударение в наречиях",
+        "partial",
+    ),
 }
 
 
@@ -49,7 +77,7 @@ def build_resolution() -> dict[str, Any]:
     graph_rows = [row for row in graph.get("skills", []) if isinstance(row, dict)]
 
     resolutions: list[dict[str, Any]] = []
-    for candidate_id, (taxonomy_ref, expected_label) in sorted(EXPECTED.items()):
+    for candidate_id, (taxonomy_ref, expected_label, expected_graph_evidence_status) in sorted(EXPECTED.items()):
         candidate_matches = [
             row
             for row in objects
@@ -106,8 +134,12 @@ def build_resolution() -> dict[str, Any]:
             raise ValueError(f"RU02 skill-graph meaning drift: {taxonomy_ref}")
         if graph_row.get("parent_skill_id") != "orthoepic_norms":
             raise ValueError(f"RU02 skill-graph parent drift: {taxonomy_ref}")
-        if graph_row.get("evidence_status") != "confirmed":
-            raise ValueError(f"RU02 skill-graph evidence is not confirmed: {taxonomy_ref}")
+        graph_evidence_status = str(graph_row.get("evidence_status") or "")
+        if graph_evidence_status != expected_graph_evidence_status:
+            raise ValueError(
+                f"RU02 skill-graph evidence status drift: {taxonomy_ref}: "
+                f"expected={expected_graph_evidence_status} actual={graph_evidence_status}"
+            )
         if graph_row.get("exam_task_numbers") != [4]:
             raise ValueError(f"RU02 skill-graph task-route drift: {taxonomy_ref}")
 
@@ -118,15 +150,20 @@ def build_resolution() -> dict[str, Any]:
                 "source_taxonomy_id": taxonomy_ref,
                 "label_ru": expected_label,
                 "meaning_ru": normalized_meaning(candidate.get("observed_meaning")),
-                "source_identity_resolution": "EXACT_CURRENT_SOURCE_VERIFIED_EGE_TAXONOMY_BACKING",
+                "source_identity_resolution": "EXACT_CURRENT_SOURCE_VERIFIED_INVENTORY_BACKING_GRAPH_EVIDENCE_PRESERVED",
                 "source_authority": "03-RUSSIAN-SKILL-GRAPH.json",
                 "source_provenance_refs": provenance_refs,
-                "source_evidence_status": "confirmed",
-                "source_review_status": "source_verified",
+                "inventory_source_review_status": "source_verified",
+                "skill_graph_evidence_status": graph_evidence_status,
                 "route_metadata": {"ege_task_numbers": [4]},
                 "admission_effect": "NONE",
             }
         )
+
+    confirmed_count = sum(row["skill_graph_evidence_status"] == "confirmed" for row in resolutions)
+    partial_count = sum(row["skill_graph_evidence_status"] == "partial" for row in resolutions)
+    if confirmed_count != 1 or partial_count != 6:
+        raise ValueError("RU02 graph evidence distribution drift")
 
     result: dict[str, Any] = {
         "schema_version": "0.1.0",
@@ -142,7 +179,8 @@ def build_resolution() -> dict[str, Any]:
             "exact_source_backing_required": True,
             "exact_label_and_meaning_match_required": True,
             "source_verified_inventory_backing_required": True,
-            "confirmed_skill_graph_node_required": True,
+            "skill_graph_evidence_status_must_be_preserved": True,
+            "partial_skill_graph_evidence_may_be_promoted_by_resolution": False,
             "content_adequacy_review_still_required_before_gap_or_admission": True,
             "keyword_or_fuzzy_inference_allowed": False,
         },
@@ -151,6 +189,8 @@ def build_resolution() -> dict[str, Any]:
             "candidate_records": len(EXPECTED),
             "exact_source_identity_resolutions": len(resolutions),
             "unresolved_source_identities": len(EXPECTED) - len(resolutions),
+            "confirmed_skill_graph_evidence": confirmed_count,
+            "partial_skill_graph_evidence": partial_count,
             "semantic_admissions": 0,
             "object_level_admission_units_closed": 0,
             "object_level_requirements_closed": 0,
@@ -158,8 +198,10 @@ def build_resolution() -> dict[str, Any]:
         },
         "next_exact_work": {
             "draft_candidates_requiring_source_identity_resolution": 0,
+            "candidates_with_partial_skill_graph_evidence_requiring_semantic_acceptance_review": partial_count,
             "content_units_requiring_exact_candidate_adequacy_review": 2,
             "candidate_level_content_gap_may_be_declared_without_separate_review": False,
+            "subject_semantic_admission_may_be_inferred_from_source_resolution": False,
         },
     }
     result["normalized_sha256"] = hashlib.sha256(canonical_json(result)).hexdigest()
@@ -183,6 +225,8 @@ def main() -> int:
         print("RU02_ORTHOEPY_SOURCE_IDENTITY_RESOLUTION=PASS")
         print(f"EXACT_SOURCE_IDENTITY_RESOLUTIONS={result['summary']['exact_source_identity_resolutions']}")
         print(f"UNRESOLVED_SOURCE_IDENTITIES={result['summary']['unresolved_source_identities']}")
+        print(f"CONFIRMED_SKILL_GRAPH_EVIDENCE={result['summary']['confirmed_skill_graph_evidence']}")
+        print(f"PARTIAL_SKILL_GRAPH_EVIDENCE={result['summary']['partial_skill_graph_evidence']}")
         print("SEMANTIC_ADMISSIONS=0")
         print("OBJECT_LEVEL_CLOSURES=0")
         print("FALSE_EXACT_MASTERY_ADMISSIONS=0")
