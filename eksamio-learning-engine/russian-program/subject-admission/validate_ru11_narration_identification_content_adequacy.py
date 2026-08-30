@@ -19,7 +19,7 @@ CONTENT = PROGRAM / "production-learning-content/RU-PROG-11-NARRATION-IDENTIFICA
 CANDIDATE = "candidate-044"
 TAXONOMY = "narration_identification"
 SEMANTIC = "ru-text-narration-identification"
-REVIEW_LABEL = "Определение повествования"
+REVIEW_LABEL = "Распознавание повествования"
 CANONICAL_LABEL = "Распознавание повествования"
 EXPECTED_CHECK_IDS = {"p11-nar-v1", "p11-nar-v2"}
 
