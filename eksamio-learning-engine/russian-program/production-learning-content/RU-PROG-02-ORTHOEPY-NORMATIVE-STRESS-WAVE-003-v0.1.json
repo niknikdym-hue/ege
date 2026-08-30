@@ -1,0 +1,236 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-02",
+  "module_title_ru": "Орфоэпия и ударение",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "thematic_trainer", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#candidate-018",
+      "coverage_note": "candidate-018 is the current missing-subject-semantic candidate for generic normative stress selection."
+    },
+    {
+      "kind": "source_identity_resolution",
+      "ref": "russian-program/subject-admission/build_ru02_orthoepy_source_identity_resolution.py",
+      "coverage_note": "The deterministic resolver binds candidate-018 exactly to source taxonomy node normative_stress_selection and preserves its confirmed skill-graph evidence status."
+    },
+    {
+      "kind": "content_gap_review",
+      "ref": "russian-program/subject-admission/build_ru02_orthoepy_content_adequacy_review.py",
+      "coverage_note": "The pre-materialization review proves that the previous two RU02 learner units were not exact candidate-018 content."
+    },
+    {
+      "kind": "repo_audited_normative_fact_bank",
+      "ref": "russkiy-knigi/ege-russkiy-trenazher/ORTHOEPIC-TRAINER-BANK.json",
+      "coverage_note": "Only the bank's word-form/stress facts are reused; learner explanations, algorithms and practice wording are original Eksamio material."
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "learner_explanations": "ORIGINAL_EKSAMIO",
+    "learner_examples": "ORIGINAL_EKSAMIO_AROUND_REPO_AUDITED_NORM_FACTS",
+    "official_material_use": "SCOPE_AND_NORM_FACTS_ONLY",
+    "commercial_textbook_bytes_in_git": 0
+  },
+  "identity_boundary": {
+    "candidate_ref": "candidate-018",
+    "source_taxonomy_id": "normative_stress_selection",
+    "rule": "This unit targets only the generic operation of determining the normative stress position in a presented word or word form. It does not self-admit a semantic identity and does not consume the six adjacent part-of-speech-specific candidates.",
+    "candidate_status_after_content": "SOURCE_CANDIDATE_REMAINS_UNCHANGED",
+    "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+    "object_level_admission_effect": "NONE_UNTIL_SEPARATE_EXACT_OBJECT_BINDING",
+    "generic_task4_result_can_emit_exact_component_mastery": false
+  },
+  "units": [
+    {
+      "candidate_ref": "candidate-018",
+      "source_taxonomy_id": "normative_stress_selection",
+      "proposed_semantic_id": "ru-orthoepy-normative-stress-selection",
+      "title_ru": "Нормативное ударение: определить позицию ударения в слове или форме",
+      "canonical_explanation": {
+        "short": "Нужно определить, на какой слог падает нормативное словесное ударение именно в предъявленном слове или конкретной форме. Ответ нельзя выводить только по аналогии или привычному произношению: нормативную позицию ударения вспоминают из подтверждённой нормы или проверяют по актуальному нормативному источнику.",
+        "boundaries": [
+          "Цель — выбрать нормативную позицию ударения в конкретном предъявленном слове или форме; это общий навык выбора, а не отдельное правило для одной части речи.",
+          "Наличие примеров разных частей речи не заменяет отдельное обучение ударению в существительных, прилагательных, глаголах, причастиях, деепричастиях и наречиях; candidate-019…024 остаются отдельными предметными границами.",
+          "Этот навык не охватывает все орфоэпические нормы произношения звуков и сочетаний звуков: здесь проверяется только словесное ударение.",
+          "Результат целого задания ЕГЭ №4 не может автоматически подтверждать mastery этого компонента без независимой component-specific проверки."
+        ]
+      },
+      "decision_algorithm": [
+        "Зафиксируй точное предъявленное слово или словоформу: не заменяй её начальной формой и не меняй грамматические признаки.",
+        "Определи возможные слоги с гласными и поставь предполагаемое ударение.",
+        "Сверь предполагаемую позицию с подтверждённой нормативной формой из текущего словника/словаря или из уже проверенного учебного банка.",
+        "Если аналогия с похожим словом конфликтует с подтверждённой нормой, отбрось аналогию и сохрани точную нормативную форму.",
+        "Для самостоятельной проверки воспроизведи нормативную форму без подсказки и отдельно отметь ударный слог."
+      ],
+      "worked_examples": [
+        {
+          "source_fact_id": "catalog",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=catalog]",
+          "prompt": "каталОг / катАлог",
+          "answer": "Нормативная позиция ударения — каталОг. Здесь нужно выбрать место ударения в конкретном слове, а не вывести его по внешней аналогии."
+        },
+        {
+          "source_fact_id": "prettier",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=prettier]",
+          "prompt": "красИвее / красивЕе",
+          "answer": "Нормативный вариант — красИвее. Конкретная форма проверяется как предъявленная, без переноса ударения по догадке."
+        },
+        {
+          "source_fact_id": "calls",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=calls]",
+          "prompt": "звонИт / звОнит",
+          "answer": "Нормативный вариант — звонИт. Проверяется точная форма, а не только лексема в общем виде."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Если вариант часто слышу, его можно считать нормативным.",
+          "correction": "Разговорная частотность не заменяет нормативную проверку."
+        },
+        {
+          "wrong": "Можно запомнить общий рисунок похожих слов и переносить ударение автоматически.",
+          "correction": "Поверхностная аналогия ненадёжна; проверяется конкретное слово или форма."
+        },
+        {
+          "wrong": "Если правильно выполнено всё задание №4, значит доказано mastery каждого частного орфоэпического компонента.",
+          "correction": "Для точного component mastery нужна независимая проверка именно этого семантического компонента."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p02-u3-g1",
+          "source_fact_id": "quarter",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=quarter]",
+          "prompt": "Варианты «квартАл» и «квАртал». Что именно нужно определить?",
+          "expected": "Нормативную позицию ударения в предъявленном слове; верный вариант — квартАл."
+        },
+        {
+          "id": "p02-u3-g2",
+          "source_fact_id": "kitchen",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=kitchen]",
+          "prompt": "Почему для «кУхонный / кухОнный» нельзя выбирать вариант только по привычному звучанию?",
+          "expected": "Нужна подтверждённая нормативная форма; в текущем проверенном банке — кУхонный."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p02-u3-i1",
+          "source_fact_id": "airports",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=airports]",
+          "prompt": "Выбери нормативный вариант: аэропОрты / аэропортЫ.",
+          "answer": "аэропОрты"
+        },
+        {
+          "id": "p02-u3-i2",
+          "source_fact_id": "plum",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=plum]",
+          "prompt": "Выбери нормативный вариант: слИвовый / сливОвый.",
+          "answer": "слИвовый"
+        },
+        {
+          "id": "p02-u3-i3",
+          "source_fact_id": "call_back",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=call_back]",
+          "prompt": "Выбери нормативный вариант: дозвонИтся / дозвОнится.",
+          "answer": "дозвонИтся"
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p02-u3-t1",
+          "prompt": "Ученик уверенно ставит ударение в знакомых существительных, но в новой форме глагола переносит ударение по аналогии. Какой общий навык нужно применить?",
+          "answer": "Зафиксировать точную предъявленную форму и определить её нормативную позицию ударения по подтверждённой норме, не подменяя проверку аналогией."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p02-u3-r1",
+          "delay_hint": "24h",
+          "source_fact_id": "catalog",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=catalog]",
+          "prompt": "Без подсказки поставь нормативное ударение: каталог.",
+          "answer": "каталОг"
+        },
+        {
+          "id": "p02-u3-r2",
+          "delay_hint": "7d",
+          "source_fact_id": "calls",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=calls]",
+          "prompt": "Без подсказки поставь нормативное ударение: звонит.",
+          "answer": "звонИт"
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p02-u3-v1",
+          "type": "single_choice",
+          "source_fact_id": "catalog",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=catalog]",
+          "prompt": "Где нормативное ударение?",
+          "options": ["катАлог", "каталОг"],
+          "correct_option_index": 1,
+          "feedback": "Нормативный вариант — каталОг."
+        },
+        {
+          "id": "p02-u3-v2",
+          "type": "single_choice",
+          "source_fact_id": "prettier",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=prettier]",
+          "prompt": "Где нормативное ударение?",
+          "options": ["красивЕе", "красИвее"],
+          "correct_option_index": 1,
+          "feedback": "Нормативный вариант — красИвее."
+        },
+        {
+          "id": "p02-u3-v3",
+          "type": "single_choice",
+          "source_fact_id": "calls",
+          "source_fact_ref": "ORTHOEPIC-TRAINER-BANK.json#entries[id=calls]",
+          "prompt": "Где нормативное ударение?",
+          "options": ["звОнит", "звонИт"],
+          "correct_option_index": 1,
+          "feedback": "Нормативный вариант — звонИт."
+        },
+        {
+          "id": "p02-u3-v4",
+          "type": "constructed_response",
+          "prompt": "Опиши безопасный общий алгоритм определения нормативной позиции ударения в предъявленном слове или форме.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: сохраняется точное предъявленное слово/форма",
+              "1: нормативная позиция проверяется по подтверждённой норме, а не по одной аналогии",
+              "1: результат воспроизводится самостоятельно без подсказки"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "generic_task4_score_can_emit_exact_mastery": false,
+        "component_specific_independent_evidence_required": true
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "asking for the exact presented word or form",
+          "checking a current source-backed normative stress fact",
+          "contrasting a confirmed normative form with a known non-normative alternative"
+        ],
+        "forbidden": [
+          "inventing stress by analogy",
+          "claiming coverage of candidate-019…024 from this generic unit",
+          "promoting a generic EGE task-4 result to exact component mastery"
+        ]
+      }
+    }
+  ]
+}
