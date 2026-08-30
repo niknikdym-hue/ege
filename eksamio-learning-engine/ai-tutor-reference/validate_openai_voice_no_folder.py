@@ -11,6 +11,7 @@ HERE = Path(__file__).resolve().parent
 ENGINE = HERE.parent
 sys.path.insert(0, str(HERE))
 
+import private_openai_yandex_121_tutor_ui as base_ui  # noqa: E402
 from private_openai_yandex_121_tutor import assemble_fast_tutor, open_benchmark_session  # noqa: E402
 from private_openai_voice_no_folder_ui import OpenAIVoiceConfig  # noqa: E402
 from resilient_speechkit_transports import RetryingBinaryTransport, RetryingStreamingJsonTransport  # noqa: E402
@@ -59,6 +60,11 @@ class FailOnceTTS:
 
 
 def main() -> int:
+    assert "function stopTutorPlayback()" in base_ui.PAGE
+    assert "async function startRec(){try{stopTutorPlayback();" in base_ui.PAGE
+    assert "a.onplay=()=>{$('#mic').disabled=true" in base_ui.PAGE
+    assert "a.onended=releaseMic;a.onpause=releaseMic;a.onerror=releaseMic" in base_ui.PAGE
+
     with no_folder_credentials():
         openai = ScriptedJsonTransport({"output_text": "OPENAI_VOICE_NO_FOLDER_OK"})
         stt = FakeSTT(transcript="Объясни слово сочетание")
@@ -112,6 +118,7 @@ def main() -> int:
     print("SPEECHKIT_TRANSIENT_STT_RETRY=PASS")
     print("SPEECHKIT_TRANSIENT_TTS_RETRY=PASS")
     print("LLM_DUPLICATE_CALLS_ON_SPEECH_RETRY=0")
+    print("TUTOR_PLAYBACK_MIC_OVERLAP=BLOCKED")
     print("YANDEX_FOLDER_ID_REQUIRED=0")
     print("RAW_AUDIO_PERSISTED_BYTES=0")
     print("LIVE_PROVIDER_CALLS=0")
