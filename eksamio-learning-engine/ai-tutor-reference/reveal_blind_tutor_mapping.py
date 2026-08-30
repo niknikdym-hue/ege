@@ -45,7 +45,11 @@ def main() -> int:
     mapping = payload.get("mapping")
     if not isinstance(mapping, dict) or set(mapping) != {"A", "B", "C", "D"}:
         raise ValueError("blind mapping is malformed")
+    candidate_sha = payload.get("candidate_sha")
+    if not isinstance(candidate_sha, str) or len(candidate_sha) != 40 or any(ch not in "0123456789abcdef" for ch in candidate_sha):
+        raise ValueError("blind mapping is not bound to a valid exact candidate SHA")
     print(f"BLIND_TEST_ID={payload.get('test_id')}")
+    print(f"CANDIDATE_SHA={candidate_sha}")
     for alias in ("A", "B", "C", "D"):
         provider = mapping[alias]
         if provider not in DISPLAY:
