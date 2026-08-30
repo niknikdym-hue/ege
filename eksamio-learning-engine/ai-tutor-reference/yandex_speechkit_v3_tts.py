@@ -4,17 +4,23 @@
 The existing bounded SpeechKit STT adapter is reused. This module only supplies
 v3 synthesis because the selected `lera` voice is v3-only. Audio is returned
 transiently and never retained by provider state.
+
+Visible Tutor text may contain Markdown for the browser. SpeechKit must never
+receive that presentation markup verbatim: a dedicated speech-text normalizer
+removes Markdown/URLs and turns school notation such as *-чет-*/*-чит-* into a
+natural spoken form before synthesis.
 """
 from __future__ import annotations
 
 import base64
 import json
 import os
+import re
 import socket
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
-from typing import Callable, Mapping, Protocol, Sequence
+from typing import Mapping, Protocol, Sequence
 
 from sep1_russian_tutor import VoiceProviderFailure
 from yandex_live_adapters import YandexCredential, YandexSpeechKitProvider
@@ -68,8 +74,6 @@ class UrllibStreamingJsonTransport:
         if not text:
             raise ValueError("SpeechKit v3 returned an empty response")
         objects: list[Mapping[str, object]] = []
-        # REST streaming may return sequential JSON objects. Also accept a single
-        # ordinary JSON object to remain robust across gateway implementations.
         try:
             parsed = json.loads(text)
         except json.JSONDecodeError:
@@ -129,18 +133,80 @@ class YandexSpeechKitV3TTSConfig:
             raise ValueError("SpeechKit v3 timeout must be in (0, 60]")
 
 
+_HYPHEN = "-‐‑‒–—"
+_WORD = "A-Za-zА-Яа-яЁё"
+
+
+def normalize_tutor_text_for_speech(text: str) -> str:
+    """Convert browser-facing Tutor Markdown into natural Russian speech text.
+
+    This is intentionally deterministic and provider-neutral. It does not alter
+    the visible answer or semantic content; it only removes presentation syntax
+    that a TTS engine might pronounce literally.
+    """
+
+    if not isinstance(text, str):
+        raise TypeError("Tutor speech text must be a string")
+    source = text.replace("\r\n", "\n").replace("\r", "\n")
+
+    # Fenced code is not useful in a spoken school explanation. Inline code keeps
+    # its content but loses the Markdown delimiters.
+    source = re.sub(r"```(?:[^`]|`(?!``))*```", " ", source, flags=re.DOTALL)
+    source = re.sub(r"`([^`]+)`", r"\1", source)
+
+    # Links/images: speak the human label, never the URL or Markdown punctuation.
+    source = re.sub(r"!\[([^\]]*)\]\([^)]*\)", r"\1", source)
+    source = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", source)
+    source = re.sub(r"https?://\S+|www\.\S+", " ", source)
+
+    # Headings/lists are visual structure; convert them to ordinary phrases.
+    source = re.sub(r"(?m)^\s{0,3}#{1,6}\s*", "", source)
+    source = re.sub(r"(?m)^\s*[-+*]\s+", "", source)
+    source = re.sub(r"(?m)^\s*\d+[.)]\s+", "", source)
+
+    # Markdown emphasis. Remove delimiters without changing the words.
+    source = re.sub(r"\*\*([^*]+)\*\*", r"\1", source)
+    source = re.sub(r"__([^_]+)__", r"\1", source)
+    source = re.sub(r"(?<!\*)\*([^*\n]+)\*(?!\*)", r"\1", source)
+    source = re.sub(r"(?<!_)_([^_\n]+)_(?!_)", r"\1", source)
+    source = source.replace("**", "").replace("*", "").replace("`", "")
+
+    # School morpheme notation such as -чет-/-чит- must be spoken as words, not
+    # as punctuation. Slash between letter groups is read as a semantic choice.
+    source = re.sub(
+        rf"(?<![{_WORD}])[{_HYPHEN}]+([{_WORD}]+)[{_HYPHEN}]+(?![{_WORD}])",
+        r"\1",
+        source,
+    )
+    source = re.sub(rf"(?<=[{_WORD}])\s*/\s*(?=[{_WORD}])", " или ", source)
+
+    # Preserve sentence meaning while removing visual table/control characters.
+    source = source.replace("|", ", ").replace(" ", " ")
+    source = re.sub(r"\s*\n+\s*", ". ", source)
+    source = re.sub(r"\s+([,.;:!?])", r"\1", source)
+    source = re.sub(r"([!?]){2,}", r"\1", source)
+    source = re.sub(r"\.{3,}", "…", source)
+    source = re.sub(r"\s{2,}", " ", source).strip(" .")
+    return source
+
+
 def _split_text(text: str, limit: int) -> tuple[str, ...]:
-    """Split on natural boundaries while respecting the v3 utterance limit."""
+    """Split at complete phrase boundaries while respecting the v3 limit."""
+
     source = " ".join(text.strip().split())
     if not source:
         return ()
     chunks: list[str] = []
+    strong_marks = (". ", "! ", "? ", "; ", ": ")
+    weak_marks = (", ", " — ", " – ", " ")
     while source:
         if len(source) <= limit:
             chunks.append(source)
             break
         window = source[: limit + 1]
-        cut = max(window.rfind(mark) for mark in (". ", "! ", "? ", "; ", ": ", ", ", " "))
+        cut = max(window.rfind(mark) for mark in strong_marks)
+        if cut < max(60, limit // 2):
+            cut = max(window.rfind(mark) for mark in weak_marks)
         if cut < max(40, limit // 3):
             cut = limit
         else:
@@ -190,7 +256,10 @@ class YandexSpeechKitV3TTS:
             raise VoiceProviderFailure("invalid SpeechKit v3 TTS input")
         if len(text) > self.config.max_total_text_chars:
             raise VoiceProviderFailure("SpeechKit v3 TTS text exceeds configured bound")
-        chunks = _split_text(text, self.config.max_chunk_chars)
+        spoken_text = normalize_tutor_text_for_speech(text)
+        if not spoken_text:
+            raise VoiceProviderFailure("SpeechKit v3 TTS normalization produced no speech text")
+        chunks = _split_text(spoken_text, self.config.max_chunk_chars)
         if not chunks:
             raise VoiceProviderFailure("SpeechKit v3 TTS text produced no utterances")
 
