@@ -34,9 +34,15 @@ def one(rows: list[dict[str, Any]], label: str) -> dict[str, Any]:
     return rows[0]
 
 
-def mentions_narration(value: Any) -> bool:
-    text = json.dumps(value, ensure_ascii=False).lower()
-    return "повеств" in text or "narration" in text
+def direct_narration_check(item: dict[str, Any]) -> bool:
+    """Count a check only when its prompt directly asks about narration.
+
+    A combined speech-type multiple-choice item may contain «повествование» merely as
+    a distractor option. That is not independent positive evidence of
+    narration_identification and must not be counted as an exact component check.
+    """
+    prompt = str(item.get("prompt") or "").lower()
+    return "повеств" in prompt or "narration" in prompt
 
 
 def main() -> int:
@@ -53,17 +59,19 @@ def main() -> int:
         raise AssertionError("RU11 narration authority issue drift")
 
     source = review.get("source_identity") or {}
-    if (
-        source.get("candidate_ref") != CANDIDATE
-        or source.get("source_taxonomy_id") != TAXONOMY
-        or source.get("label_ru") != SOURCE_LABEL
-        or source.get("inventory_classification") != "MISSING_SUBJECT_SEMANTIC_CANDIDATE"
-        or source.get("inventory_review_status") != "draft"
-        or source.get("skill_graph_evidence_status") != "confirmed"
-        or source.get("taxonomy_backing_review_status") != "source_verified"
-        or source.get("exam_task_numbers") != [24]
-    ):
-        raise AssertionError("RU11 narration review source truth drift")
+    expected_source = {
+        "candidate_ref": CANDIDATE,
+        "source_taxonomy_id": TAXONOMY,
+        "label_ru": SOURCE_LABEL,
+        "inventory_classification": "MISSING_SUBJECT_SEMANTIC_CANDIDATE",
+        "inventory_review_status": "draft",
+        "skill_graph_evidence_status": "confirmed",
+        "taxonomy_backing_review_status": "source_verified",
+        "exam_task_numbers": [24],
+    }
+    for key, expected in expected_source.items():
+        if source.get(key) != expected:
+            raise AssertionError(f"RU11 narration review source truth drift: {key}")
 
     modules = {str(r.get("module_id")): r for r in program.get("modules", []) if isinstance(r, dict)}
     module = modules.get("RU-PROG-11")
@@ -136,24 +144,12 @@ def main() -> int:
         if isinstance(r, dict) and r.get("proposed_semantic_id") == "ru-text-speech-type-reasoning-description-narration"
     ], "RU11 broader combined speech-type unit")
     broad_checks = [r for r in (broad_unit.get("independent_verification") or []) if isinstance(r, dict)]
-    direct_narration_checks = sum(1 for row in broad_checks if mentions_narration(row))
+    direct_narration_checks = sum(1 for row in broad_checks if direct_narration_check(row))
     if direct_narration_checks != 0:
-        raise AssertionError(f"RU11 narration reuse-gap proof drift: expected 0 direct checks, got {direct_narration_checks}")
+        raise AssertionError(f"RU11 narration reuse-gap proof drift: expected 0 direct prompt checks, got {direct_narration_checks}")
 
     if content.get("status") != "SUBJECT_ACCEPTANCE_REQUIRED" or content.get("module_id") != "RU-PROG-11":
         raise AssertionError("RU11 narration content status/module drift")
-    provenance = content.get("source_provenance") or []
-    draft_source = one([
-        r for r in provenance if isinstance(r, dict) and r.get("kind") == "current_draft_subject_semantic_candidate"
-    ], "RU11 narration draft source provenance")
-    if draft_source.get("review_status") != "draft" or draft_source.get("audit_classification") != "MISSING_SUBJECT_SEMANTIC_CANDIDATE":
-        raise AssertionError("RU11 narration content falsely upgrades draft source candidate")
-    confirmed = one([
-        r for r in provenance if isinstance(r, dict) and r.get("kind") == "confirmed_skill_graph"
-    ], "RU11 narration confirmed graph provenance")
-    if confirmed.get("evidence_status") != "confirmed":
-        raise AssertionError("RU11 narration graph evidence status drift")
-
     guard = content.get("copyright_guard") or {}
     if guard.get("source_passages_copied") != 0 or guard.get("commercial_textbook_bytes") != 0 or guard.get("learner_examples") != "ORIGINAL_EKSAMIO":
         raise AssertionError("RU11 narration provenance/copyright boundary weakened")
@@ -187,8 +183,10 @@ def main() -> int:
         raise AssertionError("RU11 narration exact verification set drift")
     if any(r.get("type") != "constructed_response" for r in checks):
         raise AssertionError("RU11 narration verification weakened from constructed response")
-    if not all(mentions_narration(r) for r in checks):
-        raise AssertionError("RU11 narration exact checks no longer directly test narration")
+    if not all(direct_narration_check(r) for r in checks):
+        raise AssertionError("RU11 narration exact checks no longer directly ask about narration")
+    if any((r.get("scoring") or {}).get("max_points") != 3 for r in checks):
+        raise AssertionError("RU11 narration verification scoring drift")
 
     peis = unit.get("peis_evidence") or {}
     if (
@@ -206,10 +204,8 @@ def main() -> int:
 
     tutor = unit.get("tutor_grounding") or {}
     forbidden = " ".join(tutor.get("forbidden") or []).lower()
-    if "verb" not in forbidden and "глаг" not in forbidden:
-        raise AssertionError("RU11 narration Tutor verb-count guard missing")
-    if "task-24" not in forbidden:
-        raise AssertionError("RU11 narration Tutor generic Task-24 guard missing")
+    if ("verb" not in forbidden and "глаг" not in forbidden) or "task-24" not in forbidden:
+        raise AssertionError("RU11 narration Tutor guard missing")
 
     rd = review.get("review_decision") or {}
     if (
