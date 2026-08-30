@@ -1,0 +1,235 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-11",
+  "module_title_ru": "Текст, смысл и межфразовая связь",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "repository_audited_source_taxonomy",
+      "authority": "03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_gap_grammatical_fit]",
+      "coverage_note": "Confirmed source skill: select a cohesion device that fits both meaning and grammatical form. The source identity is preserved; no exam-task number is promoted to semantic identity."
+    },
+    {
+      "kind": "semantic_candidate_inventory",
+      "authority": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-001",
+      "coverage_note": "Current candidate-001 is draft and remains draft; this learner unit does not self-admit it."
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-11"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Repository source authorities define the bounded skill only; all learner-facing examples, prompts and explanations below are original Eksamio content."
+  },
+  "reuse_review": {
+    "broader_existing_unit_ref": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-cohesion-link-means]",
+    "broader_existing_unit_reused_for_explanation_and_transfer": true,
+    "broader_existing_unit_direct_gap_selection_independent_checks": 0,
+    "broader_existing_unit_reused_as_exact_candidate_001_mastery_evidence": false,
+    "new_content_materialized_only_for_proven_gap_selection_verification_gap": true,
+    "reason": "The existing cohesion unit teaches how to identify and justify a link already present between sentences. Candidate-001 instead requires selecting a missing linking means that simultaneously fits the intended semantic relation and the grammatical slot. Existing independent checks do not directly verify that selection operation."
+  },
+  "identity_boundary": "The semantic id below is a bounded source-backed proposal. It is not canonical until separately accepted by Central Brain and never grants mastery of a particular pronoun/conjunction/word-form/cognate device family merely because a generic gap was solved.",
+  "units": [
+    {
+      "proposed_semantic_id": "ru-text-cohesion-gap-grammatical-fit",
+      "title_ru": "Подбор средства связи по смыслу и грамматической форме",
+      "canonical_explanation": {
+        "short": "Средство связи в пропуске должно пройти две независимые проверки: оно должно выражать нужное смысловое отношение к предыдущему контексту и грамматически встраиваться в предложение. Совпадения только по части речи или только по общему смыслу недостаточно.",
+        "boundaries": [
+          "Сначала восстанавливается отношение между фрагментами: продолжение, причина, следствие, противопоставление, уточнение или иное реально выраженное отношение.",
+          "Затем проверяется грамматический слот: какая форма и синтаксическая роль допустимы в конкретном предложении.",
+          "Выбранное средство должно одновременно удовлетворять смысловой и грамматической проверке.",
+          "Эта единица не обучает исчерпывающей классификации всех средств межфразовой связи и не присваивает mastery отдельным разрядам местоимений, союзам, формам одного слова или однокоренным словам.",
+          "Результат общего задания ЕГЭ №1 или №26 сам по себе не является доказательством mastery этой bounded semantic без component-specific independent evidence."
+        ]
+      },
+      "decision_algorithm": [
+        "Прочитай предложение до пропуска и соседний контекст; не выбирай слово по одному формальному признаку.",
+        "Сформулируй, какое смысловое отношение должен передать пропуск.",
+        "Определи грамматическую позицию пропуска: что может стоять здесь по синтаксису и форме.",
+        "Отбрось варианты, которые подходят по смыслу, но ломают грамматическую конструкцию.",
+        "Отбрось варианты, которые грамматически возможны, но создают другое смысловое отношение.",
+        "Подставь оставшийся вариант и перечитай связку целиком: связь должна быть и смысловой, и грамматической."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Маршрут пришлось изменить из-за сильного ветра. ___ группа вышла к перевалу позже.",
+          "answer": "Подходящее средство должно оформить следствие и грамматически вводить второе предложение; вариант со значением причины здесь изменил бы отношение."
+        },
+        {
+          "prompt": "Исследователи повторили измерения. ___ результаты оказались прежними.",
+          "answer": "Нужно выбрать средство, которое грамматически может стоять в начале второго предложения и передаёт требуемое отношение, а не просто тематически связано с измерениями."
+        },
+        {
+          "prompt": "Вариант выражает противопоставление, но после него требуется форма, несовместимая с конструкцией предложения.",
+          "answer": "Такой вариант отклоняется: смыслового совпадения недостаточно без грамматической совместимости."
+        },
+        {
+          "prompt": "Два варианта грамматически допустимы, но один выражает следствие, а другой добавление.",
+          "answer": "Выбор решает смысловая связь контекста; грамматическая допустимость — необходимое, но не достаточное условие."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Нужно сначала определить часть речи и выбрать любое слово этого разряда.",
+          "correction": "Часть речи не доказывает смысловую связь; сначала устанавливается отношение контекста, затем проверяется форма."
+        },
+        {
+          "wrong": "Если слово логично по смыслу, грамматику можно не проверять.",
+          "correction": "Кандидат должен грамматически встраиваться в предложение."
+        },
+        {
+          "wrong": "Если вариант грамматически подходит, он автоматически связывает предложения.",
+          "correction": "Нужно доказать, какое отношение он создаёт между фрагментами."
+        },
+        {
+          "wrong": "Успех в одном gap-задании означает mastery конкретного разряда местоимений или союзов.",
+          "correction": "Эта bounded semantic проверяет двухшаговый выбор средства; mastery конкретной device-family требует отдельного component-specific evidence."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p11-coh-gap-g1",
+          "prompt": "В пропуске два грамматически допустимых варианта: один выражает причину, другой следствие. Какой вопрос решает выбор?",
+          "expected": "Нужно установить реальное смысловое отношение между соседними фрагментами."
+        },
+        {
+          "id": "p11-coh-gap-g2",
+          "prompt": "Вариант выражает нужное противопоставление, но требует другой синтаксической конструкции. Принимаем?",
+          "expected": "Нет: он не проходит грамматическую проверку."
+        },
+        {
+          "id": "p11-coh-gap-g3",
+          "prompt": "Назови две обязательные проверки перед окончательным выбором средства связи.",
+          "expected": "Смысловая связь и грамматическая совместимость с предложением."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p11-coh-gap-i1",
+          "prompt": "Почему нельзя выбирать средство связи только по указанной части речи?",
+          "answer": "Нужно ещё доказать требуемую смысловую связь и совместимость формы с конкретным предложением."
+        },
+        {
+          "id": "p11-coh-gap-i2",
+          "prompt": "Что проверяется после определения отношения между предложениями?",
+          "answer": "Грамматическая позиция пропуска и совместимость формы выбранного средства."
+        },
+        {
+          "id": "p11-coh-gap-i3",
+          "prompt": "Если два варианта грамматически возможны, чем их различают?",
+          "answer": "Тем, какой смысловой тип связи каждый создаёт в данном контексте."
+        },
+        {
+          "id": "p11-coh-gap-i4",
+          "prompt": "Даёт ли правильный выбор в общем gap-задании mastery всех средств межфразовой связи?",
+          "answer": "Нет."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p11-coh-gap-t1",
+          "prompt": "Ученик перебирает местоимения, потому что в условии назван этот разряд, но не читает первое предложение. Исправь стратегию.",
+          "answer": "Сначала восстановить смысловую связь с предыдущим контекстом, затем проверить допустимый разряд и форму в грамматическом слоте."
+        },
+        {
+          "id": "p11-coh-gap-t2",
+          "prompt": "Редактор предлагает связку, которая звучит гладко, но меняет следствие на противопоставление. Почему её надо отклонить?",
+          "answer": "Она нарушает смысловое отношение между фрагментами, хотя может быть грамматически корректной."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p11-coh-gap-r1",
+          "delay_hint": "24h",
+          "prompt": "Две проверки средства связи в пропуске?",
+          "answer": "Смысловая связь и грамматическая совместимость."
+        },
+        {
+          "id": "p11-coh-gap-r2",
+          "delay_hint": "7d",
+          "prompt": "Что делать, если вариант подходит только по смыслу?",
+          "answer": "Отклонить и проверить грамматический слот."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p11-coh-gap-v1",
+          "type": "constructed_response",
+          "prompt": "Даны два кандидата для пропуска: А грамматически допустим, но выражает добавление; Б грамматически допустим и выражает следствие, которое следует из первого предложения. Какой выбрать и почему?",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: выбран вариант Б",
+              "1: объяснено требуемое следственное отношение",
+              "1: отмечено, что вариант также проходит грамматическую проверку"
+            ]
+          }
+        },
+        {
+          "id": "p11-coh-gap-v2",
+          "type": "constructed_response",
+          "prompt": "Кандидат А выражает нужное противопоставление, но не согласуется с грамматической конструкцией; кандидат Б грамматически подходит, но выражает причину вместо противопоставления. Можно ли принять один из них? Обоснуй решение.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: оба варианта отклонены",
+              "1: у А назван грамматический дефект",
+              "1: у Б назван смысловой дефект"
+            ]
+          }
+        },
+        {
+          "id": "p11-coh-gap-v3",
+          "type": "constructed_response",
+          "prompt": "Опиши короткий алгоритм выбора средства связи в пропуске так, чтобы нельзя было выбрать вариант только по части речи или только по смыслу.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: установлено смысловое отношение",
+              "1: проверена грамматическая позиция/форма",
+              "1: финальный вариант обязан пройти обе проверки"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "source_candidate_ref": "candidate-001",
+        "source_candidate_review_status": "draft",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "exact_mastery_requires_two_or_more_component_specific_gap_selection_checks": true,
+        "generic_task1_result_can_emit_exact_component_mastery": false,
+        "generic_task26_result_can_emit_exact_component_mastery": false,
+        "specific_device_family_mastery_admitted": false,
+        "broader_link_means_unit_can_emit_exact_gap_selection_mastery": false
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "ask learner to state the semantic relation before selecting a linker",
+          "ask learner to verify grammatical fit of the candidate in the exact slot",
+          "diagnose meaning-only versus grammar-only selection errors"
+        ],
+        "forbidden": [
+          "granting generic Task-1 mastery from route success",
+          "granting generic Task-26 mastery from route success",
+          "granting determinative, demonstrative or possessive pronoun mastery from this semantic",
+          "granting conjunction, word-form or cognate-word mastery from this semantic",
+          "accepting a candidate that passes only one of the two checks"
+        ]
+      }
+    }
+  ]
+}
