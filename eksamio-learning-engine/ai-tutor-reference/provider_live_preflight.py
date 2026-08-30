@@ -7,6 +7,7 @@ availability. Secret values are never printed.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -43,11 +44,18 @@ def qwen_endpoint_state(raw: str | None) -> tuple[bool, str]:
     return True, f"configured host={host}"
 
 
-def main() -> int:
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--require-four-brain", action="store_true")
+    parser.add_argument("--require-voice", action="store_true")
+    return parser.parse_args()
+
+
+def readiness_snapshot() -> dict[str, object]:
     local_config = load_private_provider_config()
     qwen_endpoint_ok, qwen_endpoint_detail = qwen_endpoint_state(local_config.qwen_base_url)
     folder_present = bool(local_config.yandex_folder_id)
-    states = {
+    states: dict[str, object] = {
         "openai_credential_present": credential_present(OpenAISecretProvider()),
         "qwen_credential_present": credential_present(QwenSecretProvider()),
         "qwen_endpoint_valid": qwen_endpoint_ok,
@@ -59,13 +67,35 @@ def main() -> int:
         "network_calls": 0,
         "provider_secret_values_printed": 0,
     }
+    states["openai_human_test_local_ready"] = bool(states["openai_credential_present"])
     states["qwen_human_test_local_ready"] = bool(states["qwen_credential_present"] and qwen_endpoint_ok)
     states["deepseek_human_test_local_ready"] = bool(states["deepseek_credential_present"])
     states["yandex_brain_human_test_local_ready"] = bool(states["yandex_ai_credential_present"] and folder_present)
     states["yandex_voice_human_test_local_ready"] = bool(states["yandex_speechkit_credential_present"] and folder_present)
+    states["all_four_brains_local_ready"] = all(
+        bool(states[name])
+        for name in (
+            "openai_human_test_local_ready",
+            "qwen_human_test_local_ready",
+            "deepseek_human_test_local_ready",
+            "yandex_brain_human_test_local_ready",
+        )
+    )
+    return states
 
+
+def main() -> int:
+    args = parse_args()
+    states = readiness_snapshot()
     print(json.dumps(states, ensure_ascii=False, indent=2, sort_keys=True))
     print("NOTE=credential presence does not prove scope/billing/provider availability; owner-authorized live smoke is still required")
+    if args.require_four_brain and not states["all_four_brains_local_ready"]:
+        print("PREFLIGHT=BLOCKED_FOUR_BRAIN_LOCAL_READINESS")
+        return 3
+    if args.require_voice and not states["yandex_voice_human_test_local_ready"]:
+        print("PREFLIGHT=BLOCKED_YANDEX_VOICE_LOCAL_READINESS")
+        return 3
+    print("PREFLIGHT=PASS")
     return 0
 
 
