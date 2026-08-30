@@ -5,11 +5,11 @@ The existing bounded SpeechKit STT adapter is reused. This module only supplies
 v3 synthesis because the selected `lera` voice is v3-only. Audio is returned
 transiently and never retained by provider state.
 
-Visible Tutor text may contain Markdown for the browser. SpeechKit must never
-receive that presentation markup verbatim: a dedicated speech-text normalizer
-removes Markdown/URLs and turns school notation such as *-чет-*/*-чит-* into a
-natural spoken form before synthesis. It also applies bounded SpeechKit TTS
-markup for pauses and pronunciation only; visible Tutor text stays unchanged.
+Visible Tutor text may contain presentation markup for the browser. SpeechKit
+receives a separate Russian pedagogical speech rendering: presentation syntax
+is removed, school notation is normalized, pronunciation hints are added only
+where required, and semantic pauses are generated from reusable Russian clause
+rules rather than per-answer patches.
 """
 from __future__ import annotations
 
@@ -138,45 +138,33 @@ _HYPHEN = "-‐‑‒–—"
 _WORD = "A-Za-zА-Яа-яЁё"
 _SENTENCE_PAUSE_MS = 260
 _LETTER_EXAMPLE_PAUSE_MS = 180
+_CONTEXT_SMALL = "<[small]>"
+_CONTEXT_MEDIUM = "<[medium]>"
 _ROOT_CHET_PHONEMES = "[[t͡ɕ ɛ t]]"
 _ROOT_CHIT_PHONEMES = "[[t͡ɕ i t]]"
+_CONTRAST_WORDS = "но|однако|зато|при этом"
+_CONCLUSION_WORDS = "сохраняется|пишется|остаётся|остается|получается|значит|поэтому|следовательно"
 
 
-def normalize_tutor_text_for_speech(text: str) -> str:
-    """Convert browser-facing Tutor Markdown into natural Russian TTS markup.
-
-    The returned string is for SpeechKit only. It may contain official SpeechKit
-    TTS markup (`sil<[...]>` and `[[...]]`) that is never shown to the learner.
-    """
-
-    if not isinstance(text, str):
-        raise TypeError("Tutor speech text must be a string")
-    source = text.replace("\r\n", "\n").replace("\r", "\n")
-
-    # Fenced code is not useful in a spoken school explanation. Inline code keeps
-    # its content but loses the Markdown delimiters.
+def _strip_presentation_markup(source: str) -> str:
     source = re.sub(r"```(?:[^`]|`(?!``))*```", " ", source, flags=re.DOTALL)
     source = re.sub(r"`([^`]+)`", r"\1", source)
-
-    # Links/images: speak the human label, never the URL or Markdown punctuation.
     source = re.sub(r"!\[([^\]]*)\]\([^)]*\)", r"\1", source)
     source = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", source)
     source = re.sub(r"https?://\S+|www\.\S+", " ", source)
-
-    # Headings/lists are visual structure; convert them to ordinary phrases.
     source = re.sub(r"(?m)^\s{0,3}#{1,6}\s*", "", source)
     source = re.sub(r"(?m)^\s*[-+*]\s+", "", source)
     source = re.sub(r"(?m)^\s*\d+[.)]\s+", "", source)
-
-    # Markdown emphasis. Remove delimiters without changing the words.
     source = re.sub(r"\*\*([^*]+)\*\*", r"\1", source)
     source = re.sub(r"__([^_]+)__", r"\1", source)
     source = re.sub(r"(?<!\*)\*([^*\n]+)\*(?!\*)", r"\1", source)
     source = re.sub(r"(?<!_)_([^_\n]+)_(?!_)", r"\1", source)
-    source = source.replace("**", "").replace("*", "").replace("`", "")
+    return source.replace("**", "").replace("*", "").replace("`", "")
 
-    # School morpheme notation such as -чет-/-чит- or ЧЕТ-/ЧИТ- must be spoken as
-    # morphemes, not as punctuation. Slash between roots becomes a spoken choice.
+
+def _normalize_school_notation(source: str) -> str:
+    # Root notation may arrive as -чет-/-чит- or ЧЕТ-/ЧИТ-. Convert the slash to
+    # ordinary Russian speech before phonetic hints are applied.
     source = re.sub(
         rf"(?<![{_WORD}])([{_WORD}]+)[{_HYPHEN}]+\s*/\s*([{_WORD}]+)[{_HYPHEN}]+(?![{_WORD}])",
         r"\1 или \2",
@@ -189,19 +177,30 @@ def normalize_tutor_text_for_speech(text: str) -> str:
     )
     source = re.sub(rf"(?<=[{_WORD}])\s*/\s*(?=[{_WORD}])", " или ", source)
 
-    # Quoted single-letter examples should not create a pause before the letter.
-    # For the common pedagogical construction "буквы «а» после..." put the
-    # deliberate pause after the letter instead.
+    # In constructions like "буквы «а» после корня" the pedagogically useful
+    # pause belongs after the named letter, never before it.
     source = re.sub(
         r"\b(букв[аы])\s+[«„“\"]\s*([А-Яа-яЁё])\s*[»”\"]\s+(?=после\b)",
         rf"\1 \2 sil<[{_LETTER_EXAMPLE_PAUSE_MS}]> ",
         source,
         flags=re.IGNORECASE,
     )
-    source = re.sub(r"[«„“\"]\s*([А-Яа-яЁё])\s*[»”\"]", r"\1", source)
 
-    # Force the pedagogical names of ЧЕТ/ЧИТ. Without a phoneme hint, a Russian
-    # TTS voice can interpret isolated "чет" too close to "чёт".
+    # A sequence of quoted examples followed by a conclusion is a reusable
+    # educational pattern: finish the examples, then make a small semantic pause.
+    source = re.sub(
+        rf"((?:[«„“\"][^»”\"]+[»”\"])(?:\s*,\s*(?:[«„“\"][^»”\"]+[»”\"]))+)(\s+)(?=(?:{_CONCLUSION_WORDS})\b)",
+        rf"\1 {_CONTEXT_SMALL} ",
+        source,
+        flags=re.IGNORECASE,
+    )
+
+    # Quotes are visual punctuation. Once enumeration structure is captured they
+    # are removed from the spoken rendering so they cannot distort timing.
+    source = re.sub(r"[«»„“”\"]", "", source)
+
+    # The isolated school root ЧЕТ is easy for TTS to drift toward ЧЁТ. Lock only
+    # the pedagogical root labels, not ordinary Russian words containing them.
     source = re.sub(
         rf"(?<![{_WORD}])чет(?![{_WORD}])",
         _ROOT_CHET_PHONEMES,
@@ -214,23 +213,59 @@ def normalize_tutor_text_for_speech(text: str) -> str:
         source,
         flags=re.IGNORECASE,
     )
+    return source
 
-    # Preserve sentence meaning while removing visual table/control characters.
+
+def _apply_russian_pedagogical_prosody(source: str) -> str:
+    # New lines indicate a thought boundary in generated Tutor text.
     source = source.replace("|", ", ").replace(" ", " ")
     source = re.sub(r"\s*\n+\s*", ". ", source)
+
+    # Russian contrastive clauses should be separated after the preceding idea,
+    # not by an accidental pause around a quoted letter or example.
+    source = re.sub(
+        rf",\s*(?=(?:{_CONTRAST_WORDS})\b)",
+        rf", {_CONTEXT_SMALL} ",
+        source,
+        flags=re.IGNORECASE,
+    )
+
+    # Colons in Tutor explanations normally introduce a rule, instruction or
+    # example. Let SpeechKit choose a short context-sensitive pause.
+    source = re.sub(r":\s+(?=[А-Яа-яЁё])", rf": {_CONTEXT_SMALL} ", source)
+
+    # Semicolons carry a stronger intra-sentence boundary than commas.
+    source = re.sub(r";\s+(?=[А-Яа-яЁё])", rf"; {_CONTEXT_MEDIUM} ", source)
+
+    # Clean punctuation before inserting sentence-level pauses.
     source = re.sub(r"\s+([,.;:!?])", r"\1", source)
     source = re.sub(r"([!?]){2,}", r"\1", source)
     source = re.sub(r"\.{3,}", "…", source)
 
-    # Natural punctuation alone was inconsistent in human listening. SpeechKit v3
-    # officially supports explicit SIL pauses, so add a short sentence pause.
+    # Sentence boundaries get a stable pause; clause-level pauses above remain
+    # context-sensitive so the voice retains natural variation.
     source = re.sub(
         r"([.!?])\s+(?=[А-ЯЁ])",
         rf"\1 sil<[{_SENTENCE_PAUSE_MS}]> ",
         source,
     )
-    source = re.sub(r"\s{2,}", " ", source).strip(" .")
-    return source
+    return re.sub(r"\s{2,}", " ", source).strip(" .")
+
+
+def normalize_tutor_text_for_speech(text: str) -> str:
+    """Render browser-facing Tutor text as reusable Russian pedagogical speech.
+
+    This function deliberately separates three concerns: presentation cleanup,
+    school-notation pronunciation, and Russian pedagogical prosody. The rules are
+    generic across Tutor responses; no exact benchmark sentence is hard-coded.
+    """
+
+    if not isinstance(text, str):
+        raise TypeError("Tutor speech text must be a string")
+    source = text.replace("\r\n", "\n").replace("\r", "\n")
+    source = _strip_presentation_markup(source)
+    source = _normalize_school_notation(source)
+    return _apply_russian_pedagogical_prosody(source)
 
 
 def _last_boundary_end(window: str, marks: tuple[str, ...]) -> int:
@@ -245,11 +280,11 @@ def _last_boundary_end(window: str, marks: tuple[str, ...]) -> int:
 
 
 def _extend_over_pause_tag(window: str, cut: int) -> int:
-    """Keep a SpeechKit pause tag attached to the sentence before it."""
+    """Keep a SpeechKit pause tag attached to the phrase before it."""
 
     if cut < 0:
         return cut
-    match = re.match(r"sil<\[\d+\]>\s*", window[cut:])
+    match = re.match(r"(?:sil<\[\d+\]>|<\[(?:tiny|small|medium|large|huge)\]>)\s*", window[cut:])
     if match:
         return cut + match.end()
     return cut
