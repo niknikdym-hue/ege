@@ -16,7 +16,7 @@ if ! git -C "$REPO_ROOT" diff --quiet -- || ! git -C "$REPO_ROOT" diff --cached 
 fi
 
 EKSAMIO_TUTOR_CANDIDATE_SHA="$(git -C "$REPO_ROOT" rev-parse --verify HEAD)"
-if [[ ! "$EKSAMIO_TUTOR_CANDIDATE_SHA" =~ '^[0-9a-f]{40}$' ]]; then
+if [[ ${#EKSAMIO_TUTOR_CANDIDATE_SHA} -ne 40 || "$EKSAMIO_TUTOR_CANDIDATE_SHA" == *[^0-9a-f]* ]]; then
   osascript -e 'display alert "Eksamio Tutor" message "Не удалось определить exact Git build." as critical'
   return 2 2>/dev/null || exit 2
 fi
