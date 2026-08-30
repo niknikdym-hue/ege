@@ -1,0 +1,203 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-03",
+  "module_title_ru": "Лексика, значение слова, паронимы и фразеология",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "thematic_trainer", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "repository_audited_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[lexical_collocation_correction]",
+      "coverage_note": "Current repository-audited source identity: replacement of a word that violates lexical collocation; evidence_status=confirmed; EGE task route metadata remains route-only."
+    },
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-013"
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-03"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Repository authorities define only the target boundary. Explanations, examples and practice below are original Eksamio wording and are not copied from FIPI, EDSOO, commercial dictionaries or textbooks."
+  },
+  "identity_boundary": "The semantic id below is a source-backed proposal for bounded subject acceptance. It is not a school canonical identity and cannot close an official admission unit or requirement without a separate exact object binding.",
+  "units": [
+    {
+      "proposed_semantic_id": "ru-lexis-collocation-word-replacement",
+      "candidate_ref": "candidate-013",
+      "source_taxonomy_id": "lexical_collocation_correction",
+      "title_ru": "Замена слова, нарушающего лексическую сочетаемость",
+      "canonical_explanation": {
+        "short": "Лексическая сочетаемость ограничивает, какие слова нормативно соединяются друг с другом в данном значении. Если одно слово выбрано так, что сочетание нарушено, исправление требует заменить именно несовместимый элемент, сохранив исходный смысл высказывания.",
+        "boundaries": [
+          "Навык применяется, когда смысл высказывания понятен, но один элемент образует ненормативное или семантически несовместимое сочетание с другим словом.",
+          "Исправление требует замены несовместимого слова или компонента сочетания на нормативно совместимый, а не удаления смыслового дубля.",
+          "Если один элемент лишь повторяет уже выраженное значение и его можно удалить без смысловой потери, это lexical_redundancy, а не lexical_collocation_correction.",
+          "Если выбор идёт между паронимами, где нужно различить значения близких по форме слов, это paronym_context_choice, даже если сочетаемость помогает сделать выбор.",
+          "Нельзя исправлять сочетание только по субъективному ощущению «так звучит лучше»: нужно показать, какой компонент несовместим и какая замена сохраняет требуемый смысл.",
+          "Успешное исправление одного сочетания не доказывает generic Task-6 mastery и не создаёт mastery соседних лексических навыков."
+        ]
+      },
+      "decision_algorithm": [
+        "Прочитай всё предложение и сформулируй, какой смысл автор хотел передать.",
+        "Найди словосочетание, которое вызывает сомнение, и определи главное слово и зависимый или связанный с ним компонент.",
+        "Проверь, не является ли проблема простой избыточностью: если достаточно удалить смысловой дубль, это другой навык.",
+        "Проверь, не является ли проблема выбором паронима: если конкурируют близкие по форме слова с разными значениями, это отдельный паронимический навык.",
+        "Определи несовместимый компонент и подбери замену, которая образует нормативное сочетание и сохраняет исходный замысел.",
+        "Перечитай исправленное предложение: значение должно сохраниться, грамматика — не нарушиться, а новая сочетаемость — быть естественной и однозначной."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "«Команда одержала поражение в решающем матче». Как исправить сочетание?",
+          "answer": "Заменить «одержала» на «потерпела»: «команда потерпела поражение». Здесь нужна замена несовместимого глагола, а не удаление слова."
+        },
+        {
+          "prompt": "«Этот разговор играл большое значение для решения». Как исправить?",
+          "answer": "Заменить «играл» на «имел»: «разговор имел большое значение». Существительное «значение» нормативно сочетается с глаголом «иметь» в этом смысле."
+        },
+        {
+          "prompt": "«После обсуждения они приняли совместное решение». Нужно ли исправлять сочетание?",
+          "answer": "Нет. «Принять решение» — нормативное сочетание; наличие другого возможного глагола не делает исходную конструкцию ошибочной."
+        },
+        {
+          "prompt": "«Он снова вернулся обратно к двери». Нужно ли заменять слово?",
+          "answer": "Нет. Здесь прежде всего нужно проверить lexical_redundancy: «обратно» дублирует значение «вернулся» и может быть удалено."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Любое необычное сочетание обязательно нарушает лексическую сочетаемость.",
+          "correction": "Необычность сама по себе не доказательство. Нужно установить несовместимость выбранного значения слова с его лексическим окружением."
+        },
+        {
+          "wrong": "Если предложение можно улучшить, значит в нём есть ошибка сочетаемости.",
+          "correction": "Стилистическое улучшение и исправление нормативной лексической ошибки — разные задачи. Здесь требуется доказанная несовместимость."
+        },
+        {
+          "wrong": "При любой лексической ошибке достаточно удалить сомнительное слово.",
+          "correction": "При нарушении сочетаемости ключевой дефект обычно устраняется заменой; удаление смыслового дубля относится к lexical_redundancy."
+        },
+        {
+          "wrong": "Выбор между любыми двумя словами — это паронимы.",
+          "correction": "Паронимический навык применим только к близким по форме словам с различающимися значениями; обычная замена несовместимого слова шире и не равна паронимии."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p03-lc-u1-g1",
+          "prompt": "В сочетании «одержал поражение» какой признак показывает, что нужна замена, а не удаление?",
+          "expected": "После удаления любого ключевого слова требуемый смысл распадается; нужно заменить несовместимый глагол «одержал» на «потерпел»."
+        },
+        {
+          "id": "p03-lc-u1-g2",
+          "prompt": "Чем проверка lexical_collocation_correction отличается от lexical_redundancy?",
+          "expected": "При сочетаемости ищут несовместимый компонент и нормативную замену; при избыточности доказывают смысловое дублирование и удаляют лишний элемент."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p03-lc-u1-i1",
+          "prompt": "Исправь: «Исследование оказало важное значение для проекта».",
+          "answer": "Например: «Исследование имело важное значение для проекта». Нужно заменить глагол, нарушающий сочетаемость."
+        },
+        {
+          "id": "p03-lc-u1-i2",
+          "prompt": "Исправь: «После встречи руководитель предпринял окончательное решение».",
+          "answer": "«После встречи руководитель принял окончательное решение». Нужно заменить «предпринял» на нормативно сочетающийся с «решение» глагол."
+        },
+        {
+          "id": "p03-lc-u1-i3",
+          "prompt": "Определи тип исправления: «В отчёте перечислены свободные вакансии». Замена или удаление?",
+          "answer": "Удаление: «свободные» дублирует значение слова «вакансии». Это lexical_redundancy, а не lexical_collocation_correction."
+        },
+        {
+          "id": "p03-lc-u1-i4",
+          "prompt": "Нужно ли исправлять: «Комиссия приняла решение перенести заседание»?",
+          "answer": "Нет. Сочетание «принять решение» нормативно; оснований для замены нет."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p03-lc-u1-t1",
+          "prompt": "Ученик заменил «имел значение» на «играл значение», потому что оба глагола связаны с ролью чего-либо. Верно ли это?",
+          "answer": "Нет. Близость общего смысла не отменяет нормативной сочетаемости: в данном сочетании требуется «имел значение»; «играл» сочетается, например, со словом «роль»."
+        },
+        {
+          "id": "p03-lc-u1-t2",
+          "prompt": "Сравни: А) «потерпеть поражение»; Б) «впервые дебютировать». Где есть ошибка сочетаемости?",
+          "answer": "В А ошибки сочетаемости нет. В Б проблема — смысловая избыточность слова «впервые», то есть lexical_redundancy."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p03-lc-u1-r1",
+          "delay_hint": "24h",
+          "prompt": "Какой вопрос нужно задать перед заменой слова из-за сочетаемости?",
+          "answer": "Какой смысл должен сохраниться и какой именно компонент не сочетается с остальными в этом значении?"
+        },
+        {
+          "id": "p03-lc-u1-r2",
+          "delay_hint": "7d",
+          "prompt": "Как отличить нарушение сочетаемости от лексической избыточности?",
+          "answer": "При нарушении сочетаемости требуется нормативная замена несовместимого компонента; при избыточности достаточно удалить смысловой дубль."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p03-lc-u1-v1",
+          "type": "single_choice",
+          "prompt": "В каком предложении требуется именно замена слова из-за нарушения сочетаемости? А) «Команда одержала поражение». Б) «Команда снова вернулась обратно».",
+          "options": ["А", "Б"],
+          "correct_option_index": 0,
+          "feedback": "В А нужно заменить «одержала» на «потерпела»; в Б прежде всего устраняется избыточное «обратно»."
+        },
+        {
+          "id": "p03-lc-u1-v2",
+          "type": "constructed_response",
+          "prompt": "Исправь предложение «Эксперимент оказал большое значение для вывода» и объясни тип ошибки.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: предложена нормативная замена, например «эксперимент имел большое значение для вывода»",
+              "1: объяснение указывает на нарушение лексической сочетаемости и необходимость замены, а не удаления смыслового дубля"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "generic_task_result_can_emit_exact_mastery": false,
+        "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "ask the learner to identify the incompatible component in a collocation",
+          "require a replacement that preserves the intended meaning",
+          "contrast collocation replacement with redundancy deletion and paronym choice",
+          "require the learner to justify why the original combination is not accepted for the intended meaning"
+        ],
+        "forbidden": [
+          "treating subjective stylistic preference as a collocation error",
+          "turning a redundancy-deletion case into collocation replacement",
+          "emitting mastery for lexical_redundancy, paronym_context_choice or generic Task-6 from this unit alone"
+        ],
+        "source_refs": [
+          "03-RUSSIAN-SKILL-GRAPH.json#skills[lexical_collocation_correction]",
+          "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-013"
+        ]
+      }
+    }
+  ]
+}
