@@ -36,11 +36,12 @@ jobs:
           test -z "${OPENAI_API_KEY:-}"
           test -z "${QWEN_API_KEY:-}"
           test -z "${DASHSCOPE_API_KEY:-}"
+          test -z "${DEEPSEEK_API_KEY:-}"
           test -z "${YANDEX_AI_STUDIO_API_KEY:-}"
           test -z "${YANDEX_SPEECHKIT_API_KEY:-}"
           echo 'LIVE_PROVIDER_SECRETS_IN_CI=0'
 
-      - name: Compile multi-provider Tutor boundaries
+      - name: Compile Tutor provider boundaries and test surfaces
         run: |
           python -m py_compile \
             eksamio-learning-engine/ai-tutor-reference/accepted_russian_semantic_tutor.py \
@@ -50,28 +51,47 @@ jobs:
             eksamio-learning-engine/ai-tutor-reference/openai_compatible_chat_adapter.py \
             eksamio-learning-engine/ai-tutor-reference/qwen_secret_provider.py \
             eksamio-learning-engine/ai-tutor-reference/qwen_live_adapter.py \
+            eksamio-learning-engine/ai-tutor-reference/deepseek_secret_provider.py \
+            eksamio-learning-engine/ai-tutor-reference/deepseek_live_adapter.py \
             eksamio-learning-engine/ai-tutor-reference/yandex_ai_secret_provider.py \
             eksamio-learning-engine/ai-tutor-reference/yandex_alice_live_adapter.py \
             eksamio-learning-engine/ai-tutor-reference/yandex_live_adapters.py \
             eksamio-learning-engine/ai-tutor-reference/yandex_speechkit_v3_tts.py \
             eksamio-learning-engine/ai-tutor-reference/stdlib_speechkit_transport.py \
             eksamio-learning-engine/ai-tutor-reference/resilient_voice_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/private_provider_config.py \
+            eksamio-learning-engine/ai-tutor-reference/configure_private_provider_config.py \
+            eksamio-learning-engine/ai-tutor-reference/provider_live_preflight.py \
             eksamio-learning-engine/ai-tutor-reference/private_staging_multi_provider_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/private_staging_four_brain_tutor.py \
             eksamio-learning-engine/ai-tutor-reference/private_multi_provider_tutor_test_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/private_four_brain_tutor_test_ui.py \
             eksamio-learning-engine/ai-tutor-reference/private_multi_provider_tutor_live_test_candidate.py \
+            eksamio-learning-engine/ai-tutor-reference/live_brain_provider_smoke.py \
             eksamio-learning-engine/ai-tutor-reference/validate_private_live_test_launcher.py \
             eksamio-learning-engine/ai-tutor-reference/validate_private_live_test_evidence.py \
             eksamio-learning-engine/ai-tutor-reference/validate_provider_api_contracts.py \
-            eksamio-learning-engine/ai-tutor-reference/validate_multi_provider_tutor.py
+            eksamio-learning-engine/ai-tutor-reference/validate_multi_provider_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_four_brain_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_four_brain_test_prep.py
 
       - name: Validate canonical Russian Tutor semantic denominator
         run: python eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py
 
-      - name: Validate current provider API contracts
+      - name: Validate existing provider API contracts
         run: python eksamio-learning-engine/ai-tutor-reference/validate_provider_api_contracts.py
 
-      - name: Validate OpenAI Qwen Yandex parity and failover
+      - name: Preserve OpenAI Qwen Yandex baseline
         run: python eksamio-learning-engine/ai-tutor-reference/validate_multi_provider_tutor.py
+
+      - name: Validate OpenAI Qwen DeepSeek Alice text voice and failover
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_four_brain_tutor.py
+
+      - name: Validate zero-call local provider preflight
+        run: python eksamio-learning-engine/ai-tutor-reference/provider_live_preflight.py
+
+      - name: Validate four-brain human-test launch preparation
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_four_brain_test_prep.py
 
       - name: Validate reliability gateway
         run: python eksamio-learning-engine/ai-tutor-reference/validate_ai_tutor_reliability_gateway_001.py
@@ -85,18 +105,46 @@ jobs:
       - name: Validate metadata-only private live-test evidence
         run: python eksamio-learning-engine/ai-tutor-reference/validate_private_live_test_evidence.py
 
-      - name: Validate standalone macOS private live-test launcher
+      - name: Validate original standalone macOS private live-test launcher
         run: python eksamio-learning-engine/ai-tutor-reference/validate_private_live_test_launcher.py
 
-      - name: Prove live-test UI cannot start without owner gate
+      - name: Prove four-brain UI cannot start without owner gate
         shell: bash
         run: |
           set -euo pipefail
-          if python eksamio-learning-engine/ai-tutor-reference/private_multi_provider_tutor_test_ui.py --max-turns 20 --no-browser; then
-            echo 'ERROR: UI started without owner authorization'
+          if python eksamio-learning-engine/ai-tutor-reference/private_four_brain_tutor_test_ui.py --max-turns 20 --no-browser; then
+            echo 'ERROR: four-brain UI started without owner authorization'
             exit 1
           fi
-          echo 'PRIVATE_MULTI_PROVIDER_UI_OWNER_GATE=PASS'
+          echo 'PRIVATE_FOUR_BRAIN_UI_OWNER_GATE=PASS'
 
-      - name: Whitespace gate
-        run: git diff --check HEAD^ HEAD
+      - name: Prove controlled failover requires locked AUTO route
+        shell: bash
+        run: |
+          set -euo pipefail
+          if python eksamio-learning-engine/ai-tutor-reference/private_four_brain_tutor_test_ui.py --owner-authorized --simulate-unavailable openai --default-provider openai --no-browser; then
+            echo 'ERROR: simulated failover accepted a non-AUTO default'
+            exit 1
+          fi
+          echo 'CONTROLLED_FAILOVER_AUTO_GATE=PASS'
+
+      - name: Prove live provider smoke cannot start without owner gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if python eksamio-learning-engine/ai-tutor-reference/live_brain_provider_smoke.py --provider all; then
+            echo 'ERROR: live smoke started without owner authorization'
+            exit 1
+          fi
+          echo 'LIVE_PROVIDER_SMOKE_OWNER_GATE=PASS'
+
+      - name: Whitespace gate across complete PR diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "${GITHUB_BASE_REF:-}" ]]; then
+            git fetch origin "$GITHUB_BASE_REF" --depth=1
+            git diff --check FETCH_HEAD...HEAD
+          else
+            git diff --check HEAD^ HEAD
+          fi
