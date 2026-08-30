@@ -65,6 +65,7 @@ jobs:
             validate_ru03_phraseologism_identification_bounded_subject_semantics.py
             validate_ru03_contextual_synonym_bounded_subject_semantics.py
             validate_ru07_numeral_oblique_case_bounded_subject_semantics.py
+            validate_ru07_comparative_degree_bounded_subject_semantics.py
             validate_ru09_syntax_bounded_subject_semantics.py
           )
           for validator in "${validators[@]}"; do
@@ -130,9 +131,10 @@ jobs:
               'RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU07_NUMERAL_OBLIQUE_CASE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU07_COMPARATIVE_DEGREE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
           }
-          assert len(data['accepted_authorities']) == 25
+          assert len(data['accepted_authorities']) == 26
           assert {a['id'] for a in data['accepted_authorities']} == expected_authorities
 
           subject_counts = {
@@ -152,6 +154,7 @@ jobs:
               'RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 3,
               'RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 3,
               'RU07_NUMERAL_OBLIQUE_CASE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU07_COMPARATIVE_DEGREE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
               'RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 5,
           }
           by_id = {a['id']: a for a in data['accepted_authorities']}
@@ -184,12 +187,12 @@ jobs:
           assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1372
           assert s['canonical_component_refs_reused_unique'] == 52
           assert s['accepted_bounded_ru_route_semantics'] == 9
-          assert s['accepted_bounded_ru_subject_semantics'] == 51
-          assert s['accepted_bounded_ru_semantics_total'] == 60
+          assert s['accepted_bounded_ru_subject_semantics'] == 52
+          assert s['accepted_bounded_ru_semantics_total'] == 61
           assert s['accepted_route_semantics_without_object_binding'] == 9
-          assert s['accepted_subject_semantics_without_object_binding'] == 51
+          assert s['accepted_subject_semantics_without_object_binding'] == 52
           assert s['new_semantic_identities_created'] == 0
-          assert s['ru_proposal_identities_admitted'] == 60
+          assert s['ru_proposal_identities_admitted'] == 61
           assert s['false_exact_mastery_admissions'] == 0
 
           expected_route = {
@@ -250,6 +253,7 @@ jobs:
               'ru-morphology-permanent-variable-features',
               'ru-morphology-analysis-sequence',
               'ru-grammar-numeral-oblique-case',
+              'ru-grammar-comparative-degree-norm',
               'ru-syntax-government-case-norm',
               'ru-syntax-indirect-speech-norm',
               'ru-syntax-uncoordinated-apposition-norm',
