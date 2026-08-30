@@ -66,13 +66,20 @@ class AcceptedRussianSemanticAllowlist:
         except (OSError, RuntimeError, ValueError) as exc:
             raise TutorSemanticNotAccepted("canonical Russian semantic-progress builder is unavailable") from exc
 
+        # The versioned progress wrapper mutates the base builder namespace and
+        # stores its effective authority tuples there. Read that effective
+        # namespace rather than duplicating the authority list in Tutor code.
+        effective = namespace.get("_namespace")
+        if not isinstance(effective, dict):
+            effective = namespace
+
         specs: list[tuple[str, str, str, int]] = []
         groups = (
             ("SUBJECT_SEMANTIC_AUTHORITIES", "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"),
             ("ROUTE_SEMANTIC_AUTHORITIES", "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC"),
         )
         for key, expected_semantic_status in groups:
-            raw_specs = namespace.get(key)
+            raw_specs = effective.get(key)
             if not isinstance(raw_specs, tuple) or not raw_specs:
                 raise TutorSemanticNotAccepted(f"canonical progress builder has no {key}")
             for raw_spec in raw_specs:
