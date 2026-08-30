@@ -19,7 +19,8 @@ CONTENT = PROGRAM / "production-learning-content/RU-PROG-11-NARRATION-IDENTIFICA
 CANDIDATE = "candidate-044"
 TAXONOMY = "narration_identification"
 SEMANTIC = "ru-text-narration-identification"
-SOURCE_LABEL = "Определение повествования"
+REVIEW_LABEL = "Определение повествования"
+CANONICAL_LABEL = "Распознавание повествования"
 EXPECTED_CHECK_IDS = {"p11-nar-v1", "p11-nar-v2"}
 
 
@@ -52,7 +53,7 @@ def main() -> int:
     expected_source = {
         "candidate_ref": CANDIDATE,
         "source_taxonomy_id": TAXONOMY,
-        "label_ru": SOURCE_LABEL,
+        "label_ru": REVIEW_LABEL,
         "inventory_classification": "MISSING_SUBJECT_SEMANTIC_CANDIDATE",
         "inventory_review_status": "draft",
         "skill_graph_evidence_status": "confirmed",
@@ -68,30 +69,17 @@ def main() -> int:
         raise AssertionError("RU11 candidate-044 no longer current")
 
     objects = [r for r in inventory.get("objects", []) if isinstance(r, dict)]
-    candidate = one([
-        r for r in objects if r.get("source_system") == "semantic_candidate" and r.get("source_id") == CANDIDATE and r.get("authority_status") == "current"
-    ], "RU11 candidate-044")
-    if (
-        candidate.get("audit_classification") != "MISSING_SUBJECT_SEMANTIC_CANDIDATE"
-        or candidate.get("candidate_canonical_owner") != CANDIDATE
-        or candidate.get("current_semantic_refs") != [TAXONOMY]
-        or candidate.get("review_status") != "draft"
-    ):
+    candidate = one([r for r in objects if r.get("source_system") == "semantic_candidate" and r.get("source_id") == CANDIDATE and r.get("authority_status") == "current"], "RU11 candidate-044")
+    if candidate.get("audit_classification") != "MISSING_SUBJECT_SEMANTIC_CANDIDATE" or candidate.get("candidate_canonical_owner") != CANDIDATE or candidate.get("current_semantic_refs") != [TAXONOMY] or candidate.get("review_status") != "draft":
         raise AssertionError("RU11 candidate-044 inventory ownership/status drift")
 
-    backing = one([
-        r for r in objects if r.get("source_system") == "ege_skill_graph" and r.get("source_id") == TAXONOMY and r.get("authority_status") == "current" and r.get("candidate_canonical_owner") == CANDIDATE
-    ], "RU11 candidate-044 taxonomy backing")
-    if backing.get("review_status") != "source_verified" or backing.get("audit_classification") != "EGE_TAXONOMY_NODE":
-        raise AssertionError("RU11 candidate-044 backing not source_verified")
-    if normalized(backing.get("observed_meaning")) != normalized(candidate.get("observed_meaning")):
-        raise AssertionError("RU11 candidate/backing meaning mismatch")
+    backing = one([r for r in objects if r.get("source_system") == "ege_skill_graph" and r.get("source_id") == TAXONOMY and r.get("authority_status") == "current" and r.get("candidate_canonical_owner") == CANDIDATE], "RU11 candidate-044 taxonomy backing")
+    if backing.get("review_status") != "source_verified" or backing.get("audit_classification") != "EGE_TAXONOMY_NODE" or normalized(backing.get("observed_meaning")) != normalized(candidate.get("observed_meaning")):
+        raise AssertionError("RU11 candidate-044 taxonomy backing drift")
 
     skill = one([r for r in graph.get("skills", []) if isinstance(r, dict) and r.get("skill_id") == TAXONOMY], "RU11 narration graph node")
-    if skill.get("evidence_status") != "confirmed" or skill.get("parent_skill_id") != "speech_type_analysis" or skill.get("exam_task_numbers") != [24] or skill.get("name_ru") != SOURCE_LABEL:
-        raise AssertionError("RU11 narration graph boundary drift")
-    if normalized(skill.get("description")) != normalized(candidate.get("observed_meaning")):
-        raise AssertionError("RU11 narration graph/inventory meaning mismatch")
+    if skill.get("evidence_status") != "confirmed" or skill.get("parent_skill_id") != "speech_type_analysis" or skill.get("exam_task_numbers") != [24] or skill.get("name_ru") != CANONICAL_LABEL or normalized(skill.get("description")) != normalized(candidate.get("observed_meaning")):
+        raise AssertionError("RU11 narration graph/source meaning drift")
 
     if any(SEMANTIC in {str(ref) for ref in (r.get("current_semantic_refs") or [])} for r in objects if r.get("authority_status") == "current"):
         raise AssertionError("RU11 narration proposed semantic collision")
@@ -112,7 +100,7 @@ def main() -> int:
     if guard.get("source_passages_copied") != 0 or guard.get("commercial_textbook_bytes") != 0 or guard.get("learner_examples") != "ORIGINAL_EKSAMIO":
         raise AssertionError("RU11 narration copyright guard drift")
     unit = one([r for r in content.get("units", []) if isinstance(r, dict) and r.get("proposed_semantic_id") == SEMANTIC], "RU11 narration exact learner unit")
-    if unit.get("title_ru") != "Распознавание повествования":
+    if unit.get("title_ru") != CANONICAL_LABEL:
         raise AssertionError("RU11 narration title drift")
     for key, minimum in (("decision_algorithm",6),("worked_examples",4),("misconceptions",4),("guided_practice",3),("independent_practice",3),("mixed_transfer_practice",2),("retention_items",2),("independent_verification",2)):
         if not isinstance(unit.get(key), list) or len(unit[key]) < minimum:
