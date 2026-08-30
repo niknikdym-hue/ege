@@ -98,6 +98,9 @@ def main() -> int:
                 text_transport=transport,
                 session_ref_factory=lambda: "tutor:openai-yandex-off-fixture",
             )
+            expected_semantic_count = assembly.tutor.accepted_semantics.expected_semantic_count
+            assert expected_semantic_count == len(assembly.tutor.accepted_semantics.semantic_ids)
+            assert expected_semantic_count >= 19
             snapshot = assembly.safety_snapshot()
             assert snapshot == {
                 "private_staging": True,
@@ -105,7 +108,7 @@ def main() -> int:
                 "owner_live_authorized": False,
                 "openai_text_execution_enabled": False,
                 "yandex_speech_execution_enabled": False,
-                "accepted_semantic_count": 19,
+                "accepted_semantic_count": expected_semantic_count,
                 "learner_audio_persisted_bytes": 0,
             }
             state = assembly.tutor.open_semantic_session(

@@ -76,11 +76,15 @@ def main() -> int:
     require(result.accepted_attempt_id == secondary.attempts[0].provider_attempt_id and sum(event.event_type == "logical_turn_accepted" and event.provider_id == "fake-primary" for event in runner.events) == 0, "malformed ProviderResponse never becomes an accepted primary attempt")
     require(sum(event.event_type == "learner_quota_debit_committed" and event.provider_id == "fake-primary" for event in runner.events) == 0 and result.learner_quota_debit_count == result.evidence_verification_commit_count == 1, "malformed primary creates zero quota/evidence commits before secondary success")
 
-    for name, failure, health in [("rate-limit", FailureClass.RATE_LIMIT, HealthState.HEALTHY), ("billing", FailureClass.QUOTA_OR_BILLING_EXHAUSTED, HealthState.BLOCKED_FINOPS), ("credential", FailureClass.CREDENTIAL_OR_ACCOUNT_FAILURE, HealthState.BLOCKED_CREDENTIAL), ("model", FailureClass.MODEL_UNAVAILABLE, HealthState.OPEN_CIRCUIT)]:
+    for name, failure, health in [
+        ("rate-limit", FailureClass.RATE_LIMIT, HealthState.OPEN_CIRCUIT),
+        ("billing", FailureClass.QUOTA_OR_BILLING_EXHAUSTED, HealthState.BLOCKED_FINOPS),
+        ("credential", FailureClass.CREDENTIAL_OR_ACCOUNT_FAILURE, HealthState.BLOCKED_CREDENTIAL),
+        ("model", FailureClass.MODEL_UNAVAILABLE, HealthState.OPEN_CIRCUIT),
+    ]:
         runner, primary, secondary, result = scenario(name, [failed(failure)], [healthy()])
         require(len(primary.attempts) == 1 and len(secondary.attempts) == 1, f"{name}: no blind retry and secondary fallback")
-        if health is not HealthState.HEALTHY:
-            require(runner.circuits[("fake-primary", "text")].health is health and runner.circuits[("fake-primary", "text")].state is CircuitState.OPEN, f"{name}: primary path is opened/blocked")
+        require(runner.circuits[("fake-primary", "text")].health is health and runner.circuits[("fake-primary", "text")].state is CircuitState.OPEN, f"{name}: primary path is opened/blocked")
 
     runner, primary, secondary, result = scenario("late", [delayed()], [healthy()])
     late_id = primary.attempts[0].provider_attempt_id
@@ -96,12 +100,13 @@ def main() -> int:
     runner, primary, secondary, result = scenario("invalid", [failed(FailureClass.INVALID_PLATFORM_REQUEST)], [healthy()], "TUTOR_UNAVAILABLE")
     require(len(primary.attempts) == 1 and len(secondary.attempts) == 0, "invalid platform request is not retried across providers")
 
-    runner, primary, secondary = gateway([failed(FailureClass.QUOTA_OR_BILLING_EXHAUSTED), healthy()], [healthy()])
-    first = runner.handle_turn(episode("recover-1"), turn())
+    runner, primary, secondary = gateway([failed(FailureClass.QUOTA_OR_BILLING_EXHAUSTED), healthy()], [healthy(), healthy()])
+    first = runner.handle_turn(episode("billing-block-1"), turn())
     require(first.status == "TUTOR_ADVISORY" and runner.circuits[("fake-primary", "text")].state is CircuitState.OPEN, "billing opens primary circuit while fallback succeeds")
-    runner.tick += 2
-    recovered = runner.handle_turn(episode("recover-2"), turn())
-    require(recovered.accepted_attempt_id is not None and recovered.accepted_attempt_id.split(":")[3] == "fake-primary" and runner.circuits[("fake-primary", "text")].state is CircuitState.CLOSED, "recovered provider returns through half-open controlled probe")
+    runner.tick += 20
+    second = runner.handle_turn(episode("billing-block-2"), turn())
+    require(second.accepted_attempt_id is not None and second.accepted_attempt_id.split(":")[3] == "fake-secondary", "billing-blocked provider is not auto-probed on later learner turns")
+    require(runner.circuits[("fake-primary", "text")].state is CircuitState.OPEN and runner.circuits[("fake-primary", "text")].health is HealthState.BLOCKED_FINOPS, "billing block remains fail-closed until explicit recovery/reassembly")
 
     runner, primary, secondary, result = scenario("portability", [failed(FailureClass.NETWORK_FAILURE), failed(FailureClass.NETWORK_FAILURE)], [healthy("secondary continuity")])
     secondary_request = secondary.requests[0]
