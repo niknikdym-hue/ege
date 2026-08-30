@@ -34,7 +34,7 @@ def request() -> ProviderRequest:
         subject_id="russian",
         learning_goal="Explain a verified Russian-language concept pedagogically.",
         policy_instruction="Use only verified context. Do not invent facts.",
-        verified_source_refs=("fixture-source",),
+        verified_source_refs=("source:fixture-reasoning-contract",),
         verified_excerpts=("Проверенный контекст: тестовая учебная опора.",),
         peis_learning_summary="fixture learner summary",
         target_refs=("fixture-target",),
