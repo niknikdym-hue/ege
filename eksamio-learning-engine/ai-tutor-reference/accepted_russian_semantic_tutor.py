@@ -127,15 +127,18 @@ class AcceptedRussianSemanticAllowlist:
         if payload.get("status") != "SUBJECT_ACCEPTANCE_REQUIRED":
             raise TutorSemanticNotAccepted("source learner bundle must remain fail-closed; acceptance belongs to overlay authority")
         copyright_guard = payload.get("copyright_guard")
-        if not isinstance(copyright_guard, dict) or copyright_guard.get("source_passages_copied") != 0:
-            raise TutorSemanticNotAccepted("Tutor semantic grounding violates source-passage guard")
-        byte_guards = [
+        if not isinstance(copyright_guard, dict):
+            raise TutorSemanticNotAccepted("Tutor semantic grounding lacks copyright guard")
+        zero_copy_guards = [
             value
             for key, value in copyright_guard.items()
-            if isinstance(key, str) and key.endswith("_bytes_in_git")
+            if isinstance(key, str) and (key.endswith("_copied") or key.endswith("_bytes_in_git"))
         ]
-        if not byte_guards or any(value != 0 for value in byte_guards):
-            raise TutorSemanticNotAccepted("Tutor semantic grounding violates source-byte guard")
+        if not zero_copy_guards or any(
+            not isinstance(value, (int, bool)) or value != 0
+            for value in zero_copy_guards
+        ):
+            raise TutorSemanticNotAccepted("Tutor semantic grounding violates zero-copy copyright guard")
 
         raw_units = payload.get("units")
         if not isinstance(raw_units, list) or any(not isinstance(row, dict) for row in raw_units):
