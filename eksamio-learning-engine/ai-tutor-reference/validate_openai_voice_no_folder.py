@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import os
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -10,18 +12,29 @@ sys.path.insert(0, str(HERE))
 
 from private_openai_yandex_121_tutor import assemble_fast_tutor, open_benchmark_session  # noqa: E402
 from private_openai_voice_no_folder_ui import OpenAIVoiceConfig  # noqa: E402
-from validate_private_openai_yandex_121_tutor import (  # noqa: E402
-    FakeSTT,
-    FakeV3TTS,
-    ScriptedJsonTransport,
-    fake_credentials,
-    openai_success,
-)
+from validate_private_openai_yandex_121_tutor import FakeSTT, FakeV3TTS, ScriptedJsonTransport  # noqa: E402
+
+
+@contextmanager
+def no_folder_credentials():
+    names = ("OPENAI_API_KEY", "YANDEX_SPEECHKIT_API_KEY", "YANDEX_FOLDER_ID")
+    old = {name: os.environ.get(name) for name in names}
+    os.environ["OPENAI_API_KEY"] = "fixture-openai-secret"
+    os.environ["YANDEX_SPEECHKIT_API_KEY"] = "fixture-yandex-speech-secret"
+    os.environ.pop("YANDEX_FOLDER_ID", None)
+    try:
+        yield
+    finally:
+        for name, value in old.items():
+            if value is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = value
 
 
 def main() -> int:
-    with fake_credentials():
-        openai = ScriptedJsonTransport([openai_success("OPENAI_VOICE_NO_FOLDER_OK")])
+    with no_folder_credentials():
+        openai = ScriptedJsonTransport({"output_text": "OPENAI_VOICE_NO_FOLDER_OK"})
         stt = FakeSTT(transcript="Объясни слово сочетание")
         tts = FakeV3TTS()
         config = OpenAIVoiceConfig(
