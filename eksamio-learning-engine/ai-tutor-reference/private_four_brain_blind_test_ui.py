@@ -29,6 +29,15 @@ PROVIDER_ID_TO_NAME = {
 }
 
 
+def _candidate_sha() -> str | None:
+    value = os.environ.get("EKSAMIO_TUTOR_CANDIDATE_SHA", "").strip().lower()
+    if not value:
+        return None
+    if len(value) != 40 or any(ch not in "0123456789abcdef" for ch in value):
+        raise ValueError("invalid EKSAMIO_TUTOR_CANDIDATE_SHA")
+    return value
+
+
 def _mapping_dir() -> Path:
     root = Path.home() / "Library" / "Application Support" / "Eksamio" / "TutorBlindTests"
     root.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -46,6 +55,7 @@ def _create_mapping() -> tuple[str, dict[str, str]]:
     payload = {
         "schema_version": "eksamio.tutor.blind-provider-map.v1",
         "test_id": test_id,
+        "candidate_sha": _candidate_sha(),
         "mapping": mapping,
     }
     with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
@@ -79,10 +89,6 @@ def _blind_page(*, speech_enabled: bool, test_id: str) -> str:
     page = page.replace(
         "При отказе одного AI система продолжит ход через следующий backend.",
         "Название AI скрыто. Оценивайте только качество обучения и удобство диалога.",
-    )
-    page = page.replace(
-        "Ответил: '+provider",
-        "Ответил: '+provider",
     )
     voice_note = " Голосовой слой у всех вариантов одинаков: Yandex SpeechKit STT + Lera TTS." if speech_enabled else ""
     page = page.replace(
@@ -157,6 +163,12 @@ def main() -> int:
         return 2
     if not 1 <= args.max_turns <= 20:
         print("PRIVATE_BLIND_TUTOR_UI=BLOCKED_MAX_TURNS")
+        return 2
+    if not 1024 <= args.port <= 65535:
+        print("PRIVATE_BLIND_TUTOR_UI=BLOCKED_INVALID_PORT")
+        return 2
+    if _candidate_sha() is None:
+        print("PRIVATE_BLIND_TUTOR_UI=BLOCKED_EXACT_CANDIDATE_SHA")
         return 2
 
     local = load_private_provider_config()
