@@ -98,7 +98,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          zsh -n eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          # Ubuntu Actions runners do not ship zsh. The launcher is intentionally
+          # syntax-compatible with bash for CI parsing and executes via zsh on macOS.
+          bash -n eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          grep -q '^#!/bin/zsh$' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
           grep -q 'private_openai_yandex_121_tutor_ui.py --owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
           grep -q 'EKSAMIO_TUTOR_CANDIDATE_SHA' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
           echo 'FAST_TUTOR_LAUNCHER=PASS'
