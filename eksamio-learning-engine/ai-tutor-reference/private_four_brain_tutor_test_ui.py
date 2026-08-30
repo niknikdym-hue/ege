@@ -11,6 +11,7 @@ from typing import Any, Mapping
 
 import private_multi_provider_tutor_test_ui as base_ui
 from deepseek_secret_provider import DeepSeekSecretProvider
+from private_provider_config import load_private_provider_config
 from private_staging_four_brain_tutor import (
     PrivateFourBrainTutorConfig,
     assemble_private_four_brain_tutor,
@@ -148,11 +149,15 @@ def main() -> int:
         print("PRIVATE_FOUR_BRAIN_TUTOR_UI=BLOCKED_INVALID_FAILOVER_PROVIDER")
         return 2
 
+    local_config = load_private_provider_config()
+    qwen_base_url = args.qwen_base_url or local_config.qwen_base_url
+    yandex_folder_id = args.yandex_folder_id or local_config.yandex_folder_id
+
     app = FourBrainApp(
         max_turns=args.max_turns,
         speech_enabled=args.enable_speech,
-        qwen_base_url=args.qwen_base_url,
-        yandex_folder_id=args.yandex_folder_id,
+        qwen_base_url=qwen_base_url,
+        yandex_folder_id=yandex_folder_id,
         simulated_unavailable=simulated,
     )
     base_ui.PAGE = _four_brain_page()
