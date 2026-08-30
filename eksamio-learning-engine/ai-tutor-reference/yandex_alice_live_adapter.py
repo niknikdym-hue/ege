@@ -38,7 +38,7 @@ class YandexAliceTutorConfig:
     @property
     def model_uri(self) -> str:
         folder = (self.folder_id or "disabled-folder").strip()
-        return f"gpt://{folder}/{self.model_id}"
+        return f"gpt://{folder}/{self.model_id}/latest"
 
 
 class YandexAliceTextProvider(OpenAICompatibleChatProvider):
