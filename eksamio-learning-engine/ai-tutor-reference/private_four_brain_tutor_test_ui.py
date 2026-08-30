@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import argparse
-import os
 import secrets
 import threading
 import webbrowser
 from http.server import ThreadingHTTPServer
+from typing import Any, Mapping
 
 import private_multi_provider_tutor_test_ui as base_ui
 from deepseek_secret_provider import DeepSeekSecretProvider
@@ -17,6 +17,25 @@ from private_staging_four_brain_tutor import (
 )
 
 FOUR_PROVIDER_MODES = {"auto", "openai", "qwen", "deepseek", "yandex"}
+
+
+class SimulatedUnavailableTransport:
+    """Deterministic offline failure injection for an owner-authorized live route."""
+
+    def __init__(self, provider_name: str) -> None:
+        self.provider_name = provider_name
+        self.calls = 0
+
+    def post_json(
+        self,
+        *,
+        url: str,
+        headers: Mapping[str, str],
+        body: Mapping[str, Any],
+        timeout_seconds: float,
+    ) -> Mapping[str, Any]:
+        self.calls += 1
+        raise TimeoutError(f"simulated {self.provider_name} outage")
 
 
 def _four_brain_page() -> str:
@@ -38,6 +57,10 @@ def _four_brain_page() -> str:
 
 
 class FourBrainApp(base_ui.App):
+    def __init__(self, *, simulated_unavailable: set[str], **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self.simulated_unavailable = set(simulated_unavailable)
+
     def provider_status(self) -> dict[str, dict[str, object]]:
         status = super().provider_status()
         deepseek_ready = base_ui._credential_ready(DeepSeekSecretProvider())
@@ -45,7 +68,14 @@ class FourBrainApp(base_ui.App):
             "ready": deepseek_ready,
             "detail": "ключ не найден" if not deepseek_ready else "",
         }
+        for name in self.simulated_unavailable:
+            if name in status:
+                status[name]["ready"] = False
+                status[name]["detail"] = "намеренно отключён для failover-теста"
         return status
+
+    def _transport(self, name: str):
+        return SimulatedUnavailableTransport(name) if name in self.simulated_unavailable else None
 
     def start(self, provider: str, semantic_id: str) -> dict[str, object]:
         if provider not in FOUR_PROVIDER_MODES:
@@ -61,7 +91,14 @@ class FourBrainApp(base_ui.App):
             text_execution_enabled=True,
             speech_execution_enabled=self.speech_enabled,
         )
-        assembly = assemble_private_four_brain_tutor(engine_root=base_ui.ENGINE, config=config)
+        assembly = assemble_private_four_brain_tutor(
+            engine_root=base_ui.ENGINE,
+            config=config,
+            openai_transport=self._transport("openai"),
+            qwen_transport=self._transport("qwen"),
+            deepseek_transport=self._transport("deepseek"),
+            yandex_text_transport=self._transport("yandex"),
+        )
         tutor_state = assembly.tutor.open_semantic_session(
             learner_profile_id="private-test-" + secrets.token_hex(6),
             semantic_id=semantic_id,
@@ -86,6 +123,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--port", type=int, default=base_ui.DEFAULT_PORT)
     parser.add_argument("--qwen-base-url", default=None)
     parser.add_argument("--yandex-folder-id", default=None)
+    parser.add_argument(
+        "--simulate-unavailable",
+        default="",
+        help="comma-separated provider names; only injects deterministic transport failures",
+    )
     parser.add_argument("--no-browser", action="store_true")
     return parser.parse_args()
 
@@ -101,12 +143,17 @@ def main() -> int:
     if not 1024 <= args.port <= 65535:
         print("PRIVATE_FOUR_BRAIN_TUTOR_UI=BLOCKED_INVALID_PORT")
         return 2
+    simulated = {item.strip() for item in args.simulate_unavailable.split(",") if item.strip()}
+    if not simulated.issubset({"openai", "qwen", "deepseek", "yandex"}):
+        print("PRIVATE_FOUR_BRAIN_TUTOR_UI=BLOCKED_INVALID_FAILOVER_PROVIDER")
+        return 2
 
     app = FourBrainApp(
         max_turns=args.max_turns,
         speech_enabled=args.enable_speech,
         qwen_base_url=args.qwen_base_url,
         yandex_folder_id=args.yandex_folder_id,
+        simulated_unavailable=simulated,
     )
     base_ui.PAGE = _four_brain_page()
     base_ui.Handler.app = app
@@ -115,6 +162,7 @@ def main() -> int:
     print(f"PRIVATE_FOUR_BRAIN_TUTOR_UI=READY {url}")
     print("PROVIDER_MODES=openai,qwen,deepseek,yandex,auto")
     print("AUTO_ORDER=PROVISIONAL_NOT_PRODUCT_RANKING")
+    print("SIMULATED_UNAVAILABLE=" + (",".join(sorted(simulated)) if simulated else "none"))
     print("PUBLIC_TRAFFIC_ENABLED=0")
     print(f"MAX_SUCCESSFUL_LEARNER_TURNS={args.max_turns}")
     print(f"SPEECH_ENABLED={int(args.enable_speech)}")
