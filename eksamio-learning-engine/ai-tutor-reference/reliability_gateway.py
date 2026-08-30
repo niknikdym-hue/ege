@@ -169,6 +169,12 @@ class ReliabilityGateway:
         FailureClass.MALFORMED_PROVIDER_OUTPUT,
         FailureClass.TOOL_PROTOCOL_FAILURE,
     }
+    _MANUAL_RECOVERY_HEALTH = {
+        HealthState.DISABLED_MAINTENANCE,
+        HealthState.BLOCKED_FINOPS,
+        HealthState.BLOCKED_CREDENTIAL,
+        HealthState.BLOCKED_POLICY,
+    }
 
     def __init__(
         self,
@@ -219,6 +225,8 @@ class ReliabilityGateway:
     def _allow_path(self, key: tuple[str, str], episode: EpisodeProjection) -> bool:
         circuit = self.circuits[key]
         if circuit.state is CircuitState.OPEN:
+            if circuit.health in self._MANUAL_RECOVERY_HEALTH:
+                return False
             if (
                 circuit.opened_at_tick is None
                 or self.tick - circuit.opened_at_tick < self.config.half_open_after_ticks
@@ -276,6 +284,10 @@ class ReliabilityGateway:
             return False, False, HealthState.BLOCKED_FINOPS
         if failure is FailureClass.CREDENTIAL_OR_ACCOUNT_FAILURE:
             return False, False, HealthState.BLOCKED_CREDENTIAL
+        if failure is FailureClass.RATE_LIMIT:
+            # Do not spend the learner's latency budget retrying a throttled path.
+            # Open temporarily and move immediately to the next admitted provider.
+            return False, False, HealthState.OPEN_CIRCUIT
         if failure in {FailureClass.MODEL_UNAVAILABLE, FailureClass.CAPACITY_UNAVAILABLE}:
             return False, False, HealthState.OPEN_CIRCUIT
         return (

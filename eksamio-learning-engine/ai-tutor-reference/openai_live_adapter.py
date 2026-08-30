@@ -8,10 +8,11 @@ independent-verification boundary.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Callable, Mapping
 
 from reliability_gateway import FailureClass, ProviderAttempt, ProviderFault, ProviderOutcome
 from tutor_boundary import ProviderRequest, ProviderResponse
+from tutor_provider_prompt import chat_messages
 from yandex_live_adapters import JsonTransport
 
 
@@ -20,9 +21,12 @@ class OpenAICredential:
     secret_provider: Callable[[], str] = field(repr=False, compare=False)
 
     def authorization_header(self) -> str:
-        secret = self.secret_provider()
+        try:
+            secret = self.secret_provider()
+        except Exception as exc:
+            raise PermissionError("OpenAI credential unavailable") from exc
         if not isinstance(secret, str) or not secret.strip():
-            raise ValueError("OpenAI credential unavailable")
+            raise PermissionError("OpenAI credential unavailable")
         return f"Bearer {secret.strip()}"
 
 
@@ -63,38 +67,10 @@ class OpenAITextProvider:
             f"execution_enabled={self.config.execution_enabled!r}, credential='<redacted>')"
         )
 
-    @staticmethod
-    def _history_messages(history: Sequence[Any]) -> list[dict[str, str]]:
-        messages: list[dict[str, str]] = []
-        for entry in history:
-            role = "user" if entry.role == "learner" else "assistant"
-            messages.append({"role": role, "content": entry.text})
-        return messages
-
     def _request_body(self, request: ProviderRequest) -> Mapping[str, Any]:
-        if not request.verified_source_refs or len(request.verified_source_refs) != len(request.verified_excerpts):
-            raise ValueError("grounded OpenAI Tutor requires paired verified source refs/excerpts")
-        if not all(ref.startswith("source:") for ref in request.verified_source_refs):
-            raise ValueError("OpenAI Tutor accepts server-verified source refs only")
-
-        verified = "\n\n".join(
-            f"[{ref}]\n{excerpt}" for ref, excerpt in zip(request.verified_source_refs, request.verified_excerpts)
-        )
-        system_text = (
-            f"{request.policy_instruction}\n"
-            "Ты образовательный Tutor Eksamio. Используй только проверенный контекст ниже как предметную истину. "
-            "Не выдумывай правило, ответ, источник или состояние ученика. Не утверждай mastery по самому диалогу. "
-            "После существенной помощи напомни, что навык подтверждается отдельной самостоятельной проверкой.\n\n"
-            f"Цель обучения: {request.learning_goal}\n"
-            f"PEIS summary: {request.peis_learning_summary}\n"
-            f"Проверенный контекст:\n{verified}"
-        )
-        input_messages: list[dict[str, str]] = [{"role": "system", "content": system_text}]
-        input_messages.extend(self._history_messages(request.history))
-        input_messages.append({"role": "user", "content": request.learner_text})
         body: Mapping[str, Any] = {
             "model": self.config.model,
-            "input": input_messages,
+            "input": chat_messages(request),
             "max_output_tokens": self.config.max_output_tokens,
         }
         if len(repr(body)) > self.config.max_request_chars:
@@ -143,6 +119,13 @@ class OpenAITextProvider:
             return ProviderFault(FailureClass.INVALID_PLATFORM_REQUEST, "invalid grounded OpenAI request")
         except PermissionError:
             return ProviderFault(FailureClass.CREDENTIAL_OR_ACCOUNT_FAILURE, "OpenAI credential rejected")
+        except RuntimeError as exc:
+            text = str(exc)
+            if "429" in text:
+                return ProviderFault(FailureClass.RATE_LIMIT, "OpenAI rate limit")
+            if any(f" {code}" in text for code in range(500, 600)):
+                return ProviderFault(FailureClass.PROVIDER_5XX, "OpenAI provider 5xx")
+            return ProviderFault(FailureClass.NETWORK_FAILURE, "OpenAI HTTP failure")
         except Exception:
             return ProviderFault(FailureClass.NETWORK_FAILURE, "OpenAI text transport failure")
 

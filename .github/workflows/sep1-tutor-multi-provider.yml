@@ -1,0 +1,93 @@
+name: SEP1 Tutor multi-provider failover
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/ai-tutor-reference/**'
+      - '.github/workflows/sep1-tutor-multi-provider.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sep1-tutor-multi-provider-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Prove provider secrets are absent in CI
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "${OPENAI_API_KEY:-}"
+          test -z "${QWEN_API_KEY:-}"
+          test -z "${DASHSCOPE_API_KEY:-}"
+          test -z "${YANDEX_AI_STUDIO_API_KEY:-}"
+          test -z "${YANDEX_SPEECHKIT_API_KEY:-}"
+          echo 'LIVE_PROVIDER_SECRETS_IN_CI=0'
+
+      - name: Compile multi-provider Tutor boundaries
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/ai-tutor-reference/accepted_russian_semantic_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/tutor_provider_prompt.py \
+            eksamio-learning-engine/ai-tutor-reference/openai_live_adapter.py \
+            eksamio-learning-engine/ai-tutor-reference/openai_compatible_chat_adapter.py \
+            eksamio-learning-engine/ai-tutor-reference/qwen_secret_provider.py \
+            eksamio-learning-engine/ai-tutor-reference/qwen_live_adapter.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_ai_secret_provider.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_alice_live_adapter.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_live_adapters.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_speechkit_v3_tts.py \
+            eksamio-learning-engine/ai-tutor-reference/stdlib_speechkit_transport.py \
+            eksamio-learning-engine/ai-tutor-reference/resilient_voice_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/private_staging_multi_provider_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/private_multi_provider_tutor_test_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_provider_api_contracts.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_multi_provider_tutor.py
+
+      - name: Validate canonical Russian Tutor semantic denominator
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py
+
+      - name: Validate current provider API contracts
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_provider_api_contracts.py
+
+      - name: Validate OpenAI Qwen Yandex parity and failover
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_multi_provider_tutor.py
+
+      - name: Validate reliability gateway
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_ai_tutor_reliability_gateway_001.py
+
+      - name: Validate transient circuit repair
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_ai_tutor_reliability_circuit_repair_001.py
+
+      - name: Preserve existing OpenAI plus Yandex staging boundary
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py
+
+      - name: Prove live-test UI cannot start without owner gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if python eksamio-learning-engine/ai-tutor-reference/private_multi_provider_tutor_test_ui.py --max-turns 20 --no-browser; then
+            echo 'ERROR: UI started without owner authorization'
+            exit 1
+          fi
+          echo 'PRIVATE_MULTI_PROVIDER_UI_OWNER_GATE=PASS'
+
+      - name: Whitespace gate
+        run: git diff --check HEAD^ HEAD
