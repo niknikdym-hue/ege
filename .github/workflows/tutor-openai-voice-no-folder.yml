@@ -1,0 +1,45 @@
+name: Tutor OpenAI voice no folder
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_voice_no_folder_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_openai_voice_no_folder.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/launch_openai_voice_no_folder_test.command'
+      - '.github/workflows/tutor-openai-voice-no-folder.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-openai-voice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: No provider secrets in CI
+        shell: bash
+        run: |
+          test -z "${OPENAI_API_KEY:-}"
+          test -z "${YANDEX_SPEECHKIT_API_KEY:-}"
+          echo 'LIVE_PROVIDER_SECRETS_IN_CI=0'
+      - name: Compile no-folder OpenAI voice runner
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_voice_no_folder_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_openai_voice_no_folder.py
+      - name: Validate OpenAI voice with SpeechKit API key and no folder ID
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_openai_voice_no_folder.py
+      - name: Validate launcher
+        shell: bash
+        run: |
+          bash -n eksamio-learning-engine/ai-tutor-reference/launch_openai_voice_no_folder_test.command
+          grep -q 'YANDEX_FOLDER_ID for this run' eksamio-learning-engine/ai-tutor-reference/private_openai_voice_no_folder_ui.py || true
+          grep -q 'private_openai_voice_no_folder_ui.py --owner-authorized --port 8767' eksamio-learning-engine/ai-tutor-reference/launch_openai_voice_no_folder_test.command
+          echo 'OPENAI_VOICE_LAUNCHER=PASS'
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
