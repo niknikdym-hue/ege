@@ -14,12 +14,16 @@ if [[ -z "$PYTHON" ]]; then
   osascript -e 'display alert "Eksamio Tutor" message "Нужен Python 3.12 или новее." as critical'
   exit 2
 fi
+cd "$SCRIPT_DIR"
+export PYTHONDONTWRITEBYTECODE=1
+if ! "$PYTHON" ./provider_live_preflight.py --require-four-brain --require-voice; then
+  osascript -e 'display alert "Eksamio Tutor" message "Слепой голосовой тест не начат: не все четыре AI-мозга или Yandex SpeechKit локально готовы. Сначала завершите provider preflight/configuration." as critical'
+  exit 3
+fi
 if ! osascript <<'APPLESCRIPT' >/dev/null
 button returned of (display dialog "Слепой голосовой тест сравнит четыре AI-мозга как A/B/C/D. Для всех один голосовой слой: Yandex SpeechKit STT + Lera TTS, поэтому сравнивается именно мозг. Максимум 20 успешных реплик; возможны AI/SpeechKit расходы. Аудио не сохраняется. Продолжить?" buttons {"Отмена", "Разрешаю слепой голосовой тест"} default button "Разрешаю слепой голосовой тест" cancel button "Отмена" with title "Eksamio Tutor — blind voice test" with icon caution)
 APPLESCRIPT
 then
   exit 0
 fi
-cd "$SCRIPT_DIR"
-export PYTHONDONTWRITEBYTECODE=1
 exec "$PYTHON" ./private_four_brain_blind_test_ui.py --owner-authorized --enable-speech --max-turns 20
