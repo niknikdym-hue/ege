@@ -20,7 +20,6 @@ CONTENT = PROGRAM / "production-learning-content/RU-PROG-11-NARRATION-IDENTIFICA
 CANDIDATE = "candidate-044"
 TAXONOMY = "narration_identification"
 SEMANTIC = "ru-text-narration-identification"
-SOURCE_LABEL = "Определение повествования"
 CANONICAL_LABEL = "Распознавание повествования"
 EXPECTED_CHECK_IDS = {"p11-nar-v1", "p11-nar-v2"}
 EXPECTED_CANDIDATES = {"candidate-001","candidate-002","candidate-003","candidate-004","candidate-005","candidate-006","candidate-007","candidate-043","candidate-044","candidate-045","candidate-046","candidate-047"}
@@ -83,7 +82,7 @@ def main() -> int:
     if backing.get("review_status") != "source_verified" or backing.get("audit_classification") != "EGE_TAXONOMY_NODE" or normalized(backing.get("observed_meaning")) != normalized(candidate.get("observed_meaning")):
         raise AssertionError("RU11 candidate-044 taxonomy backing drift")
     skill = one([r for r in graph.get("skills", []) if isinstance(r, dict) and r.get("skill_id") == TAXONOMY], "RU11 narration graph node")
-    if skill.get("evidence_status") != "confirmed" or skill.get("parent_skill_id") != "speech_type_analysis" or skill.get("exam_task_numbers") != [24] or skill.get("name_ru") != SOURCE_LABEL or normalized(skill.get("description")) != normalized(candidate.get("observed_meaning")):
+    if skill.get("evidence_status") != "confirmed" or skill.get("parent_skill_id") != "speech_type_analysis" or skill.get("exam_task_numbers") != [24] or skill.get("name_ru") != CANONICAL_LABEL or normalized(skill.get("description")) != normalized(candidate.get("observed_meaning")):
         raise AssertionError("RU11 narration graph/source meaning drift")
 
     if any(SEMANTIC in {str(ref) for ref in (r.get("current_semantic_refs") or [])} for r in objects if r.get("authority_status") == "current"):
