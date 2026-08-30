@@ -1,0 +1,219 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-11",
+  "module_title_ru": "Текст, смысл и межфразовая связь",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "current_draft_subject_semantic_candidate",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-044",
+      "review_status": "draft",
+      "audit_classification": "MISSING_SUBJECT_SEMANTIC_CANDIDATE"
+    },
+    {
+      "kind": "source_verified_taxonomy_backing",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#ege_skill_graph::narration_identification",
+      "review_status": "source_verified"
+    },
+    {
+      "kind": "confirmed_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[narration_identification]",
+      "evidence_status": "confirmed"
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-11"
+    }
+  ],
+  "reuse_review": {
+    "reviewed_existing_unit": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-speech-type-reasoning-description-narration]",
+    "existing_unit_reused_as_scope_and_explanation_evidence": true,
+    "existing_unit_reused_as_exact_candidate_044_mastery_evidence": false,
+    "broader_existing_unit_direct_narration_independent_checks": 0,
+    "reason": "The existing combined speech-type unit explains narration, description and reasoning together, but its independent-verification block has no direct narration-identification check. Exact candidate-044 mastery therefore requires separate component-specific independent evidence rather than inference from generic Task-24 or combined speech-type performance.",
+    "new_content_materialized_only_for_proven_component_verification_gap": true
+  },
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Current repository authorities define the bounded source meaning only; every learner-facing fragment, explanation and exercise below is original Eksamio content."
+  },
+  "identity_boundary": "The proposed ru-* semantic is not a school-* canonical identity, does not replace narration_identification, does not upgrade candidate-044 from draft, and does not admit description, reasoning or generic Task-24 mastery.",
+  "units": [
+    {
+      "proposed_semantic_id": "ru-text-narration-identification",
+      "title_ru": "Распознавание повествования",
+      "canonical_explanation": {
+        "short": "Повествование показывает развитие событий или смену состояний во времени: можно восстановить, что произошло сначала, что изменилось затем и к какому следующему состоянию пришла ситуация. Решение принимают по смысловому движению событий, а не по одному глаголу или слову-маркеру.",
+        "boundaries": [
+          "Несколько глаголов действия сами по себе не доказывают повествование: действия должны образовывать временную или событийную последовательность.",
+          "Описание может содержать глаголы состояния, но если признаки объекта представлены как одновременные, это не становится повествованием автоматически.",
+          "Рассуждение может приводить событие как пример или доказательство; если событие подчинено тезису и обоснованию, нельзя объявлять весь фрагмент повествованием только из-за действия.",
+          "Навык не включает самостоятельное распознавание описания или рассуждения и не даёт общего владения заданием ЕГЭ №24."
+        ]
+      },
+      "decision_algorithm": [
+        "Определи, меняется ли ситуация от начала фрагмента к концу.",
+        "Выдели минимум два события или состояния и расположи их во временной последовательности.",
+        "Проверь, можно ли естественно задать вопросы «что произошло сначала?» и «что произошло потом?». Если да, это сильный признак повествования.",
+        "Отличи последовательность событий от перечисления одновременных признаков предмета или места.",
+        "Проверь, не служат ли события только примером внутри тезиса и доказательства: в таком случае доминирующей организацией может быть рассуждение.",
+        "Сформулируй доказательство решения через изменение ситуации или цепочку событий, а не через количество глаголов."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Дверь открылась, в коридор выбежал щенок, остановился у лестницы и через секунду бросился вниз.",
+          "answer": "Повествование: ситуация меняется, а действия образуют последовательность во времени."
+        },
+        {
+          "prompt": "Сад был тихим: вдоль дорожки стояли старые липы, у стены темнела скамья, за ней виднелся пруд.",
+          "answer": "Не доказанное повествование: признаки пространства представлены одновременно, без развития события."
+        },
+        {
+          "prompt": "Полезно проверять решение повторно, потому что второй просмотр помогает заметить пропущенное условие.",
+          "answer": "Не повествование: это суждение с объяснением причины, а не цепочка меняющихся событий."
+        },
+        {
+          "prompt": "Сначала экран погас, затем система перезапустилась, после чего сообщение об ошибке исчезло.",
+          "answer": "Повествование: есть последовательная смена состояний системы."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Много глаголов — значит повествование.",
+          "correction": "Нужно доказать событийное или временное развитие; глаголы могут описывать состояние или входить в рассуждение."
+        },
+        {
+          "wrong": "Слово «потом» автоматически делает текст повествованием.",
+          "correction": "Маркер помогает увидеть порядок, но решение подтверждается реальной сменой событий или состояний."
+        },
+        {
+          "wrong": "Любое событие внутри рассуждения превращает фрагмент в повествование.",
+          "correction": "Если событие используется как аргумент к тезису, доминирующая смысловая организация может оставаться рассуждением."
+        },
+        {
+          "wrong": "Верный общий ответ на задание №24 доказывает точное владение повествованием.",
+          "correction": "Нет. Exact mastery требует отдельной независимой проверки именно narration_identification."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p11-nar-g1",
+          "prompt": "Фрагмент сообщает: лампа мигнула, погасла, через минуту снова загорелась. Какой признак нужно назвать для доказательства повествования?",
+          "expected": "Последовательную смену состояний во времени."
+        },
+        {
+          "id": "p11-nar-g2",
+          "prompt": "Во фрагменте перечислены цвет стен, высота потолка и расположение окон. Почему наличие глаголов «были», «стояли», «виднелись» не доказывает повествование?",
+          "expected": "Потому что признаки представлены одновременно и не образуют развития события."
+        },
+        {
+          "id": "p11-nar-g3",
+          "prompt": "Автор приводит короткий случай, а затем объясняет, почему этот случай подтверждает тезис. Что нужно проверить перед выбором «повествование»?",
+          "expected": "Нужно определить доминирующую смысловую организацию: служит ли событие самостоятельной цепочкой или только аргументом в рассуждении."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p11-nar-i1",
+          "prompt": "Какой минимальный смысловой признак отличает повествование от статического описания?",
+          "answer": "Развитие события или смена состояний во времени."
+        },
+        {
+          "id": "p11-nar-i2",
+          "prompt": "Достаточно ли одного слова «затем» для решения?",
+          "answer": "Нет; нужно подтвердить реальную последовательность событий или состояний."
+        },
+        {
+          "id": "p11-nar-i3",
+          "prompt": "Может ли предложение с несколькими действиями не быть доказанным повествованием?",
+          "answer": "Да, если действия не образуют событийного развития или служат лишь примером внутри рассуждения."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p11-nar-t1",
+          "prompt": "Ученик выбрал повествование только потому, что нашёл пять глаголов. Как перепроверить решение?",
+          "answer": "Восстановить цепочку событий: что изменилось сначала, что затем и как изменилось состояние ситуации."
+        },
+        {
+          "id": "p11-nar-t2",
+          "prompt": "В описании комнаты окно «выходило» во двор, шкаф «стоял» у стены, лампа «висела» над столом. Почему это не обязательное повествование?",
+          "answer": "Глаголы обозначают одновременные характеристики расположения; событийной смены нет."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p11-nar-r1",
+          "delay_hint": "24h",
+          "prompt": "Главный вопрос для проверки повествования?",
+          "answer": "Развивается ли событие и можно ли восстановить последовательность изменения ситуации во времени?"
+        },
+        {
+          "id": "p11-nar-r2",
+          "delay_hint": "7d",
+          "prompt": "Почему количество глаголов не является достаточным критерием повествования?",
+          "answer": "Потому что важна смысловая событийная последовательность, а не грамматическая форма сама по себе."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p11-nar-v1",
+          "type": "constructed_response",
+          "prompt": "Фрагмент: «Сигнал прозвучал, поезд медленно тронулся, миновал платформу и вскоре скрылся за поворотом». Определи, подтверждает ли фрагмент повествование, и обоснуй ответ через развитие ситуации.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: дан вердикт «повествование»",
+              "1: названа последовательность событий/действий",
+              "1: показано изменение ситуации во времени от отправления к исчезновению поезда"
+            ]
+          }
+        },
+        {
+          "id": "p11-nar-v2",
+          "type": "constructed_response",
+          "prompt": "Фрагмент: «Кабинет был небольшим: у окна стоял стол, вдоль стены тянулся шкаф, над дверью висели часы». Можно ли подтвердить повествование только потому, что во фрагменте есть три глагола? Дай вердикт и объясни смысловую организацию.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: ответ «нет»",
+              "1: отмечено одновременное перечисление признаков/расположения",
+              "1: указано отсутствие развития события или смены состояний"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "source_candidate_review_status": "draft",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "exact_mastery_requires_two_component_specific_narration_checks": true,
+        "generic_task24_result_can_emit_exact_component_mastery": false,
+        "combined_speech_type_unit_result_can_emit_exact_component_mastery": false,
+        "description_or_reasoning_result_can_emit_this_mastery": false,
+        "object_closure_implied": false
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "identify narration from event sequence or change of states over time",
+          "contrast event development with simultaneous descriptive features",
+          "ask the learner to justify classification by reconstructing what changed first and next"
+        ],
+        "forbidden": [
+          "infer narration from one marker word or from verb count",
+          "treat generic Task-24 correctness as exact narration mastery",
+          "claim description or reasoning mastery from this semantic"
+        ]
+      }
+    }
+  ]
+}
