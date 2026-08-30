@@ -43,6 +43,8 @@ jobs:
       - name: Compile multi-provider Tutor boundaries
         run: |
           python -m py_compile \
+            eksamio-learning-engine/ai-tutor-reference/accepted_russian_semantic_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py \
             eksamio-learning-engine/ai-tutor-reference/tutor_provider_prompt.py \
             eksamio-learning-engine/ai-tutor-reference/openai_live_adapter.py \
             eksamio-learning-engine/ai-tutor-reference/openai_compatible_chat_adapter.py \
@@ -56,7 +58,14 @@ jobs:
             eksamio-learning-engine/ai-tutor-reference/resilient_voice_tutor.py \
             eksamio-learning-engine/ai-tutor-reference/private_staging_multi_provider_tutor.py \
             eksamio-learning-engine/ai-tutor-reference/private_multi_provider_tutor_test_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_provider_api_contracts.py \
             eksamio-learning-engine/ai-tutor-reference/validate_multi_provider_tutor.py
+
+      - name: Validate canonical Russian Tutor semantic denominator
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py
+
+      - name: Validate current provider API contracts
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_provider_api_contracts.py
 
       - name: Validate OpenAI Qwen Yandex parity and failover
         run: python eksamio-learning-engine/ai-tutor-reference/validate_multi_provider_tutor.py
