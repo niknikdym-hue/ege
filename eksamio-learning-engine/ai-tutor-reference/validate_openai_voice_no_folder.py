@@ -5,6 +5,7 @@ import os
 import sys
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Any
 
 HERE = Path(__file__).resolve().parent
 ENGINE = HERE.parent
@@ -12,6 +13,7 @@ sys.path.insert(0, str(HERE))
 
 from private_openai_yandex_121_tutor import assemble_fast_tutor, open_benchmark_session  # noqa: E402
 from private_openai_voice_no_folder_ui import OpenAIVoiceConfig  # noqa: E402
+from resilient_speechkit_transports import RetryingBinaryTransport, RetryingStreamingJsonTransport  # noqa: E402
 from validate_private_openai_yandex_121_tutor import FakeSTT, FakeV3TTS, ScriptedJsonTransport  # noqa: E402
 
 
@@ -30,6 +32,30 @@ def no_folder_credentials():
                 os.environ.pop(name, None)
             else:
                 os.environ[name] = value
+
+
+class FailOnceSTT:
+    def __init__(self, inner: FakeSTT) -> None:
+        self.inner = inner
+        self.calls = 0
+
+    def post_binary(self, **kwargs: Any):
+        self.calls += 1
+        if self.calls == 1:
+            raise TimeoutError("fixture transient STT timeout")
+        return self.inner.post_binary(**kwargs)
+
+
+class FailOnceTTS:
+    def __init__(self, inner: FakeV3TTS) -> None:
+        self.inner = inner
+        self.calls = 0
+
+    def post_json_stream(self, **kwargs: Any):
+        self.calls += 1
+        if self.calls == 1:
+            raise TimeoutError("fixture transient TTS timeout")
+        return self.inner.post_json_stream(**kwargs)
 
 
 def main() -> int:
@@ -60,9 +86,32 @@ def main() -> int:
         assert openai.calls == 1
         assert assembly.speech_provider.raw_audio_persistence_count() == 0
 
+        retry_openai = ScriptedJsonTransport({"output_text": "OPENAI_RETRY_OK"})
+        retry_stt = RetryingBinaryTransport(FailOnceSTT(FakeSTT(transcript="Повтори правило")))
+        retry_tts = RetryingStreamingJsonTransport(FailOnceTTS(FakeV3TTS()))
+        retry_assembly = assemble_fast_tutor(
+            engine_root=ENGINE,
+            config=config,
+            openai_transport=retry_openai,
+            stt_transport=retry_stt,
+            tts_v3_transport=retry_tts,
+        )
+        retry_state = open_benchmark_session(retry_assembly, "learner-openai-voice-retry")
+        retry_result = retry_assembly.tutor.voice_turn(retry_state.session_ref, b"transient-pcm-retry")
+        assert "OPENAI_RETRY_OK" in retry_result.tutor_text
+        assert retry_result.asr_provider_id == "yandex-speechkit"
+        assert retry_result.tts_provider_id == "yandex-speechkit"
+        assert retry_stt.retries == 1
+        assert retry_tts.retries == 1
+        assert retry_openai.calls == 1
+        assert retry_assembly.speech_provider.raw_audio_persistence_count() == 0
+
     print("OPENAI_VOICE_WITHOUT_YANDEX_FOLDER=PASS")
     print("OPENAI_BRAIN=gpt-5.6-sol")
     print("SPEECHKIT_API_KEY_PATH=PASS")
+    print("SPEECHKIT_TRANSIENT_STT_RETRY=PASS")
+    print("SPEECHKIT_TRANSIENT_TTS_RETRY=PASS")
+    print("LLM_DUPLICATE_CALLS_ON_SPEECH_RETRY=0")
     print("YANDEX_FOLDER_ID_REQUIRED=0")
     print("RAW_AUDIO_PERSISTED_BYTES=0")
     print("LIVE_PROVIDER_CALLS=0")
