@@ -24,7 +24,7 @@ class DeepSeekTutorConfig:
     model: str = "deepseek-v4-pro"
     endpoint: str = "https://api.deepseek.com/chat/completions"
     timeout_seconds: float = 45.0
-    max_output_tokens: int = 900
+    max_output_tokens: int = 4_096
     temperature: float = 0.2
     thinking_enabled: bool = True
     reasoning_effort: str = "high"
@@ -37,6 +37,8 @@ class DeepSeekTutorConfig:
             raise DeepSeekConfigurationError("DeepSeek Tutor must use the approved official chat endpoint")
         if self.reasoning_effort not in {"low", "high", "max"}:
             raise DeepSeekConfigurationError("DeepSeek reasoning_effort must be low/high/max")
+        if not 64 <= self.max_output_tokens <= 4_096:
+            raise DeepSeekConfigurationError("DeepSeek output-token bound is invalid")
 
 
 class DeepSeekTextProvider(OpenAICompatibleChatProvider):
@@ -64,5 +66,10 @@ class DeepSeekTextProvider(OpenAICompatibleChatProvider):
             "type": "enabled" if self.deepseek_config.thinking_enabled else "disabled",
         }
         if self.deepseek_config.thinking_enabled:
+            # DeepSeek documents temperature/top_p/presence/frequency penalties as
+            # unsupported (ignored) in thinking mode. Omit temperature entirely so
+            # the live-test contract matches the provider rather than relying on an
+            # ignored compatibility field.
+            body.pop("temperature", None)
             body["reasoning_effort"] = self.deepseek_config.reasoning_effort
         return body
