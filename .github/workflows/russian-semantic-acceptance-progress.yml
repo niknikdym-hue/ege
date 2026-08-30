@@ -69,6 +69,7 @@ jobs:
             validate_ru09_syntax_bounded_subject_semantics.py
             validate_ru11_content_statement_verification_bounded_subject_semantics.py
             validate_ru11_reasoning_identification_bounded_subject_semantics.py
+            validate_ru11_semantic_relation_bounded_subject_semantics.py
             validate_ru12_genre_address_purpose_bounded_subject_semantics.py
             validate_ru12_functional_style_bounded_subject_semantics.py
           )
@@ -139,10 +140,11 @@ jobs:
               'RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU11_CONTENT_STATEMENT_VERIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU11_REASONING_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_SEMANTIC_RELATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU12_GENRE_ADDRESS_PURPOSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU12_FUNCTIONAL_STYLE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
           }
-          assert len(data['accepted_authorities']) == 30
+          assert len(data['accepted_authorities']) == 31
           assert {a['id'] for a in data['accepted_authorities']} == expected_authorities
 
           subject_counts = {
@@ -166,6 +168,7 @@ jobs:
               'RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 5,
               'RU11_CONTENT_STATEMENT_VERIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
               'RU11_REASONING_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_SEMANTIC_RELATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
               'RU12_GENRE_ADDRESS_PURPOSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
               'RU12_FUNCTIONAL_STYLE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
           }
@@ -199,12 +202,12 @@ jobs:
           assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1372
           assert s['canonical_component_refs_reused_unique'] == 52
           assert s['accepted_bounded_ru_route_semantics'] == 9
-          assert s['accepted_bounded_ru_subject_semantics'] == 56
-          assert s['accepted_bounded_ru_semantics_total'] == 65
+          assert s['accepted_bounded_ru_subject_semantics'] == 57
+          assert s['accepted_bounded_ru_semantics_total'] == 66
           assert s['accepted_route_semantics_without_object_binding'] == 9
-          assert s['accepted_subject_semantics_without_object_binding'] == 56
+          assert s['accepted_subject_semantics_without_object_binding'] == 57
           assert s['new_semantic_identities_created'] == 0
-          assert s['ru_proposal_identities_admitted'] == 65
+          assert s['ru_proposal_identities_admitted'] == 66
           assert s['false_exact_mastery_admissions'] == 0
 
           expected_route = {
@@ -273,6 +276,7 @@ jobs:
               'ru-syntax-homogeneous-members-norm',
               'ru-text-content-statement-verification',
               'ru-text-reasoning-identification',
+              'ru-text-semantic-relation-between-sentences',
               'ru-text-genre-address-purpose-identification',
               'ru-text-functional-style-identification',
           }
