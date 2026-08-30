@@ -1,0 +1,78 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTICS",
+  "authority_issue": 161,
+  "scope": "RU06_SOURCE_BACKED_MORPHOLOGY_COMPONENTS_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "authority": {
+    "subject_program": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#module=RU-PROG-06",
+    "subject_program_binding_mode": "MIXED_EXISTING_AND_EXPANSION_BINDING",
+    "subject_program_candidate_refs": [],
+    "official_broad_domain_meaning": "Распознавать части речи и их грамматические признаки.",
+    "exact_broad_domain_admission_units": 172,
+    "exact_broad_domain_requirements": 178,
+    "boundary_review_builder": "russian-program/subject-admission/build_ru06_morphology_subject_boundary_review.py",
+    "boundary_review_normalized_sha256": "a327e34d3ca2a10d82cc4c9a7d0f7b86ea76f00c66af042af6b67f04c6b6b9a7",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-06-MORPHOLOGY-WAVE-002-v0.1.json",
+    "official_program_provenance": "EDSOO Federal Working Program Russian 5-9, 2025 / PUBLIC_OFFICIAL_PDF",
+    "reuse_decision": "EXISTING_EGE_NORM_OR_ORTHOGRAPHY_REFS_ARE_RELATED_PREREQUISITE_OR_DOWNSTREAM_SEMANTICS_NOT_EXACT_OWNERS_OF_THE_THREE_RU06_DECISIONS"
+  },
+  "policy": {
+    "reuse_first": true,
+    "content_presence_alone_implies_acceptance": false,
+    "module_membership_implies_object_binding": false,
+    "broad_domain_attempt_can_emit_exact_component_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "keyword_or_fuzzy_inference_allowed": false,
+    "morphology_mastery_implies_morphological_norm_mastery": false,
+    "morphology_mastery_implies_orthography_mastery": false,
+    "school_registry_replacement_or_mutation_allowed": false
+  },
+  "decisions": [
+    {
+      "accepted_semantic_id": "ru-morphology-part-of-speech-identification",
+      "label_ru": "Как определить часть речи: значение, вопрос, признаки и роль",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-06-MORPHOLOGY-WAVE-002-v0.1.json#ru-morphology-part-of-speech-identification",
+      "boundary_guard": "Identify part of speech from the combined evidence of grammatical meaning, morphology, forms and syntactic function in context; a single question, suffix, ending or surface form is insufficient, and this bounded semantic does not grant morphology-norm or orthography mastery.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    },
+    {
+      "accepted_semantic_id": "ru-morphology-permanent-variable-features",
+      "label_ru": "Постоянные и непостоянные морфологические признаки",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-06-MORPHOLOGY-WAVE-002-v0.1.json#ru-morphology-permanent-variable-features",
+      "boundary_guard": "Classify grammatical features only after the part of speech and form are established, separating lexeme-stable properties from form-dependent properties and checking category applicability; one part of speech's feature list cannot be transferred to another and unavailable categories cannot be invented.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    },
+    {
+      "accepted_semantic_id": "ru-morphology-analysis-sequence",
+      "label_ru": "Морфологический разбор: правильная последовательность",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-06-MORPHOLOGY-WAVE-002-v0.1.json#ru-morphology-analysis-sequence",
+      "boundary_guard": "Perform morphology analysis from contextual identification through part of speech, normative initial form, stable and form-dependent features, then syntactic function; the initial form must belong to the same lexeme, and a broad morphology attempt cannot substitute for component-specific independent evidence.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    }
+  ],
+  "explicit_non_acceptances": [
+    {
+      "semantic_or_object_ref": "RU06 broad-domain 172 admission units / 178 requirements",
+      "reason": "The broad official domain establishes morphology scope but does not prove one-to-one object binding for the three bounded components; object accounting remains unchanged."
+    },
+    {
+      "semantic_or_object_ref": "morphological_norms / noun_form_norms / numeral_form_norms / verb_form_norms",
+      "reason": "Normative form production and correction are related downstream capabilities, not exact owners of generic part-of-speech identification, feature classification or full morphology analysis."
+    },
+    {
+      "semantic_or_object_ref": "orthographic_norms / suffix_spelling_by_part_of_speech / ne_contextual_spelling",
+      "reason": "Part-of-speech recognition can be prerequisite evidence for orthographic decisions but does not grant exact orthographic mastery."
+    }
+  ],
+  "summary": {
+    "accepted_bounded_subject_semantics": 3,
+    "accepted_ru_subject_semantics": 3,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
