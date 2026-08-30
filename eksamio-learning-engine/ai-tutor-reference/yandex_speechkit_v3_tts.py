@@ -8,7 +8,8 @@ transiently and never retained by provider state.
 Visible Tutor text may contain Markdown for the browser. SpeechKit must never
 receive that presentation markup verbatim: a dedicated speech-text normalizer
 removes Markdown/URLs and turns school notation such as *-чет-*/*-чит-* into a
-natural spoken form before synthesis.
+natural spoken form before synthesis. It also applies bounded SpeechKit TTS
+markup for pauses and pronunciation only; visible Tutor text stays unchanged.
 """
 from __future__ import annotations
 
@@ -135,14 +136,17 @@ class YandexSpeechKitV3TTSConfig:
 
 _HYPHEN = "-‐‑‒–—"
 _WORD = "A-Za-zА-Яа-яЁё"
+_SENTENCE_PAUSE_MS = 260
+_LETTER_EXAMPLE_PAUSE_MS = 180
+_ROOT_CHET_PHONEMES = "[[t͡ɕ ɛ t]]"
+_ROOT_CHIT_PHONEMES = "[[t͡ɕ i t]]"
 
 
 def normalize_tutor_text_for_speech(text: str) -> str:
-    """Convert browser-facing Tutor Markdown into natural Russian speech text.
+    """Convert browser-facing Tutor Markdown into natural Russian TTS markup.
 
-    This is intentionally deterministic and provider-neutral. It does not alter
-    the visible answer or semantic content; it only removes presentation syntax
-    that a TTS engine might pronounce literally.
+    The returned string is for SpeechKit only. It may contain official SpeechKit
+    TTS markup (`sil<[...]>` and `[[...]]`) that is never shown to the learner.
     """
 
     if not isinstance(text, str):
@@ -171,8 +175,8 @@ def normalize_tutor_text_for_speech(text: str) -> str:
     source = re.sub(r"(?<!_)_([^_\n]+)_(?!_)", r"\1", source)
     source = source.replace("**", "").replace("*", "").replace("`", "")
 
-    # School morpheme notation such as -чет-/-чит- must be spoken as words, not
-    # as punctuation. Slash between letter groups is read as a semantic choice.
+    # School morpheme notation such as -чет-/-чит- must be spoken as morphemes,
+    # not as punctuation. Slash between letter groups is read as a semantic choice.
     source = re.sub(
         rf"(?<![{_WORD}])[{_HYPHEN}]+([{_WORD}]+)[{_HYPHEN}]+(?![{_WORD}])",
         r"\1",
@@ -180,14 +184,70 @@ def normalize_tutor_text_for_speech(text: str) -> str:
     )
     source = re.sub(rf"(?<=[{_WORD}])\s*/\s*(?=[{_WORD}])", " или ", source)
 
+    # Quoted single-letter examples should not create a pause before the letter.
+    # For the common pedagogical construction "буквы «а» после..." put the
+    # deliberate pause after the letter instead.
+    source = re.sub(
+        r"\b(букв[аы])\s+[«„“\"]\s*([А-Яа-яЁё])\s*[»”\"]\s+(?=после\b)",
+        rf"\1 \2 sil<[{_LETTER_EXAMPLE_PAUSE_MS}]> ",
+        source,
+        flags=re.IGNORECASE,
+    )
+    source = re.sub(r"[«„“\"]\s*([А-Яа-яЁё])\s*[»”\"]", r"\1", source)
+
+    # Force the pedagogical names of ЧЕТ/ЧИТ. Without a phoneme hint, a Russian
+    # TTS voice can interpret isolated "чет" too close to "чёт".
+    source = re.sub(
+        rf"(?<![{_WORD}])чет(?![{_WORD}])",
+        _ROOT_CHET_PHONEMES,
+        source,
+        flags=re.IGNORECASE,
+    )
+    source = re.sub(
+        rf"(?<![{_WORD}])чит(?![{_WORD}])",
+        _ROOT_CHIT_PHONEMES,
+        source,
+        flags=re.IGNORECASE,
+    )
+
     # Preserve sentence meaning while removing visual table/control characters.
     source = source.replace("|", ", ").replace(" ", " ")
     source = re.sub(r"\s*\n+\s*", ". ", source)
     source = re.sub(r"\s+([,.;:!?])", r"\1", source)
     source = re.sub(r"([!?]){2,}", r"\1", source)
     source = re.sub(r"\.{3,}", "…", source)
+
+    # Natural punctuation alone was inconsistent in human listening. SpeechKit v3
+    # officially supports explicit SIL pauses, so add a short sentence pause.
+    source = re.sub(
+        r"([.!?])\s+(?=[А-ЯЁ])",
+        rf"\1 sil<[{_SENTENCE_PAUSE_MS}]> ",
+        source,
+    )
     source = re.sub(r"\s{2,}", " ", source).strip(" .")
     return source
+
+
+def _last_boundary_end(window: str, marks: tuple[str, ...]) -> int:
+    """Return an exclusive boundary index, or -1 when none is suitable."""
+
+    best = -1
+    for mark in marks:
+        pos = window.rfind(mark)
+        if pos >= 0:
+            best = max(best, pos + len(mark))
+    return best
+
+
+def _extend_over_pause_tag(window: str, cut: int) -> int:
+    """Keep a SpeechKit pause tag attached to the sentence before it."""
+
+    if cut < 0:
+        return cut
+    match = re.match(r"sil<\[\d+\]>\s*", window[cut:])
+    if match:
+        return cut + match.end()
+    return cut
 
 
 def _split_text(text: str, limit: int) -> tuple[str, ...]:
@@ -204,13 +264,13 @@ def _split_text(text: str, limit: int) -> tuple[str, ...]:
             chunks.append(source)
             break
         window = source[: limit + 1]
-        cut = max(window.rfind(mark) for mark in strong_marks)
+        cut = _last_boundary_end(window, strong_marks)
         if cut < max(60, limit // 2):
-            cut = max(window.rfind(mark) for mark in weak_marks)
+            cut = _last_boundary_end(window, weak_marks)
         if cut < max(40, limit // 3):
             cut = limit
         else:
-            cut += 1
+            cut = _extend_over_pause_tag(window, cut)
         chunk = source[:cut].strip()
         if chunk:
             chunks.append(chunk)
