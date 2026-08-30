@@ -15,14 +15,9 @@ from http.server import ThreadingHTTPServer
 
 import private_openai_yandex_121_tutor_ui as base_ui
 from private_openai_yandex_121_tutor import (
-    ENGINE if False else FastTutorConfig,
-)
-
-# Import the remaining names explicitly after the dataclass type to keep this
-# runner visibly bounded to the already-reviewed fast benchmark implementation.
-from private_openai_yandex_121_tutor import (  # noqa: E402
     OPENAI_BENCHMARK_MODEL,
     YANDEX_BENCHMARK_MODEL_ID,
+    FastTutorConfig,
     FastTutorConfigurationError,
     assemble_fast_tutor,
     open_benchmark_session,
@@ -52,8 +47,6 @@ class OpenAIVoiceApp(base_ui.App):
         status = super().status()
         providers = status.get("providers")
         if isinstance(providers, dict):
-            # Yandex AI/folder remain accurately BLOCKED for Alice; they are not
-            # prerequisites for this OpenAI-brain voice runner.
             openai = providers.get("openai")
             status["openai_voice_ready"] = bool(
                 isinstance(openai, dict) and openai.get("ready") and status.get("speech_ready")
