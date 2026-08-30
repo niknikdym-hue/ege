@@ -175,8 +175,13 @@ def normalize_tutor_text_for_speech(text: str) -> str:
     source = re.sub(r"(?<!_)_([^_\n]+)_(?!_)", r"\1", source)
     source = source.replace("**", "").replace("*", "").replace("`", "")
 
-    # School morpheme notation such as -чет-/-чит- must be spoken as morphemes,
-    # not as punctuation. Slash between letter groups is read as a semantic choice.
+    # School morpheme notation such as -чет-/-чит- or ЧЕТ-/ЧИТ- must be spoken as
+    # morphemes, not as punctuation. Slash between roots becomes a spoken choice.
+    source = re.sub(
+        rf"(?<![{_WORD}])([{_WORD}]+)[{_HYPHEN}]+\s*/\s*([{_WORD}]+)[{_HYPHEN}]+(?![{_WORD}])",
+        r"\1 или \2",
+        source,
+    )
     source = re.sub(
         rf"(?<![{_WORD}])[{_HYPHEN}]+([{_WORD}]+)[{_HYPHEN}]+(?![{_WORD}])",
         r"\1",
