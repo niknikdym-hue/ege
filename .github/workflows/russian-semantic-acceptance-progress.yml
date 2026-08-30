@@ -29,103 +29,61 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Review RU01 phonetics subject boundary
+
+      - name: Rebuild bounded subject reviews deterministically
         shell: bash
         run: |
           set -euo pipefail
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_subject_boundary_review.py --output /tmp/ru01-a.json > /tmp/ru01-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_subject_boundary_review.py --output /tmp/ru01-b.json > /tmp/ru01-b.txt
-          cmp /tmp/ru01-a.json /tmp/ru01-b.json
-          diff -u /tmp/ru01-a.txt /tmp/ru01-b.txt
-          cat /tmp/ru01-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru01_phonetics_bounded_subject_semantics.py
-      - name: Review RU04 morphemics subject boundary
+          for spec in \
+            "ru01:build_ru01_phonetics_subject_boundary_review.py:validate_ru01_phonetics_bounded_subject_semantics.py" \
+            "ru04:build_ru04_morphemics_subject_boundary_review.py:validate_ru04_morphemics_bounded_subject_semantics.py" \
+            "ru05:build_ru05_wordformation_subject_boundary_review.py:validate_ru05_wordformation_bounded_subject_semantics.py" \
+            "ru06:build_ru06_morphology_subject_boundary_review.py:validate_ru06_morphology_bounded_subject_semantics.py"
+          do
+            IFS=: read -r tag builder validator <<< "$spec"
+            root="eksamio-learning-engine/russian-program/subject-admission"
+            python3 "$root/$builder" --output "/tmp/${tag}-a.json" > "/tmp/${tag}-a.txt"
+            python3 "$root/$builder" --output "/tmp/${tag}-b.json" > "/tmp/${tag}-b.txt"
+            cmp "/tmp/${tag}-a.json" "/tmp/${tag}-b.json"
+            diff -u "/tmp/${tag}-a.txt" "/tmp/${tag}-b.txt"
+            python3 "$root/$validator"
+          done
+
+      - name: Validate accepted bounded semantics twice
         shell: bash
         run: |
           set -euo pipefail
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru04_morphemics_subject_boundary_review.py --output /tmp/ru04-a.json > /tmp/ru04-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru04_morphemics_subject_boundary_review.py --output /tmp/ru04-b.json > /tmp/ru04-b.txt
-          cmp /tmp/ru04-a.json /tmp/ru04-b.json
-          diff -u /tmp/ru04-a.txt /tmp/ru04-b.txt
-          cat /tmp/ru04-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru04_morphemics_bounded_subject_semantics.py
-      - name: Review RU05 word-formation subject boundary
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru05_wordformation_subject_boundary_review.py --output /tmp/ru05-a.json > /tmp/ru05-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru05_wordformation_subject_boundary_review.py --output /tmp/ru05-b.json > /tmp/ru05-b.txt
-          cmp /tmp/ru05-a.json /tmp/ru05-b.json
-          diff -u /tmp/ru05-a.txt /tmp/ru05-b.txt
-          cat /tmp/ru05-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru05_wordformation_bounded_subject_semantics.py
-      - name: Review RU06 morphology subject boundary
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru06_morphology_subject_boundary_review.py --output /tmp/ru06-a.json > /tmp/ru06-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru06_morphology_subject_boundary_review.py --output /tmp/ru06-b.json > /tmp/ru06-b.txt
-          cmp /tmp/ru06-a.json /tmp/ru06-b.json
-          diff -u /tmp/ru06-a.txt /tmp/ru06-b.txt
-          cat /tmp/ru06-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru06_morphology_bounded_subject_semantics.py
-      - name: Validate RU02 normative-stress bounded semantic twice
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_stress_bounded_subject_semantics.py
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_stress_bounded_subject_semantics.py > /tmp/ru02-accept-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_stress_bounded_subject_semantics.py > /tmp/ru02-accept-b.txt
-          diff -u /tmp/ru02-accept-a.txt /tmp/ru02-accept-b.txt
-          cat /tmp/ru02-accept-a.txt
-      - name: Validate RU03 paronym bounded semantic twice
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru03_paronym_bounded_subject_semantics.py
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_paronym_bounded_subject_semantics.py > /tmp/ru03-accept-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_paronym_bounded_subject_semantics.py > /tmp/ru03-accept-b.txt
-          diff -u /tmp/ru03-accept-a.txt /tmp/ru03-accept-b.txt
-          cat /tmp/ru03-accept-a.txt
-      - name: Validate RU03 dictionary-sense bounded semantic twice
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru03_dictionary_sense_bounded_subject_semantics.py
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_dictionary_sense_bounded_subject_semantics.py > /tmp/ru03-dss-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_dictionary_sense_bounded_subject_semantics.py > /tmp/ru03-dss-b.txt
-          diff -u /tmp/ru03-dss-a.txt /tmp/ru03-dss-b.txt
-          cat /tmp/ru03-dss-a.txt
-      - name: Validate RU03 definition-context bounded semantic twice
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru03_definition_context_bounded_subject_semantics.py
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_definition_context_bounded_subject_semantics.py > /tmp/ru03-dcm-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_definition_context_bounded_subject_semantics.py > /tmp/ru03-dcm-b.txt
-          diff -u /tmp/ru03-dcm-a.txt /tmp/ru03-dcm-b.txt
-          cat /tmp/ru03-dcm-a.txt
-      - name: Validate RU09 bounded syntax semantics twice
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru09_syntax_bounded_subject_semantics.py
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru09_syntax_bounded_subject_semantics.py > /tmp/ru09-accept-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru09_syntax_bounded_subject_semantics.py > /tmp/ru09-accept-b.txt
-          diff -u /tmp/ru09-accept-a.txt /tmp/ru09-accept-b.txt
-          cat /tmp/ru09-accept-a.txt
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          validators=(
+            validate_ru02_normative_stress_bounded_subject_semantics.py
+            validate_ru03_paronym_bounded_subject_semantics.py
+            validate_ru03_dictionary_sense_bounded_subject_semantics.py
+            validate_ru03_definition_context_bounded_subject_semantics.py
+            validate_ru03_lexical_redundancy_bounded_subject_semantics.py
+            validate_ru09_syntax_bounded_subject_semantics.py
+          )
+          for validator in "${validators[@]}"; do
+            python3 -m py_compile "$root/$validator"
+            tag="${validator%.py}"
+            python3 "$root/$validator" > "/tmp/${tag}-a.txt"
+            python3 "$root/$validator" > "/tmp/${tag}-b.txt"
+            diff -u "/tmp/${tag}-a.txt" "/tmp/${tag}-b.txt"
+            cat "/tmp/${tag}-a.txt"
+          done
+
       - name: Build semantic acceptance progress twice
         shell: bash
         run: |
           set -euo pipefail
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress.py \
-            --output /tmp/progress-a.json > /tmp/progress-report-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress.py \
-            --output /tmp/progress-b.json > /tmp/progress-report-b.txt
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile "$root/build_russian_semantic_acceptance_progress.py"
+          python3 "$root/build_russian_semantic_acceptance_progress.py" --output /tmp/progress-a.json > /tmp/progress-report-a.txt
+          python3 "$root/build_russian_semantic_acceptance_progress.py" --output /tmp/progress-b.json > /tmp/progress-report-b.txt
           cmp /tmp/progress-a.json /tmp/progress-b.json
           diff -u /tmp/progress-report-a.txt /tmp/progress-report-b.txt
           cat /tmp/progress-report-a.txt
-          cp /tmp/progress-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json
+          cp /tmp/progress-a.json "$root/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json"
+
       - name: Verify fail-closed progress summary
         shell: bash
         run: |
@@ -134,8 +92,10 @@ jobs:
           import json
           from pathlib import Path
 
-          data = json.loads(Path('eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json').read_text(encoding='utf-8'))
+          path = Path('eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
           s = data['progress_summary']
+
           assert data['schema_version'] == '0.4.0'
           assert data['status'] == 'CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS'
           assert data['russian_content_ready'] is False
@@ -156,42 +116,46 @@ jobs:
               'RU03_PARONYM_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU03_DICTIONARY_SENSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU03_DEFINITION_CONTEXT_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU03_LEXICAL_REDUNDANCY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU04_MORPHEMICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
           }
-          assert len(data['accepted_authorities']) == 19
+          assert len(data['accepted_authorities']) == 20
           assert {a['id'] for a in data['accepted_authorities']} == expected_authorities
 
-          for authority_id, count in (
-              ('RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 14),
-              ('RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 10),
-              ('RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
-              ('RU02_NORMATIVE_STRESS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 1),
-              ('RU03_PARONYM_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 1),
-              ('RU03_DICTIONARY_SENSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 1),
-              ('RU03_DEFINITION_CONTEXT_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 1),
-              ('RU04_MORPHEMICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
-              ('RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
-              ('RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 3),
-              ('RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1', 5),
-          ):
-              authority = next(a for a in data['accepted_authorities'] if a['id'] == authority_id)
+          subject_counts = {
+              'RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 14,
+              'RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 10,
+              'RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 3,
+              'RU02_NORMATIVE_STRESS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_PARONYM_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_DICTIONARY_SENSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_DEFINITION_CONTEXT_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_LEXICAL_REDUNDANCY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU04_MORPHEMICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 3,
+              'RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 3,
+              'RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 3,
+              'RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 5,
+          }
+          by_id = {a['id']: a for a in data['accepted_authorities']}
+          for authority_id, count in subject_counts.items():
+              authority = by_id[authority_id]
               assert authority['authority_kind'] == 'BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_WITHOUT_OBJECT_BINDING'
               assert authority['accepted_admission_units'] == 0
               assert authority['accepted_requirements'] == 0
               assert authority['accepted_subject_semantics'] == count
               assert authority['accepted_route_semantics'] == 0
 
-          ru15 = next(a for a in data['accepted_authorities'] if a['id'] == 'RU15_OGE_EXPOSITION_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1')
+          ru15 = by_id['RU15_OGE_EXPOSITION_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1']
           assert ru15['authority_kind'] == 'BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_WITHOUT_OBJECT_BINDING'
           assert ru15['accepted_admission_units'] == 0
           assert ru15['accepted_requirements'] == 0
           assert ru15['accepted_route_semantics'] == 4
           assert ru15['accepted_subject_semantics'] == 0
 
-          indirect = next(a for a in data['accepted_authorities'] if a['id'] == 'RUSSIAN_OGE_INDIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1')
+          indirect = by_id['RUSSIAN_OGE_INDIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1']
           assert indirect['authority_kind'] == 'OBJECT_BOUND_CANONICAL_COMPONENT_SET'
           assert indirect['accepted_admission_units'] == 1
           assert indirect['accepted_requirements'] == 1
@@ -205,12 +169,12 @@ jobs:
           assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1372
           assert s['canonical_component_refs_reused_unique'] == 52
           assert s['accepted_bounded_ru_route_semantics'] == 9
-          assert s['accepted_bounded_ru_subject_semantics'] == 45
-          assert s['accepted_bounded_ru_semantics_total'] == 54
+          assert s['accepted_bounded_ru_subject_semantics'] == 46
+          assert s['accepted_bounded_ru_semantics_total'] == 55
           assert s['accepted_route_semantics_without_object_binding'] == 9
-          assert s['accepted_subject_semantics_without_object_binding'] == 45
+          assert s['accepted_subject_semantics_without_object_binding'] == 46
           assert s['new_semantic_identities_created'] == 0
-          assert s['ru_proposal_identities_admitted'] == 54
+          assert s['ru_proposal_identities_admitted'] == 55
           assert s['false_exact_mastery_admissions'] == 0
 
           expected_route = {
@@ -256,6 +220,7 @@ jobs:
               'ru-lexis-paronym-collocation-choice',
               'ru-lexis-dictionary-sense-selection',
               'ru-lexis-definition-context-matching',
+              'ru-lexis-redundancy-extra-word',
               'ru-morphemics-morpheme-base-ending',
               'ru-morphemics-root-prefix-suffix-analysis',
               'ru-morphemics-alternation-and-full-analysis',
@@ -285,6 +250,7 @@ jobs:
           assert all(g['remaining_group_action'].startswith('CONTINUE_EXACT_COMPONENT_REVIEW') for g in touched)
           print('RUSSIAN_SEMANTIC_ACCEPTANCE_PROGRESS_GUARD=PASS')
           PY
+
       - name: Upload semantic progress artifact
         uses: actions/upload-artifact@v4
         with:
@@ -292,6 +258,7 @@ jobs:
           path: eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json
           if-no-files-found: error
           retention-days: 14
+
       - name: Protect accepted Russian production surfaces
         shell: bash
         run: |
@@ -300,5 +267,6 @@ jobs:
             echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
             exit 1
           fi
+
       - name: Diff hygiene
         run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
