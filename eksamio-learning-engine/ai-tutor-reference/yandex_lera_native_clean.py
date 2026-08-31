@@ -17,11 +17,11 @@ from yandex_speechkit_v3_tts import StreamingJsonTransport, YandexSpeechKitV3TTS
 
 @dataclass(frozen=True)
 class YandexLeraNativeCleanProfile:
-    name: str = "YANDEX_LERA_NATIVE_CLEAN_V2_D"
+    name: str = "YANDEX_LERA_NATIVE_CLEAN_V3_A"
     voice: str = "lera"
-    role: str = "friendly"
-    speed: float = 0.97
-    pitch_shift_hz: float = -35.0
+    role: str = "neutral"
+    speed: float = 1.04
+    pitch_shift_hz: float = 0.0
     pause_profile: str = "marked"
 
 
