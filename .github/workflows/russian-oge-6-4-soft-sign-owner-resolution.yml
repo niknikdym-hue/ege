@@ -4,14 +4,13 @@ on:
   pull_request:
     paths:
       - ".github/workflows/russian-oge-6-4-soft-sign-owner-resolution.yml"
-      - ".github/scripts/brain_oge64_atomic_sync_once.py"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  publish-oge-6-4-exact-candidate:
+  publish-semantic-candidate:
     if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'brain/sep1-russian-subject-closure'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -23,7 +22,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Build exact candidate from proven OGE 6.4 frontier
+      - name: Build exact OGE 6.4 semantic authority candidate
         shell: bash
         run: |
           set -euo pipefail
@@ -47,16 +46,16 @@ jobs:
             echo 'Protected accepted Russian surface changed.' >&2
             exit 1
           fi
-      - name: Validate bounded changed-path set
+      - name: Reduce candidate to semantic authority only
         shell: bash
         run: |
           set -euo pipefail
+          git restore -- .github
+          find eksamio-learning-engine -type d -name __pycache__ -prune -exec rm -rf {} +
+          find eksamio-learning-engine -type f -name '*.pyc' -delete
+          git diff --check
           git diff --name-only | sort > /tmp/actual.txt
-          cat > /tmp/allowed.txt <<'EOF'
-          .github/scripts/brain_oge64_atomic_sync_once.py
-          .github/workflows/russian-oge-6-4-soft-sign-owner-resolution.yml
-          .github/workflows/russian-oge-exact-component-acceptance.yml
-          .github/workflows/russian-semantic-acceptance-progress.yml
+          cat > /tmp/expected.txt <<'EOF'
           eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json
           eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json
           eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
@@ -65,32 +64,23 @@ jobs:
           eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_exact_component_acceptance.py
           eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_base.py
           EOF
-          sort -o /tmp/allowed.txt /tmp/allowed.txt
-          unexpected=$(comm -23 /tmp/actual.txt /tmp/allowed.txt)
-          test -z "$unexpected" || { echo "Unexpected changed paths:"; echo "$unexpected"; exit 1; }
-          for required in \
-            eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json \
-            eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json \
-            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json \
-            eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_exact_component_acceptance.py \
-            eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py \
-            eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py; do
-              grep -Fxq "$required" /tmp/actual.txt
-          done
+          sort -o /tmp/expected.txt /tmp/expected.txt
+          diff -u /tmp/expected.txt /tmp/actual.txt
           cat /tmp/actual.txt
-      - name: Publish isolated candidate branch
+      - name: Publish semantic-only isolated branch
         shell: bash
         run: |
           set -euo pipefail
-          rm .github/workflows/brain-oge64-atomic-sync-once.yml
-          rm .github/scripts/brain_oge64_atomic_sync_once.py
           git config user.name "Eksamio Central Brain"
           git config user.email "actions@users.noreply.github.com"
-          git add -A
+          git add -- \
+            eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json \
+            eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json \
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json \
+            eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py \
+            eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py \
+            eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_exact_component_acceptance.py \
+            eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_base.py
           git diff --cached --check
-          if git diff --cached --name-only | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
-            echo 'Protected accepted Russian surface changed.' >&2
-            exit 1
-          fi
-          git commit -m "russian: exact-accept OGE 6.4 owner set"
+          git commit -m "russian: exact-accept OGE 6.4 semantic authority candidate"
           git push origin HEAD:refs/heads/brain/tmp-oge64-sync-candidate
