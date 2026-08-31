@@ -1,7 +1,7 @@
 # Eksamio Learning Engine — Product Masterplan
 
 **Статус:** PRODUCT / ARCHITECTURE AUTHORITY  
-**Версия:** 1.4
+**Версия:** 1.5
 **Дата исходной фиксации:** 2026-08-18  
 **Актуализация:** 2026-08-31
 **Корень системы:** `eksamio-learning-engine/`
@@ -667,3 +667,23 @@ Release artifacts/images and production configuration needed to run the admitted
 Repository hosting is replaceable. Future migration from GitHub to SourceCraft or another Git host may be evaluated after launch, but it is **not** part of the current launch critical path. Such a migration must not require redesign of PEIS, subject truth, business logic, learner data or product interfaces.
 
 Primary Russian production cloud remains Yandex Cloud Russia, while code/business contracts remain portable/provider-neutral.
+
+## 27. Progressive Public Release — hard release invariant 2026-08-31
+
+Owner decision: `OWNER-DECISION-PROGRESSIVE-PUBLIC-RELEASE-2026-08-31.md`.
+
+Eksamio не ждёт полного завершения всей платформы, чтобы показать ученикам уже готовую и безопасную ценность.
+
+Любая learner-facing функция, раздел, предметный срез, тренажёр, диагностика, маршрут или иной продуктовый этап, который прошёл собственные обязательные subject/runtime/product acceptance gates, не создаёт ложного claim полноты и production-ready для заявленного публичного scope, **должен быть опубликован на живом сайте Eksamio без ожидания полного Pro launch или закрытия несвязанных launch blockers**.
+
+Для уже опубликованной бесплатной и безопасной ценности разрешено и требуется начинать привлечение реальных пользователей и измерение поведения/learning outcomes. Незавершённые платные/Pro/payment/identity/Tutor функции не обещаются как доступные и остаются за своими production gates.
+
+Каждый закрытый learner-facing этап обязан иметь один publication status:
+
+- `LIVE` — реально доступен ученику на production-сайте;
+- `READY_TO_PUBLISH` — acceptance пройден, требуется только фактическая публикация;
+- `BLOCKED:<reason>` — существует конкретный blocker, мешающий безопасной публикации.
+
+`DONE` без `LIVE` либо явного `BLOCKED:<reason>` не считается операционно завершённым. Удержание готового learner-facing этапа «под капотом» без конкретного blocker запрещено.
+
+Этот инвариант отменяет blanket-подход «ничего нового не показывать ученикам до полного запуска всей системы» для уже готового, правдивого и безопасного публичного scope. Он не отменяет отдельные production gates для платного Pro, оплаты, identity, entitlements, receipt/refund/revoke, privacy и Tutor.
