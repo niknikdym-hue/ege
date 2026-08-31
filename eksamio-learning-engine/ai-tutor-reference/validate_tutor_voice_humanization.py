@@ -86,11 +86,7 @@ def main() -> int:
     assert EXAMPLE.startswith("Вы почти правы")  # visible text is untouched
 
     rhythm = normalize_tutor_text_for_speech(RHYTHM_EXAMPLE)
-    # Human-listening target: never pause before the named letter. The first
-    # semantic pause belongs after the completed clause "пишется и".
     assert "перед а пишется и, <[small]> но" in rhythm
-    # The examples form one spoken group, followed by a small pause before the
-    # conclusion "сохраняется е".
     assert "в словах сочетать, сочетание <[small]> сохраняется е" in rhythm
     assert "перед <[" not in rhythm
     assert "перед sil<[" not in rhythm
@@ -99,7 +95,6 @@ def main() -> int:
         rendered = normalize_tutor_text_for_speech(source)
         assert marker in rendered, (source, rendered, marker)
 
-    # Markdown and school notation are visual-only and must never leak to speech.
     markdown = normalize_tutor_text_for_speech(
         "В корнях *‑чет‑*/*‑чит‑* пишется **е**. Подробнее: https://example.invalid/rule"
     )
@@ -124,7 +119,6 @@ def main() -> int:
     long_text = normalize_tutor_text_for_speech("Первая законченная фраза. " * 20)
     chunks = _split_text(long_text, 240)
     assert chunks and all(len(chunk) <= 240 for chunk in chunks)
-    # TTS markup must remain attached to its phrase, never become a chunk by itself.
     assert all(not chunk.startswith(("sil<[", "<[")) for chunk in chunks)
 
     page = base_ui.PAGE
@@ -133,6 +127,11 @@ def main() -> int:
     assert "setTimeout(r,180)" in page
     assert "Tutor говорит…" in page
     assert "$('#mic').disabled=true" in page
+    assert "function renderTutorMarkdown(node,text)" in page
+    assert "if(cls==='tutor')renderTutorMarkdown(d,text)" in page
+    assert "document.createElement('strong')" in page
+    assert "document.createElement('em')" in page
+    assert "innerHTML" not in page
 
     first_prompt = grounded_system_text(_request()).lower()
     assert "не добавляй шаблонную фразу" in first_prompt
@@ -146,6 +145,9 @@ def main() -> int:
 
     print("RUSSIAN_PEDAGOGICAL_PROSODY=PASS")
     print("TUTOR_TTS_MARKDOWN_NORMALIZATION=PASS")
+    print("TUTOR_VISIBLE_MARKDOWN_RENDERING=PASS")
+    print("TUTOR_VISIBLE_LITERAL_ASTERISKS=0")
+    print("TUTOR_VISIBLE_MARKDOWN_INNER_HTML=0")
     print("TUTOR_TTS_ROOT_CHET_PHONEME=PASS")
     print("TUTOR_TTS_NO_PAUSE_BEFORE_NAMED_LETTER=PASS")
     print("TUTOR_TTS_CONTRASTIVE_CLAUSE_PAUSE=PASS")
