@@ -223,11 +223,11 @@ jobs:
           assert s['finite_semantic_review_groups'] == 74
           assert s['fully_accepted_semantic_groups'] == 0
           assert s['review_groups_with_accepted_component_sets'] == 10
-          assert s['semantic_units_with_accepted_component_sets'] == 19
-          assert s['semantic_requirements_with_accepted_component_sets'] == 19
-          assert s['semantic_units_remaining_without_accepted_component_set'] == 1297
-          assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1372
-          assert s['canonical_component_refs_reused_unique'] == 52
+          assert s['semantic_units_with_accepted_component_sets'] == 20
+          assert s['semantic_requirements_with_accepted_component_sets'] == 20
+          assert s['semantic_units_remaining_without_accepted_component_set'] == 1296
+          assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1371
+          assert s['canonical_component_refs_reused_unique'] == 55
           assert s['accepted_bounded_ru_route_semantics'] == 9
           assert s['accepted_bounded_ru_subject_semantics'] == 66
           assert s['accepted_bounded_ru_semantics_total'] == 75
@@ -325,7 +325,7 @@ jobs:
 
           touched = [g for g in data['semantic_review_groups'] if g['accepted_component_set_count']]
           assert len(touched) == 10
-          assert sum(g['accepted_component_set_count'] for g in touched) == 19
+          assert sum(g['accepted_component_set_count'] for g in touched) == 20
           assert all(g['status'] == 'SUBJECT_ACCEPTANCE_REQUIRED_WITH_ACCEPTED_COMPONENT_SET' for g in touched)
           assert all(g['remaining_group_action'].startswith('CONTINUE_EXACT_COMPONENT_REVIEW') for g in touched)
           print('RUSSIAN_SEMANTIC_ACCEPTANCE_PROGRESS_GUARD=PASS')
