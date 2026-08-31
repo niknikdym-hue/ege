@@ -13,6 +13,13 @@ HERE = Path(__file__).resolve().parent
 ENGINE = HERE.parents[1]
 INVENTORY = ENGINE / "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
 CURRENT_ROUTE = ENGINE / "278-RUSSIAN-FIPI-2026-OGE-6.6-CURRENT-ROUTE-SUPERSESSION-v0.1.json"
+COMPONENT_EVIDENCE = (
+    ENGINE
+    / "russian-program"
+    / "production-learning-content"
+    / "RU-PROG-08-OGE-6.6-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
+)
+COMPONENT_VALIDATOR = HERE / "validate_oge_6_6_component_evidence.py"
 PACKET_BUILDER = HERE / "build_russian_semantic_acceptance_packet.py"
 ACCOUNTING_BUILDER = HERE / "build_russian_subject_accounting_complete.py"
 
@@ -20,6 +27,7 @@ TARGET_CODE = "6.6"
 TARGET_SOURCE = "FIPI-OGE-RU-2026-FINAL"
 TARGET_DOCUMENT = "OGE_COD"
 INDEPENDENT_LEARNER_SYSTEMS = {"trainer_item", "practice_item"}
+MINIMUM_EXACT_ITEMS_PER_OWNER = 3
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -36,6 +44,8 @@ def canonical(value: Any) -> bytes:
 def build_audit() -> dict[str, Any]:
     inventory = load(INVENTORY)
     route = load(CURRENT_ROUTE)
+    component_evidence = load(COMPONENT_EVIDENCE)
+    component_validation = runpy.run_path(str(COMPONENT_VALIDATOR))["validate"]()
     packet = runpy.run_path(str(PACKET_BUILDER))["build_packet"]()
     accounting = runpy.run_path(str(ACCOUNTING_BUILDER))["build_accounting"]()
 
@@ -48,6 +58,25 @@ def build_audit() -> dict[str, Any]:
         raise ValueError("OGE 6.6 route mastery boundary weakened")
     if route.get("mastery_boundary", {}).get("component_specific_independent_evidence_required") is not True:
         raise ValueError("OGE 6.6 component-specific evidence requirement weakened")
+
+    validation_summary = component_validation.get("summary") or {}
+    if validation_summary.get("exact_owner_frontier") != 10:
+        raise ValueError("component evidence validator owner frontier drift")
+    if validation_summary.get("owners_with_valid_component_evidence") != 10:
+        raise ValueError("component evidence pack is not complete")
+    if validation_summary.get("minimum_items_per_owner", 0) < MINIMUM_EXACT_ITEMS_PER_OWNER:
+        raise ValueError("component evidence pack has insufficient per-owner evidence")
+    if validation_summary.get("object_closures") != 0:
+        raise ValueError("component evidence validator must not close the OGE object")
+
+    evidence_rows = component_evidence.get("owner_evidence") or []
+    evidence_by_owner = {
+        str(row.get("canonical_ref")): row
+        for row in evidence_rows
+        if isinstance(row, dict)
+    }
+    if set(evidence_by_owner) != set(owners):
+        raise ValueError("validated evidence owner set must equal route owner set")
 
     objects = [row for row in inventory.get("objects") or [] if isinstance(row, dict)]
     canonical_rows = {
@@ -99,6 +128,12 @@ def build_audit() -> dict[str, Any]:
     if accounting_row.get("semantic_identity_ref") is not None:
         raise ValueError("OGE 6.6 must not already carry a singular semantic identity")
 
+    target = component_evidence.get("target") or {}
+    if target.get("requirement_id") != requirement_id:
+        raise ValueError("component evidence requirement binding drift")
+    if target.get("admission_unit_id") != accounting_row.get("admission_unit_id"):
+        raise ValueError("component evidence admission-unit binding drift")
+
     linked_by_owner: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in objects:
         refs = [str(ref) for ref in row.get("current_semantic_refs") or []]
@@ -108,12 +143,14 @@ def build_audit() -> dict[str, Any]:
 
     owner_reviews: list[dict[str, Any]] = []
     exact_ready_count = 0
+    insufficient_exact_count = 0
     mixed_only_count = 0
     no_evidence_count = 0
     for owner in owners:
         canonical_row = canonical_rows[owner]
         exact_component_items: list[dict[str, Any]] = []
         mixed_component_items: list[dict[str, Any]] = []
+
         for row in linked_by_owner.get(owner, []):
             if row.get("source_system") not in INDEPENDENT_LEARNER_SYSTEMS:
                 continue
@@ -135,11 +172,31 @@ def build_audit() -> dict[str, Any]:
             else:
                 mixed_component_items.append(item)
 
+        materialized_row = evidence_by_owner[owner]
+        for item in materialized_row.get("independent_verification") or []:
+            refs = [str(ref) for ref in item.get("school_semantic_refs") or []]
+            materialized_item = {
+                "source_system": "original_eksamio_component_evidence",
+                "source_id": str(item.get("id")),
+                "review_status": "validated_current_launch",
+                "school_semantic_refs": refs,
+                "evidence_provenance_refs": [
+                    "russian-program/production-learning-content/RU-PROG-08-OGE-6.6-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
+                ],
+            }
+            if refs == [owner]:
+                exact_component_items.append(materialized_item)
+            else:
+                mixed_component_items.append(materialized_item)
+
         exact_component_items.sort(key=lambda row: (row["source_system"], row["source_id"]))
         mixed_component_items.sort(key=lambda row: (row["source_system"], row["source_id"]))
-        if exact_component_items:
+        if len(exact_component_items) >= MINIMUM_EXACT_ITEMS_PER_OWNER:
             status = "EXPLICIT_COMPONENT_SPECIFIC_INDEPENDENT_EVIDENCE_PRESENT"
             exact_ready_count += 1
+        elif exact_component_items:
+            status = "INSUFFICIENT_COMPONENT_SPECIFIC_INDEPENDENT_EVIDENCE"
+            insufficient_exact_count += 1
         elif mixed_component_items:
             status = "MIXED_SEMANTIC_LEARNER_EVIDENCE_ONLY_NOT_EXACT_ENOUGH"
             mixed_only_count += 1
@@ -156,6 +213,7 @@ def build_audit() -> dict[str, Any]:
                     str(ref) for ref in canonical_row.get("evidence_provenance_refs") or []
                 ],
                 "evidence_status": status,
+                "minimum_exact_items_required": MINIMUM_EXACT_ITEMS_PER_OWNER,
                 "exact_component_independent_item_count": len(exact_component_items),
                 "mixed_semantic_independent_item_count": len(mixed_component_items),
                 "exact_component_independent_items": exact_component_items,
@@ -163,9 +221,14 @@ def build_audit() -> dict[str, Any]:
             }
         )
 
-    ready = exact_ready_count == len(owners)
+    ready = (
+        exact_ready_count == len(owners)
+        and insufficient_exact_count == 0
+        and mixed_only_count == 0
+        and no_evidence_count == 0
+    )
     result: dict[str, Any] = {
-        "schema_version": "0.1.0",
+        "schema_version": "0.2.0",
         "date": "2026-08-31",
         "status": (
             "CENTRAL_BRAIN_OGE_6_6_COMPONENT_EVIDENCE_FRONTIER_COMPLETE_READY_FOR_SEPARATE_OBJECT_ACCEPTANCE"
@@ -179,9 +242,15 @@ def build_audit() -> dict[str, Any]:
             "keyword_or_fuzzy_inference_allowed": False,
             "module_or_packet_meaning_equivalence_allowed": False,
             "component_specific_independent_evidence_required": True,
-            "exact_component_evidence_rule": "A current trainer/practice object must explicitly reference the owner and must not reference any other school-* semantic identity. Non-school routing tags do not invalidate exact component evidence.",
+            "minimum_exact_independent_items_per_owner": MINIMUM_EXACT_ITEMS_PER_OWNER,
+            "exact_component_evidence_rule": (
+                "A current validated independent item must explicitly reference exactly one OGE 6.6 canonical owner. "
+                "At least three exact items, including selected and constructed evidence as enforced by the component validator, "
+                "are required per owner. Non-school routing tags do not establish mastery."
+            ),
             "mixed_semantic_item_can_prove_exact_component_evidence": False,
             "route_attempt_can_emit_exact_component_mastery": False,
+            "evidence_readiness_is_object_acceptance": False,
         },
         "target": {
             "content_code": TARGET_CODE,
@@ -194,11 +263,19 @@ def build_audit() -> dict[str, Any]:
             "routes": list(accounting_row.get("routes") or []),
             "current_disposition": str(accounting_row["disposition"]),
         },
+        "component_evidence": {
+            "path": "russian-program/production-learning-content/RU-PROG-08-OGE-6.6-COMPONENT-EVIDENCE-WAVE-001-v0.1.json",
+            "validator_path": "russian-program/subject-admission/validate_oge_6_6_component_evidence.py",
+            "validator_normalized_sha256": str(component_validation["normalized_sha256"]),
+            "owner_count": int(validation_summary["owners_with_valid_component_evidence"]),
+            "independent_item_count": int(validation_summary["independent_items_total"]),
+        },
         "exact_owner_refs": owners,
         "owner_reviews": owner_reviews,
         "summary": {
             "exact_owner_frontier": len(owners),
             "owners_with_explicit_component_specific_independent_evidence": exact_ready_count,
+            "owners_with_insufficient_exact_evidence": insufficient_exact_count,
             "owners_with_mixed_semantic_evidence_only": mixed_only_count,
             "owners_with_no_inventoried_independent_evidence": no_evidence_count,
             "ready_for_separate_exact_object_acceptance": ready,
@@ -239,9 +316,16 @@ def main() -> int:
         print(f"REQUIREMENT_ID={result['target']['requirement_id']}")
         print(f"ADMISSION_UNIT_ID={result['target']['admission_unit_id']}")
         print(f"EXACT_OWNER_FRONTIER={summary['exact_owner_frontier']}")
-        print("OWNERS_WITH_EXACT_COMPONENT_EVIDENCE=" + str(summary["owners_with_explicit_component_specific_independent_evidence"]))
+        print(
+            "OWNERS_WITH_EXACT_COMPONENT_EVIDENCE="
+            + str(summary["owners_with_explicit_component_specific_independent_evidence"])
+        )
+        print("OWNERS_WITH_INSUFFICIENT_EXACT=" + str(summary["owners_with_insufficient_exact_evidence"]))
         print("OWNERS_WITH_MIXED_ONLY=" + str(summary["owners_with_mixed_semantic_evidence_only"]))
-        print("OWNERS_WITH_NO_INDEPENDENT_EVIDENCE=" + str(summary["owners_with_no_inventoried_independent_evidence"]))
+        print(
+            "OWNERS_WITH_NO_INDEPENDENT_EVIDENCE="
+            + str(summary["owners_with_no_inventoried_independent_evidence"])
+        )
         print("READY_FOR_EXACT_OBJECT_ACCEPTANCE=" + str(int(summary["ready_for_separate_exact_object_acceptance"])))
         print("OBJECT_CLOSURES=0")
         print("FALSE_EXACT_MASTERY=0")
