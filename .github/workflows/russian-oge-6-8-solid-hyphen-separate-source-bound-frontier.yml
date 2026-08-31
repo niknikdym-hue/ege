@@ -1,0 +1,69 @@
+name: Russian OGE 6.8 solid-hyphen-separate source-bound frontier
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/172-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK04-ADVERBS-PRONOUNS-HYPHEN-v0.1.json"
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_8_solid_hyphen_separate_source_bound_frontier_review.py"
+      - ".github/workflows/russian-oge-6-8-solid-hyphen-separate-source-bound-frontier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-8-solid-hyphen-separate-source-bound-frontier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile source-bound reviewer
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_8_solid_hyphen_separate_source_bound_frontier_review.py
+      - name: Build deterministic 6.8 frontier twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_oge_6_8_solid_hyphen_separate_source_bound_frontier_review.py" --output /tmp/oge-6-8-a.json > /tmp/oge-6-8-a.txt
+          python3 "$root/build_oge_6_8_solid_hyphen_separate_source_bound_frontier_review.py" --output /tmp/oge-6-8-b.json > /tmp/oge-6-8-b.txt
+          cmp /tmp/oge-6-8-a.json /tmp/oge-6-8-b.json
+          diff -u /tmp/oge-6-8-a.txt /tmp/oge-6-8-b.txt
+          cat /tmp/oge-6-8-a.txt
+          grep -Fx 'OGE_6_8_SOLID_HYPHEN_SEPARATE_SOURCE_BOUND_FRONTIER=PASS' /tmp/oge-6-8-a.txt
+          grep -Fx 'OFFICIAL_BRANCHES=9' /tmp/oge-6-8-a.txt
+          grep -Fx 'UNIQUE_EXACT_OWNER_CANDIDATES=8' /tmp/oge-6-8-a.txt
+          grep -Fx 'CURRENT_ROUTE_REFS=6' /tmp/oge-6-8-a.txt
+          grep -Fx 'CURRENT_SOURCE_SUPPORTED_EXACT_CANDIDATES=6' /tmp/oge-6-8-a.txt
+          grep -Fx 'MISSING_EXACT_OWNER_CANDIDATES=2' /tmp/oge-6-8-a.txt
+          grep -Fx 'CURRENT_NONEXACT_ROUTE_REFS=0' /tmp/oge-6-8-a.txt
+          grep -Fx 'LEGACY_PLACEHOLDERS=2' /tmp/oge-6-8-a.txt
+          grep -Fx 'SCHOOL_REOPEN_REQUIRED=0' /tmp/oge-6-8-a.txt
+          grep -Fx 'SEMANTIC_ADMISSIONS=0' /tmp/oge-6-8-a.txt
+          grep -Fx 'OBJECT_CLOSURES=0' /tmp/oge-6-8-a.txt
+          grep -Fx 'NEW_SCHOOL_IDENTITIES=0' /tmp/oge-6-8-a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/oge-6-8-a.txt
+          grep -Fx 'LEARNER_AUDIO_PERSISTENCE=0' /tmp/oge-6-8-a.txt
+      - name: Upload source-bound frontier review
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-8-solid-hyphen-separate-source-bound-frontier
+          path: /tmp/oge-6-8-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
