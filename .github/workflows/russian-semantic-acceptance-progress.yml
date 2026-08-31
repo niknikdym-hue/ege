@@ -76,6 +76,7 @@ jobs:
             validate_ru11_determinative_pronoun_cohesion_bounded_subject_semantics.py
             validate_ru11_ukazatelnoe_pronoun_cohesion_bounded_subject_semantics.py
             validate_ru11_prityazhatelnoe_pronoun_cohesion_bounded_subject_semantics.py
+            validate_ru11_soyuz_cohesion_bounded_subject_semantics.py
             validate_ru12_genre_address_purpose_bounded_subject_semantics.py
             validate_ru12_functional_style_bounded_subject_semantics.py
           )
@@ -153,10 +154,11 @@ jobs:
               'RU11_DETERMINATIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU11_DEMONSTRATIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU11_POSSESSIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_CONJUNCTION_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU12_GENRE_ADDRESS_PURPOSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
               'RU12_FUNCTIONAL_STYLE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
           }
-          assert len(data['accepted_authorities']) == 37
+          assert len(data['accepted_authorities']) == 38
           assert {a['id'] for a in data['accepted_authorities']} == expected_authorities
 
           subject_counts = {
@@ -187,6 +189,7 @@ jobs:
               'RU11_DETERMINATIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
               'RU11_DEMONSTRATIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
               'RU11_POSSESSIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_CONJUNCTION_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
               'RU12_GENRE_ADDRESS_PURPOSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
               'RU12_FUNCTIONAL_STYLE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
           }
@@ -220,12 +223,12 @@ jobs:
           assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1372
           assert s['canonical_component_refs_reused_unique'] == 52
           assert s['accepted_bounded_ru_route_semantics'] == 9
-          assert s['accepted_bounded_ru_subject_semantics'] == 63
-          assert s['accepted_bounded_ru_semantics_total'] == 72
+          assert s['accepted_bounded_ru_subject_semantics'] == 64
+          assert s['accepted_bounded_ru_semantics_total'] == 73
           assert s['accepted_route_semantics_without_object_binding'] == 9
-          assert s['accepted_subject_semantics_without_object_binding'] == 63
+          assert s['accepted_subject_semantics_without_object_binding'] == 64
           assert s['new_semantic_identities_created'] == 0
-          assert s['ru_proposal_identities_admitted'] == 72
+          assert s['ru_proposal_identities_admitted'] == 73
           assert s['false_exact_mastery_admissions'] == 0
 
           expected_route = {
@@ -301,6 +304,7 @@ jobs:
               'ru-text-cohesion-determinative-pronoun',
               'ru-text-cohesion-demonstrative-pronoun',
               'ru-text-cohesion-possessive-pronoun',
+              'ru-text-cohesion-conjunction',
               'ru-text-genre-address-purpose-identification',
               'ru-text-functional-style-identification',
           }
