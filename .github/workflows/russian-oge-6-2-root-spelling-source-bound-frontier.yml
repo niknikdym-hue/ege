@@ -1,0 +1,81 @@
+name: Russian OGE 6.2 root-spelling source-bound frontier
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_2_root_spelling_source_bound_frontier_review.py"
+      - ".github/workflows/russian-oge-6-2-root-spelling-source-bound-frontier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-2-source-bound-frontier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile reviewer
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_2_root_spelling_source_bound_frontier_review.py
+      - name: Build deterministic source-bound review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_oge_6_2_root_spelling_source_bound_frontier_review.py" --output /tmp/review-a.json > /tmp/review-a.txt
+          python3 "$root/build_oge_6_2_root_spelling_source_bound_frontier_review.py" --output /tmp/review-b.json > /tmp/review-b.txt
+          cmp /tmp/review-a.json /tmp/review-b.json
+          diff -u /tmp/review-a.txt /tmp/review-b.txt
+          cat /tmp/review-a.txt
+      - name: Enforce fail-closed 6.2 source truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          review=json.loads(Path('/tmp/review-a.json').read_text(encoding='utf-8'))
+          assert review['status']=='SOURCE_BOUND_FRONTIER_REVIEW_INCOMPLETE_NO_ADMISSION'
+          assert review['target']['content_code']=='6.2'
+          assert review['official_source_truth']['alternating_root_family_count']==15
+          assert review['official_source_truth']['double_consonant_scope']=='double consonants in numeral names'
+          assert review['official_source_truth']['generic_russian_root_double_consonant_scope_claimed'] is False
+          assert review['source_boundary_findings']['legacy_double_consonant_placeholder_is_source_inexact'] is True
+          assert review['source_boundary_findings']['school_double_consonants_russian_root_lexical_cannot_be_admitted_from_6_2_source'] is True
+          assert review['source_boundary_findings']['school_numeral_orthography_base_is_reuse_candidate_not_yet_scope_proven_for_double_consonants'] is True
+          assert review['source_boundary_findings']['uncheckable_consonant_owner_requires_explicit_reuse_audit'] is True
+          assert review['admission_policy']['semantic_admissions']==0
+          assert review['admission_policy']['object_closures']==0
+          assert review['admission_policy']['false_exact_mastery_admissions']==0
+          assert review['admission_policy']['remove_6_2_placeholders_now'] is False
+          assert review['admission_policy']['accept_6_2_exact_component_now'] is False
+          assert review['admission_policy']['route_attempt_can_emit_exact_component_mastery'] is False
+          assert review['safety']['learner_audio_persistence']==0
+          print('OGE_6_2_FAIL_CLOSED_SOURCE_TRUTH=PASS')
+          PY
+      - name: Upload OGE 6.2 frontier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-2-root-spelling-source-bound-frontier
+          path: /tmp/review-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
