@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Fast private acceptance assembly for OpenAI vs Yandex Tutor brains.
 
-This lane intentionally avoids the branch-authored ru-* acceptance overlay.  It
+This lane intentionally avoids the branch-authored ru-* acceptance overlay. It
 uses the already merged reviewed 121-card Russian grounding path and one exact
 production-shaped card for the imminent human provider comparison.
 
-Fast voice acceptance uses the existing bounded SpeechKit v1 REST STT with the
-same SpeechKit v3 Lera TTS for both brains.  Production realtime STT remains the
-separate SpeechKit v3 gRPC-streaming target; this benchmark must never be
-represented as production streaming acceptance.
+Fast voice acceptance uses the existing bounded SpeechKit v1 REST STT and
+SpeechKit v3 Lera TTS. OpenAI and Alice keep separate spoken-rendering profiles:
+Alice uses a native Yandex Lera profile built only from SpeechKit controls.
+Production realtime STT remains the separate SpeechKit v3 gRPC-streaming target.
 """
 from __future__ import annotations
 
@@ -30,6 +30,11 @@ from sep1_russian_tutor import (
 from stdlib_json_transport import UrllibJsonTransport
 from stdlib_speechkit_transport import UrllibBinaryTransport, UrllibFormBytesTransport
 from yandex_alice_live_adapter import YandexAliceTextProvider, YandexAliceTutorConfig
+from yandex_lera_native_clean import (
+    PROFILE as YANDEX_LERA_NATIVE_PROFILE,
+    YandexNativeCleanTTSAdapter,
+    YandexNativePitchTransport,
+)
 from yandex_live_adapters import CredentialKind, YandexCredential, YandexSpeechConfig, YandexSpeechKitProvider
 from yandex_speech_secret_provider import YandexSpeechSecretProvider
 from yandex_speechkit_v3_tts import (
@@ -44,6 +49,7 @@ BENCHMARK_CARD_ID = "ex-practice-alt-sochetat-001"
 BENCHMARK_SEMANTIC_ID = "school-i-e-alternating-verb-roots-stressed-a"
 OPENAI_BENCHMARK_MODEL = "gpt-5.6-sol"
 YANDEX_BENCHMARK_MODEL_ID = "aliceai-llm"
+OPENAI_LERA_READING_PROFILE = "OPENAI_LERA_REFERENCE_CLEAN_V1"
 
 
 class FastTutorConfigurationError(ValueError):
@@ -148,6 +154,10 @@ class FastTutorConfig:
     def resolved_yandex_folder_id(self) -> str | None:
         return self.yandex_folder_id or os.environ.get("YANDEX_FOLDER_ID") or None
 
+    @property
+    def lera_reading_profile(self) -> str:
+        return YANDEX_LERA_NATIVE_PROFILE.name if self.brain_mode == "yandex" else OPENAI_LERA_READING_PROFILE
+
 
 @dataclass(frozen=True)
 class FastTutorAssembly:
@@ -179,6 +189,8 @@ class FastTutorAssembly:
             "tts_voice": "lera",
             "tts_role": "neutral",
             "tts_speed": 1.04,
+            "tts_reading_profile": self.config.lera_reading_profile,
+            "tts_pitch_shift_hz": YANDEX_LERA_NATIVE_PROFILE.pitch_shift_hz if self.config.brain_mode == "yandex" else None,
         }
 
 
@@ -238,7 +250,14 @@ def assemble_fast_tutor(
         stt_transport=stt_transport or UrllibBinaryTransport(),
         tts_transport=UrllibFormBytesTransport(),
     )
-    tts_provider = YandexSpeechKitV3TTS(
+
+    raw_tts_transport = tts_v3_transport or UrllibStreamingJsonTransport()
+    effective_tts_transport = (
+        YandexNativePitchTransport(raw_tts_transport)
+        if config.brain_mode == "yandex"
+        else raw_tts_transport
+    )
+    base_tts_provider = YandexSpeechKitV3TTS(
         config=YandexSpeechKitV3TTSConfig(
             credential=speech_credential,
             voice=config.yandex_voice,
@@ -246,9 +265,14 @@ def assemble_fast_tutor(
             speed=config.yandex_voice_speed,
             execution_enabled=config.speech_execution_enabled,
         ),
-        transport=tts_v3_transport or UrllibStreamingJsonTransport(),
+        transport=effective_tts_transport,
     )
-    speech_provider = YandexHybridSpeechProvider(stt_provider=stt_provider, tts_provider=tts_provider)
+    tts_provider = (
+        YandexNativeCleanTTSAdapter(base_tts_provider)
+        if config.brain_mode == "yandex"
+        else base_tts_provider
+    )
+    speech_provider = YandexHybridSpeechProvider(stt_provider=stt_provider, tts_provider=tts_provider)  # type: ignore[arg-type]
     voice_gateway = VoiceGateway([speech_provider])  # type: ignore[list-item]
 
     tutor = ResilientRussian121Tutor(
