@@ -9,6 +9,9 @@ from typing import Any
 HERE = Path(__file__).resolve().parent
 ENGINE = HERE.parent.parent
 PRONOUN_BANK = ENGINE / "172-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK04-ADVERBS-PRONOUNS-HYPHEN-v0.1.json"
+CURRENT_NORM_AUDIT = ENGINE / "221-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE3-ADVERBS-PRONOUNS-HYPHEN-v0.1.json"
+SEMANTIC_CONSOLIDATION = ENGINE / "239-RUSSIAN-SCHOOL-CANONICAL-SEMANTIC-CONSOLIDATION-AFTER-CURRENT-NORM-AUDIT-v0.1.json"
+WAVE_D = ENGINE / "255-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-D-O36-O45-v0.1.json"
 OGE_OVERLAY = ENGINE / "265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
 IDENTITY_INVENTORY = ENGINE / "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
 
@@ -40,12 +43,13 @@ EXPECTED_CURRENT_ROUTE_REFS = [
 ]
 
 COMPOUND_ADJECTIVE_OWNER = "school-compound-adjective-solid-hyphen-separate-system"
-INDEFINITE_PRONOUN_OWNER = "school-indefinite-pronouns-hyphen-koe-preposition-boundary"
+ABSORBED_INDEFINITE_PRONOUN_ID = "school-indefinite-pronouns-hyphen-koe-preposition-boundary"
+CURRENT_PRONOUN_PARTICLE_OWNER = "school-nonnegative-particle-separate-hyphen-spelling-base"
 NEGATIVE_PRONOUN_NONOWNER = "school-negative-pronouns-ne-ni-stress-preposition-boundary"
 COMPOUND_NOUN_NONOWNER = "school-compound-noun-solid-hyphen-system"
 
 SOURCE_BOUND_EXACT_OWNER_CANDIDATES = sorted(
-    set(EXPECTED_CURRENT_ROUTE_REFS + [COMPOUND_ADJECTIVE_OWNER, INDEFINITE_PRONOUN_OWNER])
+    set(EXPECTED_CURRENT_ROUTE_REFS + [COMPOUND_ADJECTIVE_OWNER])
 )
 MISSING_EXACT_OWNER_CANDIDATES = sorted(
     set(SOURCE_BOUND_EXACT_OWNER_CANDIDATES) - set(EXPECTED_CURRENT_ROUTE_REFS)
@@ -70,7 +74,8 @@ OFFICIAL_BRANCHES = [
     {
         "branch": "pronouns",
         "fipi_wording": "слитное, раздельное и дефисное написание местоимений",
-        "candidate_owner_refs": [INDEFINITE_PRONOUN_OWNER],
+        "candidate_owner_refs": [CURRENT_PRONOUN_PARTICLE_OWNER],
+        "authority_note": "The former narrow indefinite-pronoun identity was explicitly absorbed by this current canonical parent in authority 255; the parent retains кое-/кой-, -то/-либо/-нибудь and preposition-insertion branches.",
     },
     {
         "branch": "adverbs",
@@ -90,12 +95,12 @@ OFFICIAL_BRANCHES = [
     {
         "branch": "particles_by_li_zhe",
         "fipi_wording": "правописание частиц бы, ли, же с другими словами",
-        "candidate_owner_refs": ["school-nonnegative-particle-separate-hyphen-spelling-base"],
+        "candidate_owner_refs": [CURRENT_PRONOUN_PARTICLE_OWNER],
     },
     {
         "branch": "particles_to_taki_ka",
         "fipi_wording": "дефисное написание частиц -то, -таки, -ка",
-        "candidate_owner_refs": ["school-nonnegative-particle-separate-hyphen-spelling-base"],
+        "candidate_owner_refs": [CURRENT_PRONOUN_PARTICLE_OWNER],
     },
 ]
 
@@ -107,8 +112,22 @@ def load_json(path: Path) -> dict[str, Any]:
     return data
 
 
+def _decision_by_unit(audit: dict[str, Any], unit_id: str) -> dict[str, Any]:
+    rows = [
+        row
+        for row in audit.get("decisions") or []
+        if isinstance(row, dict) and row.get("unit_id") == unit_id
+    ]
+    if len(rows) != 1:
+        raise ValueError(f"expected exactly one current-norm audit decision for {unit_id}")
+    return rows[0]
+
+
 def build_review() -> dict[str, Any]:
     pronoun_bank = load_json(PRONOUN_BANK)
+    norm_audit = load_json(CURRENT_NORM_AUDIT)
+    consolidation = load_json(SEMANTIC_CONSOLIDATION)
+    wave_d = load_json(WAVE_D)
     overlay = load_json(OGE_OVERLAY)
     inventory = load_json(IDENTITY_INVENTORY)
 
@@ -145,11 +164,10 @@ def build_review() -> dict[str, Any]:
         if item.get("source_system") == "school_canonical"
         and str(item.get("source_id") or "").startswith("school-")
     }
-    inventory_required = sorted(set(SOURCE_BOUND_EXACT_OWNER_CANDIDATES) - {INDEFINITE_PRONOUN_OWNER})
-    missing_inventory = [ref for ref in inventory_required if ref not in canonical_rows]
+    missing_inventory = [ref for ref in SOURCE_BOUND_EXACT_OWNER_CANDIDATES if ref not in canonical_rows]
     if missing_inventory:
         raise ValueError("source-supported 6.8 candidate missing from canonical inventory: " + ",".join(missing_inventory))
-    for ref in inventory_required:
+    for ref in SOURCE_BOUND_EXACT_OWNER_CANDIDATES:
         row = canonical_rows[ref]
         if row.get("authority_status") != "current" or row.get("review_status") != "reviewed":
             raise ValueError(f"6.8 candidate not current/reviewed: {ref}")
@@ -163,19 +181,46 @@ def build_review() -> dict[str, Any]:
         for row in pronoun_bank.get("canonical_units") or []
         if isinstance(row, dict)
     }
-    indefinite = bank_units.get(INDEFINITE_PRONOUN_OWNER)
-    if not indefinite:
-        raise ValueError("indefinite-pronoun 6.8 owner missing from canonical pronoun bank")
-    members = {str(value) for value in indefinite.get("members") or []}
-    contrasts = {str(value) for value in indefinite.get("contrast_members") or []}
+    narrow_pronoun = bank_units.get(ABSORBED_INDEFINITE_PRONOUN_ID)
+    if not narrow_pronoun:
+        raise ValueError("historical indefinite-pronoun identity missing from canonical pronoun bank")
+    members = {str(value) for value in narrow_pronoun.get("members") or []}
+    contrasts = {str(value) for value in narrow_pronoun.get("contrast_members") or []}
     if not {"кое-кто", "кто-то", "кто-либо", "кто-нибудь"}.issubset(members):
-        raise ValueError("indefinite-pronoun hyphen model drift")
+        raise ValueError("historical indefinite-pronoun hyphen model drift")
     if not {"кое у кого", "кое с кем"}.issubset(contrasts):
-        raise ValueError("indefinite-pronoun preposition boundary drift")
+        raise ValueError("historical indefinite-pronoun preposition boundary drift")
+
+    norm_decision = _decision_by_unit(norm_audit, ABSORBED_INDEFINITE_PRONOUN_ID)
+    if norm_decision.get("disposition") != "CONFIRMED_AND_NORMATIVE_SCOPE_BROADENED_NO_COUNT_CHANGE":
+        raise ValueError("indefinite-pronoun current-norm confirmation drift")
+    if norm_decision.get("keep_identity") is not True or norm_decision.get("count_effect") != 0:
+        raise ValueError("indefinite-pronoun current-norm checkpoint semantics drift")
+
+    scope = consolidation.get("scope") or {}
+    if "221-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE3-ADVERBS-PRONOUNS-HYPHEN-v0.1.json" not in (scope.get("audit_wave_refs") or []):
+        raise ValueError("239 consolidation no longer consumes 221 pronoun audit")
+    if (consolidation.get("count_arithmetic") or {}).get("active_school_canonical_total") != 137:
+        raise ValueError("239 active semantic baseline drift")
+
+    particle_parent = (wave_d.get("O38_nonnegative_particles") or {}).get("new_unit") or {}
+    if particle_parent.get("unit_id") != CURRENT_PRONOUN_PARTICLE_OWNER:
+        raise ValueError("255 particle parent identity drift")
+    if particle_parent.get("absorbs") != [ABSORBED_INDEFINITE_PRONOUN_ID]:
+        raise ValueError("255 indefinite-pronoun absorption lineage drift")
+    branches = {str(value) for value in particle_parent.get("branches") or []}
+    required_parent_branches = {
+        "кое-/кой-, -то, -либо, -нибудь with pronominal words",
+        "preposition inserted after кое-/кой- breaks the hyphenated form: кое у кого, кое с кем",
+    }
+    if not required_parent_branches.issubset(branches):
+        raise ValueError("255 current parent no longer preserves pronoun branches")
+    if ABSORBED_INDEFINITE_PRONOUN_ID in canonical_rows:
+        raise ValueError("absorbed indefinite-pronoun identity unexpectedly reappeared as current canonical identity")
+
     negative = bank_units.get(NEGATIVE_PRONOUN_NONOWNER)
     if not negative:
         raise ValueError("negative-pronoun boundary identity missing from canonical pronoun bank")
-
     if COMPOUND_NOUN_NONOWNER not in canonical_rows:
         raise ValueError("compound-noun nonowner boundary missing from canonical inventory")
 
@@ -194,7 +239,7 @@ def build_review() -> dict[str, Any]:
         raise ValueError("official 6.8 branch-to-owner frontier does not match unique candidate set")
 
     return {
-        "schema_version": "0.1.0",
+        "schema_version": "0.2.0",
         "status": "CENTRAL_BRAIN_SOURCE_BOUND_FRONTIER_PROVEN_NO_ADMISSION",
         "authority_issue": 161,
         "scope": "OGE_2026_ORTHOGRAPHY_CODE_6_8_SOLID_HYPHEN_SEPARATE_SOURCE_BOUND_FRONTIER",
@@ -219,6 +264,16 @@ def build_review() -> dict[str, Any]:
             "review_status": str(current_route.get("review_status")),
             "current_semantic_refs": current_refs,
         },
+        "pronoun_authority_lineage": {
+            "historical_identity": ABSORBED_INDEFINITE_PRONOUN_ID,
+            "current_norm_audit_authority": "221",
+            "semantic_consolidation_authority": "239",
+            "absorption_authority": "255",
+            "current_canonical_parent": CURRENT_PRONOUN_PARTICLE_OWNER,
+            "historical_identity_is_current_inventory_member": False,
+            "semantic_reopen_required": False,
+            "reason": "221 confirmed the narrow identity inside the 137 checkpoint; 239 retained that checkpoint semantic set; 255 explicitly absorbed the narrow identity into the current nonnegative-particle spelling parent while preserving the pronoun hyphen/preposition branches. The current inventory correctly contains the parent and not the absorbed child.",
+        },
         "source_bound_frontier": {
             "official_branch_count": len(OFFICIAL_BRANCHES),
             "unique_exact_owner_candidates": SOURCE_BOUND_EXACT_OWNER_CANDIDATES,
@@ -231,15 +286,16 @@ def build_review() -> dict[str, Any]:
             "current_nonexact_route_ref_count": len(nonexact_current),
             "school_reopen_required": False,
             "school_count_effect_if_route_is_corrected": 0,
-            "exact_route_ready_now": False,
-            "next_atomic_action": "Create an additive current-launch 6.8 route supersession with exactly the eight proven canonical owners and zero placeholders. Do not mutate historical 265/273 evidence in place and do not claim object/component acceptance until independent component-specific evidence is separately audited.",
+            "exact_route_ready_now": True,
+            "next_atomic_action": "Create an additive current-launch 6.8 route supersession with exactly the seven proven current canonical owners and zero placeholders. Do not mutate historical 265/273 evidence in place and do not claim object/component acceptance until independent component-specific evidence is separately audited.",
         },
         "boundary_notes": [
             {
                 "boundary": "pronouns",
-                "decision": "INDEFINITE_PRONOUN_HYPHEN_PREPOSITION_OWNER_ONLY_FOR_6_8",
-                "owner": INDEFINITE_PRONOUN_OWNER,
-                "reason": "The canonical unit explicitly covers КОЕ-/‑ТО/‑ЛИБО/‑НИБУДЬ hyphenation and the preposition-inside-form separation boundary, which is the 6.8 pronoun spelling operation.",
+                "decision": "USE_CURRENT_ABSORPTION_PARENT_FOR_6_8",
+                "historical_identity": ABSORBED_INDEFINITE_PRONOUN_ID,
+                "owner": CURRENT_PRONOUN_PARTICLE_OWNER,
+                "reason": "Authority 255 explicitly absorbed the formerly narrow indefinite-pronoun identity into the current canonical parent and preserved both the hyphenated кое-/кой-/-то/-либо/-нибудь branch and the preposition-insertion separation branch.",
             },
             {
                 "boundary": "negative_pronouns",
@@ -286,6 +342,8 @@ def main() -> int:
     print(f"CURRENT_NONEXACT_ROUTE_REFS={frontier['current_nonexact_route_ref_count']}")
     print(f"LEGACY_PLACEHOLDERS={review['historical_overlay_truth']['placeholder_count']}")
     print(f"SCHOOL_REOPEN_REQUIRED={int(frontier['school_reopen_required'])}")
+    print(f"EXACT_ROUTE_READY_NOW={int(frontier['exact_route_ready_now'])}")
+    print(f"ABSORBED_PRONOUN_ID_CURRENT={int(review['pronoun_authority_lineage']['historical_identity_is_current_inventory_member'])}")
     print(f"SEMANTIC_ADMISSIONS={boundary['semantic_admissions']}")
     print(f"OBJECT_CLOSURES={boundary['object_closures']}")
     print(f"NEW_SCHOOL_IDENTITIES={boundary['new_school_identities']}")
