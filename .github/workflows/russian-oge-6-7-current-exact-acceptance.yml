@@ -1,0 +1,97 @@
+name: Russian OGE 6.7 current exact acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/279-RUSSIAN-FIPI-2026-OGE-6.7-CURRENT-ROUTE-SUPERSESSION-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.6-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.7-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.7-COMPONENT-EVIDENCE-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.7-COMPONENT-EVIDENCE-WAVE-003-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.7-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_7_current_evidence_audit.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_7_current_evidence_audit_v2.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_7_current_evidence_audit_v3.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_7_object_evidence_audit.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_6_component_evidence.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_7_component_evidence_wave_001.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_7_component_evidence_wave_002.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_7_component_evidence_wave_003.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_7_current_acceptance.py"
+      - ".github/workflows/russian-oge-6-7-current-exact-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-7-current-exact-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile exact acceptance validators
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile \
+            "$root/build_oge_6_7_current_evidence_audit_v3.py" \
+            "$root/validate_russian_oge_6_7_current_acceptance.py"
+      - name: Prove current evidence readiness deterministically
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_oge_6_7_current_evidence_audit_v3.py" --output /tmp/oge67-a.json > /tmp/oge67-a.txt
+          python3 "$root/build_oge_6_7_current_evidence_audit_v3.py" --output /tmp/oge67-b.json > /tmp/oge67-b.txt
+          cmp /tmp/oge67-a.json /tmp/oge67-b.json
+          diff -u /tmp/oge67-a.txt /tmp/oge67-b.txt
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/oge67-a.json').read_text(encoding='utf-8'))
+          s=d['summary']
+          assert d['status']=='CENTRAL_BRAIN_OGE_6_7_COMPONENT_EVIDENCE_COMPLETE_READY_FOR_SEPARATE_OBJECT_ACCEPTANCE_NOT_ACCEPTED'
+          assert s['exact_owner_frontier']==12
+          assert s['owners_with_explicit_component_specific_independent_evidence']==12
+          assert s['owners_with_insufficient_exact_evidence']==0
+          assert s['owners_with_mixed_semantic_evidence_only']==0
+          assert s['owners_with_no_inventoried_independent_evidence']==0
+          assert s['total_exact_independent_items_added_or_reused_by_bounded_oge_6_7_audits']==36
+          assert s['ready_for_separate_exact_object_acceptance'] is True
+          assert s['object_closures']==0 and s['false_exact_mastery_admissions']==0
+          assert d['safety']['learner_audio_persistence']==0
+          print('OGE_6_7_EVIDENCE_READY=PASS')
+          PY
+      - name: Validate exact OGE 6.7 acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/validate_russian_oge_6_7_current_acceptance.py" > /tmp/accept-a.txt
+          python3 "$root/validate_russian_oge_6_7_current_acceptance.py" > /tmp/accept-b.txt
+          diff -u /tmp/accept-a.txt /tmp/accept-b.txt
+          cat /tmp/accept-a.txt
+      - name: Upload exact evidence audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-7-current-exact-acceptance-evidence
+          path: /tmp/oge67-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
