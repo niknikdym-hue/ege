@@ -1,0 +1,246 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-11",
+  "module_title_ru": "Текст, смысл и межфразовая связь",
+  "scope": {
+    "routes": ["school", "ege", "diagnostic", "tutor"],
+    "source_candidate_ref": "candidate-006",
+    "source_taxonomy_id": "cohesion_word_forms"
+  },
+  "source_provenance": [
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-006",
+      "coverage_note": "Current draft subject candidate; status is preserved and not silently upgraded."
+    },
+    {
+      "kind": "confirmed_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_word_forms]",
+      "coverage_note": "Confirmed repository-audited EGE taxonomy node under text_cohesion, task 26."
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-11"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Source authorities define the bounded skill identity only; all learner-facing examples and practice below are original Eksamio wording."
+  },
+  "identity_boundary": "This file materializes only the proven candidate-specific verification gap. The ru-* id remains non-school-canonical and is admitted only by a separate Central Brain bounded subject-semantic authority; candidate/taxonomy ids remain source refs.",
+  "reuse_review": {
+    "broader_existing_unit_ref": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-cohesion-link-means]",
+    "broader_existing_unit_reused_for_explanation_and_transfer": true,
+    "broader_existing_unit_direct_word_forms_independent_checks": 0,
+    "broader_existing_direct_check_ids": [],
+    "broader_existing_unit_reused_as_exact_candidate_006_mastery_evidence": false,
+    "minimum_component_specific_independent_checks_for_exact_mastery": 2,
+    "new_content_materialized_only_for_proven_component_verification_gap": true,
+    "reason": "The broader cohesion unit names grammatical correlation in its explanation but its independent verification checks a causal adverb and a demonstrative-pronoun substitution. It contains no direct independent check that distinguishes inflected forms of one lexeme from cognate words or exact lexical repetition, so it cannot establish candidate-006 mastery."
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-text-cohesion-word-forms",
+      "title_ru": "Формы одного слова как средство межфразовой связи",
+      "canonical_explanation": {
+        "short": "Формы одного слова связывают предложения, когда один и тот же лексический элемент повторяется в разных грамматических формах и подхватывает тот же предмет, признак или действие. Для exact mastery нужно доказать тождество лексемы, различие грамматической формы и реальную связь через границу предложений.",
+        "boundaries": [
+          "Однокоренные, но разные слова не являются формами одного слова: «исследовать — исследование» относится к соседнему навыку.",
+          "Неизменённый повтор того же слова сам по себе относится к лексическому повтору и не доказывает именно смену формы.",
+          "Совпадение окончания или части слова не доказывает тождество лексемы.",
+          "Нужно показать межфразовую функцию: формы должны связывать конкретные предложения, а не просто встречаться рядом.",
+          "Generic Task-26 result и общий unit по средствам связи не могут автоматически выдать exact mastery этого component."
+        ]
+      },
+      "decision_algorithm": [
+        "Найди во втором предложении слово, которое по смыслу подхватывает слово из предыдущего предложения.",
+        "Проверь словарное тождество: это одна и та же лексема, а не два однокоренных производных слова.",
+        "Назови различие грамматической формы: падеж, число, род, лицо, время или другой релевантный грамматический признак.",
+        "Проверь, что лексическое значение сохраняется и речь идёт о том же предмете, признаке или действии.",
+        "Покажи, какие два предложения связывает эта пара форм и что именно подхватывается.",
+        "Фиксируй mastery только если одновременно доказаны одна лексема, разные грамматические формы и межфразовая связующая функция."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Экспедиция вышла к перевалу утром. Участники экспедиции сделали там короткую остановку.",
+          "answer": "«Экспедиция — экспедиции» — формы одного существительного: меняется падеж, лексема и референт сохраняются; вторая форма подхватывает объект первого предложения."
+        },
+        {
+          "prompt": "Маршрут оказался сложным. О сложном маршруте предупреждали заранее.",
+          "answer": "«Маршрут — маршруте» и «сложным — сложном» показывают грамматическое изменение тех же лексем и связывают второе предложение с первым."
+        },
+        {
+          "prompt": "Исследователи наблюдали за птицами. Наблюдение продолжалось два часа.",
+          "answer": "«Наблюдали — наблюдение» — однокоренные, но разные слова, поэтому это не candidate-006."
+        },
+        {
+          "prompt": "Проект завершили в мае. Проект получил высокую оценку.",
+          "answer": "Здесь повторена та же неизменённая форма «проект»; это может связывать предложения лексическим повтором, но не доказывает навык распознавания разных форм одного слова."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Любые однокоренные слова — формы одного слова.",
+          "correction": "Нужно различать словоизменение и словообразование: у форм сохраняется одна лексема, а у производных слов появляются разные лексические единицы."
+        },
+        {
+          "wrong": "Если слово повторилось без изменения, это уже формы одного слова.",
+          "correction": "Для этого component нужно доказать именно разные грамматические формы одной лексемы; неизменённый повтор относится к другой разновидности связи."
+        },
+        {
+          "wrong": "Достаточно увидеть похожие окончания.",
+          "correction": "Формальное сходство не заменяет доказательство тождества лексемы и её межфразовой функции."
+        },
+        {
+          "wrong": "Верный общий ответ на задание 26 автоматически доказывает candidate-006.",
+          "correction": "Составной результат не заменяет отдельные component-specific независимые проверки."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p11-wf-g1",
+          "prompt": "Почему «станция — станции» может быть парой форм одного слова?",
+          "expected": "Это одна лексема «станция» в разных падежных формах; при сохранении того же референта пара может связывать предложения."
+        },
+        {
+          "id": "p11-wf-g2",
+          "prompt": "Почему «строить — строительство» не подходит?",
+          "expected": "Это однокоренные, но разные слова, а не грамматические формы одной лексемы."
+        },
+        {
+          "id": "p11-wf-g3",
+          "prompt": "Какие три доказательства обязательны для exact mastery?",
+          "expected": "Одна лексема, разные грамматические формы и реальная межфразовая функция."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p11-wf-i1",
+          "prompt": "«Команда закончила расчёты. У команды оставался час на проверку». Что связывает предложения?",
+          "answer": "Формы «команда — команды»: одна лексема в разных падежах, второй элемент подхватывает тот же референт."
+        },
+        {
+          "id": "p11-wf-i2",
+          "prompt": "«Лес быстро темнел. В темноте тропу стало не видно». Это формы одного слова?",
+          "answer": "Нет; «темнел — темноте» не являются грамматическими формами одной лексемы."
+        },
+        {
+          "id": "p11-wf-i3",
+          "prompt": "«Схема была точной. Схема помогла сверить данные». Это candidate-006?",
+          "answer": "Нет как доказательство candidate-006: форма слова не изменилась; возможен лексический повтор."
+        },
+        {
+          "id": "p11-wf-i4",
+          "prompt": "Можно ли выдать mastery, если ученик нашёл пару «проект — проектом», но не объяснил связь между предложениями?",
+          "answer": "Нет."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p11-wf-t1",
+          "prompt": "Ученик выписал пары похожих слов. Как отличить candidate-006 от candidate-007?",
+          "answer": "Нужно установить, одна ли это лексема в разных грамматических формах; если это разные однокоренные слова, относится к candidate-007."
+        },
+        {
+          "id": "p11-wf-t2",
+          "prompt": "Почему морфологическое распознавание падежа само по себе не равно mastery candidate-006?",
+          "answer": "Здесь грамматическая форма важна только как часть доказательства межфразовой связи одной лексемы; общий морфологический навык шире и не доказывает связующую функцию."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p11-wf-r1",
+          "delay_hint": "24h",
+          "prompt": "Главный тест пары форм одного слова как средства связи?",
+          "answer": "Одна лексема + разные грамматические формы + доказанная связь через границу предложений."
+        },
+        {
+          "id": "p11-wf-r2",
+          "delay_hint": "7d",
+          "prompt": "«Читать — чтение» — формы одного слова?",
+          "answer": "Нет, это однокоренные разные слова."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p11-wf-v1",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «Лаборатория получила новый прибор. В лаборатории прибор сразу проверили». Докажи или опровергни candidate-006.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: выделена пара «лаборатория — лаборатории» как одна лексема",
+              "1: названо различие грамматической формы (именительный / предложный падеж)",
+              "1: доказано, что вторая форма подхватывает тот же объект через границу предложений"
+            ]
+          }
+        },
+        {
+          "id": "p11-wf-v2",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «Исследователи начали измерять температуру. Измерение повторили вечером». Можно ли засчитать candidate-006?",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: ответ «нет»",
+              "1: объяснено, что «измерять — измерение» являются однокоренными разными словами, а не формами одной лексемы",
+              "1: указано, что такая пара не может быть exact evidence candidate-006 даже при смысловой связи предложений"
+            ]
+          }
+        },
+        {
+          "id": "p11-wf-v3",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «Отчёт лежал на столе. Отчёт оказался неполным». Почему эта пара не доказывает candidate-006?",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: замечено, что повторена одна и та же неизменённая форма «отчёт»",
+              "1: отличен лексический повтор от разных грамматических форм одного слова",
+              "1: сделан вывод, что exact mastery candidate-006 по этой паре не подтверждается"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "source_candidate_ref": "candidate-006",
+        "source_candidate_review_status": "draft",
+        "independent_verification_required": true,
+        "exact_mastery_requires_two_or_more_component_specific_word_forms_checks": true,
+        "generic_task26_result_can_emit_exact_component_mastery": false,
+        "generic_morphology_result_can_emit_this_mastery": false,
+        "cognate_words_result_can_emit_this_mastery": false,
+        "broader_link_means_unit_can_emit_exact_word_forms_mastery": false,
+        "unchanged_lexical_repetition_can_emit_exact_word_forms_mastery": false
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "distinguishing inflected forms of one lexeme from cognate words",
+          "proving grammatical-form change while lexical identity remains stable",
+          "proving the pair's inter-sentence cohesion function"
+        ],
+        "forbidden": [
+          "equating cognate words with forms of one word",
+          "equating unchanged lexical repetition with candidate-006 mastery",
+          "emitting generic Task-26 or morphology mastery from this bounded unit"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "production_units": 1,
+    "new_original_examples": 4,
+    "guided_items": 3,
+    "independent_items": 4,
+    "transfer_items": 2,
+    "retention_items": 2,
+    "independent_verification_items": 3,
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0
+  }
+}

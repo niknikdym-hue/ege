@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU16_TASK27_K5_ROUTE_SEMANTIC",
+  "authority_issue": 161,
+  "scope": "EGE_2026_TASK_27_K5_LOGICAL_COHERENCE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "decision": {
+    "candidate_ref": "candidate-052",
+    "source_taxonomy_id": "essay_composition_coherence",
+    "accepted_semantic_id": "ru-ege-essay-logical-composition-cohesion",
+    "label_ru": "Логичная композиция, связность и последовательность сочинения",
+    "criterion_route": "K5",
+    "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
+    "content_ref": "russian-program/production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json"
+  },
+  "authority": {
+    "tier_a_task27_route": "russian-program/ege-task-code-relation/FIPI-EGE-2026-TASK-CODE-RELATION-v1.0.json#task=27",
+    "tier_a_fipi_spec_sha256": "3b71ec81f954bc32b574a0b3b997ee37bb3bc19ae8825f11217fd7149198b476",
+    "tier_a_locator": "printed_page=20;pdf_page=10;panel=right;task=27",
+    "tier_b_k5": "53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json#criteria[K5]",
+    "source_verified_taxonomy": "03-RUSSIAN-SKILL-GRAPH.json#skills[essay_composition_coherence]"
+  },
+  "exact_boundary": {
+    "included": [
+      "absence of logical contradictions between parts of the essay",
+      "clear logical transitions between paragraphs and theses",
+      "conclusions that follow from the stated arguments",
+      "functional sequence and semantic cohesion of essay parts"
+    ],
+    "excluded": [
+      "orthographic correctness (K7)",
+      "punctuation correctness (K8)",
+      "grammar correctness (K9)",
+      "speech-norm correctness (K10)",
+      "mere paragraph formatting or equal paragraph length",
+      "a generic essay-quality or overall-writing identity"
+    ]
+  },
+  "mastery_boundary": {
+    "k5_score_alone_implies_exact_semantic_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "generic_essay_attempt_can_emit_exact_component_mastery": false
+  },
+  "acceptance_reason": "The final Task-27 route is Tier-A proven. FIPI K5 defines logicality through contradictions, transitions and conclusions. The current EGE taxonomy node candidate-052 is source-verified as essay composition/coherence, and the original Eksamio learner unit trains the same bounded logical-coherence operation with independent verification. The accepted semantic is therefore bounded to K5 logical coherence and does not absorb K7-K10 or generic essay quality.",
+  "summary": {
+    "accepted_route_semantics": 1,
+    "accepted_ru_route_semantics": 1,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}

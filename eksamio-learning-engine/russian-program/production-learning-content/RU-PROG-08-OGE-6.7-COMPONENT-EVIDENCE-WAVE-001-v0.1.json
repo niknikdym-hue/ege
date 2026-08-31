@@ -1,0 +1,104 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-31",
+  "status": "CURRENT_LAUNCH_OGE_6_7_COMPONENT_EVIDENCE_WAVE_001_NO_OBJECT_ADMISSION",
+  "subject": "russian",
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "target": {
+    "source_id": "FIPI-OGE-RU-2026-FINAL",
+    "document_id": "OGE_COD",
+    "content_code": "6.7",
+    "requirement_id": "RSK-OGE_COD-6-7-P025",
+    "admission_unit_id": "RAU-2668e140328e4edee952"
+  },
+  "evidence_policy": {
+    "reuse_first": true,
+    "new_semantic_identity_created": false,
+    "exact_owner_frontier_may_change_here": false,
+    "each_item_must_reference_exactly_one_school_semantic": true,
+    "component_specific_independent_evidence_required": true,
+    "route_attempt_can_emit_exact_component_mastery": false,
+    "evidence_readiness_is_object_acceptance": false,
+    "cross_route_reuse_may_complete_an_owner_only_when_route_scoped": true
+  },
+  "source_provenance": [
+    {
+      "kind": "current_route_owner_authority",
+      "ref": "../../279-RUSSIAN-FIPI-2026-OGE-6.7-CURRENT-ROUTE-SUPERSESSION-v0.1.json",
+      "coverage_note": "Current launch authority proves the exact OGE 6.7 owner frontier; this evidence wave does not change it."
+    },
+    {
+      "kind": "official_scope_authority",
+      "ref": "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/ru-9_6_orfografija.pdf",
+      "coverage_note": "FIPI defines the endings branch. No official exercise wording is copied."
+    },
+    {
+      "kind": "validated_cross_route_component_evidence",
+      "ref": "RU-PROG-08-OGE-6.6-COMPONENT-EVIDENCE-WAVE-001-v0.1.json",
+      "coverage_note": "The separate OGE 6.7 audit reuses only ending-specific item IDs oge66-shib-v1 and oge66-shib-v2 for this owner; suffix-only oge66-shib-v3 remains excluded."
+    }
+  ],
+  "owner_evidence": [
+    {
+      "canonical_ref": "school-o-e-after-sibilants-suffix-ending",
+      "title_ru": "О / Е после шипящих в окончаниях: route-scoped completion evidence",
+      "semantic_boundary": "Проверяется выбор О/Е после шипящей именно в окончании существительного. Корневая орфография и суффиксальные случаи не засчитываются этой проверкой.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_ROUTE_SCOPED_COMPLETION_EVIDENCE",
+      "reuse_dependency": {
+        "validated_pack": "RU-PROG-08-OGE-6.6-COMPONENT-EVIDENCE-WAVE-001-v0.1.json",
+        "required_route_scoped_item_ids": ["oge66-shib-v1", "oge66-shib-v2"],
+        "excluded_same_owner_item_ids": ["oge66-shib-v3"]
+      },
+      "mastery_guard": {
+        "component_specific_only": true,
+        "minimum_independent_items_required_across_validated_reuse_and_this_wave": 3,
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "generic_oge_route_result_can_emit_exact_mastery": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge67-shib-end-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Почему в творительном падеже пишется «плащом», но «овощем»? Объясни выбор О/Е после шипящей именно в окончании.",
+          "answer_outline": "В окончании существительного после шипящей под ударением пишется о: «плащом»; без ударения — е: «овощем». Корень и суффикс этой проверкой не оцениваются.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: «плащом» связано с ударным окончанием и буквой о, «овощем» — с безударным окончанием и буквой е",
+              "1: явно указано, что правило применяется к окончанию без переноса на корень или суффикс"
+            ]
+          },
+          "school_semantic_refs": ["school-o-e-after-sibilants-suffix-ending"]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "owners_with_new_evidence": 1,
+    "new_independent_items": 1,
+    "owner_completed_only_with_validated_route_scoped_reuse": true,
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  },
+  "copyright_guard": {
+    "official_source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "commercial_textbook_prose_copied": 0,
+    "learner_prompts_examples_feedback": "ORIGINAL_EKSAMIO",
+    "rule": "Authorities define scope only; the learner-facing evidence item uses original Eksamio wording."
+  },
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "tilda_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_payment_or_refund": false,
+    "real_message_delivery": false
+  }
+}

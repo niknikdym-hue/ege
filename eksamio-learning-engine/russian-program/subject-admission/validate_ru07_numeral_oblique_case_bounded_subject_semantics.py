@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import hashlib
+import json
+import runpy
+from pathlib import Path
+from typing import Any
+
+HERE = Path(__file__).resolve().parent
+PROGRAM = HERE.parent
+BOUNDARY_BUILDER = HERE / "build_ru07_grammar_norms_candidate_boundary_review.py"
+ACCEPTANCE = HERE / "RU07-NUMERAL-OBLIQUE-CASE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+CONTENT = PROGRAM / "production-learning-content/RU-PROG-07-GRAMMAR-NORMS-WAVE-002-v0.1.json"
+
+CANDIDATE = "candidate-026"
+SEMANTIC = "ru-grammar-numeral-oblique-case"
+SOURCE_REF = "numeral_form_norms"
+
+
+def load(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def one(rows: list[dict[str, Any]], label: str) -> dict[str, Any]:
+    if len(rows) != 1:
+        raise AssertionError(f"{label}: expected 1, got {len(rows)}")
+    return rows[0]
+
+
+def main() -> int:
+    boundary = runpy.run_path(str(BOUNDARY_BUILDER))["build_review"]()
+    acceptance = load(ACCEPTANCE)
+    content = load(CONTENT)
+
+    if boundary.get("status") != "CENTRAL_BRAIN_RU07_GRAMMAR_NORMS_REUSE_FIRST_BOUNDARY_REVIEW_ACCEPTANCE_NOT_ADMITTED":
+        raise AssertionError("RU07 antecedent boundary status drift")
+    if boundary.get("module_id") != "RU-PROG-07" or boundary.get("module_binding_mode") != "DRAFT_CANDIDATE_BINDING":
+        raise AssertionError("RU07 module boundary drift")
+    reuse = boundary.get("reuse_review") or {}
+    if reuse.get("current_proposed_id_collisions") != 0:
+        raise AssertionError("RU07 proposed semantic id collision detected")
+    policy0 = boundary.get("policy") or {}
+    if policy0.get("subset_evidence_can_admit_broader_candidate") is not False:
+        raise AssertionError("RU07 subset/broader-candidate guard weakened")
+    if policy0.get("component_specific_independent_evidence_required") is not True:
+        raise AssertionError("RU07 component-specific evidence guard missing")
+    rel = one(
+        [row for row in boundary.get("candidate_relation_decisions", []) if isinstance(row, dict) and row.get("candidate_ref") == CANDIDATE and row.get("content_semantic_id") == SEMANTIC],
+        "candidate-026 bounded-subset relation",
+    )
+    if rel.get("relation") != "CONTENT_IS_BOUNDED_SUBSET_OF_DRAFT_CANDIDATE" or rel.get("acceptance_effect") != "NONE":
+        raise AssertionError("candidate-026 antecedent subset relation drift")
+    snapshot = one(
+        [row for row in boundary.get("candidate_inventory_snapshot", []) if isinstance(row, dict) and row.get("candidate_ref") == CANDIDATE],
+        "candidate-026 inventory snapshot",
+    )
+    if snapshot.get("review_status") != "draft" or snapshot.get("current_semantic_refs") != [SOURCE_REF]:
+        raise AssertionError("candidate-026 source identity/review state drift")
+
+    if content.get("status") != "SUBJECT_ACCEPTANCE_REQUIRED" or content.get("module_id") != "RU-PROG-07":
+        raise AssertionError("RU07 content self-admitted or module drift")
+    provenance = content.get("source_provenance") or []
+    if not any(isinstance(row, dict) and row.get("kind") == "official_program" and row.get("access") == "PUBLIC_OFFICIAL_PDF" for row in provenance):
+        raise AssertionError("RU07 public official-program provenance missing")
+    if not any(isinstance(row, dict) and row.get("kind") == "official_exam_methodology" and row.get("access") == "PUBLIC_OFFICIAL_PDF" for row in provenance):
+        raise AssertionError("RU07 public official exam-methodology provenance missing")
+    guard = content.get("copyright_guard") or {}
+    if guard.get("source_passages_copied") != 0 or guard.get("learner_examples") != "ORIGINAL_EKSAMIO":
+        raise AssertionError("RU07 copyright/original-content guard drift")
+    unit = one(
+        [row for row in content.get("units", []) if isinstance(row, dict) and row.get("proposed_semantic_id") == SEMANTIC],
+        "RU07 numeral oblique-case learner unit",
+    )
+    for key, minimum in (
+        ("decision_algorithm", 5),
+        ("worked_examples", 3),
+        ("misconceptions", 2),
+        ("guided_practice", 2),
+        ("independent_practice", 3),
+        ("mixed_transfer_practice", 1),
+        ("retention_items", 2),
+        ("independent_verification", 2),
+    ):
+        rows = unit.get(key)
+        if not isinstance(rows, list) or len(rows) < minimum:
+            raise AssertionError(f"RU07 numeral learner coverage too small: {key}")
+    peis = unit.get("peis_evidence") or {}
+    if peis.get("semantic_ref_status") != "PROPOSED_NOT_CANONICAL" or peis.get("independent_verification_required") is not True:
+        raise AssertionError("RU07 numeral PEIS fail-closed state drift")
+    tutor = unit.get("tutor_grounding") or {}
+    if not tutor.get("allowed") or not tutor.get("forbidden"):
+        raise AssertionError("RU07 numeral Tutor boundary missing")
+
+    if acceptance.get("status") != "CENTRAL_BRAIN_ACCEPTED_RU07_NUMERAL_OBLIQUE_CASE_BOUNDED_SUBJECT_SEMANTIC":
+        raise AssertionError("RU07 numeral acceptance status drift")
+    if acceptance.get("authority_issue") != 161:
+        raise AssertionError("RU07 numeral authority issue drift")
+    if acceptance.get("canonical_school_registry_mutated") is not False or acceptance.get("new_parallel_registry_created") is not False:
+        raise AssertionError("RU07 numeral registry mutation/duplication forbidden")
+    source_truth = acceptance.get("source_truth") or {}
+    if source_truth.get("candidate_ref") != CANDIDATE or source_truth.get("candidate_source_taxonomy_ref") != SOURCE_REF:
+        raise AssertionError("RU07 numeral source truth crosswalk drift")
+    if source_truth.get("candidate_review_status") != "draft":
+        raise AssertionError("RU07 candidate-026 must remain draft")
+    if source_truth.get("accepted_semantic_is_exact_candidate_equivalent") is not False or source_truth.get("accepted_semantic_relation_to_candidate") != "BOUNDED_SUBSET":
+        raise AssertionError("RU07 numeral subset boundary drift")
+
+    policy = acceptance.get("policy") or {}
+    for key in (
+        "reuse_first",
+        "current_semantic_inventory_collision_forbidden",
+        "school_duplicate_forbidden",
+        "component_specific_independent_evidence_required",
+    ):
+        if policy.get(key) is not True:
+            raise AssertionError(f"RU07 numeral required policy weakened: {key}")
+    for key in (
+        "candidate_ref_is_canonical_id",
+        "candidate_ref_admitted",
+        "subset_evidence_can_admit_broader_candidate",
+        "module_membership_implies_exact_owner",
+        "content_presence_implies_acceptance",
+        "generic_task7_result_can_emit_exact_component_mastery",
+        "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding",
+        "keyword_or_fuzzy_inference_allowed",
+    ):
+        if policy.get(key) is not False:
+            raise AssertionError(f"RU07 numeral fail-closed policy drift: {key}")
+    if policy.get("new_subject_identity_namespace") != "ru-*":
+        raise AssertionError("RU07 numeral namespace drift")
+
+    decision = one(acceptance.get("decisions") or [], "RU07 numeral acceptance decision")
+    if (
+        decision.get("candidate_ref") != CANDIDATE
+        or decision.get("source_taxonomy_ref") != SOURCE_REF
+        or decision.get("accepted_semantic_id") != SEMANTIC
+        or decision.get("entity_type") != "NUMERAL_OBLIQUE_CASE_INFLECTION_SKILL"
+        or decision.get("subject_semantic_status") != "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+        or decision.get("relation_to_candidate") != "CONTENT_IS_BOUNDED_SUBSET_OF_DRAFT_CANDIDATE"
+        or decision.get("broader_candidate_status_after_acceptance") != "REMAINS_DRAFT_NOT_ADMITTED"
+        or decision.get("object_binding_status") != "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+    ):
+        raise AssertionError("RU07 numeral acceptance decision drift")
+    boundary_guard = str(decision.get("boundary_guard") or "").lower()
+    for token in ("oblique case", "normative numeral form", "does not claim full", "task-7"):
+        if token not in boundary_guard:
+            raise AssertionError(f"RU07 numeral boundary missing token: {token}")
+
+    ag = acceptance.get("copyright_guard") or {}
+    if ag.get("source_passages_copied") != 0 or ag.get("commercial_textbook_bytes") != 0:
+        raise AssertionError("RU07 numeral acceptance copyright guard drift")
+    summary = acceptance.get("summary") or {}
+    expected = {
+        "accepted_bounded_subject_semantics": 1,
+        "accepted_ru_subject_semantics": 1,
+        "broader_candidate_records_admitted": 0,
+        "new_school_canonical_identities": 0,
+        "object_level_admission_units_closed": 0,
+        "object_level_requirements_closed": 0,
+        "false_exact_mastery_admissions": 0,
+    }
+    for key, value in expected.items():
+        if summary.get(key) != value:
+            raise AssertionError(f"RU07 numeral acceptance summary drift: {key}")
+
+    digest = hashlib.sha256(
+        json.dumps(acceptance, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    print("RU07_NUMERAL_OBLIQUE_CASE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE=PASS")
+    print(f"ACCEPTED_SEMANTIC={SEMANTIC}")
+    print("RELATION_TO_CANDIDATE_026=BOUNDED_SUBSET")
+    print("CANDIDATE_026_STATUS=REMAINS_DRAFT_NOT_ADMITTED")
+    print("OBJECT_CLOSURES=0/0")
+    print("FALSE_EXACT_MASTERY=0")
+    print(f"NORMALIZED_SHA256={digest}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

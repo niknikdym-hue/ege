@@ -1,0 +1,74 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU03_DEFINITION_CONTEXT_BOUNDED_SUBJECT_SEMANTIC",
+  "authority_issue": 161,
+  "scope": "RU03_CANDIDATE_010_CONFIRMED_SOURCE_IDENTITY_PLUS_NEW_ORIGINAL_EXACT_LEARNER_CONTENT_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "registry_contract_ref": "272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
+  "authority": {
+    "semantic_candidate_inventory": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+    "skill_graph": "03-RUSSIAN-SKILL-GRAPH.json#skills[definition_context_matching]",
+    "candidate_boundary_review": "russian-program/subject-admission/RU03-LEXIS-CANDIDATE-BOUNDARY-REVIEW-v0.1.json",
+    "content_adequacy_review": "russian-program/subject-admission/RU03-DEFINITION-CONTEXT-CONTENT-ADEQUACY-REVIEW-v0.1.json",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-03-DEFINITION-CONTEXT-MATCHING-WAVE-004-v0.1.json"
+  },
+  "policy": {
+    "exact_current_source_identity_required": true,
+    "confirmed_skill_graph_evidence_required": true,
+    "current_missing_subject_candidate_required": true,
+    "exact_school_meaning_collision_forbidden": true,
+    "original_exact_learner_content_required": true,
+    "new_subject_identity_namespace": "ru-*",
+    "school_duplicate_forbidden": true,
+    "ege_taxonomy_id_promoted_unchanged": false,
+    "candidate_id_used_as_semantic_id": false,
+    "adjacent_candidates_admitted": false,
+    "generic_task2_result_can_emit_exact_component_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "content_presence_alone_is_semantic_admission": false
+  },
+  "decisions": [
+    {
+      "candidate_ref": "candidate-010",
+      "source_taxonomy_id": "definition_context_matching",
+      "accepted_semantic_id": "ru-lexis-definition-context-matching",
+      "canonical_label_ru": "Сопоставление словарного толкования с употреблением слова в тексте",
+      "entity_type": "DEFINITION_CONTEXT_MATCHING_SKILL",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-03-DEFINITION-CONTEXT-MATCHING-WAVE-004-v0.1.json#units[proposed_semantic_id=ru-lexis-definition-context-matching]",
+      "boundary_guard": "match one explicitly supplied definition to the presented contextual use, or select the context realizing that exact definition; does not claim multi-sense dictionary selection, generic contextual meaning inference, homonymy/polysemy classification, or generic Task-2 mastery",
+      "excluded_adjacent_candidate_refs": [
+        "candidate-008",
+        "candidate-009",
+        "candidate-011",
+        "candidate-012",
+        "candidate-013",
+        "candidate-014",
+        "candidate-015"
+      ],
+      "source_evidence_status": "confirmed",
+      "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+    }
+  ],
+  "crosswalk_policy": {
+    "candidate_ref_preserved_as_legacy_ref": true,
+    "source_taxonomy_ref_preserved": true,
+    "source_taxonomy_id_replaced": false,
+    "mapping_relation": "ROUTES_TO / CONTRIBUTES_TO",
+    "exam_task_number_is_semantic_identity": false,
+    "generic_task2_result_can_emit_exact_component_mastery": false
+  },
+  "summary": {
+    "accepted_bounded_subject_semantics": 1,
+    "accepted_ru_subject_semantics": 1,
+    "source_backed_candidates_consumed": 1,
+    "new_original_production_content_units_used": 1,
+    "adjacent_candidates_admitted": 0,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}

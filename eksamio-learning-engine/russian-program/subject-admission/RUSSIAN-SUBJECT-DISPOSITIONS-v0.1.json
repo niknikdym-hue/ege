@@ -1,0 +1,135 @@
+{
+  "schema_version": "0.1.0",
+  "status": "RUSSIAN_FULL_SUBJECT_ACCEPTANCE_CANDIDATE_PARTIAL",
+  "authority_issue": 161,
+  "baseline_main": "0e7cb3cd05cd999ea97606d65cf5aef5625fcb3f",
+  "object_review_authority": {
+    "state_path": "eksamio-learning-engine/russian-program/object-review/RUSSIAN-OBJECT-REVIEW-STATE-v1.0.json",
+    "normalized_queue_sha256": "aa334efc455c68707d2d31de48b4364c879a619cf18dd07c9183d53890be5309",
+    "requirements_total": 1400,
+    "admission_units_total": 1325
+  },
+  "policy": {
+    "disposition": "ROUTE_OR_FORMAT_ONLY",
+    "semantic_identity_creation_allowed": false,
+    "canonical_semantic_admissions": 0,
+    "ru_proposal_admissions": 0,
+    "interpretation": "These records are exam structure, scoring, allowed-resource, or route-format metadata. They are accounted exactly once and do not create learner semantic mastery."
+  },
+  "progress": {
+    "accepted_units": 9,
+    "accepted_requirements": 9,
+    "remaining_units_subject_review_required": 1316,
+    "remaining_requirements_subject_review_required": 1391
+  },
+  "dispositions": [
+    {
+      "admission_unit_id": "RAU-1ea15ce68171e3b66543",
+      "requirement_id": "RSK-EGE_SPEC-DURATION",
+      "requirement_class": "scoring_or_format_constraint",
+      "normalized_meaning": "ЕГЭ: на выполнение работы предусмотрено 210 минут.",
+      "source_locator": "FIPI-EGE-RU-2026-FINAL/EGE_SPEC p.15 DURATION",
+      "modules": ["RU-PROG-16"],
+      "routes": ["ege"],
+      "disposition": "ROUTE_OR_FORMAT_ONLY",
+      "semantic_identity_ref": null,
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED"
+    },
+    {
+      "admission_unit_id": "RAU-21de023c8b5626a6a250",
+      "requirement_id": "RSK-OGE_SPEC-MAX-POINTS",
+      "requirement_class": "scoring_or_format_constraint",
+      "normalized_meaning": "ОГЭ: максимальный первичный результат за работу — 37 баллов.",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_SPEC p.8 MAX-POINTS",
+      "modules": ["RU-PROG-15"],
+      "routes": ["oge"],
+      "disposition": "ROUTE_OR_FORMAT_ONLY",
+      "semantic_identity_ref": null,
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED"
+    },
+    {
+      "admission_unit_id": "RAU-8a2d22326876673e2d21",
+      "requirement_id": "RSK-OGE_SPEC-STRUCTURE",
+      "requirement_class": "scoring_or_format_constraint",
+      "normalized_meaning": "ОГЭ: 13 заданий в трёх частях — изложение, краткие ответы, сочинение.",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_SPEC p.7 STRUCTURE",
+      "modules": ["RU-PROG-15"],
+      "routes": ["oge"],
+      "disposition": "ROUTE_OR_FORMAT_ONLY",
+      "semantic_identity_ref": null,
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED"
+    },
+    {
+      "admission_unit_id": "RAU-9445f2281caceae3e6f5",
+      "requirement_id": "RSK-EGE_SPEC-STRUCTURE",
+      "requirement_class": "scoring_or_format_constraint",
+      "normalized_meaning": "ЕГЭ: 27 заданий; 26 кратких ответов и одно сочинение.",
+      "source_locator": "FIPI-EGE-RU-2026-FINAL/EGE_SPEC p.12 STRUCTURE",
+      "modules": ["RU-PROG-16"],
+      "routes": ["ege"],
+      "disposition": "ROUTE_OR_FORMAT_ONLY",
+      "semantic_identity_ref": null,
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED"
+    },
+    {
+      "admission_unit_id": "RAU-958f797fe08bb7eeec3c",
+      "requirement_id": "RSK-EGE_SPEC-MAX-POINTS",
+      "requirement_class": "scoring_or_format_constraint",
+      "normalized_meaning": "ЕГЭ: максимальный первичный результат за работу — 50 баллов.",
+      "source_locator": "FIPI-EGE-RU-2026-FINAL/EGE_SPEC p.13 MAX-POINTS",
+      "modules": ["RU-PROG-16"],
+      "routes": ["ege"],
+      "disposition": "ROUTE_OR_FORMAT_ONLY",
+      "semantic_identity_ref": null,
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED"
+    },
+    {
+      "admission_unit_id": "RAU-a4760ec6aa32a35739bd",
+      "requirement_id": "RSK-OGE_DEMO-DEMO-ROUTE",
+      "requirement_class": "exam_format_constraint",
+      "normalized_meaning": "Демоверсия фиксирует модель задания и ответа для маршрута ОГЭ-2026.",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_DEMO p.2 DEMO-ROUTE",
+      "modules": ["RU-PROG-15"],
+      "routes": ["oge"],
+      "disposition": "ROUTE_OR_FORMAT_ONLY",
+      "semantic_identity_ref": null,
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED"
+    },
+    {
+      "admission_unit_id": "RAU-d46e3e665994bc48f8a1",
+      "requirement_id": "RSK-EGE_DEMO-DEMO-ROUTE",
+      "requirement_class": "exam_format_constraint",
+      "normalized_meaning": "Демоверсия фиксирует модель задания и ответа для маршрута ЕГЭ-2026.",
+      "source_locator": "FIPI-EGE-RU-2026-FINAL/EGE_DEMO p.2 DEMO-ROUTE",
+      "modules": ["RU-PROG-16"],
+      "routes": ["ege"],
+      "disposition": "ROUTE_OR_FORMAT_ONLY",
+      "semantic_identity_ref": null,
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED"
+    },
+    {
+      "admission_unit_id": "RAU-e736c4bd4170fb961302",
+      "requirement_id": "RSK-OGE_SPEC-DICTIONARY",
+      "requirement_class": "scoring_or_format_constraint",
+      "normalized_meaning": "ОГЭ допускает нормативный орфографический словарь в установленном формате.",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_SPEC p.11 DICTIONARY",
+      "modules": ["RU-PROG-08", "RU-PROG-15"],
+      "routes": ["oge"],
+      "disposition": "ROUTE_OR_FORMAT_ONLY",
+      "semantic_identity_ref": null,
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED"
+    },
+    {
+      "admission_unit_id": "RAU-fdb9996412f16c57bf96",
+      "requirement_id": "RSK-OGE_SPEC-DURATION",
+      "requirement_class": "scoring_or_format_constraint",
+      "normalized_meaning": "ОГЭ: на выполнение работы предусмотрено 235 минут.",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_SPEC p.11 DURATION",
+      "modules": ["RU-PROG-15"],
+      "routes": ["oge"],
+      "disposition": "ROUTE_OR_FORMAT_ONLY",
+      "semantic_identity_ref": null,
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED"
+    }
+  ]
+}

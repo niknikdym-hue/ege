@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_REVIEWED_EXACT_BROAD_DOMAINS_PARTIAL",
+  "authority_issue": 161,
+  "baseline_main": "0e7cb3cd05cd999ea97606d65cf5aef5625fcb3f",
+  "source_review_slice_sha256": "4a46ddc0dca08f91295e93a59f98b2f08f234425da6a4d7b611a61b8455ab7cb",
+  "object_review_queue_sha256": "aa334efc455c68707d2d31de48b4364c879a619cf18dd07c9183d53890be5309",
+  "target_modules": ["RU-PROG-08", "RU-PROG-09", "RU-PROG-10", "RU-PROG-14"],
+  "selection_rule": "EXACT_NORMALIZED_MEANING_EQUALITY_WITHIN_PINNED_REVIEW_SLICE_ONLY",
+  "policy": {
+    "keyword_or_fuzzy_inference_allowed": false,
+    "module_membership_is_not_semantic_admission": true,
+    "classification_only_no_semantic_admission": true,
+    "broad_domain_is_not_atomic_mastery": true,
+    "generic_domain_attempt_can_emit_exact_component_mastery": false,
+    "component_mastery_requires_component_specific_independent_evidence": true,
+    "content_presence_implies_admission": false
+  },
+  "expected_materialized_summary": {
+    "reviewed_meanings": 4,
+    "accepted_classification_units": 344,
+    "accepted_classification_requirements": 361,
+    "semantic_admissions": 0
+  },
+  "exact_normalized_meanings": [
+    "Анализировать синтаксическую конструкцию и её нормативность.",
+    "Выбирать нормативные знаки препинания в конструкции.",
+    "Контролировать речевую нормативность и исправлять нарушения.",
+    "Применять орфографическое правило к слову или форме."
+  ],
+  "rationale_by_meaning": {
+    "Анализировать синтаксическую конструкцию и её нормативность.": "This is a broad syntax-and-normativity domain spanning multiple independently assessable construction types and normative decisions. Treating one generic attempt as exact mastery of the entire domain would create false mastery.",
+    "Выбирать нормативные знаки препинания в конструкции.": "This is a broad punctuation domain spanning multiple independently assessable construction and punctuation rules. Generic punctuation success cannot prove exact mastery of every component rule.",
+    "Контролировать речевую нормативность и исправлять нарушения.": "This is a broad speech-norm/error-correction domain spanning multiple lexical, grammatical and syntactic norm targets. Generic correction evidence cannot prove exact mastery of every component norm.",
+    "Применять орфографическое правило к слову или форме.": "This is a broad orthography domain spanning multiple independently assessable spelling rules. Generic orthography evidence cannot prove exact mastery of every component spelling rule."
+  }
+}

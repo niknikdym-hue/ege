@@ -1,0 +1,68 @@
+name: Russian OGE 6.7 object evidence audit
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/279-RUSSIAN-FIPI-2026-OGE-6.7-CURRENT-ROUTE-SUPERSESSION-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.6-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_6_component_evidence.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_7_object_evidence_audit.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
+      - ".github/workflows/russian-oge-6-7-object-evidence-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-7-object-evidence-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile evidence auditor
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_7_object_evidence_audit.py
+      - name: Build deterministic reuse-first evidence audit twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_oge_6_7_object_evidence_audit.py" --output /tmp/oge-6-7-evidence-a.json > /tmp/oge-6-7-evidence-a.txt
+          python3 "$root/build_oge_6_7_object_evidence_audit.py" --output /tmp/oge-6-7-evidence-b.json > /tmp/oge-6-7-evidence-b.txt
+          diff -u /tmp/oge-6-7-evidence-a.json /tmp/oge-6-7-evidence-b.json
+          diff -u /tmp/oge-6-7-evidence-a.txt /tmp/oge-6-7-evidence-b.txt
+          cat /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'OGE_6_7_OBJECT_EVIDENCE_AUDIT=PASS' /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'EXACT_OWNER_FRONTIER=12' /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'OWNERS_WITH_EXACT_COMPONENT_EVIDENCE=1' /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'OWNERS_WITH_INSUFFICIENT_EXACT=1' /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'OWNERS_WITH_MIXED_ONLY=0' /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'OWNERS_WITH_NO_INDEPENDENT_EVIDENCE=10' /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'REUSED_ROUTE_SCOPED_ITEMS=5' /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'READY_FOR_EXACT_OBJECT_ACCEPTANCE=0' /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'OBJECT_CLOSURES=0' /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/oge-6-7-evidence-a.txt
+          grep -Fx 'LEARNER_AUDIO_PERSISTENCE=0' /tmp/oge-6-7-evidence-a.txt
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
+      - name: Upload bounded component evidence audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-7-object-evidence-audit
+          path: /tmp/oge-6-7-evidence-a.json
+          retention-days: 30

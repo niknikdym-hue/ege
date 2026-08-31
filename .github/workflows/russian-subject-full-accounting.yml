@@ -1,0 +1,107 @@
+name: Russian full subject object accounting
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/**"
+      - ".github/workflows/russian-subject-full-accounting.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-object-accounting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build full object accounting twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py \
+            --output /tmp/accounting-a.json > /tmp/accounting-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py \
+            --output /tmp/accounting-b.json > /tmp/accounting-report-b.txt
+          cmp /tmp/accounting-a.json /tmp/accounting-b.json
+          diff -u /tmp/accounting-report-a.txt /tmp/accounting-report-b.txt
+          cat /tmp/accounting-report-a.txt
+          cp /tmp/accounting-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-FULL-SUBJECT-OBJECT-ACCOUNTING.json
+      - name: Validate full accounting remains semantic-blocked
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_accounting_complete.py
+      - name: Build finite semantic acceptance packet twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py \
+            --json-output /tmp/semantic-packet-a.json \
+            --markdown-output /tmp/semantic-packet-a.md > /tmp/semantic-packet-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py \
+            --json-output /tmp/semantic-packet-b.json \
+            --markdown-output /tmp/semantic-packet-b.md > /tmp/semantic-packet-report-b.txt
+          cmp /tmp/semantic-packet-a.json /tmp/semantic-packet-b.json
+          cmp /tmp/semantic-packet-a.md /tmp/semantic-packet-b.md
+          diff -u /tmp/semantic-packet-report-a.txt /tmp/semantic-packet-report-b.txt
+          cat /tmp/semantic-packet-report-a.txt
+          cp /tmp/semantic-packet-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.json
+          cp /tmp/semantic-packet-a.md eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.md
+      - name: Validate finite semantic acceptance packet
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_semantic_acceptance_packet.py
+      - name: Build exact semantic reuse evidence twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_exact_semantic_reuse_probe.py \
+            --output /tmp/reuse-probe-a.json > /tmp/reuse-probe-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_exact_semantic_reuse_probe.py \
+            --output /tmp/reuse-probe-b.json > /tmp/reuse-probe-report-b.txt
+          cmp /tmp/reuse-probe-a.json /tmp/reuse-probe-b.json
+          diff -u /tmp/reuse-probe-report-a.txt /tmp/reuse-probe-report-b.txt
+          cat /tmp/reuse-probe-report-a.txt
+          cp /tmp/reuse-probe-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EXACT-SEMANTIC-REUSE-PROBE.json
+      - name: Build exact EGE canonical component acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_ege_exact_component_acceptance.py \
+            --output /tmp/ege-component-acceptance-a.json > /tmp/ege-component-acceptance-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_ege_exact_component_acceptance.py \
+            --output /tmp/ege-component-acceptance-b.json > /tmp/ege-component-acceptance-report-b.txt
+          cmp /tmp/ege-component-acceptance-a.json /tmp/ege-component-acceptance-b.json
+          diff -u /tmp/ege-component-acceptance-report-a.txt /tmp/ege-component-acceptance-report-b.txt
+          cat /tmp/ege-component-acceptance-report-a.txt
+          cp /tmp/ege-component-acceptance-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
+      - name: Preserve source and object-review authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/source-knowledge/validate_russian_source_knowledge.py
+          python3 eksamio-learning-engine/russian-program/object-review/validate_object_level_review_queue.py
+      - name: Upload full accounting and semantic-review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-full-subject-object-accounting
+          path: |
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-FULL-SUBJECT-OBJECT-ACCOUNTING.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PACKET.md
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EXACT-SEMANTIC-REUSE-PROBE.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed in full-accounting slice.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'

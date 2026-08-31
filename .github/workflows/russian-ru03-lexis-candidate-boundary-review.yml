@@ -1,0 +1,74 @@
+name: Russian RU03 lexis candidate boundary review
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU03-LEXIS-CANDIDATE-BOUNDARY-REVIEW-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru03_lexis_candidate_boundary_review.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-03-LEXIS-PARONYMS-PHRASEOLOGY-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json"
+      - ".github/workflows/russian-ru03-lexis-candidate-boundary-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru03-lexis-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU03 exact boundary validator
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru03_lexis_candidate_boundary_review.py
+      - name: Validate RU03 candidate boundary twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_lexis_candidate_boundary_review.py > /tmp/ru03-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru03_lexis_candidate_boundary_review.py > /tmp/ru03-b.txt
+          diff -u /tmp/ru03-a.txt /tmp/ru03-b.txt
+          cat /tmp/ru03-a.txt
+      - name: Require fail-closed admission-ready boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('eksamio-learning-engine/russian-program/subject-admission/RU03-LEXIS-CANDIDATE-BOUNDARY-REVIEW-v0.1.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'CENTRAL_BRAIN_RU03_LEXIS_CANDIDATE_BOUNDARY_REVIEW_COMPLETE_NO_ADMISSION'
+          s = d['summary']
+          assert s['candidates_reviewed'] == 8
+          assert s['confirmed_skill_graph_candidates'] == 7
+          assert s['needs_review_skill_graph_candidates'] == 1
+          assert s['exact_content_admission_ready_candidates'] == 1
+          assert s['semantic_admissions'] == 0
+          assert s['object_level_admission_units_closed'] == 0
+          assert s['object_level_requirements_closed'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          ready = d['admission_ready']
+          assert ready['candidate_ref'] == 'candidate-011'
+          assert ready['source_taxonomy_id'] == 'paronym_context_choice'
+          assert ready['proposed_semantic_id'] == 'ru-lexis-paronym-collocation-choice'
+          assert ready['status'] == 'READY_FOR_SEPARATE_BOUNDED_SEMANTIC_ACCEPTANCE_NOT_ACCEPTED_BY_THIS_REVIEW'
+          assert next(r for r in d['candidate_review'] if r['candidate_ref'] == 'candidate-015')['skill_graph_evidence_status'] == 'needs_review'
+          print('RU03_LEXIS_FAIL_CLOSED_GUARD=PASS')
+          PY
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda or audited trainer source changed in RU03 review PR.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'

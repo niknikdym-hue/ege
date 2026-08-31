@@ -1,0 +1,104 @@
+name: Russian OGE 6.2 root-spelling source-bound frontier
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/247-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A1-MATERIALIZATION-v0.1.json"
+      - "eksamio-learning-engine/248-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A2-ALTERNATING-ROOTS-NORMALIZATION-v0.1.json"
+      - "eksamio-learning-engine/249-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A3-E-E-Y-DOUBLE-CONSONANTS-v0.1.json"
+      - "eksamio-learning-engine/252-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-B-O17-O25-v0.1.json"
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_2_root_spelling_source_bound_frontier_review.py"
+      - ".github/workflows/russian-oge-6-2-root-spelling-source-bound-frontier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-2-source-bound-frontier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile reviewer
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_2_root_spelling_source_bound_frontier_review.py
+      - name: Build deterministic source-bound review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_oge_6_2_root_spelling_source_bound_frontier_review.py" --output /tmp/review-a.json > /tmp/review-a.txt
+          python3 "$root/build_oge_6_2_root_spelling_source_bound_frontier_review.py" --output /tmp/review-b.json > /tmp/review-b.txt
+          cmp /tmp/review-a.json /tmp/review-b.json
+          diff -u /tmp/review-a.txt /tmp/review-b.txt
+          cat /tmp/review-a.txt
+      - name: Enforce fail-closed 6.2 source truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          review=json.loads(Path('/tmp/review-a.json').read_text(encoding='utf-8'))
+          assert review['status']=='SOURCE_BOUND_FRONTIER_ONE_CANONICAL_GAP_NO_ADMISSION'
+          assert review['target']['content_code']=='6.2'
+          assert review['official_source_truth']['alternating_root_family_count']==15
+          assert review['official_source_truth']['double_consonant_scope']=='double consonants in numeral names'
+          alt=review['alternating_root_owner_audit']
+          assert alt['status']=='RESOLVED_EXACT_REUSE_FIRST'
+          assert alt['resolved_family_count']==15
+          assert alt['unresolved_family_count']==0
+          assert alt['unique_current_reviewed_owner_count']==8
+          assert alt['keyword_or_fuzzy_mapping_used'] is False
+          doubles=review['numeral_double_consonant_owner_audit']
+          assert doubles['status']=='RESOLVED_EXACT_REUSE_FIRST'
+          assert doubles['exact_owner']=='school-double-consonants-morpheme-junction'
+          assert doubles['generic_russian_root_double_owner_used'] is False
+          assert doubles['borrowed_root_double_owner_used'] is False
+          assert doubles['numeral_orthography_base_used'] is False
+          gap=review['uncheckable_consonant_gap']
+          assert gap['status']=='PROVEN_CANONICAL_GAP_REQUIRES_BOUNDED_REOPEN_REVIEW'
+          assert gap['official_fipi_branch_present'] is True
+          assert gap['nearby_verification_ids_explicitly_exclude_nonverifiable_cases'] is True
+          assert gap['exact_current_canonical_owner_count']==0
+          assert gap['proposed_identity']=='school-root-consonant-dictionary-unverifiable'
+          assert gap['proposed_identity_admitted'] is False
+          assert gap['refreeze_185_zero-gap_claim_can_be_treated_as_current_exact_truth'] is False
+          boundary=review['remaining_source_boundary']
+          assert boundary['unresolved_branch_count']==1
+          assert boundary['unresolved_branches']==['uncheckable_consonants']
+          assert review['admission_policy']['semantic_admissions']==0
+          assert review['admission_policy']['object_closures']==0
+          assert review['admission_policy']['false_exact_mastery_admissions']==0
+          assert review['admission_policy']['remove_6_2_placeholders_now'] is False
+          assert review['admission_policy']['accept_6_2_exact_component_now'] is False
+          assert review['admission_policy']['route_attempt_can_emit_exact_component_mastery'] is False
+          assert review['safety']['learner_audio_persistence']==0
+          print('OGE_6_2_FAIL_CLOSED_SOURCE_TRUTH=PASS')
+          PY
+      - name: Upload OGE 6.2 frontier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-2-root-spelling-source-bound-frontier
+          path: /tmp/review-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'

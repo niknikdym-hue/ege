@@ -1,0 +1,89 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU15_OGE_EXPOSITION_BOUNDED_ROUTE_SEMANTICS",
+  "authority_issue": 161,
+  "scope": "OGE_2026_TASK1_IK1_IK3_WITH_ORIGINAL_EKSAMIO_CONTENT_NO_RIGHTS_BLOCKED_ASSETS",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "registry_contract_ref": "272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
+  "authority": {
+    "program": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-15",
+    "oge_route_overlay": "265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json#exam_task_map[task=1]",
+    "official_route": "compressed exposition",
+    "overlay_classification": "OUTSIDE_SCHOOL_DENOMINATOR",
+    "official_exam_methodology": "FIPI OGE Russian 2026 methodological materials for subject commissions",
+    "content_ref": "russian-program/production-learning-content/RU-PROG-15-OGE-COMPRESSED-EXPOSITION-WAVE-001-v0.1.json",
+    "boundary_review_builder": "russian-program/subject-admission/build_ru15_oge_exposition_route_boundary_review.py",
+    "rights_blocked_salvage": "russian-program/subject-admission/PR139-RIGHTS-BLOCKED-SALVAGE-v0.1.json"
+  },
+  "policy": {
+    "task1_is_route_not_universal_semantic_identity": true,
+    "criterion_label_is_not_semantic_identity": true,
+    "generic_task1_score_implies_exact_component_mastery": false,
+    "generic_task1_attempt_can_emit_exact_component_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "full_draft_verification_is_composite_meta_skill_not_component_mastery_substitute": true,
+    "route_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "rights_blocked_assets_can_ground_accepted_semantics": false,
+    "rights_blocked_assets_admitted": 0,
+    "official_source_passages_copied": 0,
+    "original_eksamio_practice_required": true
+  },
+  "decisions": [
+    {
+      "accepted_semantic_id": "ru-oge-exposition-microtheme-preservation",
+      "label_ru": "Микротемы: сохранить каркас исходного текста",
+      "criterion_route": "IK1_CONTENT",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-15-OGE-COMPRESSED-EXPOSITION-WAVE-001-v0.1.json",
+      "boundary_guard": "preserve the source text's necessary microthemes without adding an alien microtheme; distinct from compression technique and from general logical-cohesion checking",
+      "mastery_boundary": "A Task-1 total or IK1 score is route evidence, not automatic independent mastery; component-specific independent verification remains required."
+    },
+    {
+      "accepted_semantic_id": "ru-oge-exposition-compression-across-text",
+      "label_ru": "Сжатие: уменьшить форму, сохранить смысл",
+      "criterion_route": "IK2_COMPRESSION",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-15-OGE-COMPRESSED-EXPOSITION-WAVE-001-v0.1.json",
+      "boundary_guard": "apply valid compression across the text while preserving necessary semantic relations; the Eksamio exclusion/generalization/simplification model is pedagogy, not a claim that FIPI recognizes only those three labels",
+      "mastery_boundary": "A Task-1 total or IK2 score is route evidence, not automatic independent mastery; component-specific independent verification remains required."
+    },
+    {
+      "accepted_semantic_id": "ru-oge-exposition-logical-cohesion",
+      "label_ru": "Логика сжатого текста: связи, порядок, непротиворечивость",
+      "criterion_route": "IK3_LOGIC",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-15-OGE-COMPRESSED-EXPOSITION-WAVE-001-v0.1.json",
+      "boundary_guard": "preserve causal, temporal, referential and other necessary semantic links after compression; distinct from preserving the set of microthemes and from the compression operation itself",
+      "mastery_boundary": "A Task-1 total or IK3 score is route evidence, not automatic independent mastery; component-specific independent verification remains required."
+    },
+    {
+      "accepted_semantic_id": "ru-oge-exposition-full-draft-verification",
+      "label_ru": "Полная самопроверка изложения по ИК1–ИК3",
+      "criterion_route": "IK1_IK3_COMPOSITE_META_REVIEW",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-15-OGE-COMPRESSED-EXPOSITION-WAVE-001-v0.1.json",
+      "boundary_guard": "three-pass self-review of content, compression and logic for the complete exposition draft; does not replace separate language-literacy criteria or prove each IK component independently",
+      "mastery_boundary": "Composite full-draft verification may contribute evidence to the route, but cannot by itself emit exact mastery for the three component semantics."
+    }
+  ],
+  "rights_non_acceptance": {
+    "pr139_task1_variants": 5,
+    "pr139_mp3_txt_assets": 10,
+    "authorship": "NOT_PROVEN",
+    "production_admission": "EXCLUDED_RIGHTS_BLOCKED",
+    "copied_assets": 0,
+    "semantic_or_mastery_admission": false
+  },
+  "summary": {
+    "accepted_route_semantics": 4,
+    "accepted_criteria_routes": 3,
+    "accepted_composite_meta_review_semantics": 1,
+    "accepted_ru_route_semantics": 4,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "rights_blocked_assets_admitted": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}

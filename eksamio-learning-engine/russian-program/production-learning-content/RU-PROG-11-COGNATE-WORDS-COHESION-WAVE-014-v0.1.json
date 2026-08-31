@@ -1,0 +1,248 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-11",
+  "module_title_ru": "Текст, смысл и межфразовая связь",
+  "scope": {
+    "routes": ["school", "ege", "diagnostic", "tutor"],
+    "source_candidate_ref": "candidate-007",
+    "source_taxonomy_id": "cohesion_cognate_words"
+  },
+  "source_provenance": [
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-007",
+      "coverage_note": "Current draft subject candidate; status is preserved and not silently upgraded."
+    },
+    {
+      "kind": "confirmed_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_cognate_words]",
+      "coverage_note": "Confirmed repository-audited EGE taxonomy node under text_cohesion, task 26."
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-11"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Source authorities define only the bounded skill identity; all learner-facing examples and practice are original Eksamio wording."
+  },
+  "identity_boundary": "This file materializes only the proven candidate-specific verification gap. The ru-* id remains non-school-canonical and is admitted only by a separate Central Brain bounded subject-semantic authority; candidate/taxonomy ids remain source refs.",
+  "reuse_review": {
+    "broader_existing_unit_ref": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-cohesion-link-means]",
+    "broader_existing_unit_reused_for_explanation_and_transfer": true,
+    "broader_existing_unit_mentions_cognate_words": true,
+    "broader_existing_unit_has_cognate_worked_example": true,
+    "broader_existing_unit_direct_cognate_words_independent_checks": 0,
+    "broader_existing_direct_check_ids": [],
+    "broader_existing_unit_reused_as_exact_candidate_007_mastery_evidence": false,
+    "minimum_component_specific_independent_checks_for_exact_mastery": 2,
+    "new_content_materialized_only_for_proven_component_verification_gap": true,
+    "reason": "The broader cohesion unit correctly names cognate words and gives one worked example, so that material is reused for explanation/transfer. Its independent verification, however, checks a causal adverb and demonstrative substitution and never requires the learner to prove different lexemes with a common root, distinguish them from forms of one word, and prove inter-sentence cohesion."
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-text-cohesion-cognate-words",
+      "title_ru": "Однокоренные слова как средство межфразовой связи",
+      "canonical_explanation": {
+        "short": "Однокоренные слова могут связывать предложения, когда разные лексемы с общим корнем сохраняют общий смысловой компонент и второе слово подхватывает или развивает содержание предыдущего предложения. Exact mastery требует доказать общность корня, различие лексем и реальную межфразовую функцию.",
+        "boundaries": [
+          "Формы одного и того же слова не относятся к этому component: «экспедиция — экспедиции» — candidate-006.",
+          "Неизменённый повтор той же лексемы относится к лексическому повтору, а не к однокоренным разным словам.",
+          "Одинаковая буквенная последовательность ещё не доказывает общий корень и смысловое родство.",
+          "Однокоренность сама по себе недостаточна: нужно показать, что второе слово связывает конкретные предложения.",
+          "Generic Task-26 result и общий unit по средствам связи не могут автоматически выдать exact mastery candidate-007."
+        ]
+      },
+      "decision_algorithm": [
+        "Найди во втором предложении слово, которое смыслово подхватывает элемент предыдущего предложения.",
+        "Определи, являются ли слова разными лексемами, а не грамматическими формами одной лексемы.",
+        "Выдели общий корень и проверь сохранение общего смыслового компонента.",
+        "Исключи случай простого неизменённого повтора той же лексемы.",
+        "Объясни, какой фрагмент содержания первого предложения подхватывает или развивает второе однокоренное слово.",
+        "Фиксируй mastery только при одновременном доказательстве: разные лексемы + общий корень/семантическое родство + межфразовая связующая функция."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Архитекторы начали реконструировать площадь. Реконструкция должна завершиться осенью.",
+          "answer": "«Реконструировать — реконструкция» — разные однокоренные слова; существительное подхватывает названное в первом предложении действие и связывает предложения."
+        },
+        {
+          "prompt": "Команда исследовала прибрежную зону. Исследование заняло три недели.",
+          "answer": "«Исследовала — исследование» — разные лексемы с общим корнем и общим смысловым компонентом; второе слово подхватывает действие первого предложения."
+        },
+        {
+          "prompt": "Экспедиция достигла перевала. Участники экспедиции остановились на час.",
+          "answer": "«Экспедиция — экспедиции» — формы одной лексемы, поэтому это candidate-006, а не candidate-007."
+        },
+        {
+          "prompt": "Проект обсудили утром. Проект утвердили вечером.",
+          "answer": "Неизменённый повтор «проект» может создавать лексическую связь, но не доказывает candidate-007."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Любые слова с похожей частью — однокоренные.",
+          "correction": "Нужно доказать общий корень и смысловое родство, а не только совпадение букв."
+        },
+        {
+          "wrong": "Формы слова и однокоренные слова — одно и то же.",
+          "correction": "Формы сохраняют одну лексему; однокоренные слова являются разными лексемами, связанными корнем и значением."
+        },
+        {
+          "wrong": "Если слова однокоренные, связь между предложениями доказана автоматически.",
+          "correction": "Нужно отдельно показать, что второе слово подхватывает или развивает содержание конкретного предыдущего предложения."
+        },
+        {
+          "wrong": "Верный общий ответ на задание 26 автоматически доказывает candidate-007.",
+          "correction": "Составной результат не заменяет отдельные component-specific независимые проверки."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p11-cw-g1",
+          "prompt": "Почему «строить — строительство» могут быть однокоренными разными словами?",
+          "expected": "Это разные лексемы с общим корнем и связанным значением; при подхвате содержания через границу предложений они могут реализовать candidate-007."
+        },
+        {
+          "id": "p11-cw-g2",
+          "prompt": "Почему «станция — станции» не подходит для candidate-007?",
+          "expected": "Это разные грамматические формы одной лексемы, а не однокоренные разные слова."
+        },
+        {
+          "id": "p11-cw-g3",
+          "prompt": "Какие три доказательства обязательны для exact mastery?",
+          "expected": "Разные лексемы, общий корень/смысловое родство и реальная межфразовая функция."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p11-cw-i1",
+          "prompt": "«Учёные наблюдали за течением. Наблюдение продолжалось до вечера». Что связывает предложения?",
+          "answer": "Однокоренные разные слова «наблюдали — наблюдение»: второе подхватывает действие первого предложения."
+        },
+        {
+          "id": "p11-cw-i2",
+          "prompt": "«Группа подошла к станции. На станции было пусто». Это candidate-007?",
+          "answer": "Нет; «станции — станции» здесь формы/употребления одной лексемы, не разные однокоренные слова."
+        },
+        {
+          "id": "p11-cw-i3",
+          "prompt": "«Совет принял решение. Решение опубликовали вечером». Это candidate-007?",
+          "answer": "Нет как доказательство candidate-007: повторяется та же лексема «решение»; это лексический повтор."
+        },
+        {
+          "id": "p11-cw-i4",
+          "prompt": "Можно ли засчитать mastery, если ученик нашёл пару однокоренных слов, но не показал, как они связывают предложения?",
+          "answer": "Нет."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p11-cw-t1",
+          "prompt": "Как отличить candidate-007 от candidate-006 в паре «разработка — разработке» / «разрабатывать — разработка»?",
+          "answer": "В первой паре одна лексема в разных формах; во второй — разные однокоренные лексемы. В обоих случаях дополнительно нужна межфразовая функция."
+        },
+        {
+          "id": "p11-cw-t2",
+          "prompt": "Почему словообразовательный разбор сам по себе не равен mastery candidate-007?",
+          "answer": "Он может доказать родство слов, но не доказывает, что конкретная пара выполняет функцию связи между предложениями."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p11-cw-r1",
+          "delay_hint": "24h",
+          "prompt": "Главный тест однокоренных слов как средства связи?",
+          "answer": "Разные лексемы + общий корень/смысловое родство + доказанная связь между предложениями."
+        },
+        {
+          "id": "p11-cw-r2",
+          "delay_hint": "7d",
+          "prompt": "«Читать — чтение» — формы одного слова или однокоренные разные слова?",
+          "answer": "Однокоренные разные слова."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p11-cw-v1",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «Инженеры начали проектировать мост. Проектирование займёт несколько месяцев». Докажи или опровергни candidate-007.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: выделена пара «проектировать — проектирование» как разные однокоренные лексемы",
+              "1: доказан общий корень и сохранение общего смыслового компонента",
+              "1: доказано, что второе слово подхватывает действие первого предложения через границу предложений"
+            ]
+          }
+        },
+        {
+          "id": "p11-cw-v2",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «Экспедиция вернулась вечером. Об экспедиции сообщили в новостях». Можно ли засчитать candidate-007?",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: ответ «нет»",
+              "1: объяснено, что «экспедиция — экспедиции» являются формами одной лексемы, а не разными однокоренными словами",
+              "1: candidate-007 отделён от candidate-006 даже при наличии межфразовой связи"
+            ]
+          }
+        },
+        {
+          "id": "p11-cw-v3",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «Исследование завершили в июне. Исследование подтвердило гипотезу». Почему эта пара не доказывает candidate-007?",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: замечено, что повторена одна и та же лексема «исследование» без образования другой лексемы",
+              "1: отличен лексический повтор от однокоренных разных слов",
+              "1: сделан вывод, что exact mastery candidate-007 по этой паре не подтверждается"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "source_candidate_ref": "candidate-007",
+        "source_candidate_review_status": "draft",
+        "independent_verification_required": true,
+        "exact_mastery_requires_two_or_more_component_specific_cognate_words_checks": true,
+        "generic_task26_result_can_emit_exact_component_mastery": false,
+        "generic_wordformation_result_can_emit_this_mastery": false,
+        "word_forms_result_can_emit_this_mastery": false,
+        "lexical_repetition_result_can_emit_this_mastery": false,
+        "broader_link_means_unit_can_emit_exact_cognate_words_mastery": false
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "distinguishing cognate different lexemes from forms of one word and unchanged repetition",
+          "proving common-root semantic relationship",
+          "proving the pair's inter-sentence cohesion function"
+        ],
+        "forbidden": [
+          "equating forms of one lexeme with cognate different words",
+          "equating unchanged repetition with candidate-007 mastery",
+          "emitting generic Task-26 or word-formation mastery from this bounded unit"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "production_units": 1,
+    "new_original_examples": 4,
+    "guided_items": 3,
+    "independent_items": 4,
+    "transfer_items": 2,
+    "retention_items": 2,
+    "independent_verification_items": 3,
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0
+  }
+}

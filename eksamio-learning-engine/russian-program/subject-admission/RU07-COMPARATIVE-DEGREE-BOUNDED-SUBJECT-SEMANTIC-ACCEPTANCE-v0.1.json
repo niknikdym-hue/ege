@@ -1,0 +1,98 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU07_COMPARATIVE_DEGREE_BOUNDED_SUBJECT_SEMANTIC",
+  "authority_issue": 161,
+  "scope": "RU07_NARROW_SOURCE_BACKED_COMPARATIVE_SUBSET_OF_NEEDS_REVIEW_CANDIDATE_053_WITHOUT_BROADER_CANDIDATE_OR_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "registry_contract_ref": "272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
+  "authority": {
+    "program": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-07",
+    "candidate_boundary_builder": "russian-program/subject-admission/build_ru07_grammar_norms_candidate_boundary_review.py",
+    "semantic_candidate_inventory": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-053",
+    "parent_skill_graph": "03-RUSSIAN-SKILL-GRAPH.json#skills[morphological_norms]",
+    "gap_review": "87A-RUSSIAN-MORPHOLOGY-GRAPH-GAP-CANDIDATES.txt#CANDIDATE 1",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-07-GRAMMAR-NORMS-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-grammar-comparative-degree-norm]"
+  },
+  "official_source_verification": [
+    {
+      "authority": "FIPI Navigator EGE 2026 — Grammar and Morphology",
+      "url": "https://doc.fipi.ru/navigator-podgotovki/navigator-ege/2026/ru-3-grammatika-morfologija.pdf",
+      "pdf_page_index": 0,
+      "verified_fact": "The official 2026 scope explicitly includes forms of degrees of comparison among adjective norms. This supports the topic boundary, not automatic candidate admission."
+    },
+    {
+      "authority": "FIPI EGE 2026 Methodological Recommendations — Russian",
+      "url": "https://doc.fipi.ru/navigator-podgotovki/navigator-ege/MR_rus_yaz_ege_2026.pdf",
+      "pdf_page_index": 24,
+      "verified_fact": "The official Task-7 comparison table includes the form «более СТРОГО» among the presented 2025/2026 answer-list forms. This is used only as a normative source fact for the bounded learner unit."
+    }
+  ],
+  "source_truth": {
+    "candidate_ref": "candidate-053",
+    "candidate_label_ru": "Нормативные формы степеней сравнения прилагательных и наречий",
+    "candidate_source_taxonomy_ref": "comparison_degree_forms",
+    "candidate_review_status": "needs_review",
+    "gap_review_language_content_status": "VERIFIED",
+    "gap_review_exact_skill_routing_status": "HOLD",
+    "accepted_semantic_is_exact_candidate_equivalent": false,
+    "accepted_semantic_relation_to_candidate": "BOUNDED_SUBSET",
+    "reason": "Candidate-053 owns the broader comparison-degree topic, including comparative and superlative forms. The accepted semantic is deliberately narrower: choose one normative comparative formation model in context and detect/correct simultaneous double-comparative markers. Candidate-053 therefore remains needs_review and is not consumed or admitted by this authority."
+  },
+  "policy": {
+    "reuse_first": true,
+    "current_semantic_inventory_collision_forbidden": true,
+    "candidate_ref_is_canonical_id": false,
+    "candidate_ref_admitted": false,
+    "needs_review_candidate_can_be_silently_admitted": false,
+    "subset_evidence_can_admit_broader_candidate": false,
+    "module_membership_implies_exact_owner": false,
+    "content_presence_implies_acceptance": false,
+    "new_subject_identity_namespace": "ru-*",
+    "school_duplicate_forbidden": true,
+    "component_specific_independent_evidence_required": true,
+    "generic_task7_result_can_emit_exact_component_mastery": false,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "keyword_or_fuzzy_inference_allowed": false
+  },
+  "decisions": [
+    {
+      "candidate_ref": "candidate-053",
+      "source_taxonomy_ref": "comparison_degree_forms",
+      "accepted_semantic_id": "ru-grammar-comparative-degree-norm",
+      "canonical_label_ru": "Сравнительная степень: одна нормативная модель без двойных показателей",
+      "entity_type": "COMPARATIVE_DEGREE_FORMATION_MODEL_SKILL",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+      "relation_to_candidate": "CONTENT_IS_BOUNDED_SUBSET_OF_NEEDS_REVIEW_CANDIDATE",
+      "broader_candidate_status_after_acceptance": "REMAINS_NEEDS_REVIEW_NOT_ADMITTED",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-07-GRAMMAR-NORMS-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-grammar-comparative-degree-norm]",
+      "boundary_guard": "Only choose between one normative simple comparative model and one normative compound comparative model with «более/менее» plus the base form, and detect/correct simultaneous double-comparative markers in a supplied context. Does not claim full candidate-053, complete comparative or superlative paradigms for adjectives/adverbs, irregular or suppletive form production as a whole, superlative mastery, adjacent RU07 candidates, or generic Task-7 mastery.",
+      "excluded_claims": [
+        "full candidate-053 mastery",
+        "superlative-degree mastery",
+        "complete adjective comparison paradigms",
+        "complete adverb comparison paradigms",
+        "irregular or suppletive comparison-form production as a whole",
+        "noun-form norms",
+        "numeral-form norms",
+        "verb-form norms",
+        "generic grammatical-error Task-7 mastery"
+      ],
+      "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO_OR_NORMATIVE_SOURCE_FACTS_ONLY"
+  },
+  "summary": {
+    "accepted_bounded_subject_semantics": 1,
+    "accepted_ru_subject_semantics": 1,
+    "broader_candidate_records_admitted": 0,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}

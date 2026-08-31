@@ -1,0 +1,114 @@
+name: Russian OGE 6.4 soft-sign owner resolution
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/259-RUSSIAN-SCHOOL-ROSENTHAL-PRIMARY-COMPLETENESS-FINAL-FREEZE-v1.0.json"
+      - "eksamio-learning-engine/262-RUSSIAN-FIPI-2026-SCHOOL-REOPEN-GAP-AUDIT-v0.1.json"
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py"
+      - ".github/workflows/russian-oge-6-4-soft-sign-owner-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-4-owner-resolution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile exact owner reviewers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py
+      - name: Build exact owner review and frontier twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_oge_6_4_soft_sign_owner_resolution_review.py" --output /tmp/review-a.json > /tmp/review-a.txt
+          python3 "$root/build_oge_6_4_soft_sign_owner_resolution_review.py" --output /tmp/review-b.json > /tmp/review-b.txt
+          cmp /tmp/review-a.json /tmp/review-b.json
+          diff -u /tmp/review-a.txt /tmp/review-b.txt
+          python3 "$root/build_oge_6_4_soft_sign_owner_frontier_proof.py" --output /tmp/proof-a.json > /tmp/proof-a.txt
+          python3 "$root/build_oge_6_4_soft_sign_owner_frontier_proof.py" --output /tmp/proof-b.json > /tmp/proof-b.txt
+          cmp /tmp/proof-a.json /tmp/proof-b.json
+          diff -u /tmp/proof-a.txt /tmp/proof-b.txt
+          cat /tmp/review-a.txt
+          cat /tmp/proof-a.txt
+      - name: Verify exact canonical sync remains fail-closed for mastery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          expected = [
+              'school-separating-hard-soft-sign-boundary',
+              'school-verb-soft-sign-forms',
+              'school-numeral-orthography-base',
+              'school-adverb-final-soft-sign-after-sibilant-base',
+          ]
+          review=json.loads(Path('/tmp/review-a.json').read_text(encoding='utf-8'))
+          proof=json.loads(Path('/tmp/proof-a.json').read_text(encoding='utf-8'))
+          assert review['status']=='CENTRAL_BRAIN_EXACT_OWNER_SYNC_ACCEPTED'
+          assert review['target']['content_code']=='6.4'
+          assert review['current_overlay_truth']['explicit_canonical_refs']==expected
+          assert review['current_overlay_truth']['unresolved_placeholder_present'] is False
+          assert review['current_overlay_truth']['overlay_is_complete_exact_owner_list'] is True
+          assert review['identity_inventory_truth']['current_semantic_refs']==expected
+          assert review['identity_inventory_truth']['inventory_refs_prove_overlay_completeness'] is True
+          assert review['exact_acceptance_truth']['current_exact_acceptance_for_6_4'] is True
+          assert review['source_bound_frontier']['still_unresolved_candidates']==[]
+          assert review['source_bound_frontier']['frontier_complete_for_exact_acceptance'] is True
+          assert review['summary']['object_level_admission_units_closed']==1
+          assert review['summary']['object_level_requirements_closed']==1
+          assert review['summary']['false_exact_mastery_admissions']==0
+          assert review['policy']['route_attempt_can_emit_exact_component_mastery'] is False
+          assert review['policy']['component_specific_independent_evidence_required'] is True
+          assert proof['status']=='SOURCE_BOUND_OWNER_FRONTIER_PROVEN_AND_CANONICALLY_SYNCED'
+          assert proof['proven_exact_owner_frontier']['canonical_refs']==expected
+          assert proof['proven_exact_owner_frontier']['source_bound_frontier_complete'] is True
+          assert proof['current_repository_sync_state']['overlay_placeholder_present'] is False
+          assert proof['current_repository_sync_state']['overlay_exact_owner_list_complete'] is True
+          assert proof['current_repository_sync_state']['identity_inventory_exact_owner_list_complete'] is True
+          assert proof['current_repository_sync_state']['exact_component_acceptance_present'] is True
+          assert proof['current_repository_sync_state']['source_sync_required'] is False
+          assert proof['summary']['remaining_source_boundary_unknowns']==0
+          assert proof['summary']['object_level_admission_units_closed']==1
+          assert proof['summary']['object_level_requirements_closed']==1
+          assert proof['summary']['false_exact_mastery_admissions']==0
+          print('OGE_6_4_CANONICAL_OWNER_SYNC_GUARD=PASS')
+          PY
+      - name: Upload exact OGE 6.4 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-4-soft-sign-owner-resolution
+          path: |
+            /tmp/review-a.json
+            /tmp/proof-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'

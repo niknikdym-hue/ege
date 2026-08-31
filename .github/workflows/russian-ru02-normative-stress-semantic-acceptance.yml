@@ -1,0 +1,88 @@
+name: Russian RU02 normative-stress semantic acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-02-ORTHOEPY-NORMATIVE-STRESS-WAVE-003-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-STRESS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_stress_bounded_subject_semantics.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_source_identity_resolution.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_content_adequacy_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_candidate_boundary_review.py"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json"
+      - "eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ORTHOEPIC-TRAINER-BANK.json"
+      - ".github/workflows/russian-ru02-normative-stress-semantic-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru02-normative-stress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU02 candidate-018 acceptance validator
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_stress_bounded_subject_semantics.py
+      - name: Validate exact source and pre-materialization gap prerequisites twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_source_identity_resolution.py --emit > /tmp/ru02-source-a.json
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_source_identity_resolution.py --emit > /tmp/ru02-source-b.json
+          diff -u /tmp/ru02-source-a.json /tmp/ru02-source-b.json
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_content_adequacy_review.py --emit > /tmp/ru02-gap-a.json
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_content_adequacy_review.py --emit > /tmp/ru02-gap-b.json
+          diff -u /tmp/ru02-gap-a.json /tmp/ru02-gap-b.json
+      - name: Validate bounded candidate-018 acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_stress_bounded_subject_semantics.py > /tmp/ru02-accept-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_stress_bounded_subject_semantics.py > /tmp/ru02-accept-b.txt
+          diff -u /tmp/ru02-accept-a.txt /tmp/ru02-accept-b.txt
+          cat /tmp/ru02-accept-a.txt
+      - name: Require fail-closed candidate-018 boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-STRESS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'CENTRAL_BRAIN_ACCEPTED_RU02_NORMATIVE_STRESS_BOUNDED_SUBJECT_SEMANTIC'
+          assert len(d['decisions']) == 1
+          row = d['decisions'][0]
+          assert row['candidate_ref'] == 'candidate-018'
+          assert row['source_taxonomy_id'] == 'normative_stress_selection'
+          assert row['accepted_semantic_id'] == 'ru-orthoepy-normative-stress-selection'
+          assert row['source_evidence_status'] == 'confirmed'
+          assert set(row['excluded_adjacent_candidate_refs']) == {f'candidate-{n:03d}' for n in range(19, 25)}
+          s = d['summary']
+          assert s['accepted_bounded_subject_semantics'] == 1
+          assert s['adjacent_partial_evidence_candidates_admitted'] == 0
+          assert s['object_level_admission_units_closed'] == 0
+          assert s['object_level_requirements_closed'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          assert d['policy']['generic_task4_result_can_emit_exact_component_mastery'] is False
+          assert d['policy']['component_specific_independent_evidence_required'] is True
+          print('RU02_NORMATIVE_STRESS_FAIL_CLOSED_GUARD=PASS')
+          PY
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda or audited trainer source changed in RU02 acceptance PR.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'

@@ -1,0 +1,54 @@
+name: Russian RU03 contextual synonym bounded subject acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru03_contextual_synonym_source_identity_resolution.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru03_contextual_synonym_content_gap_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru03_contextual_synonym_content_adequacy_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU03-CONTEXTUAL-SYNONYM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru03_contextual_synonym_bounded_subject_semantics.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-03-CONTEXTUAL-SYNONYM-SELECTION-WAVE-008-v0.1.json"
+      - ".github/workflows/russian-ru03-contextual-synonym-bounded-subject-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru03-contextual-synonym-bounded-subject-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile contextual synonym acceptance validator
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru03_contextual_synonym_bounded_subject_semantics.py
+      - name: Validate bounded subject semantic twice
+        shell: bash
+        working-directory: eksamio-learning-engine/russian-program/subject-admission
+        run: |
+          set -euo pipefail
+          python3 validate_ru03_contextual_synonym_bounded_subject_semantics.py > /tmp/ru03-csyn-accept-a.txt
+          python3 validate_ru03_contextual_synonym_bounded_subject_semantics.py > /tmp/ru03-csyn-accept-b.txt
+          diff -u /tmp/ru03-csyn-accept-a.txt /tmp/ru03-csyn-accept-b.txt
+          cat /tmp/ru03-csyn-accept-a.txt
+          grep -Fx 'RU03_CONTEXTUAL_SYNONYM_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE=PASS' /tmp/ru03-csyn-accept-a.txt
+          grep -Fx 'ACCEPTED_SEMANTIC=ru-lexis-contextual-synonym-text-fit' /tmp/ru03-csyn-accept-a.txt
+          grep -Fx 'SOURCE_IDENTITY=CURRENT_2026_OFFICIAL_FIPI_CONFIRMED' /tmp/ru03-csyn-accept-a.txt
+          grep -Fx 'OBJECT_CLOSURES=0/0' /tmp/ru03-csyn-accept-a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/ru03-csyn-accept-a.txt
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'

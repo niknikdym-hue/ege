@@ -1,0 +1,115 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU11_COHESION_GAP_GRAMMATICAL_FIT_BOUNDED_SUBJECT_SEMANTIC",
+  "authority_issue": 161,
+  "scope": "RU11_CANDIDATE_001_SOURCE_VERIFIED_TAXONOMY_PLUS_CONFIRMED_GRAPH_AND_EXACT_ORIGINAL_GAP_SELECTION_VERIFICATION_WITH_DRAFT_CANDIDATE_GUARD_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "registry_contract_ref": "272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
+  "authority": {
+    "semantic_candidate_inventory": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-001",
+    "skill_graph": "03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_gap_grammatical_fit]",
+    "full_subject_program": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-11",
+    "broader_existing_content_reviewed_first": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-cohesion-link-means]",
+    "exact_learner_content": "russian-program/production-learning-content/RU-PROG-11-COHESION-GAP-GRAMMATICAL-FIT-WAVE-008-v0.1.json"
+  },
+  "source_truth_guard": {
+    "inventory_candidate_review_status": "draft",
+    "inventory_candidate_status_silently_upgraded": false,
+    "taxonomy_backing_review_status": "source_verified",
+    "skill_graph_evidence_status": "confirmed",
+    "accepted_positive_scope": [
+      "select a missing cohesion device by the intended semantic relation between the local text fragments",
+      "verify that the same candidate grammatically fits the exact syntactic and morphological slot",
+      "accept the candidate only when both semantic and grammatical tests pass"
+    ],
+    "specific_device_family_mastery_admitted": false,
+    "generic_task1_mastery_admitted": false,
+    "generic_task26_mastery_admitted": false
+  },
+  "reuse_first_decision": {
+    "broader_existing_unit_present": true,
+    "broader_existing_unit_reused_as_scope_and_explanation_evidence": true,
+    "broader_existing_unit_is_exact_candidate_001_mastery_evidence": false,
+    "broader_existing_unit_direct_gap_selection_independent_checks": 0,
+    "minimum_component_specific_independent_checks_for_this_acceptance": 2,
+    "exact_new_unit_component_specific_gap_selection_checks": 3,
+    "reason": "The existing cohesion-link-means unit verifies identification and justification of an already present linking device. Candidate-001 is a different operation: selecting a missing device that simultaneously satisfies semantic relation and grammatical fit. No existing independent check directly verifies that operation, so a minimal original Eksamio unit was materialized for the proven verification gap.",
+    "new_content_materialized_only_for_proven_component_verification_gap": true
+  },
+  "policy": {
+    "exact_current_source_identity_required": true,
+    "source_verified_taxonomy_backing_required": true,
+    "confirmed_skill_graph_evidence_required": true,
+    "current_missing_subject_candidate_required": true,
+    "draft_candidate_status_must_be_preserved": true,
+    "exact_school_meaning_collision_forbidden": true,
+    "reuse_first": true,
+    "component_specific_independent_evidence_required": true,
+    "minimum_component_specific_independent_checks": 2,
+    "school_duplicate_forbidden": true,
+    "new_subject_identity_namespace": "ru-*",
+    "ege_taxonomy_id_promoted_unchanged": false,
+    "candidate_id_used_as_semantic_id": false,
+    "adjacent_candidates_admitted": false,
+    "specific_device_family_mastery_admitted_by_this_authority": false,
+    "generic_task1_result_can_emit_exact_component_mastery": false,
+    "generic_task26_result_can_emit_exact_component_mastery": false,
+    "broader_link_means_result_can_emit_exact_gap_selection_mastery": false,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "content_presence_alone_is_semantic_admission": false
+  },
+  "decisions": [
+    {
+      "candidate_ref": "candidate-001",
+      "source_taxonomy_id": "cohesion_gap_grammatical_fit",
+      "accepted_semantic_id": "ru-text-cohesion-gap-grammatical-fit",
+      "canonical_label_ru": "Подбор средства связи по смыслу и грамматической форме",
+      "entity_type": "TEXT_COHESION_GAP_SELECTION_SKILL",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-11-COHESION-GAP-GRAMMATICAL-FIT-WAVE-008-v0.1.json#units[proposed_semantic_id=ru-text-cohesion-gap-grammatical-fit]",
+      "boundary_guard": "Select a missing cohesion device only by proving both the intended semantic relation and grammatical fit in the exact slot. Excludes exhaustive mastery of cohesion-device taxonomy; determinative, demonstrative and possessive pronoun mastery; conjunction mastery; word-form and cognate-word mastery; generic text-cohesion mastery; generic Task-1 or Task-26 mastery; and all adjacent RU11 candidates.",
+      "excluded_adjacent_candidate_refs": [
+        "candidate-002",
+        "candidate-003",
+        "candidate-004",
+        "candidate-005",
+        "candidate-006",
+        "candidate-007",
+        "candidate-043",
+        "candidate-044",
+        "candidate-045",
+        "candidate-046",
+        "candidate-047"
+      ],
+      "source_evidence_status": "confirmed",
+      "source_candidate_inventory_review_status": "draft",
+      "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+    }
+  ],
+  "crosswalk_policy": {
+    "candidate_ref_preserved_as_legacy_ref": true,
+    "source_taxonomy_ref_preserved": true,
+    "source_taxonomy_id_replaced": false,
+    "mapping_relation": "ROUTES_TO / CONTRIBUTES_TO",
+    "exam_task_number_is_semantic_identity": false,
+    "generic_task_result_can_emit_exact_component_mastery": false
+  },
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO"
+  },
+  "summary": {
+    "accepted_bounded_subject_semantics": 1,
+    "accepted_ru_subject_semantics": 1,
+    "source_backed_candidates_consumed": 1,
+    "new_original_production_content_units_used": 1,
+    "adjacent_candidates_admitted": 0,
+    "specific_device_family_masteries_admitted": 0,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}

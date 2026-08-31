@@ -1,0 +1,78 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU07_NUMERAL_OBLIQUE_CASE_BOUNDED_SUBJECT_SEMANTIC",
+  "authority_issue": 161,
+  "scope": "RU07_NARROW_SOURCE_BACKED_SUBSET_OF_CANDIDATE_026_WITHOUT_BROADER_CANDIDATE_OR_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "registry_contract_ref": "272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
+  "authority": {
+    "program": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-07",
+    "candidate_boundary_builder": "russian-program/subject-admission/build_ru07_grammar_norms_candidate_boundary_review.py",
+    "semantic_candidate_inventory": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-026",
+    "skill_graph": "03-RUSSIAN-SKILL-GRAPH.json#skills[numeral_form_norms]",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-07-GRAMMAR-NORMS-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-grammar-numeral-oblique-case]"
+  },
+  "source_truth": {
+    "candidate_ref": "candidate-026",
+    "candidate_label_ru": "Нормативное образование и склонение числительных",
+    "candidate_source_taxonomy_ref": "numeral_form_norms",
+    "candidate_review_status": "draft",
+    "accepted_semantic_is_exact_candidate_equivalent": false,
+    "accepted_semantic_relation_to_candidate": "BOUNDED_SUBSET",
+    "reason": "The accepted semantic covers only context-driven inflection of numerals in oblique cases. Candidate-026 is broader and also owns normative formation/declension beyond this exact subset; candidate-026 therefore remains draft and is not consumed or admitted by this authority."
+  },
+  "policy": {
+    "reuse_first": true,
+    "current_semantic_inventory_collision_forbidden": true,
+    "candidate_ref_is_canonical_id": false,
+    "candidate_ref_admitted": false,
+    "subset_evidence_can_admit_broader_candidate": false,
+    "module_membership_implies_exact_owner": false,
+    "content_presence_implies_acceptance": false,
+    "new_subject_identity_namespace": "ru-*",
+    "school_duplicate_forbidden": true,
+    "component_specific_independent_evidence_required": true,
+    "generic_task7_result_can_emit_exact_component_mastery": false,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "keyword_or_fuzzy_inference_allowed": false
+  },
+  "decisions": [
+    {
+      "candidate_ref": "candidate-026",
+      "source_taxonomy_ref": "numeral_form_norms",
+      "accepted_semantic_id": "ru-grammar-numeral-oblique-case",
+      "canonical_label_ru": "Числительные в косвенных падежах: нормативное изменение формы по контексту",
+      "entity_type": "NUMERAL_OBLIQUE_CASE_INFLECTION_SKILL",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+      "relation_to_candidate": "CONTENT_IS_BOUNDED_SUBSET_OF_DRAFT_CANDIDATE",
+      "broader_candidate_status_after_acceptance": "REMAINS_DRAFT_NOT_ADMITTED",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-07-GRAMMAR-NORMS-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-grammar-numeral-oblique-case]",
+      "boundary_guard": "Only determine the context-required oblique case and build the normative numeral form, including all components that must inflect and dependent-word agreement. Does not claim full normative numeral formation/declension, cardinal/ordinal/fractional/collective numeral morphology as a whole, numeral syntax as a whole, adjacent RU07 candidates, or generic Task-7 mastery.",
+      "excluded_claims": [
+        "full candidate-026 mastery",
+        "normative numeral formation outside the practiced oblique-case boundary",
+        "all numeral subtype paradigms without separate evidence",
+        "noun-form norms",
+        "verb-form norms",
+        "comparison-degree norms",
+        "generic grammatical-error Task-7 mastery"
+      ],
+      "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO_OR_NORMATIVE_SOURCE_FACTS_ONLY"
+  },
+  "summary": {
+    "accepted_bounded_subject_semantics": 1,
+    "accepted_ru_subject_semantics": 1,
+    "broader_candidate_records_admitted": 0,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}

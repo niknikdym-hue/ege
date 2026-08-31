@@ -1,0 +1,78 @@
+name: Russian RU12 genre-address-purpose semantic acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU12-GENRE-ADDRESS-PURPOSE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru12_genre_address_purpose_bounded_subject_semantics.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-12-GENRE-ADDRESS-PURPOSE-WAVE-003-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-12-STYLES-GENRES-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json"
+      - ".github/workflows/russian-ru12-genre-address-purpose-semantic-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru12-genre-address-purpose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU12 acceptance validator
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru12_genre_address_purpose_bounded_subject_semantics.py
+      - name: Validate bounded candidate-017 acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/validate_ru12_genre_address_purpose_bounded_subject_semantics.py" > /tmp/ru12-a.txt
+          python3 "$root/validate_ru12_genre_address_purpose_bounded_subject_semantics.py" > /tmp/ru12-b.txt
+          diff -u /tmp/ru12-a.txt /tmp/ru12-b.txt
+          cat /tmp/ru12-a.txt
+      - name: Require fail-closed candidate-017 boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('eksamio-learning-engine/russian-program/subject-admission/RU12-GENRE-ADDRESS-PURPOSE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'CENTRAL_BRAIN_ACCEPTED_RU12_GENRE_ADDRESS_PURPOSE_BOUNDED_SUBJECT_SEMANTIC'
+          assert len(d['decisions']) == 1
+          row = d['decisions'][0]
+          assert row['candidate_ref'] == 'candidate-017'
+          assert row['source_taxonomy_id'] == 'genre_and_communicative_purpose'
+          assert row['accepted_semantic_id'] == 'ru-text-genre-address-purpose-identification'
+          assert row['source_evidence_status'] == 'confirmed'
+          assert row['excluded_adjacent_candidate_refs'] == ['candidate-016']
+          s = d['summary']
+          assert s['accepted_bounded_subject_semantics'] == 1
+          assert s['adjacent_candidates_admitted'] == 0
+          assert s['object_level_admission_units_closed'] == 0
+          assert s['object_level_requirements_closed'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          assert d['reuse_first_decision']['related_existing_unit_is_exact_candidate_017_mastery_evidence'] is False
+          assert d['policy']['generic_task3_result_can_emit_exact_component_mastery'] is False
+          assert d['policy']['component_specific_independent_evidence_required'] is True
+          print('RU12_GENRE_ADDRESS_PURPOSE_FAIL_CLOSED_GUARD=PASS')
+          PY
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda or audited trainer source changed in RU12 acceptance slice.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
