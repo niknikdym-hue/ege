@@ -47,6 +47,7 @@ jobs:
           path = Path('eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-RESOLUTION-REVIEW.json')
           data = json.loads(path.read_text(encoding='utf-8'))
           summary = data['summary']
+          frontier = data['source_bound_frontier']
           assert data['schema_version'] == '0.1.0'
           assert data['status'] == 'CENTRAL_BRAIN_REVIEW_REQUIRED'
           assert data['target']['document_id'] == 'OGE_COD'
@@ -58,16 +59,35 @@ jobs:
           assert data['admission_effect'] == 'NONE'
           assert summary['explicit_overlay_canonical_refs'] == 2
           assert summary['unresolved_owner_placeholders'] == 1
-          assert summary['review_only_overlap_candidates'] == 4
+          assert summary['review_only_overlap_candidates'] == 6
+          assert summary['fipi_supported_6_4_owner_candidates_not_yet_admitted'] == 2
+          assert summary['adjacent_code_nonowner_candidates'] == 3
+          assert summary['still_unresolved_candidates'] == 1
           assert summary['semantic_admissions'] == 0
           assert summary['object_level_closures'] == 0
           assert summary['false_exact_mastery_admissions'] == 0
+          assert frontier['fipi_supported_6_4_owner_candidates_not_yet_admitted'] == [
+              'school-adverb-final-soft-sign-after-sibilant-base',
+              'school-numeral-orthography-base',
+          ]
+          assert frontier['adjacent_code_nonowner_candidates'] == [
+              'school-adjective-soft-sign-before-sk-base',
+              'school-noun-agent-suffix-chik-shchik-soft-sign',
+              'school-noun-genitive-plural-ending-system',
+          ]
+          assert frontier['still_unresolved_candidates'] == [
+              'school-verbal-noun-nie-nye-semantic-boundary',
+          ]
+          assert frontier['frontier_complete_for_exact_acceptance'] is False
           assert data['policy']['reuse_first'] is True
           assert data['policy']['review_only_candidate_is_exact_owner'] is False
           assert data['policy']['keyword_or_name_overlap_is_exact_binding'] is False
+          assert data['policy']['official_navigator_paragraph_is_exact_component_admission'] is False
+          assert data['policy']['adjacent_codifier_boundary_prevents_false_6_4_admission'] is True
           assert data['policy']['placeholder_may_be_silently_dropped'] is False
           assert data['policy']['exact_acceptance_allowed_while_placeholder_remains'] is False
           assert all(row['review_disposition'] == 'REVIEW_ONLY_NOT_OGE_6_4_OWNER_ADMITTED' for row in data['review_only_overlap_candidates'])
+          assert all(row['exact_oge_6_4_owner_proven'] is False for row in data['review_only_overlap_candidates'])
           assert all(row['admission_effect'] == 'NONE' for row in data['review_only_overlap_candidates'])
           print('OGE_6_4_SOFT_SIGN_OWNER_FRONTIER_FAIL_CLOSED=PASS')
           PY
