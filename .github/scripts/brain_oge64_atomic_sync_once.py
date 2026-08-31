@@ -1,0 +1,592 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+import textwrap
+from pathlib import Path
+
+ENGINE = Path("eksamio-learning-engine")
+ADM = ENGINE / "russian-program" / "subject-admission"
+WF = Path(".github/workflows")
+
+EXACT = [
+    "school-separating-hard-soft-sign-boundary",
+    "school-verb-soft-sign-forms",
+    "school-numeral-orthography-base",
+    "school-adverb-final-soft-sign-after-sibilant-base",
+]
+OLD = [
+    "school-separating-hard-soft-sign-boundary",
+    "school-verb-soft-sign-forms",
+]
+PLACEHOLDER = "other active lexical/form soft-sign owners where applicable"
+
+
+def replace_once(text: str, old: str, new: str, label: str) -> str:
+    count = text.count(old)
+    if count != 1:
+        raise RuntimeError(f"{label}: expected one replacement target, got {count}")
+    return text.replace(old, new, 1)
+
+
+def run(*args: str) -> None:
+    subprocess.run(list(args), check=True)
+
+
+# 265: synchronize the source-bound exact owner list without reformatting the authority.
+p265 = ENGINE / "265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+t265 = p265.read_text(encoding="utf-8")
+old_owners = '"owners":["school-separating-hard-soft-sign-boundary","school-verb-soft-sign-forms","other active lexical/form soft-sign owners where applicable"]'
+new_owners = '"owners":' + json.dumps(EXACT, ensure_ascii=False, separators=(",", ":"))
+t265 = replace_once(t265, old_owners, new_owners, "265/6.4 owners")
+d265 = json.loads(t265)
+row64 = [r for r in d265["orthography_codifier_overlay"] if r.get("position") == "6.4"]
+assert len(row64) == 1
+assert row64[0]["owners"] == EXACT
+assert PLACEHOLDER not in row64[0]["owners"]
+p265.write_text(t265, encoding="utf-8")
+
+# 273: mutate only the reviewed OGE-6.4 route object's ref list; do not reformat the 1.1 MB inventory.
+p273 = ENGINE / "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+t273 = p273.read_text(encoding="utf-8")
+d273 = json.loads(t273)
+key = "oge_2026_orthography_route::oge-2026-orthography-6-4"
+rows273 = [o for o in d273.get("objects", []) if o.get("object_key") == key]
+assert len(rows273) == 1
+assert rows273[0].get("review_status") == "reviewed"
+assert rows273[0].get("audit_classification") == "EXAM_ROUTE_ONLY"
+assert rows273[0].get("current_semantic_refs") == OLD
+marker = '"object_key": "' + key + '"'
+mi = t273.index(marker)
+fi = t273.index('"current_semantic_refs": [', mi)
+lb = t273.index("[", fi)
+rb = t273.index("]", lb)
+old_slice = t273[lb : rb + 1]
+expected_old_slice = '[\n        "school-separating-hard-soft-sign-boundary",\n        "school-verb-soft-sign-forms"\n      ]'
+assert old_slice == expected_old_slice
+new_slice = "[\n" + ",\n".join(f'        "{ref}"' for ref in EXACT) + "\n      ]"
+t273 = t273[:lb] + new_slice + t273[rb + 1 :]
+d273_after = json.loads(t273)
+row_after = [o for o in d273_after["objects"] if o.get("object_key") == key]
+assert len(row_after) == 1
+assert row_after[0]["current_semantic_refs"] == EXACT
+p273.write_text(t273, encoding="utf-8")
+
+# Exact OGE object-bound builder: add only the four source-proven 6.4 owners.
+pexact = ADM / "build_russian_oge_exact_component_acceptance.py"
+text = pexact.read_text(encoding="utf-8")
+old_block = '''    "6.3": (\n        "school-invariable-prefix-spelling-base",\n        "school-prefix-z-s-selection",\n        "school-pre-pri-semantic-base",\n        "school-pre-pri-lexical-contrast-family",\n    ),\n    "6.5": ('''
+new_block = '''    "6.3": (\n        "school-invariable-prefix-spelling-base",\n        "school-prefix-z-s-selection",\n        "school-pre-pri-semantic-base",\n        "school-pre-pri-lexical-contrast-family",\n    ),\n    "6.4": (\n        "school-separating-hard-soft-sign-boundary",\n        "school-verb-soft-sign-forms",\n        "school-numeral-orthography-base",\n        "school-adverb-final-soft-sign-after-sibilant-base",\n    ),\n    "6.5": ('''
+text = replace_once(text, old_block, new_block, "exact builder/EXPECTED_EXACT")
+text = replace_once(
+    text,
+    '    "6.3": "SCHOOL_IDENTITY_ROUTE",\n    "6.5": "SCHOOL_IDENTITY_ROUTE",',
+    '    "6.3": "SCHOOL_IDENTITY_ROUTE",\n    "6.4": "SCHOOL_IDENTITY_ROUTE",\n    "6.5": "SCHOOL_IDENTITY_ROUTE",',
+    "exact builder/classification",
+)
+text = replace_once(
+    text,
+    '    skipped = {"6.1", "6.2", "6.4", "6.6", "6.7", "6.8", "6.9", "6.11", "6.12", "6.14"}',
+    '    skipped = {"6.1", "6.2", "6.6", "6.7", "6.8", "6.9", "6.11", "6.12", "6.14"}',
+    "exact builder/skipped set",
+)
+pexact.write_text(text, encoding="utf-8")
+
+# The same authority now contains five exact object-bound decisions.
+pbase = ADM / "build_russian_semantic_acceptance_progress_base.py"
+text = pbase.read_text(encoding="utf-8")
+text = replace_once(
+    text,
+    '(HERE / "RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json", "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_CANONICAL_COMPONENT_SLICE", 4, "RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1"),',
+    '(HERE / "RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json", "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_CANONICAL_COMPONENT_SLICE", 5, "RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1"),',
+    "semantic progress/base OGE count",
+)
+pbase.write_text(text, encoding="utf-8")
+
+# Post-sync owner-resolution reviewer keeps the source evidence but changes the repository truth from pending to exact.
+prev = ADM / "build_oge_6_4_soft_sign_owner_resolution_review.py"
+text = prev.read_text(encoding="utf-8")
+anchor = "]\nFIPI_NAVIGATOR_URL = "
+idx = text.index(anchor, text.index("EXPECTED_EXPLICIT_REFS = ["))
+text = (
+    text[: idx + 2]
+    + 'EXACT_OWNER_REFS = EXPECTED_EXPLICIT_REFS + [\n    "school-numeral-orthography-base",\n    "school-adverb-final-soft-sign-after-sibilant-base",\n]\n'
+    + text[idx + 2 :]
+)
+start = text.index("def build_review() -> dict[str, Any]:")
+end = text.index("\ndef main() -> int:", start)
+new_review = textwrap.dedent('''
+    def build_review() -> dict[str, Any]:
+        overlay = load_json(OGE_OVERLAY)
+        inventory = load_json(IDENTITY_INVENTORY)
+        exact = load_json(EXACT_AUTHORITY)
+
+        rows = [row for row in overlay.get("orthography_codifier_overlay") or [] if isinstance(row, dict) and str(row.get("position")) == TARGET_CODE]
+        if len(rows) != 1:
+            raise ValueError("OGE 6.4 overlay row must exist exactly once")
+        row = rows[0]
+        if row.get("topic") != TARGET_TOPIC or row.get("classification") != "SCHOOL_IDENTITY_ROUTE":
+            raise ValueError("OGE 6.4 source route drift")
+        owners = [str(value) for value in row.get("owners") or []]
+        if owners != EXACT_OWNER_REFS or UNRESOLVED_OWNER in owners:
+            raise ValueError("OGE 6.4 exact owner sync drift")
+
+        decisions = [item for item in exact.get("decisions") or [] if isinstance(item, dict)]
+        accepted_6_4 = [item for item in decisions if str(item.get("content_code")) == TARGET_CODE]
+        if len(accepted_6_4) != 1:
+            raise ValueError("OGE 6.4 exact authority must contain exactly one decision")
+        decision = accepted_6_4[0]
+        if decision.get("canonical_component_refs") != EXACT_OWNER_REFS:
+            raise ValueError("OGE 6.4 exact authority owner list drift")
+        mastery = decision.get("mastery_boundary") or {}
+        if mastery.get("route_or_broad_composite_attempt_can_emit_exact_component_mastery") is not False:
+            raise ValueError("OGE 6.4 route-level false mastery guard weakened")
+        if mastery.get("component_specific_independent_evidence_required") is not True:
+            raise ValueError("OGE 6.4 component-specific evidence guard missing")
+
+        objects = [item for item in inventory.get("objects") or [] if isinstance(item, dict)]
+        inventory_rows = [item for item in objects if item.get("object_key") == "oge_2026_orthography_route::oge-2026-orthography-6-4"]
+        if len(inventory_rows) != 1:
+            raise ValueError("OGE 6.4 identity-inventory source row must exist exactly once")
+        inventory_row = inventory_rows[0]
+        if inventory_row.get("review_status") != "reviewed" or inventory_row.get("audit_classification") != "EXAM_ROUTE_ONLY":
+            raise ValueError("OGE 6.4 identity-inventory authority drift")
+        inventory_refs = [str(ref) for ref in inventory_row.get("current_semantic_refs") or []]
+        if inventory_refs != EXACT_OWNER_REFS:
+            raise ValueError("OGE 6.4 identity-inventory refs are not atomically synchronized")
+
+        known_refs: set[str] = set()
+        for item in objects:
+            source_id = str(item.get("source_id") or "")
+            if source_id.startswith("school-"):
+                known_refs.add(source_id)
+            known_refs.update(str(ref) for ref in item.get("current_semantic_refs") or [] if str(ref).startswith("school-"))
+        missing = [item["canonical_ref"] for item in REVIEW_ONLY_CANDIDATES if item["canonical_ref"] not in known_refs]
+        if missing:
+            raise ValueError("reviewed canonical refs missing from current inventory: " + ",".join(missing))
+
+        admitted = set(EXACT_OWNER_REFS[2:])
+        candidate_rows = []
+        for item in REVIEW_ONLY_CANDIDATES:
+            ref = item["canonical_ref"]
+            is_exact = ref in admitted
+            candidate_rows.append({
+                **item,
+                "review_disposition": "FIPI_OGE_6_4_EXACT_OWNER_ADMITTED" if is_exact else "REVIEWED_EXPLICIT_NONOWNER",
+                "exact_oge_6_4_owner_proven": is_exact,
+                "admission_effect": "OBJECT_COMPONENT_OWNER" if is_exact else "NONE",
+            })
+
+        supported = [row for row in candidate_rows if row["source_bound_disposition"] == "FIPI_NAVIGATOR_SUPPORTS_6_4_OWNER_CANDIDATE"]
+        adjacent = [row for row in candidate_rows if row["source_bound_disposition"].startswith("ADJACENT_CODE_")]
+        no_binding = [row for row in candidate_rows if row["source_bound_disposition"] == "NO_EXACT_OGE_2026_ROUTE_BINDING_PROVEN"]
+        if {row["canonical_ref"] for row in supported} != admitted or not all(row["exact_oge_6_4_owner_proven"] for row in supported):
+            raise ValueError("FIPI-supported OGE 6.4 owner admission drift")
+        if any(row["exact_oge_6_4_owner_proven"] for row in adjacent + no_binding):
+            raise ValueError("explicit OGE 6.4 nonowner was falsely admitted")
+
+        result: dict[str, Any] = {
+            "schema_version": "0.1.0",
+            "status": "CENTRAL_BRAIN_EXACT_OWNER_SYNC_ACCEPTED",
+            "authority_issue": 161,
+            "scope": "OGE_2026_ORTHOGRAPHY_CODE_6_4_SOFT_SIGN_OWNER_RESOLUTION",
+            "target": {"document_id": "OGE_COD", "content_code": TARGET_CODE, "topic": TARGET_TOPIC, "classification": str(row["classification"])},
+            "official_source_review": {"navigator": FIPI_NAVIGATOR_EVIDENCE, "methodical_recommendations": FIPI_METHODICAL_EVIDENCE},
+            "current_overlay_truth": {
+                "explicit_canonical_refs": EXACT_OWNER_REFS,
+                "unresolved_owner_placeholder": UNRESOLVED_OWNER,
+                "unresolved_placeholder_present": False,
+                "overlay_is_complete_exact_owner_list": True,
+            },
+            "identity_inventory_truth": {
+                "source_id": str(inventory_row["source_id"]),
+                "review_status": str(inventory_row["review_status"]),
+                "audit_classification": str(inventory_row["audit_classification"]),
+                "current_semantic_refs": inventory_refs,
+                "inventory_refs_prove_overlay_completeness": True,
+            },
+            "exact_acceptance_truth": {
+                "current_exact_acceptance_for_6_4": True,
+                "accepted_oge_orthography_codes": sorted(str(item.get("content_code")) for item in decisions),
+                "exact_acceptance_requires_complete_placeholder_free_owner_list": True,
+            },
+            "review_only_overlap_candidates": candidate_rows,
+            "source_bound_frontier": {
+                "fipi_supported_6_4_owner_candidates_admitted": [row["canonical_ref"] for row in supported],
+                "adjacent_code_nonowner_candidates": [row["canonical_ref"] for row in adjacent],
+                "no_exact_oge_2026_route_binding_candidates": [row["canonical_ref"] for row in no_binding],
+                "still_unresolved_candidates": [],
+                "frontier_complete_for_exact_acceptance": True,
+            },
+            "summary": {
+                "explicit_overlay_canonical_refs": len(EXACT_OWNER_REFS),
+                "unresolved_owner_placeholders": 0,
+                "review_only_overlap_candidates": len(candidate_rows),
+                "fipi_supported_6_4_owner_candidates_admitted": len(supported),
+                "adjacent_code_nonowner_candidates": len(adjacent),
+                "no_exact_oge_2026_route_binding_candidates": len(no_binding),
+                "still_unresolved_candidates": 0,
+                "new_school_semantic_identities_created": 0,
+                "bounded_ru_semantic_admissions": 0,
+                "object_level_admission_units_closed": 1,
+                "object_level_requirements_closed": 1,
+                "false_exact_mastery_admissions": 0,
+            },
+            "policy": {
+                "reuse_first": True,
+                "keyword_or_name_overlap_is_exact_binding": False,
+                "official_navigator_paragraph_alone_is_exact_component_admission": False,
+                "methodical_exhaustive_table_may_reject_exact_route_binding": True,
+                "absence_from_oge_route_invalidates_school_semantic": False,
+                "adjacent_codifier_boundary_prevents_false_6_4_admission": True,
+                "exact_route_requires_overlay_inventory_authority_agreement": True,
+                "route_attempt_can_emit_exact_component_mastery": False,
+                "component_specific_independent_evidence_required": True,
+            },
+            "admission_effect": "ONE_OBJECT_BOUND_CANONICAL_COMPONENT_SET",
+            "next_safe_step": "Keep 6.4 exact only while overlay, reviewed inventory and exact authority agree on the four source-proven owners. Continue remaining Russian subject closure without converting this route-level mapping into atomic learner mastery.",
+        }
+        result["normalized_sha256"] = hashlib.sha256(canonical_json(result)).hexdigest()
+        return result
+''').lstrip()
+text = text[:start] + new_review + text[end:]
+prev.write_text(text, encoding="utf-8")
+
+# Post-sync source/frontier proof.
+pproof = ADM / "build_oge_6_4_soft_sign_owner_frontier_proof.py"
+text = pproof.read_text(encoding="utf-8")
+start = text.index("def build_proof() -> dict[str, Any]:")
+end = text.index("\ndef main() -> int:", start)
+new_proof = textwrap.dedent('''
+    def build_proof() -> dict[str, Any]:
+        review = build_review()
+        rosenthal = load_json(ROSENTHAL_FREEZE)
+        reopen = load_json(FIPI_REOPEN_AUDIT)
+        refreeze = load_json(FINAL_REFREEZE)
+
+        if review["status"] != "CENTRAL_BRAIN_EXACT_OWNER_SYNC_ACCEPTED":
+            raise ValueError("OGE 6.4 owner review is not exact-sync accepted")
+        if review["target"]["content_code"] != TARGET_CODE or review["target"]["topic"] != TARGET_TOPIC:
+            raise ValueError("OGE 6.4 review target drift")
+        frontier = review["source_bound_frontier"]
+        if frontier["still_unresolved_candidates"] != [] or frontier["frontier_complete_for_exact_acceptance"] is not True:
+            raise ValueError("OGE 6.4 source-bound frontier reopened")
+        if frontier["fipi_supported_6_4_owner_candidates_admitted"] != [
+            "school-adverb-final-soft-sign-after-sibilant-base",
+            "school-numeral-orthography-base",
+        ]:
+            raise ValueError("OGE 6.4 supported-owner admission set drift")
+        if frontier["adjacent_code_nonowner_candidates"] != ADJACENT_CODE_NONOWNERS:
+            raise ValueError("OGE 6.4 adjacent-code nonowner set drift")
+        if frontier["no_exact_oge_2026_route_binding_candidates"] != NO_EXACT_ROUTE_BINDING:
+            raise ValueError("OGE 6.4 no-exact-binding set drift")
+
+        source_paragraphs = review["official_source_review"]["navigator"]["source_attested_soft_sign_paragraphs"]
+        if len(source_paragraphs) != 4:
+            raise ValueError("official OGE 6.4 source-attested decision frontier drift")
+        rosenthal_closure = rosenthal.get("source_topic_closure") or {}
+        if any(rosenthal_closure.get(k) != 0 for k in ("orthography_unresolved", "candidate_families_unresolved", "open_holds")):
+            raise ValueError("Rosenthal source closure reopened")
+        reopen_checked = [str(value) for value in reopen.get("exam_topics_checked_and_not_reopened") or []]
+        if not any("hard/soft signs" in value and "existing owners" in value for value in reopen_checked):
+            raise ValueError("FIPI reopen audit no longer records hard/soft signs as existing-owner coverage")
+        if (reopen.get("count_assertion") or {}).get("projected_school_denominator_after_admission") != 185:
+            raise ValueError("FIPI reopen denominator projection drift")
+        if refreeze.get("final_school_canonical_denominator") != 185:
+            raise ValueError("final school denominator drift")
+        final_closure = refreeze.get("final_source_closure") or {}
+        for k in ("rosenthal_unresolved_after_259", "ege_2026_second_pass_school_reopen_candidates", "oge_2026_second_pass_school_reopen_candidates", "final_unowned_official_school_orthography_topics", "open_holds"):
+            if final_closure.get(k) != 0:
+                raise ValueError(f"final school/FIPI closure reopened: {k}")
+        if final_closure.get("fipi_pre_reopen_school_gaps") != 6 or final_closure.get("fipi_gaps_materialized") != 6:
+            raise ValueError("FIPI school-gap materialization count drift")
+
+        if review["current_overlay_truth"]["explicit_canonical_refs"] != PROVEN_OWNER_REFS:
+            raise ValueError("canonical OGE 6.4 route owner set drift")
+        if review["current_overlay_truth"]["unresolved_placeholder_present"] is not False:
+            raise ValueError("OGE 6.4 unresolved placeholder survived exact sync")
+        if review["identity_inventory_truth"]["current_semantic_refs"] != PROVEN_OWNER_REFS:
+            raise ValueError("OGE 6.4 inventory owner set drift")
+        if review["exact_acceptance_truth"]["current_exact_acceptance_for_6_4"] is not True:
+            raise ValueError("OGE 6.4 exact authority missing after sync")
+
+        result: dict[str, Any] = {
+            "schema_version": "0.1.0",
+            "status": "SOURCE_BOUND_OWNER_FRONTIER_PROVEN_AND_CANONICALLY_SYNCED",
+            "authority_issue": 161,
+            "target": {"document_id": "OGE_COD", "content_code": TARGET_CODE, "topic": TARGET_TOPIC},
+            "proof_basis": {
+                "official_fipi_6_4_decision_branches": source_paragraphs,
+                "rosenthal_primary_source_unresolved": rosenthal_closure["orthography_unresolved"],
+                "rosenthal_candidate_families_unresolved": rosenthal_closure["candidate_families_unresolved"],
+                "fipi_reopen_audit_hard_soft_signs_existing_owner_coverage": True,
+                "final_school_canonical_denominator": refreeze["final_school_canonical_denominator"],
+                "oge_2026_second_pass_school_reopen_candidates": final_closure["oge_2026_second_pass_school_reopen_candidates"],
+                "final_unowned_official_school_orthography_topics": final_closure["final_unowned_official_school_orthography_topics"],
+                "final_open_holds": final_closure["open_holds"],
+            },
+            "proven_exact_owner_frontier": {
+                "canonical_refs": PROVEN_OWNER_REFS,
+                "source_bound_frontier_complete": True,
+                "new_school_identity_required": False,
+                "pre_sync_explicit_refs": PROVEN_OWNER_REFS[:2],
+                "source_supported_refs_added": PROVEN_OWNER_REFS[2:],
+            },
+            "proven_nonowners": {
+                "adjacent_code_nonowners": ADJACENT_CODE_NONOWNERS,
+                "no_exact_oge_2026_route_binding": NO_EXACT_ROUTE_BINDING,
+            },
+            "current_repository_sync_state": {
+                "overlay_placeholder_present": False,
+                "overlay_exact_owner_list_complete": True,
+                "identity_inventory_exact_owner_list_complete": True,
+                "exact_component_acceptance_present": True,
+                "source_sync_required": False,
+            },
+            "policy": {
+                "reuse_first": True,
+                "no_new_school_identity_for_6_4": True,
+                "overlay_inventory_and_exact_authority_must_remain_synchronized": True,
+                "route_attempt_can_emit_exact_component_mastery": False,
+                "component_specific_independent_evidence_required": True,
+            },
+            "summary": {
+                "proven_exact_owner_refs": len(PROVEN_OWNER_REFS),
+                "adjacent_code_nonowners": len(ADJACENT_CODE_NONOWNERS),
+                "no_exact_route_binding_nonowners": len(NO_EXACT_ROUTE_BINDING),
+                "remaining_source_boundary_unknowns": 0,
+                "new_school_semantic_identities_created": 0,
+                "bounded_ru_semantic_admissions": 0,
+                "object_level_admission_units_closed": 1,
+                "object_level_requirements_closed": 1,
+                "false_exact_mastery_admissions": 0,
+            },
+            "admission_effect": "ONE_OBJECT_BOUND_CANONICAL_COMPONENT_SET",
+            "next_safe_step": "Treat OGE 6.4 as exact route-to-component authority only; continue remaining Russian subject closure while preserving component-specific mastery evidence requirements.",
+        }
+        result["normalized_sha256"] = hashlib.sha256(canonical_json(result)).hexdigest()
+        return result
+''').lstrip()
+text = text[:start] + new_proof + text[end:]
+pproof.write_text(text, encoding="utf-8")
+
+# Exact acceptance workflow watches both route and identity inventory and pins five decisions.
+pexactwf = WF / "russian-oge-exact-component-acceptance.yml"
+text = pexactwf.read_text(encoding="utf-8")
+text = replace_once(
+    text,
+    '      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"\n      - ".github/workflows/russian-oge-exact-component-acceptance.yml"',
+    '      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"\n      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"\n      - ".github/workflows/russian-oge-exact-component-acceptance.yml"',
+    "exact workflow/inventory path",
+)
+text = replace_once(text, "assert s['accepted_content_codes']==4", "assert s['accepted_content_codes']==5", "exact workflow/content count")
+text = replace_once(text, "assert s['accepted_admission_units']==4", "assert s['accepted_admission_units']==5", "exact workflow/unit count")
+text = replace_once(text, "assert s['accepted_requirements']==4", "assert s['accepted_requirements']==5", "exact workflow/req count")
+text = replace_once(
+    text,
+    "assert {x['content_code'] for x in d['decisions']}=={'6.3','6.5','6.10','6.13'}",
+    "assert {x['content_code'] for x in d['decisions']}=={'6.3','6.4','6.5','6.10','6.13'}",
+    "exact workflow/code set",
+)
+pexactwf.write_text(text, encoding="utf-8")
+
+# Owner-resolution workflow: now fail-closed on exact synchronized route truth.
+pownerwf = WF / "russian-oge-6-4-soft-sign-owner-resolution.yml"
+owner_workflow = textwrap.dedent('''
+    name: Russian OGE 6.4 soft-sign owner resolution
+
+    on:
+      pull_request:
+        paths:
+          - "eksamio-learning-engine/259-RUSSIAN-SCHOOL-ROSENTHAL-PRIMARY-COMPLETENESS-FINAL-FREEZE-v1.0.json"
+          - "eksamio-learning-engine/262-RUSSIAN-FIPI-2026-SCHOOL-REOPEN-GAP-AUDIT-v0.1.json"
+          - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+          - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+          - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+          - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+          - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py"
+          - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py"
+          - ".github/workflows/russian-oge-6-4-soft-sign-owner-resolution.yml"
+      workflow_dispatch:
+
+    permissions:
+      contents: read
+
+    jobs:
+      oge-6-4-owner-resolution:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+          - uses: actions/checkout@v4
+            with:
+              fetch-depth: 0
+          - uses: actions/setup-python@v5
+            with:
+              python-version: "3.12"
+          - name: Build synchronized owner proof deterministically
+            shell: bash
+            run: |
+              set -euo pipefail
+              root="eksamio-learning-engine/russian-program/subject-admission"
+              python3 -m py_compile "$root/build_oge_6_4_soft_sign_owner_resolution_review.py" "$root/build_oge_6_4_soft_sign_owner_frontier_proof.py"
+              python3 "$root/build_oge_6_4_soft_sign_owner_resolution_review.py" --output /tmp/review-a.json > /tmp/review-a.txt
+              python3 "$root/build_oge_6_4_soft_sign_owner_resolution_review.py" --output /tmp/review-b.json > /tmp/review-b.txt
+              cmp /tmp/review-a.json /tmp/review-b.json
+              diff -u /tmp/review-a.txt /tmp/review-b.txt
+              python3 "$root/build_oge_6_4_soft_sign_owner_frontier_proof.py" --output /tmp/proof-a.json > /tmp/proof-a.txt
+              python3 "$root/build_oge_6_4_soft_sign_owner_frontier_proof.py" --output /tmp/proof-b.json > /tmp/proof-b.txt
+              cmp /tmp/proof-a.json /tmp/proof-b.json
+              diff -u /tmp/proof-a.txt /tmp/proof-b.txt
+              cat /tmp/review-a.txt /tmp/proof-a.txt
+          - name: Validate exact synchronized OGE 6.4 truth
+            shell: bash
+            run: |
+              python3 - <<'PY'
+              import json
+              exact = [
+                  'school-separating-hard-soft-sign-boundary',
+                  'school-verb-soft-sign-forms',
+                  'school-numeral-orthography-base',
+                  'school-adverb-final-soft-sign-after-sibilant-base',
+              ]
+              review=json.load(open('/tmp/review-a.json', encoding='utf-8'))
+              proof=json.load(open('/tmp/proof-a.json', encoding='utf-8'))
+              assert review['status']=='CENTRAL_BRAIN_EXACT_OWNER_SYNC_ACCEPTED'
+              assert review['current_overlay_truth']['explicit_canonical_refs']==exact
+              assert review['current_overlay_truth']['unresolved_placeholder_present'] is False
+              assert review['current_overlay_truth']['overlay_is_complete_exact_owner_list'] is True
+              assert review['identity_inventory_truth']['current_semantic_refs']==exact
+              assert review['identity_inventory_truth']['inventory_refs_prove_overlay_completeness'] is True
+              assert review['exact_acceptance_truth']['current_exact_acceptance_for_6_4'] is True
+              assert review['source_bound_frontier']['frontier_complete_for_exact_acceptance'] is True
+              assert review['source_bound_frontier']['still_unresolved_candidates']==[]
+              assert review['summary']['object_level_admission_units_closed']==1
+              assert review['summary']['object_level_requirements_closed']==1
+              assert review['summary']['false_exact_mastery_admissions']==0
+              assert proof['status']=='SOURCE_BOUND_OWNER_FRONTIER_PROVEN_AND_CANONICALLY_SYNCED'
+              assert proof['proven_exact_owner_frontier']['canonical_refs']==exact
+              assert proof['current_repository_sync_state']=={
+                  'overlay_placeholder_present': False,
+                  'overlay_exact_owner_list_complete': True,
+                  'identity_inventory_exact_owner_list_complete': True,
+                  'exact_component_acceptance_present': True,
+                  'source_sync_required': False,
+              }
+              assert proof['summary']['remaining_source_boundary_unknowns']==0
+              assert proof['summary']['object_level_admission_units_closed']==1
+              assert proof['summary']['object_level_requirements_closed']==1
+              assert proof['summary']['false_exact_mastery_admissions']==0
+              print('OGE_6_4_EXACT_OWNER_SYNC_GUARD=PASS')
+              PY
+          - name: Upload OGE 6.4 synchronized proof
+            uses: actions/upload-artifact@v4
+            with:
+              name: russian-oge-6-4-soft-sign-owner-resolution
+              path: |
+                /tmp/review-a.json
+                /tmp/proof-a.json
+              if-no-files-found: error
+              retention-days: 14
+          - name: Protect accepted Russian production surfaces
+            shell: bash
+            run: |
+              set -euo pipefail
+              if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+                echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+                exit 1
+              fi
+          - name: Diff hygiene
+            run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
+''').lstrip()
+pownerwf.write_text(owner_workflow, encoding="utf-8")
+
+# Generate exact authority after all three canonical truth layers agree.
+exact_authority = ADM / "RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+run("python3", str(pexact), "--output", str(exact_authority))
+exact_data = json.loads(exact_authority.read_text(encoding="utf-8"))
+assert exact_data["summary"]["accepted_content_codes"] == 5
+assert exact_data["summary"]["accepted_admission_units"] == 5
+assert exact_data["summary"]["accepted_requirements"] == 5
+d64 = [d for d in exact_data["decisions"] if d["content_code"] == "6.4"]
+assert len(d64) == 1
+assert d64[0]["canonical_component_refs"] == EXACT
+assert d64[0]["mastery_boundary"]["route_or_broad_composite_attempt_can_emit_exact_component_mastery"] is False
+assert d64[0]["mastery_boundary"]["component_specific_independent_evidence_required"] is True
+
+# Prove synchronized source/route truth and derive the exact aggregate delta.
+run("python3", str(prev), "--output", "/tmp/oge64-review.json")
+run("python3", str(pproof), "--output", "/tmp/oge64-proof.json")
+review = json.loads(Path("/tmp/oge64-review.json").read_text(encoding="utf-8"))
+proof = json.loads(Path("/tmp/oge64-proof.json").read_text(encoding="utf-8"))
+assert review["status"] == "CENTRAL_BRAIN_EXACT_OWNER_SYNC_ACCEPTED"
+assert proof["status"] == "SOURCE_BOUND_OWNER_FRONTIER_PROVEN_AND_CANONICALLY_SYNCED"
+
+progress_path = "/tmp/russian-progress.json"
+run("python3", str(ADM / "build_russian_semantic_acceptance_progress.py"), "--output", progress_path)
+progress = json.loads(Path(progress_path).read_text(encoding="utf-8"))
+s = progress["progress_summary"]
+assert s["semantic_units_with_accepted_component_sets"] == 20
+assert s["semantic_requirements_with_accepted_component_sets"] == 20
+assert s["semantic_units_remaining_without_accepted_component_set"] == 1296
+assert s["semantic_requirements_remaining_without_accepted_component_set"] == 1371
+assert s["canonical_component_refs_reused_unique"] == 56
+assert s["accepted_bounded_ru_subject_semantics"] == 66
+assert s["accepted_bounded_ru_route_semantics"] == 9
+assert s["accepted_bounded_ru_semantics_total"] == 75
+assert s["new_semantic_identities_created"] == 0
+assert s["false_exact_mastery_admissions"] == 0
+assert len(progress["accepted_authorities"]) == 40
+
+# Pin semantic-progress CI to the deterministic post-sync aggregate.
+psemwf = WF / "russian-semantic-acceptance-progress.yml"
+text = psemwf.read_text(encoding="utf-8")
+for summary_key in [
+    "finite_semantic_review_groups",
+    "fully_accepted_semantic_groups",
+    "review_groups_with_accepted_component_sets",
+    "semantic_units_with_accepted_component_sets",
+    "semantic_requirements_with_accepted_component_sets",
+    "semantic_units_remaining_without_accepted_component_set",
+    "semantic_requirements_remaining_without_accepted_component_set",
+    "canonical_component_refs_reused_unique",
+]:
+    pattern = rf"(assert s\['{re.escape(summary_key)}'\] == )\d+"
+    text, count = re.subn(pattern, rf"\g<1>{int(s[summary_key])}", text, count=1)
+    if count != 1:
+        raise RuntimeError(f"semantic workflow summary assertion missing: {summary_key}")
+touched_count = int(s["review_groups_with_accepted_component_sets"])
+text, count = re.subn(r"assert len\(touched\) == \d+", f"assert len(touched) == {touched_count}", text, count=1)
+assert count == 1
+text, count = re.subn(
+    r"assert sum\(g\['accepted_component_set_count'\] for g in touched\) == \d+",
+    "assert sum(g['accepted_component_set_count'] for g in touched) == 20",
+    text,
+    count=1,
+)
+assert count == 1
+psemwf.write_text(text, encoding="utf-8")
+
+# Rebuild twice from the final staged tree before publishing the candidate commit.
+run("python3", "-m", "py_compile", str(pexact), str(prev), str(pproof), str(pbase), str(ADM / "build_russian_semantic_acceptance_progress.py"))
+run("python3", str(pexact), "--output", "/tmp/exact-a.json")
+run("python3", str(pexact), "--output", "/tmp/exact-b.json")
+assert Path("/tmp/exact-a.json").read_bytes() == Path("/tmp/exact-b.json").read_bytes() == exact_authority.read_bytes()
+run("python3", str(prev), "--output", "/tmp/review-a.json")
+run("python3", str(prev), "--output", "/tmp/review-b.json")
+assert Path("/tmp/review-a.json").read_bytes() == Path("/tmp/review-b.json").read_bytes()
+run("python3", str(pproof), "--output", "/tmp/proof-a.json")
+run("python3", str(pproof), "--output", "/tmp/proof-b.json")
+assert Path("/tmp/proof-a.json").read_bytes() == Path("/tmp/proof-b.json").read_bytes()
+run("python3", str(ADM / "build_russian_semantic_acceptance_progress.py"), "--output", "/tmp/progress-final.json")
+final_progress = json.loads(Path("/tmp/progress-final.json").read_text(encoding="utf-8"))
+assert final_progress["progress_summary"] == s
+
+print("OGE_6_4_ATOMIC_SYNC_CANDIDATE=PASS")
+print("accepted_object_units=20")
+print("accepted_object_requirements=20")
+print("remaining_units=1296")
+print("remaining_requirements=1371")
+print("unique_school_refs=56")
+print("bounded_ru_semantics=75")
