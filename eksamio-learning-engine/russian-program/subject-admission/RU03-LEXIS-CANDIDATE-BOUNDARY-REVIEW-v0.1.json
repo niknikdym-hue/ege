@@ -1,0 +1,108 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_RU03_LEXIS_CANDIDATE_BOUNDARY_REVIEW_COMPLETE_NO_ADMISSION",
+  "authority_issue": 161,
+  "scope": "RU03_CANDIDATES_008_015_EXACT_SOURCE_CONTENT_BOUNDARY_REVIEW_REUSE_FIRST_NO_SEMANTIC_ADMISSION",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "policy": {
+    "exact_current_source_identity_required": true,
+    "confirmed_skill_graph_evidence_required_for_admission_ready": true,
+    "exact_school_meaning_collision_forbidden": true,
+    "original_exact_learner_content_required": true,
+    "content_presence_alone_is_semantic_admission": false,
+    "review_status_is_semantic_admission": false,
+    "generic_exam_task_result_can_emit_exact_component_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "object_counts_reduced": false
+  },
+  "authority": {
+    "semantic_candidate_inventory": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+    "skill_graph": "03-RUSSIAN-SKILL-GRAPH.json",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-03-LEXIS-PARONYMS-PHRASEOLOGY-WAVE-002-v0.1.json"
+  },
+  "candidate_review": [
+    {
+      "candidate_ref": "candidate-008",
+      "source_taxonomy_id": "lexical_meaning_in_context",
+      "skill_graph_evidence_status": "confirmed",
+      "learner_content_ref": "ru-lexis-contextual-meaning-polysemy",
+      "content_boundary": "BROADER_THAN_EXACT_CANDIDATE_COMBINES_CONTEXTUAL_MEANING_AND_POLYSEMY",
+      "disposition": "REVIEWED_NOT_ADMITTED"
+    },
+    {
+      "candidate_ref": "candidate-009",
+      "source_taxonomy_id": "dictionary_sense_selection",
+      "skill_graph_evidence_status": "confirmed",
+      "learner_content_ref": null,
+      "content_boundary": "NO_DEDICATED_EXACT_LEARNER_UNIT",
+      "disposition": "REVIEWED_NOT_ADMITTED"
+    },
+    {
+      "candidate_ref": "candidate-010",
+      "source_taxonomy_id": "definition_context_matching",
+      "skill_graph_evidence_status": "confirmed",
+      "learner_content_ref": null,
+      "content_boundary": "NO_DEDICATED_EXACT_LEARNER_UNIT",
+      "disposition": "REVIEWED_NOT_ADMITTED"
+    },
+    {
+      "candidate_ref": "candidate-011",
+      "source_taxonomy_id": "paronym_context_choice",
+      "skill_graph_evidence_status": "confirmed",
+      "learner_content_ref": "ru-lexis-paronym-collocation-choice",
+      "content_boundary": "EXACT_CANDIDATE_MEANING_MATCH_VALUE_AND_LEXICAL_COLLOCATION_WITH_INDEPENDENT_VERIFICATION",
+      "disposition": "EXACT_BOUNDED_SUBJECT_SEMANTIC_ADMISSION_READY_NOT_ADMITTED"
+    },
+    {
+      "candidate_ref": "candidate-012",
+      "source_taxonomy_id": "lexical_redundancy",
+      "skill_graph_evidence_status": "confirmed",
+      "learner_content_ref": null,
+      "content_boundary": "NO_DEDICATED_EXACT_LEARNER_UNIT",
+      "disposition": "REVIEWED_NOT_ADMITTED"
+    },
+    {
+      "candidate_ref": "candidate-013",
+      "source_taxonomy_id": "lexical_collocation_correction",
+      "skill_graph_evidence_status": "confirmed",
+      "learner_content_ref": null,
+      "content_boundary": "NO_DEDICATED_EXACT_LEARNER_UNIT",
+      "disposition": "REVIEWED_NOT_ADMITTED"
+    },
+    {
+      "candidate_ref": "candidate-014",
+      "source_taxonomy_id": "phraseologism_identification",
+      "skill_graph_evidence_status": "confirmed",
+      "learner_content_ref": "ru-lexis-phraseology-free-combination",
+      "content_boundary": "BROADER_THAN_EXACT_CANDIDATE_TRAINS_PHRASEOLOGISM_VS_FREE_COMBINATION_NOT_ONLY_IDENTIFICATION_IN_FRAGMENT",
+      "disposition": "REVIEWED_NOT_ADMITTED"
+    },
+    {
+      "candidate_ref": "candidate-015",
+      "source_taxonomy_id": "contextual_synonym_selection",
+      "skill_graph_evidence_status": "needs_review",
+      "learner_content_ref": null,
+      "content_boundary": "SOURCE_EVIDENCE_NEEDS_REVIEW_AND_NO_DEDICATED_EXACT_LEARNER_UNIT",
+      "disposition": "REVIEWED_FAIL_CLOSED_NOT_ADMITTED"
+    }
+  ],
+  "admission_ready": {
+    "candidate_ref": "candidate-011",
+    "source_taxonomy_id": "paronym_context_choice",
+    "proposed_semantic_id": "ru-lexis-paronym-collocation-choice",
+    "reason": "Exact current missing-subject candidate, source-verified inventory backing, confirmed skill-graph node, no exact school-canonical meaning collision, and one original learner unit matching selection by meaning and lexical collocation.",
+    "status": "READY_FOR_SEPARATE_BOUNDED_SEMANTIC_ACCEPTANCE_NOT_ACCEPTED_BY_THIS_REVIEW"
+  },
+  "summary": {
+    "candidates_reviewed": 8,
+    "confirmed_skill_graph_candidates": 7,
+    "needs_review_skill_graph_candidates": 1,
+    "exact_content_admission_ready_candidates": 1,
+    "semantic_admissions": 0,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}

@@ -1,0 +1,92 @@
+name: Russian final disposition review coverage
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_final_disposition_review_coverage_v2.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_ledger.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_ledger_extended.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-DISPOSITIONS-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-REVIEWED-*.json"
+      - ".github/workflows/russian-final-disposition-review-coverage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  final-disposition-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile final disposition review gate
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_final_disposition_review_coverage_v2.py
+      - name: Build final disposition review coverage twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_final_disposition_review_coverage_v2.py --output /tmp/coverage-a.json > /tmp/coverage-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_final_disposition_review_coverage_v2.py --output /tmp/coverage-b.json > /tmp/coverage-b.txt
+          cmp /tmp/coverage-a.json /tmp/coverage-b.json
+          diff -u /tmp/coverage-a.txt /tmp/coverage-b.txt
+          cat /tmp/coverage-a.txt
+          cp /tmp/coverage-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-FINAL-DISPOSITION-REVIEW-COVERAGE.json
+      - name: Require finite issue-161 disposition closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-FINAL-DISPOSITION-REVIEW-COVERAGE.json').read_text(encoding='utf-8'))
+          s = d['summary']
+          assert d['schema_version'] == '0.2.0'
+          assert d['status'] == 'CENTRAL_BRAIN_FINAL_DISPOSITION_REVIEW_COVERAGE_ACCEPTED', d['failures'][:20]
+          assert s['admission_units_total'] == 1325
+          assert s['requirements_total'] == 1400
+          assert s['reviewed_admission_units'] == 1325
+          assert s['reviewed_requirements'] == 1400
+          assert s['unreviewed_admission_units'] == 0
+          assert s['route_or_format_only_units'] == 9
+          assert s['route_or_format_only_requirements'] == 9
+          assert s['partial_or_composite_units'] == 1316
+          assert s['partial_or_composite_requirements'] == 1391
+          assert s['finite_semantic_review_groups'] == 74
+          assert s['modules_with_nonzero_reviewed_accounting'] == 16
+          assert s['semantic_identity_self_admissions_from_classification'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          assert d['failures'] == []
+          assert d['policy']['partial_or_composite_is_valid_final_disposition'] is True
+          assert d['policy']['partial_or_composite_is_not_atomic_mastery'] is True
+          assert d['policy']['partial_or_composite_requires_component_specific_independent_evidence'] is True
+          assert d['policy']['object_disposition_review_is_complete'] is True
+          assert d['policy']['object_disposition_review_implies_russian_content_ready'] is False
+          assert d['policy']['keyword_fuzzy_module_only_mapping_allowed'] is False
+          for module, counts in d['module_review_coverage'].items():
+              assert counts['units'] > 0 and counts['requirements'] > 0, (module, counts)
+          print('RUSSIAN_FINAL_DISPOSITION_REVIEW_CLOSURE=PASS')
+          PY
+      - name: Upload final review coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-final-disposition-review-coverage
+          path: eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-FINAL-DISPOSITION-REVIEW-COVERAGE.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Final disposition review gate changed accepted Russian production surfaces.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'

@@ -1,0 +1,78 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU03_CONTEXTUAL_SYNONYM_BOUNDED_SUBJECT_SEMANTIC",
+  "authority_issue": 161,
+  "scope": "RU03_CANDIDATE_015_CURRENT_2026_OFFICIAL_SOURCE_IDENTITY_PLUS_NEW_ORIGINAL_EXACT_LEARNER_CONTENT_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "registry_contract_ref": "272-RUSSIAN-UNIFIED-SEMANTIC-IDENTITY-REGISTRY-CONTRACT-v1.0.txt",
+  "authority": {
+    "semantic_candidate_inventory": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-015",
+    "legacy_skill_graph": "03-RUSSIAN-SKILL-GRAPH.json#skills[contextual_synonym_selection]",
+    "current_2026_source_resolution": "russian-program/subject-admission/build_ru03_contextual_synonym_source_identity_resolution.py",
+    "reuse_first_content_gap_review": "russian-program/subject-admission/build_ru03_contextual_synonym_content_gap_review.py",
+    "content_adequacy_review": "russian-program/subject-admission/build_ru03_contextual_synonym_content_adequacy_review.py",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-03-CONTEXTUAL-SYNONYM-SELECTION-WAVE-008-v0.1.json"
+  },
+  "policy": {
+    "exact_current_source_identity_required": true,
+    "current_official_2026_fipi_authority_required": true,
+    "current_missing_subject_candidate_required": true,
+    "exact_school_meaning_collision_forbidden": true,
+    "original_exact_learner_content_required": true,
+    "new_subject_identity_namespace": "ru-*",
+    "school_duplicate_forbidden": true,
+    "legacy_ege_taxonomy_id_promoted_unchanged": false,
+    "candidate_id_used_as_semantic_id": false,
+    "adjacent_candidates_admitted": false,
+    "generic_task25_result_can_emit_exact_component_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "content_presence_alone_is_semantic_admission": false,
+    "legacy_graph_or_inventory_needs_review_mutated": false
+  },
+  "decisions": [
+    {
+      "candidate_ref": "candidate-015",
+      "source_taxonomy_id": "contextual_synonym_selection",
+      "accepted_semantic_id": "ru-lexis-contextual-synonym-text-fit",
+      "canonical_label_ru": "Подбор контекстного синонима к слову исходного текста",
+      "entity_type": "CONTEXTUAL_SYNONYM_TEXT_FIT_SKILL",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-03-CONTEXTUAL-SYNONYM-SELECTION-WAVE-008-v0.1.json#units[proposed_semantic_id=ru-lexis-contextual-synonym-text-fit]",
+      "boundary_guard": "select or produce a replacement for the target word in the supplied fragment and prove that the replacement preserves the target's contextual meaning, grammatical fit and stylistic fit; does not claim general contextual-meaning mastery, dictionary-sense selection, phraseologism identification, paronym choice, lexical-collocation correction, adjacent RU03 candidates, language-only synonymy, or generic Task-25 mastery",
+      "excluded_adjacent_candidate_refs": [
+        "candidate-008",
+        "candidate-009",
+        "candidate-010",
+        "candidate-011",
+        "candidate-012",
+        "candidate-013",
+        "candidate-014"
+      ],
+      "source_evidence_status": "confirmed_current_2026_official_fipi",
+      "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+    }
+  ],
+  "crosswalk_policy": {
+    "candidate_ref_preserved_as_legacy_ref": true,
+    "source_taxonomy_ref_preserved": true,
+    "source_taxonomy_id_replaced": false,
+    "legacy_needs_review_records_preserved_as_audit_history": true,
+    "current_2026_source_resolution_overlays_legacy_review_state": true,
+    "mapping_relation": "ROUTES_TO / CONTRIBUTES_TO",
+    "exam_task_number_is_semantic_identity": false,
+    "generic_task25_result_can_emit_exact_component_mastery": false
+  },
+  "summary": {
+    "accepted_bounded_subject_semantics": 1,
+    "accepted_ru_subject_semantics": 1,
+    "source_backed_candidates_consumed": 1,
+    "new_original_production_content_units_used": 1,
+    "adjacent_candidates_admitted": 0,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}

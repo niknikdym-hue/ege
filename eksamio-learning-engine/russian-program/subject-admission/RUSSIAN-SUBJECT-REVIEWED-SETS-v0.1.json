@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_REVIEWED_EXACT_UNIT_SETS_PARTIAL",
+  "authority_issue": 161,
+  "baseline_main": "0e7cb3cd05cd999ea97606d65cf5aef5625fcb3f",
+  "object_review_queue_sha256": "aa334efc455c68707d2d31de48b4364c879a619cf18dd07c9183d53890be5309",
+  "policy": {
+    "unit_selection": "EXPLICIT_ADMISSION_UNIT_IDS_ONLY",
+    "batch_or_keyword_inference_allowed": false,
+    "review_batch_is_admission_authority": false,
+    "every_set_expands_to_exact_source_specific_unit_rows": true,
+    "component_ref_does_not_admit_semantic_identity": true
+  },
+  "reviewed_sets": [
+    {
+      "set_id": "CB-RU13-EXPRESSIVE-BROAD-DOMAIN-001",
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED_CLASSIFICATION",
+      "disposition": "PARTIAL_OR_COMPOSITE",
+      "rationale": "Each enumerated official admission unit states the broad ability to recognize and interpret expressive means. That ability is not one atomic semantic decision. It decomposes into named expressive-mean abilities and must not award exact mastery from a generic task/domain result. The component inventory combines the existing 033–042 semantic candidates with the 14 newly materialized RU13 learner units; rhetorical address remains inside the candidate-039 boundary instead of creating a duplicate identity.",
+      "expected_normalized_meaning": "Распознавать и интерпретировать средства выразительности.",
+      "exact_admission_unit_ids": [
+        "RAU-170745c79503b789e72b",
+        "RAU-359cfc7d0ad59a2f6e95",
+        "RAU-6a7b2dccf1d2430a2777",
+        "RAU-b5712ae284c6178d10fd",
+        "RAU-f8b3979c6b1889dbb949"
+      ],
+      "exact_requirement_ids": [
+        "RSK-EDSOO59-8-1-P201",
+        "RSK-OGE_COD-1-1-2-P002",
+        "RSK-EDSOO59-8-1-P227",
+        "RSK-EDSOO59-8-1-P231",
+        "RSK-EGE_COD-3-12-P004",
+        "RSK-EGE_COD-1-1-1-P002"
+      ],
+      "route_authority_refs": [
+        "FIPI-EGE-2026-TASK-CODE-RELATION-v1.0.json#task=22 requirement_code=3.12",
+        "issue:#161#issuecomment-5454768742"
+      ],
+      "components": [
+        {"ref_kind": "existing_semantic_candidate", "ref": "candidate-033", "label": "assonance", "status": "NOT_ADMITTED_BY_THIS_SET"},
+        {"ref_kind": "existing_semantic_candidate", "ref": "candidate-034", "label": "hyperbole", "status": "NOT_ADMITTED_BY_THIS_SET"},
+        {"ref_kind": "existing_semantic_candidate", "ref": "candidate-035", "label": "metonymy", "status": "NOT_ADMITTED_BY_THIS_SET"},
+        {"ref_kind": "existing_semantic_candidate", "ref": "candidate-036", "label": "anaphora", "status": "NOT_ADMITTED_BY_THIS_SET"},
+        {"ref_kind": "existing_semantic_candidate", "ref": "candidate-037", "label": "parceling", "status": "NOT_ADMITTED_BY_THIS_SET"},
+        {"ref_kind": "existing_semantic_candidate", "ref": "candidate-038", "label": "homogeneous-member row expressive", "status": "NOT_ADMITTED_BY_THIS_SET"},
+        {"ref_kind": "existing_semantic_candidate", "ref": "candidate-039", "label": "address expressive / rhetorical-address boundary", "status": "EXACT_BOUNDARY_REVIEW_REQUIRED_NOT_ADMITTED_BY_THIS_SET"},
+        {"ref_kind": "existing_semantic_candidate", "ref": "candidate-040", "label": "epithet", "status": "NOT_ADMITTED_BY_THIS_SET"},
+        {"ref_kind": "existing_semantic_candidate", "ref": "candidate-041", "label": "metaphor", "status": "NOT_ADMITTED_BY_THIS_SET"},
+        {"ref_kind": "existing_semantic_candidate", "ref": "candidate-042", "label": "comparison", "status": "NOT_ADMITTED_BY_THIS_SET"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-alliteration", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-personification", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-syntactic-parallelism", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-question-answer-form", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-gradation", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-inversion", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-lexical-repetition", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-epiphora", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-antithesis", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-rhetorical-question", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-rhetorical-exclamation", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-polysyndeton", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-asyndeton", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"},
+        {"ref_kind": "proposed_semantic_with_content", "ref": "ru-expressive-litotes", "content_ref": "production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json", "status": "PROPOSED_NOT_CANONICAL"}
+      ],
+      "mastery_boundary": {
+        "generic_domain_attempt_can_emit_exact_component_mastery": false,
+        "generic_domain_attempt_can_emit_partial_or_composite_evidence": true,
+        "component_mastery_requires_component_specific_independent_evidence": true
+      }
+    },
+    {
+      "set_id": "CB-RU16-BROAD-ESSAY-COMPOSITE-001",
+      "subject_review_status": "CENTRAL_BRAIN_ACCEPTED_CLASSIFICATION",
+      "disposition": "PARTIAL_OR_COMPOSITE",
+      "rationale": "The exact normalized review meaning combines two independently assessable learner operations: analysis of the source text and construction of a route essay. The six enumerated source-specific admission units span EGE, OGE and school authorities, so this set is classification-only: it prevents false exact mastery and does not claim one route-specific content bundle or semantic identity covers all six source rows.",
+      "expected_normalized_meaning": "Анализировать исходный текст и строить сочинение маршрута ЕГЭ.",
+      "exact_admission_unit_ids": [
+        "RAU-c898f2a0d0a257786030",
+        "RAU-f1a4cbdba923a06d22e5",
+        "RAU-99c275cbfd99491d687b",
+        "RAU-be06422d548c67f8956d",
+        "RAU-e27c1a25ffdf42be7cad",
+        "RAU-f5726a12a14447bfe44a"
+      ],
+      "exact_requirement_ids": [
+        "RSK-EGE_COD-2-1-3-P002",
+        "RSK-EGE_COD-1-2-4-P002",
+        "RSK-OGE_COD-2-1-2-P003",
+        "RSK-OGE_COD-3-1-1-P004",
+        "RSK-OGE_COD-1-2-5-P003",
+        "RSK-EDSOO59-1-5-P186"
+      ],
+      "components": [
+        {"ref_kind": "review_capability_boundary", "ref": "review-boundary:source-text-analysis", "label": "Анализировать исходный текст.", "status": "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION"},
+        {"ref_kind": "review_capability_boundary", "ref": "review-boundary:route-essay-construction", "label": "Строить сочинение маршрута ЕГЭ.", "status": "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION"}
+      ],
+      "mastery_boundary": {
+        "generic_domain_attempt_can_emit_exact_component_mastery": false,
+        "generic_domain_attempt_can_emit_partial_or_composite_evidence": true,
+        "component_mastery_requires_component_specific_independent_evidence": true
+      }
+    }
+  ]
+}

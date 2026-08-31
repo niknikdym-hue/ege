@@ -1,0 +1,52 @@
+name: Russian RU11 ukazatelnoe-pronoun cohesion semantic acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU11-UKAZATELNOE-PRONOUN-COHESION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru11_ukazatelnoe_pronoun_cohesion_bounded_subject_semantics.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-11-UKAZATELNOE-PRONOUN-COHESION-WAVE-010-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json"
+      - ".github/workflows/russian-ru11-ukazatelnoe-pronoun-cohesion-semantic-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru11-ukazatelnoe-pronoun-cohesion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile validator
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru11_ukazatelnoe_pronoun_cohesion_bounded_subject_semantics.py
+      - name: Validate twice
+        run: |
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru11_ukazatelnoe_pronoun_cohesion_bounded_subject_semantics.py > /tmp/a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru11_ukazatelnoe_pronoun_cohesion_bounded_subject_semantics.py > /tmp/b.txt
+          diff -u /tmp/a.txt /tmp/b.txt
+          grep -Fx 'RU11_DEMONSTRATIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE=PASS' /tmp/a.txt
+          grep -Fx 'SOURCE_CANDIDATE_REVIEW_STATUS=draft' /tmp/a.txt
+          grep -Fx 'ACCEPTED_SEMANTIC=ru-text-cohesion-demonstrative-pronoun' /tmp/a.txt
+          grep -Fx 'BROADER_EXISTING_DIRECT_DEMONSTRATIVE_PRONOUN_CHECKS=1' /tmp/a.txt
+          grep -Fx 'EXACT_COMPONENT_CHECKS=3' /tmp/a.txt
+          grep -Fx 'OBJECT_CLOSURES=0/0' /tmp/a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/a.txt
+          cat /tmp/a.txt
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Candidate-003 acceptance changed accepted Russian production surfaces.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check

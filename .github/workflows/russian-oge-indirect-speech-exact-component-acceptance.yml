@@ -1,0 +1,107 @@
+name: Russian OGE indirect-speech exact component acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_indirect_speech_exact_component_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-INDIRECT-SPEECH-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-REVIEWED-REUSE-COMPOSITE-MEANINGS-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
+      - "eksamio-learning-engine/russian-program/source-knowledge/**"
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - ".github/workflows/russian-oge-indirect-speech-exact-component-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-indirect-speech-exact-component:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build exact indirect-speech acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_indirect_speech_exact_component_acceptance.py --output /tmp/indirect-a.json > /tmp/indirect-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_indirect_speech_exact_component_acceptance.py --output /tmp/indirect-b.json > /tmp/indirect-report-b.txt
+          cmp /tmp/indirect-a.json /tmp/indirect-b.json
+          diff -u /tmp/indirect-report-a.txt /tmp/indirect-report-b.txt
+          cmp /tmp/indirect-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-INDIRECT-SPEECH-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
+          cat /tmp/indirect-report-a.txt
+      - name: Verify exact source and mastery boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('/tmp/indirect-a.json').read_text(encoding='utf-8'))
+          assert data['status'] == 'CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_INDIRECT_SPEECH_CANONICAL_COMPONENT_SLICE'
+          assert data['official_oge_codifier_sha256'] == '2d83e987ddad08d405827f98dfa490721f2d67b787b2803d8c499eea7b84858a'
+          assert data['object_accounting_sha256'] == 'f3aef83dab99b554a4cdec9ef8d8fbc8036d557182259ae69db182efa11b925c'
+          assert data['semantic_packet_sha256'] == 'b35fb420f7a6e96ea11f47e321cae0affe363dc5ed8d6fb79ea8640ac5ac94c4'
+          assert data['normalized_sha256'] == '15a46d0f300ba66d380d2039d7943589b5e7ad8e4a945f203d3d25285045c98e'
+          s = data['summary']
+          assert s['accepted_admission_units'] == 1
+          assert s['accepted_requirements'] == 1
+          assert s['accepted_content_codes'] == 1
+          assert s['canonical_component_refs_unique'] == 7
+          assert s['new_semantic_identities_created'] == 0
+          assert s['ru_proposal_identities_admitted'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          row = data['decisions'][0]
+          assert row['content_code'] == '7.25'
+          assert row['requirement_id'] == 'RSK-OGE_COD-7-25-P026'
+          assert row['admission_unit_id'] == 'RAU-6ca3e333fc26afdc06c5'
+          assert row['source_locator'] == 'FIPI-OGE-RU-2026-FINAL/OGE_COD p.26 7.25'
+          assert row['modules'] == ['RU-PROG-09', 'RU-PROG-14']
+          assert row['routes'] == ['oge']
+          assert row['authority']['packet_group'] == 'RUS-SEM-REVIEW-016'
+          assert row['authority']['reviewed_composite_meaning_authority'] == 'RUSSIAN-SUBJECT-REVIEWED-REUSE-COMPOSITE-MEANINGS-v0.1.json'
+          assert row['subject_semantic_status'] == 'CENTRAL_BRAIN_ACCEPTED_CANONICAL_COMPONENT_SET'
+          assert row['disposition'] == 'PARTIAL_OR_COMPOSITE'
+          assert row['mapping_mode'] == 'CLOSED_FOREIGN_SPEECH_FAMILY_PLUS_ORDINARY_INDIRECT_SPEECH_SPP_BASE'
+          assert row['canonical_component_refs'] == [
+              'school-direct-speech-base-formatting',
+              'school-direct-speech-adjacent-author-words-system',
+              'school-direct-speech-author-words-middle-system',
+              'school-direct-speech-inside-author-words',
+              'school-citation-punctuation-formatting',
+              'school-dialogue-replica-punctuation',
+              'school-spp-main-subordinate-comma-base',
+          ]
+          b = row['mastery_boundary']
+          assert b['route_or_broad_composite_attempt_can_emit_exact_component_mastery'] is False
+          assert b['component_specific_independent_evidence_required'] is True
+          assert data['policy']['new_indirect_speech_semantic_identity_allowed'] is False
+          assert data['policy']['broad_punctuation_analysis_route_allowed'] is False
+          print('RUSSIAN_OGE_INDIRECT_SPEECH_EXACT_COMPONENT_GUARD=PASS')
+          PY
+      - name: Upload exact indirect-speech authority artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-indirect-speech-exact-component-acceptance
+          path: /tmp/indirect-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'

@@ -1,0 +1,112 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU04_MORPHEMICS_BOUNDED_SUBJECT_SEMANTICS",
+  "authority_issue": 161,
+  "scope": "RU04_SOURCE_BACKED_MORPHEMICS_COMPONENTS_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "authority": {
+    "subject_program": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#module=RU-PROG-04",
+    "subject_program_binding_mode": "SOURCE_BACKED_SUBJECT_EXPANSION_REQUIRED",
+    "subject_program_candidate_refs": [],
+    "official_broad_domain_meaning": "Разбирать морфемную структуру слова.",
+    "exact_broad_domain_admission_unit_ids": [
+      "RAU-082a4d00afa38f12e19e",
+      "RAU-0af04b15e5048f5f87a9",
+      "RAU-15c7bf6ab0c3dbdfa19c",
+      "RAU-20a875bc757e0dc0e16a",
+      "RAU-23b62e8d1409aec85092",
+      "RAU-4ab8541d5b0b11be8987",
+      "RAU-87a223a056538be4621d",
+      "RAU-8cdd6b5472ec14c2cbcb",
+      "RAU-a4423df62934f23efcec",
+      "RAU-aeea343ee858939b5bd6",
+      "RAU-be321f56a83268b2681d",
+      "RAU-c09f98610a173e0aa3a0",
+      "RAU-c6d51aa34d525e92d880",
+      "RAU-cbbc6f469b7f7ac505de",
+      "RAU-f879154b58ed98955a2f"
+    ],
+    "exact_broad_domain_requirement_ids": [
+      "RSK-EDSOO59-4-10-P182",
+      "RSK-EDSOO59-4-12-P182",
+      "RSK-EDSOO59-4-3-1-P188",
+      "RSK-EDSOO59-4-3-2-P188",
+      "RSK-EDSOO59-4-3-3-P188",
+      "RSK-EDSOO59-4-3-5-P188",
+      "RSK-EDSOO59-4-3-P188",
+      "RSK-EDSOO59-4-9-P182",
+      "RSK-EDSOO59-8-1-P186",
+      "RSK-EDSOO59-8-1-P192",
+      "RSK-OGE_COD-3-2-P014",
+      "RSK-OGE_COD-4-3-1-P021",
+      "RSK-OGE_COD-4-3-2-P021",
+      "RSK-OGE_COD-4-3-3-P021",
+      "RSK-OGE_COD-4-3-5-P021",
+      "RSK-OGE_COD-4-3-P021"
+    ],
+    "boundary_review_builder": "russian-program/subject-admission/build_ru04_morphemics_subject_boundary_review.py",
+    "boundary_review_normalized_sha256": "3fdbcb1331d54cbd34fce40405c2e7e227573da1bbf7f6ea013092b8cfdab281",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json",
+    "official_program_provenance": "EDSOO Federal Working Program Russian 5-9, 2025 / PUBLIC_OFFICIAL_PDF"
+  },
+  "policy": {
+    "source_backed_subject_expansion_required": true,
+    "content_presence_alone_implies_acceptance": false,
+    "module_membership_implies_object_binding": false,
+    "broad_domain_attempt_can_emit_exact_component_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "keyword_or_fuzzy_inference_allowed": false,
+    "school_registry_replacement_or_mutation_allowed": false
+  },
+  "decisions": [
+    {
+      "accepted_semantic_id": "ru-morphemics-morpheme-base-ending",
+      "label_ru": "Морфема, основа и окончание",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json#ru-morphemics-morpheme-base-ending",
+      "boundary_guard": "Identify the ending through inflection of the same word, distinguish a zero ending from absence of an ending in an indeclinable word, and derive the base only after that check; final letters alone do not prove an ending and this semantic does not grant word-formation or spelling mastery.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    },
+    {
+      "accepted_semantic_id": "ru-morphemics-root-prefix-suffix-analysis",
+      "label_ru": "Корень, приставка и суффикс: разбор по значению и родству",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json#ru-morphemics-root-prefix-suffix-analysis",
+      "boundary_guard": "Establish the root from modern semantic kinship plus formal recurrence, then test prefixes and suffixes through structural/derivational comparison; matching letter chunks or position alone are insufficient, and unsourced historical etymology is outside this bounded semantic.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    },
+    {
+      "accepted_semantic_id": "ru-morphemics-alternation-and-full-analysis",
+      "label_ru": "Чередование в морфемах и полный морфемный анализ",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json#ru-morphemics-alternation-and-full-analysis",
+      "boundary_guard": "Recognize alternation only after the identity and semantic relation of the morpheme are established, and perform full morphemic analysis through checked word forms and related words; not every graphic difference is an alternation and this does not independently grant orthographic or word-formation mastery.",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+    }
+  ],
+  "explicit_non_acceptances": [
+    {
+      "semantic_or_object_ref": "RU04 broad-domain 15 admission units / 16 requirements",
+      "reason": "The broad official domain establishes morphemics scope but does not prove one-to-one object binding for the three bounded components; object accounting remains unchanged."
+    },
+    {
+      "semantic_or_object_ref": "RU-PROG-05 word formation",
+      "reason": "Word-formation relations and formation methods remain a separate source-backed module and are not admitted through morphemics merely because the domains are prerequisites for one another."
+    },
+    {
+      "semantic_or_object_ref": "RU-PROG-08 orthography",
+      "reason": "Using morphemic structure as evidence for spelling does not by itself grant any exact orthographic semantic mastery."
+    },
+    {
+      "semantic_or_object_ref": "historical etymological decomposition",
+      "reason": "No unsourced diachronic decomposition is admitted; the bounded learner semantics use current school morphemic analysis unless separate authority proves otherwise."
+    }
+  ],
+  "summary": {
+    "accepted_bounded_subject_semantics": 3,
+    "accepted_ru_subject_semantics": 3,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}

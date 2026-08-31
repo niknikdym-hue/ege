@@ -1,0 +1,47 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_RU03_CONTEXTUAL_MEANING_CONTENT_ADEQUACY_REVIEW_COMPLETE_NO_ADMISSION",
+  "authority_issue": 161,
+  "scope": "CANDIDATE_008_LEXICAL_MEANING_IN_CONTEXT_REUSE_FIRST_EXACTNESS_REVIEW_FAIL_CLOSED_NO_OBJECT_BINDING",
+  "antecedent_boundary_review": "RU03-LEXIS-CANDIDATE-BOUNDARY-REVIEW-v0.1.json",
+  "source_identity": {
+    "candidate_ref": "candidate-008",
+    "source_taxonomy_id": "lexical_meaning_in_context",
+    "label_ru": "Определение значения слова в данном контексте",
+    "skill_graph_evidence_status": "confirmed",
+    "inventory_classification": "MISSING_SUBJECT_SEMANTIC_CANDIDATE"
+  },
+  "reuse_first_result": {
+    "existing_broader_content_ref": "russian-program/production-learning-content/RU-PROG-03-LEXIS-PARONYMS-PHRASEOLOGY-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-lexis-contextual-meaning-polysemy]",
+    "existing_content_exact_for_candidate_008": false,
+    "reason": "The existing unit combines determination of contextual lexical meaning with polysemy, direct/figurative-use reasoning and homonymy-versus-polysemy guidance. Candidate-008 requires only determination of the active meaning of the target word in the supplied context; the broader unit cannot be silently reused as exact mastery.",
+    "silent_reuse_as_exact_mastery_forbidden": true
+  },
+  "learner_content": {
+    "ref": "russian-program/production-learning-content/RU-PROG-03-CONTEXTUAL-MEANING-DETERMINATION-WAVE-009-v0.1.json#units[proposed_semantic_id=ru-lexis-contextual-meaning-determination]",
+    "proposed_semantic_id": "ru-lexis-contextual-meaning-determination",
+    "copyright_status": "ORIGINAL_EKSAMIO_ZERO_SOURCE_PASSAGES_COPIED_ZERO_COMMERCIAL_TEXTBOOK_BYTES",
+    "exact_target": "determine and neutrally formulate the active lexical meaning of one target word from the supplied context without requiring a supplied dictionary article or polysemy classification",
+    "explicit_exclusions": [
+      "selection of a numbered sense from an explicitly supplied dictionary article",
+      "matching an already supplied definition to contextual use",
+      "polysemy-versus-homonymy classification",
+      "direct-versus-figurative classification as an independent mastery target",
+      "contextual synonym selection",
+      "generic Task-2 mastery"
+    ],
+    "independent_verification_present": true,
+    "assistance_recording_required": true,
+    "tutor_grounding_bounded": true
+  },
+  "review_decision": {
+    "new_content_exact_for_candidate_008": true,
+    "new_content_duplicate_of_existing_ru03_unit": false,
+    "exact_school_meaning_collision_observed": false,
+    "semantic_admission_by_this_review": false,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0,
+    "next_status": "READY_FOR_SEPARATE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE"
+  }
+}

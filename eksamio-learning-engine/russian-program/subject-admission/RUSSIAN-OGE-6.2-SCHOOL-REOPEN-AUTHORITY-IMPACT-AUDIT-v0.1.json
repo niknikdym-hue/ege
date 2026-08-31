@@ -1,0 +1,96 @@
+{
+  "schema_version": "0.1.0",
+  "status": "BOUNDED_SCHOOL_REOPEN_REQUIRED_NO_ADMISSION",
+  "target": {
+    "exam": "OGE-2026 Russian",
+    "content_code": "6.2",
+    "official_branch": "uncheckable consonants in roots",
+    "proposed_identity": "school-root-consonant-dictionary-unverifiable"
+  },
+  "authority_basis": {
+    "current_denominator_authority": "266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json",
+    "current_school_denominator": 185,
+    "reopen_policy_authority": "262-RUSSIAN-FIPI-2026-SCHOOL-REOPEN-GAP-AUDIT-v0.1.json",
+    "reopen_materialization_precedent": "263-RUSSIAN-SCHOOL-FIPI-REOPEN-MATERIALIZATION-v0.1.json",
+    "source_bound_frontier_builder": "russian-program/subject-admission/build_oge_6_2_root_spelling_source_bound_frontier_review.py",
+    "source_bound_frontier_status": "SOURCE_BOUND_FRONTIER_ONE_CANONICAL_GAP_NO_ADMISSION"
+  },
+  "gap_proof": {
+    "official_fipi_branch_present": true,
+    "exact_current_canonical_owner_count": 0,
+    "nearby_identity_exclusions": [
+      {
+        "identity": "school-root-voiced-voiceless-consonant-verification",
+        "repository_authority": "247-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A1-MATERIALIZATION-v0.1.json",
+        "exclusion": "dictionary-control nonverifiable cases remain separate"
+      },
+      {
+        "identity": "school-unpronounceable-consonant-verification",
+        "repository_authority": "247-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A1-MATERIALIZATION-v0.1.json",
+        "exclusion": "lexical nonverifiable spellings remain dictionary-controlled"
+      }
+    ],
+    "dictionary_vowel_identity_is_not_a_substitute": "school-root-vowel-dictionary-unverifiable owns vowels, not consonants",
+    "scope_expansion_without_new_identity_is_exact": false,
+    "absorption_into_existing_identity_is_exact": false,
+    "new_bounded_school_identity_required": true
+  },
+  "reopen_policy_application": {
+    "policy": "A school reopen candidate exists only when official FIPI school content requires a productive orthographic decision with no active semantic owner; task/codifier labels themselves are not identities.",
+    "policy_satisfied": true,
+    "decision": "REOPEN_REQUIRED",
+    "reason": "OGE-2026 6.2 explicitly contains the dictionary-controlled uncheckable-root-consonant branch, while the active 185 have no exact owner and adjacent verification identities explicitly exclude it.",
+    "current_185_zero_gap_claim_exact_for_6_2": false,
+    "historical_266_file_mutated_by_this_audit": false
+  },
+  "denominator_impact": {
+    "school_denominator_before": 185,
+    "new_independent_school_identities_if_materialized": 1,
+    "absorptions": 0,
+    "scope_only_expansions": 0,
+    "projected_school_denominator_after_materialization": 186,
+    "projected_denominator_is_current_authority": false,
+    "count_effect_applied_now": 0
+  },
+  "proposed_identity_contract": {
+    "unit_id": "school-root-consonant-dictionary-unverifiable",
+    "canonical_label": "Непроверяемая согласная в корне: словарный контроль",
+    "domain": "orthography_roots_lexicon",
+    "unit_type": "dictionary_control_decision",
+    "decision_model": "When a doubtful root consonant cannot be established by a valid form or cognate and is not governed by a dedicated special rule, the spelling is dictionary-controlled.",
+    "ownership_boundary": "Does not own checkable voiced/voiceless root consonants, unpronounceable-consonant verification, double-consonant systems, or individual lexical-item mastery.",
+    "fipi_routes": [
+      "OGE-2026-orthography-6.2"
+    ],
+    "norm_basis": "official FIPI 2026 route plus current academic dictionary-control rule",
+    "status": "PROPOSED_REOPEN_TARGET_NOT_ADMITTED"
+  },
+  "atomic_materialization_gate": {
+    "ready_to_materialize_after_this_audit": true,
+    "must_be_one_atomic_authority_change": true,
+    "required_sync": [
+      "materialize the bounded school identity with count_effect=1",
+      "update 265 OGE 6.2 ownership from legacy placeholders to the exact resolved owner set including the new identity",
+      "update 273 active school identity inventory/count to the materialized authority",
+      "update RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json only if the full exact 6.2 owner set validates fail-closed",
+      "supersede the bounded 266 zero-gap/185 claim for current exact launch truth without rewriting historical evidence"
+    ],
+    "partial_sync_allowed": false,
+    "exact_6_2_acceptance_before_atomic_sync": false
+  },
+  "launch_accounting": {
+    "semantic_admissions_this_audit": 0,
+    "object_closures_this_audit": 0,
+    "false_exact_mastery_admissions": 0,
+    "bounded_ru_semantic_count_change": 0,
+    "russian_content_status": "BLOCKED_SUBJECT"
+  },
+  "safety": {
+    "production_integration": "HOLD",
+    "accepted_demo_or_scorer_change": false,
+    "learner_audio_persistence": 0,
+    "provider_execution": false,
+    "production_peis_write": false,
+    "public_traffic": false
+  }
+}

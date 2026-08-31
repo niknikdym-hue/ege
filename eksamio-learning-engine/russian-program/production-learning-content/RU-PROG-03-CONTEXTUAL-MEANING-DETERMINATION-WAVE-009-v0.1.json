@@ -1,0 +1,232 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-03",
+  "module_title_ru": "Лексика, значение слова, паронимы и фразеология",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "thematic_trainer", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-008",
+      "coverage_note": "The inventory records candidate-008 as the missing subject semantic 'Определение значения слова в данном контексте' with source-verified lexical_meaning_in_context evidence."
+    },
+    {
+      "kind": "skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[lexical_meaning_in_context]",
+      "coverage_note": "The reviewed Skill Graph marks lexical_meaning_in_context as confirmed and routes it to the lexical-semantic task family."
+    },
+    {
+      "kind": "reuse_first_boundary_review",
+      "ref": "russian-program/subject-admission/RU03-LEXIS-CANDIDATE-BOUNDARY-REVIEW-v0.1.json#candidate_review[candidate_ref=candidate-008]",
+      "coverage_note": "The pre-existing ru-lexis-contextual-meaning-polysemy learner unit is broader than candidate-008 because it combines contextual-meaning determination with polysemy/direct-vs-figurative reasoning; therefore it cannot be silently reused as exact candidate mastery."
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-03"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Repository authorities define the target boundary only. All learner-facing explanations, examples, fragments and practice below are original Eksamio wording."
+  },
+  "identity_boundary": "The semantic id below is a source-backed proposal for bounded subject acceptance. It is not a school canonical identity and cannot close an official admission unit or requirement without a separate exact object binding.",
+  "units": [
+    {
+      "proposed_semantic_id": "ru-lexis-contextual-meaning-determination",
+      "candidate_ref": "candidate-008",
+      "source_taxonomy_id": "lexical_meaning_in_context",
+      "title_ru": "Определение значения слова в данном контексте",
+      "canonical_explanation": {
+        "short": "Чтобы определить значение слова в тексте, нужно восстановить тот смысл, который активирован именно данным окружением слова, и сформулировать его так, чтобы толкование можно было подставить вместо слова без искажения сообщения.",
+        "boundaries": [
+          "Целевой навык — определить актуальное значение одного заданного слова в конкретном фрагменте текста.",
+          "Нужно опираться на смысл предложения, ближайшее словесное окружение и при необходимости соседние предложения, а не на первое знакомое значение слова.",
+          "Ответ должен описывать значение, которое слово имеет здесь; перечислять все возможные словарные значения не требуется.",
+          "Этот юнит не проверяет выбор номера значения из предъявленной словарной статьи: это отдельный навык dictionary_sense_selection.",
+          "Этот юнит не проверяет сопоставление уже предъявленного готового толкования с контекстом: это отдельный навык definition_context_matching.",
+          "Этот юнит не требует классифицировать употребление как полисемию, омонимию, прямое или переносное значение, если такая классификация не нужна для формулировки актуального смысла.",
+          "Этот юнит не проверяет подбор контекстного синонима: сначала значение можно установить, но способность подобрать замену требует отдельной независимой проверки.",
+          "Общий результат задания №2 не может сам по себе означать exact mastery этого компонента: требуется component-specific independent evidence."
+        ]
+      },
+      "decision_algorithm": [
+        "Найди целевое слово и прочитай предложение полностью; если смысл остаётся неясным, прочитай одно-два соседних предложения.",
+        "Отметь слова и факты, которые ограничивают возможный смысл: объект действия, признак, причину, результат, оценку или ситуацию.",
+        "Сформулируй короткое нейтральное толкование слова именно здесь, не используя само целевое слово и его очевидную однокоренную форму.",
+        "Мысленно подставь толкование вместо слова и проверь, сохраняется ли смысл предложения.",
+        "Отбрось толкования, которые подходят слову вообще, но противоречат контекстным ограничениям этого фрагмента.",
+        "Если возможны два близких варианта, выбери более точный — тот, который объясняет больше контекстных признаков без добавления отсутствующих в тексте деталей.",
+        "При нормативном сомнении маршрутизируй значение на словарную проверку, не выдумывая новое значение."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Фрагмент: «После долгой болезни он заметно сдал: быстро уставал и почти не выходил из дома». Что значит слово «сдал»?",
+          "answer": "Ослабел, стал хуже чувствовать себя. Продолжение про усталость и редкие выходы из дома исключает значения 'передал' или 'успешно выполнил экзамен'."
+        },
+        {
+          "prompt": "Фрагмент: «В споре она заняла твёрдую позицию и не изменила решения даже после долгих уговоров». Что значит «твёрдую»?",
+          "answer": "Устойчивую, непреклонную. Контекст говорит о неизменности решения, а не о физической твёрдости."
+        },
+        {
+          "prompt": "Фрагмент: «К вечеру ветер стих, и гладь озера стала совершенно спокойной». Что значит «стих»?",
+          "answer": "Ослаб и прекратился. Состояние озера после этого подтверждает уменьшение силы ветра."
+        },
+        {
+          "prompt": "Фрагмент: «Редактор снял спорный абзац из окончательной версии статьи». Что значит «снял»?",
+          "answer": "Удалил, исключил из текста. Объект 'абзац' и 'окончательная версия' задают редакторское, а не физическое действие."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Нужно назвать самое частотное или первое знакомое значение слова.",
+          "correction": "Частотность не решает задачу: значение выбирается по ограничениям конкретного контекста."
+        },
+        {
+          "wrong": "Если употребление переносное, достаточно написать 'переносное значение'.",
+          "correction": "Нужно сформулировать сам актуальный смысл слова; метка 'переносное' не является толкованием."
+        },
+        {
+          "wrong": "Если я нашёл подходящий синоним, контекстное значение автоматически доказано.",
+          "correction": "Синоним может быть неточным или менять оттенок. Сначала сформулируй значение и проверь его подстановкой."
+        },
+        {
+          "wrong": "Можно добавить к толкованию подробности, которых нет в тексте, если они кажутся логичными.",
+          "correction": "Толкование должно быть достаточным, но не должно приписывать фрагменту новые факты или оценки."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p03-cmeaning-u1-g1",
+          "prompt": "Фрагмент: «После резкого ответа беседа оборвалась». Ученик толкует «оборвалась» как 'верёвка порвалась'. Какой контекстный признак нужно использовать для исправления?",
+          "expected": "Субъект 'беседа' показывает, что речь о прекращении разговора; физическое значение не подходит."
+        },
+        {
+          "id": "p03-cmeaning-u1-g2",
+          "prompt": "Фрагмент: «Критика попала в цель: после неё автор исправил именно слабое место аргументации». Как проверить толкование слова «цель»?",
+          "expected": "Подставить смысл 'точно указала на проблему / оказалась уместной' и проверить, объясняет ли он последующее исправление слабого места."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p03-cmeaning-u1-i1",
+          "prompt": "Фрагмент: «Проект буксовал: решения откладывались, а сроки переносились снова и снова». Что значит «буксовал»?",
+          "answer": "Не продвигался, задерживался в развитии/выполнении."
+        },
+        {
+          "id": "p03-cmeaning-u1-i2",
+          "prompt": "Фрагмент: «Его шутка разрядила обстановку, и участники снова начали спокойно обсуждать вопрос». Что значит «разрядила»?",
+          "answer": "Сняла напряжение, сделала ситуацию менее напряжённой."
+        },
+        {
+          "id": "p03-cmeaning-u1-i3",
+          "prompt": "Фрагмент: «После первых неудач команда собралась и закончила матч уверенно». Что значит «собралась»?",
+          "answer": "Сосредоточилась, мобилизовалась для дальнейшей игры."
+        },
+        {
+          "id": "p03-cmeaning-u1-i4",
+          "prompt": "Фрагмент: «Доклад получился сухим: в нём были только цифры и почти не было объяснений». Что значит «сухим»?",
+          "answer": "Лишённым подробных объяснений и живой подачи; предельно фактическим."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p03-cmeaning-u1-t1",
+          "prompt": "Ученик правильно определил значение слова «тяжёлый» в выражении «тяжёлый разговор», а затем отметил номер этого значения в словарной статье. Какие два навыка здесь нужно учитывать раздельно?",
+          "answer": "Определение актуального значения по контексту и выбор соответствующего нумерованного значения в предъявленной словарной статье. Первый навык не автоматически доказывает второй."
+        },
+        {
+          "id": "p03-cmeaning-u1-t2",
+          "prompt": "Ученик объяснил значение слова «холодный» в фразе «холодный ответ» как 'недоброжелательный, без участия'. Доказал ли он этим умение подбирать контекстный синоним?",
+          "answer": "Нет. Значение определено, но для отдельного навыка синонимической замены нужно предложить замену и независимо доказать её смысловую, грамматическую и стилистическую пригодность."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p03-cmeaning-u1-r1",
+          "delay_hint": "24h",
+          "prompt": "Какой главный тест для сформулированного контекстного значения?",
+          "answer": "Мысленно подставить толкование вместо слова и проверить, сохраняется ли смысл фрагмента."
+        },
+        {
+          "id": "p03-cmeaning-u1-r2",
+          "delay_hint": "7d",
+          "prompt": "Почему первое знакомое значение слова может быть неверным в тексте?",
+          "answer": "Потому что конкретный контекст может активировать другое нормативное значение; решение задают контекстные ограничения."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p03-cmeaning-u1-v1",
+          "type": "single_choice",
+          "prompt": "Фрагмент: «После обсуждения руководитель снял вопрос с повестки». Какое толкование слова «снял» подтверждено контекстом?",
+          "options": ["сфотографировал", "убрал или исключил из рассмотрения", "взял одежду", "арендовал"],
+          "correct_option_index": 1,
+          "feedback": "Сочетание 'вопрос с повестки' задаёт значение исключения из дальнейшего рассмотрения."
+        },
+        {
+          "id": "p03-cmeaning-u1-v2",
+          "type": "constructed_response",
+          "prompt": "Фрагмент: «После нескольких удачных решений работа наконец пошла». Объясни значение слова «пошла» именно здесь и назови один контекстный признак, который это доказывает.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: значение сформулировано как 'начала продвигаться / наладилась / стала успешно выполняться' без физического значения движения",
+              "1: приведён контекстный признак — связь с удачными решениями и словом 'работа'"
+            ]
+          }
+        },
+        {
+          "id": "p03-cmeaning-u1-v3",
+          "type": "constructed_response",
+          "prompt": "Фрагмент: «Замечание задело его, и весь вечер он отвечал односложно». Объясни значение слова «задело» без использования однокоренного слова.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: указано значение 'обидело / неприятно повлияло / вызвало болезненную эмоциональную реакцию'",
+              "1: объяснение связано с последующим односложным поведением"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "generic_task_result_can_emit_exact_mastery": false,
+        "component_specific_independent_evidence_required": true,
+        "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "infer the active lexical meaning from the supplied context",
+          "point to contextual constraints that rule meanings in or out",
+          "ask the learner to test a neutral paraphrase by substitution",
+          "route normative uncertainty to dictionary verification"
+        ],
+        "forbidden": [
+          "treat first-known or most-frequent meaning as automatically correct",
+          "claim polysemy/homonymy classification mastery from this unit",
+          "claim dictionary-sense-selection or definition-matching mastery from this unit",
+          "claim contextual-synonym-selection mastery from meaning determination alone",
+          "emit exact component mastery from a generic Task-2 result"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "production_learning_units": 1,
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "original_eksamio_examples": true,
+    "semantic_admissions": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0
+  }
+}

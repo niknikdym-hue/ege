@@ -1,0 +1,105 @@
+name: Russian RU04 morphemics subject boundary review
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru04_morphemics_subject_boundary_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU04-MORPHEMICS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru04_morphemics_bounded_subject_semantics.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-04-MORPHEMICS-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/object-review/**"
+      - "eksamio-learning-engine/russian-program/source-knowledge/**"
+      - ".github/workflows/russian-ru04-morphemics-boundary-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru04-morphemics-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU04 review and acceptance validator
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru04_morphemics_subject_boundary_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru04_morphemics_bounded_subject_semantics.py
+      - name: Build RU04 boundary review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru04_morphemics_subject_boundary_review.py --output /tmp/ru04-a.json > /tmp/ru04-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru04_morphemics_subject_boundary_review.py --output /tmp/ru04-b.json > /tmp/ru04-b.txt
+          cmp /tmp/ru04-a.json /tmp/ru04-b.json
+          diff -u /tmp/ru04-a.txt /tmp/ru04-b.txt
+          cat /tmp/ru04-a.txt
+          cp /tmp/ru04-a.json RU04-MORPHEMICS-SUBJECT-BOUNDARY-REVIEW.json
+      - name: Verify fail-closed review outcome
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('RU04-MORPHEMICS-SUBJECT-BOUNDARY-REVIEW.json').read_text(encoding='utf-8'))
+          assert data['status'] == 'CENTRAL_BRAIN_RU04_MORPHEMICS_BOUNDARY_READY_ACCEPTANCE_NOT_ADMITTED'
+          assert data['module_id'] == 'RU-PROG-04'
+          assert data['module_binding_mode'] == 'SOURCE_BACKED_SUBJECT_EXPANSION_REQUIRED'
+          assert len(data['exact_broad_domain_admission_unit_ids']) == 15
+          assert len(data['exact_broad_domain_requirement_ids']) == 16
+          assert set(data['proposed_subject_semantic_ids']) == {
+              'ru-morphemics-morpheme-base-ending',
+              'ru-morphemics-root-prefix-suffix-analysis',
+              'ru-morphemics-alternation-and-full-analysis',
+          }
+          assert data['duplicate_review']['program_candidate_refs'] == []
+          assert data['duplicate_review']['current_inventory_id_collisions'] == 0
+          assert data['duplicate_review']['school_registry_mutation_required'] is False
+          assert data['duplicate_review']['new_parallel_registry_required'] is False
+          assert data['policy']['content_presence_implies_acceptance'] is False
+          assert data['policy']['module_membership_implies_object_binding'] is False
+          assert data['policy']['broad_domain_attempt_can_emit_exact_component_mastery'] is False
+          assert data['policy']['component_specific_independent_evidence_required'] is True
+          assert data['policy']['subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
+          assert data['summary'] == {
+              'bounded_semantics_reviewed': 3,
+              'semantic_admissions': 0,
+              'object_level_admission_units_closed': 0,
+              'object_level_requirements_closed': 0,
+              'false_exact_mastery_admissions': 0,
+          }
+          print('RU04_MORPHEMICS_BOUNDARY_FAIL_CLOSED_GUARD=PASS')
+          PY
+      - name: Validate bounded RU04 semantics twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru04_morphemics_bounded_subject_semantics.py > /tmp/ru04-accept-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru04_morphemics_bounded_subject_semantics.py > /tmp/ru04-accept-b.txt
+          diff -u /tmp/ru04-accept-a.txt /tmp/ru04-accept-b.txt
+          cat /tmp/ru04-accept-a.txt
+      - name: Upload RU04 review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru04-morphemics-boundary-review
+          path: RU04-MORPHEMICS-SUBJECT-BOUNDARY-REVIEW.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'

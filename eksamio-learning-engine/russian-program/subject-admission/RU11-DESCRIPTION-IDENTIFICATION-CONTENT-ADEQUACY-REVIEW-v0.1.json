@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_RU11_DESCRIPTION_IDENTIFICATION_CONTENT_ADEQUACY_REVIEW_COMPLETE_NO_ADMISSION",
+  "authority_issue": 161,
+  "scope": "RU11_CANDIDATE_045_REUSE_FIRST_CONTENT_ADEQUACY_ONLY_NO_SEMANTIC_OR_OBJECT_ADMISSION",
+  "source_identity": {
+    "candidate_ref": "candidate-045",
+    "source_taxonomy_id": "description_identification",
+    "inventory_review_status": "draft",
+    "taxonomy_backing_review_status": "source_verified",
+    "skill_graph_evidence_status": "confirmed",
+    "exam_task_numbers": [24]
+  },
+  "reuse_first_review": {
+    "existing_unit_ref": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-speech-type-reasoning-description-narration]",
+    "existing_unit_reusable_for_explanation_and_contrast": true,
+    "existing_unit_is_exact_candidate_045_mastery_evidence": false,
+    "direct_description_independent_checks_observed": 1,
+    "direct_check_ids": ["p11-u3-v2"],
+    "gap": "one direct description-focused independent check exists, but a single check does not prove stable component mastery across positive and contrast cases",
+    "duplicate_content_regeneration_forbidden": true
+  },
+  "new_content": {
+    "ref": "russian-program/production-learning-content/RU-PROG-11-DESCRIPTION-IDENTIFICATION-WAVE-007-v0.1.json",
+    "proposed_semantic_id": "ru-text-description-identification",
+    "component_specific_independent_check_ids": ["p11-desc-v1", "p11-desc-v2"],
+    "component_specific_independent_checks": 2,
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO"
+  },
+  "review_decision": {
+    "content_exact_for_current_candidate_045_source_meaning": true,
+    "source_candidate_inventory_status_preserved_as_draft": true,
+    "semantic_admission_by_this_review": false,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "false_exact_mastery_admissions": 0,
+    "generic_task24_result_can_emit_exact_description_mastery": false,
+    "broader_combined_unit_can_emit_exact_description_mastery": false,
+    "next_status": "READY_FOR_SEPARATE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_WITH_DRAFT_CANDIDATE_GUARD"
+  },
+  "safety": {
+    "accepted_demo_scorer_tilda_surfaces_changed": false,
+    "shared_peis_contract_changed": false,
+    "learner_audio_persistence_bytes": 0,
+    "provider_execution": 0,
+    "public_traffic": false,
+    "production_peis_writes": 0
+  }
+}

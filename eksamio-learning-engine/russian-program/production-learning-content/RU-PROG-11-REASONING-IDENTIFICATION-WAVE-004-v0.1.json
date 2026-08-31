@@ -1,0 +1,189 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-11",
+  "module_title_ru": "Текст, смысл и межфразовая связь",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "current_source_identity",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-046"
+    },
+    {
+      "kind": "confirmed_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[reasoning_identification]"
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-11"
+    }
+  ],
+  "reuse_review": {
+    "reviewed_existing_unit": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-speech-type-reasoning-description-narration]",
+    "existing_unit_reused_as_scope_and_explanation_evidence": true,
+    "existing_unit_reused_as_exact_candidate_046_mastery_evidence": false,
+    "reason": "The existing combined speech-type unit teaches narration, description and reasoning together, but its independent-verification block contains only one direct reasoning-identification check. A bounded semantic needs at least two component-specific independent checks so generic Task-24 or combined speech-type performance cannot masquerade as exact reasoning mastery.",
+    "new_content_materialized_only_for_proven_component_verification_gap": true
+  },
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Official/current repository authorities define only the skill boundary; all learner-facing fragments, explanations and practice in this unit are original Eksamio content."
+  },
+  "identity_boundary": "The ru-* semantic below is a bounded subject-acceptance identity. It is not a school-* canonical identity, does not replace the source taxonomy id, and does not admit adjacent speech-type candidates.",
+  "units": [
+    {
+      "proposed_semantic_id": "ru-text-reasoning-identification",
+      "title_ru": "Распознавание рассуждения",
+      "canonical_explanation": {
+        "short": "Рассуждение организует мысль: автор формулирует тезис или суждение, связывает его с основаниями, объяснениями, доказательствами и/или выводом. Определять рассуждение нужно по смысловой логике фрагмента, а не по отдельным словам или частям речи.",
+        "boundaries": [
+          "Наличие слов «потому что», «поэтому» или «значит» само по себе не доказывает рассуждение: нужно увидеть логическую связь мысли и основания/вывода.",
+          "Фрагмент с событиями может содержать рассуждение, если события служат аргументом для тезиса; это не делает весь фрагмент повествованием автоматически.",
+          "Навык не включает самостоятельное распознавание повествования или описания и не даёт общего владения заданием ЕГЭ №24."
+        ]
+      },
+      "decision_algorithm": [
+        "Сформулируй, какую мысль автор утверждает или проверяет во фрагменте.",
+        "Найди основание: почему автор считает эту мысль верной, чем объясняет или доказывает её.",
+        "Проверь, есть ли логический ход от тезиса к объяснению, доказательству, следствию или выводу.",
+        "Отдели факты-примеры от их функции: факт становится частью рассуждения, когда поддерживает мысль.",
+        "Не решай по количеству глаголов, прилагательных или союзов; решает смысловая организация.",
+        "Перед фиксацией результата сформулируй короткое доказательство: «это рассуждение, потому что тезис X обоснован Y и ведёт к Z»."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Регулярное повторение полезно не само по себе. Оно заставляет снова извлекать правило из памяти, поэтому слабые связи становятся заметнее и укрепляются.",
+          "answer": "Рассуждение: есть тезис о пользе повторения и объяснение причин, почему оно работает."
+        },
+        {
+          "prompt": "Автобус задержался, затем подъехал к остановке, пассажиры вошли в салон.",
+          "answer": "Это не доказанное рассуждение: фрагмент разворачивает последовательность событий и не содержит тезиса с обоснованием."
+        },
+        {
+          "prompt": "Комната казалась просторной: светлые стены, высокий потолок и два широких окна усиливали это впечатление.",
+          "answer": "Описание признаков с пояснением впечатления; одного причинного оттенка недостаточно, чтобы объявить весь фрагмент рассуждением."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Есть слово «поэтому» — значит это рассуждение.",
+          "correction": "Связка — только сигнал. Нужно доказать движение мысли от тезиса/причины к следствию или выводу."
+        },
+        {
+          "wrong": "Если в тексте много действий, рассуждения быть не может.",
+          "correction": "Действия могут быть примером или доказательством внутри рассуждения."
+        },
+        {
+          "wrong": "Правильный ответ на всё задание №24 доказывает владение распознаванием рассуждения.",
+          "correction": "Нет. Для exact mastery нужна отдельная независимая проверка именно компонента reasoning_identification."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p11-rsn-g1",
+          "prompt": "Во фрагменте есть тезис «план помогает учиться спокойнее» и затем объясняется, как он уменьшает число срочных решений. Какой смысловой признак нужно назвать?",
+          "expected": "Связь тезиса с объяснением/основанием; это основной признак рассуждения."
+        },
+        {
+          "id": "p11-rsn-g2",
+          "prompt": "Почему список последовательных действий без авторского вывода нельзя автоматически назвать рассуждением?",
+          "expected": "Потому что для рассуждения требуется логическая организация мысли: тезис, основание, объяснение, доказательство или вывод."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p11-rsn-i1",
+          "prompt": "Какой минимальный смысловой каркас подтверждает рассуждение?",
+          "answer": "Тезис/суждение плюс его основание, объяснение, доказательство и/или вывод."
+        },
+        {
+          "id": "p11-rsn-i2",
+          "prompt": "Может ли пример события быть частью рассуждения?",
+          "answer": "Да, если он используется для обоснования мысли, а не просто разворачивает сюжет."
+        },
+        {
+          "id": "p11-rsn-i3",
+          "prompt": "Достаточно ли союза или вводного слова для exact-решения?",
+          "answer": "Нет; нужно доказать смысловую функцию и логическую связь мысли."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p11-rsn-t1",
+          "prompt": "Ученик выбрал «рассуждение», потому что увидел слово «следовательно». Как проверить ответ без этого маркера?",
+          "answer": "Переформулировать тезис и основание/вывод; если логическая цепочка сохраняется без слова-маркера, решение подтверждено смыслом."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p11-rsn-r1",
+          "delay_hint": "24h",
+          "prompt": "Что важнее для распознавания рассуждения: части речи или ход мысли?",
+          "answer": "Ход мысли: тезис и его обоснование/вывод."
+        },
+        {
+          "id": "p11-rsn-r2",
+          "delay_hint": "7d",
+          "prompt": "Как отличить факт внутри рассуждения от простого повествовательного события?",
+          "answer": "Проверить, служит ли факт доказательством или объяснением тезиса."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p11-rsn-v1",
+          "type": "constructed_response",
+          "prompt": "Фрагмент: «Короткие тренировки полезнее редких марафонов: после небольшой нагрузки легче заметить ошибку, исправить её и снова проверить правило. Поэтому регулярность даёт больше циклов обратной связи». Определи, является ли фрагмент рассуждением, и докажи решение по смысловой организации.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: дан вердикт «рассуждение»",
+              "1: выделен тезис о пользе коротких регулярных тренировок",
+              "1: показана цепочка основания/объяснения к выводу о большем числе циклов обратной связи"
+            ]
+          }
+        },
+        {
+          "id": "p11-rsn-v2",
+          "type": "constructed_response",
+          "prompt": "Фрагмент: «Сначала ученик открыл тетрадь, затем переписал условие и через минуту закрыл её». Можно ли по этому фрагменту подтвердить навык «распознавание рассуждения» ответом «это рассуждение»? Дай вердикт и объясни, какого смыслового звена не хватает.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: ответ «нет, это не доказанное рассуждение»",
+              "1: отмечена последовательность событий",
+              "1: указано отсутствие тезиса с основанием/объяснением/выводом"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "exact_mastery_requires_two_component_specific_reasoning_checks": true,
+        "generic_task24_result_can_emit_exact_component_mastery": false,
+        "combined_speech_type_unit_result_can_emit_exact_component_mastery": false,
+        "narration_or_description_result_can_emit_this_mastery": false
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "identify reasoning from thesis plus grounds/explanation/conclusion",
+          "contrast logical organization with mere event sequence or descriptive feature listing",
+          "ask the learner to justify the classification from meaning"
+        ],
+        "forbidden": [
+          "infer reasoning from one marker word",
+          "treat generic Task-24 correctness as exact reasoning mastery",
+          "claim narration or description mastery from this semantic"
+        ]
+      }
+    }
+  ]
+}

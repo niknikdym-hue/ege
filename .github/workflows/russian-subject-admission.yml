@@ -1,0 +1,179 @@
+name: Russian subject admission candidate
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/**"
+      - "eksamio-learning-engine/russian-program/production-learning-content/**"
+      - "eksamio-learning-engine/russian-program/object-review/**"
+      - "eksamio-learning-engine/russian-program/source-knowledge/**"
+      - "eksamio-learning-engine/russian-program/semantic-registry/**"
+      - "eksamio-learning-engine/russian-program/ege-task-code-relation/**"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json"
+      - "eksamio-learning-engine/build/**"
+      - ".github/workflows/russian-subject-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  subject-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate accepted source knowledge
+        run: python3 eksamio-learning-engine/russian-program/source-knowledge/validate_russian_source_knowledge.py
+      - name: Validate object review queue
+        run: python3 eksamio-learning-engine/russian-program/object-review/validate_object_level_review_queue.py
+      - name: Validate exact route/format disposition slice twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_dispositions.py > /tmp/russian-subject-1.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_dispositions.py > /tmp/russian-subject-2.txt
+          diff -u /tmp/russian-subject-1.txt /tmp/russian-subject-2.txt
+          cat /tmp/russian-subject-1.txt
+      - name: Validate RU13 expressive learner content twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_content.py > /tmp/ru13-1.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_content.py > /tmp/ru13-2.txt
+          diff -u /tmp/ru13-1.txt /tmp/ru13-2.txt
+          cat /tmp/ru13-1.txt
+      - name: Validate RU16 EGE essay learner content twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_essay_content.py > /tmp/ru16-1.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_essay_content.py > /tmp/ru16-2.txt
+          diff -u /tmp/ru16-1.txt /tmp/ru16-2.txt
+          cat /tmp/ru16-1.txt
+      - name: Validate RU16 essay component boundary review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_essay_component_boundary_review.py > /tmp/ru16-boundary-1.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru16_essay_component_boundary_review.py > /tmp/ru16-boundary-2.txt
+          diff -u /tmp/ru16-boundary-1.txt /tmp/ru16-boundary-2.txt
+          cat /tmp/ru16-boundary-1.txt
+      - name: Build exact RU13 RU16 admission review slice twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_launch_critical_review_slice.py \
+            --output /tmp/ru13-ru16-a.json > /tmp/ru13-ru16-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_launch_critical_review_slice.py \
+            --output /tmp/ru13-ru16-b.json > /tmp/ru13-ru16-report-b.txt
+          cmp /tmp/ru13-ru16-a.json /tmp/ru13-ru16-b.json
+          diff -u /tmp/ru13-ru16-report-a.txt /tmp/ru13-ru16-report-b.txt
+          cat /tmp/ru13-ru16-report-a.txt
+          cp /tmp/ru13-ru16-a.json eksamio-learning-engine/russian-program/subject-admission/RU13-RU16-EXACT-REVIEW-SLICE.json
+      - name: Build RU08 RU09 RU10 RU14 reuse pool twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru08_09_10_14_reuse_pool.py \
+            --output /tmp/reuse-a.json > /tmp/reuse-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru08_09_10_14_reuse_pool.py \
+            --output /tmp/reuse-b.json > /tmp/reuse-report-b.txt
+          cmp /tmp/reuse-a.json /tmp/reuse-b.json
+          diff -u /tmp/reuse-report-a.txt /tmp/reuse-report-b.txt
+          cat /tmp/reuse-report-a.txt
+          cp /tmp/reuse-a.json eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-REUSE-POOL.json
+      - name: Build exact RU08 RU09 RU10 RU14 review slice twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_reuse_target_review_slice.py \
+            --output /tmp/reuse-targets-a.json > /tmp/reuse-targets-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_reuse_target_review_slice.py \
+            --output /tmp/reuse-targets-b.json > /tmp/reuse-targets-report-b.txt
+          cmp /tmp/reuse-targets-a.json /tmp/reuse-targets-b.json
+          diff -u /tmp/reuse-targets-report-a.txt /tmp/reuse-targets-report-b.txt
+          cat /tmp/reuse-targets-report-a.txt
+          cp /tmp/reuse-targets-a.json eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-EXACT-REVIEW-SLICE.json
+      - name: Build exact remaining-module review slice twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_remaining_module_review_slice.py \
+            --output /tmp/remaining-modules-a.json > /tmp/remaining-modules-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_remaining_module_review_slice.py \
+            --output /tmp/remaining-modules-b.json > /tmp/remaining-modules-report-b.txt
+          cmp /tmp/remaining-modules-a.json /tmp/remaining-modules-b.json
+          diff -u /tmp/remaining-modules-report-a.txt /tmp/remaining-modules-report-b.txt
+          cat /tmp/remaining-modules-report-a.txt
+          cp /tmp/remaining-modules-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-REMAINING-MODULE-EXACT-REVIEW-SLICE.json
+      - name: Build extended aggregate exact subject ledger twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_ledger_extended.py \
+            --output /tmp/russian-ledger-a.json > /tmp/russian-ledger-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_ledger_extended.py \
+            --output /tmp/russian-ledger-b.json > /tmp/russian-ledger-report-b.txt
+          cmp /tmp/russian-ledger-a.json /tmp/russian-ledger-b.json
+          diff -u /tmp/russian-ledger-report-a.txt /tmp/russian-ledger-report-b.txt
+          cat /tmp/russian-ledger-report-a.txt
+          cp /tmp/russian-ledger-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-AGGREGATE-LEDGER.json
+      - name: Validate extended aggregate subject ledger
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_ledger_extended.py
+      - name: Build complete fail-closed object accounting twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py \
+            --output /tmp/russian-accounting-a.json > /tmp/russian-accounting-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py \
+            --output /tmp/russian-accounting-b.json > /tmp/russian-accounting-report-b.txt
+          cmp /tmp/russian-accounting-a.json /tmp/russian-accounting-b.json
+          diff -u /tmp/russian-accounting-report-a.txt /tmp/russian-accounting-report-b.txt
+          cat /tmp/russian-accounting-report-a.txt
+          cp /tmp/russian-accounting-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-COMPLETE-OBJECT-ACCOUNTING.json
+      - name: Validate complete object accounting remains semantic-blocked
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_subject_accounting_complete.py
+      - name: Build exact EGE canonical-component acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_ege_exact_component_acceptance.py \
+            --output /tmp/ege-exact-acceptance-a.json > /tmp/ege-exact-acceptance-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_ege_exact_component_acceptance.py \
+            --output /tmp/ege-exact-acceptance-b.json > /tmp/ege-exact-acceptance-report-b.txt
+          cmp /tmp/ege-exact-acceptance-a.json /tmp/ege-exact-acceptance-b.json
+          diff -u /tmp/ege-exact-acceptance-report-a.txt /tmp/ege-exact-acceptance-report-b.txt
+          cat /tmp/ege-exact-acceptance-report-a.txt
+          cp /tmp/ege-exact-acceptance-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE.json
+      - name: Upload exact subject artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-subject-exact-ledger
+          path: |
+            eksamio-learning-engine/russian-program/subject-admission/RU13-RU16-EXACT-REVIEW-SLICE.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-AGGREGATE-LEDGER.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-COMPLETE-OBJECT-ACCOUNTING.json
+            eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-REUSE-POOL.json
+            eksamio-learning-engine/russian-program/subject-admission/RU08-RU09-RU10-RU14-EXACT-REVIEW-SLICE.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-REMAINING-MODULE-EXACT-REVIEW-SLICE.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-EGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed in subject closure PR.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'

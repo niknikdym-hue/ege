@@ -1,0 +1,188 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-03",
+  "module_title_ru": "Лексика, значение слова, паронимы и фразеология",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "thematic_trainer", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "repository_audited_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[lexical_redundancy]",
+      "coverage_note": "Current repository-audited source identity: detection and removal of pleonasm or a semantically redundant word; evidence_status=confirmed; EGE task route metadata remains route-only."
+    },
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-012"
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-03"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Repository authorities define only the target boundary. Explanations, examples and practice below are original Eksamio wording and are not copied from FIPI, EDSOO or commercial dictionaries/textbooks."
+  },
+  "identity_boundary": "The semantic id below is a source-backed proposal for bounded subject acceptance. It is not a school canonical identity and cannot close an official admission unit or requirement without a separate exact object binding.",
+  "units": [
+    {
+      "proposed_semantic_id": "ru-lexis-redundancy-extra-word",
+      "candidate_ref": "candidate-012",
+      "source_taxonomy_id": "lexical_redundancy",
+      "title_ru": "Обнаружение и устранение плеоназма или лишнего слова",
+      "canonical_explanation": {
+        "short": "Лексическая избыточность возникает, когда одно слово или оборот повторяет смысл, уже содержащийся в другом элементе высказывания. Исправление состоит в удалении именно избыточного элемента при сохранении грамматики и исходного смысла.",
+        "boundaries": [
+          "Навык применяется, когда лишний элемент дублирует или повторяет уже выраженный смысл и его можно убрать без смысловой потери.",
+          "Навык включает плеонастические сочетания и явно избыточные слова, но не требует исправлять все стилистические повторы в тексте.",
+          "Если проблема в несовместимой лексической сочетаемости и нужно заменить одно слово другим, это lexical_collocation_correction, а не lexical_redundancy.",
+          "Если повтор служит намеренному выразительному приёму или без него меняется смысл, автоматически считать его ошибкой нельзя.",
+          "Успешное исправление одного случая не доказывает generic Task-6 mastery и не создаёт mastery соседних лексических навыков."
+        ]
+      },
+      "decision_algorithm": [
+        "Прочитай всё предложение и сформулируй его основной смысл без исправлений.",
+        "Найди сочетание, где значения двух элементов частично или полностью дублируют друг друга.",
+        "Проверь кандидата на удаление: мысленно убери один элемент и убедись, что ключевой смысл и грамматика сохраняются.",
+        "Отдели избыточность от нарушения сочетаемости: при избыточности достаточно удалить лишний элемент; при нарушении сочетаемости обычно нужна замена слова.",
+        "Проверь, не является ли повтор осмысленным уточнением или выразительным приёмом в данном контексте.",
+        "Запиши только тот элемент, удаление которого устраняет дублирование смысла, и перечитай исправленное предложение."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "«После совещания директор снова вернулся обратно в кабинет». Что избыточно?",
+          "answer": "«обратно». Глагол «вернулся» уже содержит значение движения назад; без слова «обратно» смысл сохраняется."
+        },
+        {
+          "prompt": "«Актёр впервые дебютировал на большой сцене». Что избыточно?",
+          "answer": "«впервые». Дебют — это первое публичное выступление в определённой роли или сфере, поэтому дополнительное «впервые» повторяет значение."
+        },
+        {
+          "prompt": "«Команда одержала поражение в финале». Нужно ли просто удалить слово как лишнее?",
+          "answer": "Нет. Здесь проблема не в избыточности, а в нарушении лексической сочетаемости: нормативно «потерпела поражение». Это соседний навык lexical_collocation_correction."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Любые два близких по смыслу слова рядом образуют плеоназм.",
+          "correction": "Нужно доказать именно смысловое дублирование в данном контексте и возможность удалить элемент без потери существенного смысла."
+        },
+        {
+          "wrong": "Если фраза звучит непривычно, достаточно убрать любое слово.",
+          "correction": "При нарушении сочетаемости требуется замена, а не удаление. Сначала определи тип лексической ошибки."
+        },
+        {
+          "wrong": "Повтор всегда является ошибкой.",
+          "correction": "Намеренное повторение может выполнять смысловую или выразительную функцию; избыточность нужно доказывать по конкретному контексту."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p03-lr-u1-g1",
+          "prompt": "В сочетании «вернуться обратно» какой тест подтверждает избыточность?",
+          "expected": "Убрать «обратно» и проверить: «вернуться» уже выражает движение назад, смысл не теряется."
+        },
+        {
+          "id": "p03-lr-u1-g2",
+          "prompt": "Почему «одержать поражение» нельзя исправить простым удалением одного слова?",
+          "expected": "Потому что это нарушение сочетаемости: нужно заменить «одержать» на «потерпеть», а не устранять смысловое дублирование."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p03-lr-u1-i1",
+          "prompt": "Найди избыточное слово: «В отчёте перечислены свободные вакансии отдела».",
+          "answer": "«свободные»: вакансия уже означает незанятое место."
+        },
+        {
+          "id": "p03-lr-u1-i2",
+          "prompt": "Найди избыточное слово: «Перед стартом он заранее предвидел основные риски».",
+          "answer": "«заранее»: глагол «предвидел» уже означает предвосхищение будущего."
+        },
+        {
+          "id": "p03-lr-u1-i3",
+          "prompt": "Определи тип исправления: «Автор повысил внимание к деталям». Нужно удалить лишнее слово или заменить несовместимое?",
+          "answer": "Нужно заменить несовместимое слово/сочетание; это не доказанный случай lexical_redundancy."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p03-lr-u1-t1",
+          "prompt": "Ученик отметил как лишнее слово «очень» в фразе «очень редкий случай», потому что без него предложение грамматически сохраняется. Достаточен ли такой аргумент?",
+          "answer": "Нет. Грамматическая сохранность недостаточна: «очень» меняет степень признака и несёт смысл. Для lexical_redundancy нужно доказать дублирование значения."
+        },
+        {
+          "id": "p03-lr-u1-t2",
+          "prompt": "Сравни: А) «снова повторил ещё раз»; Б) «одержал победу». В каком случае искать избыточный элемент, а в каком — проверять сочетаемость?",
+          "answer": "В А есть смысловое дублирование повторности и нужно искать лишний элемент. В Б сочетание нормативно и исправление не требуется."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p03-lr-u1-r1",
+          "delay_hint": "24h",
+          "prompt": "Какой главный тест отличает лишнее слово от значимого уточнения?",
+          "answer": "Удаление должно устранять дублирование, не убирая существенный смысл и не ломая грамматику."
+        },
+        {
+          "id": "p03-lr-u1-r2",
+          "delay_hint": "7d",
+          "prompt": "Чем lexical_redundancy отличается от lexical_collocation_correction?",
+          "answer": "При избыточности удаляют смысловой дубль; при нарушении сочетаемости заменяют неподходящее слово или сочетание."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p03-lr-u1-v1",
+          "type": "single_choice",
+          "prompt": "В каком предложении есть доказанная лексическая избыточность? А) «Он вернулся обратно к началу маршрута». Б) «Он быстро вернулся к началу маршрута».",
+          "options": ["А", "Б"],
+          "correct_option_index": 0,
+          "feedback": "В А «обратно» дублирует значение глагола «вернулся»; «быстро» в Б добавляет характеристику темпа."
+        },
+        {
+          "id": "p03-lr-u1-v2",
+          "type": "constructed_response",
+          "prompt": "Исправь предложение «На сцене певица впервые дебютировала в новой роли» и кратко объясни выбор.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: удалено слово «впервые»",
+              "1: объяснение указывает, что значение первого выступления уже содержится в слове «дебютировала»"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "generic_task_result_can_emit_exact_mastery": false,
+        "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "ask the learner to identify the duplicated meaning in a phrase",
+          "apply the deletion test and require a semantic justification",
+          "contrast deletion for redundancy with replacement for collocation errors"
+        ],
+        "forbidden": [
+          "treating any optional modifier as redundant without semantic proof",
+          "turning a collocation-replacement error into lexical redundancy",
+          "emitting mastery for lexical_collocation_correction or generic Task-6 from this unit alone"
+        ],
+        "source_refs": [
+          "03-RUSSIAN-SKILL-GRAPH.json#skills[lexical_redundancy]",
+          "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-012"
+        ]
+      }
+    }
+  ]
+}

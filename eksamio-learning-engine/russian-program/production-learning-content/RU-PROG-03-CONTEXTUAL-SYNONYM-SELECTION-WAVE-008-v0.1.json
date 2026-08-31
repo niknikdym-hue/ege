@@ -1,0 +1,214 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-03",
+  "module_title_ru": "Лексика, значение слова, паронимы и фразеология",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "thematic_trainer", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "current_official_source_resolution",
+      "ref": "russian-program/subject-admission/build_ru03_contextual_synonym_source_identity_resolution.py",
+      "coverage_note": "Central Brain verified the current 2026 FIPI lexical/phraseology navigator: contextual synonymy is a current Task-25 source scope. The resolver supersedes the repository's historical-only negative inference for current-2026 scope without mutating the legacy Skill Graph or inventory audit record."
+    },
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-015"
+    },
+    {
+      "kind": "reuse_first_gap_review",
+      "ref": "russian-program/subject-admission/build_ru03_contextual_synonym_content_gap_review.py",
+      "coverage_note": "All pre-existing RU03 learner-content waves were reviewed. The contextual-meaning/polysemy unit is adjacent but not exact because determining a word's meaning does not by itself prove ability to select a replacement that preserves that meaning in the supplied text."
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-03"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Official and repository authorities define only the skill boundary. All learner-facing explanations, fragments, examples and practice below are original Eksamio wording."
+  },
+  "identity_boundary": "The semantic id below is a source-backed proposal for bounded subject acceptance. It is not a school canonical identity and cannot close an official admission unit or requirement without a separate exact object binding.",
+  "units": [
+    {
+      "proposed_semantic_id": "ru-lexis-contextual-synonym-text-fit",
+      "candidate_ref": "candidate-015",
+      "source_taxonomy_id": "contextual_synonym_selection",
+      "title_ru": "Подбор контекстного синонима к слову исходного текста",
+      "canonical_explanation": {
+        "short": "Контекстный синоним должен заменить данное слово именно в этом фрагменте так, чтобы сохранить актуальный смысл высказывания. Такая близость может существовать только в конкретном контексте: вне него слова не обязаны быть обычными словарными синонимами.",
+        "boundaries": [
+          "Целевой навык — подобрать или выбрать замену для конкретного слова в конкретном фрагменте, сохранив его актуальное контекстное значение.",
+          "Сначала устанавливается значение исходного слова в этом месте текста, затем проверяется заменяемость кандидата; одной тематической близости слов недостаточно.",
+          "Контекстный синоним может совпадать с общеязыковым синонимом, но это не обязательно: решающим является сохранение смысла именно данного фрагмента.",
+          "Замена должна подходить по грамматической форме и синтаксической позиции; при необходимости форму слова изменяют, не меняя лексического выбора.",
+          "Нужно учитывать стилистическую уместность: слово, меняющее регистр, оценку или тон настолько, что искажается высказывание, не является точной заменой для этого контекста.",
+          "Этот навык не равен общему определению лексического значения, работе со словарной статьёй, поиску фразеологизма, выбору паронима или исправлению лексической сочетаемости.",
+          "Если условие задания требует языковой, а не контекстной синонимии, этот юнит сам по себе не даёт оснований считать такую отдельную операцию освоенной.",
+          "Успех в одном компоненте не превращает общий результат Task-25 в exact mastery: требуется component-specific independent evidence."
+        ]
+      },
+      "decision_algorithm": [
+        "Найди целевое слово и прочитай всё предложение, а при необходимости — соседние предложения, чтобы восстановить его актуальный смысл.",
+        "Сформулируй короткое нейтральное толкование того, что слово означает именно здесь.",
+        "Подбери один или несколько кандидатов с близким смыслом, не требуя, чтобы они были универсальными словарными синонимами исходного слова.",
+        "Подставь каждый кандидат в исходную синтаксическую позицию и приведи его к нужной грамматической форме.",
+        "Проверь смысл: после замены факт, оценка, степень признака и отношение автора не должны существенно измениться.",
+        "Проверь сочетаемость и стиль: новая форма должна естественно соединяться с соседними словами и не ломать регистр фрагмента.",
+        "Отбрось тематически близкие, но не взаимозаменяемые слова, а также слишком широкие или слишком узкие замены.",
+        "Если остаётся несколько равноправных вариантов, принимай только те, для которых заменяемость можно объяснить по данному контексту; при нормативном сомнении маршрутизируй на словарную проверку."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Фрагмент: «После замечания разговор сразу стал сухим: собеседники отвечали коротко и без улыбки». Подбери контекстный синоним к слову «сухим».",
+          "answer": "«холодным». В этом фрагменте «сухим» означает лишённым теплоты и дружелюбия; замена сохраняет описанный характер разговора."
+        },
+        {
+          "prompt": "Фрагмент: «Над площадью повисла тяжёлая тишина: никто не решался заговорить первым». Подбери контекстный синоним к слову «тяжёлая».",
+          "answer": "«гнетущая». Здесь речь не о физической массе, а о психологически напряжённой тишине."
+        },
+        {
+          "prompt": "Фрагмент: «К концу заседания спор стал жарким, участники перебивали друг друга и всё громче отстаивали свои позиции». Подойдёт ли «бурным» вместо «жарким»?",
+          "answer": "Да. В этом контексте оба слова передают высокую интенсивность спора; замена не меняет основного смысла ситуации."
+        },
+        {
+          "prompt": "Фрагмент: «Он дал точный ответ и сразу перешёл к следующему вопросу». Можно ли заменить «точный» на «меткий»?",
+          "answer": "Не без дополнительного контекста. «Меткий ответ» может означать остроумный или удачно попадающий в суть, тогда как здесь подтверждено только значение правильности/определённости; тематической близости недостаточно."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Контекстный синоним обязан быть синонимом исходного слова во всех ситуациях.",
+          "correction": "Нет. Достаточно доказанной взаимозаменяемости в данном фрагменте; вне него отношения между словами могут быть другими."
+        },
+        {
+          "wrong": "Если два слова относятся к одной теме, их можно считать контекстными синонимами.",
+          "correction": "Тематическая близость не гарантирует заменяемости. После подстановки должен сохраняться актуальный смысл исходного слова."
+        },
+        {
+          "wrong": "Можно не учитывать форму слова: достаточно назвать подходящую лемму.",
+          "correction": "Для проверки заменяемости кандидат нужно поставить в грамматическую форму, которая подходит к исходной позиции."
+        },
+        {
+          "wrong": "Любая более выразительная замена лучше исходной.",
+          "correction": "Новая экспрессия может изменить оценку и стиль. Нужна смысловая и стилистическая уместность, а не усиление текста."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p03-csyn-u1-g1",
+          "prompt": "Фрагмент: «После новости в комнате стало мёртво тихо». Ученик предлагает заменить «мёртво» словом «совсем». Что нужно проверить прежде всего?",
+          "expected": "Сохраняет ли «совсем» именно тот оттенок гнетущей, безжизненной тишины, который создаёт исходное слово. Простого усиления степени недостаточно."
+        },
+        {
+          "id": "p03-csyn-u1-g2",
+          "prompt": "Почему при проверке пары «жаркий спор» → «бурный спор» нужно читать не только два слова, но и продолжение фразы?",
+          "expected": "Продолжение показывает интенсивность и конфликтность обсуждения и тем самым доказывает, что «бурный» сохраняет актуальный смысл «жаркий» именно здесь."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p03-csyn-u1-i1",
+          "prompt": "Фрагмент: «Его встретили ледяным молчанием: никто не ответил на приветствие». Подбери контекстный синоним к «ледяным».",
+          "answer": "Например, «холодным»: контекст передаёт отчуждение, а не температуру."
+        },
+        {
+          "id": "p03-csyn-u1-i2",
+          "prompt": "Фрагмент: «После нескольких неудач команда наконец поймала ритм и заиграла увереннее». Может ли «нашла» заменить «поймала»?",
+          "answer": "Да: «нашла ритм» сохраняет здесь значение обретения нужного темпа и согласованности действий."
+        },
+        {
+          "id": "p03-csyn-u1-i3",
+          "prompt": "Фрагмент: «Тон письма был резким: автор прямо обвинял адресата в нарушении обещания». Подойдёт ли «жёстким» вместо «резким»?",
+          "answer": "Да, если замена понимается как строгий, бескомпромиссный тон; это значение подтверждается продолжением фрагмента."
+        },
+        {
+          "id": "p03-csyn-u1-i4",
+          "prompt": "Фрагмент: «Утром выпал глубокий снег». Можно ли назвать «белый» контекстным синонимом слова «глубокий» только потому, что оба описывают снег?",
+          "answer": "Нет. Слова называют разные признаки и не взаимозаменяемы в этой позиции без изменения смысла."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p03-csyn-u1-t1",
+          "prompt": "Ученик верно объяснил переносное значение слова «тяжёлая» в сочетании «тяжёлая тишина» и решил, что уже доказал умение подбирать контекстные синонимы. Почему этого недостаточно?",
+          "answer": "Определить значение — только предварительный шаг. Нужно ещё предложить замену, подставить её в текст и доказать сохранение смысла, формы и стилистической уместности."
+        },
+        {
+          "id": "p03-csyn-u1-t2",
+          "prompt": "В задании требуется найти фразеологизм, а ученик вместо этого подбирает синоним к одному слову. Можно ли засчитать освоение Task-25 целиком?",
+          "answer": "Нет. Фразеологизм и contextual_synonym_selection — разные компоненты; generic Task-25 не даёт exact mastery без component-specific evidence."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p03-csyn-u1-r1",
+          "delay_hint": "24h",
+          "prompt": "Главный тест контекстного синонима после выбора кандидата?",
+          "answer": "Подставить его в исходный фрагмент и проверить сохранение актуального смысла, грамматической совместимости и стилистической уместности."
+        },
+        {
+          "id": "p03-csyn-u1-r2",
+          "delay_hint": "7d",
+          "prompt": "Должны ли слова быть универсальными словарными синонимами, чтобы быть контекстными синонимами?",
+          "answer": "Нет. Их смысловая близость может возникать только в конкретном контексте, если замена там сохраняет значение."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p03-csyn-u1-v1",
+          "type": "single_choice",
+          "prompt": "Фрагмент: «После долгого ожидания он ответил сухо: коротко поблагодарил и сразу завершил разговор». Какая замена слова «сухо» лучше всего сохраняет его контекстное значение?",
+          "options": ["холодно", "правильно", "громко", "медленно"],
+          "correct_option_index": 0,
+          "feedback": "«Холодно» сохраняет заданный контекстом оттенок отчуждённости; остальные варианты называют другие признаки ответа."
+        },
+        {
+          "id": "p03-csyn-u1-v2",
+          "type": "constructed_response",
+          "prompt": "Фрагмент: «Обсуждение становилось всё жарче: участники перебивали друг друга и всё настойчивее защищали свои позиции». Предложи контекстный синоним к слову «жарче» и объясни заменяемость одним предложением.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: предложена грамматически подходящая замена со значением усиления интенсивности спора, например «бурнее» или равнозначный контексту вариант",
+              "1: объяснено, что продолжение фрагмента подтверждает рост интенсивности обсуждения и после замены этот смысл сохраняется"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "generic_task_result_can_emit_exact_mastery": false,
+        "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "ask the learner to infer the target word's meaning from the supplied fragment before proposing a replacement",
+          "require substitution back into the supplied text and a check that contextual meaning is preserved",
+          "check grammatical form, collocation and stylistic fit of the proposed replacement",
+          "accept a context-only synonym when the supplied fragment proves interchangeability even if the words are not universal dictionary synonyms",
+          "route uncertain normative synonymy or usage to a dictionary check"
+        ],
+        "forbidden": [
+          "accepting thematic association as sufficient evidence of synonymy",
+          "emitting mastery for ru-lexis-contextual-meaning-polysemy merely because a replacement was selected",
+          "emitting mastery for phraseologism_identification, paronym_context_choice, lexical_collocation_correction or generic Task-25 from this unit alone",
+          "treating the old historical-only Task-25 note as current-2026 negative authority after the explicit current FIPI source resolution"
+        ],
+        "source_refs": [
+          "russian-program/subject-admission/build_ru03_contextual_synonym_source_identity_resolution.py",
+          "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-015"
+        ]
+      }
+    }
+  ]
+}
