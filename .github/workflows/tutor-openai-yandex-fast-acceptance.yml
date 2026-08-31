@@ -1,0 +1,135 @@
+name: Tutor OpenAI Yandex fast acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_private_openai_yandex_121_tutor.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/TUTOR-BRAIN-HUMAN-ACCEPTANCE-FAST-v0.1.md'
+      - 'eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command'
+      - '.github/workflows/tutor-openai-yandex-fast-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tutor-openai-yandex-fast-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Prove provider secrets are absent in CI
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "${OPENAI_API_KEY:-}"
+          test -z "${YANDEX_AI_STUDIO_API_KEY:-}"
+          test -z "${YANDEX_SPEECHKIT_API_KEY:-}"
+          echo 'LIVE_PROVIDER_SECRETS_IN_CI=0'
+
+      - name: Compile fast acceptance runner
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_private_openai_yandex_121_tutor.py
+
+      - name: Validate forced OpenAI Yandex text and voice parity
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_private_openai_yandex_121_tutor.py
+
+      - name: Prove only two brain providers exist in fast runtime
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root = Path('eksamio-learning-engine/ai-tutor-reference')
+          paths = [
+              root / 'private_openai_yandex_121_tutor.py',
+              root / 'private_openai_yandex_121_tutor_ui.py',
+              root / 'private_openai_yandex_resilient_human_ui.py',
+              root / 'validate_private_openai_yandex_121_tutor.py',
+          ]
+          text = '\n'.join(path.read_text(encoding='utf-8').lower() for path in paths)
+          assert 'qwen' not in text
+          assert 'deepseek' not in text
+          assert 'openai' in text
+          assert 'yandex' in text
+          print('FAST_BRAIN_SCOPE=openai,yandex')
+          PY
+
+      - name: Prove benchmark uses merged 121-card exact grounding
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py').read_text(encoding='utf-8')
+          assert 'ex-practice-alt-sochetat-001' in text
+          assert 'school-i-e-alternating-verb-roots-stressed-a' in text
+          assert 'RussianTutorVerticalSlice' in text
+          assert 'AcceptedSemanticRussianTutorVerticalSlice' not in text
+          print('FAST_GROUNDING=MERGED_121_CARD_EXACT')
+          PY
+
+      - name: Prove UI cannot start without explicit owner gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          out="$(python eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py --no-browser 2>&1)"
+          code=$?
+          set -e
+          test "$code" -eq 2
+          grep -q '^FAST_TUTOR_UI=BLOCKED_OWNER_AUTHORIZATION$' <<<"$out"
+          echo 'FAST_TUTOR_OWNER_GATE=PASS'
+
+      - name: Validate launcher boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          grep -q '^#!/bin/zsh$' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          grep -q 'private_openai_yandex_resilient_human_ui.py --owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          grep -q 'EKSAMIO_TUTOR_CANDIDATE_SHA' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          echo 'FAST_TUTOR_LAUNCHER=PASS'
+
+      - name: Preserve privacy and launch boundaries
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py').read_text(encoding='utf-8')
+          ui = Path('eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py').read_text(encoding='utf-8')
+          base_ui = Path('eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor_ui.py').read_text(encoding='utf-8')
+          assert 'learner_audio_persisted_bytes' in text
+          assert 'production_peis_writes_enabled' in text
+          assert '127.0.0.1' in base_ui
+          assert 'PERSISTENT_EVIDENCE=0' in base_ui
+          assert 'stopTutorPlayback' in ui
+          print('RAW_AUDIO_PERSISTED_BYTES=0')
+          print('PUBLIC_TRAFFIC_ENABLED=0')
+          print('PRODUCTION_PEIS_WRITES_ENABLED=0')
+          print('LIVE_PROVIDER_CALLS=0')
+          PY
+
+      - name: Diff hygiene
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
+          else
+            git diff --check HEAD^
+          fi

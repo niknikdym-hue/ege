@@ -1,0 +1,113 @@
+name: Tutor voice humanization
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/ai-tutor-reference/yandex_speechkit_v3_tts.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/yandex_lera_native_clean.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/yandex_lera_casting_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/yandex_lera_finalists_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_casting.command'
+      - 'eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_finalists.command'
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_tutor_voice_humanization.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_native_clean.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_casting.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_finalists.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/tutor_boundary.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command'
+      - '.github/workflows/tutor-voice-humanization.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-voice-humanization:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prove provider secrets are absent
+        shell: bash
+        run: |
+          test -z "${OPENAI_API_KEY:-}"
+          test -z "${YANDEX_AI_STUDIO_API_KEY:-}"
+          test -z "${YANDEX_SPEECHKIT_API_KEY:-}"
+          echo 'LIVE_PROVIDER_SECRETS_IN_CI=0'
+      - name: Compile voice humanization lane
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/ai-tutor-reference/yandex_speechkit_v3_tts.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_lera_native_clean.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_lera_casting_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_lera_finalists_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_tutor_voice_humanization.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_native_clean.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_casting.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_finalists.py \
+            eksamio-learning-engine/ai-tutor-reference/tutor_boundary.py
+      - name: Validate speech text and half duplex
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_tutor_voice_humanization.py
+      - name: Validate native Yandex Lera profile
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_native_clean.py
+      - name: Validate native Yandex Lera casting
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_casting.py
+      - name: Validate A-D finalist long-text casting
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_finalists.py
+      - name: Validate Tutor scope lock
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          root = Path('eksamio-learning-engine/ai-tutor-reference')
+          sys.path.insert(0, str(root))
+          from tutor_boundary import (
+              PeisContextProjection, ServerTutorTurn, SystemPolicy,
+              VerifiedSubjectContext, _provider_request,
+          )
+          turn = ServerTutorTurn(
+              tutor_session_ref='tutor:scope-test',
+              subject_id='russian',
+              learning_goal='understand:school-i-e-alternating-verb-roots-stressed-a',
+              policy=SystemPolicy(verification_required=True, allowed_tool_names=()),
+              verified_subject=VerifiedSubjectContext(
+                  source_refs=('source:russian-reviewed-card:fixture',),
+                  excerpts=('Задание: сочетание\nПроверенный ответ: сочетание\nПроверенное объяснение: исключение',),
+              ),
+              peis_projection=PeisContextProjection(
+                  projection_version='test', learning_summary='russian only',
+                  target_refs=('school-i-e-alternating-verb-roots-stressed-a',),
+              ),
+              history=(), learner_text='Что лучше: Mercedes или BMW?',
+          )
+          req = _provider_request(turn)
+          p = req.policy_instruction.lower()
+          assert 'unrelated topic' in p
+          assert 'do not answer or compare' in p
+          assert 'current learning task' in p
+          print('OFF_TOPIC_PROVIDER_SCOPE_LOCK=PASS')
+          PY
+      - name: Validate launchers
+        shell: bash
+        run: |
+          bash -n eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          bash -n eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_casting.command
+          bash -n eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_finalists.command
+          grep -q 'private_openai_yandex_resilient_human_ui.py' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          grep -q -- '--owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          grep -q 'yandex_lera_casting_ui.py' eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_casting.command
+          grep -q -- '--owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_casting.command
+          grep -q 'yandex_lera_finalists_ui.py' eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_finalists.command
+          grep -q -- '--owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_finalists.command
+          echo 'VOICE_LAUNCHERS=PASS'
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
