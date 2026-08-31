@@ -71,7 +71,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
             echo 'Exact reuse candidate probe changed protected Russian production surfaces.' >&2
             exit 1
           fi
