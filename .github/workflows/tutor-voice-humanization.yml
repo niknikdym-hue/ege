@@ -4,8 +4,11 @@ on:
   pull_request:
     paths:
       - 'eksamio-learning-engine/ai-tutor-reference/yandex_speechkit_v3_tts.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/yandex_lera_native_clean.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py'
       - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py'
       - 'eksamio-learning-engine/ai-tutor-reference/validate_tutor_voice_humanization.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_native_clean.py'
       - 'eksamio-learning-engine/ai-tutor-reference/tutor_boundary.py'
       - 'eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command'
       - '.github/workflows/tutor-voice-humanization.yml'
@@ -36,11 +39,16 @@ jobs:
         run: |
           python -m py_compile \
             eksamio-learning-engine/ai-tutor-reference/yandex_speechkit_v3_tts.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_lera_native_clean.py \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py \
             eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py \
             eksamio-learning-engine/ai-tutor-reference/validate_tutor_voice_humanization.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_native_clean.py \
             eksamio-learning-engine/ai-tutor-reference/tutor_boundary.py
       - name: Validate speech text and half duplex
         run: python eksamio-learning-engine/ai-tutor-reference/validate_tutor_voice_humanization.py
+      - name: Validate native Yandex Lera profile
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_native_clean.py
       - name: Validate Tutor scope lock
         run: |
           python - <<'PY'
