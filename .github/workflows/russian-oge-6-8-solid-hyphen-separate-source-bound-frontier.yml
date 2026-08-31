@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - "eksamio-learning-engine/172-RUSSIAN-SCHOOL-CANONICAL-BANK-CHUNK04-ADVERBS-PRONOUNS-HYPHEN-v0.1.json"
+      - "eksamio-learning-engine/221-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE3-ADVERBS-PRONOUNS-HYPHEN-v0.1.json"
+      - "eksamio-learning-engine/239-RUSSIAN-SCHOOL-CANONICAL-SEMANTIC-CONSOLIDATION-AFTER-CURRENT-NORM-AUDIT-v0.1.json"
+      - "eksamio-learning-engine/255-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-D-O36-O45-v0.1.json"
       - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
       - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_8_solid_hyphen_separate_source_bound_frontier_review.py"
@@ -38,13 +41,15 @@ jobs:
           cat /tmp/oge-6-8-a.txt
           grep -Fx 'OGE_6_8_SOLID_HYPHEN_SEPARATE_SOURCE_BOUND_FRONTIER=PASS' /tmp/oge-6-8-a.txt
           grep -Fx 'OFFICIAL_BRANCHES=9' /tmp/oge-6-8-a.txt
-          grep -Fx 'UNIQUE_EXACT_OWNER_CANDIDATES=8' /tmp/oge-6-8-a.txt
+          grep -Fx 'UNIQUE_EXACT_OWNER_CANDIDATES=7' /tmp/oge-6-8-a.txt
           grep -Fx 'CURRENT_ROUTE_REFS=6' /tmp/oge-6-8-a.txt
           grep -Fx 'CURRENT_SOURCE_SUPPORTED_EXACT_CANDIDATES=6' /tmp/oge-6-8-a.txt
-          grep -Fx 'MISSING_EXACT_OWNER_CANDIDATES=2' /tmp/oge-6-8-a.txt
+          grep -Fx 'MISSING_EXACT_OWNER_CANDIDATES=1' /tmp/oge-6-8-a.txt
           grep -Fx 'CURRENT_NONEXACT_ROUTE_REFS=0' /tmp/oge-6-8-a.txt
           grep -Fx 'LEGACY_PLACEHOLDERS=2' /tmp/oge-6-8-a.txt
           grep -Fx 'SCHOOL_REOPEN_REQUIRED=0' /tmp/oge-6-8-a.txt
+          grep -Fx 'EXACT_ROUTE_READY_NOW=1' /tmp/oge-6-8-a.txt
+          grep -Fx 'ABSORBED_PRONOUN_ID_CURRENT=0' /tmp/oge-6-8-a.txt
           grep -Fx 'SEMANTIC_ADMISSIONS=0' /tmp/oge-6-8-a.txt
           grep -Fx 'OBJECT_CLOSURES=0' /tmp/oge-6-8-a.txt
           grep -Fx 'NEW_SCHOOL_IDENTITIES=0' /tmp/oge-6-8-a.txt
