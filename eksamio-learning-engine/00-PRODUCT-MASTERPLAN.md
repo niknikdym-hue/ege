@@ -1,9 +1,9 @@
 # Eksamio Learning Engine — Product Masterplan
 
 **Статус:** PRODUCT / ARCHITECTURE AUTHORITY  
-**Версия:** 1.3
+**Версия:** 1.4
 **Дата исходной фиксации:** 2026-08-18  
-**Актуализация:** 2026-08-23
+**Актуализация:** 2026-08-31
 **Корень системы:** `eksamio-learning-engine/`
 
 Утверждённые owner decisions по первому Pro launch, product client, production cloud, AI/provider boundary, audio privacy, identity, payments и Tutor policy зафиксированы в `OWNER-DECISIONS-2026-08-22.md`. Они являются частью текущей product/architecture authority и явно заменяют прежний порядок, в котором realtime voice относился к позднему/P3-слою после первого Pro launch.
@@ -226,7 +226,7 @@ Recommendation Engine оптимизирует ожидаемую полезно
 Первый paid Pro launch запрещён, пока одновременно не production-ready:
 
 - text AI Tutor;
-- realtime voice AI Tutor;
+- realtime voice AI Tutor.
 
 Text-only и voice-only Pro launch запрещены. Переключение `voice -> text -> voice` внутри одной сессии не должно терять learning context или PEIS state. Voice является P0 launch capability, но не отдельным Tutor и не разрешением обходить shared PEIS dependency graph.
 
@@ -577,3 +577,93 @@ Google Drive допускается как начальный bounded Source Arc
 `verified Russian scope -> PEIS evidence -> personalized practice/help -> independent verification -> retained state`.
 
 Нельзя ради календаря обходить source truth, security, identity, Tutor verification или privacy gates. Но нельзя и откладывать первый полезный working contour ради необязательной архитектурной полноты других предметов или поздних функций.
+
+## 24. Russian learner product family and progressive rollout — owner clarification 2026-08-31
+
+Полная программа Русского языка является **единой предметной базой для всей линейки ученических продуктов**, а не только «курсом».
+
+Из одной принятой canonical Russian knowledge/content layer должны последовательно собираться и открываться:
+
+- бесплатные демоверсии и диагностики;
+- работа над ошибками;
+- тематические тренажёры;
+- ЕГЭ-тренажёры;
+- ОГЭ-тренажёры;
+- **конструктор тренажера**, который собирает тренировку из уже принятых canonical skills/items по выбранным темам, типам заданий, объёму и допустимой сложности;
+- персональная «Тренировка на сегодня»;
+- полный учебный маршрут / курс Русского;
+- школьные маршруты 5–11 классов;
+- подготовка к ОГЭ;
+- подготовка к ЕГЭ;
+- персональная работа с prerequisite gaps;
+- text + realtime voice Tutor;
+- независимая проверка после помощи;
+- retention/spaced practice;
+- карта слабых мест, прогресс и readiness;
+- персональный план до экзамена;
+- essay/extended-answer support после отдельного rubric/eval gate;
+- дальнейшие learner/parent analytics и multimodal функции после их собственных acceptance gates.
+
+Ни один из этих продуктов не получает отдельную ontology, отдельную базу знаний или отдельную модель mastery. Все они являются разными интерфейсами одного полного предмета и одного PEIS learner state.
+
+### Progressive opening
+
+Разделы разрешено открывать ученику поэтапно, когда конкретный раздел прошёл свои subject/runtime/product gates. Поэтапное открытие не разрешает ложный claim полноты: UI и коммерческое описание должны точно соответствовать реально доступному покрытию.
+
+Рабочая последовательность открытия:
+
+1. **R0 — private production assembly:** Yandex backend/persistence, account/session, accepted Russian content, protected client, payment candidate, Tutor integration; public paid traffic OFF.
+2. **R1 — first paid closed loop:** diagnosis/attempt -> error -> practice/help -> independent verify -> persisted learner state -> next action; account, entitlement, trainer, work on mistakes, personal route and both Tutor interfaces are real.
+3. **R2 — EGE Russian surface:** complete admitted EGE route + exam-task trainer + thematic trainer + trainer constructor + course/personal route + Tutor/retention.
+4. **R3 — OGE Russian surface:** complete admitted OGE route over the same school identities/PEIS state.
+5. **R4 — school Russian 5–11 surfaces:** grade/program navigation, topic study, thematic practice and prerequisite repair over the full school program.
+6. **R5 — advanced services:** essay/extended answers, richer forecast/analytics, parent/reporting surfaces and later multimodal capabilities after their own gates.
+
+Full-subject truth and the visual rollout of specialized sections are different concepts. Once the full program is accepted, specialized learner surfaces should be released progressively without rebuilding the subject.
+
+## 25. Russian launch AI/speech policy — owner decision 2026-08-31
+
+For learners in Russia, conversational brain routing is internal and not a learner-facing choice.
+
+Launch policy:
+
+- **Yandex conversational brain is the default brain for Russian learners**;
+- OpenAI is fallback/escalation only after applicable production admission;
+- the learner sees one product identity: `Tutor Eksamio`;
+- provider/model choice remains server-side, logged/versioned and replaceable;
+- provider-specific representation may not enter canonical subject truth or PEIS learner state.
+
+The Russian voice casting decision is closed unless a new production defect appears:
+
+- Yandex SpeechKit voice: **Lera**;
+- accepted profile: `neutral / speed 1.04 / pitch 0 Hz / marked pauses`;
+- further subjective Lera casting is not launch-critical work;
+- learner audio persistence remains exactly `0`.
+
+This section supersedes older candidate-only wording for the **Russian launch routing default**. It does not make Yandex proprietary representations part of the core architecture.
+
+## 26. Repository-host independence — hard production invariant 2026-08-31
+
+GitHub is currently the development/version-control source of truth, but **Eksamio must not depend on GitHub for normal production operation or for its long-term architecture**.
+
+Hard invariant:
+
+> **GitHub outage != Eksamio outage.**
+
+After a release is deployed, GitHub may become completely unavailable and normal learner operation must continue from the production contour.
+
+Therefore production must not fetch GitHub in the learner hot path for:
+
+- application startup/runtime;
+- Russian knowledge required by already admitted learner features;
+- PEIS state;
+- account/session state;
+- entitlements;
+- Tutor runtime configuration required for an already deployed release;
+- production assets required for normal service.
+
+Release artifacts/images and production configuration needed to run the admitted version must exist in the production environment independently of GitHub. Secrets and learner data are never stored in GitHub.
+
+Repository hosting is replaceable. Future migration from GitHub to SourceCraft or another Git host may be evaluated after launch, but it is **not** part of the current launch critical path. Such a migration must not require redesign of PEIS, subject truth, business logic, learner data or product interfaces.
+
+Primary Russian production cloud remains Yandex Cloud Russia, while code/business contracts remain portable/provider-neutral.
