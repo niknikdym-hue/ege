@@ -2,11 +2,12 @@
 """Shared OpenAI/Yandex human benchmark UI with resilient, half-duplex voice.
 
 This wrapper keeps the existing benchmark UI and subject contract, but hardens
-voice interaction for both brains:
+human interaction for both brains:
 - transient STT/TTS retries stay below the LLM layer;
 - Tutor playback and learner microphone are half-duplex;
 - starting learner recording always stops any Tutor audio first;
-- older Tutor audio never autoplays because of a microphone action.
+- older Tutor audio never autoplays because of a microphone action;
+- browser-facing Tutor Markdown is rendered safely instead of showing raw `*`.
 """
 from __future__ import annotations
 
@@ -51,7 +52,35 @@ def _install_half_duplex_voice_ui() -> None:
     base_ui.PAGE = base_ui.PAGE.replace(audio_marker, guarded_audio, 1)
 
 
+def _install_safe_tutor_markdown_ui() -> None:
+    """Render a tiny safe Markdown subset without ever injecting provider HTML."""
+
+    add_marker = (
+        "function add(text,cls,provider){const d=document.createElement('div');d.className='msg '+cls;"
+        "d.textContent=text;$('#messages').appendChild(d);if(provider){const p=document.createElement('div');"
+        "p.className='provider';p.textContent=provider;$('#messages').appendChild(p)}"
+        "$('#messages').scrollTop=$('#messages').scrollHeight}"
+    )
+    rendered_add = (
+        "function renderTutorMarkdown(node,text){const s=String(text),re=/(\\*\\*[^*\\n]+\\*\\*|`[^`\\n]+`|\\*[^*\\n]+\\*)/g;"
+        "let last=0,m;while((m=re.exec(s))){if(m.index>last)node.appendChild(document.createTextNode(s.slice(last,m.index)));"
+        "const raw=m[0];let el;if(raw.startsWith('**')){el=document.createElement('strong');el.textContent=raw.slice(2,-2)}"
+        "else if(raw.startsWith('`')){el=document.createElement('code');el.textContent=raw.slice(1,-1)}"
+        "else{el=document.createElement('em');el.textContent=raw.slice(1,-1)}node.appendChild(el);last=m.index+raw.length}"
+        "if(last<s.length){const tail=s.slice(last).replace(/\\*\\*/g,'').replace(/\\*/g,'').replace(/`/g,'');"
+        "node.appendChild(document.createTextNode(tail))}}\n"
+        "function add(text,cls,provider){const d=document.createElement('div');d.className='msg '+cls;"
+        "if(cls==='tutor')renderTutorMarkdown(d,text);else d.textContent=text;$('#messages').appendChild(d);"
+        "if(provider){const p=document.createElement('div');p.className='provider';p.textContent=provider;"
+        "$('#messages').appendChild(p)}$('#messages').scrollTop=$('#messages').scrollHeight}"
+    )
+    if base_ui.PAGE.count(add_marker) != 1:
+        raise RuntimeError("safe Tutor Markdown UI marker not found")
+    base_ui.PAGE = base_ui.PAGE.replace(add_marker, rendered_add, 1)
+
+
 _install_half_duplex_voice_ui()
+_install_safe_tutor_markdown_ui()
 
 
 class ResilientHumanApp(base_ui.App):
@@ -119,6 +148,7 @@ def main() -> int:
     print("VOICE_HALF_DUPLEX=1")
     print("TUTOR_PLAYBACK_MIC_OVERLAP=BLOCKED")
     print("TUTOR_SPEECH_TEXT_NORMALIZATION=1")
+    print("TUTOR_VISIBLE_MARKDOWN_RENDERING=SAFE")
     print("PUBLIC_TRAFFIC_ENABLED=0")
     print("PRODUCTION_PEIS_WRITES_ENABLED=0")
     print("PERSISTENT_EVIDENCE=0")
