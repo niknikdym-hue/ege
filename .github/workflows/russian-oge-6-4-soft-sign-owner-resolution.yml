@@ -62,7 +62,8 @@ jobs:
           assert summary['review_only_overlap_candidates'] == 6
           assert summary['fipi_supported_6_4_owner_candidates_not_yet_admitted'] == 2
           assert summary['adjacent_code_nonowner_candidates'] == 3
-          assert summary['still_unresolved_candidates'] == 1
+          assert summary['no_exact_oge_2026_route_binding_candidates'] == 1
+          assert summary['still_unresolved_candidates'] == 0
           assert summary['semantic_admissions'] == 0
           assert summary['object_level_closures'] == 0
           assert summary['false_exact_mastery_admissions'] == 0
@@ -75,14 +76,17 @@ jobs:
               'school-noun-agent-suffix-chik-shchik-soft-sign',
               'school-noun-genitive-plural-ending-system',
           ]
-          assert frontier['still_unresolved_candidates'] == [
+          assert frontier['no_exact_oge_2026_route_binding_candidates'] == [
               'school-verbal-noun-nie-nye-semantic-boundary',
           ]
+          assert frontier['still_unresolved_candidates'] == []
           assert frontier['frontier_complete_for_exact_acceptance'] is False
           assert data['policy']['reuse_first'] is True
           assert data['policy']['review_only_candidate_is_exact_owner'] is False
           assert data['policy']['keyword_or_name_overlap_is_exact_binding'] is False
           assert data['policy']['official_navigator_paragraph_is_exact_component_admission'] is False
+          assert data['policy']['methodical_exhaustive_table_may_reject_exact_route_binding'] is True
+          assert data['policy']['absence_from_oge_route_invalidates_school_semantic'] is False
           assert data['policy']['adjacent_codifier_boundary_prevents_false_6_4_admission'] is True
           assert data['policy']['placeholder_may_be_silently_dropped'] is False
           assert data['policy']['exact_acceptance_allowed_while_placeholder_remains'] is False
