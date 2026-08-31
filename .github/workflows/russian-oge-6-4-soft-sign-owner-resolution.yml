@@ -3,10 +3,14 @@ name: Russian OGE 6.4 soft-sign owner resolution
 on:
   pull_request:
     paths:
+      - "eksamio-learning-engine/259-RUSSIAN-SCHOOL-ROSENTHAL-PRIMARY-COMPLETENESS-FINAL-FREEZE-v1.0.json"
+      - "eksamio-learning-engine/262-RUSSIAN-FIPI-2026-SCHOOL-REOPEN-GAP-AUDIT-v0.1.json"
       - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
       - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py"
       - ".github/workflows/russian-oge-6-4-soft-sign-owner-resolution.yml"
   workflow_dispatch:
 
@@ -24,8 +28,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Compile owner-resolution reviewer
-        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py
+      - name: Compile owner-resolution reviewers
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py
       - name: Build deterministic OGE 6.4 owner review twice
         shell: bash
         run: |
@@ -95,11 +101,68 @@ jobs:
           assert all(row['admission_effect'] == 'NONE' for row in data['review_only_overlap_candidates'])
           print('OGE_6_4_SOFT_SIGN_OWNER_FRONTIER_FAIL_CLOSED=PASS')
           PY
+      - name: Build deterministic OGE 6.4 complete-frontier proof twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py --output /tmp/oge-6-4-proof-a.json > /tmp/oge-6-4-proof-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py --output /tmp/oge-6-4-proof-b.json > /tmp/oge-6-4-proof-b.txt
+          cmp /tmp/oge-6-4-proof-a.json /tmp/oge-6-4-proof-b.json
+          diff -u /tmp/oge-6-4-proof-a.txt /tmp/oge-6-4-proof-b.txt
+          cat /tmp/oge-6-4-proof-a.txt
+          cp /tmp/oge-6-4-proof-a.json eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-FRONTIER-PROOF.json
+      - name: Validate complete source-bound OGE 6.4 frontier proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-FRONTIER-PROOF.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          assert data['schema_version'] == '0.1.0'
+          assert data['status'] == 'SOURCE_BOUND_OWNER_FRONTIER_PROVEN_SOURCE_SYNC_REQUIRED'
+          assert data['target']['document_id'] == 'OGE_COD'
+          assert data['target']['content_code'] == '6.4'
+          assert data['proven_exact_owner_frontier']['canonical_refs'] == [
+              'school-separating-hard-soft-sign-boundary',
+              'school-verb-soft-sign-forms',
+              'school-numeral-orthography-base',
+              'school-adverb-final-soft-sign-after-sibilant-base',
+          ]
+          assert data['proven_exact_owner_frontier']['source_bound_frontier_complete'] is True
+          assert data['proven_exact_owner_frontier']['new_school_identity_required'] is False
+          assert data['proven_nonowners']['adjacent_code_nonowners'] == [
+              'school-adjective-soft-sign-before-sk-base',
+              'school-noun-agent-suffix-chik-shchik-soft-sign',
+              'school-noun-genitive-plural-ending-system',
+          ]
+          assert data['proven_nonowners']['no_exact_oge_2026_route_binding'] == [
+              'school-verbal-noun-nie-nye-semantic-boundary',
+          ]
+          assert data['proof_basis']['final_school_canonical_denominator'] == 185
+          assert data['proof_basis']['oge_2026_second_pass_school_reopen_candidates'] == 0
+          assert data['proof_basis']['final_unowned_official_school_orthography_topics'] == 0
+          assert data['proof_basis']['final_open_holds'] == 0
+          assert data['current_repository_sync_state']['overlay_placeholder_present'] is True
+          assert data['current_repository_sync_state']['source_sync_required'] is True
+          assert data['current_repository_sync_state']['exact_component_acceptance_present'] is False
+          assert data['summary']['proven_exact_owner_refs'] == 4
+          assert data['summary']['remaining_source_boundary_unknowns'] == 0
+          assert data['summary']['semantic_admissions'] == 0
+          assert data['summary']['object_level_closures'] == 0
+          assert data['summary']['false_exact_mastery_admissions'] == 0
+          assert data['admission_effect'] == 'NONE'
+          print('OGE_6_4_COMPLETE_SOURCE_BOUND_FRONTIER_PROOF=PASS')
+          PY
       - name: Upload OGE 6.4 review evidence
         uses: actions/upload-artifact@v4
         with:
           name: russian-oge-6-4-soft-sign-owner-resolution
-          path: eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-RESOLUTION-REVIEW.json
+          path: |
+            eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-RESOLUTION-REVIEW.json
+            eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-FRONTIER-PROOF.json
           if-no-files-found: error
           retention-days: 14
       - name: Protect accepted Russian production surfaces
