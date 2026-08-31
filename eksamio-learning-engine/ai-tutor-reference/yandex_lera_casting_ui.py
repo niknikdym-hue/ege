@@ -11,7 +11,6 @@ from __future__ import annotations
 import argparse
 import base64
 import json
-import secrets
 import threading
 import webbrowser
 from http import HTTPStatus
@@ -25,7 +24,7 @@ from yandex_speechkit_v3_tts import UrllibStreamingJsonTransport, YandexSpeechKi
 
 HOST = "127.0.0.1"
 DEFAULT_PORT = 8768
-MAX_SYNTHESIS_CALLS = 30
+MAX_SYNTHESIS_CALLS = 120
 ENDPOINT = "https://tts.api.cloud.yandex.net/tts/v3/utteranceSynthesis"
 
 CASTING_TEXT = (
@@ -46,12 +45,10 @@ PRESETS: dict[str, dict[str, object]] = {
 
 def _pause_variant(text: str, profile: str) -> str:
     if profile == "light":
-        # Prefer Yandex context-sensitive pauses over fixed silence.
         text = text.replace("sil<[260]>", "<[small]>")
         text = text.replace("<[medium]>", "<[small]>")
         return text
     if profile == "marked":
-        # Keep sentence boundary and make contrastive boundaries more explicit.
         text = text.replace("<[small]>", "<[medium]>")
         return text
     if profile == "balanced":
@@ -85,6 +82,7 @@ class CastingApp:
             "presets": PRESETS,
             "max_calls": MAX_SYNTHESIS_CALLS,
             "calls": self.calls,
+            "remaining_calls": max(0, MAX_SYNTHESIS_CALLS - self.calls),
             "brain_calls": 0,
             "persistent_audio_bytes": 0,
         }
@@ -103,6 +101,7 @@ class CastingApp:
                 raise ValueError("casting synthesis call cap reached")
             self.calls += 1
             call_no = self.calls
+            remaining = MAX_SYNTHESIS_CALLS - self.calls
 
         spoken = prepare_casting_speech(CASTING_TEXT, pauses)
         body: Mapping[str, object] = {
@@ -136,6 +135,7 @@ class CastingApp:
             "pitch": pitch,
             "pauses": pauses,
             "call": call_no,
+            "remaining_calls": remaining,
             "brain_calls": 0,
             "persistent_audio_bytes": 0,
         }
@@ -148,8 +148,8 @@ const $=s=>document.querySelector(s);let presets={};
 function sync(){ $('#speedOut').textContent=Number($('#speed').value).toFixed(2);$('#pitchOut').textContent=`${$('#pitch').value} Hz`;}
 $('#speed').oninput=sync;$('#pitch').oninput=sync;
 function applyPreset(id){const p=presets[id];if(!p)return;$('#role').value=p.role;$('#speed').value=p.speed;$('#pitch').value=p.pitch;$('#pauses').value=p.pauses;sync();document.querySelectorAll('.preset').forEach(b=>b.classList.toggle('active',b.dataset.id===id));}
-async function boot(){const r=await fetch('/api/status');const s=await r.json();$('#text').textContent=s.text;presets=s.presets;for(const [id,p] of Object.entries(presets)){const b=document.createElement('button');b.className='preset';b.dataset.id=id;b.textContent=p.label;b.onclick=()=>applyPreset(id);$('#presets').appendChild(b)}applyPreset('A');$('#status').textContent=s.ready?`SpeechKit READY · лимит ${s.max_calls} проб`:'SpeechKit BLOCKED';$('#play').disabled=!s.ready;}
-$('#play').onclick=async()=>{const body={role:$('#role').value,speed:Number($('#speed').value),pitch:Number($('#pitch').value),pauses:$('#pauses').value};$('#play').disabled=true;$('#status').textContent='Лера синтезирует…';try{const r=await fetch('/api/synthesize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!r.ok)throw new Error(j.error||'Ошибка');$('#audio').src='data:audio/mpeg;base64,'+j.audio_b64;$('#meta').textContent=`role=${j.role} · speed=${j.speed.toFixed(2)} · pitch=${j.pitch} Hz · pauses=${j.pauses} · проба ${j.call}`;$('#result').hidden=false;$('#status').textContent='Готово. Если нравится — запиши мне букву профиля или эти четыре значения.';}catch(e){$('#status').textContent=e.message}finally{$('#play').disabled=false}};
+async function boot(){const r=await fetch('/api/status');const s=await r.json();$('#text').textContent=s.text;presets=s.presets;for(const [id,p] of Object.entries(presets)){const b=document.createElement('button');b.className='preset';b.dataset.id=id;b.textContent=p.label;b.onclick=()=>applyPreset(id);$('#presets').appendChild(b)}applyPreset('A');$('#status').textContent=s.ready?`SpeechKit READY · лимит ${s.max_calls} проб · осталось ${s.remaining_calls}`:'SpeechKit BLOCKED';$('#play').disabled=!s.ready;}
+$('#play').onclick=async()=>{const body={role:$('#role').value,speed:Number($('#speed').value),pitch:Number($('#pitch').value),pauses:$('#pauses').value};$('#play').disabled=true;$('#status').textContent='Лера синтезирует…';try{const r=await fetch('/api/synthesize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!r.ok)throw new Error(j.error||'Ошибка');$('#audio').src='data:audio/mpeg;base64,'+j.audio_b64;$('#meta').textContent=`role=${j.role} · speed=${j.speed.toFixed(2)} · pitch=${j.pitch} Hz · pauses=${j.pauses} · проба ${j.call} · осталось ${j.remaining_calls}`;$('#result').hidden=false;$('#status').textContent=`Готово. Осталось ${j.remaining_calls} проб. Если нравится — запиши мне букву профиля или эти четыре значения.`;}catch(e){$('#status').textContent=e.message}finally{$('#play').disabled=false}};
 boot();
 </script></body></html>'''
 
