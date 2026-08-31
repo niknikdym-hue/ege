@@ -1,0 +1,704 @@
+{
+  "copyright_guard": {
+    "commercial_textbook_bytes": 0,
+    "commercial_textbook_prose_copied": 0,
+    "learner_prompts_examples_feedback": "ORIGINAL_EKSAMIO",
+    "official_source_passages_copied": 0,
+    "rule": "Authorities define scope only; all learner-facing evidence items below are original Eksamio wording."
+  },
+  "date": "2026-08-31",
+  "evidence_policy": {
+    "component_specific_independent_evidence_required": true,
+    "each_item_must_reference_exactly_one_school_semantic": true,
+    "evidence_readiness_is_object_acceptance": false,
+    "exact_owner_frontier_may_change_here": false,
+    "minimum_independent_items_per_owner": 3,
+    "new_semantic_identity_created": false,
+    "reuse_first": true,
+    "route_attempt_can_emit_exact_component_mastery": false
+  },
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "owner_evidence": [
+    {
+      "canonical_ref": "school-adverb-final-vowel-a-o",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 0,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "В модели с из- используется конечное -а: издавна.",
+          "id": "oge66-adverb-ao-v1",
+          "options": [
+            "издавна",
+            "издавно",
+            "издавне"
+          ],
+          "prompt": "Выбери нормативное написание.",
+          "school_semantic_refs": [
+            "school-adverb-final-vowel-a-o"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "В модели с на- используется конечное -о: направо.",
+          "id": "oge66-adverb-ao-v2",
+          "options": [
+            "направа",
+            "направо",
+            "направе"
+          ],
+          "prompt": "Выбери нормативное написание.",
+          "school_semantic_refs": [
+            "school-adverb-final-vowel-a-o"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "справа — конечное -а в соответствующей приставочной модели; заново — конечное -о в модели с за-.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge66-adverb-ao-v3",
+          "prompt": "Объясни, почему в словах «справа» и «заново» разные конечные гласные. Назови правило, а не только правильные формы.",
+          "school_semantic_refs": [
+            "school-adverb-final-vowel-a-o"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: «справа» соотнесено с моделью на -а при приставке с-",
+              "1: «заново» соотнесено с моделью на -о при приставке за-"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется выбор конечной -а/-о в продуктивной школьной модели наречий, соотнесённой с приставочной группой; словарные и иные словообразовательные случаи не засчитываются автоматически.",
+      "title_ru": "А / О на конце наречий от кратких прилагательных по приставке"
+    },
+    {
+      "canonical_ref": "school-adjective-k-sk-derivational-boundary",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Нормативная форма — ткацкий; при образовании с -к- происходит школьно фиксируемое изменение согласного.",
+          "id": "oge66-adj-ksk-v1",
+          "options": [
+            "ткачский",
+            "ткацкий",
+            "ткаческий"
+          ],
+          "prompt": "Какое прилагательное от слова «ткач» написано нормативно?",
+          "school_semantic_refs": [
+            "school-adjective-k-sk-derivational-boundary"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Нормативно: матросский; в относительном прилагательном используется -ск-, поэтому на стыке сохраняются две с.",
+          "id": "oge66-adj-ksk-v2",
+          "options": [
+            "матроский",
+            "матросский",
+            "матросцкий"
+          ],
+          "prompt": "Какое прилагательное от слова «матрос» написано нормативно?",
+          "school_semantic_refs": [
+            "school-adjective-k-sk-derivational-boundary"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "Краткая форма помогает распознать школьную модель с -к-; относительное «французский» оформляется с -ск-.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge66-adj-ksk-v3",
+          "prompt": "Сопоставь «узкий — узок» и «французский». Какой диагностический признак помогает не смешать -к- и -ск- в этих школьных моделях?",
+          "school_semantic_refs": [
+            "school-adjective-k-sk-derivational-boundary"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: для типа «узкий» указана возможность краткой формы как диагностический признак модели с -к-",
+              "1: «французский» отнесён к относительному прилагательному с -ск-"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется школьный выбор -к-/-ск- и связанное изменение/сохранение конечного согласного производящей основы; орфография других суффиксов прилагательных не засчитывается.",
+      "title_ru": "-К- / -СК- и сохранение/изменение согласных в относительных и качественных прилагательных"
+    },
+    {
+      "canonical_ref": "school-gerund-forming-suffix-system",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Для этой формы несовершенного вида нормативно: читая.",
+          "id": "oge66-gerund-v1",
+          "options": [
+            "читав",
+            "читая",
+            "читев"
+          ],
+          "prompt": "Выбери нормативное деепричастие от глагола «читать».",
+          "school_semantic_refs": [
+            "school-gerund-forming-suffix-system"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "От глагола совершенного вида «решить» нормативная форма — решив.",
+          "id": "oge66-gerund-v2",
+          "options": [
+            "решая",
+            "решив",
+            "решев"
+          ],
+          "prompt": "Выбери нормативное деепричастие от глагола «решить».",
+          "school_semantic_refs": [
+            "school-gerund-forming-suffix-system"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "делая; сделав. Форму строят от вида и основы исходного глагола, а не по одному внешнему окончанию.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge66-gerund-v3",
+          "prompt": "Образуй деепричастия от «делать» и «сделать» и объясни, почему нельзя выбирать суффикс без учёта вида/основы.",
+          "school_semantic_refs": [
+            "school-gerund-forming-suffix-system"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: даны нормативные формы «делая» и «сделав»",
+              "1: объяснено, что выбор модели зависит от вида и основы исходного глагола"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется образование нормативной деепричастной формы по виду и основе глагола; пунктуация при деепричастном обороте и общий субъект — другие семантики.",
+      "title_ru": "Суффиксы деепричастий: выбор нормативной модели по виду и основе глагола"
+    },
+    {
+      "canonical_ref": "school-noun-agent-suffix-chik-shchik-soft-sign",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "После д в этой школьной модели используется -чик-: переводчик.",
+          "id": "oge66-chik-v1",
+          "options": [
+            "переводщик",
+            "переводчик",
+            "переводьщик"
+          ],
+          "prompt": "Выбери нормативное название лица по действию от «переводить».",
+          "school_semantic_refs": [
+            "school-noun-agent-suffix-chik-shchik-soft-sign"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Нормативно: каменщик; здесь выбирается -щик-, без мягкого знака перед ним.",
+          "id": "oge66-chik-v2",
+          "options": [
+            "каменчик",
+            "каменщик",
+            "каменьщик"
+          ],
+          "prompt": "Выбери нормативное написание.",
+          "school_semantic_refs": [
+            "school-noun-agent-suffix-chik-shchik-soft-sign"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "После л перед -щик- в этой модели пишется ь: стекольщик; после н — нет: каменщик.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge66-chik-v3",
+          "prompt": "Почему в слове «стекольщик» перед -щик- пишется ь, а в «каменщик» — нет?",
+          "school_semantic_refs": [
+            "school-noun-agent-suffix-chik-shchik-soft-sign"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: указано, что ь перед -щик- сохраняется после л в данной модели",
+              "1: объяснено, что после н в «каменщик» такой ь не ставится"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется выбор суффикса лица -чик-/-щик- и отдельная граница мягкого знака перед -щик-; иные уменьшительные или абстрактные суффиксы не входят.",
+      "title_ru": "-ЧИК- / -ЩИК- и Ь перед -ЩИК-"
+    },
+    {
+      "canonical_ref": "school-noun-suffix-ek-ik-vowel-retention",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "В «замочек — замочка» гласная суффикса выпадает, что указывает на -ек-.",
+          "id": "oge66-ekik-v1",
+          "options": [
+            "замочек — замочека",
+            "замочек — замочка",
+            "замочик — замочика"
+          ],
+          "prompt": "Выбери правильную пару форм.",
+          "school_semantic_refs": [
+            "school-noun-suffix-ek-ik-vowel-retention"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "В «ключик — ключика» гласная сохраняется, что указывает на -ик-.",
+          "id": "oge66-ekik-v2",
+          "options": [
+            "ключек — ключка",
+            "ключик — ключика",
+            "ключек — ключека"
+          ],
+          "prompt": "Выбери правильную пару форм.",
+          "school_semantic_refs": [
+            "school-noun-suffix-ek-ik-vowel-retention"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "Если гласная выпадает при склонении — -ек-; если сохраняется — -ик-.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge66-ekik-v3",
+          "prompt": "Сравни «орешек — орешка» и «кирпичик — кирпичика». Как изменение формы помогает выбрать -ек- или -ик-?",
+          "school_semantic_refs": [
+            "school-noun-suffix-ek-ik-vowel-retention"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: в «орешек — орешка» отмечено выпадение е и выбор -ек-",
+              "1: в «кирпичик — кирпичика» отмечено сохранение и и выбор -ик-"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется выбор -ек-/-ик- через сохранение или выпадение гласной при изменении формы существительного; другие суффиксы существительных не засчитываются.",
+      "title_ru": "-ЕК- / -ИК-: беглая или сохраняемая гласная при склонении"
+    },
+    {
+      "canonical_ref": "school-o-e-after-sibilants-suffix-ending",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "В ударном окончании после ч пишется о: врачом.",
+          "id": "oge66-shib-v1",
+          "options": [
+            "врачем",
+            "врачом",
+            "врачём"
+          ],
+          "prompt": "Выбери нормативную форму творительного падежа.",
+          "school_semantic_refs": [
+            "school-o-e-after-sibilants-suffix-ending"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "В безударном окончании после щ пишется е: товарищем.",
+          "id": "oge66-shib-v2",
+          "options": [
+            "товарищом",
+            "товарищем",
+            "товарищём"
+          ],
+          "prompt": "Выбери нормативную форму творительного падежа.",
+          "school_semantic_refs": [
+            "school-o-e-after-sibilants-suffix-ending"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "После шипящей в этих суффиксальных моделях ударение различает о/е; корневая орфография рассматривается отдельно.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge66-shib-v3",
+          "prompt": "Сопоставь «дружо́к» и «оре́шек». Объясни выбор о/е после шипящей в суффиксе и укажи, почему это не правило о гласной в корне.",
+          "school_semantic_refs": [
+            "school-o-e-after-sibilants-suffix-ending"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: в ударном суффиксе «дружо́к» указано о, в безударном суффиксе «оре́шек» — е",
+              "1: явно указано, что проверяются суффиксы/окончания, а не корень"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется гласная после ж/ш/ч/щ именно в суффиксе или окончании; корневая орфография после шипящих — отдельная семантика.",
+      "title_ru": "О / Е(Ё) после шипящих в суффиксах и окончаниях"
+    },
+    {
+      "canonical_ref": "school-participle-vowel-suffix-conjugation-base",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "«Читать» — глагол I спряжения; нормативно: читающий.",
+          "id": "oge66-part-v1",
+          "options": [
+            "читящий",
+            "читающий",
+            "читаещий"
+          ],
+          "prompt": "Выбери нормативное действительное причастие настоящего времени от «читать».",
+          "school_semantic_refs": [
+            "school-participle-vowel-suffix-conjugation-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "«Видеть» относится ко II спряжению; нормативно: видимый.",
+          "id": "oge66-part-v2",
+          "options": [
+            "видеемый",
+            "видимый",
+            "видемый"
+          ],
+          "prompt": "Выбери нормативное страдательное причастие настоящего времени от «видеть».",
+          "school_semantic_refs": [
+            "school-participle-vowel-suffix-conjugation-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "сеявший: гласная я исходной основы сохраняется перед -вш-.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge66-part-v3",
+          "prompt": "Образуй действительное причастие прошедшего времени от «сеять» и объясни судьбу гласной основы перед -вш-.",
+          "school_semantic_refs": [
+            "school-participle-vowel-suffix-conjugation-base"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: дана нормативная форма «сеявший»",
+              "1: указано сохранение гласной я исходной инфинитивной основы перед -вш-"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется выбор гласной/суффиксальной модели причастия по спряжению, исходной основе и типу причастия; Н/НН и пунктуация с причастным оборотом не входят.",
+      "title_ru": "Гласные в суффиксах причастий: спряжение, инфинитивная основа и тип причастия"
+    },
+    {
+      "canonical_ref": "school-verb-infinitive-past-nonfinite-stem-vowel",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Исходная основа «таять» сохраняет я перед -л-: таял.",
+          "id": "oge66-stem-v1",
+          "options": [
+            "таил",
+            "таял",
+            "таел"
+          ],
+          "prompt": "Выбери нормативную форму прошедшего времени от «таять».",
+          "school_semantic_refs": [
+            "school-verb-infinitive-past-nonfinite-stem-vowel"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 2,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Исходная основа «клеить» сохраняет и перед -л-: клеил.",
+          "id": "oge66-stem-v2",
+          "options": [
+            "клеел",
+            "клеял",
+            "клеил"
+          ],
+          "prompt": "Выбери нормативную форму прошедшего времени от «клеить».",
+          "school_semantic_refs": [
+            "school-verb-infinitive-past-nonfinite-stem-vowel"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "обессилеть → обессилел; обессилить → обессилила. Смысл определяет исходный глагол, затем сохраняется его гласная основы.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge66-stem-v3",
+          "prompt": "Сопоставь: «спортсмен обессилел» и «болезнь обессилила спортсмена». От каких инфинитивов образованы формы и почему гласные различаются?",
+          "school_semantic_refs": [
+            "school-verb-infinitive-past-nonfinite-stem-vowel"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: «обессилел» связано с «обессилеть», «обессилила» — с «обессилить»",
+              "1: объяснено, что сначала выбирают исходный глагол по значению, затем сохраняют его гласную основы"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется сохранение релевантной гласной исходной основы перед -л-, -вш-, -в/-вши и выбор исходного глагола при смысловых парах; личные окончания глагола — другая семантика.",
+      "title_ru": "Гласная основы инфинитива в формах прошедшего времени, действительных причастиях и деепричастиях"
+    },
+    {
+      "canonical_ref": "school-verb-suffix-ova-eva-yva-iva-base",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 2,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Форма на -ую указывает здесь на -ова-: советовать.",
+          "id": "oge66-ova-v1",
+          "options": [
+            "советывать",
+            "советивать",
+            "советовать"
+          ],
+          "prompt": "По форме «я советую» выбери нормативный инфинитив.",
+          "school_semantic_refs": [
+            "school-verb-suffix-ova-eva-yva-iva-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Форма сохраняет -ыва-: рассказывать.",
+          "id": "oge66-ova-v2",
+          "options": [
+            "рассказовать",
+            "рассказывать",
+            "рассказевать"
+          ],
+          "prompt": "По форме «я рассказываю» выбери нормативный инфинитив.",
+          "school_semantic_refs": [
+            "school-verb-suffix-ova-eva-yva-iva-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "ночевать: форма 1-го лица «ночую» ведёт к модели -ева-, а не -ива-.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge66-ova-v3",
+          "prompt": "По форме «я ночую» восстанови инфинитив и объясни выбор между -ева- и -ива-.",
+          "school_semantic_refs": [
+            "school-verb-suffix-ova-eva-yva-iva-base"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: дан нормативный инфинитив «ночевать»",
+              "1: связь формы «ночую» с моделью -ева- объяснена без переноса правила на неродственные суффиксы"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется выбор глагольного суффикса через форму 1-го лица единственного числа; другие суффиксальные или личные окончания не засчитываются автоматически.",
+      "title_ru": "-ОВА-/-ЕВА- или -ЫВА-/-ИВА- по форме 1-го лица"
+    },
+    {
+      "canonical_ref": "school-vowels-after-ts-suffix-ending",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "В ударном окончании после ц пишется о: бойцом.",
+          "id": "oge66-ts-v1",
+          "options": [
+            "бойцем",
+            "бойцом",
+            "бойцым"
+          ],
+          "prompt": "Выбери нормативную форму творительного падежа.",
+          "school_semantic_refs": [
+            "school-vowels-after-ts-suffix-ending"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "В безударном окончании после ц пишется е: пальцем.",
+          "id": "oge66-ts-v2",
+          "options": [
+            "пальцом",
+            "пальцем",
+            "пальцым"
+          ],
+          "prompt": "Выбери нормативную форму творительного падежа.",
+          "school_semantic_refs": [
+            "school-vowels-after-ts-suffix-ending"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "«улицы» проверяет окончание после ц; «цифры» — корневое написание и относится к другой семантической ветви.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge66-ts-v3",
+          "prompt": "Сравни «улицы» и «цифры». Почему ы в «улицы» относится к этой семантике, а и в «цифры» — нет?",
+          "school_semantic_refs": [
+            "school-vowels-after-ts-suffix-ending"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: в «улицы» ы определено как гласная окончания после ц",
+              "1: в «цифры» и находится в корне, поэтому отнесено к отдельному корневому правилу"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется О/Е и нормативное Ы после ц именно в суффиксах/окончаниях; корневая орфография после ц должна быть распознана как отдельная ветвь.",
+      "title_ru": "Гласные после Ц в суффиксах и окончаниях"
+    }
+  ],
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_message_delivery": false,
+    "real_payment_or_refund": false,
+    "tilda_change": false
+  },
+  "schema_version": "0.1.0",
+  "source_provenance": [
+    {
+      "coverage_note": "Current launch overlay proves the exact 10-owner frontier for OGE 2026 code 6.6; this evidence pack does not change that frontier.",
+      "kind": "current_route_owner_authority",
+      "ref": "../../278-RUSSIAN-FIPI-2026-OGE-6.6-CURRENT-ROUTE-SUPERSESSION-v0.1.json"
+    },
+    {
+      "coverage_note": "Official FIPI OGE-2026 orthography navigator defines the tested suffix-spelling branches; no official exercise wording is copied.",
+      "kind": "official_scope_authority",
+      "ref": "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/ru-9_6_orfografija.pdf"
+    },
+    {
+      "coverage_note": "Canonical labels and identity boundaries are reused; no new school identity is created.",
+      "kind": "canonical_identity_inventory",
+      "ref": "../../273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+    },
+    {
+      "kind": "program_authority",
+      "ref": "../RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-08"
+    }
+  ],
+  "status": "CURRENT_LAUNCH_OGE_6_6_COMPONENT_EVIDENCE_CANDIDATE_NO_OBJECT_ADMISSION",
+  "subject": "russian",
+  "summary": {
+    "exact_owner_frontier": 10,
+    "false_exact_mastery_admissions": 0,
+    "independent_items_total": 30,
+    "object_closures": 0,
+    "owners_with_materialized_component_evidence": 10,
+    "requirements_closed": 0,
+    "semantic_admissions": 0
+  },
+  "target": {
+    "admission_unit_id": "RAU-9d61ef1d2fd678fc3fee",
+    "content_code": "6.6",
+    "document_id": "OGE_COD",
+    "requirement_id": "RSK-OGE_COD-6-6-P024",
+    "source_id": "FIPI-OGE-RU-2026-FINAL"
+  }
+}
