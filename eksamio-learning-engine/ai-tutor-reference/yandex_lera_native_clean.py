@@ -17,11 +17,12 @@ from yandex_speechkit_v3_tts import StreamingJsonTransport, YandexSpeechKitV3TTS
 
 @dataclass(frozen=True)
 class YandexLeraNativeCleanProfile:
-    name: str = "YANDEX_LERA_NATIVE_CLEAN_V1"
+    name: str = "YANDEX_LERA_NATIVE_CLEAN_V2_D"
     voice: str = "lera"
-    role: str = "neutral"
-    speed: float = 1.04
-    pitch_shift_hz: float = 0.0
+    role: str = "friendly"
+    speed: float = 0.97
+    pitch_shift_hz: float = -35.0
+    pause_profile: str = "marked"
 
 
 PROFILE = YandexLeraNativeCleanProfile()
@@ -55,6 +56,18 @@ def _repair_alice_spoken_punctuation(text: str) -> str:
     return re.sub(r"\s{2,}", " ", source).strip()
 
 
+def _apply_native_pause_profile(text: str, profile: YandexLeraNativeCleanProfile = PROFILE) -> str:
+    """Apply the owner-selected native SpeechKit pause profile."""
+
+    if profile.pause_profile == "marked":
+        return text.replace("<[small]>", "<[medium]>")
+    if profile.pause_profile == "light":
+        return text.replace("sil<[260]>", "<[small]>").replace("<[medium]>", "<[small]>")
+    if profile.pause_profile == "balanced":
+        return text
+    raise ValueError("unknown Yandex Lera native pause profile")
+
+
 def prepare_yandex_lera_native_speech(text: str) -> str:
     """Return a SpeechKit-ready spoken rendering for Alice answers."""
 
@@ -69,11 +82,11 @@ def prepare_yandex_lera_native_speech(text: str) -> str:
         rendered,
         flags=re.IGNORECASE,
     )
-    return rendered
+    return _apply_native_pause_profile(rendered)
 
 
 class YandexNativePitchTransport:
-    """Inject the native SpeechKit v3 pitchShift hint for the Yandex profile."""
+    """Apply the owner-selected native SpeechKit voice hints for Yandex only."""
 
     def __init__(self, inner: StreamingJsonTransport, *, profile: YandexLeraNativeCleanProfile = PROFILE) -> None:
         self.inner = inner
@@ -90,8 +103,23 @@ class YandexNativePitchTransport:
         payload = dict(body)
         raw_hints = payload.get("hints")
         hints = list(raw_hints) if isinstance(raw_hints, list) else []
-        if not any(isinstance(item, Mapping) and "pitchShift" in item for item in hints):
-            hints.append({"pitchShift": str(self.profile.pitch_shift_hz)})
+
+        # Replace the base benchmark hints only in the Yandex-native path. The
+        # OpenAI path never uses this transport wrapper and remains unchanged.
+        controlled = {"voice", "role", "speed", "pitchShift"}
+        hints = [
+            item
+            for item in hints
+            if not (isinstance(item, Mapping) and controlled.intersection(item.keys()))
+        ]
+        hints.extend(
+            [
+                {"voice": self.profile.voice},
+                {"role": self.profile.role},
+                {"speed": f"{self.profile.speed:.2f}"},
+                {"pitchShift": f"{self.profile.pitch_shift_hz:.1f}"},
+            ]
+        )
         payload["hints"] = hints
         return self.inner.post_json_stream(
             url=url,
