@@ -2,6 +2,10 @@
   'use strict';
 
   var COUNTER_ID = 110348386;
+
+  // Browser code may emit only non-authoritative learning/intent signals.
+  // Payment, entitlement, refund and referral-reward truth is server-owned and
+  // deliberately absent from this allowlist.
   var ALLOWED_GOALS = new Set([
     'eks_demo_open',
     'eks_demo_start',
@@ -11,8 +15,10 @@
     'eks_trainer_start',
     'eks_trainer_meaningful',
     'eks_return_learning',
+    'eks_pro_offer_view',
     'eks_pro_intent',
-    'eks_purchase'
+    'eks_checkout_start',
+    'eks_referral_visit'
   ]);
 
   function cleanString(value, maxLength) {
@@ -32,6 +38,9 @@
       'task_family',
       'surface',
       'release',
+      'landing_id',
+      'sku',
+      'source_channel',
       'href',
       'label'
     ]);
