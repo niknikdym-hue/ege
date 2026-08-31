@@ -1,0 +1,409 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-08-31",
+  "status": "CURRENT_LAUNCH_OGE_6_7_COMPONENT_EVIDENCE_WAVE_001_NO_OBJECT_ADMISSION",
+  "subject": "russian",
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "target": {
+    "source_id": "FIPI-OGE-RU-2026-FINAL",
+    "document_id": "OGE_COD",
+    "content_code": "6.7",
+    "requirement_id": "RSK-OGE_COD-6-7-P025",
+    "admission_unit_id": "RAU-2668e140328e4edee952"
+  },
+  "evidence_policy": {
+    "reuse_first": true,
+    "new_semantic_identity_created": false,
+    "exact_owner_frontier_may_change_here": false,
+    "each_item_must_reference_exactly_one_school_semantic": true,
+    "component_specific_independent_evidence_required": true,
+    "route_attempt_can_emit_exact_component_mastery": false,
+    "evidence_readiness_is_object_acceptance": false,
+    "minimum_total_independent_items_for_newly_covered_owner": 3,
+    "cross_route_reuse_may_complete_an_owner_only_when_route_scoped": true
+  },
+  "source_provenance": [
+    {
+      "kind": "current_route_owner_authority",
+      "ref": "../../279-RUSSIAN-FIPI-2026-OGE-6.7-CURRENT-ROUTE-SUPERSESSION-v0.1.json",
+      "coverage_note": "Current launch authority proves the exact 12-owner frontier for OGE 2026 code 6.7; this evidence wave does not change that frontier."
+    },
+    {
+      "kind": "official_scope_authority",
+      "ref": "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/ru-9_6_orfografija.pdf",
+      "coverage_note": "Official FIPI OGE-2026 orthography navigator defines the tested ending branches; no official exercise wording is copied."
+    },
+    {
+      "kind": "canonical_identity_inventory",
+      "ref": "../../273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+      "coverage_note": "Canonical identities and boundaries are reused; no new school identity is created."
+    },
+    {
+      "kind": "validated_cross_route_component_evidence",
+      "ref": "RU-PROG-08-OGE-6.6-COMPONENT-EVIDENCE-WAVE-001-v0.1.json",
+      "coverage_note": "Only explicitly whitelisted ending-specific items may be reused by the separate OGE 6.7 object-evidence auditor."
+    },
+    {
+      "kind": "program_authority",
+      "ref": "../RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-08"
+    }
+  ],
+  "owner_evidence": [
+    {
+      "canonical_ref": "school-adjective-ending-inflection-and-special-forms",
+      "title_ru": "Окончания прилагательных и причастий по согласованию",
+      "semantic_boundary": "Проверяется выбор падежного окончания прилагательного или причастия по форме определяемого существительного; суффиксы образования прилагательных и причастий не засчитываются.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "component_specific_only": true,
+        "minimum_independent_items_required": 3,
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "generic_oge_route_result_can_emit_exact_mastery": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge67-adjend-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму: мы говорили о ... море.",
+          "options": ["синим", "синем", "синём"],
+          "correct_option_index": 1,
+          "feedback": "С существительным «море» в предложном падеже согласуется форма «синем».",
+          "school_semantic_refs": ["school-adjective-ending-inflection-and-special-forms"]
+        },
+        {
+          "id": "oge67-adjend-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное согласование: заметка находится в ... книге.",
+          "options": ["прочитанной", "прочитанную", "прочитанным"],
+          "correct_option_index": 0,
+          "feedback": "Причастие согласуется с «книге» в женском роде, единственном числе, предложном падеже: «в прочитанной книге».",
+          "school_semantic_refs": ["school-adjective-ending-inflection-and-special-forms"]
+        },
+        {
+          "id": "oge67-adjend-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Объясни окончания в сочетаниях «с летящим самолётом» и «с летящей птицей». Как определить нужную форму зависимого слова?",
+          "answer_outline": "Обе формы стоят в творительном падеже и согласуются с определяемыми существительными: мужской род «самолётом» требует «летящим», женский род «птицей» — «летящей».",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: обе формы правильно определены как творительный падеж и связаны с определяемыми существительными",
+              "1: различие окончаний объяснено согласованием по роду и форме существительного"
+            ]
+          },
+          "school_semantic_refs": ["school-adjective-ending-inflection-and-special-forms"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-noun-case-ending-base",
+      "title_ru": "Безударные падежные окончания существительных: базовый тип",
+      "semantic_boundary": "Проверяется выбор падежного окончания существительного по склонению, числу и падежу в базовых парадигмах; специальные группы и словарные формы учитываются отдельными владельцами.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "component_specific_only": true,
+        "minimum_independent_items_required": 3,
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "generic_oge_route_result_can_emit_exact_mastery": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge67-ncase-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное окончание: рассказать о ... .",
+          "options": ["книги", "книге", "книгу"],
+          "correct_option_index": 1,
+          "feedback": "После «о» здесь нужен предложный падеж: «о книге».",
+          "school_semantic_refs": ["school-noun-case-ending-base"]
+        },
+        {
+          "id": "oge67-ncase-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму: подойти к ... .",
+          "options": ["площаде", "площади", "площадью"],
+          "correct_option_index": 1,
+          "feedback": "Существительное третьего склонения в дательном падеже имеет окончание -и: «к площади».",
+          "school_semantic_refs": ["school-noun-case-ending-base"]
+        },
+        {
+          "id": "oge67-ncase-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Почему пишется «в деревне», но «в тетради»? Укажи падеж, склонение и принцип выбора окончания.",
+          "answer_outline": "Обе формы предложного падежа единственного числа. «Деревня» относится к первому склонению и даёт -е, «тетрадь» — к третьему склонению и даёт -и.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: обе формы правильно определены как предложный падеж, а существительные — как первое и третье склонение",
+              "1: выбор -е и -и объяснён через тип склонения, а не запоминанием отдельного слова"
+            ]
+          },
+          "school_semantic_refs": ["school-noun-case-ending-base"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-numeral-case-ending-inflection-base",
+      "title_ru": "Падежные формы числительных: базовое склонение",
+      "semantic_boundary": "Проверяется падежная форма простого количественного числительного и его нормативное окончание; специальные двухформные и многокомпонентные парадигмы учитываются отдельными владельцами.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "component_specific_only": true,
+        "minimum_independent_items_required": 3,
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "generic_oge_route_result_can_emit_exact_mastery": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge67-numbase-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму: обратиться к ... ученикам.",
+          "options": ["пять", "пяти", "пятью"],
+          "correct_option_index": 1,
+          "feedback": "Предлог «к» требует дательного падежа: «к пяти ученикам».",
+          "school_semantic_refs": ["school-numeral-case-ending-inflection-base"]
+        },
+        {
+          "id": "oge67-numbase-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму: работать с ... книгами.",
+          "options": ["три", "трёх", "тремя"],
+          "correct_option_index": 2,
+          "feedback": "После «с» в значении совместности нужен творительный падеж: «с тремя книгами».",
+          "school_semantic_refs": ["school-numeral-case-ending-inflection-base"]
+        },
+        {
+          "id": "oge67-numbase-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Поставь числительное «пять» в нужную форму в сочетаниях «с ... книгами» и «к ... книгам» и объясни различие.",
+          "answer_outline": "«С пятью книгами» — творительный падеж; «к пяти книгам» — дательный. Форма числительного меняется вместе с требуемым падежом.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: даны формы «пятью» и «пяти» в правильных сочетаниях",
+              "1: различие объяснено творительным и дательным падежами"
+            ]
+          },
+          "school_semantic_refs": ["school-numeral-case-ending-inflection-base"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-numerals-both-parts-decline-50-80-200-900",
+      "title_ru": "Сложные числительные: склонение обеих частей",
+      "semantic_boundary": "Проверяется изменение обеих частей числительных 50–80 и 200–900 в косвенных падежах; двухформные 40/90/100 и базовые простые числительные учитываются отдельно.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "component_specific_only": true,
+        "minimum_independent_items_required": 3,
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "generic_oge_route_result_can_emit_exact_mastery": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge67-bothparts-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму: приблизиться к ... участникам.",
+          "options": ["пятьдесят", "пятидесяти", "пятьюдесятью"],
+          "correct_option_index": 1,
+          "feedback": "В дательном падеже у «пятьдесят» изменяются обе части: «к пятидесяти участникам».",
+          "school_semantic_refs": ["school-numerals-both-parts-decline-50-80-200-900"]
+        },
+        {
+          "id": "oge67-bothparts-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму: рукопись объёмом ... страницами.",
+          "options": ["двести", "двумястами", "двухсот"],
+          "correct_option_index": 1,
+          "feedback": "Творительный падеж числительного «двести» — «двумястами»: обе части изменены.",
+          "school_semantic_refs": ["school-numerals-both-parts-decline-50-80-200-900"]
+        },
+        {
+          "id": "oge67-bothparts-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Поставь «пятьдесят» в родительный падеж и «триста» в дательный. Объясни общий принцип.",
+          "answer_outline": "Родительный: «пятидесяти»; дательный: «трёмстам». В этих сложных числительных при склонении изменяются обе части.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: даны нормативные формы «пятидесяти» и «трёмстам»",
+              "1: сформулирован принцип изменения обеих частей сложного числительного"
+            ]
+          },
+          "school_semantic_refs": ["school-numerals-both-parts-decline-50-80-200-900"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-numerals-two-form-paradigm-40-90-100",
+      "title_ru": "СОРОК, ДЕВЯНОСТО, СТО: двухформная парадигма",
+      "semantic_boundary": "Проверяется особая двухформная парадигма числительных сорок, девяносто и сто: именительный/винительный против остальных падежей.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "component_specific_only": true,
+        "minimum_independent_items_required": 3,
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "generic_oge_route_result_can_emit_exact_mastery": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge67-twoform-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму: не хватило ... страниц.",
+          "options": ["сорок", "сорока", "сороков"],
+          "correct_option_index": 1,
+          "feedback": "В родительном падеже числительное «сорок» имеет форму «сорока».",
+          "school_semantic_refs": ["school-numerals-two-form-paradigm-40-90-100"]
+        },
+        {
+          "id": "oge67-twoform-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму: обратиться к ... участникам.",
+          "options": ["девяносто", "девяноста", "девяностам"],
+          "correct_option_index": 1,
+          "feedback": "В дательном падеже числительное «девяносто» имеет форму «девяноста».",
+          "school_semantic_refs": ["school-numerals-two-form-paradigm-40-90-100"]
+        },
+        {
+          "id": "oge67-twoform-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Объясни формы «вижу сто страниц» и «нет ста страниц». Сколько падежных форм образует числительное «сто» в этой парадигме?",
+          "answer_outline": "В именительном и винительном используется «сто», в остальных падежах — «ста»; это двухформная парадигма.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: правильно разграничены форма «сто» для именительного/винительного и «ста» для косвенных падежей",
+              "1: указано, что нормативная парадигма содержит две формы"
+            ]
+          },
+          "school_semantic_refs": ["school-numerals-two-form-paradigm-40-90-100"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-o-e-after-sibilants-suffix-ending",
+      "title_ru": "О / Е после шипящих в окончаниях: недостающая независимая проверка",
+      "semantic_boundary": "Этот элемент дополняет только окончательную ветвь OGE 6.7; суффиксальные случаи того же canonical owner не используются для доказательства окончания.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_ROUTE_SCOPED_COMPLETION_EVIDENCE",
+      "reuse_dependency": {
+        "validated_pack": "RU-PROG-08-OGE-6.6-COMPONENT-EVIDENCE-WAVE-001-v0.1.json",
+        "required_route_scoped_item_ids": ["oge66-shib-v1", "oge66-shib-v2"],
+        "excluded_same_owner_item_ids": ["oge66-shib-v3"]
+      },
+      "mastery_guard": {
+        "component_specific_only": true,
+        "minimum_independent_items_required_across_validated_reuse_and_this_wave": 3,
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "generic_oge_route_result_can_emit_exact_mastery": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge67-shib-end-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Почему в творительном падеже пишется «плащом», но «овощем»? Объясни выбор О/Е после шипящей именно в окончании.",
+          "answer_outline": "В окончании существительного после шипящей под ударением пишется о: плащом; без ударения — е: овощем. Суффиксы и корни этим ответом не проверяются.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: «плащом» связано с ударным окончанием и буквой о, «овощем» — с безударным окончанием и буквой е",
+              "1: явно указано, что правило применяется к окончанию, без переноса на корневую или суффиксальную орфографию"
+            ]
+          },
+          "school_semantic_refs": ["school-o-e-after-sibilants-suffix-ending"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-verb-personal-ending-conjugation-base",
+      "title_ru": "Личные окончания глаголов по спряжению",
+      "semantic_boundary": "Проверяется выбор безударного личного окончания по спряжению глагола; суффиксы инфинитива, прошедшего времени и причастий не засчитываются автоматически.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "component_specific_only": true,
+        "minimum_independent_items_required": 3,
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "generic_oge_route_result_can_emit_exact_mastery": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge67-verbend-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму: они ... письмо.",
+          "options": ["клеют", "клеят", "клеет"],
+          "correct_option_index": 1,
+          "feedback": "Глагол «клеить» относится ко II спряжению: «они клеят».",
+          "school_semantic_refs": ["school-verb-personal-ending-conjugation-base"]
+        },
+        {
+          "id": "oge67-verbend-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму: ты ... за результат.",
+          "options": ["боришься", "борешься", "борешся"],
+          "correct_option_index": 1,
+          "feedback": "Глагол «бороться» относится к I спряжению: «ты борешься».",
+          "school_semantic_refs": ["school-verb-personal-ending-conjugation-base"]
+        },
+        {
+          "id": "oge67-verbend-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Образуй формы 3-го лица множественного числа от «решать» и «хранить» и объясни выбор окончаний.",
+          "answer_outline": "«Решают» — I спряжение, окончание -ют; «хранят» — II спряжение, окончание -ят.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: даны нормативные формы «решают» и «хранят»",
+              "1: окончания объяснены принадлежностью к I и II спряжению"
+            ]
+          },
+          "school_semantic_refs": ["school-verb-personal-ending-conjugation-base"]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "owners_with_new_evidence": 7,
+    "owners_newly_fully_covered_by_this_wave": 6,
+    "owner_completed_with_validated_cross_route_reuse": 1,
+    "independent_items_total": 19,
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  },
+  "copyright_guard": {
+    "official_source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "commercial_textbook_prose_copied": 0,
+    "learner_prompts_examples_feedback": "ORIGINAL_EKSAMIO",
+    "rule": "Authorities define scope only; all new learner-facing items in this wave use original Eksamio wording."
+  },
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "tilda_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_payment_or_refund": false,
+    "real_message_delivery": false
+  }
+}
