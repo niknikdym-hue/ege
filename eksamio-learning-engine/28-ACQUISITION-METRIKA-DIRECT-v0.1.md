@@ -113,11 +113,22 @@ Before that number is fixed, the allowed state is:
 
 Once the Owner fixes the budget, campaign activation is permitted within that exact limit. Eksamio spend/economics must remain isolated from Dilivox even though the same technical Direct operator is reused.
 
-## 8. Advertising-block policy
+## 8. On-site advertising policy — owner decision 2026-08-31
 
-Acquisition advertising (Direct -> Eksamio) and on-site ad monetization are separate decisions.
+**Eksamio does not place third-party advertising blocks on the site.** This is a product decision, not a temporary pre-Pro restriction.
 
-The Eksamio homepage is permanently ad-block-free. Learner-critical demo/trainer/Pro/Tutor flows are not to be polluted with third-party display blocks as part of this acquisition launch. The current objective is learner acquisition, learning outcome and future Pro conversion, not monetizing learner attention with external ads.
+Therefore:
+
+- no РСЯ/YAN display blocks on the homepage;
+- no РСЯ/YAN display blocks in demo, result, trainer, course, Pro, Tutor, account or payment surfaces;
+- no other third-party display/ad-network blocks are introduced as a substitute;
+- learner attention is not monetized by sending users to external advertisers.
+
+Yandex Direct remains an **acquisition channel into Eksamio** and is not the same thing as on-site advertising monetization.
+
+The economic objective for Eksamio is learner acquisition, measurable learning value, return usage and future Pro conversion, not advertising revenue from page views.
+
+Any future proposal to add third-party advertising blocks to Eksamio requires a new explicit Owner decision and must not be inferred from the separate Dilivox monetization model.
 
 ## 9. Publication gate for measurement
 
