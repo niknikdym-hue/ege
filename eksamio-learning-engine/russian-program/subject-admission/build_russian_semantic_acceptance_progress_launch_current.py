@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Current Sep-1 launch semantic-progress view layered over the historical progress builder."""
+"""Current Sep-1 launch semantic-progress view including batch wave 001."""
 from __future__ import annotations
 
 import argparse
@@ -9,24 +9,14 @@ from pathlib import Path
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
-LEGACY = HERE / "build_russian_semantic_acceptance_progress.py"
-NEW_6_2_AUTHORITY = (
-    HERE / "RUSSIAN-OGE-6.2-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json",
-    "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_6_2_CANONICAL_COMPONENT_SET",
-    1,
-    "RUSSIAN_OGE_6_2_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
-)
-
-_namespace: dict[str, Any] = runpy.run_path(str(LEGACY))
-_base_build_progress = _namespace["_base_build_progress"]
-_current = tuple(_base_build_progress.__globals__["OBJECT_AUTHORITIES"])
-if any(spec[3] == NEW_6_2_AUTHORITY[3] for spec in _current):
-    raise RuntimeError("OGE 6.2 current authority duplicated")
-_base_build_progress.__globals__["OBJECT_AUTHORITIES"] = _current + (NEW_6_2_AUTHORITY,)
+BATCH = HERE / "build_russian_batch_wave_001_exact_component_acceptance.py"
+_namespace: dict[str, Any] = runpy.run_path(str(BATCH))
+_build_batched_progress = _namespace["build_batched_progress"]
 
 
 def build_progress() -> dict[str, Any]:
-    return _base_build_progress()
+    _wave, progress = _build_batched_progress()
+    return progress
 
 
 def main() -> int:
@@ -41,9 +31,15 @@ def main() -> int:
         print(json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
     else:
         s = result["progress_summary"]
+        wave = result.get("batch_wave_001") or {}
         print("RUSSIAN_SEMANTIC_ACCEPTANCE_PROGRESS_CURRENT=PASS")
         print(f"accepted_authorities={len(result['accepted_authorities'])}")
+        print(f"batch_wave_001_status={wave.get('status')}")
+        print(f"batch_wave_001_accepted_units={wave.get('accepted_admission_units', 0)}")
+        print(f"batch_wave_001_accepted_requirements={wave.get('accepted_requirements', 0)}")
         for key in (
+            "fully_accepted_semantic_groups",
+            "review_groups_with_accepted_component_sets",
             "semantic_units_with_accepted_component_sets",
             "semantic_requirements_with_accepted_component_sets",
             "semantic_units_remaining_without_accepted_component_set",
