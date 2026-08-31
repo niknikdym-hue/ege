@@ -1,0 +1,90 @@
+name: Russian OGE 6.4 soft-sign owner resolution
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py"
+      - ".github/workflows/russian-oge-6-4-soft-sign-owner-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-4-owner-resolution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile owner-resolution reviewer
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py
+      - name: Build deterministic OGE 6.4 owner review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py --output /tmp/oge-6-4-a.json > /tmp/oge-6-4-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py --output /tmp/oge-6-4-b.json > /tmp/oge-6-4-b.txt
+          cmp /tmp/oge-6-4-a.json /tmp/oge-6-4-b.json
+          diff -u /tmp/oge-6-4-a.txt /tmp/oge-6-4-b.txt
+          cat /tmp/oge-6-4-a.txt
+          cp /tmp/oge-6-4-a.json eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-RESOLUTION-REVIEW.json
+      - name: Validate fail-closed OGE 6.4 owner frontier
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-RESOLUTION-REVIEW.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          summary = data['summary']
+          assert data['schema_version'] == '0.1.0'
+          assert data['status'] == 'CENTRAL_BRAIN_REVIEW_REQUIRED'
+          assert data['target']['document_id'] == 'OGE_COD'
+          assert data['target']['content_code'] == '6.4'
+          assert data['current_overlay_truth']['unresolved_placeholder_present'] is True
+          assert data['current_overlay_truth']['overlay_is_complete_exact_owner_list'] is False
+          assert data['exact_acceptance_truth']['current_exact_acceptance_for_6_4'] is False
+          assert data['identity_inventory_truth']['inventory_refs_prove_overlay_completeness'] is False
+          assert data['admission_effect'] == 'NONE'
+          assert summary['explicit_overlay_canonical_refs'] == 2
+          assert summary['unresolved_owner_placeholders'] == 1
+          assert summary['review_only_overlap_candidates'] == 4
+          assert summary['semantic_admissions'] == 0
+          assert summary['object_level_closures'] == 0
+          assert summary['false_exact_mastery_admissions'] == 0
+          assert data['policy']['reuse_first'] is True
+          assert data['policy']['review_only_candidate_is_exact_owner'] is False
+          assert data['policy']['keyword_or_name_overlap_is_exact_binding'] is False
+          assert data['policy']['placeholder_may_be_silently_dropped'] is False
+          assert data['policy']['exact_acceptance_allowed_while_placeholder_remains'] is False
+          assert all(row['review_disposition'] == 'REVIEW_ONLY_NOT_OGE_6_4_OWNER_ADMITTED' for row in data['review_only_overlap_candidates'])
+          assert all(row['admission_effect'] == 'NONE' for row in data['review_only_overlap_candidates'])
+          print('OGE_6_4_SOFT_SIGN_OWNER_FRONTIER_FAIL_CLOSED=PASS')
+          PY
+      - name: Upload OGE 6.4 review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-4-soft-sign-owner-resolution
+          path: eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-RESOLUTION-REVIEW.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
