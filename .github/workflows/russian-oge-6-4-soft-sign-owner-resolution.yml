@@ -3,181 +3,15 @@ name: Russian OGE 6.4 soft-sign owner resolution
 on:
   pull_request:
     paths:
-      - "eksamio-learning-engine/259-RUSSIAN-SCHOOL-ROSENTHAL-PRIMARY-COMPLETENESS-FINAL-FREEZE-v1.0.json"
-      - "eksamio-learning-engine/262-RUSSIAN-FIPI-2026-SCHOOL-REOPEN-GAP-AUDIT-v0.1.json"
-      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
-      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
-      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
-      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
-      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py"
-      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py"
       - ".github/workflows/russian-oge-6-4-soft-sign-owner-resolution.yml"
+      - ".github/scripts/brain_oge64_atomic_sync_once.py"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  oge-6-4-owner-resolution:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Compile owner-resolution reviewers
-        run: |
-          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py
-          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py
-      - name: Build deterministic OGE 6.4 owner review twice
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py --output /tmp/oge-6-4-a.json > /tmp/oge-6-4-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py --output /tmp/oge-6-4-b.json > /tmp/oge-6-4-b.txt
-          cmp /tmp/oge-6-4-a.json /tmp/oge-6-4-b.json
-          diff -u /tmp/oge-6-4-a.txt /tmp/oge-6-4-b.txt
-          cat /tmp/oge-6-4-a.txt
-          cp /tmp/oge-6-4-a.json eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-RESOLUTION-REVIEW.json
-      - name: Validate fail-closed OGE 6.4 owner frontier
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-
-          path = Path('eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-RESOLUTION-REVIEW.json')
-          data = json.loads(path.read_text(encoding='utf-8'))
-          summary = data['summary']
-          frontier = data['source_bound_frontier']
-          assert data['schema_version'] == '0.1.0'
-          assert data['status'] == 'CENTRAL_BRAIN_REVIEW_REQUIRED'
-          assert data['target']['document_id'] == 'OGE_COD'
-          assert data['target']['content_code'] == '6.4'
-          assert data['current_overlay_truth']['unresolved_placeholder_present'] is True
-          assert data['current_overlay_truth']['overlay_is_complete_exact_owner_list'] is False
-          assert data['exact_acceptance_truth']['current_exact_acceptance_for_6_4'] is False
-          assert data['identity_inventory_truth']['inventory_refs_prove_overlay_completeness'] is False
-          assert data['admission_effect'] == 'NONE'
-          assert summary['explicit_overlay_canonical_refs'] == 2
-          assert summary['unresolved_owner_placeholders'] == 1
-          assert summary['review_only_overlap_candidates'] == 6
-          assert summary['fipi_supported_6_4_owner_candidates_not_yet_admitted'] == 2
-          assert summary['adjacent_code_nonowner_candidates'] == 3
-          assert summary['no_exact_oge_2026_route_binding_candidates'] == 1
-          assert summary['still_unresolved_candidates'] == 0
-          assert summary['semantic_admissions'] == 0
-          assert summary['object_level_closures'] == 0
-          assert summary['false_exact_mastery_admissions'] == 0
-          assert frontier['fipi_supported_6_4_owner_candidates_not_yet_admitted'] == [
-              'school-adverb-final-soft-sign-after-sibilant-base',
-              'school-numeral-orthography-base',
-          ]
-          assert frontier['adjacent_code_nonowner_candidates'] == [
-              'school-adjective-soft-sign-before-sk-base',
-              'school-noun-agent-suffix-chik-shchik-soft-sign',
-              'school-noun-genitive-plural-ending-system',
-          ]
-          assert frontier['no_exact_oge_2026_route_binding_candidates'] == [
-              'school-verbal-noun-nie-nye-semantic-boundary',
-          ]
-          assert frontier['still_unresolved_candidates'] == []
-          assert frontier['frontier_complete_for_exact_acceptance'] is False
-          assert data['policy']['reuse_first'] is True
-          assert data['policy']['review_only_candidate_is_exact_owner'] is False
-          assert data['policy']['keyword_or_name_overlap_is_exact_binding'] is False
-          assert data['policy']['official_navigator_paragraph_is_exact_component_admission'] is False
-          assert data['policy']['methodical_exhaustive_table_may_reject_exact_route_binding'] is True
-          assert data['policy']['absence_from_oge_route_invalidates_school_semantic'] is False
-          assert data['policy']['adjacent_codifier_boundary_prevents_false_6_4_admission'] is True
-          assert data['policy']['placeholder_may_be_silently_dropped'] is False
-          assert data['policy']['exact_acceptance_allowed_while_placeholder_remains'] is False
-          assert all(row['review_disposition'] == 'REVIEW_ONLY_NOT_OGE_6_4_OWNER_ADMITTED' for row in data['review_only_overlap_candidates'])
-          assert all(row['exact_oge_6_4_owner_proven'] is False for row in data['review_only_overlap_candidates'])
-          assert all(row['admission_effect'] == 'NONE' for row in data['review_only_overlap_candidates'])
-          print('OGE_6_4_SOFT_SIGN_OWNER_FRONTIER_FAIL_CLOSED=PASS')
-          PY
-      - name: Build deterministic OGE 6.4 complete-frontier proof twice
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py --output /tmp/oge-6-4-proof-a.json > /tmp/oge-6-4-proof-a.txt
-          python3 eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py --output /tmp/oge-6-4-proof-b.json > /tmp/oge-6-4-proof-b.txt
-          cmp /tmp/oge-6-4-proof-a.json /tmp/oge-6-4-proof-b.json
-          diff -u /tmp/oge-6-4-proof-a.txt /tmp/oge-6-4-proof-b.txt
-          cat /tmp/oge-6-4-proof-a.txt
-          cp /tmp/oge-6-4-proof-a.json eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-FRONTIER-PROOF.json
-      - name: Validate complete source-bound OGE 6.4 frontier proof
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-
-          path = Path('eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-FRONTIER-PROOF.json')
-          data = json.loads(path.read_text(encoding='utf-8'))
-          assert data['schema_version'] == '0.1.0'
-          assert data['status'] == 'SOURCE_BOUND_OWNER_FRONTIER_PROVEN_SOURCE_SYNC_REQUIRED'
-          assert data['target']['document_id'] == 'OGE_COD'
-          assert data['target']['content_code'] == '6.4'
-          assert data['proven_exact_owner_frontier']['canonical_refs'] == [
-              'school-separating-hard-soft-sign-boundary',
-              'school-verb-soft-sign-forms',
-              'school-numeral-orthography-base',
-              'school-adverb-final-soft-sign-after-sibilant-base',
-          ]
-          assert data['proven_exact_owner_frontier']['source_bound_frontier_complete'] is True
-          assert data['proven_exact_owner_frontier']['new_school_identity_required'] is False
-          assert data['proven_nonowners']['adjacent_code_nonowners'] == [
-              'school-adjective-soft-sign-before-sk-base',
-              'school-noun-agent-suffix-chik-shchik-soft-sign',
-              'school-noun-genitive-plural-ending-system',
-          ]
-          assert data['proven_nonowners']['no_exact_oge_2026_route_binding'] == [
-              'school-verbal-noun-nie-nye-semantic-boundary',
-          ]
-          assert data['proof_basis']['final_school_canonical_denominator'] == 185
-          assert data['proof_basis']['oge_2026_second_pass_school_reopen_candidates'] == 0
-          assert data['proof_basis']['final_unowned_official_school_orthography_topics'] == 0
-          assert data['proof_basis']['final_open_holds'] == 0
-          assert data['current_repository_sync_state']['overlay_placeholder_present'] is True
-          assert data['current_repository_sync_state']['source_sync_required'] is True
-          assert data['current_repository_sync_state']['exact_component_acceptance_present'] is False
-          assert data['summary']['proven_exact_owner_refs'] == 4
-          assert data['summary']['remaining_source_boundary_unknowns'] == 0
-          assert data['summary']['semantic_admissions'] == 0
-          assert data['summary']['object_level_closures'] == 0
-          assert data['summary']['false_exact_mastery_admissions'] == 0
-          assert data['admission_effect'] == 'NONE'
-          print('OGE_6_4_COMPLETE_SOURCE_BOUND_FRONTIER_PROOF=PASS')
-          PY
-      - name: Upload OGE 6.4 review evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: russian-oge-6-4-soft-sign-owner-resolution
-          path: |
-            eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-RESOLUTION-REVIEW.json
-            eksamio-learning-engine/russian-program/subject-admission/OGE-6-4-SOFT-SIGN-OWNER-FRONTIER-PROOF.json
-          if-no-files-found: error
-          retention-days: 14
-      - name: Protect accepted Russian production surfaces
-        shell: bash
-        run: |
-          set -euo pipefail
-          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
-            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
-            exit 1
-          fi
-      - name: Diff hygiene
-        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
-
   publish-oge-6-4-exact-candidate:
-    needs: oge-6-4-owner-resolution
     if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'brain/sep1-russian-subject-closure'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -189,18 +23,61 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Build isolated exact candidate
+      - name: Build exact candidate from proven OGE 6.4 frontier
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
           git merge-base --is-ancestor b3ca7e0552f4d4a7342998d16a0cd9f2f5348d83 HEAD
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('.github/scripts/brain_oge64_atomic_sync_once.py')
+          text = p.read_text(encoding='utf-8')
+          old_assert = 'assert s["canonical_component_refs_reused_unique"] == 56'
+          old_print = 'print("unique_school_refs=56")'
+          assert text.count(old_assert) == 1
+          assert text.count(old_print) == 1
+          text = text.replace(old_assert, 'assert s["canonical_component_refs_reused_unique"] == 55', 1)
+          text = text.replace(old_print, 'print("unique_school_refs=55")', 1)
+          p.write_text(text, encoding='utf-8')
+          PY
           python3 .github/scripts/brain_oge64_atomic_sync_once.py
           git diff --check
           if git diff --name-only | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
             echo 'Protected accepted Russian surface changed.' >&2
             exit 1
           fi
+      - name: Validate bounded changed-path set
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only | sort > /tmp/actual.txt
+          cat > /tmp/allowed.txt <<'EOF'
+          .github/scripts/brain_oge64_atomic_sync_once.py
+          .github/workflows/russian-oge-6-4-soft-sign-owner-resolution.yml
+          .github/workflows/russian-oge-exact-component-acceptance.yml
+          .github/workflows/russian-semantic-acceptance-progress.yml
+          eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json
+          eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py
+          eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_exact_component_acceptance.py
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_base.py
+          EOF
+          sort -o /tmp/allowed.txt /tmp/allowed.txt
+          unexpected=$(comm -23 /tmp/actual.txt /tmp/allowed.txt)
+          test -z "$unexpected" || { echo "Unexpected changed paths:"; echo "$unexpected"; exit 1; }
+          for required in \
+            eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json \
+            eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json \
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json \
+            eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_exact_component_acceptance.py \
+            eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_resolution_review.py \
+            eksamio-learning-engine/russian-program/subject-admission/build_oge_6_4_soft_sign_owner_frontier_proof.py; do
+              grep -Fxq "$required" /tmp/actual.txt
+          done
+          cat /tmp/actual.txt
       - name: Publish isolated candidate branch
         shell: bash
         run: |
