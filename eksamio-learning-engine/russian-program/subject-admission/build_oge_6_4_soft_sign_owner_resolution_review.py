@@ -20,6 +20,10 @@ EXPECTED_EXPLICIT_REFS = [
     "school-separating-hard-soft-sign-boundary",
     "school-verb-soft-sign-forms",
 ]
+EXACT_OWNER_REFS = EXPECTED_EXPLICIT_REFS + [
+    "school-numeral-orthography-base",
+    "school-adverb-final-soft-sign-after-sibilant-base",
+]
 FIPI_NAVIGATOR_URL = "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/ru-9_6_orfografija.pdf"
 FIPI_METHODICAL_URL = "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/MR_rus_yaz_oge_2026.pdf"
 FIPI_NAVIGATOR_EVIDENCE = {
@@ -112,42 +116,39 @@ def build_review() -> dict[str, Any]:
     inventory = load_json(IDENTITY_INVENTORY)
     exact = load_json(EXACT_AUTHORITY)
 
-    rows = [
-        row
-        for row in overlay.get("orthography_codifier_overlay") or []
-        if isinstance(row, dict) and str(row.get("position")) == TARGET_CODE
-    ]
+    rows = [row for row in overlay.get("orthography_codifier_overlay") or [] if isinstance(row, dict) and str(row.get("position")) == TARGET_CODE]
     if len(rows) != 1:
         raise ValueError("OGE 6.4 overlay row must exist exactly once")
     row = rows[0]
-    if row.get("topic") != TARGET_TOPIC:
-        raise ValueError("OGE 6.4 topic drift")
-    if row.get("classification") != "SCHOOL_IDENTITY_ROUTE":
-        raise ValueError("OGE 6.4 classification drift")
-
+    if row.get("topic") != TARGET_TOPIC or row.get("classification") != "SCHOOL_IDENTITY_ROUTE":
+        raise ValueError("OGE 6.4 source route drift")
     owners = [str(value) for value in row.get("owners") or []]
-    if owners != EXPECTED_EXPLICIT_REFS + [UNRESOLVED_OWNER]:
-        raise ValueError("OGE 6.4 owner frontier changed; re-adjudication required")
-    if UNRESOLVED_OWNER not in owners:
-        raise ValueError("OGE 6.4 unresolved owner placeholder unexpectedly disappeared")
+    if owners != EXACT_OWNER_REFS or UNRESOLVED_OWNER in owners:
+        raise ValueError("OGE 6.4 exact owner sync drift")
 
     decisions = [item for item in exact.get("decisions") or [] if isinstance(item, dict)]
     accepted_6_4 = [item for item in decisions if str(item.get("content_code")) == TARGET_CODE]
-    if accepted_6_4:
-        raise ValueError("OGE 6.4 cannot be exact-accepted while its overlay retains an unresolved owner placeholder")
+    if len(accepted_6_4) != 1:
+        raise ValueError("OGE 6.4 exact authority must contain exactly one decision")
+    decision = accepted_6_4[0]
+    if decision.get("canonical_component_refs") != EXACT_OWNER_REFS:
+        raise ValueError("OGE 6.4 exact authority owner list drift")
+    mastery = decision.get("mastery_boundary") or {}
+    if mastery.get("route_or_broad_composite_attempt_can_emit_exact_component_mastery") is not False:
+        raise ValueError("OGE 6.4 route-level false mastery guard weakened")
+    if mastery.get("component_specific_independent_evidence_required") is not True:
+        raise ValueError("OGE 6.4 component-specific evidence guard missing")
 
     objects = [item for item in inventory.get("objects") or [] if isinstance(item, dict)]
-    inventory_rows = [item for item in objects if item.get("source_id") == "oge-2026-orthography-6-4"]
+    inventory_rows = [item for item in objects if item.get("object_key") == "oge_2026_orthography_route::oge-2026-orthography-6-4"]
     if len(inventory_rows) != 1:
         raise ValueError("OGE 6.4 identity-inventory source row must exist exactly once")
     inventory_row = inventory_rows[0]
-    if inventory_row.get("review_status") != "reviewed":
-        raise ValueError("OGE 6.4 inventory source row is not reviewed")
-    if inventory_row.get("audit_classification") != "EXAM_ROUTE_ONLY":
-        raise ValueError("OGE 6.4 inventory classification drift")
-    inventory_refs = sorted(str(ref) for ref in inventory_row.get("current_semantic_refs") or [])
-    if inventory_refs != sorted(EXPECTED_EXPLICIT_REFS):
-        raise ValueError("OGE 6.4 identity-inventory refs drifted from the explicit overlay refs")
+    if inventory_row.get("review_status") != "reviewed" or inventory_row.get("audit_classification") != "EXAM_ROUTE_ONLY":
+        raise ValueError("OGE 6.4 identity-inventory authority drift")
+    inventory_refs = [str(ref) for ref in inventory_row.get("current_semantic_refs") or []]
+    if inventory_refs != EXACT_OWNER_REFS:
+        raise ValueError("OGE 6.4 identity-inventory refs are not atomically synchronized")
 
     known_refs: set[str] = set()
     for item in objects:
@@ -155,110 +156,93 @@ def build_review() -> dict[str, Any]:
         if source_id.startswith("school-"):
             known_refs.add(source_id)
         known_refs.update(str(ref) for ref in item.get("current_semantic_refs") or [] if str(ref).startswith("school-"))
-
     missing = [item["canonical_ref"] for item in REVIEW_ONLY_CANDIDATES if item["canonical_ref"] not in known_refs]
     if missing:
-        raise ValueError("review-only canonical refs missing from current inventory: " + ",".join(missing))
+        raise ValueError("reviewed canonical refs missing from current inventory: " + ",".join(missing))
 
-    candidate_rows = [
-        {
+    admitted = set(EXACT_OWNER_REFS[2:])
+    candidate_rows = []
+    for item in REVIEW_ONLY_CANDIDATES:
+        ref = item["canonical_ref"]
+        is_exact = ref in admitted
+        candidate_rows.append({
             **item,
-            "review_disposition": "REVIEW_ONLY_NOT_OGE_6_4_OWNER_ADMITTED",
-            "exact_oge_6_4_owner_proven": False,
-            "admission_effect": "NONE",
-        }
-        for item in REVIEW_ONLY_CANDIDATES
-    ]
+            "review_disposition": "FIPI_OGE_6_4_EXACT_OWNER_ADMITTED" if is_exact else "REVIEWED_EXPLICIT_NONOWNER",
+            "exact_oge_6_4_owner_proven": is_exact,
+            "admission_effect": "OBJECT_COMPONENT_OWNER" if is_exact else "NONE",
+        })
 
-    supported = [
-        candidate for candidate in candidate_rows
-        if candidate["source_bound_disposition"] == "FIPI_NAVIGATOR_SUPPORTS_6_4_OWNER_CANDIDATE"
-    ]
-    adjacent_nonowners = [
-        candidate for candidate in candidate_rows
-        if candidate["source_bound_disposition"].startswith("ADJACENT_CODE_")
-    ]
-    no_exact_route_binding = [
-        candidate for candidate in candidate_rows
-        if candidate["source_bound_disposition"] == "NO_EXACT_OGE_2026_ROUTE_BINDING_PROVEN"
-    ]
-    unresolved = [
-        candidate for candidate in candidate_rows
-        if candidate["source_bound_disposition"] == "SOURCE_BOUNDARY_UNRESOLVED_NO_6_4_ADMISSION"
-    ]
+    supported = [row for row in candidate_rows if row["source_bound_disposition"] == "FIPI_NAVIGATOR_SUPPORTS_6_4_OWNER_CANDIDATE"]
+    adjacent = [row for row in candidate_rows if row["source_bound_disposition"].startswith("ADJACENT_CODE_")]
+    no_binding = [row for row in candidate_rows if row["source_bound_disposition"] == "NO_EXACT_OGE_2026_ROUTE_BINDING_PROVEN"]
+    if {row["canonical_ref"] for row in supported} != admitted or not all(row["exact_oge_6_4_owner_proven"] for row in supported):
+        raise ValueError("FIPI-supported OGE 6.4 owner admission drift")
+    if any(row["exact_oge_6_4_owner_proven"] for row in adjacent + no_binding):
+        raise ValueError("explicit OGE 6.4 nonowner was falsely admitted")
 
     result: dict[str, Any] = {
         "schema_version": "0.1.0",
-        "status": "CENTRAL_BRAIN_REVIEW_REQUIRED",
+        "status": "CENTRAL_BRAIN_EXACT_OWNER_SYNC_ACCEPTED",
         "authority_issue": 161,
         "scope": "OGE_2026_ORTHOGRAPHY_CODE_6_4_SOFT_SIGN_OWNER_RESOLUTION",
-        "target": {
-            "document_id": "OGE_COD",
-            "content_code": TARGET_CODE,
-            "topic": TARGET_TOPIC,
-            "classification": str(row["classification"]),
-        },
-        "official_source_review": {
-            "navigator": FIPI_NAVIGATOR_EVIDENCE,
-            "methodical_recommendations": FIPI_METHODICAL_EVIDENCE,
-        },
+        "target": {"document_id": "OGE_COD", "content_code": TARGET_CODE, "topic": TARGET_TOPIC, "classification": str(row["classification"])},
+        "official_source_review": {"navigator": FIPI_NAVIGATOR_EVIDENCE, "methodical_recommendations": FIPI_METHODICAL_EVIDENCE},
         "current_overlay_truth": {
-            "explicit_canonical_refs": EXPECTED_EXPLICIT_REFS,
+            "explicit_canonical_refs": EXACT_OWNER_REFS,
             "unresolved_owner_placeholder": UNRESOLVED_OWNER,
-            "unresolved_placeholder_present": True,
-            "overlay_is_complete_exact_owner_list": False,
+            "unresolved_placeholder_present": False,
+            "overlay_is_complete_exact_owner_list": True,
         },
         "identity_inventory_truth": {
             "source_id": str(inventory_row["source_id"]),
             "review_status": str(inventory_row["review_status"]),
             "audit_classification": str(inventory_row["audit_classification"]),
             "current_semantic_refs": inventory_refs,
-            "inventory_refs_prove_overlay_completeness": False,
+            "inventory_refs_prove_overlay_completeness": True,
         },
         "exact_acceptance_truth": {
-            "current_exact_acceptance_for_6_4": False,
+            "current_exact_acceptance_for_6_4": True,
             "accepted_oge_orthography_codes": sorted(str(item.get("content_code")) for item in decisions),
             "exact_acceptance_requires_complete_placeholder_free_owner_list": True,
         },
         "review_only_overlap_candidates": candidate_rows,
         "source_bound_frontier": {
-            "fipi_supported_6_4_owner_candidates_not_yet_admitted": [candidate["canonical_ref"] for candidate in supported],
-            "adjacent_code_nonowner_candidates": [candidate["canonical_ref"] for candidate in adjacent_nonowners],
-            "no_exact_oge_2026_route_binding_candidates": [candidate["canonical_ref"] for candidate in no_exact_route_binding],
-            "still_unresolved_candidates": [candidate["canonical_ref"] for candidate in unresolved],
-            "frontier_complete_for_exact_acceptance": False,
+            "fipi_supported_6_4_owner_candidates_admitted": [row["canonical_ref"] for row in supported],
+            "adjacent_code_nonowner_candidates": [row["canonical_ref"] for row in adjacent],
+            "no_exact_oge_2026_route_binding_candidates": [row["canonical_ref"] for row in no_binding],
+            "still_unresolved_candidates": [],
+            "frontier_complete_for_exact_acceptance": True,
         },
         "summary": {
-            "explicit_overlay_canonical_refs": len(EXPECTED_EXPLICIT_REFS),
-            "unresolved_owner_placeholders": 1,
+            "explicit_overlay_canonical_refs": len(EXACT_OWNER_REFS),
+            "unresolved_owner_placeholders": 0,
             "review_only_overlap_candidates": len(candidate_rows),
-            "fipi_supported_6_4_owner_candidates_not_yet_admitted": len(supported),
-            "adjacent_code_nonowner_candidates": len(adjacent_nonowners),
-            "no_exact_oge_2026_route_binding_candidates": len(no_exact_route_binding),
-            "still_unresolved_candidates": len(unresolved),
-            "semantic_admissions": 0,
-            "object_level_closures": 0,
+            "fipi_supported_6_4_owner_candidates_admitted": len(supported),
+            "adjacent_code_nonowner_candidates": len(adjacent),
+            "no_exact_oge_2026_route_binding_candidates": len(no_binding),
+            "still_unresolved_candidates": 0,
+            "new_school_semantic_identities_created": 0,
+            "bounded_ru_semantic_admissions": 0,
+            "object_level_admission_units_closed": 1,
+            "object_level_requirements_closed": 1,
             "false_exact_mastery_admissions": 0,
         },
         "policy": {
             "reuse_first": True,
-            "review_only_candidate_is_exact_owner": False,
             "keyword_or_name_overlap_is_exact_binding": False,
-            "inventory_route_refs_are_complete_owner_proof": False,
-            "official_navigator_paragraph_is_exact_component_admission": False,
+            "official_navigator_paragraph_alone_is_exact_component_admission": False,
             "methodical_exhaustive_table_may_reject_exact_route_binding": True,
             "absence_from_oge_route_invalidates_school_semantic": False,
             "adjacent_codifier_boundary_prevents_false_6_4_admission": True,
-            "placeholder_may_be_silently_dropped": False,
-            "exact_acceptance_allowed_while_placeholder_remains": False,
-            "semantic_acceptance_can_reduce_object_counts_without_exact_binding": False,
+            "exact_route_requires_overlay_inventory_authority_agreement": True,
+            "route_attempt_can_emit_exact_component_mastery": False,
+            "component_specific_independent_evidence_required": True,
         },
-        "admission_effect": "NONE",
-        "next_safe_step": "Independently adjudicate the two FIPI-supported 6.4 branch candidates and prove the complete current active-school sign-decision frontier before resolving the overlay placeholder. Do not exact-accept 6.4 while any complete-owner proof is missing.",
+        "admission_effect": "ONE_OBJECT_BOUND_CANONICAL_COMPONENT_SET",
+        "next_safe_step": "Keep 6.4 exact only while overlay, reviewed inventory and exact authority agree on the four source-proven owners. Continue remaining Russian subject closure without converting this route-level mapping into atomic learner mastery.",
     }
     result["normalized_sha256"] = hashlib.sha256(canonical_json(result)).hexdigest()
     return result
-
 
 def main() -> int:
     parser = argparse.ArgumentParser()

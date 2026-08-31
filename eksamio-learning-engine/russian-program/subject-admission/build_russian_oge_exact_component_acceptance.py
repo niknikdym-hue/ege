@@ -33,6 +33,12 @@ EXPECTED_EXACT: dict[str, tuple[str, ...]] = {
         "school-pre-pri-semantic-base",
         "school-pre-pri-lexical-contrast-family",
     ),
+    "6.4": (
+        "school-separating-hard-soft-sign-boundary",
+        "school-verb-soft-sign-forms",
+        "school-numeral-orthography-base",
+        "school-adverb-final-soft-sign-after-sibilant-base",
+    ),
     "6.5": (
         "school-i-y-after-russian-prefix-base",
         "school-i-y-after-prefix-vzimat-exception",
@@ -53,6 +59,7 @@ EXPECTED_EXACT: dict[str, tuple[str, ...]] = {
 }
 EXPECTED_CLASSIFICATION = {
     "6.3": "SCHOOL_IDENTITY_ROUTE",
+    "6.4": "SCHOOL_IDENTITY_ROUTE",
     "6.5": "SCHOOL_IDENTITY_ROUTE",
     "6.10": "EXAM_ONLY_COMPOSITE",
     "6.13": "EXAM_ONLY_COMPOSITE",
@@ -118,7 +125,7 @@ def build_acceptance() -> dict[str, Any]:
         if any(not isinstance(owner, str) or owner not in canonical for owner in owners):
             raise ValueError(f"OGE exact owner list contains non-current/noncanonical ref: {position}")
 
-    skipped = {"6.1", "6.2", "6.4", "6.6", "6.7", "6.8", "6.9", "6.11", "6.12", "6.14"}
+    skipped = {"6.1", "6.2", "6.6", "6.7", "6.8", "6.9", "6.11", "6.12", "6.14"}
     if set(by_position) != set(EXPECTED_EXACT) | skipped:
         raise ValueError("OGE orthography position inventory drift")
 
