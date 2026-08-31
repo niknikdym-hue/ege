@@ -6,12 +6,15 @@ on:
       - 'eksamio-learning-engine/ai-tutor-reference/yandex_speechkit_v3_tts.py'
       - 'eksamio-learning-engine/ai-tutor-reference/yandex_lera_native_clean.py'
       - 'eksamio-learning-engine/ai-tutor-reference/yandex_lera_casting_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/yandex_lera_finalists_ui.py'
       - 'eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_casting.command'
+      - 'eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_finalists.command'
       - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py'
       - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py'
       - 'eksamio-learning-engine/ai-tutor-reference/validate_tutor_voice_humanization.py'
       - 'eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_native_clean.py'
       - 'eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_casting.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_finalists.py'
       - 'eksamio-learning-engine/ai-tutor-reference/tutor_boundary.py'
       - 'eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command'
       - '.github/workflows/tutor-voice-humanization.yml'
@@ -44,11 +47,13 @@ jobs:
             eksamio-learning-engine/ai-tutor-reference/yandex_speechkit_v3_tts.py \
             eksamio-learning-engine/ai-tutor-reference/yandex_lera_native_clean.py \
             eksamio-learning-engine/ai-tutor-reference/yandex_lera_casting_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_lera_finalists_ui.py \
             eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py \
             eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py \
             eksamio-learning-engine/ai-tutor-reference/validate_tutor_voice_humanization.py \
             eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_native_clean.py \
             eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_casting.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_finalists.py \
             eksamio-learning-engine/ai-tutor-reference/tutor_boundary.py
       - name: Validate speech text and half duplex
         run: python eksamio-learning-engine/ai-tutor-reference/validate_tutor_voice_humanization.py
@@ -56,6 +61,8 @@ jobs:
         run: python eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_native_clean.py
       - name: Validate native Yandex Lera casting
         run: python eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_casting.py
+      - name: Validate A-D finalist long-text casting
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_yandex_lera_finalists.py
       - name: Validate Tutor scope lock
         run: |
           python - <<'PY'
@@ -94,8 +101,10 @@ jobs:
         run: |
           bash -n eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
           bash -n eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_casting.command
+          bash -n eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_finalists.command
           grep -q 'private_openai_yandex_resilient_human_ui.py --owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
           grep -q 'yandex_lera_casting_ui.py --owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_casting.command
+          grep -q 'yandex_lera_finalists_ui.py --owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_yandex_lera_finalists.command
           echo 'VOICE_LAUNCHERS=PASS'
       - name: Diff hygiene
         run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
