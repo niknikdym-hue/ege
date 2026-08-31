@@ -49,29 +49,37 @@ jobs:
           import json
           from pathlib import Path
           review=json.loads(Path('/tmp/review-a.json').read_text(encoding='utf-8'))
-          assert review['status']=='SOURCE_BOUND_FRONTIER_PARTIALLY_RESOLVED_NO_ADMISSION'
+          assert review['status']=='SOURCE_BOUND_FRONTIER_ONE_CANONICAL_GAP_NO_ADMISSION'
           assert review['target']['content_code']=='6.2'
           assert review['official_source_truth']['alternating_root_family_count']==15
           assert review['official_source_truth']['double_consonant_scope']=='double consonants in numeral names'
-          assert review['official_source_truth']['generic_double_consonant_scope_claimed'] is False
           alt=review['alternating_root_owner_audit']
           assert alt['status']=='RESOLVED_EXACT_REUSE_FIRST'
-          assert alt['official_family_count']==15
           assert alt['resolved_family_count']==15
           assert alt['unresolved_family_count']==0
           assert alt['unique_current_reviewed_owner_count']==8
           assert alt['keyword_or_fuzzy_mapping_used'] is False
+          doubles=review['numeral_double_consonant_owner_audit']
+          assert doubles['status']=='RESOLVED_EXACT_REUSE_FIRST'
+          assert doubles['exact_owner']=='school-double-consonants-morpheme-junction'
+          assert doubles['generic_russian_root_double_owner_used'] is False
+          assert doubles['borrowed_root_double_owner_used'] is False
+          assert doubles['numeral_orthography_base_used'] is False
+          gap=review['uncheckable_consonant_gap']
+          assert gap['status']=='PROVEN_CANONICAL_GAP_REQUIRES_BOUNDED_REOPEN_REVIEW'
+          assert gap['official_fipi_branch_present'] is True
+          assert gap['nearby_verification_ids_explicitly_exclude_nonverifiable_cases'] is True
+          assert gap['exact_current_canonical_owner_count']==0
+          assert gap['proposed_identity']=='school-root-consonant-dictionary-unverifiable'
+          assert gap['proposed_identity_admitted'] is False
+          assert gap['refreeze_185_zero-gap_claim_can_be_treated_as_current_exact_truth'] is False
           boundary=review['remaining_source_boundary']
-          assert boundary['unresolved_branch_count']==2
-          assert [row['branch'] for row in boundary['unresolved_branches']]==['uncheckable_consonants','double_consonants_in_numeral_names']
-          assert boundary['uncheckable_consonant_verification_identities_may_not_be_stretched'] is True
-          assert boundary['numeral_orthography_has_double_consonant_branch'] is False
-          assert boundary['legacy_double_consonant_placeholder_is_source_inexact'] is True
+          assert boundary['unresolved_branch_count']==1
+          assert boundary['unresolved_branches']==['uncheckable_consonants']
           assert review['admission_policy']['semantic_admissions']==0
           assert review['admission_policy']['object_closures']==0
           assert review['admission_policy']['false_exact_mastery_admissions']==0
-          assert review['admission_policy']['remove_alternating_placeholder_now'] is False
-          assert review['admission_policy']['remove_double_placeholder_now'] is False
+          assert review['admission_policy']['remove_6_2_placeholders_now'] is False
           assert review['admission_policy']['accept_6_2_exact_component_now'] is False
           assert review['admission_policy']['route_attempt_can_emit_exact_component_mastery'] is False
           assert review['safety']['learner_audio_persistence']==0
