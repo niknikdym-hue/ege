@@ -25,7 +25,7 @@ class CaptureTransport:
 
 def main() -> int:
     assert len(PRESETS) == 6
-    assert MAX_SYNTHESIS_CALLS == 30
+    assert MAX_SYNTHESIS_CALLS == 120
     for preset in PRESETS.values():
         assert preset["role"] in {"neutral", "friendly"}
         assert 0.90 <= float(preset["speed"]) <= 1.12
@@ -41,10 +41,13 @@ def main() -> int:
     transport = CaptureTransport()
     app.transport = transport
     app.credential = FakeCredential()  # type: ignore[assignment]
+    status = app.status()
+    assert status["remaining_calls"] == 120
     result = app.synthesize("friendly", 1.00, -20.0, "light")
     assert result["audio_b64"]
     assert result["brain_calls"] == 0
     assert result["persistent_audio_bytes"] == 0
+    assert result["remaining_calls"] == 119
     body = transport.bodies[0]
     hints = body["hints"]
     assert {"voice": "lera"} in hints
@@ -54,9 +57,11 @@ def main() -> int:
 
     assert 'id="speed"' in PAGE and 'id="pitch"' in PAGE and 'id="role"' in PAGE and 'id="pauses"' in PAGE
     assert "OpenAI и Tutor-мозг не вызываются" in PAGE
+    assert "осталось" in PAGE
     print("YANDEX_LERA_CASTING_UI=PASS")
     print("YANDEX_NATIVE_CONTROLS=role,speed,pitchShift,pauses")
     print("PRESET_COUNT=6")
+    print("MAX_SYNTHESIS_CALLS=120")
     print("BRAIN_CALLS=0")
     print("PERSISTENT_AUDIO_BYTES=0")
     print("LIVE_PROVIDER_CALLS=0")
