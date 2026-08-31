@@ -1,0 +1,135 @@
+name: Russian batch wave 001 exact component acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_batch_wave_001_exact_component_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_prebatch.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_base.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.2-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - ".github/workflows/russian-batch-wave-001-exact-component-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  batch-wave-001:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile batch acceptance builders
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_batch_wave_001_exact_component_acceptance.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_prebatch.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current.py
+      - name: Build batch wave and post-wave progress twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_russian_batch_wave_001_exact_component_acceptance.py" --wave-output /tmp/wave-a.json --progress-output /tmp/progress-a.json > /tmp/run-a.txt
+          python3 "$root/build_russian_batch_wave_001_exact_component_acceptance.py" --wave-output /tmp/wave-b.json --progress-output /tmp/progress-b.json > /tmp/run-b.txt
+          cmp /tmp/wave-a.json /tmp/wave-b.json
+          cmp /tmp/progress-a.json /tmp/progress-b.json
+          diff -u /tmp/run-a.txt /tmp/run-b.txt
+          cat /tmp/run-a.txt
+          cp /tmp/wave-a.json "$root/RUSSIAN-BATCH-WAVE-001-EXACT-COMPONENT-ACCEPTANCE.json"
+          cp /tmp/progress-a.json "$root/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-CURRENT.json"
+      - name: Require fail-closed deterministic batch truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('eksamio-learning-engine/russian-program/subject-admission')
+          wave = json.loads((root / 'RUSSIAN-BATCH-WAVE-001-EXACT-COMPONENT-ACCEPTANCE.json').read_text(encoding='utf-8'))
+          progress = json.loads((root / 'RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-CURRENT.json').read_text(encoding='utf-8'))
+          ws = wave['summary']
+          ps = progress['progress_summary']
+          assert wave['schema_version'] == '0.1.0'
+          assert wave['status'] in {
+              'CENTRAL_BRAIN_ACCEPTED_BATCH_WAVE_001_EXACT_COMPONENT_REUSE',
+              'CENTRAL_BRAIN_BATCH_WAVE_001_NO_SAFE_ELIGIBLE_UNITS',
+          }
+          assert ws['finite_semantic_review_groups'] == 74
+          assert ws['prebatch_accepted_units'] == 21
+          assert ws['prebatch_accepted_requirements'] == 21
+          assert ws['batch_accepted_units'] == ws['batch_accepted_requirements']
+          assert ws['new_semantic_identities_created'] == 0
+          assert ws['false_exact_mastery_admissions'] == 0
+          policy = wave['eligibility_rule']
+          assert policy['finite_group_exact_normalized_meaning_required'] is True
+          assert policy['accepted_anchor_required'] is True
+          assert policy['all_group_anchors_must_have_identical_canonical_owner_set'] is True
+          assert policy['same_pinned_source_id_and_document_id_as_anchor_required'] is True
+          assert policy['single_member_admission_unit_required'] is True
+          assert policy['cross_document_reuse_allowed'] is False
+          assert policy['cross_source_reuse_allowed'] is False
+          assert policy['keyword_fuzzy_module_only_inference_allowed'] is False
+          assert policy['new_semantic_identity_creation_allowed'] is False
+          assert policy['component_specific_independent_evidence_required'] is True
+          seen_units = set()
+          seen_requirements = set()
+          for row in wave['decisions']:
+              assert row['subject_semantic_status'] == 'CENTRAL_BRAIN_ACCEPTED_CANONICAL_COMPONENT_SET'
+              refs = row['canonical_component_refs']
+              assert refs and all(ref.startswith('school-') for ref in refs)
+              mastery = row['mastery_boundary']
+              assert mastery['route_or_broad_composite_attempt_can_emit_exact_component_mastery'] is False
+              assert mastery['component_specific_independent_evidence_required'] is True
+              assert row['admission_unit_id'] not in seen_units
+              assert row['requirement_id'] not in seen_requirements
+              seen_units.add(row['admission_unit_id'])
+              seen_requirements.add(row['requirement_id'])
+          assert len(seen_units) == ws['batch_accepted_units']
+          assert len(seen_requirements) == ws['batch_accepted_requirements']
+          assert progress['schema_version'] == '0.5.0'
+          assert progress['status'] == 'CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS'
+          assert progress['russian_content_ready'] is False
+          assert ps['finite_semantic_review_groups'] == 74
+          assert ps['semantic_units_with_accepted_component_sets'] == 21 + ws['batch_accepted_units']
+          assert ps['semantic_requirements_with_accepted_component_sets'] == 21 + ws['batch_accepted_requirements']
+          assert ps['semantic_units_remaining_without_accepted_component_set'] == 1295 - ws['batch_accepted_units']
+          assert ps['semantic_requirements_remaining_without_accepted_component_set'] == 1370 - ws['batch_accepted_requirements']
+          assert ps['accepted_bounded_ru_semantics_total'] == 75
+          assert ps['false_exact_mastery_admissions'] == 0
+          assert progress['policy']['batch_cross_document_reuse_allowed'] is False
+          assert progress['policy']['batch_keyword_fuzzy_module_only_inference_allowed'] is False
+          print('RUSSIAN_BATCH_WAVE_001_EXACT_COMPONENT_ACCEPTANCE=PASS')
+          print(f"BATCH_ACCEPTED_UNITS={ws['batch_accepted_units']}")
+          print(f"BATCH_ACCEPTED_REQUIREMENTS={ws['batch_accepted_requirements']}")
+          print(f"POST_REMAINING_UNITS={ps['semantic_units_remaining_without_accepted_component_set']}")
+          print(f"POST_REMAINING_REQUIREMENTS={ps['semantic_requirements_remaining_without_accepted_component_set']}")
+          print(f"FULLY_ACCEPTED_GROUPS={ps['fully_accepted_semantic_groups']}")
+          PY
+      - name: Upload batch acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-batch-wave-001-exact-component-acceptance
+          path: |
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-BATCH-WAVE-001-EXACT-COMPONENT-ACCEPTANCE.json
+            eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-CURRENT.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
