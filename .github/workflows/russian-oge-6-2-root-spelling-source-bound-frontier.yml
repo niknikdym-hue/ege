@@ -3,7 +3,12 @@ name: Russian OGE 6.2 root-spelling source-bound frontier
 on:
   pull_request:
     paths:
+      - "eksamio-learning-engine/247-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A1-MATERIALIZATION-v0.1.json"
+      - "eksamio-learning-engine/248-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A2-ALTERNATING-ROOTS-NORMALIZATION-v0.1.json"
+      - "eksamio-learning-engine/249-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A3-E-E-Y-DOUBLE-CONSONANTS-v0.1.json"
+      - "eksamio-learning-engine/252-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-B-O17-O25-v0.1.json"
       - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
       - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_2_root_spelling_source_bound_frontier_review.py"
@@ -44,19 +49,29 @@ jobs:
           import json
           from pathlib import Path
           review=json.loads(Path('/tmp/review-a.json').read_text(encoding='utf-8'))
-          assert review['status']=='SOURCE_BOUND_FRONTIER_REVIEW_INCOMPLETE_NO_ADMISSION'
+          assert review['status']=='SOURCE_BOUND_FRONTIER_PARTIALLY_RESOLVED_NO_ADMISSION'
           assert review['target']['content_code']=='6.2'
           assert review['official_source_truth']['alternating_root_family_count']==15
           assert review['official_source_truth']['double_consonant_scope']=='double consonants in numeral names'
-          assert review['official_source_truth']['generic_russian_root_double_consonant_scope_claimed'] is False
-          assert review['source_boundary_findings']['legacy_double_consonant_placeholder_is_source_inexact'] is True
-          assert review['source_boundary_findings']['school_double_consonants_russian_root_lexical_cannot_be_admitted_from_6_2_source'] is True
-          assert review['source_boundary_findings']['school_numeral_orthography_base_is_reuse_candidate_not_yet_scope_proven_for_double_consonants'] is True
-          assert review['source_boundary_findings']['uncheckable_consonant_owner_requires_explicit_reuse_audit'] is True
+          assert review['official_source_truth']['generic_double_consonant_scope_claimed'] is False
+          alt=review['alternating_root_owner_audit']
+          assert alt['status']=='RESOLVED_EXACT_REUSE_FIRST'
+          assert alt['official_family_count']==15
+          assert alt['resolved_family_count']==15
+          assert alt['unresolved_family_count']==0
+          assert alt['unique_current_reviewed_owner_count']==7
+          assert alt['keyword_or_fuzzy_mapping_used'] is False
+          boundary=review['remaining_source_boundary']
+          assert boundary['unresolved_branch_count']==2
+          assert [row['branch'] for row in boundary['unresolved_branches']]==['uncheckable_consonants','double_consonants_in_numeral_names']
+          assert boundary['uncheckable_consonant_verification_identities_may_not_be_stretched'] is True
+          assert boundary['numeral_orthography_has_double_consonant_branch'] is False
+          assert boundary['legacy_double_consonant_placeholder_is_source_inexact'] is True
           assert review['admission_policy']['semantic_admissions']==0
           assert review['admission_policy']['object_closures']==0
           assert review['admission_policy']['false_exact_mastery_admissions']==0
-          assert review['admission_policy']['remove_6_2_placeholders_now'] is False
+          assert review['admission_policy']['remove_alternating_placeholder_now'] is False
+          assert review['admission_policy']['remove_double_placeholder_now'] is False
           assert review['admission_policy']['accept_6_2_exact_component_now'] is False
           assert review['admission_policy']['route_attempt_can_emit_exact_component_mastery'] is False
           assert review['safety']['learner_audio_persistence']==0
