@@ -1,0 +1,76 @@
+name: Russian OGE 6.8 current route supersession
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/221-RUSSIAN-SCHOOL-CANONICAL-COMPLETENESS-CURRENT-NORM-AUDIT-WAVE3-ADVERBS-PRONOUNS-HYPHEN-v0.1.json"
+      - "eksamio-learning-engine/239-RUSSIAN-SCHOOL-CANONICAL-SEMANTIC-CONSOLIDATION-AFTER-CURRENT-NORM-AUDIT-v0.1.json"
+      - "eksamio-learning-engine/255-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-D-O36-O45-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/277-RUSSIAN-SCHOOL-CURRENT-LAUNCH-REFREEZE-v1.1.json"
+      - "eksamio-learning-engine/280-RUSSIAN-FIPI-2026-OGE-6.8-CURRENT-ROUTE-SUPERSESSION-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_8_solid_hyphen_separate_source_bound_frontier_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_8_current_route_supersession.py"
+      - ".github/workflows/russian-oge-6-8-current-route-supersession.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-8-current-route-supersession:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile exact-current-route validator
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_8_solid_hyphen_separate_source_bound_frontier_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_8_current_route_supersession.py
+      - name: Validate exact owner frontier without admission twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/validate_russian_oge_6_8_current_route_supersession.py" > /tmp/oge-6-8-current-a.txt
+          python3 "$root/validate_russian_oge_6_8_current_route_supersession.py" > /tmp/oge-6-8-current-b.txt
+          diff -u /tmp/oge-6-8-current-a.txt /tmp/oge-6-8-current-b.txt
+          cat /tmp/oge-6-8-current-a.txt
+          grep -Fx 'RUSSIAN_OGE_6_8_CURRENT_ROUTE_SUPERSESSION=PASS' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'CURRENT_SCHOOL_DENOMINATOR=186' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'OFFICIAL_BRANCHES=9' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'EXACT_OWNER_FRONTIER=7' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'CURRENT_ROUTE_REFS=6' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'ADDED_SOURCE_SUPPORTED_EXACT_REFS=1' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'ABSORBED_PRONOUN_REOPENED=0' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'LEGACY_PLACEHOLDERS=0' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'SEMANTIC_ADMISSIONS=0' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'OBJECT_CLOSURES=0' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'SCHOOL_IDENTITY_COUNT_EFFECT=0' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'READY_FOR_EXACT_OBJECT_ACCEPTANCE=0' /tmp/oge-6-8-current-a.txt
+          grep -Fx 'LEARNER_AUDIO_PERSISTENCE=0' /tmp/oge-6-8-current-a.txt
+      - name: Upload current-route validation
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-8-current-route-supersession
+          path: |
+            /tmp/oge-6-8-current-a.txt
+            eksamio-learning-engine/280-RUSSIAN-FIPI-2026-OGE-6.8-CURRENT-ROUTE-SUPERSESSION-v0.1.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
