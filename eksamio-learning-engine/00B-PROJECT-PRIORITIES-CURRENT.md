@@ -1,8 +1,8 @@
 # Eksamio — Current Project Priorities / Operational Launch Board
 
-**Status:** CURRENT PRODUCT / DELIVERY AUTHORITY  
-**Updated:** 2026-08-31  
-**Baseline main:** `ab3839085743759ac61857dec6cec1607e306e68`  
+**Status:** CURRENT PRODUCT / DELIVERY AUTHORITY
+**Updated:** 2026-08-31
+**Baseline main:** `ab3839085743759ac61857dec6cec1607e306e68`
 **Primary deadline:** paid `Eksamio Pro — Russian` production launch by **2026-09-01**
 
 This file is the single operational launch board for the current Russian launch. It supplements `00-PRODUCT-MASTERPLAN.md` v1.4 and approved owner decisions.
