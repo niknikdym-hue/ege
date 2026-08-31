@@ -59,7 +59,7 @@ jobs:
           assert alt['official_family_count']==15
           assert alt['resolved_family_count']==15
           assert alt['unresolved_family_count']==0
-          assert alt['unique_current_reviewed_owner_count']==7
+          assert alt['unique_current_reviewed_owner_count']==8
           assert alt['keyword_or_fuzzy_mapping_used'] is False
           boundary=review['remaining_source_boundary']
           assert boundary['unresolved_branch_count']==2
