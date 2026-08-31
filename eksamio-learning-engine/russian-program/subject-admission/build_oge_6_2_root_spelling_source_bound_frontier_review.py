@@ -114,11 +114,11 @@ def build() -> dict:
 
     assert len(ALTERNATING_FAMILY_OWNER) == 15
     alternating_unique_owners = sorted(set(ALTERNATING_FAMILY_OWNER.values()))
-    assert len(alternating_unique_owners) == 7
+    assert len(alternating_unique_owners) == 8
     for owner in alternating_unique_owners:
         canonical_record(inventory, owner)
 
-    # Prove the seven exact current owners from the structured source-normalization file,
+    # Prove the eight exact current owners from the structured source-normalization file,
     # not from lexical/fuzzy similarity.
     expansions = alternating["existing_id_scope_expansions"]
     assert source_record(expansions, "unit_id", "school-lag-lozh-polog-exception")["new_semantic_scope"].startswith("LAG/LOG/LOZH")
@@ -209,7 +209,7 @@ def build() -> dict:
             "official_family_count": 15,
             "resolved_family_count": 15,
             "unresolved_family_count": 0,
-            "unique_current_reviewed_owner_count": 7,
+            "unique_current_reviewed_owner_count": 8,
             "family_owner_map": ALTERNATING_FAMILY_OWNER,
             "exact_current_reviewed_owner_refs": alternating_unique_owners,
             "keyword_or_fuzzy_mapping_used": False,
@@ -262,7 +262,7 @@ def main() -> None:
     print("STATUS=" + result["status"])
     print("OFFICIAL_ALTERNATING_FAMILIES=15")
     print("ALTERNATING_FAMILIES_RESOLVED=15")
-    print("ALTERNATING_UNIQUE_REUSED_OWNERS=7")
+    print("ALTERNATING_UNIQUE_REUSED_OWNERS=8")
     print("SOURCE_BOUND_UNRESOLVED_BRANCHES=2")
     print("SEMANTIC_ADMISSIONS=0")
     print("OBJECT_CLOSURES=0")
