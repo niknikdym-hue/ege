@@ -49,11 +49,11 @@ def main() -> int:
     assert "перед а пишется и, <[medium]> но" in native
     assert "сочетать, сочетание <[medium]> сохраняется е" in native
 
-    assert PROFILE.name == "YANDEX_LERA_NATIVE_CLEAN_V2_D"
+    assert PROFILE.name == "YANDEX_LERA_NATIVE_CLEAN_V3_A"
     assert PROFILE.voice == "lera"
-    assert PROFILE.role == "friendly"
-    assert PROFILE.speed == 0.97
-    assert PROFILE.pitch_shift_hz == -35.0
+    assert PROFILE.role == "neutral"
+    assert PROFILE.speed == 1.04
+    assert PROFILE.pitch_shift_hz == 0.0
     assert PROFILE.pause_profile == "marked"
 
     capture = CaptureTransport()
@@ -65,8 +65,9 @@ def main() -> int:
             "text": native,
             "hints": [
                 {"voice": "lera"},
-                {"role": "neutral"},
-                {"speed": "1.04"},
+                {"role": "friendly"},
+                {"speed": "0.97"},
+                {"pitchShift": "-35.0"},
             ],
         },
         timeout_seconds=1.0,
@@ -74,22 +75,23 @@ def main() -> int:
     hints = capture.bodies[0]["hints"]
     assert isinstance(hints, list)
     assert {"voice": "lera"} in hints
-    assert {"role": "friendly"} in hints
-    assert {"speed": "0.97"} in hints
-    assert {"pitchShift": "-35.0"} in hints
-    assert {"role": "neutral"} not in hints
-    assert {"speed": "1.04"} not in hints
+    assert {"role": "neutral"} in hints
+    assert {"speed": "1.04"} in hints
+    assert {"pitchShift": "0.0"} in hints
+    assert {"role": "friendly"} not in hints
+    assert {"speed": "0.97"} not in hints
+    assert {"pitchShift": "-35.0"} not in hints
 
     openai_cfg = FastTutorConfig(brain_mode="openai")
     yandex_cfg = FastTutorConfig(brain_mode="yandex")
     assert openai_cfg.lera_reading_profile == "OPENAI_LERA_REFERENCE_CLEAN_V1"
-    assert yandex_cfg.lera_reading_profile == "YANDEX_LERA_NATIVE_CLEAN_V2_D"
+    assert yandex_cfg.lera_reading_profile == "YANDEX_LERA_NATIVE_CLEAN_V3_A"
     assert openai_cfg.lera_reading_profile != yandex_cfg.lera_reading_profile
 
-    print("YANDEX_LERA_NATIVE_PROFILE_D=PASS")
-    print("YANDEX_LERA_ROLE=friendly")
-    print("YANDEX_LERA_SPEED=0.97")
-    print("YANDEX_LERA_PITCH_HZ=-35")
+    print("YANDEX_LERA_NATIVE_PROFILE_A=PASS")
+    print("YANDEX_LERA_ROLE=neutral")
+    print("YANDEX_LERA_SPEED=1.04")
+    print("YANDEX_LERA_PITCH_HZ=0")
     print("YANDEX_LERA_PAUSES=marked")
     print("YANDEX_ALICE_RUN_ON_REPAIR=PASS")
     print("OPENAI_YANDEX_READING_PROFILES_SEPARATE=PASS")
