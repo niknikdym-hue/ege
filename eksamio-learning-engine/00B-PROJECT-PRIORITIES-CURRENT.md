@@ -1,211 +1,339 @@
 # Eksamio — Current Project Priorities
 
-**Status:** CURRENT PRODUCT / DELIVERY SNAPSHOT  
-**Updated:** 2026-08-23  
-**Baseline at update:** `c2100f26300590b3da390cd4a7ed37e792255cbd`
+**Status:** CURRENT PRODUCT / DELIVERY AUTHORITY  
+**Updated:** 2026-08-31  
+**Baseline main at update:** `0e7cb3cd05cd999ea97606d65cf5aef5625fcb3f`  
+**Primary deadline:** paid `Eksamio Pro — Russian` production launch by **2026-09-01**
 
-This file does not replace `00-PRODUCT-MASTERPLAN.md` or `OWNER-DECISIONS-2026-08-22.md`. The owner decision of 2026-08-23 sets a hard delivery deadline: **full paid `Eksamio Pro — Russian` launch by 2026-09-01**.
+This file is the current executable critical path. It supplements, but does not replace, `00-PRODUCT-MASTERPLAN.md` and approved owner decisions. When an older priority statement conflicts with this file, the newer explicitly approved owner/product decision wins.
 
-## 1. Product priority
+## 1. One launch goal
 
-Eksamio remains one **Personal Exam Intelligence System (PEIS)**.
+Until the Russian paid launch is real, the project has one dominant delivery objective:
 
-Subject order remains:
+`FULL_RUSSIAN_TRUTH -> WORKING_RUSSIAN_PRODUCT -> YANDEX_PRODUCTION -> REAL_IDENTITY -> REAL_PAYMENT -> REAL_TUTOR -> END_TO_END_ACCEPTANCE -> PUBLIC_GO_LIVE`
 
-1. Russian — subject #1, P0 and the only Full Subject launch target before 2026-09-01.
-2. Mathematics — subject #2, P0 system subject, but non-launch-critical Full Subject acquisition is deferred until Russian source completeness.
-3. Physics — subject #3, P1; bounded accepted-demo closure may finish but must not consume Russian launch-critical capacity.
+Work that does not materially reduce one of these launch blockers is deferred.
 
-Until September 1, priority is determined by contribution to the real paid Russian Pro launch, not by historical P0/P1 labels alone.
+Mathematics, Physics, historical polish, speculative platform work and nonessential UI expansion must not steal capacity from Russian launch closure.
 
-## 2. Primary milestone and critical path
+## 2. Product architecture fixed on 2026-08-31
 
-Primary milestone:
+Eksamio remains one Personal Exam Intelligence System (PEIS), not a collection of unrelated demo/trainer/course pages.
 
-`PAID_EKSAMIO_PRO_RUSSIAN_PRODUCTION_LAUNCHED_BY_2026_09_01`
+For the Russian learner experience:
 
-The deadline does not weaken hard product/security/source/privacy gates. It changes scheduling: every new task must reduce one concrete launch blocker or be deferred.
+- `eksamio.ru` / Tilda remains the public marketing + free-demo layer;
+- the protected learning area is one Eksamio web application from the learner's point of view;
+- accounts, canonical learner state, PEIS, Tutor, entitlements and paid learning state live server-side, not in Tilda;
+- primary production runtime is **Yandex Cloud Russia**;
+- GitHub is a current development/version-control tool, **not a runtime dependency**;
+- a GitHub outage must not break an already deployed Eksamio;
+- production code/artifacts/configuration/data required for normal learner operation must be available from the production contour without fetching GitHub;
+- repository hosting must remain replaceable without redesigning PEIS, subject truth or the learner product.
 
-Current launch-critical lanes are:
+Google Drive may remain a bounded Source Archive for raw source materials, but is never on the normal learner runtime path after ingestion.
 
-1. **Russian subject truth/content** — normative scope coverage, textbook/source ingestion, canonical identities/prerequisites, complete launch-relevant content bundles and subject acceptance.
-2. **Russian PEIS connection** — move the merged 121-card mapping from integration-ready to real shared-PEIS evidence flow/end-to-end learning loop.
-3. **Yandex deployment/security** — staging -> production candidate, private service/persistence, secrets, monitoring, rollback and Russia/no-VPN operation.
-4. **Tutor** — provider-neutral/evaluation -> admitted text path -> realtime voice -> same-session continuity -> reliability/kill switch.
-5. **Identity/session** — passwordless e-mail/phone and safe anonymous -> account continuity with server-owned canonical identity.
-6. **Payments/entitlements** — real SBP/card paid path, NPD-compatible receipt, webhook idempotency, entitlement and refund/failure behavior.
-7. **Product client** — separate Eksamio Pro web application with strong desktop/mobile-browser flow; Tilda remains public/free-demo layer.
-8. **Legal/privacy/production acceptance** — required launch copy/controls, learner audio persisted = 0, final end-to-end production acceptance.
+## 3. Russian full program is one source for many learner products
 
-A task outside these lanes needs an explicit reason why it is still launch-critical before September 1.
+The full Russian program is not one linear course. It is the shared verified knowledge/content layer from which Eksamio can expose multiple learner surfaces without creating parallel subject ontologies.
 
-## 3. Russian launch lane — immediate work
+Student-facing Russian product family:
 
-### RUSSIAN SOURCE / FULL SUBJECT
+1. **Free official demos and diagnostics** — EGE/OGE/school diagnostic entry points where admitted.
+2. **Work on mistakes** — direct handoff from a failed item to the exact semantic skill and prerequisite chain.
+3. **Thematic trainer** — practice by topic/skill, using the same canonical identities.
+4. **Exam-task trainer** — EGE and OGE routes mapped to official task/code structures.
+5. **Trainer constructor** — learner chooses admitted topics/task families/amount/difficulty or a system-generated mix; it reuses the same item/semantic pool rather than creating a separate knowledge model.
+6. **Personal training / “Training for today”** — PEIS selects the next best work from errors, readiness, retention risk and exam value.
+7. **Russian course / guided route** — structured learning path through the complete program with prerequisites, teaching, practice, verification and return-to-gap logic.
+8. **School Russian 5–11** — grade/program views over the same full-subject knowledge layer.
+9. **OGE Russian preparation** — exam route plus prerequisite repair into the school program.
+10. **EGE Russian preparation** — exam route plus prerequisite repair into the school program.
+11. **AI Tutor** — text + realtime voice over verified Russian knowledge and current learner state; not a general chat.
+12. **Independent verification and retention** — mastery cannot be awarded merely because Tutor helped or the learner said “I understand”.
+13. **Progress / readiness / weak-points map** — server-owned learner state with explainable next action.
+14. **Extended-answer / essay learning support** — only where the rubric/source/evaluation gates are admitted; richer functionality may roll out after the core launch.
+15. **Personalized course and exam plan** — deadline-aware sequence recomputed from evidence rather than a static checklist.
 
-`FULL_SUBJECT_SCOPE_SOURCE_COMPLETE` is launch-blocking for a complete paid Russian subject offer.
+These are product surfaces over one Russian truth layer. No course, trainer, constructor, OGE route or EGE route may create a second semantic truth or separate mastery database.
 
-Current active textbook/source step:
+## 4. Progressive rollout rule
 
-`RUSSIAN_TEXTBOOK_SELECTION_MATRIX`
+Full-subject truth and product-surface rollout are separate gates.
 
-Rules:
+A section may be opened to learners only when all dependencies for that section are admitted. Eksamio may progressively open sections, but must never claim a section or “full Russian” capability that is not actually backed by accepted content and runtime evidence.
 
-- official school-program authority defines scope skeleton;
-- FIPI/OGE/EGE are assessment overlays, not the whole subject;
-- selected textbooks are knowledge/pedagogy evidence;
-- no batch textbook download before matrix approval;
-- source PDFs belong in Source Archive, not product runtime;
-- Google Drive may be Source Archive but Yandex runtime must work without Drive after ingestion;
-- no persistent owner-local textbook folders unless explicitly requested.
+### Stage R0 — private production assembly
 
-### RUSSIAN 121-CARD MAPPING / PEIS CONNECTION
+Purpose: make the system real before public traffic.
 
-PR #112 was reviewed and merged on 2026-08-23 as merge commit `c2100f26300590b3da390cd4a7ed37e792255cbd`.
+Required:
 
-Accepted bounded result:
+- accepted Russian subject/content slice sufficient for the exposed learner surface;
+- Yandex production-shaped backend and persistence;
+- server-owned identity/session;
+- product client connected to real backend;
+- payment/entitlement contour connected in bounded production acceptance;
+- Tutor connected behind server-side provider gateway;
+- public traffic OFF until final gate.
 
-- 121 active unique cards;
-- 116 EXACT;
-- 5 PARTIAL_COMPOSITE;
-- 121 integration-ready;
-- 0 blocked;
-- 0 live-connected at the mapping artifact layer;
-- exactly 12 previously admitted new canonical `ru-*` identities in that reconciliation wave;
-- 185 canonical school identities preserved;
-- Russian demos/Tilda/shared PEIS contracts unchanged by the landing.
+### Stage R1 — first paid Russian closed loop
 
-The mapping-landing blocker is CLOSED. Do not reopen the broad RU-1 reconciliation.
+Minimum learner loop:
 
-**Next launch-critical action:** production-shaped Russian shared-PEIS connection using the already merged PEIS integration/service-bridge/browser-hook/trusted-host/substrate contracts. Move real Russian learner attempts through server-owned evidence/persistence/recompute/NBA while preserving current scoring/local fallback and source truth. Do not stop at `integration_ready`.
+`diagnosis/attempt -> error evidence -> weak skill -> explanation/practice -> independent verify -> learner state -> next action`
 
-## 4. Central platform lane
+Must include:
 
-The portable PostgreSQL/container substrate has passed and is merged.
+- account/login;
+- paid entitlement;
+- Russian learning content;
+- trainer/practice;
+- work on mistakes;
+- personal next action;
+- text + realtime voice Tutor as two interfaces of one Tutor;
+- persistence across sessions;
+- operational refund/revoke path;
+- desktop + mobile-browser acceptance.
 
-Next platform milestone is real Yandex staging and then production-candidate admission. Public traffic remains OFF until security/identity gates pass.
+### Stage R2 — EGE Russian full learner surface
 
-Required production invariants include:
+Open the complete admitted EGE route, exam-task training, thematic training, trainer constructor, course route, personalized practice, retention and Tutor over the complete accepted EGE-relevant Russian program.
 
-- private runtime behind controlled API edge;
-- Managed PostgreSQL or admitted production persistence;
-- secrets outside Git/client/logs;
-- server-owned learner identity;
-- kill switches and fail-safe behavior;
-- monitoring/rollback;
-- Google Drive/source archive not on production hot path;
-- deterministic/base product survives Tutor/provider/source-archive outage.
+### Stage R3 — OGE Russian full learner surface
 
-## 5. Tutor lane
+Open the admitted OGE route using the same school/full-subject identities and PEIS state. OGE must not become a parallel subject database.
 
-Merged foundations:
+### Stage R4 — school Russian 5–11 surfaces
 
-- provider-neutral Tutor boundary;
-- reliability gateway;
-- transient-failure circuit repair;
-- bounded real OpenAI sandbox authority.
+Expose grade/program navigation, topic study, thematic training and prerequisite repair across the accepted full school program.
 
-Active/next execution must produce repo-visible results, not only design notes:
+### Stage R5 — advanced learner services
 
-- real-provider sandbox evidence;
-- provider-neutral evaluation harness;
-- production-eligible conversational provider admission for Russia/no-VPN contour;
-- grounded Russian text Tutor vertical slice;
-- realtime speech path with learner audio persistence = 0;
-- `voice -> text -> voice` same-session continuity;
-- independent verification and exactly-once PEIS evidence behavior;
-- provider failure/fallback/kill switch.
+Add/expand essay and extended-answer evaluation, richer score forecast, deeper longitudinal analytics, parent/reporting surfaces and later multimodal tools only after their own gates pass.
 
-The first paid Pro launch remains forbidden if either text or realtime voice Tutor is not production-ready.
+Stages are rollout surfaces, not permission to weaken subject truth. If a feature is not open, the site must describe only what is actually available.
 
-## 6. Identity / payment / client lanes
+## 5. Russian content lane — highest P0 and acceleration rule
 
-These are now immediate launch dependencies, not later backlog items.
+PR #164 is the current subject-closure authority branch and remains draft/NO-GO while Russian content is blocked.
 
-### Identity
+Current exact truth from that PR:
 
-- passwordless verified e-mail or phone;
-- browser is not canonical identity authority;
-- anonymous free-demo evidence can be safely linked to permanent account;
-- session/privacy/retention behavior tested.
+- `1325 / 1325` admission units accounted exactly once;
+- `1400 / 1400` official requirements accounted exactly once;
+- exact object-bound accepted component sets: `21 units / 21 requirements`;
+- remaining without accepted component set: `1295 units / 1370 requirements`;
+- accepted bounded `ru-*` semantics: `75` total;
+- false exact-mastery admissions: `0`.
 
-### Payments
+This proves the denominator is known. The bottleneck is now acceptance throughput, not scope discovery.
 
-First candidate remains `Robokassa + Robocheki SMZ` for the self-employed/NPD contour, subject to production acceptance.
+### Mandatory acceleration change
 
-Launch requires real:
+Do **not** continue closing the Russian program as a long sequence of single-object micro-audits when a deterministic family/module batch can be reviewed safely.
 
-- SBP and bank-card flow;
-- legal receipt behavior;
-- no mandatory card saving/autocharging;
+Use:
+
+`official family/module -> exact canonical owners -> bounded source packet -> deterministic object binding -> batch subject acceptance -> regression gate`
+
+Batch by coherent canonical families and program modules where the same source authority and semantic boundary apply. Reuse existing canonical `school-*` owners first. Create new identities only for real source-backed gaps. Historical evidence is not silently rewritten.
+
+Every batch must remain fail-closed:
+
+- no broad family evidence may emit exact component mastery;
+- no unresolved owner may be marked accepted;
+- no rights-blocked textbook prose enters learner-facing content;
+- exact object/requirement coverage counters must reconcile after each batch.
+
+The goal is to move hundreds of compatible objects through reviewed mappings per wave where possible, not to lower semantic precision.
+
+## 6. Tutor lane — casting closed, integration remains
+
+The voice casting exercise is **closed**. Do not spend launch-critical time on further Lera casting unless a new production defect appears.
+
+Accepted Russian speech policy:
+
+- Yandex SpeechKit voice: **Lera**;
+- accepted reading profile: `neutral / speed 1.04 / pitch 0 Hz / marked pauses`;
+- learner audio persistence: `0`.
+
+Brain routing owner decision for Russian launch:
+
+- **Yandex brain is the default conversational brain for learners in Russia**;
+- OpenAI is fallback/escalation only after applicable production admission;
+- provider selection is backend/internal; the learner does not select “Yandex/OpenAI”;
+- one learner-facing identity remains “Tutor Eksamio”.
+
+PR #172 contains the current OpenAI/Yandex fast text/voice acceptance work. Its human benchmark/casting evidence must be incorporated into the production Tutor integration without reopening subjective voice casting.
+
+Remaining Tutor work is production integration, latency/reliability, same-session continuity and PEIS evidence correctness — not voice selection.
+
+## 7. Identity/session lane
+
+Passwordless identity architecture is already implemented; PR #148 (`Yandex Postbox + SMS.RU production delivery`) is merged.
+
+Remaining launch work:
+
+- real verified Postbox sender/domain and IAM/service-account path;
+- real SMS.RU credential/sender acceptance if phone login is enabled at launch;
+- bounded real delivery smoke;
+- anonymous -> permanent account continuity;
+- server-owned canonical identity/session;
+- privacy/retention and failure behavior.
+
+No secrets, verification codes or raw contact data may be committed to Git or exposed to browser logs.
+
+## 8. Payments / entitlement lane
+
+Robokassa + Robocheki SMZ remains the first Russian self-employed/NPD payment candidate. Production-candidate code is merged; real provider acceptance remains a launch gate.
+
+Required before paid public traffic:
+
+- actual merchant settings/credentials outside Git;
+- SBP and bank-card path;
+- NPD/receipt acceptance;
+- Password #1 / Password #2 boundaries;
+- server-owned amount/order/InvId verification;
 - webhook replay/idempotency;
-- entitlement grant;
-- refund/failure/retry handling.
+- exactly-once entitlement grant;
+- refund -> revoke;
+- failure/retry behavior;
+- no saved-card/autorenew requirement.
 
-### Product client
+Payment success is not a browser flag; entitlement authority is server-side.
 
-- separate Pro web app;
-- desktop + mobile-browser acceptance;
-- demos remain anonymously usable through public layer;
-- Pro sections may be previewed/locked according to product authority;
-- no accounts/payments/PEIS/Tutor authority inside Tilda.
+## 9. Yandex Cloud / server lane
 
-## 7. Deferred until after Russian launch unless directly blocking it
+Primary production cloud for Russian launch is **Yandex Cloud Russia**.
 
-Normally defer before September 1:
+Normal learner operation must not depend on:
 
-- Mathematics Full Subject acquisition/ingestion;
-- Physics Full Subject acquisition/ingestion;
-- broad historical demo re-audits;
-- speculative infrastructure/framework work;
-- nonessential dashboard/report polish;
-- later vision/photo/multimodal features;
-- cross-subject expansion;
-- refactors without launch evidence;
-- new governance documents when existing authority can be updated instead.
+- GitHub availability;
+- Google Drive availability;
+- an owner laptop/local workspace;
+- direct learner-browser access to a foreign AI provider.
 
-## 8. Mandatory task admission test through September 1
+Production contour must own or have admitted equivalents for:
 
-Every significant task must state:
+- application runtime;
+- database/persistence;
+- production release artifacts/images;
+- secrets/credentials outside repository and client;
+- logs/monitoring with secret redaction;
+- backup/restore and rollback;
+- provider gateway and kill switches;
+- server-owned PEIS/learner state.
 
-- `WHY_NOW`;
-- `SEP1_LAUNCH_BLOCKER` — exact launch blocker reduced;
-- `BASELINE_MAIN_SHA`;
-- `DEPENDENCY_IN`;
-- `MINIMAL_DELTA`;
-- `EXPECTED_UNLOCK`;
-- `EXECUTOR`;
-- `ALLOWED_PATHS` / `FORBIDDEN_PATHS`;
-- `ACCEPTANCE_EVIDENCE`;
-- `STOP_CONDITIONS`;
-- bounded `FINAL_STATUS`.
+GitHub may remain source/version-control and CI during development, but **GitHub outage != Eksamio outage**. Repository hosting must be replaceable later without changing product data models or business logic.
 
-If a task cannot name the September 1 launch blocker it reduces, defer it.
+## 10. Product client / site assembly lane
 
-Use existing working infrastructure and contracts. Do not turn a bounded launch task into a new architecture project.
+The learner sees one Eksamio, even though public and protected technical layers differ.
 
-## 9. Parallel execution rule
+Public layer:
 
-Launch-critical independent lanes may run in parallel when they do not conflict:
+- `eksamio.ru` / Tilda;
+- product explanation;
+- free demos and anonymous entry where applicable;
+- sign-in / purchase entry points.
 
-- Russian source/content;
-- Russian mapping/PEIS integration;
-- Yandex deployment/security;
+Protected learning layer:
+
+- account;
+- Russian program/course surfaces;
+- trainers and trainer constructor;
+- personal route / “training for today”;
+- work on mistakes;
 - Tutor;
-- identity;
-- payments;
-- client/legal acceptance.
+- progress/readiness;
+- entitlement-aware access.
 
-This parallelism uses cloud isolation + GitHub branches/PRs. It must not create persistent owner-local clones/worktrees/folders without explicit owner permission.
+The protected application should share brand/navigation continuity with the public site so the learner does not experience it as a different product.
 
-## 10. Delivery rule
+## 11. Critical execution order from 2026-08-31
 
-Until paid Russian Pro is live, choose work by:
+Run independent lanes in parallel, but resolve blockers in this order of business impact:
 
-`Sep 1 blocker -> smallest executable delta -> evidence -> accept/repair -> next blocker`.
+### P0-A — Russian subject closure
 
-Avoid:
+1. Stop micro-audit throughput where safe batch acceptance is possible.
+2. Close canonical owner families/modules in bounded waves.
+3. Reconcile every wave against the exact 1325/1400 denominator.
+4. Reach `russian_content = PASS` without false exact mastery.
 
-`new paper -> re-audit -> process document -> another paper`.
+### P0-B — production Russian assembly
 
-A repository document is justified only when it is necessary authority for executable work or records a material owner decision. The default next action is implementation, testing, integration or production acceptance.
+In parallel with subject closure:
+
+1. assemble the protected Russian client against the production-shaped backend;
+2. connect accepted Russian content to PEIS live flow;
+3. wire account/session continuity;
+4. wire trainer/work-on-errors/personal-route surfaces;
+5. integrate the accepted Tutor policy into the same learner state.
+
+### P0-C — external production gates
+
+1. Yandex production deployment/persistence/security;
+2. passwordless real delivery smoke;
+3. Robokassa/Robocheki bounded real payment + receipt acceptance;
+4. payment -> entitlement -> receipt -> refund/revoke E2E;
+5. monitoring/rollback/kill switches.
+
+### P0-D — final production E2E
+
+Prove on one exact release identity:
+
+`public entry -> account -> purchase -> entitlement -> Russian learning -> PEIS write/read -> trainer -> Tutor text/voice -> independent verify -> persisted progress -> logout/login continuity -> refund/revoke`
+
+Then and only then enable owner-approved public paid traffic.
+
+## 12. Go-live gates
+
+Public paid Russian launch is `GO` only when all mandatory classes are true:
+
+- `RUSSIAN_SUBJECT_CONTENT = PASS` for the marketed scope;
+- `RUSSIAN_PEIS_LIVE = PASS`;
+- `YANDEX_PRODUCTION = PASS`;
+- `IDENTITY_DELIVERY = PASS`;
+- `PAYMENT_RECEIPT_ENTITLEMENT = PASS`;
+- `PRODUCT_CLIENT = PASS`;
+- `TUTOR_TEXT_AND_VOICE = PASS`;
+- `AUDIO_PERSISTENCE = 0`;
+- `LEGAL_PRIVACY_OPERATIONS = PASS`;
+- `FINAL_PRODUCTION_E2E = PASS`;
+- explicit owner go-live approval is recorded.
+
+No deadline may silently convert a failed mandatory gate into PASS.
+
+## 13. Deferred until after launch
+
+Unless directly required to clear a gate above, defer:
+
+- more Lera casting;
+- new Tutor provider experiments;
+- Mathematics/Physics full-subject work;
+- SourceCraft/GitHub migration;
+- broad UI polish;
+- native mobile apps;
+- speculative infrastructure refactors;
+- vision/photo/richer multimodal work;
+- nonessential reports/dashboards;
+- historical cleanup that does not affect launch truth.
+
+## 14. Execution rule
+
+Every task until go-live must answer:
+
+`Which exact launch blocker does this remove?`
+
+Preferred loop:
+
+`blocker -> smallest production-shaped delta -> tests/evidence -> accept or repair -> immediately attack next blocker`
+
+Not acceptable:
+
+`new document -> another audit -> another document` without executable effect.
+
+Authority documents are updated only when a material product/architecture/owner decision changed, as happened on 2026-08-31.
