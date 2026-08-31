@@ -21,6 +21,7 @@ EXPECTED_EXPLICIT_REFS = [
     "school-verb-soft-sign-forms",
 ]
 FIPI_NAVIGATOR_URL = "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/ru-9_6_orfografija.pdf"
+FIPI_METHODICAL_URL = "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/MR_rus_yaz_oge_2026.pdf"
 FIPI_NAVIGATOR_EVIDENCE = {
     "document": "ФИПИ. Навигатор самостоятельной подготовки к ОГЭ-2026. Русский язык. Орфография",
     "url": FIPI_NAVIGATOR_URL,
@@ -37,6 +38,17 @@ FIPI_NAVIGATOR_EVIDENCE = {
         "6.7": "endings across parts of speech, explicitly including noun endings",
     },
     "evidence_policy": "The navigator is used to narrow the owner frontier. A cited textbook paragraph is not by itself an exact component admission; adjacent-code ownership is used only to prevent false 6.4 admission.",
+}
+FIPI_METHODICAL_EVIDENCE = {
+    "document": "ФИПИ. Методические рекомендации обучающимся по организации индивидуальной подготовки к ОГЭ 2026 года. Русский язык",
+    "url": FIPI_METHODICAL_URL,
+    "retrieved_for_review": "2026-08-31",
+    "scope_statement": "Table 2 is introduced by FIPI as containing all themes and content elements that can be checked on OGE Russian 2026.",
+    "orthography_rows": {
+        "soft_sign": "Правописание ъ и ь",
+        "suffixes": "The suffix row enumerates the tested suffix families and does not name the lexical/stylistic -НИЕ/-НЬЕ contrast.",
+    },
+    "evidence_policy": "Absence from the exhaustive OGE checkable-content table is sufficient to reject an exact OGE route binding for the lexical/stylistic -НИЕ/-НЬЕ school semantic. It does not invalidate that active school semantic or prove that its words can never appear in exam text.",
 }
 REVIEW_ONLY_CANDIDATES = [
     {
@@ -76,10 +88,10 @@ REVIEW_ONLY_CANDIDATES = [
     },
     {
         "canonical_ref": "school-verbal-noun-nie-nye-semantic-boundary",
-        "review_reason": "The canonical identity directly contrasts -НИЕ/-НЬЕ, so it is a real sign-presence overlap that the earlier four-row frontier omitted. Current FIPI navigator evidence does not explicitly map this lexical/stylistic suffix boundary to 6.4 or another OGE code; exact ownership therefore remains unresolved.",
+        "review_reason": "This active school identity is a lexical/stylistic noun-suffix boundary, not a generic soft-sign rule. FIPI's OGE-2026 methodical Table 2 is introduced as the complete set of checkable themes/content elements; it lists 'Правописание ъ и ь' separately and enumerates the suffix families without -НИЕ/-НЬЕ. The orthography navigator likewise does not list a -НИЕ/-НЬЕ paragraph. Therefore no exact OGE-2026 route binding to 6.4 or 6.6 is proven for this school semantic.",
         "provenance": "252-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-B-O17-O25-v0.1.json",
-        "source_bound_disposition": "SOURCE_BOUNDARY_UNRESOLVED_NO_6_4_ADMISSION",
-        "official_source_evidence": "No explicit -НИЕ/-НЬЕ paragraph is named in the current FIPI OGE-2026 orthography navigator examples; absence is not treated as proof of exclusion",
+        "source_bound_disposition": "NO_EXACT_OGE_2026_ROUTE_BINDING_PROVEN",
+        "official_source_evidence": "FIPI OGE-2026 methodical recommendations Table 2: soft-sign is a separate checkable element; the exhaustive suffix row does not enumerate -НИЕ/-НЬЕ. The OGE orthography navigator also does not name that lexical/stylistic pair.",
     },
 ]
 
@@ -144,33 +156,35 @@ def build_review() -> dict[str, Any]:
             known_refs.add(source_id)
         known_refs.update(str(ref) for ref in item.get("current_semantic_refs") or [] if str(ref).startswith("school-"))
 
-    missing = [
-        item["canonical_ref"]
-        for item in REVIEW_ONLY_CANDIDATES
-        if item["canonical_ref"] not in known_refs
-    ]
+    missing = [item["canonical_ref"] for item in REVIEW_ONLY_CANDIDATES if item["canonical_ref"] not in known_refs]
     if missing:
         raise ValueError("review-only canonical refs missing from current inventory: " + ",".join(missing))
 
-    candidate_rows = []
-    for item in REVIEW_ONLY_CANDIDATES:
-        candidate_rows.append(
-            {
-                **item,
-                "review_disposition": "REVIEW_ONLY_NOT_OGE_6_4_OWNER_ADMITTED",
-                "exact_oge_6_4_owner_proven": False,
-                "admission_effect": "NONE",
-            }
-        )
+    candidate_rows = [
+        {
+            **item,
+            "review_disposition": "REVIEW_ONLY_NOT_OGE_6_4_OWNER_ADMITTED",
+            "exact_oge_6_4_owner_proven": False,
+            "admission_effect": "NONE",
+        }
+        for item in REVIEW_ONLY_CANDIDATES
+    ]
 
     supported = [
-        row for row in candidate_rows if row["source_bound_disposition"] == "FIPI_NAVIGATOR_SUPPORTS_6_4_OWNER_CANDIDATE"
+        candidate for candidate in candidate_rows
+        if candidate["source_bound_disposition"] == "FIPI_NAVIGATOR_SUPPORTS_6_4_OWNER_CANDIDATE"
     ]
     adjacent_nonowners = [
-        row for row in candidate_rows if row["source_bound_disposition"].startswith("ADJACENT_CODE_")
+        candidate for candidate in candidate_rows
+        if candidate["source_bound_disposition"].startswith("ADJACENT_CODE_")
+    ]
+    no_exact_route_binding = [
+        candidate for candidate in candidate_rows
+        if candidate["source_bound_disposition"] == "NO_EXACT_OGE_2026_ROUTE_BINDING_PROVEN"
     ]
     unresolved = [
-        row for row in candidate_rows if row["source_bound_disposition"] == "SOURCE_BOUNDARY_UNRESOLVED_NO_6_4_ADMISSION"
+        candidate for candidate in candidate_rows
+        if candidate["source_bound_disposition"] == "SOURCE_BOUNDARY_UNRESOLVED_NO_6_4_ADMISSION"
     ]
 
     result: dict[str, Any] = {
@@ -184,7 +198,10 @@ def build_review() -> dict[str, Any]:
             "topic": TARGET_TOPIC,
             "classification": str(row["classification"]),
         },
-        "official_source_review": FIPI_NAVIGATOR_EVIDENCE,
+        "official_source_review": {
+            "navigator": FIPI_NAVIGATOR_EVIDENCE,
+            "methodical_recommendations": FIPI_METHODICAL_EVIDENCE,
+        },
         "current_overlay_truth": {
             "explicit_canonical_refs": EXPECTED_EXPLICIT_REFS,
             "unresolved_owner_placeholder": UNRESOLVED_OWNER,
@@ -205,9 +222,10 @@ def build_review() -> dict[str, Any]:
         },
         "review_only_overlap_candidates": candidate_rows,
         "source_bound_frontier": {
-            "fipi_supported_6_4_owner_candidates_not_yet_admitted": [row["canonical_ref"] for row in supported],
-            "adjacent_code_nonowner_candidates": [row["canonical_ref"] for row in adjacent_nonowners],
-            "still_unresolved_candidates": [row["canonical_ref"] for row in unresolved],
+            "fipi_supported_6_4_owner_candidates_not_yet_admitted": [candidate["canonical_ref"] for candidate in supported],
+            "adjacent_code_nonowner_candidates": [candidate["canonical_ref"] for candidate in adjacent_nonowners],
+            "no_exact_oge_2026_route_binding_candidates": [candidate["canonical_ref"] for candidate in no_exact_route_binding],
+            "still_unresolved_candidates": [candidate["canonical_ref"] for candidate in unresolved],
             "frontier_complete_for_exact_acceptance": False,
         },
         "summary": {
@@ -216,6 +234,7 @@ def build_review() -> dict[str, Any]:
             "review_only_overlap_candidates": len(candidate_rows),
             "fipi_supported_6_4_owner_candidates_not_yet_admitted": len(supported),
             "adjacent_code_nonowner_candidates": len(adjacent_nonowners),
+            "no_exact_oge_2026_route_binding_candidates": len(no_exact_route_binding),
             "still_unresolved_candidates": len(unresolved),
             "semantic_admissions": 0,
             "object_level_closures": 0,
@@ -227,13 +246,15 @@ def build_review() -> dict[str, Any]:
             "keyword_or_name_overlap_is_exact_binding": False,
             "inventory_route_refs_are_complete_owner_proof": False,
             "official_navigator_paragraph_is_exact_component_admission": False,
+            "methodical_exhaustive_table_may_reject_exact_route_binding": True,
+            "absence_from_oge_route_invalidates_school_semantic": False,
             "adjacent_codifier_boundary_prevents_false_6_4_admission": True,
             "placeholder_may_be_silently_dropped": False,
             "exact_acceptance_allowed_while_placeholder_remains": False,
             "semantic_acceptance_can_reduce_object_counts_without_exact_binding": False,
         },
         "admission_effect": "NONE",
-        "next_safe_step": "Resolve school-verbal-noun-nie-nye-semantic-boundary against exact official OGE scope, then independently prove whether the two FIPI-supported candidates belong in the complete 6.4 owner list. Do not remove the placeholder or exact-accept 6.4 before that proof is complete.",
+        "next_safe_step": "Independently adjudicate the two FIPI-supported 6.4 branch candidates and prove the complete current active-school sign-decision frontier before resolving the overlay placeholder. Do not exact-accept 6.4 while any complete-owner proof is missing.",
     }
     result["normalized_sha256"] = hashlib.sha256(canonical_json(result)).hexdigest()
     return result
@@ -254,9 +275,10 @@ def main() -> int:
         print(json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
     else:
         print("OGE_6_4_SOFT_SIGN_OWNER_RESOLUTION_REVIEW=PASS")
-        for key, value in result["summary"].items():
-            print(f"{key}={value}")
-        print(f"normalized_sha256={result['normalized_sha256']}")
+        print(f"NORMALIZED_SHA256={result['normalized_sha256']}")
+        print("SEMANTIC_ADMISSIONS=0")
+        print("OBJECT_LEVEL_CLOSURES=0")
+        print("FALSE_EXACT_MASTERY_ADMISSIONS=0")
     return 0
 
 
