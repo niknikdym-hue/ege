@@ -20,20 +20,34 @@ API_BASE = "https://api-metrika.yandex.net/management/v1"
 class GoalSpec:
     event_id: str
     name: str
+    layer: str
     favorite: bool = False
+    server_only: bool = False
 
 
 GOALS = (
-    GoalSpec("eks_demo_open", "Eksamio — demo open"),
-    GoalSpec("eks_demo_start", "Eksamio — demo start"),
-    GoalSpec("eks_demo_complete", "Eksamio — demo complete", True),
-    GoalSpec("eks_result_to_practice", "Eksamio — result to practice", True),
-    GoalSpec("eks_trainer_open", "Eksamio — trainer open"),
-    GoalSpec("eks_trainer_start", "Eksamio — trainer start"),
-    GoalSpec("eks_trainer_meaningful", "Eksamio — meaningful trainer practice", True),
-    GoalSpec("eks_return_learning", "Eksamio — return learning", True),
-    GoalSpec("eks_pro_intent", "Eksamio — Pro intent"),
-    GoalSpec("eks_purchase", "Eksamio — purchase"),
+    # Learning funnel — quality signals before Pro and diagnostics afterwards.
+    GoalSpec("eks_demo_open", "Eksamio — demo open", "learning"),
+    GoalSpec("eks_demo_start", "Eksamio — demo start", "learning"),
+    GoalSpec("eks_demo_complete", "Eksamio — demo complete", "learning", True),
+    GoalSpec("eks_result_to_practice", "Eksamio — result to practice", "learning"),
+    GoalSpec("eks_trainer_open", "Eksamio — trainer open", "learning"),
+    GoalSpec("eks_trainer_start", "Eksamio — trainer start", "learning"),
+    GoalSpec("eks_trainer_meaningful", "Eksamio — meaningful trainer practice", "learning", True),
+    GoalSpec("eks_return_learning", "Eksamio — return learning", "learning"),
+    # Commercial funnel. Purchase/refund truth is server-owned.
+    GoalSpec("eks_pro_offer_view", "Eksamio — Pro offer viewed", "commercial"),
+    GoalSpec("eks_pro_intent", "Eksamio — Pro intent", "commercial", True),
+    GoalSpec("eks_checkout_start", "Eksamio — checkout started", "commercial", True),
+    GoalSpec("eks_purchase", "Eksamio — verified Pro purchase", "commercial", True, True),
+    GoalSpec("eks_entitlement_active", "Eksamio — paid entitlement active", "commercial", False, True),
+    GoalSpec("eks_refund", "Eksamio — refund or paid entitlement revoke", "commercial", False, True),
+    # Referral funnel. Only the visit is browser-eligible; qualification and rewards are server-owned.
+    GoalSpec("eks_referral_visit", "Eksamio — referral visit", "referral"),
+    GoalSpec("eks_referral_qualified", "Eksamio — referral qualified", "referral", False, True),
+    GoalSpec("eks_referral_purchase_verified", "Eksamio — referred purchase verified", "referral", True, True),
+    GoalSpec("eks_referral_reward_granted", "Eksamio — referral reward granted", "referral", False, True),
+    GoalSpec("eks_referral_reward_reversed", "Eksamio — referral reward reversed", "referral", False, True),
 )
 
 
@@ -100,23 +114,52 @@ def counter_domain(counter: dict) -> str:
     return ""
 
 
-def extract_exact_action(goals: list[dict]) -> dict[str, dict]:
+def action_event_ids(goal: dict) -> set[str]:
+    if goal.get("type") != "action":
+        return set()
+    result: set[str] = set()
+    for condition in goal.get("conditions") or []:
+        if not isinstance(condition, dict):
+            continue
+        # Current API represents the UI "matches" condition as exact. Accept action as
+        # well for compatibility with older JavaScript-event representations.
+        if condition.get("type") not in {"exact", "action"}:
+            continue
+        event_id = condition.get("url")
+        if isinstance(event_id, str) and event_id:
+            result.add(event_id)
+    return result
+
+
+def index_existing(goals: list[dict]) -> dict[str, dict]:
     result: dict[str, dict] = {}
     for goal in goals:
-        if goal.get("type") != "action":
+        if not isinstance(goal, dict):
             continue
-        conditions = goal.get("conditions") or []
-        for condition in conditions:
-            if not isinstance(condition, dict):
-                continue
-            if condition.get("type") != "exact":
-                continue
-            event_id = condition.get("url")
-            if isinstance(event_id, str) and event_id:
-                if event_id in result:
-                    raise RuntimeError(f"Duplicate exact action goal already exists for {event_id!r}")
-                result[event_id] = goal
+        for event_id in action_event_ids(goal):
+            if event_id in result:
+                raise RuntimeError(f"Duplicate JavaScript-event goal already exists for {event_id!r}")
+            result[event_id] = goal
     return result
+
+
+def public_goal_inventory(goals: list[dict]) -> list[dict[str, object]]:
+    inventory: list[dict[str, object]] = []
+    canonical_ids = {spec.event_id for spec in GOALS}
+    for goal in goals:
+        if not isinstance(goal, dict):
+            continue
+        event_ids = sorted(action_event_ids(goal))
+        inventory.append(
+            {
+                "id": goal.get("id"),
+                "name": goal.get("name"),
+                "type": goal.get("type"),
+                "event_ids": event_ids,
+                "canonical_match": any(event_id in canonical_ids for event_id in event_ids),
+            }
+        )
+    return inventory
 
 
 def create_goal(token: str, spec: GoalSpec) -> dict:
@@ -137,12 +180,15 @@ def create_goal(token: str, spec: GoalSpec) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Verify and idempotently install canonical Eksamio JavaScript-event goals in Yandex Metrika"
+        description=(
+            "Inventory the existing Eksamio Metrika goals and idempotently install only "
+            "missing canonical learning/commercial/referral goals"
+        )
     )
     parser.add_argument(
         "--apply",
         action="store_true",
-        help="Create missing goals. Without this flag the command is read-only.",
+        help="Create missing canonical goals. Existing goals are never deleted or modified.",
     )
     args = parser.parse_args()
 
@@ -164,9 +210,9 @@ def main() -> int:
     if not isinstance(goals, list):
         raise RuntimeError("Metrika goals response is missing goals list")
 
-    existing = extract_exact_action(goals)
+    existing = index_existing(goals)
     missing = [spec for spec in GOALS if spec.event_id not in existing]
-    created: list[dict] = []
+    created: list[dict[str, object]] = []
 
     if args.apply:
         for spec in missing:
@@ -174,19 +220,33 @@ def main() -> int:
             goal = result.get("goal")
             if not isinstance(goal, dict) or not goal.get("id"):
                 raise RuntimeError(f"Goal creation returned invalid response for {spec.event_id!r}")
-            created.append({"event_id": spec.event_id, "goal_id": goal.get("id")})
+            created.append(
+                {
+                    "event_id": spec.event_id,
+                    "goal_id": goal.get("id"),
+                    "layer": spec.layer,
+                    "server_only": spec.server_only,
+                }
+            )
 
-        # Read back after mutation and require every canonical goal.
         verify_response = api_request(token, "GET", f"/counter/{COUNTER_ID}/goals")
         verify_goals = verify_response.get("goals")
         if not isinstance(verify_goals, list):
             raise RuntimeError("Metrika verification response is missing goals list")
-        verified = extract_exact_action(verify_goals)
+        verified = index_existing(verify_goals)
         unresolved = [spec.event_id for spec in GOALS if spec.event_id not in verified]
+        final_goals = verify_goals
         if unresolved:
             raise RuntimeError(f"Metrika goal verification failed; still missing: {unresolved}")
     else:
         unresolved = [spec.event_id for spec in missing]
+        final_goals = goals
+
+    by_layer = {
+        layer: [spec.event_id for spec in GOALS if spec.layer == layer]
+        for layer in ("learning", "commercial", "referral")
+    }
+    server_only = [spec.event_id for spec in GOALS if spec.server_only]
 
     print(
         json.dumps(
@@ -197,8 +257,11 @@ def main() -> int:
                 "counter_domain_verified": True,
                 "token_source": f"macOS Keychain:{KEYCHAIN_SERVICE}/{KEYCHAIN_ACCOUNT}",
                 "token_value_printed": False,
+                "existing_goal_inventory": public_goal_inventory(final_goals),
+                "existing_goals_preserved": True,
                 "canonical_goal_count": len(GOALS),
-                "existing_before": len(GOALS) - len(missing),
+                "canonical_by_layer": by_layer,
+                "server_only_goal_ids": server_only,
                 "missing_before": [spec.event_id for spec in missing],
                 "created": created,
                 "unresolved_after": unresolved,
