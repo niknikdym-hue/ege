@@ -1,5 +1,5 @@
 {
-  "schema_version": "eksamio-sep1-live-growth-provider-acceptance-v0.1",
+  "schema_version": "eksamio-sep1-live-growth-provider-acceptance-v0.2",
   "status": "BLOCKED_EXTERNAL",
   "executed_at_utc": "2026-09-01T12:39:33Z",
   "source_commit_sha": "b075d71d8e2d2eddc74726bc50612a020c1ba3d8",
@@ -83,9 +83,11 @@
       "eks_referral_reward_granted",
       "eks_referral_reward_reversed"
     ],
+    "owner_authorization_received": true,
+    "owner_authorization_scope": "Create the 19 canonical Metrika goals and deploy/install browser-eligible eks_* events; Direct activation, budget and spend remain forbidden.",
     "token_source": "macOS Keychain:ProfitEngine-YandexOAuth-Read/profit-engine",
     "token_value_printed": false,
-    "external_blocker": "Explicit owner confirmation is required before creating 19 live goals."
+    "external_blocker": "Owner authorization is complete. Live --apply/read-back still requires execution in the owner Mac context where the protected macOS Keychain entry is available."
   },
   "browser_event_verification": {
     "counter_id_in_live_head": 110348386,
@@ -110,7 +112,10 @@
       {"surface": "checkout_start", "classification": "SURFACE_NOT_CURRENTLY_AVAILABLE", "evidence": "No checkout surface was present in checked public navigation."},
       {"surface": "referral_visit", "classification": "SURFACE_NOT_CURRENTLY_AVAILABLE", "evidence": "No referral entry surface was present in checked public navigation."}
     ],
-    "server_only_events_emitted_or_simulated": []
+    "server_only_events_emitted_or_simulated": [],
+    "deployment_authorized": true,
+    "deployment_verified": false,
+    "external_blocker": "Publishing the canonical bridge still requires an authenticated Tilda operator/session; repository presence is not live deployment evidence."
   },
   "direct": {
     "provider_acceptance": "BLOCKED",
@@ -142,7 +147,8 @@
     "search": "NOT_PROVIDER_VERIFIED",
     "network": "NOT_PROVIDER_VERIFIED",
     "weekly_budget": "NOT_PROVIDER_VERIFIED",
-    "spend": "NOT_PROVIDER_VERIFIED",
+    "provider_account_spend": "NOT_PROVIDER_VERIFIED",
+    "current_acceptance_run_spend_created_rub": 0,
     "apply_executed": false,
     "token_source": "macOS Keychain:ProfitEngine-YandexOAuth-Read/profit-engine",
     "token_value_printed": false,
@@ -152,7 +158,8 @@
     "provider_write_types_executed": [],
     "metrika_goals_created": 0,
     "direct_objects_created_or_modified": 0,
-    "real_spend": 0,
+    "current_acceptance_run_direct_spend_created_rub": 0,
+    "provider_account_spend": "NOT_PROVIDER_VERIFIED",
     "public_activation": false,
     "budget_mutation": false,
     "production_payment_or_refund_operations": 0,
@@ -164,9 +171,9 @@
     "status": "NOT_LIVE_CONNECTED",
     "required": "Implement and admit a read-only aggregate collector only after provider acceptance, joining Metrika, Direct, server payment/refund/entitlement truth, referral truth, and SEO aggregates.",
     "current_blockers": [
-      "Metrika canonical goals are absent and no post-apply readback exists.",
-      "Canonical eks_* browser bridge is not deployed on checked public pages.",
-      "Direct provider inventory is unavailable because the Keychain OAuth credential fails authorization."
+      "Metrika owner authorization is complete, but live canonical goal apply/read-back has not run in a Keychain-capable owner Mac context.",
+      "Canonical eks_* browser bridge is authorized but not yet verified as deployed on checked public pages.",
+      "Direct provider inventory remains unavailable because the protected OAuth credential fails authorization."
     ]
   }
 }
