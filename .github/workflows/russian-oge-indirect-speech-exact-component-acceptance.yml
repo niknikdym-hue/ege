@@ -26,6 +26,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Fetch current PR base
+        run: git fetch --no-tags origin "${{ github.base_ref }}" --depth=1
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -99,9 +101,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -E 'russkiy-knigi|tilda|demo|scor'; then
             echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
             exit 1
           fi
       - name: Diff hygiene
-        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
