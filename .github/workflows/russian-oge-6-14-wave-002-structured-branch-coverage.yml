@@ -1,0 +1,44 @@
+name: Russian OGE 6.14 wave 002 structured branch coverage
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.14-GAP-EVIDENCE-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/248-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A2-ALTERNATING-ROOTS-NORMALIZATION-v0.1.json"
+      - "eksamio-learning-engine/249-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A3-E-E-Y-DOUBLE-CONSONANTS-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_14_wave_002_structured_branch_coverage.py"
+      - ".github/workflows/russian-oge-6-14-wave-002-structured-branch-coverage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  structured-branch-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate structured owner branch coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile "$root/validate_oge_6_14_wave_002_structured_branch_coverage.py"
+          python3 "$root/validate_oge_6_14_wave_002_structured_branch_coverage.py"
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
