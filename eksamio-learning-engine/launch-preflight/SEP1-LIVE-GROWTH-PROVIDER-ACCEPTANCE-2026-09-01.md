@@ -1,7 +1,9 @@
 # Eksamio SEP-1 live growth provider acceptance
 
-**Status:** `BLOCKED_EXTERNAL`  
-**Executed:** `2026-09-01T12:39:33Z`  
+**Status:** `BLOCKED_EXTERNAL`
+
+**Executed:** `2026-09-01T12:39:33Z`
+
 **Source commit:** `b075d71d8e2d2eddc74726bc50612a020c1ba3d8`
 
 ## Result
