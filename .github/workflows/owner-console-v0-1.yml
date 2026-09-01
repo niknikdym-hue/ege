@@ -1,0 +1,42 @@
+name: Owner Console v0.1
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/tools/eksamio_owner_console.py'
+      - 'eksamio-learning-engine/tests/test_eksamio_owner_console.py'
+      - 'eksamio-learning-engine/owner-console/sample-snapshot.json'
+      - 'eksamio-learning-engine/34-OWNER-CONSOLE-IMPLEMENTATION-v0.1.md'
+      - '.github/workflows/owner-console-v0-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-owner-console:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile renderer
+        run: python3 -m py_compile eksamio-learning-engine/tools/eksamio_owner_console.py
+      - name: Run deterministic tests
+        run: >-
+          python3 -m unittest discover
+          -s eksamio-learning-engine/tests
+          -p 'test_eksamio_owner_console.py'
+          -v
+      - name: Render safe sample
+        run: >-
+          python3 eksamio-learning-engine/tools/eksamio_owner_console.py
+          --input eksamio-learning-engine/owner-console/sample-snapshot.json
+          --output /tmp/eksamio-owner-console.html
+          --period 7d
+      - name: Assert renderer is provider-offline
+        run: |
+          test -s /tmp/eksamio-owner-console.html
+          ! grep -q 'must-not-leak@example.com' /tmp/eksamio-owner-console.html
