@@ -19,8 +19,40 @@
   const $=selector=>document.querySelector(selector);
   const $$=selector=>Array.from(document.querySelectorAll(selector));
 
+  function resolveAdapterRuntime(){
+    const host=String(window.location.hostname||'').toLowerCase();
+    const localHost=host==='127.0.0.1'||host==='localhost'||host==='[::1]';
+    const raw=window.EKSAMIO_PRO_RUNTIME_CONFIG;
+
+    // Local browser/CI fixtures may use the deterministic mock when no runtime
+    // config is injected. A deployed/non-local client must never silently do so.
+    if(raw==null){
+      if(localHost) return {mode:'mock'};
+      throw new Error('EKSAMIO_PRO_RUNTIME_CONFIG is required outside localhost');
+    }
+    if(typeof raw!=='object'||Array.isArray(raw)) throw new Error('invalid EKSAMIO_PRO_RUNTIME_CONFIG');
+
+    const mode=String(raw.mode||'');
+    if(mode==='mock'){
+      if(!localHost) throw new Error('mock Pro adapters are forbidden outside localhost');
+      return {mode:'mock'};
+    }
+    if(mode!=='http') throw new Error('unsupported Pro runtime mode');
+    if(!localHost&&window.location.protocol!=='https:') throw new Error('production Pro client requires HTTPS');
+
+    const baseUrl=String(raw.baseUrl||'').trim().replace(/\/$/,'');
+    if(baseUrl){
+      let parsed;
+      try{ parsed=new URL(baseUrl,window.location.href); }
+      catch(_error){ throw new Error('invalid Pro backend base URL'); }
+      if(parsed.username||parsed.password) throw new Error('credentials are forbidden in Pro backend URL');
+      if(!localHost&&parsed.protocol!=='https:') throw new Error('production Pro backend requires HTTPS');
+    }
+    return {mode:'http',baseUrl};
+  }
+
   async function init(){
-    state.adapters=window.EksamioProAdapters.createAdapters({mode:'mock'});
+    state.adapters=window.EksamioProAdapters.createAdapters(resolveAdapterRuntime());
     state.program=await state.adapters.learning.program();
     populateGoalControls();
     renderProgram();
@@ -31,6 +63,7 @@
     renderIdentity();
     renderPractice();
     renderEntitlement();
+    configurePaymentUi();
     bindEvents();
     document.documentElement.dataset.appReady='true';
   }
@@ -95,6 +128,18 @@
     }
   }
 
+  function configurePaymentUi(){
+    const button=$('#purchaseButton');
+    if(state.adapters.mode==='mock'){
+      button.hidden=false;
+      button.disabled=false;
+      return;
+    }
+    button.hidden=true;
+    button.disabled=true;
+    $('#paymentStatus').textContent='Production checkout будет доступен только после допуска server-owned SKU и trusted payment boundary.';
+  }
+
   function renderPractice(){
     const p=state.practice;
     $('#practiceSemantic').textContent=p.semantic_id;
@@ -149,6 +194,7 @@
   }
 
   async function purchaseSandbox(){
+    if(!state.adapters||state.adapters.mode!=='mock') throw new Error('sandbox purchase is localhost/mock only');
     if(!state.identity.authenticated) await continueIdentity();
     const button=$('#purchaseButton');
     button.disabled=true;
@@ -206,7 +252,7 @@
     $('#gradeSelect').addEventListener('change',async event=>{state.grade=Number(event.target.value);await refreshLearningState();});
     $('#routeSelect').addEventListener('change',async event=>{state.route=event.target.value;await refreshLearningState();});
     $('#checkAnswer').addEventListener('click',handleCheck);
-    $('#purchaseButton').addEventListener('click',purchaseSandbox);
+    if(state.adapters.mode==='mock') $('#purchaseButton').addEventListener('click',purchaseSandbox);
     $('#tutorForm').addEventListener('submit',handleTutor);
     window.addEventListener('hashchange',()=>{
       const view=location.hash.replace('#','');
