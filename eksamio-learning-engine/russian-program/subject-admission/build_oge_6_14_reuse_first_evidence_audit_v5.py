@@ -4,9 +4,9 @@
 The historical reuse-exhaustion proof describes the repository before wave 002 was
 materialized. A later replacement-only structured repair is also post-proof material,
 so it must not be re-read as if it had existed before materialization. v5 preserves
-that historical proof without editing it: while v4/v3 are evaluated, exactly the base
-wave-002 file and its bounded structured repair are excluded from that historical
-scan. The historical normalized fingerprint must remain unchanged.
+the historical normalized result while verifying that the historical scanner excludes
+exactly the two authorized post-proof materialization files. The historical normalized
+fingerprint must remain unchanged.
 """
 from __future__ import annotations
 
@@ -108,7 +108,8 @@ def build_audit_v5() -> dict[str, Any]:
         "excluded_post_proof_materialization_files": observed_exclusion_set,
         "expected_and_observed_reuse_exhaustion_normalized_sha256": EXPECTED_EXHAUSTION_SHA,
         "broad_exclusion_used": False,
-        "historical_proof_file_modified_for_repair": False,
+        "historical_proof_guard_code_updated_for_exact_repair_file": True,
+        "historical_proof_normalized_result_changed": False,
     }
     result["summary"]["historical_reuse_proof_fingerprint_preserved"] = True
     result["summary"]["ready_for_separate_exact_object_acceptance"] = True

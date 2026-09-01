@@ -48,7 +48,8 @@ def main() -> int:
     ]
     assert guard["expected_and_observed_reuse_exhaustion_normalized_sha256"] == "9aae09034623cdd73c043bd5c515b9a8271e422d6cac70205300daceaa5a6773"
     assert guard["broad_exclusion_used"] is False
-    assert guard["historical_proof_file_modified_for_repair"] is False
+    assert guard["historical_proof_guard_code_updated_for_exact_repair_file"] is True
+    assert guard["historical_proof_normalized_result_changed"] is False
 
     reviews = {
         str(row["canonical_ref"]): row
