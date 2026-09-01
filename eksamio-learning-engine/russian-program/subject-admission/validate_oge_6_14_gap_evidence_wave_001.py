@@ -13,28 +13,29 @@ EXPECTED_BY_CODE = {
         "school-invariable-prefix-spelling-base",
         "school-pre-pri-lexical-contrast-family",
         "school-pre-pri-semantic-base",
-        "school-prefix-z-s-selection"
+        "school-prefix-z-s-selection",
     ],
     "6.4": [
         "school-adverb-final-soft-sign-after-sibilant-base",
         "school-separating-hard-soft-sign-boundary",
-        "school-verb-soft-sign-forms"
+        "school-verb-soft-sign-forms",
     ],
     "6.5": [
         "school-i-y-after-prefix-retain-i-boundary",
         "school-i-y-after-prefix-vzimat-exception",
-        "school-i-y-after-russian-prefix-base"
+        "school-i-y-after-russian-prefix-base",
     ],
     "6.10": [
         "school-denominal-adjective-n-nn-base",
         "school-nn-derived-noun-adverb-inheritance",
-        "school-participle-verbal-adjective-n-nn-base"
-    ]
+        "school-participle-verbal-adjective-n-nn-base",
+    ],
 }
 EXPECTED_OWNERS = sorted(ref for refs in EXPECTED_BY_CODE.values() for ref in refs)
 EXPECTED_AUTHORITY_SHA = "c9b40069b7d2f8bb692cfa4e3b1e5ae21fd785e23542d8f6e74b391b0a8674dc"
 EXPECTED_BASE_AUDIT_SHA = "762983d941220598a43161bac0cceecc1cc1bc3a5f4b50a16b02057c4761b696"
 MIN_ITEMS = 3
+
 
 def main() -> int:
     d = json.loads(PACK.read_text(encoding="utf-8"))
@@ -48,6 +49,7 @@ def main() -> int:
         "label_ru": "Орфографический анализ",
         "classification": "EXAM_ONLY_COMPOSITE",
     }
+
     policy = d["evidence_policy"]
     assert policy["base_reuse_audit_normalized_sha256"] == EXPECTED_BASE_AUDIT_SHA
     assert policy["base_exact_owner_frontier"] == 83
@@ -81,37 +83,50 @@ def main() -> int:
     owners = [row["canonical_ref"] for row in rows]
     assert sorted(owners) == EXPECTED_OWNERS
     assert len(owners) == len(set(owners)) == 13
-    all_ids = []
+
+    all_ids: list[str] = []
     for row in rows:
         owner = row["canonical_ref"]
         code = row["source_oge_code"]
         assert owner in EXPECTED_BY_CODE[code]
         assert row["evidence_status"] == "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE"
-        assert row["title_ru"].strip()
-        assert row["semantic_boundary"].strip()
+        assert len(row["title_ru"].strip()) >= 10
+        assert len(row["semantic_boundary"].strip()) >= 40
+
         items = row["independent_verification"]
         assert len(items) == MIN_ITEMS
+        types = {item.get("type") for item in items}
+        # Pedagogical acceptance: recognition alone is insufficient. Every exact
+        # owner must have at least one selected-response item and one item where
+        # the learner independently states/applies the rule boundary.
+        assert "single_choice" in types, f"selected-response evidence missing: {owner}"
+        assert "constructed_response" in types, f"constructed-response evidence missing: {owner}"
+
         for item in items:
             iid = item["id"]
             all_ids.append(iid)
             assert iid.startswith("oge614-w1-")
             assert item["evidence_mode"] == "INDEPENDENT"
             assert item["school_semantic_refs"] == [owner]
-            assert item["prompt"].strip()
+            assert len(item["prompt"].strip()) >= 15
+
             if item["type"] == "single_choice":
                 options = item["options"]
                 idx = item["correct_option_index"]
                 assert len(options) == 3
                 assert len(set(options)) == 3
                 assert 0 <= idx < len(options)
-                assert item["feedback"].strip()
+                assert len(item["feedback"].strip()) >= 15
             elif item["type"] == "constructed_response":
-                assert item["answer_outline"].strip()
+                assert len(item["answer_outline"].strip()) >= 25
                 scoring = item["scoring"]
                 assert scoring["max_points"] == 2
-                assert len(scoring["criteria"]) == 2
+                criteria = scoring["criteria"]
+                assert len(criteria) == 2
+                assert all(isinstance(c, str) and len(c.strip()) >= 20 for c in criteria)
             else:
                 raise AssertionError(f"unsupported evidence type: {item['type']}")
+
     assert len(all_ids) == 39
     assert len(all_ids) == len(set(all_ids))
 
@@ -128,6 +143,7 @@ def main() -> int:
     assert s["object_closures"] == 0
     assert s["false_exact_mastery_admissions"] == 0
     assert s["new_school_identities"] == 0
+
     safety = d["safety"]
     assert safety["accepted_demo_or_scorer_change"] is False
     assert safety["tilda_change"] is False
@@ -140,12 +156,14 @@ def main() -> int:
 
     print("OGE_6_14_GAP_WAVE_001_OWNER_COUNT=13")
     print("OGE_6_14_GAP_WAVE_001_INDEPENDENT_ITEMS=39")
+    print("OGE_6_14_GAP_WAVE_001_RESPONSE_MODE_PER_OWNER=SELECTED_PLUS_CONSTRUCTED")
     print("OGE_6_14_GAP_WAVE_001_SEMANTIC_ADMISSIONS=0")
     print("OGE_6_14_GAP_WAVE_001_OBJECT_CLOSURES=0")
     print("FALSE_EXACT_MASTERY_ADMISSIONS=0")
     print("LEARNER_AUDIO_PERSISTENCE=0")
     print("RUSSIAN_OGE_6_14_GAP_EVIDENCE_WAVE_001_GUARD=PASS")
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
