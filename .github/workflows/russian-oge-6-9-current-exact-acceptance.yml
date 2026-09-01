@@ -1,0 +1,104 @@
+name: Russian OGE 6.9 current exact acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/281-RUSSIAN-FIPI-2026-OGE-6.9-CURRENT-ROUTE-SUPERSESSION-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.9-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.9-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_9_component_evidence.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_9_object_evidence_audit.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_9_current_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
+      - ".github/workflows/russian-oge-6-9-current-exact-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-9-current-exact-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile exact acceptance chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile \
+            "$root/validate_oge_6_9_component_evidence.py" \
+            "$root/build_oge_6_9_object_evidence_audit.py" \
+            "$root/validate_russian_oge_6_9_current_acceptance.py"
+      - name: Prove component evidence readiness deterministically
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_oge_6_9_object_evidence_audit.py" --output /tmp/oge69-a.json > /tmp/oge69-a.txt
+          python3 "$root/build_oge_6_9_object_evidence_audit.py" --output /tmp/oge69-b.json > /tmp/oge69-b.txt
+          cmp /tmp/oge69-a.json /tmp/oge69-b.json
+          diff -u /tmp/oge69-a.txt /tmp/oge69-b.txt
+          cat /tmp/oge69-a.txt
+          grep -Fx 'OGE_6_9_OBJECT_EVIDENCE_AUDIT=PASS' /tmp/oge69-a.txt
+          grep -Fx 'OFFICIAL_FIPI_BRANCHES=8' /tmp/oge69-a.txt
+          grep -Fx 'EXACT_BRANCH_OWNER_PAIRS=21' /tmp/oge69-a.txt
+          grep -Fx 'EXACT_OWNER_FRONTIER=14' /tmp/oge69-a.txt
+          grep -Fx 'OWNERS_WITH_EXACT_COMPONENT_EVIDENCE=14' /tmp/oge69-a.txt
+          grep -Fx 'OWNERS_WITH_INSUFFICIENT_EXACT=0' /tmp/oge69-a.txt
+          grep -Fx 'OWNERS_WITH_MIXED_ONLY=0' /tmp/oge69-a.txt
+          grep -Fx 'OWNERS_WITH_NO_INDEPENDENT_EVIDENCE=0' /tmp/oge69-a.txt
+          grep -Fx 'MATERIALIZED_EXACT_ITEMS=42' /tmp/oge69-a.txt
+          grep -Fx 'REUSED_ROUTE_SCOPED_ITEMS=0' /tmp/oge69-a.txt
+          grep -Fx 'READY_FOR_EXACT_OBJECT_ACCEPTANCE=1' /tmp/oge69-a.txt
+          grep -Fx 'OBJECT_CLOSURES=0' /tmp/oge69-a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/oge69-a.txt
+          grep -Fx 'LEARNER_AUDIO_PERSISTENCE=0' /tmp/oge69-a.txt
+      - name: Validate exact OGE 6.9 acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/validate_russian_oge_6_9_current_acceptance.py" > /tmp/accept-a.txt
+          python3 "$root/validate_russian_oge_6_9_current_acceptance.py" > /tmp/accept-b.txt
+          diff -u /tmp/accept-a.txt /tmp/accept-b.txt
+          cat /tmp/accept-a.txt
+          grep -Fx 'RUSSIAN_OGE_6_9_CURRENT_ACCEPTANCE=PASS' /tmp/accept-a.txt
+          grep -Fx 'CURRENT_SCHOOL_DENOMINATOR=186' /tmp/accept-a.txt
+          grep -Fx 'OFFICIAL_FIPI_BRANCHES=8' /tmp/accept-a.txt
+          grep -Fx 'EXACT_BRANCH_OWNER_PAIRS=21' /tmp/accept-a.txt
+          grep -Fx 'EXACT_OWNER_FRONTIER=14' /tmp/accept-a.txt
+          grep -Fx 'REUSED_CURRENT_CANONICAL_OWNERS=14' /tmp/accept-a.txt
+          grep -Fx 'NEW_SCHOOL_CANONICAL_IDENTITIES=0' /tmp/accept-a.txt
+          grep -Fx 'INDEPENDENT_COMPONENT_EVIDENCE_ITEMS=42' /tmp/accept-a.txt
+          grep -Fx 'ROUTE_SCOPED_REUSED_ITEMS=0' /tmp/accept-a.txt
+          grep -Fx 'ACCEPTED_OBJECT_UNITS=1' /tmp/accept-a.txt
+          grep -Fx 'ACCEPTED_REQUIREMENTS=1' /tmp/accept-a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/accept-a.txt
+          grep -Fx 'LEARNER_AUDIO_PERSISTENCE=0' /tmp/accept-a.txt
+      - name: Upload exact evidence audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-9-current-exact-acceptance-evidence
+          path: /tmp/oge69-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
