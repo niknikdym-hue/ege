@@ -1,0 +1,131 @@
+name: Russian OGE 6.14 current exact component derivation
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.2-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.6-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.7-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.8-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.9-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.11-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.12-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.13-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_base.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_current_exact_component_derivation.py"
+      - ".github/workflows/russian-oge-6-14-current-exact-component-derivation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  current-exact-component-derivation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build deterministic OGE 6.14 current component projection twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile "$root/build_oge_6_14_current_exact_component_derivation.py"
+          python3 "$root/build_oge_6_14_current_exact_component_derivation.py" --output /tmp/oge-6-14-current-a.json > /tmp/oge-6-14-current-a.txt
+          python3 "$root/build_oge_6_14_current_exact_component_derivation.py" --output /tmp/oge-6-14-current-b.json > /tmp/oge-6-14-current-b.txt
+          cmp /tmp/oge-6-14-current-a.json /tmp/oge-6-14-current-b.json
+          diff -u /tmp/oge-6-14-current-a.txt /tmp/oge-6-14-current-b.txt
+          cat /tmp/oge-6-14-current-a.txt
+      - name: Verify exact-authority-only derivation and no 6.14 admission
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          d=json.loads(Path('/tmp/oge-6-14-current-a.json').read_text(encoding='utf-8'))
+          src=d['official_source']
+          deriv=d['derivation']
+          boundary=d['acceptance_boundary']
+          safety=d['safety']
+
+          assert d['status']=='CURRENT_EXACT_COMPONENT_SET_DERIVED_REUSE_EVIDENCE_AUDIT_REQUIRED'
+          assert src['source_system']=='OGE_COD'
+          assert src['cycle']==2026
+          assert src['code']=='6.14'
+          assert src['label']=='Орфографический анализ'
+          assert src['classification']=='EXAM_ONLY_COMPOSITE'
+          assert src['fabricated_subcodes']==0
+          assert deriv['source_codes']==[f'6.{i}' for i in range(2,14)]
+          assert deriv['source_code_count']==12
+          assert deriv['component_memberships_before_deduplication']==90
+          assert deriv['applicable_component_count']==83
+          assert len(deriv['applicable_component_refs'])==83
+          assert len(set(deriv['applicable_component_refs']))==83
+          assert all(ref.startswith('school-') for ref in deriv['applicable_component_refs'])
+          assert deriv['shared_component_ref_count']==7
+          assert deriv['unresolved_source_codes']==[]
+          assert deriv['placeholder_owner_used'] is False
+          assert deriv['manual_broad_list_used'] is False
+          assert deriv['keyword_or_fuzzy_inference_used'] is False
+          assert deriv['all_school_identities_used'] is False
+          assert deriv['component_set_status']=='COMPLETE_CURRENT_ACCEPTED_EXACT_AUTHORITY_PROJECTION'
+          assert deriv['oge_6_13_current_reconfirmation_guard_executed_by_source_progress'] is True
+          assert len(deriv['source_component_sets'])==12
+          assert all(row['component_count']==len(row['canonical_component_refs']) for row in deriv['source_component_sets'])
+          assert all(row['accepted_authority_id'] for row in deriv['source_component_sets'])
+          assert all(row['accepted_authority_sha256'] for row in deriv['source_component_sets'])
+          assert boundary['new_canonical_identity_required'] is False
+          assert boundary['exact_component_refs_accepted_for_6_14_now']==[]
+          assert boundary['exact_component_acceptance_count_for_6_14_now']==0
+          assert boundary['object_closures_now']==0
+          assert safety['semantic_admissions']==0
+          assert safety['object_closures']==0
+          assert safety['new_school_identities']==0
+          assert safety['school_reopen']==0
+          assert safety['false_exact_mastery_admissions']==0
+          assert safety['learner_audio_persistence']==0
+          assert safety['accepted_demo_or_scorer_change'] is False
+          assert safety['tilda_change'] is False
+          assert safety['production_peis_write'] is False
+          assert safety['provider_execution'] is False
+          assert safety['public_traffic'] is False
+          assert safety['real_payment_or_refund'] is False
+          assert safety['real_message_delivery'] is False
+          print('OGE_6_14_SOURCE_CODES_EXACT_ACCEPTED=12')
+          print('OGE_6_14_COMPONENT_MEMBERSHIPS=90')
+          print('OGE_6_14_UNIQUE_APPLICABLE_COMPONENTS=83')
+          print('OGE_6_14_PLACEHOLDER_OWNER_USED=0')
+          print('OGE_6_14_EXACT_COMPONENT_ADMISSIONS_NOW=0')
+          print('OGE_6_14_OBJECT_CLOSURES_NOW=0')
+          print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
+          print('LEARNER_AUDIO_PERSISTENCE=0')
+          print('RUSSIAN_OGE_6_14_CURRENT_EXACT_COMPONENT_DERIVATION_GUARD=PASS')
+          PY
+      - name: Upload current exact component derivation
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-14-current-exact-component-derivation
+          path: /tmp/oge-6-14-current-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
