@@ -1,27 +1,24 @@
 #!/usr/bin/env python3
-"""Fail-closed validator for the effective OGE 6.14 wave-002 structured repair."""
+"""Fail-closed validator for the final effective OGE 6.14 wave-002 repair."""
 from __future__ import annotations
 
 import runpy
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-BUILDER = HERE / "build_oge_6_14_reuse_first_evidence_audit_v4.py"
+BUILDER = HERE / "build_oge_6_14_reuse_first_evidence_audit_v5.py"
 DOUBLE_OWNER = "school-double-consonants-morpheme-junction"
 IE_OWNER = "school-i-e-alternating-verb-roots-stressed-a"
-
-EXPECTED_BRANCH_COUNTS = {
-    DOUBLE_OWNER: 3,
-    IE_OWNER: 10,
-}
+EXPECTED_BRANCH_COUNTS = {DOUBLE_OWNER: 3, IE_OWNER: 10}
+EXPECTED_STATUS = (
+    "CENTRAL_BRAIN_OGE_6_14_COMPONENT_EVIDENCE_COMPLETE_STRUCTURED_BRANCH_COVERAGE_AND_"
+    "HISTORICAL_REUSE_GUARD_PROVEN_READY_FOR_SEPARATE_OBJECT_ACCEPTANCE_NOT_ACCEPTED"
+)
 
 
 def main() -> int:
-    result = runpy.run_path(str(BUILDER))["build_audit_v4"]()
-    assert result["status"] == (
-        "CENTRAL_BRAIN_OGE_6_14_COMPONENT_EVIDENCE_COMPLETE_STRUCTURED_BRANCH_COVERAGE_PROVEN_"
-        "READY_FOR_SEPARATE_OBJECT_ACCEPTANCE_NOT_ACCEPTED"
-    )
+    result = runpy.run_path(str(BUILDER))["build_audit_v5"]()
+    assert result["status"] == EXPECTED_STATUS
     assert len(result["exact_owner_refs"]) == 83
     assert len(set(result["exact_owner_refs"])) == 83
     assert result["missing_owner_refs"] == []
@@ -37,10 +34,21 @@ def main() -> int:
     assert summary["structured_repair_replaced_item_count"] == 6
     assert summary["structured_repair_additional_item_count"] == 0
     assert summary["structured_branch_coverage_complete"] is True
+    assert summary["historical_reuse_proof_fingerprint_preserved"] is True
     assert summary["ready_for_separate_exact_object_acceptance"] is True
     assert summary["semantic_admissions"] == 0
     assert summary["object_closures"] == 0
     assert summary["false_exact_mastery_admissions"] == 0
+
+    guard = result["historical_reuse_proof_guard"]
+    assert guard["pre_materialization_semantics_preserved"] is True
+    assert guard["excluded_post_proof_materialization_files"] == [
+        "RU-PROG-08-OGE-6.14-GAP-EVIDENCE-WAVE-002-STRUCTURED-REPAIR-v0.1.json",
+        "RU-PROG-08-OGE-6.14-GAP-EVIDENCE-WAVE-002-v0.1.json",
+    ]
+    assert guard["expected_and_observed_reuse_exhaustion_normalized_sha256"] == "9aae09034623cdd73c043bd5c515b9a8271e422d6cac70205300daceaa5a6773"
+    assert guard["broad_exclusion_used"] is False
+    assert guard["historical_proof_file_modified_for_repair"] is False
 
     reviews = {
         str(row["canonical_ref"]): row
@@ -52,9 +60,7 @@ def main() -> int:
     superseded_ids: list[str] = []
     for owner, expected_count in EXPECTED_BRANCH_COUNTS.items():
         row = reviews[owner]
-        assert row["evidence_status"] == (
-            "EXPLICIT_COMPONENT_SPECIFIC_INDEPENDENT_EVIDENCE_PRESENT_STRUCTURED_BRANCH_COMPLETE"
-        )
+        assert row["evidence_status"] == "EXPLICIT_COMPONENT_SPECIFIC_INDEPENDENT_EVIDENCE_PRESENT_STRUCTURED_BRANCH_COMPLETE"
         assert len(row["required_branch_ids"]) == expected_count
         assert set(row["required_branch_ids"]) == set(row["covered_branch_ids"])
         assert row["exact_component_independent_item_count"] == 3
@@ -86,6 +92,7 @@ def main() -> int:
     print("STRUCTURED_REPLACED_ITEMS=6")
     print("STRUCTURED_ADDITIONAL_ITEMS=0")
     print("STRUCTURED_BRANCH_COVERAGE_COMPLETE=1")
+    print("HISTORICAL_REUSE_PROOF_FINGERPRINT_PRESERVED=1")
     print("READY_FOR_SEPARATE_EXACT_OBJECT_ACCEPTANCE=1")
     print("OGE_6_14_OBJECT_CLOSURES=0")
     print("FALSE_EXACT_MASTERY_ADMISSIONS=0")

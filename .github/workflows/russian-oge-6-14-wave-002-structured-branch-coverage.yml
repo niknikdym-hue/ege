@@ -7,8 +7,10 @@ on:
       - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.14-GAP-EVIDENCE-WAVE-002-STRUCTURED-REPAIR-v0.1.json"
       - "eksamio-learning-engine/248-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A2-ALTERNATING-ROOTS-NORMALIZATION-v0.1.json"
       - "eksamio-learning-engine/249-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A3-E-E-Y-DOUBLE-CONSONANTS-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_remaining_6_2_reuse_exhaustion.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit_v3.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit_v4.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit_v5.py"
       - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_14_wave_002_structured_branch_coverage.py"
       - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_14_wave_002_structured_repair.py"
       - ".github/workflows/russian-oge-6-14-wave-002-structured-branch-coverage.yml"
@@ -28,38 +30,38 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Validate effective structured-owner replacement evidence
+      - name: Validate final effective structured-owner evidence
         shell: bash
         run: |
           set -euo pipefail
           root="eksamio-learning-engine/russian-program/subject-admission"
           python3 -m py_compile \
             "$root/build_oge_6_14_reuse_first_evidence_audit_v4.py" \
+            "$root/build_oge_6_14_reuse_first_evidence_audit_v5.py" \
             "$root/validate_oge_6_14_wave_002_structured_repair.py" \
             "$root/validate_oge_6_14_wave_002_structured_branch_coverage.py"
           python3 "$root/validate_oge_6_14_wave_002_structured_branch_coverage.py"
-      - name: Build deterministic branch-complete v4 audit twice
+      - name: Build deterministic final effective v5 audit twice
         shell: bash
         run: |
           set -euo pipefail
           root="eksamio-learning-engine/russian-program/subject-admission"
-          python3 "$root/build_oge_6_14_reuse_first_evidence_audit_v4.py" --output /tmp/oge-6-14-v4-a.json > /tmp/oge-6-14-v4-a.txt
-          python3 "$root/build_oge_6_14_reuse_first_evidence_audit_v4.py" --output /tmp/oge-6-14-v4-b.json > /tmp/oge-6-14-v4-b.txt
-          cmp /tmp/oge-6-14-v4-a.json /tmp/oge-6-14-v4-b.json
-          diff -u /tmp/oge-6-14-v4-a.txt /tmp/oge-6-14-v4-b.txt
-          cat /tmp/oge-6-14-v4-a.txt
-      - name: Verify immutable frontier and zero object admission
+          python3 "$root/build_oge_6_14_reuse_first_evidence_audit_v5.py" --output /tmp/oge-6-14-v5-a.json > /tmp/oge-6-14-v5-a.txt
+          python3 "$root/build_oge_6_14_reuse_first_evidence_audit_v5.py" --output /tmp/oge-6-14-v5-b.json > /tmp/oge-6-14-v5-b.txt
+          cmp /tmp/oge-6-14-v5-a.json /tmp/oge-6-14-v5-b.json
+          diff -u /tmp/oge-6-14-v5-a.txt /tmp/oge-6-14-v5-b.txt
+          cat /tmp/oge-6-14-v5-a.txt
+      - name: Verify immutable frontier historical proof and zero object admission
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import json
           from pathlib import Path
-          d=json.loads(Path('/tmp/oge-6-14-v4-a.json').read_text(encoding='utf-8'))
-          s=d['summary']
-          assert d['status']=='CENTRAL_BRAIN_OGE_6_14_COMPONENT_EVIDENCE_COMPLETE_STRUCTURED_BRANCH_COVERAGE_PROVEN_READY_FOR_SEPARATE_OBJECT_ACCEPTANCE_NOT_ACCEPTED'
-          assert len(d['exact_owner_refs'])==83
-          assert len(set(d['exact_owner_refs']))==83
+          d=json.loads(Path('/tmp/oge-6-14-v5-a.json').read_text(encoding='utf-8'))
+          s=d['summary']; g=d['historical_reuse_proof_guard']
+          assert d['status']=='CENTRAL_BRAIN_OGE_6_14_COMPONENT_EVIDENCE_COMPLETE_STRUCTURED_BRANCH_COVERAGE_AND_HISTORICAL_REUSE_GUARD_PROVEN_READY_FOR_SEPARATE_OBJECT_ACCEPTANCE_NOT_ACCEPTED'
+          assert len(d['exact_owner_refs'])==83 and len(set(d['exact_owner_refs']))==83
           assert d['missing_owner_refs']==[]
           assert s['exact_owner_frontier']==83
           assert s['owners_with_explicit_component_specific_independent_evidence']==83
@@ -70,10 +72,12 @@ jobs:
           assert s['structured_repair_replaced_item_count']==6
           assert s['structured_repair_additional_item_count']==0
           assert s['structured_branch_coverage_complete'] is True
+          assert s['historical_reuse_proof_fingerprint_preserved'] is True
           assert s['ready_for_separate_exact_object_acceptance'] is True
-          assert s['semantic_admissions']==0
-          assert s['object_closures']==0
+          assert s['semantic_admissions']==0 and s['object_closures']==0
           assert s['false_exact_mastery_admissions']==0
+          assert g['expected_and_observed_reuse_exhaustion_normalized_sha256']=='9aae09034623cdd73c043bd5c515b9a8271e422d6cac70205300daceaa5a6773'
+          assert g['broad_exclusion_used'] is False
           assert d['safety']['learner_audio_persistence']==0
           print('OGE_6_14_EXACT_OWNER_FRONTIER=83')
           print('OGE_6_14_EVIDENCE_READY_OWNERS=83')
@@ -81,30 +85,33 @@ jobs:
           print('OGE_6_14_STRUCTURED_REPLACED_ITEMS=6')
           print('OGE_6_14_STRUCTURED_ADDITIONAL_ITEMS=0')
           print('STRUCTURED_BRANCH_COVERAGE_COMPLETE=1')
+          print('HISTORICAL_REUSE_PROOF_FINGERPRINT_PRESERVED=1')
           print('READY_FOR_SEPARATE_EXACT_OBJECT_ACCEPTANCE=1')
           print('OGE_6_14_OBJECT_CLOSURES=0')
           print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
           print('LEARNER_AUDIO_PERSISTENCE=0')
           PY
-      - name: Upload branch-complete evidence audit
+      - name: Upload final effective evidence audit
         uses: actions/upload-artifact@v4
         with:
-          name: russian-oge-6-14-structured-branch-complete-v4-audit
-          path: /tmp/oge-6-14-v4-a.json
+          name: russian-oge-6-14-final-effective-v5-evidence-audit
+          path: /tmp/oge-6-14-v5-a.json
           if-no-files-found: error
           retention-days: 14
-      - name: Protect accepted Russian production surfaces
+      - name: Protect surfaces changed during the 6.14 semantic-repair delta
         shell: bash
         run: |
           set -euo pipefail
-          git fetch --no-tags origin "${{ github.base_ref }}"
-          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
-            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+          repair_base="763d1808d44675b7f21dd5ececfa72bfef51039f"
+          git merge-base --is-ancestor "$repair_base" HEAD
+          if git diff --name-only "$repair_base..HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed during the OGE 6.14 semantic-repair delta.' >&2
             exit 1
           fi
-      - name: Full PR diff hygiene
+      - name: Semantic-repair delta hygiene
         shell: bash
         run: |
           set -euo pipefail
-          git fetch --no-tags origin "${{ github.base_ref }}"
-          git diff --check "origin/${{ github.base_ref }}...HEAD"
+          repair_base="763d1808d44675b7f21dd5ececfa72bfef51039f"
+          git merge-base --is-ancestor "$repair_base" HEAD
+          git diff --check "$repair_base..HEAD"
