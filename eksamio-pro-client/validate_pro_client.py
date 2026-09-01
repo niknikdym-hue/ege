@@ -50,7 +50,6 @@ def main() -> int:
     ):
         assert contract in adapters and contract in app, contract
     assert "mode==='http'" in adapters
-    assert "/api/payments/orders" in adapters
     assert "/api/tutor/turn" in adapters
     assert "/api/russian/practice/submit" in adapters
 
@@ -65,6 +64,17 @@ def main() -> int:
     assert "credentials are forbidden in Pro backend URL" in app
     assert "state.adapters=window.EksamioProAdapters.createAdapters(resolveAdapterRuntime())" in app
     assert "state.adapters=window.EksamioProAdapters.createAdapters({mode:'mock'})" not in app
+
+    # Sandbox payment is a localhost/mock fixture only. HTTP/production adapters may
+    # read server-owned entitlement but do not expose sandbox order/confirmation paths.
+    assert "/api/payments/entitlement" in adapters
+    assert "/api/payments/sandbox/confirm" not in adapters
+    assert "/api/payments/orders" not in adapters
+    assert "sandbox purchase is localhost/mock only" in app
+    assert "if(state.adapters.mode==='mock') $('#purchaseButton').addEventListener('click',purchaseSandbox);" in app
+    assert "button.hidden=true" in app
+    assert "Production checkout будет доступен только после допуска server-owned SKU and trusted payment boundary." not in app  # exact bilingual drift guard below
+    assert "Production checkout будет доступен только после допуска server-owned SKU и trusted payment boundary." in app
 
     # The one executable learning action is an existing owner-reviewed source item, not new generated content.
     reviewed = json.loads((ENGINE / "92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json").read_text(encoding="utf-8"))
@@ -101,6 +111,7 @@ def main() -> int:
     print("reviewed_owner_practice_reused=1")
     print("runtime_binding=EXPLICIT_HTTP_OUTSIDE_LOCALHOST")
     print("production_mock_fallback=0")
+    print("production_sandbox_payment_path=0")
     print("client_secrets=0")
     return 0
 
