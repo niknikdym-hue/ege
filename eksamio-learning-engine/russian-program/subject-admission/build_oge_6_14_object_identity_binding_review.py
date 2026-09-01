@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Fail-closed exact object-identity review for OGE-2026 6.14.
+"""Fail-closed exact object-identity and semantic-scope review for OGE-2026 6.14.
 
-This review derives the 6.14 admission-unit/requirement binding from complete
-object accounting and proves that current accepted object progress does not
-already contain the same object. It does not accept 6.14 or change progress.
+The accounting review group that contains OGE_COD 6.14 also carries a punctuation
+review-capability boundary. That grouping is useful for finite review accounting,
+but its combined normalized meaning is NOT exact semantic authority for 6.14.
+This builder therefore binds the unique source object and explicitly quarantines
+the unrelated punctuation boundary before any exact 6.14 acceptance can exist.
+It performs no object acceptance and does not change aggregate progress.
 """
 from __future__ import annotations
 
@@ -26,6 +29,12 @@ DOCUMENT_ID = "OGE_COD"
 CONTENT_CODE = "6.14"
 LABEL_RU = "Орфографический анализ"
 CLASSIFICATION = "EXAM_ONLY_COMPOSITE"
+OVERLAY_TOPIC = "orthographic analysis"
+OVERLAY_NOTE = "Rule identification/application over existing skills; zero school-count effect."
+ORTHOGRAPHY_BOUNDARY_REF = "review-boundary:899bdadfe84d"
+ORTHOGRAPHY_BOUNDARY_LABEL = "Применять орфографическое правило к слову или форме."
+PUNCTUATION_BOUNDARY_REF = "review-boundary:cf5ab34773b8"
+PUNCTUATION_BOUNDARY_LABEL = "Выбирать нормативные знаки препинания в конструкции."
 
 
 def canonical_bytes(value: Any) -> bytes:
@@ -53,10 +62,10 @@ def build_review() -> dict[str, Any]:
     ]
     assert len(overlay_rows) == 1
     overlay_row = overlay_rows[0]
-    assert overlay_row["topic"] == "orthographic analysis"
+    assert overlay_row["topic"] == OVERLAY_TOPIC
     assert overlay_row["classification"] == CLASSIFICATION
     assert overlay_row["owners"] == ["all applicable active orthography identities"]
-    assert "zero school-count effect" in overlay_row["note"]
+    assert overlay_row["note"] == OVERLAY_NOTE
 
     matches: list[tuple[dict[str, Any], dict[str, Any]]] = []
     for disposition in accounting["dispositions"]:
@@ -70,7 +79,7 @@ def build_review() -> dict[str, Any]:
     assert len(matches) == 1, f"expected exactly one accounting binding for 6.14, got {len(matches)}"
     disposition, member = matches[0]
     assert disposition["disposition"] == "PARTIAL_OR_COMPOSITE"
-    assert "oge" in disposition["routes"]
+    assert disposition["routes"] == ["oge"]
 
     unit_id = str(disposition["admission_unit_id"])
     requirement_id = str(member["requirement_id"])
@@ -94,6 +103,31 @@ def build_review() -> dict[str, Any]:
     assert str(packet_requirement["code"]) == CONTENT_CODE
     assert str(packet_requirement["source_locator"]) == source_locator
 
+    # The review-accounting group is intentionally broader than the exact 6.14
+    # source object. Quarantine the punctuation boundary instead of propagating
+    # the group's combined normalized meaning into exact acceptance.
+    disposition_boundaries = {
+        str(row.get("ref")): row
+        for row in disposition.get("component_refs", [])
+        if isinstance(row, dict)
+    }
+    packet_boundaries = {
+        str(row.get("ref")): row
+        for row in packet_group.get("review_capability_boundaries", [])
+        if isinstance(row, dict)
+    }
+    assert set(disposition_boundaries) == {ORTHOGRAPHY_BOUNDARY_REF, PUNCTUATION_BOUNDARY_REF}
+    assert set(packet_boundaries) == {ORTHOGRAPHY_BOUNDARY_REF, PUNCTUATION_BOUNDARY_REF}
+    for boundaries in (disposition_boundaries, packet_boundaries):
+        assert boundaries[ORTHOGRAPHY_BOUNDARY_REF]["label"] == ORTHOGRAPHY_BOUNDARY_LABEL
+        assert boundaries[PUNCTUATION_BOUNDARY_REF]["label"] == PUNCTUATION_BOUNDARY_LABEL
+        assert boundaries[ORTHOGRAPHY_BOUNDARY_REF]["status"] == "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION"
+        assert boundaries[PUNCTUATION_BOUNDARY_REF]["status"] == "REVIEW_BOUNDARY_ONLY_NOT_SEMANTIC_ADMISSION"
+    assert disposition["normalized_meaning"] == packet_group["normalized_meaning"]
+    combined_review_meaning = str(disposition["normalized_meaning"])
+    assert ORTHOGRAPHY_BOUNDARY_LABEL in combined_review_meaning
+    assert PUNCTUATION_BOUNDARY_LABEL in combined_review_meaning
+
     accepted_matches: list[dict[str, Any]] = []
     accepted_identity_matches: list[dict[str, Any]] = []
     for group in progress["semantic_review_groups"]:
@@ -106,8 +140,8 @@ def build_review() -> dict[str, Any]:
     assert accepted_identity_matches == [], "6.14 object identity is already counted under another accepted code"
 
     result: dict[str, Any] = {
-        "schema_version": "0.1.0",
-        "status": "OGE_6_14_EXACT_OBJECT_IDENTITY_BOUND_NOT_ACCEPTED",
+        "schema_version": "0.2.0",
+        "status": "OGE_6_14_EXACT_OBJECT_IDENTITY_AND_ORTHOGRAPHY_SCOPE_BOUND_NOT_ACCEPTED",
         "official_object": {
             "source_id": SOURCE_ID,
             "document_id": DOCUMENT_ID,
@@ -118,7 +152,31 @@ def build_review() -> dict[str, Any]:
             "admission_unit_id": unit_id,
             "requirement_id": requirement_id,
             "packet_group": str(packet_group["group_id"]),
-            "normalized_meaning": str(disposition["normalized_meaning"]),
+            "exact_semantic_boundary": {
+                "official_label_ru": LABEL_RU,
+                "overlay_topic": OVERLAY_TOPIC,
+                "overlay_note": OVERLAY_NOTE,
+                "operation_scope": "ORTHOGRAPHY_RULE_IDENTIFICATION_AND_APPLICATION_OVER_EXISTING_SKILLS",
+                "orthography_review_boundary_ref": ORTHOGRAPHY_BOUNDARY_REF,
+                "orthography_review_boundary_label": ORTHOGRAPHY_BOUNDARY_LABEL,
+                "punctuation_in_scope": False,
+            },
+        },
+        "review_group_contamination_guard": {
+            "packet_group": str(packet_group["group_id"]),
+            "accounting_group_normalized_meaning": combined_review_meaning,
+            "review_boundary_refs": [ORTHOGRAPHY_BOUNDARY_REF, PUNCTUATION_BOUNDARY_REF],
+            "orthography_boundary_present": True,
+            "punctuation_boundary_present": True,
+            "punctuation_boundary_ref": PUNCTUATION_BOUNDARY_REF,
+            "punctuation_boundary_label": PUNCTUATION_BOUNDARY_LABEL,
+            "punctuation_boundary_excluded_from_6_14_exact_scope": True,
+            "accounting_group_normalized_meaning_is_exact_6_14_semantic_authority": False,
+            "policy": (
+                "RUS-SEM-REVIEW-056 is a finite review-accounting group spanning orthography and punctuation capabilities. "
+                "Its combined normalized meaning must never be copied as the exact semantic meaning of OGE_COD 6.14. "
+                "Exact 6.14 scope is orthography only, bound by the official label and the OGE orthography overlay."
+            ),
         },
         "duplicate_accounting_review": {
             "accepted_rows_with_content_code_6_14": 0,
@@ -131,12 +189,14 @@ def build_review() -> dict[str, Any]:
             "fabricated_subcodes": 0,
             "school_count_effect": 0,
             "new_school_identity_required": False,
+            "exact_scope_is_orthography_only": True,
         },
         "acceptance_boundary": {
             "semantic_admissions_now": 0,
             "object_closures_now": 0,
             "exact_component_mastery_admissions_now": 0,
             "separate_exact_component_and_evidence_proof_required": True,
+            "combined_review_group_meaning_may_be_used_as_exact_object_semantics": False,
         },
         "safety": {
             "false_exact_mastery_admissions": 0,
@@ -170,12 +230,15 @@ def main() -> int:
     else:
         obj = result["official_object"]
         dup = result["duplicate_accounting_review"]
-        print("RUSSIAN_OGE_6_14_OBJECT_IDENTITY_BINDING_REVIEW=PASS")
+        guard = result["review_group_contamination_guard"]
+        print("RUSSIAN_OGE_6_14_OBJECT_IDENTITY_AND_SEMANTIC_SCOPE_REVIEW=PASS")
         print(f"OGE_6_14_ADMISSION_UNIT_ID={obj['admission_unit_id']}")
         print(f"OGE_6_14_REQUIREMENT_ID={obj['requirement_id']}")
         print(f"OGE_6_14_PACKET_GROUP={obj['packet_group']}")
         print(f"OGE_6_14_ALREADY_COUNTED={int(dup['historical_or_current_object_already_counted'])}")
         print(f"OGE_6_14_LATER_ACCEPTANCE_COUNT_DELTA={dup['aggregate_delta_if_later_exact_acceptance_passes']}")
+        print(f"OGE_6_14_PUNCTUATION_BOUNDARY_EXCLUDED={int(guard['punctuation_boundary_excluded_from_6_14_exact_scope'])}")
+        print("OGE_6_14_EXACT_SCOPE_ORTHOGRAPHY_ONLY=1")
         print("OGE_6_14_SEMANTIC_ADMISSIONS_NOW=0")
         print("OGE_6_14_OBJECT_CLOSURES_NOW=0")
         print("FALSE_EXACT_MASTERY_ADMISSIONS=0")
