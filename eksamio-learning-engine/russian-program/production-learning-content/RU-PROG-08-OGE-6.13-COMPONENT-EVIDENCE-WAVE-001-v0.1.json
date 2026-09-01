@@ -1,0 +1,264 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-09-01",
+  "status": "CURRENT_LAUNCH_OGE_6_13_COMPONENT_EVIDENCE_CANDIDATE_NO_OBJECT_ADMISSION",
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "target": {
+    "source_id": "FIPI-OGE-RU-2026-FINAL",
+    "document_id": "OGE_COD",
+    "content_code": "6.13"
+  },
+  "evidence_policy": {
+    "reuse_first": true,
+    "existing_exact_inventory_evidence_must_be_audited": true,
+    "new_semantic_identity_created": false,
+    "exact_owner_frontier_may_change_here": false,
+    "each_item_must_reference_exactly_one_school_semantic": true,
+    "minimum_independent_items_per_owner": 3,
+    "component_specific_independent_evidence_required": true,
+    "route_attempt_can_emit_exact_component_mastery": false,
+    "evidence_readiness_is_object_acceptance": false,
+    "cross_route_reuse_used": false
+  },
+  "reuse_audit": {
+    "source_systems_checked": ["trainer_item", "practice_item"],
+    "existing_exact_single_owner_items_total": 0,
+    "per_owner": [
+      {"canonical_ref": "school-compound-linking-vowel", "existing_exact_item_refs": [], "materialized_new_items": 3},
+      {"canonical_ref": "school-compound-first-part-without-linking-vowel-system", "existing_exact_item_refs": [], "materialized_new_items": 3},
+      {"canonical_ref": "school-compound-noun-solid-hyphen-system", "existing_exact_item_refs": [], "materialized_new_items": 3},
+      {"canonical_ref": "school-compound-adjective-solid-hyphen-separate-system", "existing_exact_item_refs": [], "materialized_new_items": 3},
+      {"canonical_ref": "school-abbreviations-capitalization-formation", "existing_exact_item_refs": [], "materialized_new_items": 3}
+    ],
+    "decision": "Exact-head reuse-first audit found zero current reviewed/source-verified exact single-owner trainer/practice items for all five proved OGE 6.13 owners. Materialize only the minimum three independent original Eksamio items per owner."
+  },
+  "owner_evidence": [
+    {
+      "canonical_ref": "school-compound-linking-vowel",
+      "title_ru": "Соединительные О / Е в сложных словах",
+      "semantic_boundary": "Проверяется только выбор соединительной гласной О или Е между основами сложного слова. Решение о слитном, дефисном или раздельном написании всего образования относится к другим компонентам и здесь не засчитывается.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {
+          "id": "oge613-link-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание сложного слова со значением «судно, приводимое в движение паром».",
+          "options": ["пароход", "пареход", "парход"],
+          "correct_option_index": 0,
+          "feedback": "В слове «пароход» между основами пар- и -ход употребляется соединительная О.",
+          "school_semantic_refs": ["school-compound-linking-vowel"]
+        },
+        {
+          "id": "oge613-link-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание названия человека, который ловит птиц.",
+          "options": ["птицелов", "птицолов", "птицлов"],
+          "correct_option_index": 0,
+          "feedback": "В слове «птицелов» после основы на Ц перед второй основой употребляется соединительная Е.",
+          "school_semantic_refs": ["school-compound-linking-vowel"]
+        },
+        {
+          "id": "oge613-link-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Объясни выбор соединительной гласной в словах «пароход» и «птицелов», не обсуждая слитность или дефис.",
+          "answer_outline": "В «пароход» между основами используется соединительная О после твёрдого согласного первой основы; в «птицелов» используется Е после Ц. Проверяется именно соединительная гласная, а не способ написания всего сложного слова.",
+          "scoring": {"max_points": 2, "criteria": ["1: верно объяснена соединительная О в слове «пароход»", "1: верно объяснена соединительная Е в слове «птицелов» и сохранена граница компонента"]},
+          "school_semantic_refs": ["school-compound-linking-vowel"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-compound-first-part-without-linking-vowel-system",
+      "title_ru": "Сложные слова без соединительной гласной: форма первой части, числовые/международные компоненты и специальные структуры",
+      "semantic_boundary": "Проверяется нормативная форма первой части сложного слова, когда отдельная соединительная О/Е не выбирается, включая формы числовых компонентов. Слитность или дефис как самостоятельное решение не являются доказательством этого компонента.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {
+          "id": "oge613-first-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму первой части в слове со значением «имеющий две комнаты».",
+          "options": ["двухкомнатный", "двакомнатный", "двекомнатный"],
+          "correct_option_index": 0,
+          "feedback": "В сложном слове используется нормативная форма первой части двух-, а не свободная форма числительного «два».",
+          "school_semantic_refs": ["school-compound-first-part-without-linking-vowel-system"]
+        },
+        {
+          "id": "oge613-first-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативную форму слова со значением «продолжающийся пять дней».",
+          "options": ["пятидневный", "пятьдневный", "пятедневный"],
+          "correct_option_index": 0,
+          "feedback": "Перед второй частью -дневный употребляется нормативная форма числового компонента пяти-.",
+          "school_semantic_refs": ["school-compound-first-part-without-linking-vowel-system"]
+        },
+        {
+          "id": "oge613-first-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Объясни, почему в словах «двухкомнатный» и «пятидневный» используются формы двух- и пяти-, а не «два-» и «пять-».",
+          "answer_outline": "Первая часть сложного слова имеет специальную нормативную форму: двух- и пяти-. Здесь проверяется форма числового компонента внутри сложного образования, а не отдельное решение о дефисе или соединительной О/Е.",
+          "scoring": {"max_points": 2, "criteria": ["1: распознана нормативная форма двух- в составе сложного слова", "1: распознана нормативная форма пяти- и явно сохранена граница с другими орфографическими решениями"]},
+          "school_semantic_refs": ["school-compound-first-part-without-linking-vowel-system"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-compound-noun-solid-hyphen-system",
+      "title_ru": "Сложные существительные: слитное, дефисное написание и словарный fallback",
+      "semantic_boundary": "Проверяется способ написания сложного существительного — слитно или через дефис — по структурному правилу и словарной норме. Выбор соединительной гласной и написание сложных прилагательных не засчитываются как доказательство этого компонента.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {
+          "id": "oge613-noun-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание существительного со значением предмета мебели, совмещающего диван и кровать.",
+          "options": ["диван-кровать", "диванкровать", "диван кровать"],
+          "correct_option_index": 0,
+          "feedback": "Сочетание двух самостоятельных существительных, называющих единый составной предмет, оформляется как «диван-кровать» через дефис.",
+          "school_semantic_refs": ["school-compound-noun-solid-hyphen-system"]
+        },
+        {
+          "id": "oge613-noun-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание слова в сочетании «ждать ___ часа».",
+          "options": ["полчаса", "пол-часа", "пол часа"],
+          "correct_option_index": 0,
+          "feedback": "С первой частью пол- перед согласной, не относящейся к специальным дефисным случаям, слово «полчаса» пишется слитно.",
+          "school_semantic_refs": ["school-compound-noun-solid-hyphen-system"]
+        },
+        {
+          "id": "oge613-noun-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни написание «диван-кровать» и «полчаса». Объясни, почему первое существительное пишется через дефис, а второе — слитно.",
+          "answer_outline": "«Диван-кровать» — сложное существительное из двух самостоятельных наименований одного предмета и требует дефиса. «Полчаса» образовано с пол- и перед обычной согласной пишется слитно. Это разные ветви системы написания сложных существительных.",
+          "scoring": {"max_points": 2, "criteria": ["1: объяснён дефис в «диван-кровать» через структуру сложного существительного", "1: объяснено слитное написание «полчаса» по правилу для пол-"]},
+          "school_semantic_refs": ["school-compound-noun-solid-hyphen-system"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-compound-adjective-solid-hyphen-separate-system",
+      "title_ru": "Сложные прилагательные и сочетания наречие + прилагательное: слитно, через дефис или раздельно",
+      "semantic_boundary": "Проверяется выбор слитного, дефисного или раздельного написания у сложных прилагательных и сочетаний наречие + прилагательное по структурным и лексическим критериям. Система не сводится к одному школьному шаблону «равноправие/подчинение».",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {
+          "id": "oge613-adj-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание прилагательного в сочетании «___ словарь» (русский и английский языки).
+",
+          "options": ["русско-английский", "русскоанглийский", "русско английский"],
+          "correct_option_index": 0,
+          "feedback": "Прилагательное, обозначающее сочетание двух равноправно названных языков, оформляется через дефис: «русско-английский».",
+          "school_semantic_refs": ["school-compound-adjective-solid-hyphen-separate-system"]
+        },
+        {
+          "id": "oge613-adj-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание сочетания в предложении «Это ___ проект».",
+          "options": ["общественно полезный", "общественно-полезный", "общественнополезный"],
+          "correct_option_index": 0,
+          "feedback": "Сочетание «общественно полезный» в текущей норме пишется раздельно; наличие первой части на -о само по себе не создаёт дефис или слитность.",
+          "school_semantic_refs": ["school-compound-adjective-solid-hyphen-separate-system"]
+        },
+        {
+          "id": "oge613-adj-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Объясни различие в написании «русско-английский словарь» и «общественно полезный проект». Почему нельзя выбирать дефис только по внешнему виду первой части?",
+          "answer_outline": "«Русско-английский» объединяет равноправно названные признаки и пишется через дефис. «Общественно полезный» является сочетанием наречия с прилагательным и в текущей норме пишется раздельно. Решение требует структурного и лексического анализа, а не формального признака окончания первой части.",
+          "scoring": {"max_points": 2, "criteria": ["1: объяснён дефис в «русско-английский» через структуру признаков", "1: объяснено раздельное написание «общественно полезный» и отвергнут механический внешний шаблон"]},
+          "school_semantic_refs": ["school-compound-adjective-solid-hyphen-separate-system"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-abbreviations-capitalization-formation",
+      "title_ru": "Аббревиатуры и сложносокращённые слова: прописные/строчные, звуковое чтение и производные формы",
+      "semantic_boundary": "Проверяется нормативное оформление буквенных и звуковых аббревиатур, лексикализованных сокращений и производных от них форм. Компонент не подменяется общим правилом о прописных буквах в собственных именах.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {
+          "id": "oge613-abbr-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание общепринятой буквенной аббревиатуры названия Московского государственного университета.",
+          "options": ["МГУ", "Мгу", "мгу"],
+          "correct_option_index": 0,
+          "feedback": "Буквенная аббревиатура «МГУ» нормативно оформляется прописными буквами.",
+          "school_semantic_refs": ["school-abbreviations-capitalization-formation"]
+        },
+        {
+          "id": "oge613-abbr-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание нарицательного звукового сокращения в сочетании «поступить в ___».",
+          "options": ["вуз", "ВУЗ", "Вуз"],
+          "correct_option_index": 0,
+          "feedback": "Лексикализованное нарицательное звуковое сокращение «вуз» пишется строчными буквами.",
+          "school_semantic_refs": ["school-abbreviations-capitalization-formation"]
+        },
+        {
+          "id": "oge613-abbr-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни написание «МГУ», «вуз» и «вузовский». Объясни, почему регистр букв не переносится механически на все сокращения и их производные.",
+          "answer_outline": "«МГУ» — буквенная аббревиатура и пишется прописными. «Вуз» — лексикализованное нарицательное звуковое сокращение со строчными. Производное «вузовский» сохраняет строчное оформление основы и получает обычный суффикс производного слова.",
+          "scoring": {"max_points": 3, "criteria": ["1: объяснено прописное оформление буквенной аббревиатуры «МГУ»", "1: объяснено строчное оформление лексикализованного «вуз»", "1: объяснено строчное оформление производного «вузовский» без механического переноса регистра"]},
+          "school_semantic_refs": ["school-abbreviations-capitalization-formation"]
+        }
+      ]
+    }
+  ],
+  "copyright_guard": {
+    "official_source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "commercial_textbook_prose_copied": 0,
+    "learner_prompts_examples_feedback": "ORIGINAL_EKSAMIO"
+  },
+  "source_provenance": [
+    {"ref": "../../252-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-B-O17-O25-v0.1.json", "role": "primary/current canonical authority for four compound-word owner identities"},
+    {"ref": "../../250-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A4-CAPITALIZATION-v0.1.json", "role": "primary/current canonical authority for abbreviation owner identity"},
+    {"ref": "../subject-admission/build_oge_6_13_compound_words_exact_owner_resolution.py", "role": "exact-owner proof"},
+    {"ref": "../subject-admission/build_oge_6_13_object_evidence_audit.py", "role": "exact-head reuse-first evidence gap proof"},
+    {"ref": "../../273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json", "role": "current reviewed semantic inventory"},
+    {"ref": "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/ru-9_6_orfografija.pdf", "role": "official FIPI preparation scope reference; no passage copied"}
+  ],
+  "summary": {
+    "exact_owner_frontier": 5,
+    "owners_with_materialized_component_evidence": 5,
+    "existing_exact_inventory_items_reused": 0,
+    "materialized_new_items": 15,
+    "independent_items_total": 15,
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  },
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "tilda_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_payment_or_refund": false,
+    "real_message_delivery": false
+  }
+}
