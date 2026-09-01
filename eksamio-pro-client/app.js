@@ -63,6 +63,7 @@
     renderIdentity();
     renderPractice();
     renderEntitlement();
+    configurePaymentUi();
     bindEvents();
     document.documentElement.dataset.appReady='true';
   }
@@ -127,6 +128,18 @@
     }
   }
 
+  function configurePaymentUi(){
+    const button=$('#purchaseButton');
+    if(state.adapters.mode==='mock'){
+      button.hidden=false;
+      button.disabled=false;
+      return;
+    }
+    button.hidden=true;
+    button.disabled=true;
+    $('#paymentStatus').textContent='Production checkout будет доступен только после допуска server-owned SKU и trusted payment boundary.';
+  }
+
   function renderPractice(){
     const p=state.practice;
     $('#practiceSemantic').textContent=p.semantic_id;
@@ -181,6 +194,7 @@
   }
 
   async function purchaseSandbox(){
+    if(!state.adapters||state.adapters.mode!=='mock') throw new Error('sandbox purchase is localhost/mock only');
     if(!state.identity.authenticated) await continueIdentity();
     const button=$('#purchaseButton');
     button.disabled=true;
@@ -238,7 +252,7 @@
     $('#gradeSelect').addEventListener('change',async event=>{state.grade=Number(event.target.value);await refreshLearningState();});
     $('#routeSelect').addEventListener('change',async event=>{state.route=event.target.value;await refreshLearningState();});
     $('#checkAnswer').addEventListener('click',handleCheck);
-    $('#purchaseButton').addEventListener('click',purchaseSandbox);
+    if(state.adapters.mode==='mock') $('#purchaseButton').addEventListener('click',purchaseSandbox);
     $('#tutorForm').addEventListener('submit',handleTutor);
     window.addEventListener('hashchange',()=>{
       const view=location.hash.replace('#','');
