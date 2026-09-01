@@ -47,7 +47,7 @@ def main() -> int:
     d = load(PACK)
     authority = load(AUTHORITY)
     v2 = runpy.run_path(str(V2_AUDIT))["build_audit_v2"]()
-    exhaustion = runpy.run_path(str(REUSE_EXHAUSTION))["build_review"]()
+    exhaustion = runpy.run_path(str(REUSE_EXHAUSTION))["build_reuse_exhaustion"]()
 
     assert authority["status"] == "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_6_2_CANONICAL_COMPONENT_SET"
     assert authority["normalized_sha256"] == EXPECTED_AUTHORITY_SHA
