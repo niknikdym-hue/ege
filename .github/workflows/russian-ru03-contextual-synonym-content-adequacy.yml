@@ -95,9 +95,22 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+          base_ref="${{ github.base_ref }}"
+          if [[ -z "$base_ref" ]]; then
+            base_ref="main"
+          fi
+          git fetch --no-tags origin "+refs/heads/${base_ref}:refs/remotes/origin/${base_ref}"
+          if git diff --name-only "origin/${base_ref}...HEAD" | grep -E 'russkiy-knigi|tilda|demo|scor'; then
             echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
             exit 1
           fi
       - name: Diff hygiene
-        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_ref="${{ github.base_ref }}"
+          if [[ -z "$base_ref" ]]; then
+            base_ref="main"
+          fi
+          git fetch --no-tags origin "+refs/heads/${base_ref}:refs/remotes/origin/${base_ref}"
+          git diff --check "origin/${base_ref}...HEAD"
