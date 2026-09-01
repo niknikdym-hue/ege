@@ -1,0 +1,95 @@
+{
+  "schema_version": "0.1.0",
+  "scope": "FIPI_OGE_2026_CONTENT_CODE_6_11_CURRENT_EXACT_OWNER_FRONTIER_WITH_VALIDATED_COMPONENT_EVIDENCE",
+  "status": "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_6_11_CANONICAL_COMPONENT_SET",
+  "semantic_packet_sha256": "b35fb420f7a6e96ea11f47e321cae0affe363dc5ed8d6fb79ea8640ac5ac94c4",
+  "object_accounting_sha256": "f3aef83dab99b554a4cdec9ef8d8fbc8036d557182259ae69db182efa11b925c",
+  "decisions": [
+    {
+      "acceptance_reason": "The official FIPI OGE-2026 code 6.11 is one broad source object. A separate exact-owner proof resolves it to exactly three current reviewed canonical service-word owners, proves the historical homonym/function placeholder is fully absorbed, and proves that current route inventory already equals the exact owner set without route supersession or new school identities. Reuse-first inventory audit finds zero current source-verified/reviewed single-owner trainer/practice items for these owners, so the bounded original Eksamio evidence wave supplies exactly three independent component-specific items per owner (9 total). The deterministic evidence audit proves 3/3 owners ready. The accepted mapping remains partial/composite: a generic OGE route attempt cannot emit exact component mastery.",
+      "admission_unit_id": "RAU-50d61db39b3c45d2980e",
+      "requirement_id": "RSK-OGE_COD-6-11-P025",
+      "source_id": "FIPI-OGE-RU-2026-FINAL",
+      "document_id": "OGE_COD",
+      "content_code": "6.11",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_COD p.25 6.11",
+      "disposition": "PARTIAL_OR_COMPOSITE",
+      "route_inventory_classification": "EXAM_ROUTE_ONLY",
+      "normalized_meaning": "Распознавать части речи и их грамматические признаки. Применять орфографическое правило к слову или форме.",
+      "modules": [
+        "RU-PROG-06",
+        "RU-PROG-08"
+      ],
+      "routes": [
+        "oge"
+      ],
+      "canonical_component_refs": [
+        "school-conjunction-solid-separate-spelling-base",
+        "school-nonnegative-particle-separate-hyphen-spelling-base",
+        "school-preposition-solid-hyphen-separate-base"
+      ],
+      "component_count": 3,
+      "authority": {
+        "exact_owner_resolution": "russian-program/subject-admission/build_oge_6_11_service_words_exact_owner_resolution.py",
+        "current_inventory_route": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#object_key=oge_2026_orthography_route::oge-2026-orthography-6-11",
+        "component_evidence_wave_001": "russian-program/production-learning-content/RU-PROG-08-OGE-6.11-COMPONENT-EVIDENCE-WAVE-001-v0.1.json",
+        "component_evidence_validator": "russian-program/subject-admission/validate_oge_6_11_component_evidence.py",
+        "current_evidence_auditor": "russian-program/subject-admission/build_oge_6_11_object_evidence_audit.py",
+        "packet_group": "RUS-SEM-REVIEW-073"
+      },
+      "evidence_readiness": {
+        "component_validator_normalized_sha256": "e70a8414ab5776653f123cf978c829d519a245ed610286814574b59b460c1e75",
+        "current_evidence_audit_normalized_sha256": "b6789de0ac43a1349731679691b30f1383da18897af3a2d95d1b691fb1471382",
+        "owners_with_valid_component_evidence": 3,
+        "independent_items_total": 9,
+        "minimum_independent_items_per_owner": 3,
+        "preexisting_exact_inventory_items_reused": 0
+      },
+      "mastery_boundary": {
+        "accepted_mapping_can_emit_partial_or_composite_evidence": true,
+        "route_or_broad_composite_attempt_can_emit_exact_component_mastery": false,
+        "component_specific_independent_evidence_required": true,
+        "validated_exact_component_item_may_support_only_its_single_canonical_ref": true
+      },
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_CANONICAL_COMPONENT_SET"
+    }
+  ],
+  "policy": {
+    "reuse_first": true,
+    "all_owners_must_be_exact_current_reviewed_canonical_school_ids": true,
+    "component_specific_independent_evidence_required": true,
+    "validated_component_evidence_required_before_object_acceptance": true,
+    "minimum_independent_items_per_owner": 3,
+    "cross_route_reuse_requires_explicit_item_whitelist": true,
+    "cross_route_reuse_used": false,
+    "generic_composite_attempt_can_exact_master_components": false,
+    "keyword_or_fuzzy_mapping_allowed": false,
+    "legacy_family_placeholders_allowed": false,
+    "absorbed_historical_identity_may_be_reopened": false,
+    "manufactured_fipi_subbranches_allowed": false,
+    "current_route_supersession_required": false
+  },
+  "summary": {
+    "accepted_admission_units": 1,
+    "accepted_requirements": 1,
+    "accepted_content_codes": 1,
+    "canonical_component_refs_unique": 3,
+    "reused_current_canonical_owners": 3,
+    "new_school_canonical_identities_materialized_in_current_authority_chain": 0,
+    "independent_component_evidence_items": 9,
+    "preexisting_exact_inventory_items_reused": 0,
+    "ru_proposal_identities_admitted": 0,
+    "false_exact_mastery_admissions": 0
+  },
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "tilda_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_payment_or_refund": false,
+    "real_message_delivery": false
+  },
+  "normalized_sha256": "34b56772c4265423ff3b44489164b614042ff7e48f1323c6147ca864732238d6"
+}
