@@ -1,0 +1,517 @@
+{
+  "copyright_guard": {
+    "commercial_textbook_bytes": 0,
+    "commercial_textbook_prose_copied": 0,
+    "learner_prompts_examples_feedback": "ORIGINAL_EKSAMIO",
+    "official_source_passages_copied": 0,
+    "rule": "Official authorities define scope only; all learner-facing evidence prompts, examples, distractors, feedback and scoring language are original Eksamio wording."
+  },
+  "date": "2026-09-01",
+  "evidence_policy": {
+    "component_specific_independent_evidence_required": true,
+    "cross_route_reuse_used": false,
+    "each_item_must_reference_exactly_one_school_semantic": true,
+    "evidence_readiness_is_object_acceptance": false,
+    "exact_owner_frontier_may_change_here": false,
+    "minimum_independent_items_per_owner": 3,
+    "new_semantic_identity_created": false,
+    "reuse_first": true,
+    "route_attempt_can_emit_exact_component_mastery": false
+  },
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "owner_evidence": [
+    {
+      "canonical_ref": "school-adverb-solid-hyphen-separate-system",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Наречие с по- и суффиксом -ому в этой модели пишется через дефис: по-новому.",
+          "id": "oge68-adverb-v1",
+          "options": [
+            "по новому",
+            "по-новому",
+            "поновому"
+          ],
+          "prompt": "Выбери нормативное написание наречия со значением «по-другому, новым способом».",
+          "school_semantic_refs": [
+            "school-adverb-solid-hyphen-separate-system"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Устойчивое наречное сочетание «бок о бок» пишется раздельно.",
+          "id": "oge68-adverb-v2",
+          "options": [
+            "бок-о-бок",
+            "бок о бок",
+            "бокобок"
+          ],
+          "prompt": "Выбери нормативное написание устойчивого наречного сочетания.",
+          "school_semantic_refs": [
+            "school-adverb-solid-hyphen-separate-system"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "«Вручную» — наречие слитного написания; «по-русски» образовано по модели по- + основа на -ск- + -и и пишется через дефис.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge68-adverb-v3",
+          "prompt": "Сопоставь написания «вручную» и «по-русски». Объясни, почему первое слово пишется слитно, а второе — через дефис.",
+          "school_semantic_refs": [
+            "school-adverb-solid-hyphen-separate-system"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: «вручную» определено как нормативное слитное написание наречия",
+              "1: для «по-русски» назван дефис и распознана модель с по-"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется слитное, дефисное и раздельное написание наречий и наречных сочетаний; омонимические служебные слова и написание других частей речи относятся к своим семантикам.",
+      "title_ru": "Наречия и наречные сочетания: слитно, через дефис или раздельно"
+    },
+    {
+      "canonical_ref": "school-compound-adjective-solid-hyphen-separate-system",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Равноправные основы со значением «научный и технический» соединяются дефисом: научно-технический.",
+          "id": "oge68-compadj-v1",
+          "options": [
+            "научнотехнический",
+            "научно-технический",
+            "научно технический"
+          ],
+          "prompt": "Выбери нормативное написание сложного прилагательного.",
+          "school_semantic_refs": [
+            "school-compound-adjective-solid-hyphen-separate-system"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 2,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Прилагательное «железнодорожный» образовано от сочетания «железная дорога» и пишется слитно.",
+          "id": "oge68-compadj-v2",
+          "options": [
+            "железно-дорожный",
+            "железно дорожный",
+            "железнодорожный"
+          ],
+          "prompt": "Выбери нормативное написание прилагательного со значением «относящийся к железной дороге».",
+          "school_semantic_refs": [
+            "school-compound-adjective-solid-hyphen-separate-system"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "«Научно-технический» — сложное прилагательное с равноправными основами и дефисом; «жизненно важный» — сочетание наречия и прилагательного, которое пишется раздельно.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge68-compadj-v3",
+          "prompt": "Сравни «научно-технический проект» и «жизненно важный вопрос». Объясни, почему написание между компонентами различается.",
+          "school_semantic_refs": [
+            "school-compound-adjective-solid-hyphen-separate-system"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: «научно-технический» распознан как сложное прилагательное с дефисом",
+              "1: «жизненно важный» распознан как сочетание наречия с прилагательным и написан раздельно"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется написание сложных прилагательных и разграничение их с сочетаниями наречие + прилагательное; сложные существительные не засчитываются в эту семантику.",
+      "title_ru": "Сложные прилагательные и сочетания наречие + прилагательное: слитно, через дефис или раздельно"
+    },
+    {
+      "canonical_ref": "school-conjunction-solid-separate-spelling-base",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "В значении присоединительного союза «тоже» пишется слитно: «Он тоже пришёл».",
+          "id": "oge68-conj-v1",
+          "options": [
+            "то же",
+            "тоже",
+            "то-же"
+          ],
+          "prompt": "Выбери нормативное написание в предложении: «Он ___ пришёл на встречу».",
+          "school_semantic_refs": [
+            "school-conjunction-solid-separate-spelling-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Противительный союз «зато» в этом контексте пишется слитно.",
+          "id": "oge68-conj-v2",
+          "options": [
+            "за то",
+            "зато",
+            "за-то"
+          ],
+          "prompt": "Выбери нормативное написание: «Дом небольшой, ___ очень уютный».",
+          "school_semantic_refs": [
+            "school-conjunction-solid-separate-spelling-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "«Чтобы» в первом предложении — союз и пишется слитно; «что бы» во втором — местоимение «что» с частицей «бы», поэтому пишется раздельно.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge68-conj-v3",
+          "prompt": "Сравни: «Я пришёл, чтобы поговорить» и «Что бы мне почитать?». Объясни слитное и раздельное написание.",
+          "school_semantic_refs": [
+            "school-conjunction-solid-separate-spelling-base"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: «чтобы» определено как союз и написано слитно",
+              "1: «что бы» разобрано как местоимение плюс частица и написано раздельно"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется слитное или раздельное написание союзов и разграничение союза с омонимическим сочетанием самостоятельного слова и частицы/местоимения.",
+      "title_ru": "Союзы и союзные сочетания: слитное или раздельное написание и омонимическая граница"
+    },
+    {
+      "canonical_ref": "school-nonnegative-particle-separate-hyphen-spelling-base",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 2,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Частица -ка со словом пишется через дефис: скажи-ка.",
+          "id": "oge68-particle-v1",
+          "options": [
+            "скажи ка",
+            "скажика",
+            "скажи-ка"
+          ],
+          "prompt": "Выбери нормативное написание частицы в просьбе.",
+          "school_semantic_refs": [
+            "school-nonnegative-particle-separate-hyphen-spelling-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 2,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Частица «ли» пишется со словом раздельно: «прочитал ли ты».",
+          "id": "oge68-particle-v2",
+          "options": [
+            "прочитал-ли ты",
+            "прочиталли ты",
+            "прочитал ли ты"
+          ],
+          "prompt": "Выбери нормативное написание частицы «ли» в вопросе.",
+          "school_semantic_refs": [
+            "school-nonnegative-particle-separate-hyphen-spelling-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "Неопределённое местоимение с постфиксом -то пишется через дефис: «кто-то»; при вставке предлога после кое- компоненты пишутся раздельно: «кое у кого».",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge68-particle-v3",
+          "prompt": "Сравни «кто-то» и «кое у кого». Объясни, почему в первом случае нужен дефис, а во втором написание раздельное.",
+          "school_semantic_refs": [
+            "school-nonnegative-particle-separate-hyphen-spelling-base"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: «кто-то» объяснено как дефисное написание формы с -то",
+              "1: в «кое у кого» отмечена вставка предлога и раздельное написание"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяются раздельное и дефисное написание неотрицательных частиц, а также сохранённая текущим canonical parent граница местоименных форм с кое-/кой-, -то, -либо, -нибудь и раздельного написания при вставке предлога.",
+      "title_ru": "Неотрицательные частицы: раздельное и дефисное написание"
+    },
+    {
+      "canonical_ref": "school-numeral-orthography-base",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 2,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Сложное числительное «пятьдесят» пишется слитно.",
+          "id": "oge68-num-v1",
+          "options": [
+            "пять десят",
+            "пять-десят",
+            "пятьдесят"
+          ],
+          "prompt": "Выбери нормативное написание количественного числительного.",
+          "school_semantic_refs": [
+            "school-numeral-orthography-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 2,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Составное числительное «сто двадцать три» пишется раздельно.",
+          "id": "oge68-num-v2",
+          "options": [
+            "стодвадцатьтри",
+            "сто-двадцать-три",
+            "сто двадцать три"
+          ],
+          "prompt": "Выбери нормативное написание составного количественного числительного.",
+          "school_semantic_refs": [
+            "school-numeral-orthography-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "«Пятидесятый» — сложное порядковое числительное слитного написания; «две пятых» — дробное числительное из двух слов и пишется раздельно.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge68-num-v3",
+          "prompt": "Сопоставь «пятидесятый» и «две пятых». Объясни, почему порядковое числительное пишется слитно, а дробное сочетание — раздельно.",
+          "school_semantic_refs": [
+            "school-numeral-orthography-base"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: «пятидесятый» определено как слитно пишущееся сложное порядковое числительное",
+              "1: «две пятых» определено как раздельно пишущееся дробное числительное"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется слитное и раздельное написание количественных, порядковых и дробных числительных в пределах школьной орфографической нормы; падежные окончания как грамматическая норма отдельно не засчитываются.",
+      "title_ru": "Правописание количественных, порядковых и дробных числительных"
+    },
+    {
+      "canonical_ref": "school-pol-polu-writing-boundary",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 2,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Перед гласной пол- пишется через дефис: пол-яблока.",
+          "id": "oge68-pol-v1",
+          "options": [
+            "поляблока",
+            "пол яблока",
+            "пол-яблока"
+          ],
+          "prompt": "Выбери нормативное написание сочетания с пол- перед гласной.",
+          "school_semantic_refs": [
+            "school-pol-polu-writing-boundary"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 2,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Перед согласной, кроме л, пол- в этой модели пишется слитно: полчаса.",
+          "id": "oge68-pol-v2",
+          "options": [
+            "пол-часа",
+            "пол часа",
+            "полчаса"
+          ],
+          "prompt": "Выбери нормативное написание слова с пол- перед согласной, не л.",
+          "school_semantic_refs": [
+            "school-pol-polu-writing-boundary"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "«Пол-лимона» — дефис перед л; «пол чайной ложки» — раздельно, потому что между пол и существительным есть согласованное определение; «полуостров» с полу- пишется слитно.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge68-pol-v3",
+          "prompt": "Объясни написание трёх примеров: «пол-лимона», «пол чайной ложки», «полуостров».",
+          "school_semantic_refs": [
+            "school-pol-polu-writing-boundary"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: в «пол-лимона» указан дефис перед л",
+              "1: в «пол чайной ложки» объяснено раздельное написание из-за вставленного определения",
+              "1: «полуостров» отнесён к слитному написанию с полу-"
+            ],
+            "max_points": 3
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется выбор слитного, дефисного или раздельного написания сочетаний с пол- и слитного написания слов с полу-; иные сложные слова не засчитываются автоматически.",
+      "title_ru": "ПОЛ-/ПОЛУ-: слитно, дефис, раздельно и словарные случаи"
+    },
+    {
+      "canonical_ref": "school-preposition-solid-hyphen-separate-base",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {
+          "correct_option_index": 1,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Производный предлог со значением причины «вследствие» пишется слитно.",
+          "id": "oge68-prep-v1",
+          "options": [
+            "в следствие",
+            "вследствие",
+            "в-следствие"
+          ],
+          "prompt": "Выбери нормативное написание производного предлога: «___ дождя матч перенесли».",
+          "school_semantic_refs": [
+            "school-preposition-solid-hyphen-separate-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "correct_option_index": 2,
+          "evidence_mode": "INDEPENDENT",
+          "feedback": "Составной производный предлог «в течение» пишется раздельно.",
+          "id": "oge68-prep-v2",
+          "options": [
+            "втечение",
+            "в-течение",
+            "в течение"
+          ],
+          "prompt": "Выбери нормативное написание составного предлога: «___ дня шёл дождь».",
+          "school_semantic_refs": [
+            "school-preposition-solid-hyphen-separate-base"
+          ],
+          "type": "single_choice"
+        },
+        {
+          "answer_outline": "«Насчёт поездки» — производный предлог и пишется слитно; «на счёт в банке» — свободное сочетание предлога с существительным и пишется раздельно.",
+          "evidence_mode": "INDEPENDENT",
+          "id": "oge68-prep-v3",
+          "prompt": "Сравни: «поговорить насчёт поездки» и «перевести деньги на счёт в банке». Объясни различие в написании.",
+          "school_semantic_refs": [
+            "school-preposition-solid-hyphen-separate-base"
+          ],
+          "scoring": {
+            "criteria": [
+              "1: «насчёт» определено как производный предлог и написано слитно",
+              "1: «на счёт» определено как предлог плюс существительное и написано раздельно"
+            ],
+            "max_points": 2
+          },
+          "type": "constructed_response"
+        }
+      ],
+      "mastery_guard": {
+        "assisted_attempt_can_count_as_independent_evidence": false,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "minimum_independent_items_required": 3
+      },
+      "semantic_boundary": "Проверяется написание производных и составных предлогов и разграничение производного предлога со свободным сочетанием существительного с предлогом.",
+      "title_ru": "Предлоги: слитное, дефисное и раздельное написание; производный предлог vs свободное сочетание"
+    }
+  ],
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_message_delivery": false,
+    "real_payment_or_refund": false,
+    "tilda_change": false
+  },
+  "schema_version": "0.1.0",
+  "source_provenance": [
+    {
+      "coverage_note": "Current launch authority proves the exact seven-owner frontier for OGE 2026 code 6.8; this evidence pack does not change that frontier.",
+      "kind": "current_route_owner_authority",
+      "ref": "../../280-RUSSIAN-FIPI-2026-OGE-6.8-CURRENT-ROUTE-SUPERSESSION-v0.1.json"
+    },
+    {
+      "coverage_note": "Official FIPI OGE-2026 orthography navigator defines the nine tested 6.8 branches; no official exercise wording is copied.",
+      "kind": "official_scope_authority",
+      "ref": "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/ru-9_6_orfografija.pdf"
+    },
+    {
+      "coverage_note": "Current reviewed canonical labels and identity boundaries are reused; no new school identity is created.",
+      "kind": "canonical_identity_inventory",
+      "ref": "../../273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+    },
+    {
+      "kind": "program_authority",
+      "ref": "../RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-08"
+    }
+  ],
+  "status": "CURRENT_LAUNCH_OGE_6_8_COMPONENT_EVIDENCE_CANDIDATE_NO_OBJECT_ADMISSION",
+  "subject": "russian",
+  "summary": {
+    "exact_owner_frontier": 7,
+    "false_exact_mastery_admissions": 0,
+    "independent_items_total": 21,
+    "object_closures": 0,
+    "owners_with_materialized_component_evidence": 7,
+    "requirements_closed": 0,
+    "semantic_admissions": 0
+  },
+  "target": {
+    "admission_unit_id": "RAU-201ed5b7e687237a0bae",
+    "content_code": "6.8",
+    "document_id": "OGE_COD",
+    "requirement_id": "RSK-OGE_COD-6-8-P025",
+    "source_id": "FIPI-OGE-RU-2026-FINAL"
+  }
+}
