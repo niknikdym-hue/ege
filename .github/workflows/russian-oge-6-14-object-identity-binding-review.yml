@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Derive exact 6.14 object identity twice
+      - name: Derive exact 6.14 object identity and orthography scope twice
         shell: bash
         run: |
           set -euo pipefail
@@ -36,7 +36,7 @@ jobs:
           cmp /tmp/oge614-id-a.json /tmp/oge614-id-b.json
           diff -u /tmp/oge614-id-a.txt /tmp/oge614-id-b.txt
           cat /tmp/oge614-id-a.txt
-      - name: Verify fail-closed no-admission identity result
+      - name: Verify fail-closed no-admission identity and contamination guard
         shell: bash
         run: |
           set -euo pipefail
@@ -45,18 +45,34 @@ jobs:
           from pathlib import Path
           d=json.loads(Path('/tmp/oge614-id-a.json').read_text(encoding='utf-8'))
           o=d['official_object']
+          semantic=o['exact_semantic_boundary']
+          guard=d['review_group_contamination_guard']
           dup=d['duplicate_accounting_review']
           boundary=d['acceptance_boundary']
           safety=d['safety']
-          assert d['status']=='OGE_6_14_EXACT_OBJECT_IDENTITY_BOUND_NOT_ACCEPTED'
+          assert d['schema_version']=='0.2.0'
+          assert d['status']=='OGE_6_14_EXACT_OBJECT_IDENTITY_AND_ORTHOGRAPHY_SCOPE_BOUND_NOT_ACCEPTED'
           assert o['source_id']=='FIPI-OGE-RU-2026-FINAL'
           assert o['document_id']=='OGE_COD'
           assert o['content_code']=='6.14'
           assert o['label_ru']=='Орфографический анализ'
           assert o['classification']=='EXAM_ONLY_COMPOSITE'
-          assert o['admission_unit_id'].startswith('RAU-')
-          assert o['requirement_id'].startswith('RSK-OGE_COD-')
-          assert o['packet_group'].startswith('RUS-SEM-REVIEW-')
+          assert o['admission_unit_id']=='RAU-af3fa30939d38a3ea03d'
+          assert o['requirement_id']=='RSK-OGE_COD-6-14-P025'
+          assert o['packet_group']=='RUS-SEM-REVIEW-056'
+          assert semantic['official_label_ru']=='Орфографический анализ'
+          assert semantic['overlay_topic']=='orthographic analysis'
+          assert semantic['overlay_note']=='Rule identification/application over existing skills; zero school-count effect.'
+          assert semantic['operation_scope']=='ORTHOGRAPHY_RULE_IDENTIFICATION_AND_APPLICATION_OVER_EXISTING_SKILLS'
+          assert semantic['orthography_review_boundary_ref']=='review-boundary:899bdadfe84d'
+          assert semantic['punctuation_in_scope'] is False
+          assert guard['orthography_boundary_present'] is True
+          assert guard['punctuation_boundary_present'] is True
+          assert guard['punctuation_boundary_ref']=='review-boundary:cf5ab34773b8'
+          assert guard['punctuation_boundary_excluded_from_6_14_exact_scope'] is True
+          assert guard['accounting_group_normalized_meaning_is_exact_6_14_semantic_authority'] is False
+          assert 'Применять орфографическое правило к слову или форме.' in guard['accounting_group_normalized_meaning']
+          assert 'Выбирать нормативные знаки препинания в конструкции.' in guard['accounting_group_normalized_meaning']
           assert dup['accepted_rows_with_content_code_6_14']==0
           assert dup['accepted_rows_with_same_admission_unit_or_requirement']==0
           assert dup['historical_or_current_object_already_counted'] is False
@@ -64,6 +80,7 @@ jobs:
           assert boundary['semantic_admissions_now']==0
           assert boundary['object_closures_now']==0
           assert boundary['exact_component_mastery_admissions_now']==0
+          assert boundary['combined_review_group_meaning_may_be_used_as_exact_object_semantics'] is False
           assert safety['false_exact_mastery_admissions']==0
           assert safety['learner_audio_persistence']==0
           assert safety['accepted_demo_or_scorer_change'] is False
@@ -74,11 +91,15 @@ jobs:
           assert safety['real_payment_or_refund'] is False
           assert safety['real_message_delivery'] is False
           print('OGE_6_14_OBJECT_IDENTITY_UNIQUE=1')
+          print('OGE_6_14_EXACT_SCOPE_ORTHOGRAPHY_ONLY=1')
+          print('OGE_6_14_PUNCTUATION_BOUNDARY_EXCLUDED=1')
+          print('OGE_6_14_ACCOUNTING_GROUP_MEANING_EXACT_AUTHORITY=0')
           print('OGE_6_14_ALREADY_COUNTED=0')
           print('OGE_6_14_OBJECT_CLOSURES_NOW=0')
           print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
           print('LEARNER_AUDIO_PERSISTENCE=0')
           print('RUSSIAN_OGE_6_14_OBJECT_IDENTITY_BINDING_GUARD=PASS')
+          print('NORMALIZED_SHA256='+d['normalized_sha256'])
           PY
       - name: Upload exact object identity review
         uses: actions/upload-artifact@v4
@@ -92,9 +113,15 @@ jobs:
         run: |
           set -euo pipefail
           git fetch --no-tags origin "${{ github.base_ref }}"
-          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+          pr_head="${{ github.event.pull_request.head.sha }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...$pr_head" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
             echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
             exit 1
           fi
-      - name: Diff hygiene
-        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
+      - name: Exact PR-head diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          pr_head="${{ github.event.pull_request.head.sha }}"
+          git diff --check "origin/${{ github.base_ref }}...$pr_head"
