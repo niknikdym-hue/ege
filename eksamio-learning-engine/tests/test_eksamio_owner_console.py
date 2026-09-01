@@ -108,6 +108,12 @@ class OwnerConsoleTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "cannot exceed"):
             console.normalize_snapshot(raw)
 
+    def test_rejects_channel_totals_that_do_not_reconcile_to_headline_truth(self):
+        raw = snapshot()
+        raw["periods"]["30d"]["channels"]["organic_seo"]["verified_purchases"] = 4
+        with self.assertRaisesRegex(ValueError, "does not reconcile"):
+            console.normalize_snapshot(raw)
+
 
 if __name__ == "__main__":
     unittest.main()
