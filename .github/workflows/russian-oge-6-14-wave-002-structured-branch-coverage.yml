@@ -11,6 +11,8 @@ on:
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit_v3.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit_v4.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit_v5.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_current_exact_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.14-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_14_wave_002_structured_branch_coverage.py"
       - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_14_wave_002_structured_repair.py"
       - ".github/workflows/russian-oge-6-14-wave-002-structured-branch-coverage.yml"
@@ -22,7 +24,7 @@ permissions:
 jobs:
   structured-branch-coverage:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,6 +40,7 @@ jobs:
           python3 -m py_compile \
             "$root/build_oge_6_14_reuse_first_evidence_audit_v4.py" \
             "$root/build_oge_6_14_reuse_first_evidence_audit_v5.py" \
+            "$root/build_oge_6_14_current_exact_acceptance.py" \
             "$root/validate_oge_6_14_wave_002_structured_repair.py" \
             "$root/validate_oge_6_14_wave_002_structured_branch_coverage.py"
           python3 "$root/validate_oge_6_14_wave_002_structured_branch_coverage.py"
@@ -91,11 +94,75 @@ jobs:
           print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
           print('LEARNER_AUDIO_PERSISTENCE=0')
           PY
+      - name: Build exact 6.14 acceptance candidate twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_oge_6_14_current_exact_acceptance.py" --output /tmp/oge-6-14-acceptance-a.json > /tmp/oge-6-14-acceptance-a.txt
+          python3 "$root/build_oge_6_14_current_exact_acceptance.py" --output /tmp/oge-6-14-acceptance-b.json > /tmp/oge-6-14-acceptance-b.txt
+          cmp /tmp/oge-6-14-acceptance-a.json /tmp/oge-6-14-acceptance-b.json
+          diff -u /tmp/oge-6-14-acceptance-a.txt /tmp/oge-6-14-acceptance-b.txt
+          cat /tmp/oge-6-14-acceptance-a.txt
+      - name: Verify exact acceptance candidate boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/oge-6-14-acceptance-a.json').read_text(encoding='utf-8'))
+          assert d['status']=='CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_6_14_CANONICAL_COMPONENT_SET'
+          assert d['semantic_packet_sha256']=='b35fb420f7a6e96ea11f47e321cae0affe363dc5ed8d6fb79ea8640ac5ac94c4'
+          assert d['object_accounting_sha256']=='f3aef83dab99b554a4cdec9ef8d8fbc8036d557182259ae69db182efa11b925c'
+          assert len(d['decisions'])==1
+          x=d['decisions'][0]
+          assert x['admission_unit_id']=='RAU-af3fa30939d38a3ea03d'
+          assert x['requirement_id']=='RSK-OGE_COD-6-14-P025'
+          assert x['content_code']=='6.14' and x['component_count']==83
+          assert len(x['canonical_component_refs'])==83 and len(set(x['canonical_component_refs']))==83
+          r=x['evidence_readiness']
+          assert r['current_exact_component_derivation_normalized_sha256']=='1b792cb24ea88873fb3317d74fa12977a648683727f2e381281554a73c898829'
+          assert r['final_effective_evidence_audit_normalized_sha256']=='cb106fb78cf66ec77daa25662bdd7db931dc4a8108e4de2dcfd84780f6bd6036'
+          assert r['object_identity_binding_normalized_sha256']=='1e687783350650d4bc0b7622e5004553600452f95f209840379cb60a2bd16516'
+          assert r['historical_reuse_exhaustion_normalized_sha256']=='9aae09034623cdd73c043bd5c515b9a8271e422d6cac70205300daceaa5a6773'
+          assert r['owners_with_valid_component_evidence']==83 and r['independent_items_total']==262
+          assert r['structured_branch_coverage_complete'] is True
+          assert x['mastery_boundary']['route_or_broad_composite_attempt_can_emit_exact_component_mastery'] is False
+          assert x['mastery_boundary']['component_specific_independent_evidence_required'] is True
+          assert d['summary']['accepted_admission_units']==1 and d['summary']['accepted_requirements']==1
+          assert d['summary']['false_exact_mastery_admissions']==0
+          assert d['safety']['learner_audio_persistence']==0
+          assert d['safety']['production_peis_write'] is False
+          assert d['safety']['provider_execution'] is False
+          assert d['safety']['public_traffic'] is False
+          assert d['safety']['real_payment_or_refund'] is False
+          assert d['safety']['real_message_delivery'] is False
+          digest=d.pop('normalized_sha256')
+          assert digest==hashlib.sha256(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')).hexdigest()
+          print('RUSSIAN_OGE_6_14_EXACT_ACCEPTANCE_CANDIDATE=PASS')
+          print('OGE_6_14_ACCEPTANCE_NORMALIZED_SHA256='+digest)
+          PY
+      - name: Emit exact acceptance candidate JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/oge-6-14-acceptance-a.json').read_text(encoding='utf-8'))
+          print('OGE_6_14_ACCEPTANCE_JSON_BEGIN')
+          print(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':')))
+          print('OGE_6_14_ACCEPTANCE_JSON_END')
+          PY
       - name: Upload final effective evidence audit
         uses: actions/upload-artifact@v4
         with:
           name: russian-oge-6-14-final-effective-v5-evidence-audit
-          path: /tmp/oge-6-14-v5-a.json
+          path: |
+            /tmp/oge-6-14-v5-a.json
+            /tmp/oge-6-14-acceptance-a.json
           if-no-files-found: error
           retention-days: 14
       - name: Protect surfaces changed during the 6.14 semantic-repair delta
