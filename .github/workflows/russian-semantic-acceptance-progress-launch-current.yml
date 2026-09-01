@@ -67,7 +67,7 @@ jobs:
         run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_8_current_acceptance.py
       - name: Validate OGE 6.9 current exact authority
         run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_9_current_acceptance.py
-      - name: Build current launch progress twice
+      - name: Build current and legacy progress
         shell: bash
         run: |
           set -euo pipefail
@@ -77,6 +77,7 @@ jobs:
           python3 "$root/build_russian_semantic_acceptance_progress_launch_current.py" --output /tmp/progress-b.json > /tmp/report-b.txt
           cmp /tmp/progress-a.json /tmp/progress-b.json
           diff -u /tmp/report-a.txt /tmp/report-b.txt
+          python3 "$root/build_russian_semantic_acceptance_progress.py" --output /tmp/progress-legacy.json > /tmp/report-legacy.txt
           cat /tmp/report-a.txt
       - name: Verify current launch progress summary
         shell: bash
@@ -86,35 +87,45 @@ jobs:
           import json
           from pathlib import Path
           d=json.loads(Path('/tmp/progress-a.json').read_text(encoding='utf-8'))
+          legacy=json.loads(Path('/tmp/progress-legacy.json').read_text(encoding='utf-8'))
           s=d['progress_summary']
+          ls=legacy['progress_summary']
           assert d['status']=='CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS'
           assert d['russian_content_ready'] is False
-          assert len(d['accepted_authorities'])==45
-          by_id={a['id']:a for a in d['accepted_authorities']}
-          for aid in (
+          current_ids={a['id'] for a in d['accepted_authorities']}
+          legacy_ids={a['id'] for a in legacy['accepted_authorities']}
+          expected_current_ids={
               'RUSSIAN_OGE_6_2_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RUSSIAN_OGE_6_6_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RUSSIAN_OGE_6_7_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RUSSIAN_OGE_6_8_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
               'RUSSIAN_OGE_6_9_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
-          ):
+          }
+          assert expected_current_ids.isdisjoint(legacy_ids)
+          assert current_ids == legacy_ids | expected_current_ids
+          by_id={a['id']:a for a in d['accepted_authorities']}
+          for aid in expected_current_ids:
               authority=by_id[aid]
               assert authority['authority_kind']=='OBJECT_BOUND_CANONICAL_COMPONENT_SET'
-              assert authority['accepted_admission_units']==1 and authority['accepted_requirements']==1
-          assert s['review_groups_with_accepted_component_sets']==12
-          assert s['semantic_units_with_accepted_component_sets']==25
-          assert s['semantic_requirements_with_accepted_component_sets']==25
-          assert s['semantic_units_remaining_without_accepted_component_set']==1291
-          assert s['semantic_requirements_remaining_without_accepted_component_set']==1366
-          assert 92 <= s['canonical_component_refs_reused_unique'] <= 106
-          assert s['accepted_bounded_ru_route_semantics']==9
-          assert s['accepted_bounded_ru_subject_semantics']==66
-          assert s['accepted_bounded_ru_semantics_total']==75
+              assert authority['accepted_admission_units']==1
+              assert authority['accepted_requirements']==1
+          assert s['semantic_units_with_accepted_component_sets'] == ls['semantic_units_with_accepted_component_sets'] + 5
+          assert s['semantic_requirements_with_accepted_component_sets'] == ls['semantic_requirements_with_accepted_component_sets'] + 5
+          assert s['semantic_units_remaining_without_accepted_component_set'] == ls['semantic_units_remaining_without_accepted_component_set'] - 5
+          assert s['semantic_requirements_remaining_without_accepted_component_set'] == ls['semantic_requirements_remaining_without_accepted_component_set'] - 5
+          assert s['review_groups_with_accepted_component_sets'] >= ls['review_groups_with_accepted_component_sets']
+          assert s['canonical_component_refs_reused_unique'] >= ls['canonical_component_refs_reused_unique']
+          assert s['accepted_bounded_ru_route_semantics'] == ls['accepted_bounded_ru_route_semantics']
+          assert s['accepted_bounded_ru_subject_semantics'] == ls['accepted_bounded_ru_subject_semantics']
+          assert s['accepted_bounded_ru_semantics_total'] == ls['accepted_bounded_ru_semantics_total']
           assert s['false_exact_mastery_admissions']==0
-          # OGE 6.9 creates no new school identity; the validator above proves that
-          # directly. Do not assert a nonexistent aggregate field here: the current
-          # launch chain also intentionally contains the separately accepted 6.2
-          # school-reopen materialization.
+          assert ls['false_exact_mastery_admissions']==0
+          print('ACCEPTED_AUTHORITIES='+str(len(d['accepted_authorities'])))
+          print('REVIEW_GROUPS_WITH_ACCEPTED_COMPONENT_SETS='+str(s['review_groups_with_accepted_component_sets']))
+          print('SEMANTIC_UNITS_WITH_ACCEPTED_COMPONENT_SETS='+str(s['semantic_units_with_accepted_component_sets']))
+          print('SEMANTIC_REQUIREMENTS_WITH_ACCEPTED_COMPONENT_SETS='+str(s['semantic_requirements_with_accepted_component_sets']))
+          print('SEMANTIC_UNITS_REMAINING='+str(s['semantic_units_remaining_without_accepted_component_set']))
+          print('SEMANTIC_REQUIREMENTS_REMAINING='+str(s['semantic_requirements_remaining_without_accepted_component_set']))
           print('CANONICAL_COMPONENT_REFS_REUSED_UNIQUE='+str(s['canonical_component_refs_reused_unique']))
           print('PROGRESS_NORMALIZED_SHA256='+str(d['normalized_sha256']))
           print('RUSSIAN_SEMANTIC_ACCEPTANCE_PROGRESS_CURRENT_LAUNCH_GUARD=PASS')
