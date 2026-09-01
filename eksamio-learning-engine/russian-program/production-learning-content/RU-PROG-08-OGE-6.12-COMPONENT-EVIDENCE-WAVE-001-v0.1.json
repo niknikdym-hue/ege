@@ -1,0 +1,697 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-09-01",
+  "status": "CURRENT_LAUNCH_OGE_6_12_COMPONENT_EVIDENCE_CANDIDATE_NO_OBJECT_ADMISSION",
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "target": {
+    "source_id": "FIPI-OGE-RU-2026-FINAL",
+    "document_id": "OGE_COD",
+    "content_code": "6.12"
+  },
+  "evidence_policy": {
+    "reuse_first": true,
+    "existing_exact_inventory_evidence_must_be_audited": true,
+    "new_semantic_identity_created": false,
+    "exact_owner_frontier_may_change_here": false,
+    "each_item_must_reference_exactly_one_school_semantic": true,
+    "minimum_independent_items_per_owner": 3,
+    "component_specific_independent_evidence_required": true,
+    "route_attempt_can_emit_exact_component_mastery": false,
+    "evidence_readiness_is_object_acceptance": false,
+    "cross_route_reuse_used": false
+  },
+  "reuse_audit": {
+    "source_systems_checked": [
+      "trainer_item",
+      "practice_item"
+    ],
+    "existing_exact_single_owner_items_total": 0,
+    "per_owner": [
+      {
+        "canonical_ref": "school-capitalization-astronomical-names",
+        "existing_exact_item_refs": [],
+        "materialized_new_items": 3
+      },
+      {
+        "canonical_ref": "school-capitalization-awards-orders-medals",
+        "existing_exact_item_refs": [],
+        "materialized_new_items": 3
+      },
+      {
+        "canonical_ref": "school-capitalization-documents-works-media-objects",
+        "existing_exact_item_refs": [],
+        "materialized_new_items": 3
+      },
+      {
+        "canonical_ref": "school-capitalization-geographic-administrative-names",
+        "existing_exact_item_refs": [],
+        "materialized_new_items": 3
+      },
+      {
+        "canonical_ref": "school-capitalization-historical-calendar-public-events",
+        "existing_exact_item_refs": [],
+        "materialized_new_items": 3
+      },
+      {
+        "canonical_ref": "school-capitalization-organizations-authorities-institutions",
+        "existing_exact_item_refs": [],
+        "materialized_new_items": 3
+      },
+      {
+        "canonical_ref": "school-capitalization-person-animal-name-and-derivatives",
+        "existing_exact_item_refs": [],
+        "materialized_new_items": 3
+      },
+      {
+        "canonical_ref": "school-capitalization-religious-names",
+        "existing_exact_item_refs": [],
+        "materialized_new_items": 3
+      },
+      {
+        "canonical_ref": "school-capitalization-trademarks-breeds-varieties-products",
+        "existing_exact_item_refs": [],
+        "materialized_new_items": 3
+      }
+    ],
+    "decision": "No current reviewed/source-verified exact single-owner trainer/practice item exists for the 6.12 owner set; materialize only the minimum three independent original Eksamio items per owner."
+  },
+  "owner_evidence": [
+    {
+      "canonical_ref": "school-capitalization-astronomical-names",
+      "title_ru": "Астрономические названия: собственное имя или нарицательное/обычное употребление",
+      "semantic_boundary": "Проверяется прописная/строчная буква у астрономических названий с обязательным различением собственного имени небесного тела и обычного нарицательного употребления того же слова; правило не переносится на географические названия, организации или начало предложения.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge612-astro-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативный вариант: «Космический аппарат приблизился к ___».",
+          "options": [
+            "Марсу",
+            "марсу",
+            "МАРСУ"
+          ],
+          "correct_option_index": 0,
+          "feedback": "Здесь «Марс» — индивидуальное астрономическое название планеты, поэтому оно сохраняет прописную букву в падежной форме.",
+          "school_semantic_refs": [
+            "school-capitalization-astronomical-names"
+          ]
+        },
+        {
+          "id": "oge612-astro-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативный вариант: «После дождя ___ в саду стала мягкой».",
+          "options": [
+            "земля",
+            "Земля",
+            "ЗЕМЛЯ"
+          ],
+          "correct_option_index": 0,
+          "feedback": "Здесь слово «земля» обозначает почву, а не планету как индивидуальный астрономический объект, поэтому нужна строчная буква.",
+          "school_semantic_refs": [
+            "school-capitalization-astronomical-names"
+          ]
+        },
+        {
+          "id": "oge612-astro-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни «Земля вращается вокруг Солнца» и «земля покрылась снегом». Объясни выбор прописной и строчной букв у слова «земля».",
+          "answer_outline": "В первом примере «Земля» — собственное астрономическое название планеты и пишется с прописной. Во втором слово обозначает почву/поверхность как нарицательное существительное и пишется со строчной.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: в первом примере распознан статус индивидуального астрономического названия планеты",
+              "1: во втором примере распознано нарицательное значение «почва/поверхность» и объяснена строчная буква"
+            ]
+          },
+          "school_semantic_refs": [
+            "school-capitalization-astronomical-names"
+          ]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-capitalization-awards-orders-medals",
+      "title_ru": "Ордена, медали, награды, знаки отличия и премии: оформление компонентов названия",
+      "semantic_boundary": "Проверяется структура индивидуальных названий орденов, медалей, наград и премий: нужно отличать родовое обозначение награды от компонента её собственного имени. Кавычки и иные элементы оформления не засчитываются здесь как самостоятельное пунктуационное умение.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge612-award-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание названия награды: «Его наградили орденом ___».",
+          "options": [
+            "Мужества",
+            "мужества",
+            "МУЖЕСТВА"
+          ],
+          "correct_option_index": 0,
+          "feedback": "В сочетании «орден Мужества» родовое слово «орден» не становится частью проверяемой прописной, а компонент индивидуального названия «Мужества» пишется с прописной.",
+          "school_semantic_refs": [
+            "school-capitalization-awards-orders-medals"
+          ]
+        },
+        {
+          "id": "oge612-award-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативный вариант: «Учёный получил ___ премию».",
+          "options": [
+            "Нобелевскую",
+            "нобелевскую",
+            "НОБЕЛЕВСКУЮ"
+          ],
+          "correct_option_index": 0,
+          "feedback": "«Нобелевская премия» — индивидуальное название международной премии; образованный от фамилии компонент названия пишется с прописной буквы.",
+          "school_semantic_refs": [
+            "school-capitalization-awards-orders-medals"
+          ]
+        },
+        {
+          "id": "oge612-award-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни «орден Мужества» и «награда за проявленное мужество». Объясни, почему слово «Мужества» в первом сочетании начинается с прописной, а «мужество» во втором — со строчной.",
+          "answer_outline": "В первом случае «Мужества» входит в установленное индивидуальное название награды «орден Мужества». Во втором «мужество» называет качество человека и употреблено как нарицательное существительное.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: распознан компонент индивидуального названия награды «орден Мужества»",
+              "1: во втором примере распознано нарицательное значение слова «мужество»"
+            ]
+          },
+          "school_semantic_refs": [
+            "school-capitalization-awards-orders-medals"
+          ]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-capitalization-documents-works-media-objects",
+      "title_ru": "Документы, памятники, предметы, произведения искусства, издания и информационные названия",
+      "semantic_boundary": "Проверяется употребление прописных и строчных букв внутри индивидуальных названий документов, произведений, изданий и иных именованных объектов. Кавычки в заданиях уже заданы и не являются объектом этого компонента; нельзя механически писать с прописной каждое слово названия.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge612-title-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Кавычки уже заданы. Выбери нормативное написание названия романа: «___».",
+          "options": [
+            "Война и мир",
+            "Война и Мир",
+            "война и мир"
+          ],
+          "correct_option_index": 0,
+          "feedback": "В индивидуальном названии «Война и мир» с прописной оформляется начальный компонент; обычное нарицательное слово «мир» внутри названия не получает прописную автоматически.",
+          "school_semantic_refs": [
+            "school-capitalization-documents-works-media-objects"
+          ]
+        },
+        {
+          "id": "oge612-title-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Кавычки уже заданы. Выбери нормативное написание названия повести: «___».",
+          "options": [
+            "Капитанская дочка",
+            "Капитанская Дочка",
+            "капитанская дочка"
+          ],
+          "correct_option_index": 0,
+          "feedback": "В названии «Капитанская дочка» прописная нужна в первом слове названия; нарицательное «дочка» пишется со строчной.",
+          "school_semantic_refs": [
+            "school-capitalization-documents-works-media-objects"
+          ]
+        },
+        {
+          "id": "oge612-title-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Объясни написание прописных и строчных букв в названиях «Война и мир» и «Капитанская дочка». Почему нельзя писать с прописной каждое знаменательное слово?",
+          "answer_outline": "Оба сочетания — индивидуальные названия произведений. С прописной оформляется первое слово названия и входящие в него собственные имена, если они есть; обычные нарицательные слова внутри названия не получают прописную только из-за положения в заголовке.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: отмечено правило о прописной в первом слове индивидуального названия произведения",
+              "1: отвергнута механическая прописная у всех нарицательных слов внутри названия"
+            ]
+          },
+          "school_semantic_refs": [
+            "school-capitalization-documents-works-media-objects"
+          ]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-capitalization-geographic-administrative-names",
+      "title_ru": "Географические и административно-территориальные названия и производные от них слова",
+      "semantic_boundary": "Проверяется структура географических и административно-территориальных собственных имён: нужно выделять компоненты индивидуального названия и родовые географические/административные термины. Запрещено правило «все слова с прописной» без анализа структуры названия.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge612-geo-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание географического названия.",
+          "options": [
+            "Красное море",
+            "Красное Море",
+            "красное море"
+          ],
+          "correct_option_index": 0,
+          "feedback": "В названии «Красное море» индивидуализирующий компонент «Красное» пишется с прописной, а родовой географический термин «море» — со строчной.",
+          "school_semantic_refs": [
+            "school-capitalization-geographic-administrative-names"
+          ]
+        },
+        {
+          "id": "oge612-geo-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание административно-территориального названия.",
+          "options": [
+            "Нижегородская область",
+            "Нижегородская Область",
+            "нижегородская область"
+          ],
+          "correct_option_index": 0,
+          "feedback": "В названии «Нижегородская область» собственно-именной компонент пишется с прописной, а родовое слово «область» — со строчной.",
+          "school_semantic_refs": [
+            "school-capitalization-geographic-administrative-names"
+          ]
+        },
+        {
+          "id": "oge612-geo-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни «Красное море» и «Нижегородская область». Объясни, почему слова «море» и «область» остаются со строчной, хотя сочетания являются собственными названиями.",
+          "answer_outline": "Оба сочетания — собственные географическое/административное названия, но «море» и «область» выполняют роль родовых терминов. Прописная относится к индивидуализирующим компонентам названия, а не автоматически ко всем словам.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: распознана собственно-именная природа обоих сочетаний",
+              "1: объяснена роль родовых терминов «море» и «область» и сохранение строчной буквы"
+            ]
+          },
+          "school_semantic_refs": [
+            "school-capitalization-geographic-administrative-names"
+          ]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-capitalization-historical-calendar-public-events",
+      "title_ru": "Исторические эпохи и события, календарные периоды, праздники и общественные мероприятия",
+      "semantic_boundary": "Проверяется прописная/строчная буква в установленных названиях исторических событий, эпох, праздников и общественных мероприятий с отличием индивидуального официального имени от свободного описательного сочетания. Решение должно опираться на статус конкретного названия, а не на эмоциональную значимость события.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge612-event-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание исторического названия.",
+          "options": [
+            "Великая Отечественная война",
+            "Великая отечественная Война",
+            "великая отечественная война"
+          ],
+          "correct_option_index": 0,
+          "feedback": "Установленное название исторического события пишется «Великая Отечественная война»: первые два компонента оформляются прописными, родовое «война» — строчной.",
+          "school_semantic_refs": [
+            "school-capitalization-historical-calendar-public-events"
+          ]
+        },
+        {
+          "id": "oge612-event-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание названия праздника.",
+          "options": [
+            "День Победы",
+            "День победы",
+            "день Победы"
+          ],
+          "correct_option_index": 0,
+          "feedback": "В установленном названии праздника «День Победы» оба значимых компонента входят в индивидуальное имя и пишутся с прописной.",
+          "school_semantic_refs": [
+            "school-capitalization-historical-calendar-public-events"
+          ]
+        },
+        {
+          "id": "oge612-event-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни «День Победы» и «день победы команды в турнире». Объясни различие в прописных и строчных буквах.",
+          "answer_outline": "«День Победы» — установленное собственное название праздника. Во втором сочетании слова описывают обычный день, связанный с победой конкретной команды, и не образуют индивидуального календарного имени.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: «День Победы» распознан как индивидуальное название праздника",
+              "1: во втором примере распознано свободное описательное сочетание и объяснены строчные буквы"
+            ]
+          },
+          "school_semantic_refs": [
+            "school-capitalization-historical-calendar-public-events"
+          ]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-capitalization-organizations-authorities-institutions",
+      "title_ru": "Органы власти, учреждения, организации, общества, партии, предприятия: прописные по структуре официального названия",
+      "semantic_boundary": "Проверяется структура официальных названий органов власти, учреждений и организаций: прописная определяется местом компонента в установленном имени и наличием встроенных собственных названий. Нельзя повышать регистр каждого знаменательного слова только из-за официальности организации.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge612-org-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание официального названия организации.",
+          "options": [
+            "Российская академия наук",
+            "Российская Академия Наук",
+            "российская академия наук"
+          ],
+          "correct_option_index": 0,
+          "feedback": "В официальном названии «Российская академия наук» прописная нужна в первом компоненте; слова «академия наук» не получают прописные автоматически.",
+          "school_semantic_refs": [
+            "school-capitalization-organizations-authorities-institutions"
+          ]
+        },
+        {
+          "id": "oge612-org-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание официального названия органа власти.",
+          "options": [
+            "Министерство просвещения Российской Федерации",
+            "Министерство Просвещения Российской Федерации",
+            "министерство просвещения Российской федерации"
+          ],
+          "correct_option_index": 0,
+          "feedback": "В названии «Министерство просвещения Российской Федерации» первое слово названия и встроенное собственное имя государства оформляются прописными по своей структуре.",
+          "school_semantic_refs": [
+            "school-capitalization-organizations-authorities-institutions"
+          ]
+        },
+        {
+          "id": "oge612-org-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни «Российская академия наук» и «городское управление образования». Объясни, почему официальное собственное название и свободное родовое обозначение оформляются по-разному.",
+          "answer_outline": "«Российская академия наук» — установленное индивидуальное имя организации; его структура задаёт прописную в начальном собственно-именном компоненте. «Городское управление образования» в данном виде — описательное родовое обозначение, а не доказанное индивидуальное название.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: первое сочетание распознано как официальное индивидуальное название организации",
+              "1: второе сочетание распознано как родовое/описательное обозначение без механической прописной"
+            ]
+          },
+          "school_semantic_refs": [
+            "school-capitalization-organizations-authorities-institutions"
+          ]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-capitalization-person-animal-name-and-derivatives",
+      "title_ru": "Имена людей, клички животных, мифологические имена и производные от индивидуальных названий",
+      "semantic_boundary": "Проверяется прописная в индивидуальных именах людей, кличках животных и связанных производных с обязательным различением сохранённого собственного имени и производного слова, ставшего обычным качественным/относительным обозначением. Правило не сводится к наличию фамильной основы.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge612-person-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание клички животного: «кот ___ спал на подоконнике».",
+          "options": [
+            "Барсик",
+            "барсик",
+            "БАРСИК"
+          ],
+          "correct_option_index": 0,
+          "feedback": "«Барсик» здесь — индивидуальная кличка животного, то есть собственное имя, поэтому она пишется с прописной.",
+          "school_semantic_refs": [
+            "school-capitalization-person-animal-name-and-derivatives"
+          ]
+        },
+        {
+          "id": "oge612-person-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание сочетания о творчестве писателя.",
+          "options": [
+            "пушкинские стихи",
+            "Пушкинские стихи",
+            "пушкинские Стихи"
+          ],
+          "correct_option_index": 0,
+          "feedback": "В сочетании «пушкинские стихи» относительное прилагательное на -ск- обозначает связь с творчеством Пушкина и в обычном употреблении пишется со строчной.",
+          "school_semantic_refs": [
+            "school-capitalization-person-animal-name-and-derivatives"
+          ]
+        },
+        {
+          "id": "oge612-person-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни «Александр Пушкин» и «пушкинская поэзия». Объясни, почему фамилия пишется с прописной, а производное прилагательное в данном сочетании — со строчной.",
+          "answer_outline": "«Пушкин» — индивидуальная фамилия человека и собственное имя. «Пушкинская» в сочетании «пушкинская поэзия» — обычное относительное прилагательное, образованное от фамилии, и не сохраняет статус индивидуального собственного имени.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: фамилия «Пушкин» распознана как индивидуальное собственное имя",
+              "1: «пушкинская» распознано как относительное производное прилагательное обычного употребления"
+            ]
+          },
+          "school_semantic_refs": [
+            "school-capitalization-person-animal-name-and-derivatives"
+          ]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-capitalization-religious-names",
+      "title_ru": "Названия, связанные с религией: имена, священные тексты, праздники, учреждения и употребления",
+      "semantic_boundary": "Проверяется современная нормативная прописная в религиозных собственных именах, названиях священных текстов и праздников, а также граница с производными и нарицательными употреблениями. Нельзя переносить правило на любое слово религиозной тематики без подтверждённого имени.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge612-relig-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание названия священного текста.",
+          "options": [
+            "Библия",
+            "библия",
+            "БИБЛИЯ"
+          ],
+          "correct_option_index": 0,
+          "feedback": "«Библия» как индивидуальное название священного текста пишется с прописной буквы.",
+          "school_semantic_refs": [
+            "school-capitalization-religious-names"
+          ]
+        },
+        {
+          "id": "oge612-relig-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание названия праздника.",
+          "options": [
+            "Рождество Христово",
+            "Рождество христово",
+            "рождество Христово"
+          ],
+          "correct_option_index": 0,
+          "feedback": "Установленное религиозное название праздника пишется «Рождество Христово» с прописными в обоих компонентах индивидуального имени.",
+          "school_semantic_refs": [
+            "school-capitalization-religious-names"
+          ]
+        },
+        {
+          "id": "oge612-relig-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни «Рождество Христово» и «рождественская открытка». Объясни, почему название праздника оформляется прописными, а производное прилагательное — со строчной.",
+          "answer_outline": "«Рождество Христово» — собственное название религиозного праздника. «Рождественская» в сочетании «рождественская открытка» — обычное производное прилагательное, не являющееся само по себе индивидуальным именем.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: «Рождество Христово» распознано как установленное собственное название праздника",
+              "1: производное прилагательное «рождественская» распознано как обычное нарицательное определение"
+            ]
+          },
+          "school_semantic_refs": [
+            "school-capitalization-religious-names"
+          ]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-capitalization-trademarks-breeds-varieties-products",
+      "title_ru": "Товарные знаки, марки изделий, породы, виды и сорта: собственное название или нарицательное обозначение",
+      "semantic_boundary": "Проверяется граница между индивидуальным товарным/марочным названием и обычным нарицательным обозначением продукта, вида или класса. Кавычки в конкретном задании считаются заранее заданным оформлением и не подменяют проверку прописной/строчной буквы.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge612-brand-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Кавычки уже заданы. Выбери нормативное написание марки автомобиля: автомобиль «___».",
+          "options": [
+            "Лада",
+            "лада",
+            "ЛАДА"
+          ],
+          "correct_option_index": 0,
+          "feedback": "«Лада» здесь — индивидуальное марочное название автомобиля и внутри уже заданного оформления пишется с прописной.",
+          "school_semantic_refs": [
+            "school-capitalization-trademarks-breeds-varieties-products"
+          ]
+        },
+        {
+          "id": "oge612-brand-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Кавычки уже заданы. Выбери нормативное написание индивидуального названия конфет: конфеты «___».",
+          "options": [
+            "Белочка",
+            "белочка",
+            "БЕЛОЧКА"
+          ],
+          "correct_option_index": 0,
+          "feedback": "«Белочка» в этом контексте — индивидуальное название продукта, поэтому начальная буква прописная; само решение не относится к постановке кавычек.",
+          "school_semantic_refs": [
+            "school-capitalization-trademarks-breeds-varieties-products"
+          ]
+        },
+        {
+          "id": "oge612-brand-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни «автомобиль „Лада“» и «легковой автомобиль». Объясни, почему «Лада» пишется с прописной, а слово «автомобиль» в родовом обозначении — со строчной.",
+          "answer_outline": "«Лада» — индивидуальное марочное имя продукта, поэтому оно сохраняет статус собственного названия и прописную. «Автомобиль» — общее название класса предметов и пишется со строчной.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: «Лада» распознана как индивидуальное марочное собственное название",
+              "1: «автомобиль» распознан как нарицательное родовое обозначение"
+            ]
+          },
+          "school_semantic_refs": [
+            "school-capitalization-trademarks-breeds-varieties-products"
+          ]
+        }
+      ]
+    }
+  ],
+  "source_provenance": [
+    {
+      "ref": "../../250-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A4-CAPITALIZATION-v0.1.json",
+      "role": "current canonical capitalization authority and exact labels/boundaries"
+    },
+    {
+      "ref": "../../282-RUSSIAN-FIPI-2026-OGE-6.12-CURRENT-ROUTE-SUPERSESSION-v0.1.json",
+      "role": "current exact 6.12 route owner frontier; no object admission"
+    },
+    {
+      "ref": "../subject-admission/build_oge_6_12_proper_names_exact_owner_resolution.py",
+      "role": "exact owner/rejected-candidate proof for FIPI 6.12"
+    },
+    {
+      "ref": "../../273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+      "role": "reuse-first current reviewed canonical and learner-evidence inventory"
+    },
+    {
+      "ref": "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/ru-9_6_orfografija.pdf",
+      "role": "official FIPI OGE-2026 orthography navigator; 6.12 source object boundary only"
+    }
+  ],
+  "copyright_guard": {
+    "official_source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "commercial_textbook_prose_copied": 0,
+    "learner_prompts_examples_feedback": "ORIGINAL_EKSAMIO"
+  },
+  "summary": {
+    "exact_owner_frontier": 9,
+    "owners_with_materialized_component_evidence": 9,
+    "existing_exact_inventory_items_reused": 0,
+    "materialized_new_items": 27,
+    "independent_items_total": 27,
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  },
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "tilda_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_payment_or_refund": false,
+    "real_message_delivery": false
+  }
+}
