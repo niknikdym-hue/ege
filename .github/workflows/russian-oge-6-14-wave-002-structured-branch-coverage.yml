@@ -94,7 +94,7 @@ jobs:
           print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
           print('LEARNER_AUDIO_PERSISTENCE=0')
           PY
-      - name: Build exact 6.14 acceptance candidate twice
+      - name: Build exact orthography-only 6.14 acceptance candidate twice
         shell: bash
         run: |
           set -euo pipefail
@@ -113,6 +113,7 @@ jobs:
           import json
           from pathlib import Path
           d=json.loads(Path('/tmp/oge-6-14-acceptance-a.json').read_text(encoding='utf-8'))
+          assert d['schema_version']=='0.2.0'
           assert d['status']=='CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_6_14_CANONICAL_COMPONENT_SET'
           assert d['semantic_packet_sha256']=='b35fb420f7a6e96ea11f47e321cae0affe363dc5ed8d6fb79ea8640ac5ac94c4'
           assert d['object_accounting_sha256']=='f3aef83dab99b554a4cdec9ef8d8fbc8036d557182259ae69db182efa11b925c'
@@ -122,16 +123,28 @@ jobs:
           assert x['requirement_id']=='RSK-OGE_COD-6-14-P025'
           assert x['content_code']=='6.14' and x['component_count']==83
           assert len(x['canonical_component_refs'])==83 and len(set(x['canonical_component_refs']))==83
+          semantic=x['exact_semantic_boundary']
+          assert semantic['official_label_ru']=='Орфографический анализ'
+          assert semantic['operation_scope']=='ORTHOGRAPHY_RULE_IDENTIFICATION_AND_APPLICATION_OVER_EXISTING_SKILLS'
+          assert semantic['punctuation_in_scope'] is False
+          contamination=x['review_group_contamination_guard']
+          assert contamination['punctuation_boundary_ref']=='review-boundary:cf5ab34773b8'
+          assert contamination['punctuation_boundary_excluded_from_6_14_exact_scope'] is True
+          assert contamination['accounting_group_normalized_meaning_used_as_exact_scope'] is False
           r=x['evidence_readiness']
           assert r['current_exact_component_derivation_normalized_sha256']=='1b792cb24ea88873fb3317d74fa12977a648683727f2e381281554a73c898829'
           assert r['final_effective_evidence_audit_normalized_sha256']=='cb106fb78cf66ec77daa25662bdd7db931dc4a8108e4de2dcfd84780f6bd6036'
-          assert r['object_identity_binding_normalized_sha256']=='1e687783350650d4bc0b7622e5004553600452f95f209840379cb60a2bd16516'
+          assert r['object_identity_and_scope_binding_normalized_sha256']=='7ae02137a36dd87bad5672287277c69f5f3c6b1f670ec114924a1e4a7def0303'
           assert r['historical_reuse_exhaustion_normalized_sha256']=='9aae09034623cdd73c043bd5c515b9a8271e422d6cac70205300daceaa5a6773'
           assert r['owners_with_valid_component_evidence']==83 and r['independent_items_total']==262
           assert r['structured_branch_coverage_complete'] is True
           assert x['mastery_boundary']['route_or_broad_composite_attempt_can_emit_exact_component_mastery'] is False
           assert x['mastery_boundary']['component_specific_independent_evidence_required'] is True
+          assert d['policy']['exact_object_scope_is_orthography_only'] is True
+          assert d['policy']['punctuation_review_boundary_excluded'] is True
+          assert d['policy']['combined_review_group_meaning_used_as_exact_6_14_semantics'] is False
           assert d['summary']['accepted_admission_units']==1 and d['summary']['accepted_requirements']==1
+          assert d['summary']['punctuation_boundaries_admitted']==0
           assert d['summary']['false_exact_mastery_admissions']==0
           assert d['safety']['learner_audio_persistence']==0
           assert d['safety']['production_peis_write'] is False
@@ -142,6 +155,8 @@ jobs:
           digest=d.pop('normalized_sha256')
           assert digest==hashlib.sha256(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')).hexdigest()
           print('RUSSIAN_OGE_6_14_EXACT_ACCEPTANCE_CANDIDATE=PASS')
+          print('OGE_6_14_EXACT_SCOPE_ORTHOGRAPHY_ONLY=1')
+          print('OGE_6_14_PUNCTUATION_BOUNDARIES_ADMITTED=0')
           print('OGE_6_14_ACCEPTANCE_NORMALIZED_SHA256='+digest)
           PY
       - name: Emit exact acceptance candidate JSON
@@ -156,7 +171,7 @@ jobs:
           print(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':')))
           print('OGE_6_14_ACCEPTANCE_JSON_END')
           PY
-      - name: Upload final effective evidence audit
+      - name: Upload final effective evidence audit and acceptance candidate
         uses: actions/upload-artifact@v4
         with:
           name: russian-oge-6-14-final-effective-v5-evidence-audit
