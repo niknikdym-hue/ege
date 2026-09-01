@@ -1,0 +1,227 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-09-01",
+  "status": "CURRENT_LAUNCH_OGE_6_9_COMPONENT_EVIDENCE_CANDIDATE_NO_OBJECT_ADMISSION",
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "target": {
+    "source_id": "FIPI-OGE-RU-2026-FINAL",
+    "document_id": "OGE_COD",
+    "content_code": "6.9",
+    "admission_unit_id": "RAU-ca51acb57d8fc1c83de7",
+    "requirement_id": "RSK-OGE_COD-6-9-P025"
+  },
+  "evidence_policy": {
+    "reuse_first": true,
+    "new_semantic_identity_created": false,
+    "exact_owner_frontier_may_change_here": false,
+    "each_item_must_reference_exactly_one_school_semantic": true,
+    "minimum_independent_items_per_owner": 3,
+    "component_specific_independent_evidence_required": true,
+    "route_attempt_can_emit_exact_component_mastery": false,
+    "evidence_readiness_is_object_acceptance": false,
+    "cross_route_reuse_used": false
+  },
+  "owner_evidence": [
+    {
+      "canonical_ref": "school-ne-double-negation-affirmative-boundary",
+      "title_ru": "НЕ МОГ НЕ...: двойное отрицание и утвердительный смысл",
+      "semantic_boundary": "Проверяется конструкция с двумя отрицаниями типа «не мог не сделать», где второе НЕ сохраняет отрицательную форму, а вся конструкция выражает неизбежность или фактическое совершение действия; НИ здесь не подставляется по формальному наличию первого отрицания.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-double-neg-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное продолжение: «Я не мог ___ улыбнуться, услышав эту новость».", "options": ["ни", "не", "не-"], "correct_option_index": 1, "feedback": "В конструкции «не мог не улыбнуться» обе частицы — НЕ; сочетание передаёт неизбежность действия.", "school_semantic_refs": ["school-ne-double-negation-affirmative-boundary"]},
+        {"id": "oge69-double-neg-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Какой смысл у предложения «Он не мог не согласиться с очевидным выводом»?", "options": ["Он обязательно согласился или был вынужден согласиться", "Он ни разу не соглашался", "Он сомневался, согласился ли кто-то другой"], "correct_option_index": 0, "feedback": "Двойное НЕ при «не мог не...» даёт утвердительный результат: действие фактически совершается или воспринимается как неизбежное.", "school_semantic_refs": ["school-ne-double-negation-affirmative-boundary"]},
+        {"id": "oge69-double-neg-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Объясни написание и смысл оборота «Он не мог не заметить ошибку». Почему перед инфинитивом стоит НЕ, а не НИ?", "answer_outline": "Нужно распознать модель «не мог не + инфинитив»: первое НЕ отрицает возможность не совершить действие, второе НЕ относится к инфинитиву; в результате выражается неизбежность/фактическое совершение действия. НИ не заменяет второе НЕ.", "scoring": {"max_points": 2, "criteria": ["1: распознана модель двойного отрицания «не мог не + инфинитив»", "1: объяснён утвердительный/неизбежный смысл и исключена подстановка НИ"]}, "school_semantic_refs": ["school-ne-double-negation-affirmative-boundary"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-ne-kto-inoy-vs-nikto-inoy",
+      "title_ru": "НЕ КТО ИНОЙ, КАК / НЕ ЧТО ИНОЕ, КАК vs НИКТО ИНОЙ / НИЧТО ИНОЕ",
+      "semantic_boundary": "Проверяется разграничение конструкции «не кто иной, как / не что иное, как», где НЕ пишется раздельно, и отрицательных местоименных сочетаний «никто иной / ничто иное», обычно поддержанных сказуемым с НЕ.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-inoy-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативный вариант: «Это был ___, как наш преподаватель».", "options": ["никто иной", "не кто иной", "ни кто иной"], "correct_option_index": 1, "feedback": "В обороте с «как» используется конструкция «не кто иной, как...» — НЕ пишется раздельно.", "school_semantic_refs": ["school-ne-kto-inoy-vs-nikto-inoy"]},
+        {"id": "oge69-inoy-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативный вариант: «___ не смог бы так точно восстановить ход событий».", "options": ["Не кто иной", "Никто иной", "Ни кто иной"], "correct_option_index": 1, "feedback": "В отрицательном предложении нормативно «никто иной не смог бы...»: НИ входит в отрицательное местоимение «никто».", "school_semantic_refs": ["school-ne-kto-inoy-vs-nikto-inoy"]},
+        {"id": "oge69-inoy-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни: «Это был не кто иной, как директор» и «Никто иной не знал ответа». Объясни различие НЕ/НИ и написание.", "answer_outline": "В первом предложении конструкция идентификации «не кто иной, как» требует раздельного НЕ. Во втором «никто иной» — отрицательное местоимение с НИ-, поддержанное отрицательным сказуемым «не знал».", "scoring": {"max_points": 2, "criteria": ["1: верно объяснена конструкция «не кто иной, как» и раздельное НЕ", "1: «никто иной» распознано как отрицательное местоимение с НИ- в отрицательном предложении"]}, "school_semantic_refs": ["school-ne-kto-inoy-vs-nikto-inoy"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-ne-ni-ni-odin-ne-odin-ni-razu-ne-raz",
+      "title_ru": "НИ ОДИН / НЕ ОДИН; НИ РАЗУ / НЕ РАЗ",
+      "semantic_boundary": "Проверяются смысловые минимальные пары: «ни один» и «ни разу» усиливают отрицание и означают отсутствие единичного случая, тогда как «не один» и «не раз» имеют утвердительное значение количества — несколько или многократно.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-niodin-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери вариант со значением «ни один человек не пропустил»: «___ ученик не опоздал к началу».", "options": ["Не один", "Ни один", "Ни-один"], "correct_option_index": 1, "feedback": "«Ни один ... не» означает отсутствие даже одного исключения и усиливает отрицание.", "school_semantic_refs": ["school-ne-ni-ni-odin-ne-odin-ni-razu-ne-raz"]},
+        {"id": "oge69-niodin-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери вариант со значением «много раз»: «Мы ___ обсуждали этот вопрос».", "options": ["ни разу", "не раз", "ни раз"], "correct_option_index": 1, "feedback": "«Не раз» имеет утвердительное количественное значение «многократно»; «ни разу» требует отрицательного контекста и означает «никогда».", "school_semantic_refs": ["school-ne-ni-ni-odin-ne-odin-ni-razu-ne-raz"]},
+        {"id": "oge69-niodin-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Объясни различие пар «ни один — не один» и «ни разу — не раз». Приведи для каждой пары краткое смысловое толкование.", "answer_outline": "«Ни один» и «ни разу» относятся к усиленному отрицанию: ни одного, никогда. «Не один» и «не раз» имеют утвердительное значение количества: несколько, многократно.", "scoring": {"max_points": 2, "criteria": ["1: верно объяснено отрицательное значение «ни один / ни разу»", "1: верно объяснено утвердительное количественное значение «не один / не раз»"]}, "school_semantic_refs": ["school-ne-ni-ni-odin-ne-odin-ni-razu-ne-raz"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-ne-ni-pronominal-exclamatory-vs-concessive-boundary",
+      "title_ru": "КУДА ТОЛЬКО НЕ... vs КУДА НИ...: восклицание и уступительно-обобщающее придаточное",
+      "semantic_boundary": "Проверяется НЕ в утвердительных вопросительно-восклицательных конструкциях типа «где только не бывал!» и НИ в уступительно-обобщающих придаточных типа «где бы он ни был»; внешнее сходство местоименных слов не отменяет различия синтаксического смысла.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-excl-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери частицу: «Где он только ___ бывал за эти годы!»", "options": ["ни", "не", "не-"], "correct_option_index": 1, "feedback": "В вопросительно-восклицательной конструкции «где только не бывал!» используется НЕ при утвердительном смысле «бывал во многих местах».", "school_semantic_refs": ["school-ne-ni-pronominal-exclamatory-vs-concessive-boundary"]},
+        {"id": "oge69-excl-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери частицу: «Где бы он ___ был, он всегда писал домой».", "options": ["не", "ни", "не-"], "correct_option_index": 1, "feedback": "В уступительно-обобщающем придаточном «где бы он ни был» употребляется НИ.", "school_semantic_refs": ["school-ne-ni-pronominal-exclamatory-vs-concessive-boundary"]},
+        {"id": "oge69-excl-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни «Кого только не встретишь в дороге!» и «Кого ни спроси, все помнят этот случай». Объясни выбор НЕ и НИ.", "answer_outline": "Первое предложение — вопросительно-восклицательная конструкция с утвердительным смыслом, поэтому НЕ. Второе — уступительно-обобщающая модель «кого ни спроси», поэтому НИ.", "scoring": {"max_points": 2, "criteria": ["1: первая конструкция распознана как вопросительно-восклицательная с НЕ", "1: вторая конструкция распознана как уступительно-обобщающая с НИ"]}, "school_semantic_refs": ["school-ne-ni-pronominal-exclamatory-vs-concessive-boundary"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-ne-non-o-adverb-predicative-separate-system",
+      "title_ru": "НЕ с ненаречиями на -о, неизменяемыми словами и предикативами: базовое раздельное написание и функциональные исключения",
+      "semantic_boundary": "Проверяется базовое раздельное НЕ с неизменяемыми предикативными словами и формами, не подпадающими под продуктивное правило для наречий на -о/-е, с отдельным распознаванием лексикализованных слов-исключений, которые нельзя механически разрывать.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-pred-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание: «Нам ___ спешить: времени достаточно».", "options": ["ненадо", "не надо", "не-надо"], "correct_option_index": 1, "feedback": "Предикативное слово «надо» с отрицанием в этой модели пишется раздельно: «не надо».", "school_semantic_refs": ["school-ne-non-o-adverb-predicative-separate-system"]},
+        {"id": "oge69-pred-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание: «Мне ___ потраченного времени».", "options": ["нежаль", "не жаль", "не-жаль"], "correct_option_index": 1, "feedback": "С предикативным словом «жаль» отрицательная частица пишется раздельно: «не жаль».", "school_semantic_refs": ["school-ne-non-o-adverb-predicative-separate-system"]},
+        {"id": "oge69-pred-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни «не надо спорить» и «нельзя опаздывать». Объясни, почему в первом сочетании НЕ пишется раздельно, а во втором слово пишется слитно.", "answer_outline": "«Не надо» — свободное отрицание предикативного слова «надо», поэтому раздельно. «Нельзя» — лексикализованное самостоятельное предикативное слово, нормативно пишущееся слитно.", "scoring": {"max_points": 2, "criteria": ["1: «не надо» объяснено как раздельное отрицание предикативного слова", "1: «нельзя» распознано как лексикализованное слово слитного написания"]}, "school_semantic_refs": ["school-ne-non-o-adverb-predicative-separate-system"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-ne-noun-adjective-o-adverb-spelling-system",
+      "title_ru": "НЕ с существительными, прилагательными и наречиями на -о: слитно или раздельно по значению и контексту",
+      "semantic_boundary": "Проверяется слитное НЕ при образовании нового понятия или возможности близкой замены без НЕ и раздельное НЕ при явном противопоставлении с А или подчёркнутом отрицании; граница применяется к существительным, прилагательным и наречиям на -о/-е без переноса на другие части речи.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-nao-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание: «Это была ___, а досадная ошибка в расчёте».", "options": ["неправда", "не правда", "не-правда"], "correct_option_index": 1, "feedback": "При явном противопоставлении с «а» отрицание пишется раздельно: «не правда, а ошибка».", "school_semantic_refs": ["school-ne-noun-adjective-o-adverb-spelling-system"]},
+        {"id": "oge69-nao-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание: «Он говорил ___, чтобы не разбудить ребёнка».", "options": ["не громко", "негромко", "не-громко"], "correct_option_index": 1, "feedback": "Без противопоставления наречие «негромко» обозначает единый признак и допускает близкую замену «тихо», поэтому пишется слитно.", "school_semantic_refs": ["school-ne-noun-adjective-o-adverb-spelling-system"]},
+        {"id": "oge69-nao-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни «неправда» (= ложь), «не громкий, а тихий голос» и «говорил негромко». Объясни, от чего зависит слитное или раздельное НЕ.", "answer_outline": "Слитное написание возможно при едином признаке/понятии и близкой замене без НЕ: «неправда» = ложь, «негромко» = тихо. При явном противопоставлении с «а» — «не громкий, а тихий» — НЕ пишется раздельно.", "scoring": {"max_points": 2, "criteria": ["1: названа причина слитного написания при едином понятии/близкой замене", "1: названа причина раздельного написания при противопоставлении с «а»"]}, "school_semantic_refs": ["school-ne-noun-adjective-o-adverb-spelling-system"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-ne-numeral-pronoun-spelling-base",
+      "title_ru": "НЕ с числительными и местоименными словами: базовое раздельное написание и граница с отрицательными/неопределёнными формами",
+      "semantic_boundary": "Проверяется базовое раздельное написание частицы НЕ с числительными и местоименными словами в свободном отрицании, а также граница с лексикализованными отрицательными и неопределёнными местоименными формами; соседние правила отрицательных местоимений не подменяются этой базовой семантикой.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-pronbase-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание: «___ каждый участник успел завершить работу».", "options": ["некаждый", "не каждый", "не-каждый"], "correct_option_index": 1, "feedback": "С местоименным словом «каждый» частица НЕ в свободном отрицании пишется раздельно: «не каждый».", "school_semantic_refs": ["school-ne-numeral-pronoun-spelling-base"]},
+        {"id": "oge69-pronbase-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание: «Это сделал ___ я, а мой брат».", "options": ["нея", "не я", "не-я"], "correct_option_index": 1, "feedback": "При противопоставлении местоимения частица НЕ пишется раздельно: «не я, а мой брат».", "school_semantic_refs": ["school-ne-numeral-pronoun-spelling-base"]},
+        {"id": "oge69-pronbase-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни «не каждый согласился» и «некто постучал в дверь». Объясни раздельное и слитное написание, не смешивая свободную частицу НЕ с неопределённым местоимением.", "answer_outline": "«Не каждый» — свободное отрицание местоименного слова, поэтому раздельно. «Некто» — цельное неопределённое местоимение, нормативно пишущееся слитно.", "scoring": {"max_points": 2, "criteria": ["1: «не каждый» объяснено как свободное раздельное отрицание", "1: «некто» распознано как цельное неопределённое местоимение слитного написания"]}, "school_semantic_refs": ["school-ne-numeral-pronoun-spelling-base"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-ne-participle-dependent-short-opposition-boundary",
+      "title_ru": "НЕ с причастиями: зависимое слово, краткая форма, противопоставление",
+      "semantic_boundary": "Проверяется раздельное НЕ с краткими причастиями, с полными причастиями при явном противопоставлении и в учебно-нормативной модели при наличии зависимого слова; слитное написание полного причастия без этих условий не переносится на краткую форму.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-part-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание: «___ мной письмо лежало на столе».", "options": ["непрочитанное", "не прочитанное", "не-прочитанное"], "correct_option_index": 1, "feedback": "В учебной модели полное причастие с зависимым словом «мной» пишется с НЕ раздельно: «не прочитанное мной».", "school_semantic_refs": ["school-ne-participle-dependent-short-opposition-boundary"]},
+        {"id": "oge69-part-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание краткого причастия: «Письмо ещё ___».", "options": ["непрочитано", "не прочитано", "не-прочитано"], "correct_option_index": 1, "feedback": "С краткими причастиями НЕ пишется раздельно: «не прочитано».", "school_semantic_refs": ["school-ne-participle-dependent-short-opposition-boundary"]},
+        {"id": "oge69-part-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни «непрочитанное письмо» и «не прочитанное мною письмо». Объясни, какое условие меняет написание НЕ в этой учебной модели.", "answer_outline": "Полное причастие без зависимого слова и противопоставления может писаться слитно: «непрочитанное письмо». Наличие зависимого слова «мною» в данной модели требует раздельного написания: «не прочитанное мною письмо».", "scoring": {"max_points": 2, "criteria": ["1: распознано слитное написание полного причастия без зависимого слова/противопоставления", "1: зависимое слово названо условием раздельного написания в сопоставленной модели"]}, "school_semantic_refs": ["school-ne-participle-dependent-short-opposition-boundary"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-ne-verb-gerund-spelling-base",
+      "title_ru": "НЕ с глаголами и деепричастиями: раздельно, лексикализованные НЕ-/НЕДО- формы слитно",
+      "semantic_boundary": "Проверяется базовое раздельное НЕ с глаголами и деепричастиями и слитное написание лексикализованных слов, которые без НЕ не употребляются или образуют цельную словарную форму; приставочные НЕДО- случаи нельзя выводить только из внешнего наличия «не».",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-verb-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание: «Он ___ читал инструкцию до конца».", "options": ["нечитал", "не читал", "не-читал"], "correct_option_index": 1, "feedback": "С обычным глаголом частица НЕ пишется раздельно: «не читал».", "school_semantic_refs": ["school-ne-verb-gerund-spelling-base"]},
+        {"id": "oge69-verb-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание глагола со значением «испытывал сильную неприязнь»: «Он ___ ложь».", "options": ["не навидел", "ненавидел", "не-навидел"], "correct_option_index": 1, "feedback": "Глагол «ненавидеть» без НЕ в современном языке не употребляется, поэтому пишется слитно.", "school_semantic_refs": ["school-ne-verb-gerund-spelling-base"]},
+        {"id": "oge69-verb-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни «не зная ответа, он молчал» и «недоумевая, он перечитал письмо». Объясни раздельное и слитное написание.", "answer_outline": "«Не зная» — обычное деепричастие с отрицательной частицей, поэтому раздельно. «Недоумевая» образовано от лексикализованного глагола «недоумевать», который нормативно пишется слитно.", "scoring": {"max_points": 2, "criteria": ["1: «не зная» объяснено как раздельное НЕ с обычным деепричастием", "1: «недоумевая» распознано как форма лексикализованного слитного глагола"]}, "school_semantic_refs": ["school-ne-verb-gerund-spelling-base"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-negative-adverbs-ne-ni-spelling",
+      "title_ru": "НЕ- / НИ- в отрицательных наречиях и местоименных словах по ударению",
+      "semantic_boundary": "Проверяется выбор НЕ- под ударением и НИ- без ударения в отрицательных наречиях и родственных местоименных словах, а также связь формы с отрицательным контекстом; этот признак не заменяет правила свободной частицы НЕ.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-negadv-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери слово со значением «нет времени»: «Мне ___ было останавливаться».", "options": ["никогда", "некогда", "не когда"], "correct_option_index": 1, "feedback": "В слове «некогда» со значением «нет времени» приставка НЕ- находится под ударением и пишется слитно.", "school_semantic_refs": ["school-negative-adverbs-ne-ni-spelling"]},
+        {"id": "oge69-negadv-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери слово: «Он ___ не опаздывает на занятия».", "options": ["некогда", "никогда", "ни когда"], "correct_option_index": 1, "feedback": "В отрицательном наречии «никогда» безударная приставка НИ- поддерживает отрицание сказуемого «не опаздывает».", "school_semantic_refs": ["school-negative-adverbs-ne-ni-spelling"]},
+        {"id": "oge69-negadv-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни «негде сесть» и «нигде не нашёл места». Объясни выбор НЕ- и НИ- с опорой на ударение и смысл.", "answer_outline": "«Негде» имеет ударное НЕ- и значение отсутствия места/возможности. «Нигде» имеет безударное НИ- и употребляется при отрицательном сказуемом «не нашёл».", "scoring": {"max_points": 2, "criteria": ["1: для «негде» названо ударное НЕ- и значение отсутствия возможности/места", "1: для «нигде» названо безударное НИ- и связь с отрицательным сказуемым"]}, "school_semantic_refs": ["school-negative-adverbs-ne-ni-spelling"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-negative-pronouns-ne-ni-stress-preposition-boundary",
+      "title_ru": "НЕ/НИ в отрицательных местоимениях: ударение и предлог",
+      "semantic_boundary": "Проверяется НЕ- под ударением и НИ- без ударения в отрицательных местоимениях, а при появлении предлога — раздельное написание трёх компонентов типа «не у кого / ни у кого»; слитная форма сохраняется только без предлога.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-negpron-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери слово: «Мне ___ спросить об этом».", "options": ["никого", "некого", "не кого"], "correct_option_index": 1, "feedback": "В форме «некого» приставка НЕ- ударная; без предлога отрицательное местоимение пишется слитно.", "school_semantic_refs": ["school-negative-pronouns-ne-ni-stress-preposition-boundary"]},
+        {"id": "oge69-negpron-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери слово: «Я ___ не встретил у входа».", "options": ["некого", "никого", "ни кого"], "correct_option_index": 1, "feedback": "При отрицательном сказуемом используется безударное НИ-: «никого не встретил».", "school_semantic_refs": ["school-negative-pronouns-ne-ni-stress-preposition-boundary"]},
+        {"id": "oge69-negpron-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни «мне не у кого спросить» и «я ни у кого не спрашивал». Объясни выбор НЕ/НИ и раздельное написание с предлогом.", "answer_outline": "В первом сочетании под ударением используется НЕ, во втором без ударения при отрицательном сказуемом — НИ. Предлог «у» в обоих случаях разрывает местоимение, поэтому пишутся три слова: «не у кого / ни у кого».", "scoring": {"max_points": 2, "criteria": ["1: верно объяснён выбор НЕ/НИ по ударению и отрицательному контексту", "1: верно объяснено раздельное написание при вставленном предлоге"]}, "school_semantic_refs": ["school-negative-pronouns-ne-ni-stress-preposition-boundary"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-ni-fixed-idioms",
+      "title_ru": "Устойчивые сочетания с НИ",
+      "semantic_boundary": "Проверяются закреплённые устойчивые сочетания с НИ как лексически воспроизводимые модели; их написание нельзя выводить только из общего отрицания или автоматически переносить на свободные сочетания с повторяющимся союзом НИ...НИ.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-idiom-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное устойчивое сочетание со значением «очень рано»: «Он пришёл ___».", "options": ["не свет не заря", "ни свет ни заря", "ни-свет-ни-заря"], "correct_option_index": 1, "feedback": "Устойчивое сочетание «ни свет ни заря» нормативно содержит НИ в обеих позициях и пишется раздельно.", "school_semantic_refs": ["school-ni-fixed-idioms"]},
+        {"id": "oge69-idiom-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативный фразеологический оборот: «После неожиданной новости он сидел ___».", "options": ["не жив не мёртв", "ни жив ни мёртв", "ни-жив-ни-мёртв"], "correct_option_index": 1, "feedback": "В устойчивом обороте «ни жив ни мёртв» закреплено повторение НИ.", "school_semantic_refs": ["school-ni-fixed-idioms"]},
+        {"id": "oge69-idiom-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Объясни написание устойчивого сочетания «ни с того ни с сего». Почему его нельзя исправлять на НЕ только по внешнему отсутствию сказуемого с отрицанием?", "answer_outline": "Это закреплённый фразеологический оборот с нормативным НИ в обеих позициях; его форма хранится как устойчивое сочетание и не выводится механически из общего правила отрицания.", "scoring": {"max_points": 2, "criteria": ["1: сочетание распознано как устойчивое/фразеологическое", "1: указано, что нормативное НИ закреплено лексически и не заменяется механически на НЕ"]}, "school_semantic_refs": ["school-ni-fixed-idioms"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-ni-particle-vs-repeating-conjunction",
+      "title_ru": "НИ: усилительная частица vs повторяющийся союз НИ… НИ",
+      "semantic_boundary": "Проверяется функциональное различие НИ как усилительной частицы при отрицании и повторяющегося союза НИ...НИ при однородных членах; одинаковое написание не означает одинаковую синтаксическую функцию.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-nirole-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Какова функция НИ в предложении «Он не сказал ни слова»?", "options": ["усилительная частица при отрицании", "приставка в отрицательном местоимении", "дефисная частица"], "correct_option_index": 0, "feedback": "В сочетании «не сказал ни слова» НИ усиливает уже выраженное отрицание и является частицей.", "school_semantic_refs": ["school-ni-particle-vs-repeating-conjunction"]},
+        {"id": "oge69-nirole-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Какую функцию выполняет НИ...НИ в предложении «Не было ни дождя, ни ветра»?", "options": ["повторяющийся союз при однородных членах", "приставка в двух местоимениях", "частица, образующая двойное отрицание НЕ МОГ НЕ"], "correct_option_index": 0, "feedback": "Повторяющееся «ни...ни» соединяет однородные члены «дождя, ветра» и действует как повторяющийся союз.", "school_semantic_refs": ["school-ni-particle-vs-repeating-conjunction"]},
+        {"id": "oge69-nirole-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни «Он не произнёс ни звука» и «Не было ни шума, ни музыки». Объясни разные функции НИ.", "answer_outline": "В первом предложении одиночное НИ усиливает отрицание «не произнёс» и является частицей. Во втором повторяющийся союз НИ...НИ соединяет однородные члены «шума, музыки».", "scoring": {"max_points": 2, "criteria": ["1: в первом примере НИ определено как усилительная частица", "1: во втором примере НИ...НИ определено как повторяющийся союз при однородных членах"]}, "school_semantic_refs": ["school-ni-particle-vs-repeating-conjunction"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-pri-chem-ni-pri-chem-nipochem",
+      "title_ru": "ПРИ ЧЁМ / НИ ПРИ ЧЁМ / НИПОЧЁМ",
+      "semantic_boundary": "Проверяется разграничение свободного сочетания «при чём», отрицательного сочетания «ни при чём» и слитного наречия/предикативного слова «нипочём»; выбор определяется значением и синтаксической ролью, а не только звучанием.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {"minimum_independent_items_required": 3, "component_specific_only": true, "generic_oge_route_result_can_emit_exact_mastery": false, "assisted_attempt_can_count_as_independent_evidence": false},
+      "independent_verification": [
+        {"id": "oge69-prichem-v1", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание вопросительного сочетания: «___ здесь мои слова?»", "options": ["Причём", "При чём", "При-чём"], "correct_option_index": 1, "feedback": "В вопросительном сочетании со значением отношения к ситуации пишется раздельно: «при чём здесь...?».", "school_semantic_refs": ["school-pri-chem-ni-pri-chem-nipochem"]},
+        {"id": "oge69-prichem-v2", "type": "single_choice", "evidence_mode": "INDEPENDENT", "prompt": "Выбери нормативное написание: «Я тут ___: решение принимали без меня».", "options": ["нипричём", "ни при чём", "не при чём"], "correct_option_index": 1, "feedback": "Устойчивое отрицательное сочетание «ни при чём» пишется в три слова.", "school_semantic_refs": ["school-pri-chem-ni-pri-chem-nipochem"]},
+        {"id": "oge69-prichem-v3", "type": "constructed_response", "evidence_mode": "INDEPENDENT", "prompt": "Сравни «При чём здесь погода?», «Я ни при чём» и «Ему мороз нипочём». Объясни три разных написания.", "answer_outline": "«При чём» — свободное сочетание предлога и местоимения в вопросе; «ни при чём» — отрицательное сочетание в три слова; «нипочём» — цельное наречное/предикативное слово со значением «не действует, не страшно, безразлично», пишется слитно.", "scoring": {"max_points": 3, "criteria": ["1: объяснено раздельное «при чём» как свободное сочетание", "1: объяснено раздельное «ни при чём» как отрицательное сочетание", "1: «нипочём» распознано как цельное слитное слово с отдельным значением"]}, "school_semantic_refs": ["school-pri-chem-ni-pri-chem-nipochem"]}
+      ]
+    }
+  ],
+  "source_provenance": [
+    {"ref": "../../281-RUSSIAN-FIPI-2026-OGE-6.9-CURRENT-ROUTE-SUPERSESSION-v0.1.json", "role": "current exact owner frontier and no-object-admission authority"},
+    {"ref": "../subject-admission/build_oge_6_9_ne_ni_exact_owner_resolution_review.py", "role": "branch-bound exact owner semantics and canonical provenance"},
+    {"ref": "../../273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json", "role": "current reviewed canonical identity inventory"},
+    {"ref": "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/ru-9_6_orfografija.pdf", "role": "official FIPI 2026 OGE orthography scope authority; no exercise prose copied"}
+  ],
+  "copyright_guard": {
+    "official_source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "commercial_textbook_prose_copied": 0,
+    "learner_prompts_examples_feedback": "ORIGINAL_EKSAMIO",
+    "rule": "Official authorities define scope only; all learner-facing evidence prompts, examples, distractors, feedback and scoring language are original Eksamio wording."
+  },
+  "summary": {
+    "exact_owner_frontier": 14,
+    "owners_with_materialized_component_evidence": 14,
+    "independent_items_total": 42,
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  },
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "tilda_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_payment_or_refund": false,
+    "real_message_delivery": false
+  }
+}
