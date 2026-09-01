@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Build the exact current OGE-2026 6.14 object-acceptance candidate.
 
-The builder is deliberately fail-closed and does not alter aggregate progress. It
-binds the unique OGE_COD 6.14 object identity to the already accepted exact
-orthography component projection and to the final effective independent learner-
-evidence proof. A broad/composite 6.14 attempt never emits exact component
-mastery; only validated single-component evidence may support its exact owner.
+The builder is fail-closed and does not alter aggregate progress. It binds the
+unique OGE_COD 6.14 object to the already accepted exact orthography component
+projection and final effective learner-evidence proof. The finite review group
+also contains a punctuation capability boundary; that unrelated boundary is
+explicitly quarantined and may not enter exact 6.14 semantics or mastery.
 """
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ ACCOUNTING = HERE / "build_russian_subject_accounting_complete.py"
 
 EXPECTED_DERIVATION_SHA = "1b792cb24ea88873fb3317d74fa12977a648683727f2e381281554a73c898829"
 EXPECTED_EVIDENCE_V5_SHA = "cb106fb78cf66ec77daa25662bdd7db931dc4a8108e4de2dcfd84780f6bd6036"
-EXPECTED_IDENTITY_SHA = "1e687783350650d4bc0b7622e5004553600452f95f209840379cb60a2bd16516"
+EXPECTED_IDENTITY_SHA = "7ae02137a36dd87bad5672287277c69f5f3c6b1f670ec114924a1e4a7def0303"
 EXPECTED_PACKET_SHA = "b35fb420f7a6e96ea11f47e321cae0affe363dc5ed8d6fb79ea8640ac5ac94c4"
 EXPECTED_ACCOUNTING_SHA = "f3aef83dab99b554a4cdec9ef8d8fbc8036d557182259ae69db182efa11b925c"
 EXPECTED_REUSE_EXHAUSTION_SHA = "9aae09034623cdd73c043bd5c515b9a8271e422d6cac70205300daceaa5a6773"
@@ -34,6 +34,8 @@ EXPECTED_REQUIREMENT = "RSK-OGE_COD-6-14-P025"
 EXPECTED_GROUP = "RUS-SEM-REVIEW-056"
 EXPECTED_OWNER_COUNT = 83
 EXPECTED_EVIDENCE_ITEMS = 262
+ORTHOGRAPHY_BOUNDARY_REF = "review-boundary:899bdadfe84d"
+PUNCTUATION_BOUNDARY_REF = "review-boundary:cf5ab34773b8"
 
 
 def canonical_bytes(value: Any) -> bytes:
@@ -56,14 +58,18 @@ def build_acceptance() -> dict[str, Any]:
     if evidence.get("normalized_sha256") != EXPECTED_EVIDENCE_V5_SHA:
         raise ValueError("6.14 final effective evidence fingerprint drift")
     if identity.get("normalized_sha256") != EXPECTED_IDENTITY_SHA:
-        raise ValueError("6.14 object identity fingerprint drift")
+        raise ValueError("6.14 exact object/scope fingerprint drift")
     if packet.get("normalized_sha256") != EXPECTED_PACKET_SHA:
         raise ValueError("Russian semantic packet fingerprint drift")
     if accounting.get("normalized_sha256") != EXPECTED_ACCOUNTING_SHA:
         raise ValueError("Russian object-accounting fingerprint drift")
 
+    if identity.get("status") != "OGE_6_14_EXACT_OBJECT_IDENTITY_AND_ORTHOGRAPHY_SCOPE_BOUND_NOT_ACCEPTED":
+        raise ValueError("6.14 identity/scope review status drift")
     official = identity["official_object"]
     duplicate = identity["duplicate_accounting_review"]
+    contamination = identity["review_group_contamination_guard"]
+    semantic = official["exact_semantic_boundary"]
     source = derivation["official_source"]
     d = derivation["derivation"]
     es = evidence["summary"]
@@ -82,6 +88,22 @@ def build_acceptance() -> dict[str, Any]:
     for key, value in expected_identity.items():
         if official.get(key) != value:
             raise ValueError(f"6.14 object identity drift: {key}")
+    if semantic != {
+        "official_label_ru": "Орфографический анализ",
+        "overlay_topic": "orthographic analysis",
+        "overlay_note": "Rule identification/application over existing skills; zero school-count effect.",
+        "operation_scope": "ORTHOGRAPHY_RULE_IDENTIFICATION_AND_APPLICATION_OVER_EXISTING_SKILLS",
+        "orthography_review_boundary_ref": ORTHOGRAPHY_BOUNDARY_REF,
+        "orthography_review_boundary_label": "Применять орфографическое правило к слову или форме.",
+        "punctuation_in_scope": False,
+    }:
+        raise ValueError("6.14 exact orthography semantic boundary drift")
+    if contamination.get("punctuation_boundary_ref") != PUNCTUATION_BOUNDARY_REF:
+        raise ValueError("6.14 review-group punctuation boundary drift")
+    if contamination.get("punctuation_boundary_excluded_from_6_14_exact_scope") is not True:
+        raise ValueError("6.14 punctuation boundary was not quarantined")
+    if contamination.get("accounting_group_normalized_meaning_is_exact_6_14_semantic_authority") is not False:
+        raise ValueError("6.14 accepted contaminated review-group meaning")
     if source != {
         "source_system": "OGE_COD",
         "cycle": 2026,
@@ -149,14 +171,16 @@ def build_acceptance() -> dict[str, Any]:
 
     decision = {
         "acceptance_reason": (
-            "FIPI OGE-2026 code 6.14 is one exam-only orthographic-analysis composite, not a new school identity. "
-            "The current frontier is derived only from the already accepted exact OGE orthography authorities for "
-            "6.2–6.13: 90 memberships deduplicate to 83 current canonical school owners. The final effective reuse-first "
-            "evidence audit proves independent component-specific learner evidence for all 83 owners (262 effective exact "
-            "items), including bounded replacement-only structured coverage for the two composite owners, while preserving "
-            "the historical pre-materialization reuse fingerprint. The unique 6.14 admission unit/requirement is not "
-            "already counted. Acceptance therefore binds this object to those 83 components as PARTIAL_OR_COMPOSITE; a "
-            "generic 6.14 route attempt cannot emit exact component mastery."
+            "FIPI OGE-2026 code 6.14 is one orthography-only exam composite, not a new school identity. The finite "
+            "review-accounting group also contains a punctuation capability boundary; that unrelated boundary is explicitly "
+            "quarantined and its combined group meaning is not used as exact 6.14 semantics. The current orthography "
+            "frontier is derived only from already accepted exact OGE orthography authorities for 6.2–6.13: 90 memberships "
+            "deduplicate to 83 current canonical school owners. The final effective reuse-first evidence audit proves "
+            "independent component-specific learner evidence for all 83 owners (262 effective exact items), including "
+            "bounded replacement-only structured coverage for the two structured owners, while preserving the historical "
+            "pre-materialization reuse fingerprint. The unique 6.14 admission unit/requirement is not already counted. "
+            "Acceptance binds only this orthography object to those 83 components as PARTIAL_OR_COMPOSITE; a generic 6.14 "
+            "route attempt cannot emit exact component mastery."
         ),
         "admission_unit_id": EXPECTED_UNIT,
         "requirement_id": EXPECTED_REQUIREMENT,
@@ -166,7 +190,13 @@ def build_acceptance() -> dict[str, Any]:
         "source_locator": official["source_locator"],
         "disposition": "PARTIAL_OR_COMPOSITE",
         "route_inventory_classification": "EXAM_ROUTE_ONLY",
-        "normalized_meaning": official["normalized_meaning"],
+        "exact_semantic_boundary": semantic,
+        "review_group_contamination_guard": {
+            "packet_group": EXPECTED_GROUP,
+            "punctuation_boundary_ref": PUNCTUATION_BOUNDARY_REF,
+            "punctuation_boundary_excluded_from_6_14_exact_scope": True,
+            "accounting_group_normalized_meaning_used_as_exact_scope": False,
+        },
         "modules": ["RU-PROG-08"],
         "routes": ["oge"],
         "canonical_component_refs": owners,
@@ -174,14 +204,14 @@ def build_acceptance() -> dict[str, Any]:
         "authority": {
             "current_exact_component_derivation": DERIVATION.name,
             "final_effective_evidence_audit": EVIDENCE_V5.name,
-            "object_identity_binding_review": IDENTITY.name,
+            "object_identity_and_scope_binding_review": IDENTITY.name,
             "source_component_codes": d["source_codes"],
             "packet_group": EXPECTED_GROUP,
         },
         "evidence_readiness": {
             "current_exact_component_derivation_normalized_sha256": EXPECTED_DERIVATION_SHA,
             "final_effective_evidence_audit_normalized_sha256": EXPECTED_EVIDENCE_V5_SHA,
-            "object_identity_binding_normalized_sha256": EXPECTED_IDENTITY_SHA,
+            "object_identity_and_scope_binding_normalized_sha256": EXPECTED_IDENTITY_SHA,
             "historical_reuse_exhaustion_normalized_sha256": EXPECTED_REUSE_EXHAUSTION_SHA,
             "owners_with_valid_component_evidence": EXPECTED_OWNER_COUNT,
             "independent_items_total": EXPECTED_EVIDENCE_ITEMS,
@@ -200,14 +230,17 @@ def build_acceptance() -> dict[str, Any]:
     }
 
     result: dict[str, Any] = {
-        "schema_version": "0.1.0",
-        "scope": "FIPI_OGE_2026_CONTENT_CODE_6_14_CURRENT_EXACT_OWNER_FRONTIER_WITH_VALIDATED_COMPONENT_EVIDENCE",
+        "schema_version": "0.2.0",
+        "scope": "FIPI_OGE_2026_CONTENT_CODE_6_14_ORTHOGRAPHY_ONLY_EXACT_OWNER_FRONTIER_WITH_VALIDATED_COMPONENT_EVIDENCE",
         "status": "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_6_14_CANONICAL_COMPONENT_SET",
         "semantic_packet_sha256": EXPECTED_PACKET_SHA,
         "object_accounting_sha256": EXPECTED_ACCOUNTING_SHA,
         "decisions": [decision],
         "policy": {
             "reuse_first": True,
+            "exact_object_scope_is_orthography_only": True,
+            "punctuation_review_boundary_excluded": True,
+            "combined_review_group_meaning_used_as_exact_6_14_semantics": False,
             "all_owners_derived_only_from_current_accepted_exact_orthography_authorities": True,
             "historical_placeholder_is_canonical_owner": False,
             "manufactured_fipi_subbranches_allowed": False,
@@ -231,6 +264,7 @@ def build_acceptance() -> dict[str, Any]:
             "effective_wave_002_independent_items": 48,
             "structured_repair_replaced_items": 6,
             "structured_repair_additional_items": 0,
+            "punctuation_boundaries_admitted": 0,
             "ru_proposal_identities_admitted": 0,
             "false_exact_mastery_admissions": 0,
         },
@@ -269,6 +303,8 @@ def main() -> int:
         print("PACKET_GROUP=" + EXPECTED_GROUP)
         print(f"EXACT_OWNER_FRONTIER={s['canonical_component_refs_unique']}")
         print(f"INDEPENDENT_COMPONENT_EVIDENCE_ITEMS={s['independent_component_evidence_items']}")
+        print("EXACT_SCOPE_ORTHOGRAPHY_ONLY=1")
+        print("PUNCTUATION_BOUNDARIES_ADMITTED=0")
         print("AGGREGATE_DELTA_AFTER_SEPARATE_ACCEPTANCE_GREEN=1")
         print("FALSE_EXACT_MASTERY=0")
         print("LEARNER_AUDIO_PERSISTENCE=0")
