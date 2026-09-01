@@ -1,0 +1,265 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-09-02",
+  "status": "CURRENT_LAUNCH_OGE_6_14_GAP_EVIDENCE_WAVE_002_NO_OBJECT_ADMISSION",
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "target": {
+    "source_id": "FIPI-OGE-RU-2026-FINAL",
+    "document_id": "OGE_COD",
+    "content_code": "6.14",
+    "source_component_code": "6.2",
+    "label_ru": "Орфографический анализ",
+    "classification": "EXAM_ONLY_COMPOSITE"
+  },
+  "source_exact_authority": {
+    "accepted_authority_id": "RUSSIAN_OGE_6_2_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+    "accepted_authority_sha256": "ef5cf03c7df2b2b4b327e040c62ef07707dc6ba772e7bf3cc1961564669554f4",
+    "admission_unit_id": "RAU-085b9955399af22c784f",
+    "requirement_id": "RSK-OGE_COD-6-2-P024"
+  },
+  "evidence_policy": {
+    "accepted_wave_001_post_audit_normalized_sha256": "abf91f61ae203d6a8c918536271e1eeabcf99de63fb07ef0355b8732ea6e954c",
+    "reuse_exhaustion_normalized_sha256": "9aae09034623cdd73c043bd5c515b9a8271e422d6cac70205300daceaa5a6773",
+    "base_exact_owner_frontier": 83,
+    "base_evidence_ready_owners": 67,
+    "base_missing_owners": 16,
+    "reusable_exact_items_found": 0,
+    "materialize_only_proven_missing_owner_refs": true,
+    "wave_owner_count": 16,
+    "minimum_independent_items_per_owner": 3,
+    "each_item_must_reference_exactly_one_school_semantic": true,
+    "each_owner_requires_selected_and_constructed_response": true,
+    "new_semantic_identity_created": false,
+    "exact_owner_frontier_may_change_here": false,
+    "route_attempt_can_emit_exact_component_mastery": false,
+    "evidence_readiness_is_object_acceptance": false,
+    "keyword_or_fuzzy_reuse_used": false,
+    "mastery_guard": {
+      "minimum_independent_items_required": 3,
+      "component_specific_only": true,
+      "generic_oge_route_result_can_emit_exact_mastery": false,
+      "assisted_attempt_can_count_as_independent_evidence": false
+    }
+  },
+  "copyright_and_source_guard": {
+    "learner_wording": "ORIGINAL_EKSAMIO",
+    "official_source_passages_copied": false,
+    "commercial_textbook_bytes_used": false,
+    "commercial_textbook_prose_copied": false,
+    "purpose": "Minimum original independent evidence for the final 16 proven OGE 6.14 component gaps only."
+  },
+  "owner_evidence": [
+    {
+      "canonical_ref": "school-double-consonants-morpheme-junction",
+      "source_oge_code": "6.2",
+      "title_ru": "Удвоенная согласная на стыке морфем",
+      "semantic_boundary": "Проверяется удвоение одинаковых согласных, возникающее именно на доказанной границе морфем; словарные удвоения внутри корня и иноязычные слова в этот компонент не входят.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-junction-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание слова со стыком приставки рас- и корня -сказ-.","options":["расказать","рассказать","разсказать"],"correct_option_index":1,"feedback":"В слове «рассказать» встречаются конечное С приставки рас- и начальное С корня -сказ-, поэтому пишется СС.","school_semantic_refs":["school-double-consonants-morpheme-junction"]},
+        {"id":"oge614-w2-junction-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание глагола со стыком под- и -дел-.","options":["поделать","подделать","потделать"],"correct_option_index":1,"feedback":"«Подделать» имеет ДД на стыке приставки под- и корня -дел-; это морфемное удвоение.","school_semantic_refs":["school-double-consonants-morpheme-junction"]},
+        {"id":"oge614-w2-junction-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни, почему в «рассказать» и «подделать» пишутся двойные согласные. Назови морфемы, которые создают удвоение.","answer_outline":"В «рассказать» совпадают С приставки рас- и С корня -сказ-. В «подделать» совпадают Д приставки под- и Д корня -дел-. Удвоение вызвано стыком морфем, а не словарным удвоением внутри корня.","scoring":{"max_points":2,"criteria":["1: в обоих словах правильно названы границы приставки и корня, дающие одинаковые соседние согласные","1: объяснено, что удвоение относится к стыку морфем и не переносится на словарные внутренние удвоения"]},"school_semantic_refs":["school-double-consonants-morpheme-junction"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-gor-gar-rare-exception-set",
+      "source_oge_code": "6.2",
+      "title_ru": "Чередование ГАР/ГОР и редкие исключения",
+      "semantic_boundary": "Проверяется нормативное чередование -гар-/-гор-: без ударения обычно О, под ударением гласная соответствует произношению; отдельно сохраняются словарно закреплённые редкие исключения с безударным А.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-gorgar-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание глагола с безударным корнем ГОР/ГАР.","options":["загареть","загореть","зогореть"],"correct_option_index":1,"feedback":"В безударной позиции базового чередования пишется О: «загореть».","school_semantic_refs":["school-gor-gar-rare-exception-set"]},
+        {"id":"oge614-w2-gorgar-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание редкого исключения со значением пригоревшего слоя пищи.","options":["пригорь","пригарь","прегарь"],"correct_option_index":1,"feedback":"«Пригарь» относится к словарно закреплённым исключениям и сохраняет А вне базовой безударной модели -гор-.","school_semantic_refs":["school-gor-gar-rare-exception-set"]},
+        {"id":"oge614-w2-gorgar-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Сопоставь «загореть», «загар» и «пригарь». Объясни, почему одна общая формула не сводится к выбору буквы только по наличию ударения.","answer_outline":"В «загореть» без ударения действует базовая модель с О. В ударном «загар» пишется слышимая А. «Пригарь» — словарное исключение с А, поэтому исключительный ряд нужно учитывать отдельно от базового чередования.","scoring":{"max_points":2,"criteria":["1: правильно разграничены безударное О в базовой модели и ударное написание по произношению","1: «пригарь» распознано как отдельное словарное исключение, а не как следствие ложного проверочного правила"]},"school_semantic_refs":["school-gor-gar-rare-exception-set"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-i-e-alternating-verb-roots-stressed-a",
+      "source_oge_code": "6.2",
+      "title_ru": "Чередование И/Е в глагольных корнях перед суффиксом -А-",
+      "semantic_boundary": "Проверяется только принятая группа чередующихся глагольных корней, где перед следующим суффиксом -а- появляется вариант с И, а без него — вариант с Е; правило не переносится на неродственные корни.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-ie-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание глагола с суффиксом -а- после чередующегося корня БЕР/БИР.","options":["соберать","собирать","собератьь"],"correct_option_index":1,"feedback":"Перед следующим суффиксом -а- в этой семье пишется И: «собирать».","school_semantic_refs":["school-i-e-alternating-verb-roots-stressed-a"]},
+        {"id":"oge614-w2-ie-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативную форму без суффикса -а- после корня БЕР/БИР.","options":["собиру","соберу","собяру"],"correct_option_index":1,"feedback":"Без следующего суффикса -а- используется вариант с Е: «соберу».","school_semantic_refs":["school-i-e-alternating-verb-roots-stressed-a"]},
+        {"id":"oge614-w2-ie-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни чередование в парах «собирать — соберу» и «вытирать — вытереть». Какую роль играет суффикс -а- после корня?","answer_outline":"В принятых И/Е-чередующихся глагольных корнях наличие следующего суффикса -а- вызывает вариант с И: собирать, вытирать. Без этого суффикса употребляется вариант с Е: соберу, вытереть.","scoring":{"max_points":2,"criteria":["1: сформулирована связь варианта с И с наличием следующего суффикса -а-","1: правило корректно применено к обеим парам и не представлено как универсальное для любых корней"]},"school_semantic_refs":["school-i-e-alternating-verb-roots-stressed-a"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-kas-kos-a-suffix-alternation",
+      "source_oge_code": "6.2",
+      "title_ru": "Чередование КАС/КОС по суффиксу -А-",
+      "semantic_boundary": "Проверяется чередование -кас-/-кос-: А пишется, если сразу после корня есть суффикс -а-, иначе пишется О; ударение не является решающим признаком этого правила.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-kaskos-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание глагола, где после корня следует суффикс -а-.","options":["косаться","касаться","коссаться"],"correct_option_index":1,"feedback":"В «касаться» после корня есть суффикс -а-, поэтому пишется -кас-.","school_semantic_refs":["school-kas-kos-a-suffix-alternation"]},
+        {"id":"oge614-w2-kaskos-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание формы без следующего суффикса -а-.","options":["коснуться","каснуться","косснуться"],"correct_option_index":0,"feedback":"В «коснуться» суффикса -а- после корня нет, поэтому пишется -кос-.","school_semantic_refs":["school-kas-kos-a-suffix-alternation"]},
+        {"id":"oge614-w2-kaskos-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Сравни «касаться» и «коснуться». Объясни выбор А/О в корне и укажи, почему ударение здесь не служит правилом выбора.","answer_outline":"В «касаться» после корня следует суффикс -а-, поэтому выбирается -кас-. В «коснуться» такого суффикса нет, поэтому -кос-. Чередование определяется суффиксом, а не ударением.","scoring":{"max_points":2,"criteria":["1: правильно объяснён вариант -кас- при следующем суффиксе -а- и -кос- без него","1: явно исключено ложное объяснение выбором по ударению"]},"school_semantic_refs":["school-kas-kos-a-suffix-alternation"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-klan-klon-stress-alternation",
+      "source_oge_code": "6.2",
+      "title_ru": "Чередование КЛАН/КЛОН по ударению",
+      "semantic_boundary": "Проверяется чередование -клан-/-клон-: без ударения пишется О, под ударением гласная соответствует произношению; словоформа должна оставаться в этой корневой семье.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-klan-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание слова с безударным корнем КЛАН/КЛОН.","options":["пакланиться","поклониться","покланиться"],"correct_option_index":1,"feedback":"В безударном корне пишется О: «поклониться».","school_semantic_refs":["school-klan-klon-stress-alternation"]},
+        {"id":"oge614-w2-klan-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание слова, где гласная корня находится под ударением.","options":["клоняться","кланяться","кленяться"],"correct_option_index":1,"feedback":"В «кланяться» А находится под ударением и пишется по произношению.","school_semantic_refs":["school-klan-klon-stress-alternation"]},
+        {"id":"oge614-w2-klan-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни написание корня в «поклониться», «кланяться» и «поклон». Как меняется правило в безударной и ударной позиции?","answer_outline":"Без ударения в семье КЛАН/КЛОН пишется О: поклониться. Под ударением пишется слышимая гласная: кланяться с А, поклон с О.","scoring":{"max_points":2,"criteria":["1: сформулировано безударное О в корне КЛАН/КЛОН","1: объяснено, что под ударением пишется фактически произносимая А или О на корректных примерах"]},"school_semantic_refs":["school-klan-klon-stress-alternation"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-lag-lozh-polog-exception",
+      "source_oge_code": "6.2",
+      "title_ru": "Чередование ЛАГ/ЛОЖ и исключение «полог»",
+      "semantic_boundary": "Проверяется выбор -лаг- перед Г и -лож- перед Ж в принятой корневой семье с отдельным сохранением словарного исключения «полог»; ударение не является основой этого чередования.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-lag-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание глагола перед Г.","options":["предлогать","предлагать","предлажать"],"correct_option_index":1,"feedback":"Перед Г в этой семье пишется -лаг-: «предлагать».","school_semantic_refs":["school-lag-lozh-polog-exception"]},
+        {"id":"oge614-w2-lag-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание глагола перед Ж.","options":["предлажить","предложить","предлагить"],"correct_option_index":1,"feedback":"Перед Ж пишется -лож-: «предложить».","school_semantic_refs":["school-lag-lozh-polog-exception"]},
+        {"id":"oge614-w2-lag-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Сопоставь «предлагать», «предложить» и «полог». Объясни базовый выбор А/О и роль исключения.","answer_outline":"В корневой семье перед Г употребляется -лаг-, перед Ж — -лож-. Слово «полог» сохраняется как лексическое исключение и не выводится из этой позиционной пары.","scoring":{"max_points":2,"criteria":["1: верно сформулирован выбор -лаг- перед Г и -лож- перед Ж","1: «полог» отдельно назван исключением, а ударение не используется как ложное основание выбора"]},"school_semantic_refs":["school-lag-lozh-polog-exception"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-rast-rashch-ros-exception-set",
+      "source_oge_code": "6.2",
+      "title_ru": "Чередование РАСТ/РАЩ/РОС и исключения",
+      "semantic_boundary": "Проверяется позиционный выбор А перед СТ/Щ и О перед С в корневой семье РАСТ/РАЩ/РОС с обязательным учётом принятого набора лексических исключений.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-rast-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание глагола перед Щ.","options":["вырощивать","выращивать","вырящивать"],"correct_option_index":1,"feedback":"Перед Щ в базовой модели пишется А: «выращивать».","school_semantic_refs":["school-rast-rashch-ros-exception-set"]},
+        {"id":"oge614-w2-rast-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание слова-исключения.","options":["расток","росток","ростак"],"correct_option_index":1,"feedback":"«Росток» — нормативное исключение: перед СТ сохраняется О.","school_semantic_refs":["school-rast-rashch-ros-exception-set"]},
+        {"id":"oge614-w2-rast-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни написание в словах «растение», «выращивать», «росли» и «росток». Где действует позиционное правило, а где исключение?","answer_outline":"Перед СТ и Щ базово пишется А: растение, выращивать; перед С — О: росли. «Росток» относится к исключениям и сохраняет О перед СТ.","scoring":{"max_points":2,"criteria":["1: правильно сформулирован позиционный выбор А перед СТ/Щ и О перед С","1: «росток» верно отделён как исключение, а не использован для отмены базового правила"]},"school_semantic_refs":["school-rast-rashch-ros-exception-set"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-root-consonant-dictionary-unverifiable",
+      "source_oge_code": "6.2",
+      "title_ru": "Непроверяемая согласная в корне: словарный контроль",
+      "semantic_boundary": "Проверяется словарно закреплённая согласная корня, для которой нет нормативного проверочного слова или формы с сильной позицией; запрещено изобретать созвучную проверку.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-unvercon-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание словарного слова.","options":["вогзал","вокзал","воксал"],"correct_option_index":1,"feedback":"Согласная в корне слова «вокзал» не устанавливается продуктивным проверочным словом; написание словарное.","school_semantic_refs":["school-root-consonant-dictionary-unverifiable"]},
+        {"id":"oge614-w2-unvercon-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание словарного слова.","options":["рюгзак","рюкзак","рюксак"],"correct_option_index":1,"feedback":"«Рюкзак» относится к словарно контролируемым написаниям; созвучное слово нельзя назначать проверочным без нормативной связи.","school_semantic_refs":["school-root-consonant-dictionary-unverifiable"]},
+        {"id":"oge614-w2-unvercon-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни, как действовать при сомнительной согласной в словах «вокзал» и «рюкзак», если нормативного проверочного слова нет. Что делать нельзя?","answer_outline":"Если согласную корня нельзя подтвердить нормативной сильной позицией в родственной форме, написание сверяют по словарю. Нельзя придумывать созвучное или неродственное «проверочное» слово.","scoring":{"max_points":2,"criteria":["1: указан словарный способ проверки при отсутствии нормативной сильной позиции","1: явно отвергнуто изобретение созвучного или неродственного проверочного слова"]},"school_semantic_refs":["school-root-consonant-dictionary-unverifiable"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-root-i-y-after-ts-base",
+      "source_oge_code": "6.2",
+      "title_ru": "И/Ы после Ц в корне и традиционная группа ЦЫ",
+      "semantic_boundary": "Проверяется написание И после Ц в корнях с отдельной словарной границей традиционных корней и производных с ЦЫ; суффиксы и окончания после Ц относятся к другим компонентам.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-tsy-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание корня после Ц.","options":["цыфра","цифра","цифыра"],"correct_option_index":1,"feedback":"В обычном корне после Ц пишется И: «цифра».","school_semantic_refs":["school-root-i-y-after-ts-base"]},
+        {"id":"oge614-w2-tsy-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание слова из традиционной группы исключений.","options":["циган","цыган","цыгань"],"correct_option_index":1,"feedback":"«Цыган» входит в традиционную корневую группу с ЦЫ.","school_semantic_refs":["school-root-i-y-after-ts-base"]},
+        {"id":"oge614-w2-tsy-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Сравни «цифра», «цирк», «цыган», «цыплёнок» и «цыкнуть». Объясни базовое правило и границу традиционной группы ЦЫ; не переходи к окончаниям и суффиксам.","answer_outline":"В обычных корнях после Ц пишется И: цифра, цирк. Традиционные корни и их допустимые производные группы цыган-, цып-, цык-/цыц- сохраняют Ы. Суффиксальные и падежные написания после Ц сюда не относятся.","scoring":{"max_points":2,"criteria":["1: сформулировано базовое И после Ц в корне и правильно приведены обычные примеры","1: традиционная группа ЦЫ отделена как словарная граница, без смешения с суффиксами и окончаниями"]},"school_semantic_refs":["school-root-i-y-after-ts-base"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-root-o-yo-after-sibilants-base",
+      "source_oge_code": "6.2",
+      "title_ru": "О/Ё после шипящих в корне: проверяемое Е против словарного О",
+      "semantic_boundary": "Проверяется корневое О/Ё после шипящих: под ударением Ё связано с нормативным однокоренным вариантом с Е, а О сохраняется в словарных корнях без такого Е-соответствия; суффиксы и окончания исключены.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-oyo-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание корня, учитывая однокоренное «шептать».","options":["шопот","шёпот","шепот"],"correct_option_index":1,"feedback":"В «шёпот» под ударением пишется Ё, что подтверждается однокоренным словом с Е: «шептать».","school_semantic_refs":["school-root-o-yo-after-sibilants-base"]},
+        {"id":"oge614-w2-oyo-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное словарное написание корня без Е-соответствия.","options":["шёрох","шерох","шорох"],"correct_option_index":2,"feedback":"«Шорох» — словарный корень с О; правило нельзя свести к одной лишь позиции под ударением.","school_semantic_refs":["school-root-o-yo-after-sibilants-base"]},
+        {"id":"oge614-w2-oyo-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Сравни «шёпот — шептать», «жёлтый — желтеть» и «шорох». Объясни выбор Ё/О в корне после шипящей.","answer_outline":"В «шёпот» и «жёлтый» Ё связано с однокоренными формами с Е: шептать, желтеть. В «шорох» такого Е-соответствия нет, поэтому сохраняется словарное О. Одного факта ударения недостаточно.","scoring":{"max_points":2,"criteria":["1: для Ё показано нормативное однокоренное Е-соответствие на приведённых парах","1: «шорох» правильно отнесён к словарному О и отвергнуто объяснение только ударением"]},"school_semantic_refs":["school-root-o-yo-after-sibilants-base"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-root-voiced-voiceless-consonant-verification",
+      "source_oge_code": "6.2",
+      "title_ru": "Парная звонкая/глухая согласная в корне: проверка сильной позицией",
+      "semantic_boundary": "Проверяется сомнительная парная звонкая/глухая согласная корня через родственную форму, где её качество слышно отчётливо; словарно непроверяемые и непроизносимые согласные остаются отдельными компонентами.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-paired-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание, используя проверочную форму «дубы».","options":["дуп","дуб","дубь"],"correct_option_index":1,"feedback":"Форма «дубы» ставит Б перед гласной и ясно подтверждает согласную в слове «дуб».","school_semantic_refs":["school-root-voiced-voiceless-consonant-verification"]},
+        {"id":"oge614-w2-paired-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание, используя проверочную форму «морозы».","options":["морос","мороз","моросс"],"correct_option_index":1,"feedback":"В «морозы» согласная З слышна перед гласной, поэтому пишется «мороз».","school_semantic_refs":["school-root-voiced-voiceless-consonant-verification"]},
+        {"id":"oge614-w2-paired-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни, почему формы «дубы» и «морозы» являются корректными проверочными для слов «дуб» и «мороз». Чем такая проверка отличается от словарного случая?","answer_outline":"Проверочная форма должна сохранять тот же корень и ставить сомнительную парную согласную в позицию, где её звонкость/глухость слышна ясно, обычно перед гласной. Если такой нормативной формы нет, слово относится к словарному контролю, а не к этому правилу.","scoring":{"max_points":2,"criteria":["1: объяснены родство и сильная позиция согласной в проверочных формах","1: проведена граница с непроверяемой словарной согласной без выдуманной проверки"]},"school_semantic_refs":["school-root-voiced-voiceless-consonant-verification"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-root-vowel-dictionary-unverifiable",
+      "source_oge_code": "6.2",
+      "title_ru": "Непроверяемая безударная гласная в корне: словарная проверка",
+      "semantic_boundary": "Проверяется словарно закреплённая безударная гласная корня, когда нет допустимого однокоренного или формообразовательного слова с этой гласной под ударением и не действует специальное чередование.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-unvervow-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное словарное написание.","options":["корредор","коридор","каридор"],"correct_option_index":1,"feedback":"Безударные гласные в «коридор» не выводятся из продуктивного проверочного слова; написание сверяется по словарю.","school_semantic_refs":["school-root-vowel-dictionary-unverifiable"]},
+        {"id":"oge614-w2-unvervow-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное словарное написание.","options":["венегрет","винегрет","винигрет"],"correct_option_index":1,"feedback":"«Винегрет» — словарное написание; нельзя придумывать ударный «родственник» для оправдания букв.","school_semantic_refs":["school-root-vowel-dictionary-unverifiable"]},
+        {"id":"oge614-w2-unvervow-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни алгоритм для слов «коридор» и «винегрет», если допустимой формы с сомнительной гласной под ударением нет. Почему созвучие не является проверкой?","answer_outline":"Если безударную гласную нельзя подтвердить нормативным однокоренным словом или формой под ударением и нет специального правила, написание проверяют по словарю. Созвучное неродственное слово не доказывает букву корня.","scoring":{"max_points":2,"criteria":["1: указан словарный контроль при отсутствии допустимой ударной проверки и специального чередования","1: объяснено, что фонетически похожее неродственное слово не может служить проверочным"]},"school_semantic_refs":["school-root-vowel-dictionary-unverifiable"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-root-vowel-stress-verification",
+      "source_oge_code": "6.2",
+      "title_ru": "Проверяемая безударная гласная в корне: ударная форма",
+      "semantic_boundary": "Проверяется выбор безударной гласной корня через допустимую родственную форму или слово, где та же гласная находится под ударением; чередующиеся и словарно непроверяемые корни исключены.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-checkvow-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание, используя проверочное слово «лес».","options":["лисной","лесной","лессной"],"correct_option_index":1,"feedback":"В «лесной» безударную Е подтверждает ударное «лес».","school_semantic_refs":["school-root-vowel-stress-verification"]},
+        {"id":"oge614-w2-checkvow-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание, используя проверочное слово «воды».","options":["вадяной","водяной","воденной"],"correct_option_index":1,"feedback":"Безударную О в «водяной» подтверждает ударная О в форме «воды».","school_semantic_refs":["school-root-vowel-stress-verification"]},
+        {"id":"oge614-w2-checkvow-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни, почему «лес — лесной» и «воды — водяной» являются корректными проверочными парами. Какие два условия должна выполнять проверка?","answer_outline":"Проверочное слово должно быть родственным или формой того же слова с тем же корнем и ставить именно сомнительную гласную под ударение. Чередующийся корень или неродственное созвучное слово использовать нельзя.","scoring":{"max_points":2,"criteria":["1: названы родство/тождество корня и ударная позиция той же сомнительной гласной","1: проведена граница с чередующимися и неродственными ложными проверками"]},"school_semantic_refs":["school-root-vowel-stress-verification"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-skak-skoch-exception-set",
+      "source_oge_code": "6.2",
+      "title_ru": "Чередование СКАК/СКОЧ и исключения",
+      "semantic_boundary": "Проверяется принятая позиционная система -скак-/-скоч- с обязательным учётом словоформ и исключений типа «скачок», «скачу»; упрощённая формула не должна отменять исключительный ряд.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-skak-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание базового глагола перед К.","options":["скокать","скакать","скакоть"],"correct_option_index":1,"feedback":"В базовом варианте перед К пишется А: «скакать».","school_semantic_refs":["school-skak-skoch-exception-set"]},
+        {"id":"oge614-w2-skak-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание слова-исключения перед Ч.","options":["скочок","скачок","скачёк"],"correct_option_index":1,"feedback":"«Скачок» относится к исключительному ряду и пишется с А перед Ч.","school_semantic_refs":["school-skak-skoch-exception-set"]},
+        {"id":"oge614-w2-skak-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Сопоставь «скакать», «подскочить», «скачок» и «скачу». Объясни базовую позиционную модель и почему последние два примера нельзя исправлять по упрощённому правилу.","answer_outline":"В базовой модели перед К употребляется -скак-, перед Ч — -скоч-, например скакать, подскочить. Формы «скачок» и «скачу» относятся к принятому исключительному ряду и сохраняют А перед Ч.","scoring":{"max_points":2,"criteria":["1: базовая модель -скак- перед К и -скоч- перед Ч показана на корректных примерах","1: «скачок» и «скачу» правильно выделены как исключительный ряд без попытки подчинить их грубой формуле"]},"school_semantic_refs":["school-skak-skoch-exception-set"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-unpronounceable-consonant-verification",
+      "source_oge_code": "6.2",
+      "title_ru": "Непроизносимая согласная в корне: проверка произносимой формой",
+      "semantic_boundary": "Проверяется потенциально непроизносимая согласная корня через родственную форму, где она произносится отчётливо; словарно непроверяемые согласные и парное оглушение/озвончение отделены.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-unpron-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание, учитывая проверочное «сердечный».","options":["серце","сердце","сертце"],"correct_option_index":1,"feedback":"Согласную Д в «сердце» подтверждает форма «сердечный», где Д произносится отчётливо.","school_semantic_refs":["school-unpronounceable-consonant-verification"]},
+        {"id":"oge614-w2-unpron-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание, учитывая проверочное «солнечный».","options":["сонце","солнце","солънце"],"correct_option_index":1,"feedback":"Л в «солнце» подтверждается родственным «солнечный», где согласная слышна.","school_semantic_refs":["school-unpronounceable-consonant-verification"]},
+        {"id":"oge614-w2-unpron-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни проверку написаний «сердце» и «солнце» через «сердечный» и «солнечный». Чем этот компонент отличается от словарно непроверяемой согласной?","answer_outline":"Непроизносимую согласную подтверждают родственной формой, где она звучит отчётливо: сердце — сердечный, солнце — солнечный. Если такой нормативной формы нет, написание уже относится к словарному контролю.","scoring":{"max_points":2,"criteria":["1: для обоих слов указана родственная форма, в которой сомнительная согласная произносится","1: проведена граница с непроверяемой согласной, для которой сильной формы нет"]},"school_semantic_refs":["school-unpronounceable-consonant-verification"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-zar-zor-stress-alternation",
+      "source_oge_code": "6.2",
+      "title_ru": "Чередование ЗАР/ЗОР по ударению",
+      "semantic_boundary": "Проверяется чередование -зар-/-зор-: без ударения пишется А, под ударением гласная соответствует произношению; правило применяется только к этой корневой семье.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w2-zar-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание слова с безударным корнем ЗАР/ЗОР.","options":["зоря","заря","зара"],"correct_option_index":1,"feedback":"Без ударения в этой корневой семье пишется А: «заря».","school_semantic_refs":["school-zar-zor-stress-alternation"]},
+        {"id":"oge614-w2-zar-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание формы, где корневая гласная находится под ударением.","options":["зари","зори","зоры"],"correct_option_index":1,"feedback":"В форме «зори» под ударением слышится и пишется О.","school_semantic_refs":["school-zar-zor-stress-alternation"]},
+        {"id":"oge614-w2-zar-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Сравни «заря», «озарение» и «зори». Объясни, как выбирается А/О в безударной и ударной позиции.","answer_outline":"В безударной позиции корня ЗАР/ЗОР пишется А: заря, озарение. Под ударением пишется слышимая гласная: зори с О.","scoring":{"max_points":2,"criteria":["1: сформулировано безударное А для корня ЗАР/ЗОР и корректно применено к примерам","1: объяснено написание ударной формы по произношению на примере «зори»"]},"school_semantic_refs":["school-zar-zor-stress-alternation"]}
+      ]
+    }
+  ],
+  "summary": {
+    "wave_owner_count": 16,
+    "materialized_new_independent_items": 48,
+    "remaining_missing_owner_refs_after_wave_if_valid": 0,
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "false_exact_mastery_admissions": 0,
+    "new_school_identities": 0
+  },
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "tilda_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_payment_or_refund": false,
+    "real_message_delivery": false
+  }
+}
