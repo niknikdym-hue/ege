@@ -70,7 +70,7 @@ def build_audit_v5() -> dict[str, Any]:
 
     if result.get("status") != V4_STATUS:
         raise ValueError("structured branch-complete v4 status drift")
-    if observed_exclusion_set != [BASE_WAVE_002, STRUCTURED_REPAIR]:
+    if observed_exclusion_set != sorted([BASE_WAVE_002, STRUCTURED_REPAIR]):
         raise ValueError(f"historical exclusion set drift: {observed_exclusion_set}")
 
     sources = [row for row in result.get("validated_existing_evidence_sources") or [] if isinstance(row, dict)]
