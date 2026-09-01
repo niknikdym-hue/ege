@@ -38,7 +38,7 @@ def build_review() -> dict[str, Any]:
     progress = runpy.run_path(str(CURRENT_PROGRESS))["build_progress"]()
     overlay = json.loads(OVERLAY.read_text(encoding="utf-8"))
 
-    assert accounting["status"] == "CENTRAL_BRAIN_COMPLETE_OBJECT_ACCOUNTING_SUBJECT_ACCEPTANCE_REQUIRED"
+    assert accounting["status"] == "RUSSIAN_FULL_SUBJECT_OBJECT_ACCOUNTING_COMPLETE_SEMANTIC_ACCEPTANCE_REQUIRED"
     assert accounting["summary"]["canonical_semantic_admissions"] == 0
     assert accounting["summary"]["ru_proposal_admissions"] == 0
     assert packet["status"] == "CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_REQUIRED"
