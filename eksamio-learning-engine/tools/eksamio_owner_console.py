@@ -21,10 +21,10 @@ CHANNELS = (
 CHANNEL_KEYS = {key for key, _ in CHANNELS}
 
 
-def _number(value: Any, path: str, *, integer: bool = False) -> float | int:
+def number(value: Any, path: str, *, integer: bool = False) -> float | int:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{path} must be a number")
-    if not math.isfinite(float(value)) or value < 0:
+    if value < 0 or not math.isfinite(float(value)):
         raise ValueError(f"{path} must be a finite non-negative number")
     if integer:
         if int(value) != value:
@@ -33,18 +33,15 @@ def _number(value: Any, path: str, *, integer: bool = False) -> float | int:
     return float(value)
 
 
-def _optional_number(value: Any, path: str) -> float | None:
-    if value is None:
-        return None
-    return float(_number(value, path))
+def optional_number(value: Any, path: str) -> float | None:
+    return None if value is None else float(number(value, path))
 
 
-def _parse_timestamp(value: Any, path: str) -> str:
+def parse_timestamp(value: Any, path: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{path} must be a non-empty ISO-8601 timestamp")
-    raw = value.strip()
     try:
-        parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
     except ValueError as exc:
         raise ValueError(f"{path} must be a valid ISO-8601 timestamp") from exc
     if parsed.tzinfo is None:
@@ -52,120 +49,126 @@ def _parse_timestamp(value: Any, path: str) -> str:
     return parsed.isoformat()
 
 
-def _rate(numerator: float, denominator: float) -> float | None:
-    if denominator <= 0:
-        return None
-    return numerator / denominator
+def rate(numerator: float, denominator: float) -> float | None:
+    return None if denominator <= 0 else numerator / denominator
 
 
-def _cac(spend: float, purchases: int) -> float | None:
-    if purchases <= 0:
-        return None
-    return spend / purchases
+def cac(spend: float, purchases: int) -> float | None:
+    return None if purchases <= 0 else spend / purchases
 
 
-def _normalize_channel(raw: Any, path: str) -> dict[str, float | int | None]:
+def normalize_channel(raw: Any, path: str) -> dict[str, Any]:
     if not isinstance(raw, dict):
         raise ValueError(f"{path} must be an object")
-    visitors = _number(raw.get("qualified_visitors", 0), f"{path}.qualified_visitors", integer=True)
-    purchases = _number(raw.get("verified_purchases", 0), f"{path}.verified_purchases", integer=True)
-    spend = _number(raw.get("acquisition_spend_rub", 0), f"{path}.acquisition_spend_rub")
-    gross = _number(raw.get("gross_revenue_rub", 0), f"{path}.gross_revenue_rub")
-    refunds = _number(raw.get("refunds_rub", 0), f"{path}.refunds_rub")
+    visitors = int(number(raw.get("qualified_visitors", 0), f"{path}.qualified_visitors", integer=True))
+    purchases = int(number(raw.get("verified_purchases", 0), f"{path}.verified_purchases", integer=True))
+    spend = float(number(raw.get("acquisition_spend_rub", 0), f"{path}.acquisition_spend_rub"))
+    gross = float(number(raw.get("gross_revenue_rub", 0), f"{path}.gross_revenue_rub"))
+    refunds = float(number(raw.get("refunds_rub", 0), f"{path}.refunds_rub"))
     if refunds > gross:
         raise ValueError(f"{path}.refunds_rub cannot exceed gross_revenue_rub")
     return {
         "qualified_visitors": visitors,
         "verified_purchases": purchases,
-        "purchase_cvr": _rate(float(purchases), float(visitors)),
+        "purchase_cvr": rate(purchases, visitors),
         "acquisition_spend_rub": spend,
-        "paid_cac_rub": _cac(float(spend), int(purchases)) if spend > 0 else None,
-        "refund_adjusted_revenue_rub": float(gross) - float(refunds),
+        "paid_cac_rub": cac(spend, purchases) if spend > 0 else None,
+        "gross_revenue_rub": gross,
+        "refunds_rub": refunds,
+        "refund_adjusted_revenue_rub": gross - refunds,
     }
 
 
-def _normalize_period(raw: Any, path: str) -> dict[str, Any]:
+def reconcile_channels(channels: dict[str, dict[str, Any]], headline: dict[str, float | int], path: str) -> None:
+    fields = {
+        "qualified_visitors": "qualified_visitors",
+        "verified_purchases": "verified_paid_pro_customers",
+        "acquisition_spend_rub": "attributable_paid_spend_rub",
+        "gross_revenue_rub": "gross_pro_revenue_rub",
+        "refunds_rub": "refunds_rub",
+    }
+    for channel_field, headline_field in fields.items():
+        actual = sum(float(item[channel_field]) for item in channels.values())
+        expected = float(headline[headline_field])
+        if not math.isclose(actual, expected, rel_tol=0.0, abs_tol=0.005):
+            raise ValueError(
+                f"{path}.channels {channel_field} total {actual} does not reconcile to headline {expected}"
+            )
+
+
+def normalize_period(raw: Any, path: str) -> dict[str, Any]:
     if not isinstance(raw, dict):
         raise ValueError(f"{path} must be an object")
-
-    visitors = _number(raw.get("qualified_visitors"), f"{path}.qualified_visitors", integer=True)
-    meaningful = _number(raw.get("meaningful_learners"), f"{path}.meaningful_learners", integer=True)
-    pro_intent = _number(raw.get("pro_intent"), f"{path}.pro_intent", integer=True)
-    checkout = _number(raw.get("checkout_starts"), f"{path}.checkout_starts", integer=True)
-    purchases = _number(raw.get("verified_paid_pro_customers"), f"{path}.verified_paid_pro_customers", integer=True)
-    gross = _number(raw.get("gross_pro_revenue_rub"), f"{path}.gross_pro_revenue_rub")
-    refunds = _number(raw.get("refunds_rub"), f"{path}.refunds_rub")
-    spend = _number(raw.get("attributable_paid_spend_rub"), f"{path}.attributable_paid_spend_rub")
-
-    if refunds > gross:
+    headline: dict[str, float | int] = {
+        "qualified_visitors": int(number(raw.get("qualified_visitors"), f"{path}.qualified_visitors", integer=True)),
+        "meaningful_learners": int(number(raw.get("meaningful_learners"), f"{path}.meaningful_learners", integer=True)),
+        "pro_intent": int(number(raw.get("pro_intent"), f"{path}.pro_intent", integer=True)),
+        "checkout_starts": int(number(raw.get("checkout_starts"), f"{path}.checkout_starts", integer=True)),
+        "verified_paid_pro_customers": int(number(raw.get("verified_paid_pro_customers"), f"{path}.verified_paid_pro_customers", integer=True)),
+        "gross_pro_revenue_rub": float(number(raw.get("gross_pro_revenue_rub"), f"{path}.gross_pro_revenue_rub")),
+        "refunds_rub": float(number(raw.get("refunds_rub"), f"{path}.refunds_rub")),
+        "attributable_paid_spend_rub": float(number(raw.get("attributable_paid_spend_rub"), f"{path}.attributable_paid_spend_rub")),
+    }
+    if headline["refunds_rub"] > headline["gross_pro_revenue_rub"]:
         raise ValueError(f"{path}.refunds_rub cannot exceed gross_pro_revenue_rub")
 
-    chain = (
-        ("qualified_visitors", int(visitors)),
-        ("meaningful_learners", int(meaningful)),
-        ("pro_intent", int(pro_intent)),
-        ("checkout_starts", int(checkout)),
-        ("verified_paid_pro_customers", int(purchases)),
+    funnel_names = (
+        "qualified_visitors",
+        "meaningful_learners",
+        "pro_intent",
+        "checkout_starts",
+        "verified_paid_pro_customers",
     )
-    for (prev_name, prev_value), (name, value) in zip(chain, chain[1:]):
-        if value > prev_value:
-            raise ValueError(f"{path}.{name} cannot exceed {prev_name}")
+    for previous, current in zip(funnel_names, funnel_names[1:]):
+        if headline[current] > headline[previous]:
+            raise ValueError(f"{path}.{current} cannot exceed {previous}")
 
     raw_channels = raw.get("channels")
     if not isinstance(raw_channels, dict):
         raise ValueError(f"{path}.channels must be an object")
-    unknown = set(raw_channels) - CHANNEL_KEYS
-    missing = CHANNEL_KEYS - set(raw_channels)
-    if unknown:
-        raise ValueError(f"{path}.channels has unsupported channels: {sorted(unknown)}")
-    if missing:
-        raise ValueError(f"{path}.channels is missing channels: {sorted(missing)}")
+    if set(raw_channels) != CHANNEL_KEYS:
+        raise ValueError(
+            f"{path}.channels must contain exactly {sorted(CHANNEL_KEYS)}; got {sorted(raw_channels)}"
+        )
+    channels = {key: normalize_channel(raw_channels[key], f"{path}.channels.{key}") for key, _ in CHANNELS}
+    reconcile_channels(channels, headline, path)
 
-    channels = {key: _normalize_channel(raw_channels[key], f"{path}.channels.{key}") for key, _ in CHANNELS}
-    net_revenue = float(gross) - float(refunds)
-    paid_cac = _cac(float(spend), int(purchases))
-
-    funnel_values = [value for _, value in chain]
-    funnel = []
-    largest_drop_index: int | None = None
+    funnel: list[dict[str, Any]] = []
+    largest_index: int | None = None
     largest_drop = -1.0
-    for index, (name, value) in enumerate(chain):
-        previous = funnel_values[index - 1] if index > 0 else None
-        conversion = _rate(float(value), float(previous)) if previous is not None else None
-        if previous and conversion is not None:
-            drop = 1.0 - conversion
-            if drop > largest_drop:
-                largest_drop = drop
-                largest_drop_index = index
-        funnel.append({"name": name, "count": value, "step_cvr": conversion})
-    if largest_drop_index is not None:
-        funnel[largest_drop_index]["largest_dropoff"] = True
+    for index, name in enumerate(funnel_names):
+        value = int(headline[name])
+        previous = int(headline[funnel_names[index - 1]]) if index else None
+        step_cvr = rate(value, previous) if previous is not None else None
+        if previous and step_cvr is not None and (1 - step_cvr) > largest_drop:
+            largest_drop = 1 - step_cvr
+            largest_index = index
+        funnel.append({"name": name, "count": value, "step_cvr": step_cvr})
+    if largest_index is not None:
+        funnel[largest_index]["largest_dropoff"] = True
 
+    purchases = int(headline["verified_paid_pro_customers"])
+    spend = float(headline["attributable_paid_spend_rub"])
+    gross = float(headline["gross_pro_revenue_rub"])
+    refunds = float(headline["refunds_rub"])
     return {
-        "qualified_visitors": visitors,
-        "meaningful_learners": meaningful,
-        "pro_intent": pro_intent,
-        "checkout_starts": checkout,
-        "verified_paid_pro_customers": purchases,
-        "gross_pro_revenue_rub": float(gross),
-        "refunds_rub": float(refunds),
-        "refund_adjusted_pro_revenue_rub": net_revenue,
-        "attributable_paid_spend_rub": float(spend),
-        "paid_cac_rub": paid_cac,
-        "checkout_to_purchase_cvr": _rate(float(purchases), float(checkout)),
-        "refund_rate": _rate(float(refunds), float(gross)),
+        **headline,
+        "refund_adjusted_pro_revenue_rub": gross - refunds,
+        "paid_cac_rub": cac(spend, purchases),
+        "checkout_to_purchase_cvr": rate(purchases, int(headline["checkout_starts"])),
+        "refund_rate": rate(refunds, gross),
         "funnel": funnel,
         "channels": channels,
     }
 
 
-def _normalize_trend(raw: Any) -> list[dict[str, Any]]:
+def normalize_trend(raw: Any) -> list[dict[str, Any]]:
     if raw is None:
         return []
-    if not isinstance(raw, list):
-        raise ValueError("trend_30d must be an array")
-    result: list[dict[str, Any]] = []
-    previous_date: str | None = None
+    if not isinstance(raw, list) or len(raw) > 30:
+        raise ValueError("trend_30d must be an array with at most 30 points")
+    out: list[dict[str, Any]] = []
+    last_date: str | None = None
     for index, item in enumerate(raw):
         path = f"trend_30d[{index}]"
         if not isinstance(item, dict):
@@ -177,186 +180,117 @@ def _normalize_trend(raw: Any) -> list[dict[str, Any]]:
             datetime.strptime(date, "%Y-%m-%d")
         except ValueError as exc:
             raise ValueError(f"{path}.date must be YYYY-MM-DD") from exc
-        if previous_date is not None and date <= previous_date:
+        if last_date is not None and date <= last_date:
             raise ValueError("trend_30d dates must be strictly increasing")
-        previous_date = date
-        purchases = _number(item.get("verified_paid_pro_customers", 0), f"{path}.verified_paid_pro_customers", integer=True)
-        spend = _number(item.get("attributable_paid_spend_rub", 0), f"{path}.attributable_paid_spend_rub")
-        meaningful = _number(item.get("meaningful_learners", 0), f"{path}.meaningful_learners", integer=True)
-        pro_intent = _number(item.get("pro_intent", 0), f"{path}.pro_intent", integer=True)
-        result.append(
-            {
-                "date": date,
-                "verified_paid_pro_customers": purchases,
-                "paid_cac_rub": _cac(float(spend), int(purchases)),
-                "meaningful_learners": meaningful,
-                "pro_intent": pro_intent,
-            }
-        )
-    if len(result) > 30:
-        raise ValueError("trend_30d may contain at most 30 daily points")
-    return result
+        last_date = date
+        purchases = int(number(item.get("verified_paid_pro_customers", 0), f"{path}.verified_paid_pro_customers", integer=True))
+        spend = float(number(item.get("attributable_paid_spend_rub", 0), f"{path}.attributable_paid_spend_rub"))
+        out.append({
+            "date": date,
+            "verified_paid_pro_customers": purchases,
+            "paid_cac_rub": cac(spend, purchases),
+            "meaningful_learners": int(number(item.get("meaningful_learners", 0), f"{path}.meaningful_learners", integer=True)),
+            "pro_intent": int(number(item.get("pro_intent", 0), f"{path}.pro_intent", integer=True)),
+        })
+    return out
 
 
 def normalize_snapshot(raw: Any) -> dict[str, Any]:
-    if not isinstance(raw, dict):
-        raise ValueError("snapshot root must be an object")
-    if raw.get("schema_version") != SCHEMA_VERSION:
-        raise ValueError(f"schema_version must be {SCHEMA_VERSION!r}")
-
-    generated_at = _parse_timestamp(raw.get("generated_at"), "generated_at")
+    if not isinstance(raw, dict) or raw.get("schema_version") != SCHEMA_VERSION:
+        raise ValueError(f"snapshot schema_version must be {SCHEMA_VERSION!r}")
+    generated_at = parse_timestamp(raw.get("generated_at"), "generated_at")
     measurement = raw.get("measurement")
-    if not isinstance(measurement, dict):
-        raise ValueError("measurement must be an object")
-    status = measurement.get("status")
-    if not isinstance(status, str) or not status.strip():
+    if not isinstance(measurement, dict) or not isinstance(measurement.get("status"), str):
         raise ValueError("measurement.status must be a non-empty string")
-    raw_sources = measurement.get("sources", {})
-    if not isinstance(raw_sources, dict):
+    status = measurement["status"].strip().upper()
+    if not status:
+        raise ValueError("measurement.status must be a non-empty string")
+    source_raw = measurement.get("sources", {})
+    if not isinstance(source_raw, dict):
         raise ValueError("measurement.sources must be an object")
     sources: dict[str, str] = {}
     for key in ("metrika", "direct", "payments", "referrals", "seo"):
-        value = raw_sources.get(key, "UNKNOWN")
+        value = source_raw.get(key, "UNKNOWN")
         if not isinstance(value, str) or not value.strip():
             raise ValueError(f"measurement.sources.{key} must be a non-empty string")
         sources[key] = value.strip().upper()
 
-    guardrails_raw = raw.get("guardrails", {})
-    if not isinstance(guardrails_raw, dict):
+    raw_guardrails = raw.get("guardrails", {})
+    if not isinstance(raw_guardrails, dict):
         raise ValueError("guardrails must be an object")
     guardrails = {
-        "stale_after_minutes": _optional_number(guardrails_raw.get("stale_after_minutes"), "guardrails.stale_after_minutes"),
-        "max_paid_cac_rub": _optional_number(guardrails_raw.get("max_paid_cac_rub"), "guardrails.max_paid_cac_rub"),
-        "min_checkout_sample": int(_number(guardrails_raw.get("min_checkout_sample", 0), "guardrails.min_checkout_sample", integer=True)),
-        "min_checkout_purchase_cvr": _optional_number(guardrails_raw.get("min_checkout_purchase_cvr"), "guardrails.min_checkout_purchase_cvr"),
-        "max_refund_rate": _optional_number(guardrails_raw.get("max_refund_rate"), "guardrails.max_refund_rate"),
+        "stale_after_minutes": optional_number(raw_guardrails.get("stale_after_minutes"), "guardrails.stale_after_minutes"),
+        "max_paid_cac_rub": optional_number(raw_guardrails.get("max_paid_cac_rub"), "guardrails.max_paid_cac_rub"),
+        "min_checkout_sample": int(number(raw_guardrails.get("min_checkout_sample", 0), "guardrails.min_checkout_sample", integer=True)),
+        "min_checkout_purchase_cvr": optional_number(raw_guardrails.get("min_checkout_purchase_cvr"), "guardrails.min_checkout_purchase_cvr"),
+        "max_refund_rate": optional_number(raw_guardrails.get("max_refund_rate"), "guardrails.max_refund_rate"),
     }
     for key in ("min_checkout_purchase_cvr", "max_refund_rate"):
-        value = guardrails[key]
-        if value is not None and value > 1:
+        if guardrails[key] is not None and guardrails[key] > 1:
             raise ValueError(f"guardrails.{key} must be between 0 and 1")
 
     raw_periods = raw.get("periods")
-    if not isinstance(raw_periods, dict):
-        raise ValueError("periods must be an object")
-    if set(raw_periods) != set(PERIODS):
+    if not isinstance(raw_periods, dict) or set(raw_periods) != set(PERIODS):
         raise ValueError(f"periods must contain exactly {list(PERIODS)}")
-    periods = {period: _normalize_period(raw_periods[period], f"periods.{period}") for period in PERIODS}
-
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": generated_at,
-        "measurement": {"status": status.strip().upper(), "sources": sources},
+        "measurement": {"status": status, "sources": sources},
         "guardrails": guardrails,
-        "periods": periods,
-        "trend_30d": _normalize_trend(raw.get("trend_30d")),
+        "periods": {p: normalize_period(raw_periods[p], f"periods.{p}") for p in PERIODS},
+        "trend_30d": normalize_trend(raw.get("trend_30d")),
     }
 
 
-def snapshot_age_minutes(snapshot: dict[str, Any], *, now: datetime | None = None) -> float:
-    generated = datetime.fromisoformat(snapshot["generated_at"])
-    current = now or datetime.now(timezone.utc)
-    return max(0.0, (current.astimezone(timezone.utc) - generated.astimezone(timezone.utc)).total_seconds() / 60.0)
+def snapshot_age_minutes(snapshot: dict[str, Any], now: datetime | None = None) -> float:
+    generated = datetime.fromisoformat(snapshot["generated_at"]).astimezone(timezone.utc)
+    current = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    return max(0.0, (current - generated).total_seconds() / 60)
 
 
 def build_alerts(snapshot: dict[str, Any], period: str, *, now: datetime | None = None) -> list[str]:
-    metrics = snapshot["periods"][period]
-    guardrails = snapshot["guardrails"]
+    m, g = snapshot["periods"][period], snapshot["guardrails"]
     alerts: list[tuple[int, str]] = []
-
     if snapshot["measurement"]["status"] != "OK":
         alerts.append((100, f"Measurement status is {snapshot['measurement']['status']}; verify source coverage before changing acquisition."))
-
-    stale_after = guardrails["stale_after_minutes"]
-    if stale_after is not None:
-        age = snapshot_age_minutes(snapshot, now=now)
-        if age > stale_after:
-            alerts.append((95, f"Analytics snapshot is stale ({age:.0f} min > {stale_after:.0f} min guardrail)."))
-
-    spend = metrics["attributable_paid_spend_rub"]
-    purchases = metrics["verified_paid_pro_customers"]
-    if spend > 0 and purchases == 0:
-        alerts.append((90, f"Paid spend is ₽{spend:,.0f} with zero server-confirmed Pro purchases in {period}."))
-
-    max_cac = guardrails["max_paid_cac_rub"]
-    cac = metrics["paid_cac_rub"]
-    if max_cac is not None and cac is not None and cac > max_cac:
-        alerts.append((85, f"Paid CAC is ₽{cac:,.0f}, above the Owner guardrail of ₽{max_cac:,.0f}."))
-
-    min_sample = guardrails["min_checkout_sample"]
-    min_cvr = guardrails["min_checkout_purchase_cvr"]
-    checkout = metrics["checkout_starts"]
-    cvr = metrics["checkout_to_purchase_cvr"]
-    if min_cvr is not None and checkout >= min_sample and cvr is not None and cvr < min_cvr:
-        alerts.append((80, f"Checkout→purchase CVR is {cvr:.1%}, below the Owner guardrail of {min_cvr:.1%}."))
-
-    max_refund_rate = guardrails["max_refund_rate"]
-    refund_rate = metrics["refund_rate"]
-    if max_refund_rate is not None and refund_rate is not None and refund_rate > max_refund_rate:
-        alerts.append((75, f"Refund rate is {refund_rate:.1%}, above the Owner guardrail of {max_refund_rate:.1%}."))
-
-    alerts.sort(key=lambda item: item[0], reverse=True)
-    return [message for _, message in alerts[:3]]
+    if g["stale_after_minutes"] is not None:
+        age = snapshot_age_minutes(snapshot, now)
+        if age > g["stale_after_minutes"]:
+            alerts.append((95, f"Analytics snapshot is stale ({age:.0f} min > {g['stale_after_minutes']:.0f} min guardrail)."))
+    if m["attributable_paid_spend_rub"] > 0 and m["verified_paid_pro_customers"] == 0:
+        alerts.append((90, f"Paid spend is ₽{m['attributable_paid_spend_rub']:,.0f} with zero server-confirmed Pro purchases in {period}."))
+    if g["max_paid_cac_rub"] is not None and m["paid_cac_rub"] is not None and m["paid_cac_rub"] > g["max_paid_cac_rub"]:
+        alerts.append((85, f"Paid CAC is ₽{m['paid_cac_rub']:,.0f}, above the Owner guardrail of ₽{g['max_paid_cac_rub']:,.0f}."))
+    if (g["min_checkout_purchase_cvr"] is not None and m["checkout_starts"] >= g["min_checkout_sample"] and
+            m["checkout_to_purchase_cvr"] is not None and m["checkout_to_purchase_cvr"] < g["min_checkout_purchase_cvr"]):
+        alerts.append((80, f"Checkout→purchase CVR is {m['checkout_to_purchase_cvr']:.1%}, below the Owner guardrail of {g['min_checkout_purchase_cvr']:.1%}."))
+    if g["max_refund_rate"] is not None and m["refund_rate"] is not None and m["refund_rate"] > g["max_refund_rate"]:
+        alerts.append((75, f"Refund rate is {m['refund_rate']:.1%}, above the Owner guardrail of {g['max_refund_rate']:.1%}."))
+    return [message for _, message in sorted(alerts, reverse=True)[:3]]
 
 
-def _safe_json(value: Any) -> str:
+def safe_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
 
 def render_html(snapshot: dict[str, Any], *, initial_period: str = "7d") -> str:
     if initial_period not in PERIODS:
         raise ValueError(f"initial period must be one of {PERIODS}")
-    payload = dict(snapshot)
-    payload["alerts"] = {period: build_alerts(snapshot, period) for period in PERIODS}
-    embedded = _safe_json(payload)
+    payload = {**snapshot, "alerts": {p: build_alerts(snapshot, p) for p in PERIODS}}
+    embedded = safe_json(payload)
     generated = html.escape(snapshot["generated_at"])
-
-    return f"""<!doctype html>
-<html lang=\"en\">
-<head>
-<meta charset=\"utf-8\">
-<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">
-<title>Eksamio Owner Console</title>
-<style>
-:root{{--bg:#f6f7f9;--card:#fff;--text:#15171a;--muted:#68707b;--line:#dfe3e8;--danger:#8f1d1d;--accent:#1f5f99}}
-*{{box-sizing:border-box}} body{{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}}
-main{{max-width:1180px;margin:0 auto;padding:28px 20px 48px}} header{{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:20px}}
-h1{{font-size:24px;margin:0 0 4px}} .sub{{color:var(--muted)}} .periods{{display:flex;gap:6px;flex-wrap:wrap}} button{{border:1px solid var(--line);background:var(--card);padding:8px 12px;border-radius:8px;cursor:pointer}} button[aria-pressed=\"true\"]{{border-color:var(--accent);font-weight:650}}
-.status{{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}} .pill{{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 9px}} .grid{{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin:16px 0}} .card{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}} .label{{color:var(--muted);font-size:12px}} .value{{font-size:24px;font-weight:700;margin-top:5px}}
-section{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:12px}} h2{{font-size:16px;margin:0 0 12px}} .funnel{{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}} .step{{padding:12px;border:1px solid var(--line);border-radius:9px}} .step.drop{{border-color:#b66}} .step .count{{font-size:20px;font-weight:700}} .step .rate{{color:var(--muted);font-size:12px}}
-table{{width:100%;border-collapse:collapse}} th,td{{padding:9px 8px;border-bottom:1px solid var(--line);text-align:right}} th:first-child,td:first-child{{text-align:left}} th{{color:var(--muted);font-size:12px;font-weight:600}} .alerts{{margin:0;padding-left:20px}} .alerts li{{margin:7px 0;color:var(--danger)}} .quiet{{color:var(--muted)}} #trend{{width:100%;height:180px;display:block}} .legend{{color:var(--muted);font-size:12px;margin-top:6px}}
-@media(max-width:900px){{.grid{{grid-template-columns:repeat(3,1fr)}}.funnel{{grid-template-columns:1fr}}}} @media(max-width:560px){{header{{display:block}}.periods{{margin-top:12px}}.grid{{grid-template-columns:repeat(2,1fr)}}table{{font-size:12px}}}}
-</style>
-</head>
-<body>
-<main>
-<header><div><h1>Eksamio Owner Console</h1><div class=\"sub\">Read-only commercial truth · generated {generated}</div></div><div class=\"periods\" id=\"periods\"></div></header>
-<div class=\"status\" id=\"status\"></div>
-<div class=\"grid\" id=\"kpis\"></div>
-<section><h2>Funnel</h2><div class=\"funnel\" id=\"funnel\"></div></section>
-<section><h2>Channels</h2><div style=\"overflow:auto\"><table><thead><tr><th>Channel</th><th>Qualified visitors</th><th>Verified purchases</th><th>Purchase CVR</th><th>Spend</th><th>CAC</th><th>Refund-adjusted revenue</th></tr></thead><tbody id=\"channels\"></tbody></table></div></section>
-<section><h2>30-day trend</h2><svg id=\"trend\" viewBox=\"0 0 1000 180\" role=\"img\" aria-label=\"30-day business trend\"></svg><div class=\"legend\" id=\"trendLegend\"></div></section>
-<section><h2>Priority signals</h2><div id=\"alerts\"></div></section>
-</main>
-<script id=\"owner-data\" type=\"application/json\">{embedded}</script>
-<script>
-const DATA=JSON.parse(document.getElementById('owner-data').textContent);let period={json.dumps(initial_period)};
-const labels={{today:'Today','7d':'7 days','30d':'30 days'}};
-const channelLabels={{organic_seo:'Organic SEO',yandex_direct_search:'Yandex Direct Search',referral:'Referral',other_direct:'Other/direct'}};
-const funnelLabels={{qualified_visitors:'Visit',meaningful_learners:'Meaningful learning',pro_intent:'Pro intent',checkout_starts:'Checkout',verified_paid_pro_customers:'Verified purchase'}};
-const money=v=>v==null?'—':new Intl.NumberFormat('ru-RU',{{style:'currency',currency:'RUB',maximumFractionDigits:0}}).format(v);
-const num=v=>new Intl.NumberFormat('ru-RU').format(v);const pct=v=>v==null?'—':(v*100).toFixed(1)+'%';
-function node(tag,text,cls){{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e}}
-function renderPeriods(){{const root=document.getElementById('periods');root.textContent='';Object.keys(DATA.periods).forEach(p=>{{const b=node('button',labels[p]);b.setAttribute('aria-pressed',String(p===period));b.onclick=()=>{{period=p;render()}};root.appendChild(b)}})}}
-function renderStatus(){{const root=document.getElementById('status');root.textContent='';root.appendChild(node('span','Measurement: '+DATA.measurement.status,'pill'));Object.entries(DATA.measurement.sources).forEach(([k,v])=>root.appendChild(node('span',k+': '+v,'pill')))}}
-function renderKpis(){{const m=DATA.periods[period];const items=[['Visitors',num(m.qualified_visitors)],['Meaningful learners',num(m.meaningful_learners)],['Checkout starts',num(m.checkout_starts)],['Paid Pro customers',num(m.verified_paid_pro_customers)],['Pro revenue (net refunds)',money(m.refund_adjusted_pro_revenue_rub)],['Paid CAC',money(m.paid_cac_rub)]];const root=document.getElementById('kpis');root.textContent='';items.forEach(([l,v])=>{{const c=node('div',undefined,'card');c.append(node('div',l,'label'),node('div',v,'value'));root.appendChild(c)}})}}
-function renderFunnel(){{const root=document.getElementById('funnel');root.textContent='';DATA.periods[period].funnel.forEach((s,i)=>{{const c=node('div',undefined,'step'+(s.largest_dropoff?' drop':''));c.append(node('div',funnelLabels[s.name],'label'),node('div',num(s.count),'count'),node('div',i===0?'Entry':('Step CVR '+pct(s.step_cvr)),'rate'));root.appendChild(c)}})}}
-function renderChannels(){{const root=document.getElementById('channels');root.textContent='';Object.entries(DATA.periods[period].channels).forEach(([key,c])=>{{const tr=document.createElement('tr');[channelLabels[key],num(c.qualified_visitors),num(c.verified_purchases),pct(c.purchase_cvr),money(c.acquisition_spend_rub),money(c.paid_cac_rub),money(c.refund_adjusted_revenue_rub)].forEach(v=>tr.appendChild(node('td',v)));root.appendChild(tr)}})}}
-function renderAlerts(){{const root=document.getElementById('alerts');root.textContent='';const alerts=DATA.alerts[period]||[];if(!alerts.length){{root.appendChild(node('div','No red signals from the configured guardrails.','quiet'));return}}const ul=node('ul',undefined,'alerts');alerts.forEach(a=>ul.appendChild(node('li',a)));root.appendChild(ul)}}
-function renderTrend(){{const svg=document.getElementById('trend');svg.textContent='';const pts=DATA.trend_30d||[];const paid=pts.filter(p=>p.paid_cac_rub!=null);const usePaid=paid.length>=3;const a=pts.map(p=>usePaid?p.verified_paid_pro_customers:p.meaningful_learners);const b=pts.map(p=>usePaid?(p.paid_cac_rub||0):p.pro_intent);document.getElementById('trendLegend').textContent=usePaid?'Paid customers + paid CAC (separate normalized scales)':'Leading indicators: meaningful learners + Pro intent (paid evidence not yet sufficient)';if(pts.length<2){{svg.appendChild(node('text','Not enough trend data yet.'));return}}const draw=(values,yBase)=>{{const max=Math.max(...values,1);const points=values.map((v,i)=>{{const x=20+i*(960/(values.length-1));const y=yBase-(v/max)*65;return x+','+y}}).join(' ');const line=document.createElementNS('http://www.w3.org/2000/svg','polyline');line.setAttribute('points',points);line.setAttribute('fill','none');line.setAttribute('stroke','currentColor');line.setAttribute('stroke-width','2');svg.appendChild(line)}};draw(a,80);draw(b,165)}}
-function render(){{renderPeriods();renderStatus();renderKpis();renderFunnel();renderChannels();renderTrend();renderAlerts()}}render();
-</script>
-</body></html>"""
+    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eksamio Owner Console</title><style>
+body{{margin:0;background:#f6f7f9;color:#15171a;font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}}main{{max-width:1160px;margin:auto;padding:28px 20px}}header{{display:flex;justify-content:space-between;gap:16px}}h1{{margin:0}}.muted{{color:#68707b}}button,.card,section,.pill{{background:white;border:1px solid #dfe3e8;border-radius:10px}}button{{padding:8px 11px;margin-left:5px}}button[aria-pressed="true"]{{font-weight:700;border-color:#555}}.status{{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}}.pill{{padding:5px 8px}}.grid{{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}}.card{{padding:13px}}.label{{font-size:12px;color:#68707b}}.value{{font-size:22px;font-weight:700}}section{{padding:15px;margin-top:11px}}.funnel{{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}}.step{{border:1px solid #dfe3e8;border-radius:8px;padding:10px}}.drop{{border-color:#8f1d1d}}table{{width:100%;border-collapse:collapse}}th,td{{padding:8px;border-bottom:1px solid #e5e7eb;text-align:right}}th:first-child,td:first-child{{text-align:left}}.alerts{{color:#8f1d1d}}#trend{{width:100%;height:180px}}@media(max-width:850px){{.grid{{grid-template-columns:repeat(3,1fr)}}.funnel{{grid-template-columns:1fr}}}}@media(max-width:520px){{header{{display:block}}.grid{{grid-template-columns:repeat(2,1fr)}}}}
+</style></head><body><main><header><div><h1>Eksamio Owner Console</h1><div class="muted">Read-only commercial truth · generated {generated}</div></div><div id="periods"></div></header><div class="status" id="status"></div><div class="grid" id="kpis"></div>
+<section><h2>Funnel</h2><div class="funnel" id="funnel"></div></section><section><h2>Channels</h2><div style="overflow:auto"><table><thead><tr><th>Channel</th><th>Qualified visitors</th><th>Verified purchases</th><th>Purchase CVR</th><th>Spend</th><th>CAC</th><th>Refund-adjusted revenue</th></tr></thead><tbody id="channels"></tbody></table></div></section><section><h2>30-day trend</h2><svg id="trend" viewBox="0 0 1000 180"></svg><div class="muted" id="trendLegend"></div></section><section><h2>Priority signals</h2><div id="alerts"></div></section></main>
+<script id="owner-data" type="application/json">{embedded}</script><script>
+const D=JSON.parse(document.getElementById('owner-data').textContent);let p={json.dumps(initial_period)};const PL={{today:'Today','7d':'7 days','30d':'30 days'}},CL={{organic_seo:'Organic SEO',yandex_direct_search:'Yandex Direct Search',referral:'Referral',other_direct:'Other/direct'}},FL={{qualified_visitors:'Visit',meaningful_learners:'Meaningful learning',pro_intent:'Pro intent',checkout_starts:'Checkout',verified_paid_pro_customers:'Verified purchase'}};const n=v=>new Intl.NumberFormat('ru-RU').format(v),m=v=>v==null?'—':new Intl.NumberFormat('ru-RU',{{style:'currency',currency:'RUB',maximumFractionDigits:0}}).format(v),pct=v=>v==null?'—':(v*100).toFixed(1)+'%';function e(t,x,c){{const z=document.createElement(t);if(x!==undefined)z.textContent=x;if(c)z.className=c;return z}}
+function periods(){{const r=document.getElementById('periods');r.textContent='';Object.keys(D.periods).forEach(x=>{{const b=e('button',PL[x]);b.setAttribute('aria-pressed',String(x===p));b.onclick=()=>{{p=x;render()}};r.appendChild(b)}})}}function status(){{const r=document.getElementById('status');r.textContent='';r.appendChild(e('span','Measurement: '+D.measurement.status,'pill'));Object.entries(D.measurement.sources).forEach(([k,v])=>r.appendChild(e('span',k+': '+v,'pill')))}}
+function kpis(){{const x=D.periods[p],a=[['Visitors',n(x.qualified_visitors)],['Meaningful learners',n(x.meaningful_learners)],['Checkout starts',n(x.checkout_starts)],['Paid Pro customers',n(x.verified_paid_pro_customers)],['Pro revenue (net refunds)',m(x.refund_adjusted_pro_revenue_rub)],['Paid CAC',m(x.paid_cac_rub)]],r=document.getElementById('kpis');r.textContent='';a.forEach(([l,v])=>{{const c=e('div',undefined,'card');c.append(e('div',l,'label'),e('div',v,'value'));r.appendChild(c)}})}}
+function funnel(){{const r=document.getElementById('funnel');r.textContent='';D.periods[p].funnel.forEach((x,i)=>{{const c=e('div',undefined,'step'+(x.largest_dropoff?' drop':''));c.append(e('div',FL[x.name],'label'),e('div',n(x.count),'value'),e('div',i?'Step CVR '+pct(x.step_cvr):'Entry','muted'));r.appendChild(c)}})}}function channels(){{const r=document.getElementById('channels');r.textContent='';Object.entries(D.periods[p].channels).forEach(([k,x])=>{{const tr=e('tr');[CL[k],n(x.qualified_visitors),n(x.verified_purchases),pct(x.purchase_cvr),m(x.acquisition_spend_rub),m(x.paid_cac_rub),m(x.refund_adjusted_revenue_rub)].forEach(v=>tr.appendChild(e('td',v)));r.appendChild(tr)}})}}
+function alerts(){{const r=document.getElementById('alerts'),a=D.alerts[p]||[];r.textContent='';if(!a.length){{r.appendChild(e('div','No red signals from the configured guardrails.','muted'));return}}const ul=e('ul',undefined,'alerts');a.forEach(x=>ul.appendChild(e('li',x)));r.appendChild(ul)}}function trend(){{const s=document.getElementById('trend'),q=D.trend_30d||[],paid=q.filter(x=>x.paid_cac_rub!=null),use=paid.length>=3,a=q.map(x=>use?x.verified_paid_pro_customers:x.meaningful_learners),b=q.map(x=>use?(x.paid_cac_rub||0):x.pro_intent);s.textContent='';document.getElementById('trendLegend').textContent=use?'Paid customers + paid CAC (normalized scales)':'Leading indicators: meaningful learners + Pro intent';if(q.length<2)return;function line(values,y,dash){{const max=Math.max(...values,1),pts=values.map((v,i)=>(20+i*(960/(values.length-1)))+','+(y-(v/max)*65)).join(' '),z=document.createElementNS('http://www.w3.org/2000/svg','polyline');z.setAttribute('points',pts);z.setAttribute('fill','none');z.setAttribute('stroke','currentColor');z.setAttribute('stroke-width','2');if(dash)z.setAttribute('stroke-dasharray','7 5');s.appendChild(z)}}line(a,80,false);line(b,165,true)}}function render(){{periods();status();kpis();funnel();channels();trend();alerts()}}render();
+</script></body></html>'''
 
 
 def load_snapshot(path: Path) -> dict[str, Any]:
@@ -365,12 +299,11 @@ def load_snapshot(path: Path) -> dict[str, Any]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Render the read-only Eksamio Owner Console from an aggregate commercial snapshot")
-    parser.add_argument("--input", type=Path, required=True, help="Aggregate owner-console JSON snapshot")
-    parser.add_argument("--output", type=Path, required=True, help="Local HTML output path")
-    parser.add_argument("--period", choices=PERIODS, default="7d", help="Initial period shown on open")
+    parser = argparse.ArgumentParser(description="Render read-only Eksamio Owner Console from an aggregate commercial snapshot")
+    parser.add_argument("--input", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--period", choices=PERIODS, default="7d")
     args = parser.parse_args()
-
     snapshot = load_snapshot(args.input)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(render_html(snapshot, initial_period=args.period), encoding="utf-8")
