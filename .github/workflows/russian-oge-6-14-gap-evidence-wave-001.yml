@@ -1,0 +1,125 @@
+name: Russian OGE 6.14 gap evidence wave 001
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.14-GAP-EVIDENCE-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_14_gap_evidence_wave_001.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit_v2.py"
+      - ".github/workflows/russian-oge-6-14-gap-evidence-wave-001.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gap-evidence-wave-001:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate bounded original Eksamio evidence wave
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile "$root/validate_oge_6_14_gap_evidence_wave_001.py"
+          python3 "$root/validate_oge_6_14_gap_evidence_wave_001.py"
+
+      - name: Build deterministic post-wave reuse audit twice
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile "$root/build_oge_6_14_reuse_first_evidence_audit_v2.py"
+          python3 "$root/build_oge_6_14_reuse_first_evidence_audit_v2.py" --output /tmp/oge-6-14-v2-a.json > /tmp/oge-6-14-v2-a.txt
+          python3 "$root/build_oge_6_14_reuse_first_evidence_audit_v2.py" --output /tmp/oge-6-14-v2-b.json > /tmp/oge-6-14-v2-b.txt
+          cmp /tmp/oge-6-14-v2-a.json /tmp/oge-6-14-v2-b.json
+          diff -u /tmp/oge-6-14-v2-a.txt /tmp/oge-6-14-v2-b.txt
+          cat /tmp/oge-6-14-v2-a.txt
+
+      - name: Verify exact post-wave gap accounting and no object admission
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/oge-6-14-v2-a.json').read_text(encoding='utf-8'))
+          s=d['summary']
+          expected_remaining={
+              'school-double-consonants-morpheme-junction',
+              'school-gor-gar-rare-exception-set',
+              'school-i-e-alternating-verb-roots-stressed-a',
+              'school-kas-kos-a-suffix-alternation',
+              'school-klan-klon-stress-alternation',
+              'school-lag-lozh-polog-exception',
+              'school-rast-rashch-ros-exception-set',
+              'school-root-consonant-dictionary-unverifiable',
+              'school-root-i-y-after-ts-base',
+              'school-root-o-yo-after-sibilants-base',
+              'school-root-voiced-voiceless-consonant-verification',
+              'school-root-vowel-dictionary-unverifiable',
+              'school-root-vowel-stress-verification',
+              'school-skak-skoch-exception-set',
+              'school-unpronounceable-consonant-verification',
+              'school-zar-zor-stress-alternation',
+          }
+          assert d['status']=='CENTRAL_BRAIN_OGE_6_14_REUSE_EVIDENCE_GAPS_PROVEN_AFTER_WAVE_001_NO_OBJECT_ACCEPTANCE'
+          assert len(d['exact_owner_refs'])==83
+          assert len(set(d['exact_owner_refs']))==83
+          assert set(d['missing_owner_refs'])==expected_remaining
+          assert len(d['missing_owner_refs'])==16
+          assert s['owners_with_explicit_component_specific_independent_evidence']==67
+          assert s['owners_with_insufficient_exact_evidence']==0
+          assert s['owners_with_mixed_semantic_evidence_only']==0
+          assert s['owners_with_no_independent_evidence']==16
+          assert s['exact_independent_items_reused']==214
+          assert s['mixed_semantic_independent_items_not_counted_as_exact']==0
+          assert s['materialized_new_items_this_audit']==0
+          assert s['materialized_gap_items_reused_from_wave_001']==39
+          assert s['semantic_admissions']==0
+          assert s['object_closures']==0
+          assert s['false_exact_mastery_admissions']==0
+          safety=d['safety']
+          assert safety['accepted_demo_or_scorer_change'] is False
+          assert safety['tilda_change'] is False
+          assert safety['learner_audio_persistence']==0
+          assert safety['production_peis_write'] is False
+          assert safety['provider_execution'] is False
+          assert safety['public_traffic'] is False
+          assert safety['real_payment_or_refund'] is False
+          assert safety['real_message_delivery'] is False
+          print('OGE_6_14_EXACT_OWNER_FRONTIER=83')
+          print('OGE_6_14_EVIDENCE_READY_OWNERS=67')
+          print('OGE_6_14_REMAINING_PROVEN_GAPS=16')
+          print('OGE_6_14_WAVE_001_NEW_ITEMS=39')
+          print('OGE_6_14_OBJECT_CLOSURES=0')
+          print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
+          print('LEARNER_AUDIO_PERSISTENCE=0')
+          print('RUSSIAN_OGE_6_14_GAP_EVIDENCE_WAVE_001_POST_AUDIT=PASS')
+          PY
+
+      - name: Upload post-wave evidence audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-14-gap-evidence-wave-001-post-audit
+          path: /tmp/oge-6-14-v2-a.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Protect accepted Russian production surfaces
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
