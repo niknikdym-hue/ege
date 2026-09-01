@@ -23,6 +23,9 @@ AUDIT_V2 = HERE / "build_oge_6_14_reuse_first_evidence_audit_v2.py"
 INVENTORY = ENGINE / "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
 ACCEPTANCE_6_2 = HERE / "RUSSIAN-OGE-6.2-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
 CONTENT_DIR = ENGINE / "russian-program/production-learning-content"
+POST_PROOF_MATERIALIZATION_FILES = {
+    "RU-PROG-08-OGE-6.14-GAP-EVIDENCE-WAVE-002-v0.1.json",
+}
 MIN_ITEMS = 3
 EXPECTED_6_2_ACCEPTANCE_SHA = "ef5cf03c7df2b2b4b327e040c62ef07707dc6ba772e7bf3cc1961564669554f4"
 EXPECTED_REMAINING = [
@@ -152,6 +155,8 @@ def build_reuse_exhaustion() -> dict[str, Any]:
     production_hits: dict[str, list[str]] = {owner: [] for owner in EXPECTED_REMAINING}
     scanned_json_files = 0
     for path in sorted(CONTENT_DIR.glob("*.json")):
+        if path.name in POST_PROOF_MATERIALIZATION_FILES:
+            continue
         scanned_json_files += 1
         doc = _load(path)
         for obj in _walk(doc):
@@ -229,6 +234,11 @@ def build_reuse_exhaustion() -> dict[str, Any]:
     }
     result["normalized_sha256"] = _sha(result)
     return result
+
+
+def build_review() -> dict[str, Any]:
+    """Compatibility alias for downstream final-evidence gates."""
+    return build_reuse_exhaustion()
 
 
 def main() -> int:
