@@ -8,24 +8,30 @@ on:
       - "eksamio-learning-engine/277-RUSSIAN-SCHOOL-CURRENT-LAUNCH-REFREEZE-v1.1.json"
       - "eksamio-learning-engine/278-RUSSIAN-FIPI-2026-OGE-6.6-CURRENT-ROUTE-SUPERSESSION-v0.1.json"
       - "eksamio-learning-engine/279-RUSSIAN-FIPI-2026-OGE-6.7-CURRENT-ROUTE-SUPERSESSION-v0.1.json"
+      - "eksamio-learning-engine/280-RUSSIAN-FIPI-2026-OGE-6.8-CURRENT-ROUTE-SUPERSESSION-v0.1.json"
       - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.6-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
       - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.7-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
       - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.7-COMPONENT-EVIDENCE-WAVE-002-v0.1.json"
       - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.7-COMPONENT-EVIDENCE-WAVE-003-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.8-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.2-CANONICAL-INVENTORY-SUPPLEMENT-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.2-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.6-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.7-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.8-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_6_component_evidence.py"
       - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_7_component_evidence_wave_001.py"
       - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_7_component_evidence_wave_002.py"
       - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_7_component_evidence_wave_003.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_8_component_evidence.py"
       - "eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_7_current_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_8_current_acceptance.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_6_object_evidence_audit.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_7_object_evidence_audit.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_7_current_evidence_audit.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_7_current_evidence_audit_v2.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_7_current_evidence_audit_v3.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_8_object_evidence_audit.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress.py"
       - ".github/workflows/russian-semantic-acceptance-progress-launch-current.yml"
@@ -37,7 +43,7 @@ permissions:
 jobs:
   semantic-progress-current-launch:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,6 +57,8 @@ jobs:
         run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_6_component_evidence.py
       - name: Validate OGE 6.7 current exact authority
         run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_7_current_acceptance.py
+      - name: Validate OGE 6.8 current exact authority
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_8_current_acceptance.py
       - name: Build current launch progress twice
         shell: bash
         run: |
@@ -73,7 +81,7 @@ jobs:
           s=d['progress_summary']
           assert d['status']=='CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS'
           assert d['russian_content_ready'] is False
-          assert len(d['accepted_authorities'])==43
+          assert len(d['accepted_authorities'])==44
           by_id={a['id']:a for a in d['accepted_authorities']}
           oge62=by_id['RUSSIAN_OGE_6_2_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1']
           assert oge62['authority_kind']=='OBJECT_BOUND_CANONICAL_COMPONENT_SET'
@@ -84,12 +92,15 @@ jobs:
           oge67=by_id['RUSSIAN_OGE_6_7_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1']
           assert oge67['authority_kind']=='OBJECT_BOUND_CANONICAL_COMPONENT_SET'
           assert oge67['accepted_admission_units']==1 and oge67['accepted_requirements']==1
+          oge68=by_id['RUSSIAN_OGE_6_8_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1']
+          assert oge68['authority_kind']=='OBJECT_BOUND_CANONICAL_COMPONENT_SET'
+          assert oge68['accepted_admission_units']==1 and oge68['accepted_requirements']==1
           assert s['review_groups_with_accepted_component_sets']==11
-          assert s['semantic_units_with_accepted_component_sets']==23
-          assert s['semantic_requirements_with_accepted_component_sets']==23
-          assert s['semantic_units_remaining_without_accepted_component_set']==1293
-          assert s['semantic_requirements_remaining_without_accepted_component_set']==1368
-          assert s['canonical_component_refs_reused_unique']==87
+          assert s['semantic_units_with_accepted_component_sets']==24
+          assert s['semantic_requirements_with_accepted_component_sets']==24
+          assert s['semantic_units_remaining_without_accepted_component_set']==1292
+          assert s['semantic_requirements_remaining_without_accepted_component_set']==1367
+          assert s['canonical_component_refs_reused_unique']==92
           assert s['accepted_bounded_ru_route_semantics']==9
           assert s['accepted_bounded_ru_subject_semantics']==66
           assert s['accepted_bounded_ru_semantics_total']==75
@@ -108,6 +119,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
           if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
             echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
             exit 1
