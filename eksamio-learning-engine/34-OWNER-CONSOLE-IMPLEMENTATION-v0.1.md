@@ -70,12 +70,15 @@ Derived truth:
 
 When there is no verified paid customer, CAC is undefined (`—`), never fabricated as zero.
 
+The four channel rows are a complete partition of the owner-facing acquisition view. Their totals for qualified visitors, verified purchases, attributable spend, gross revenue and refunds must reconcile to the corresponding headline totals. A mismatched snapshot is rejected rather than displayed.
+
 The renderer rejects:
 
 - negative or non-finite numbers;
 - refunds greater than gross revenue;
 - a later funnel stage greater than the preceding stage;
 - unsupported/missing channel rows;
+- channel totals that do not reconcile to headline commercial truth;
 - invalid timestamps;
 - invalid guardrail rates.
 
@@ -130,6 +133,7 @@ Acceptance coverage includes:
 
 - refund-adjusted revenue and paid CAC calculation;
 - channel CAC calculation;
+- channel/headline reconciliation failure;
 - Owner-guardrail alert behavior;
 - maximum three alerts;
 - six approved headline KPIs;
