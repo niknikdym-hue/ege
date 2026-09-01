@@ -46,6 +46,12 @@ NEW_6_11_AUTHORITY = (
     1,
     "RUSSIAN_OGE_6_11_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
 )
+NEW_6_12_AUTHORITY = (
+    HERE / "RUSSIAN-OGE-6.12-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json",
+    "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_6_12_CANONICAL_COMPONENT_SET",
+    1,
+    "RUSSIAN_OGE_6_12_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+)
 
 _namespace: dict[str, Any] = runpy.run_path(str(LEGACY))
 _base_build_progress = _namespace["_base_build_progress"]
@@ -57,6 +63,7 @@ for spec in (
     NEW_6_8_AUTHORITY,
     NEW_6_9_AUTHORITY,
     NEW_6_11_AUTHORITY,
+    NEW_6_12_AUTHORITY,
 ):
     if any(existing[3] == spec[3] for existing in _current):
         raise RuntimeError(f"current launch authority duplicated: {spec[3]}")
