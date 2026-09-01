@@ -149,11 +149,10 @@
       nextPractice:()=>this.request('/api/russian/practice/next'),
       submitPractice:args=>this.request('/api/russian/practice/submit',{method:'POST',body:JSON.stringify(args)})
     }; }
-    get payment(){ return {
-      entitlement:()=>this.request('/api/payments/entitlement'),
-      createSandboxOrder:args=>this.request('/api/payments/orders',{method:'POST',body:JSON.stringify(args)}),
-      confirmSandboxOrder:args=>this.request('/api/payments/sandbox/confirm',{method:'POST',body:JSON.stringify(args)})
-    }; }
+    // Production checkout is intentionally not exposed by this client slice.
+    // PR #163 owns the trusted mounted payment/provider boundary. HTTP mode may
+    // only read server-owned entitlement until that production checkout is admitted.
+    get payment(){ return {entitlement:()=>this.request('/api/payments/entitlement')}; }
     get tutor(){ return {ask:args=>this.request('/api/tutor/turn',{method:'POST',body:JSON.stringify(args)})}; }
   }
 
