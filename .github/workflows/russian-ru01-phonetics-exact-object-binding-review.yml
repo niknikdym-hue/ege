@@ -1,0 +1,137 @@
+name: Russian RU01 phonetics exact object binding review
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_exact_object_binding_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETICS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v2.py"
+      - "eksamio-learning-engine/russian-program/source-knowledge/RUSSIAN-OFFICIAL-REQUIREMENTS-INDEX-v1.0.json"
+      - ".github/workflows/russian-ru01-phonetics-exact-object-binding-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-object-binding-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild exact RU01 review deterministically
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          builder="$root/build_ru01_phonetics_exact_object_binding_review.py"
+          python3 -m py_compile "$builder"
+          python3 "$builder" --output /tmp/ru01-review-a.json > /tmp/ru01-report-a.txt
+          python3 "$builder" --output /tmp/ru01-review-b.json > /tmp/ru01-report-b.txt
+          cmp /tmp/ru01-review-a.json /tmp/ru01-review-b.json
+          diff -u /tmp/ru01-report-a.txt /tmp/ru01-report-b.txt
+          cat /tmp/ru01-report-a.txt
+
+      - name: Verify fail-closed partition and unchanged launch aggregate
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_russian_semantic_acceptance_progress_launch_current_v2.py" --output /tmp/current-v2.json >/tmp/current-v2.txt
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          review=json.loads(Path('/tmp/ru01-review-a.json').read_text(encoding='utf-8'))
+          current=json.loads(Path('/tmp/current-v2.json').read_text(encoding='utf-8'))
+          s=review['summary']; cs=current['progress_summary']
+
+          assert review['status']=='CENTRAL_BRAIN_RU01_EXACT_OBJECT_BINDING_REVIEW_READY_FOR_SEPARATE_ACCEPTANCE_NOT_ACCEPTED'
+          assert review['current_launch_progress_sha256']=='f25202c09baf0452fce2392726ddb02ce8a17dd111851f25f58e5334e873a4c7'
+          assert review['source_review_input_sha256']=='a725afbffe55add8000ab519902e9f076d7c7e12f9517d012c665920a5b8380b'
+          assert review['accepted_semantic_ids']==[
+              'ru-phonetics-sound-letter-relation',
+              'ru-phonetics-vowel-consonant-features',
+              'ru-phonetics-word-analysis-sequence',
+          ]
+
+          assert s['reviewed_residual_units']==20
+          assert s['reviewed_residual_requirements']==21
+          assert s['exact_reuse_ready_units']==7
+          assert s['exact_reuse_ready_requirements']==7
+          assert s['reroute_out_of_ru01_units']==6
+          assert s['reroute_out_of_ru01_requirements']==6
+          assert s['pending_exact_decomposition_units']==7
+          assert s['pending_exact_decomposition_requirements']==8
+          assert s['object_level_admission_units_closed']==0
+          assert s['object_level_requirements_closed']==0
+          assert s['new_school_canonical_identities']==0
+          assert s['new_ru_semantic_identities']==0
+          assert s['false_exact_mastery_admissions']==0
+
+          ready=review['exact_reuse_ready']
+          assert ready['semantic_id']=='ru-phonetics-word-analysis-sequence'
+          assert ready['units']==7 and ready['requirements']==7
+          assert ready['separate_object_acceptance_required'] is True
+          assert ready['object_closures_by_this_review']==0
+          assert len(set(ready['admission_unit_ids']))==7
+          assert len(set(ready['requirement_ids']))==7
+
+          reroute=review['reroute_out_of_ru01']
+          assert reroute['units']==6 and reroute['requirements']==6
+          assert len(reroute['records'])==6
+          assert {row['target_domain'] for row in reroute['records']}=={'ORTHOGRAPHY','MORPHOLOGY_ONOMATOPOEIA'}
+
+          assert review['policy']['review_is_acceptance'] is False
+          assert review['policy']['review_can_reduce_object_counts'] is False
+          assert review['policy']['review_can_create_school_identity'] is False
+          assert review['policy']['review_can_create_ru_semantic_identity'] is False
+          assert review['policy']['whole_group_acceptance_allowed'] is False
+          assert review['policy']['keyword_or_fuzzy_inference_allowed'] is False
+          assert review['policy']['generic_group_attempt_can_emit_exact_component_mastery'] is False
+
+          assert current['normalized_sha256']=='f25202c09baf0452fce2392726ddb02ce8a17dd111851f25f58e5334e873a4c7'
+          assert len(current['accepted_authorities'])==49
+          assert cs['subject_disposed_units_total']==29
+          assert cs['subject_disposed_requirements_total']==29
+          assert cs['subject_review_units_remaining']==1287
+          assert cs['subject_review_requirements_remaining']==1362
+          assert cs['semantic_units_with_accepted_component_sets']==28
+          assert cs['semantic_requirements_with_accepted_component_sets']==28
+          assert cs['canonical_component_refs_reused_unique']==115
+          assert cs['false_exact_mastery_admissions']==0
+
+          print('RU01_EXACT_REUSE_READY_WORD_ANALYSIS_UNITS=7')
+          print('RU01_REROUTE_OUT_OF_DOMAIN_UNITS=6')
+          print('RU01_PENDING_EXACT_DECOMPOSITION_UNITS=7')
+          print('RU01_OBJECT_CLOSURES_BY_REVIEW=0')
+          print('RUSSIAN_CURRENT_LAUNCH_AGGREGATE_UNCHANGED=PASS')
+          print('RU01_PHONETICS_EXACT_OBJECT_BINDING_GATE=PASS')
+          PY
+
+      - name: Upload RU01 exact binding review
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-phonetics-exact-object-binding-review
+          path: /tmp/ru01-review-a.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
