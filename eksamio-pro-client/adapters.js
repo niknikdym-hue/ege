@@ -27,6 +27,7 @@
       };
       return clone(this.identity);
     }
+    async logout(){ this.identity=null; return {status:'LOGGED_OUT'}; }
   }
 
   class MockLearningAdapter {
@@ -41,11 +42,16 @@
       return response.json();
     }
     async profile({grade,route}){
+      const correct=this.events.filter(event=>event.correctness).length;
+      const errors=this.events.length-correct;
       return {
-        grade, route, readiness: this.readiness,
+        grade, route, readiness: this.readiness, readiness_label:`${this.readiness}%`,
+        today:{solved:this.events.length,correct,errors,review:errors},
         focus_count: 1,
         retention_due: 2,
         weakness: this.practice.semantic_id,
+        skills:[{title:this.practice.rule_title,status:errors?'Требует внимания':'Недостаточно данных'}],
+        latest_changes:this.events.slice().reverse().map(event=>({title:event.correctness?'Самостоятельный ответ верный':'Требуется повторение',timestamp:'локальная фикстура'})),
         next_best_action: {
           action_type: 'PRACTICE_AND_VERIFY',
           title: this.readiness > 42 ? 'Закрепить результат через интервальное повторение' : 'Закрепить правило на независимом ответе',
@@ -62,6 +68,8 @@
       ];
     }
     async nextPractice(){ return clone(this.practice); }
+    async history(){ return this.events.slice().reverse().map(event=>({kind:'Тренировка',solved:1,correct:event.correctness?1:0,errors:event.correctness?0:1,next:'Продолжить практику'})); }
+    async diagnostics(){ return {mode:'LOCAL_MOCK',steps:[],detail:{}}; }
     async submitPractice({card_id,answer}){
       if(card_id !== this.practice.card_id) throw new Error('unknown practice card');
       const correct = normalize(answer) === normalize(this.practice.answer);
@@ -120,14 +128,11 @@
   }
 
   class MockTutorAdapter {
-    async ask({session_ref,semantic_id,message,source_ref,entitlement}){
-      if(!entitlement || entitlement.active !== true) throw new Error('Tutor requires active entitlement');
-      if(!session_ref || !semantic_id || !message || !String(source_ref).startsWith('source:')) throw new Error('grounded Tutor request incomplete');
+    async ask({card_id,message}){
+      if(card_id!==REVIEWED_PRACTICE.card_id||!message) throw new Error('grounded Tutor request incomplete');
       return {
         status:'TUTOR_ADVISORY',
-        session_ref,
-        semantic_id,
-        accepted_source_refs:[source_ref],
+        accepted_source_refs:[REVIEWED_PRACTICE.source_ref],
         verification_required:true,
         text:`По проверенному материалу Eksamio: ${REVIEWED_PRACTICE.explanation} Проверь слово «${REVIEWED_PRACTICE.answer}», а затем выполни независимое задание без подсказки.`
       };
@@ -141,11 +146,17 @@
       if(!response.ok) throw new Error(`adapter HTTP ${response.status}`);
       return response.json();
     }
-    get identity(){ return {status:()=>this.request('/api/identity/session'),continuePasswordless:()=>this.request('/api/identity/demo-continuity',{method:'POST',body:'{}'})}; }
+    get identity(){ return {
+      status:()=>this.request('/api/identity/session'),
+      continuePasswordless:()=>this.request('/api/identity/demo-continuity',{method:'POST',body:'{}'}),
+      logout:()=>this.request('/api/identity/logout',{method:'POST',body:'{}'})
+    }; }
     get learning(){ return {
       program:()=>this.request('/api/russian/program'),
       profile:args=>this.request(`/api/russian/profile?grade=${encodeURIComponent(args.grade)}&route=${encodeURIComponent(args.route)}`),
       plan:args=>this.request(`/api/russian/plan?grade=${encodeURIComponent(args.grade)}&route=${encodeURIComponent(args.route)}`),
+      history:()=>this.request('/api/russian/history'),
+      diagnostics:()=>this.request('/api/owner/diagnostics'),
       nextPractice:()=>this.request('/api/russian/practice/next'),
       submitPractice:args=>this.request('/api/russian/practice/submit',{method:'POST',body:JSON.stringify(args)})
     }; }
