@@ -1,0 +1,144 @@
+name: SEP1 Tutor private staging allowlist
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/ai-tutor-reference/accepted_russian_semantic_tutor.py"
+      - "eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py"
+      - "eksamio-learning-engine/ai-tutor-reference/private_staging_russian_tutor.py"
+      - "eksamio-learning-engine/ai-tutor-reference/validate_private_staging_russian_tutor.py"
+      - "eksamio-learning-engine/ai-tutor-reference/yandex_live_adapters.py"
+      - "eksamio-learning-engine/ai-tutor-reference/openai_live_adapter.py"
+      - "eksamio-learning-engine/ai-tutor-reference/openai_secret_provider.py"
+      - "eksamio-learning-engine/ai-tutor-reference/yandex_speech_secret_provider.py"
+      - "eksamio-learning-engine/ai-tutor-reference/stdlib_json_transport.py"
+      - "eksamio-learning-engine/ai-tutor-reference/private_staging_openai_yandex_tutor.py"
+      - "eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py"
+      - "eksamio-learning-engine/ai-tutor-reference/run_private_openai_text_smoke.py"
+      - "eksamio-learning-engine/ai-tutor-reference/private_tutor_test_ui.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU16-TASK27-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU16-TASK27-K5-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json"
+      - ".github/workflows/sep1-tutor-private-staging-allowlist.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  accepted-semantic-tutor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile Tutor private-staging boundaries
+        run: |
+          python3 -m py_compile \
+            eksamio-learning-engine/ai-tutor-reference/accepted_russian_semantic_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/private_staging_russian_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_private_staging_russian_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/openai_live_adapter.py \
+            eksamio-learning-engine/ai-tutor-reference/openai_secret_provider.py \
+            eksamio-learning-engine/ai-tutor-reference/yandex_speech_secret_provider.py \
+            eksamio-learning-engine/ai-tutor-reference/stdlib_json_transport.py \
+            eksamio-learning-engine/ai-tutor-reference/private_staging_openai_yandex_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/run_private_openai_text_smoke.py \
+            eksamio-learning-engine/ai-tutor-reference/private_tutor_test_ui.py
+      - name: Validate accepted-semantic Tutor twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py > /tmp/tutor-a.txt
+          python3 eksamio-learning-engine/ai-tutor-reference/validate_accepted_russian_semantic_tutor.py > /tmp/tutor-b.txt
+          diff -u /tmp/tutor-a.txt /tmp/tutor-b.txt
+          cat /tmp/tutor-a.txt
+      - name: Validate Yandex private-staging assembly twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/ai-tutor-reference/validate_private_staging_russian_tutor.py > /tmp/staging-a.txt
+          python3 eksamio-learning-engine/ai-tutor-reference/validate_private_staging_russian_tutor.py > /tmp/staging-b.txt
+          diff -u /tmp/staging-a.txt /tmp/staging-b.txt
+          cat /tmp/staging-a.txt
+      - name: Validate OpenAI brain + Yandex voice assembly twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py > /tmp/openai-a.txt
+          python3 eksamio-learning-engine/ai-tutor-reference/validate_openai_yandex_private_staging_tutor.py > /tmp/openai-b.txt
+          diff -u /tmp/openai-a.txt /tmp/openai-b.txt
+          cat /tmp/openai-a.txt
+          grep -q '^OPENAI_TEXT_PROVIDER=READY_OFF_BY_DEFAULT$' /tmp/openai-a.txt
+          grep -q '^OPENAI_SECRET_RESOLUTION=ENV_THEN_EXISTING_MACOS_KEYCHAIN$' /tmp/openai-a.txt
+          grep -q '^OPENAI_KEYCHAIN_SERVICE=AudiobookStudio-OpenAI$' /tmp/openai-a.txt
+          grep -q '^OWNER_LIVE_AUTHORIZATION_REQUIRED=PASS$' /tmp/openai-a.txt
+          grep -q '^SECRET_READS_WHILE_OFF=0$' /tmp/openai-a.txt
+          grep -q '^PUBLIC_TRAFFIC=OFF$' /tmp/openai-a.txt
+          grep -q '^LEARNER_AUDIO_PERSISTED_BYTES=0$' /tmp/openai-a.txt
+      - name: Prove live smoke cannot run in CI without owner flag
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          out="$(python3 eksamio-learning-engine/ai-tutor-reference/run_private_openai_text_smoke.py 2>&1)"
+          code=$?
+          set -e
+          test "$code" -eq 2
+          grep -q '^PRIVATE_OPENAI_TEXT_SMOKE=BLOCKED_OWNER_AUTHORIZATION$' <<<"$out"
+      - name: Prove user-test UI is localhost and owner-gated
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          out="$(python3 eksamio-learning-engine/ai-tutor-reference/private_tutor_test_ui.py 2>&1)"
+          code=$?
+          set -e
+          test "$code" -eq 2
+          grep -q '^PRIVATE_TUTOR_UI=BLOCKED_OWNER_AUTHORIZATION$' <<<"$out"
+          python3 - <<'PY'
+          from pathlib import Path
+          text=Path('eksamio-learning-engine/ai-tutor-reference/private_tutor_test_ui.py').read_text(encoding='utf-8')
+          assert 'HOST = "127.0.0.1"' in text
+          assert 'DEFAULT_MAX_TURNS = 20' in text
+          assert 'MAX_MESSAGE_CHARS = 2_000' in text
+          assert 'API-ключ в браузер не передаётся' in text
+          assert 'Публичный доступ и голос выключены' in text
+          assert 'public_traffic_enabled=False' in text
+          assert 'speech_execution_enabled=False' in text
+          print('PRIVATE_TUTOR_UI_LOCALHOST_GUARD=PASS')
+          PY
+      - name: Preserve existing Yandex adapter contract
+        run: python3 eksamio-learning-engine/ai-tutor-reference/validate_yandex_live_adapters.py
+      - name: Prove execution remains off without owner authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$(python3 eksamio-learning-engine/ai-tutor-reference/validate_private_staging_russian_tutor.py)"
+          grep -q '^PROVIDER_EXECUTION_DEFAULT=OFF$' <<<"$out"
+          grep -q '^OWNER_LIVE_AUTHORIZATION_REQUIRED=PASS$' <<<"$out"
+          grep -q '^PUBLIC_TRAFFIC=OFF$' <<<"$out"
+          grep -q '^SECRET_READS_WHILE_OFF=0$' <<<"$out"
+          grep -q '^TEXT_TRANSPORT_CALLS_WHILE_OFF=0$' <<<"$out"
+          grep -q '^STT_TRANSPORT_CALLS_WHILE_OFF=0$' <<<"$out"
+          grep -q '^TTS_TRANSPORT_CALLS_WHILE_OFF=0$' <<<"$out"
+          grep -q '^LEARNER_AUDIO_PERSISTED_BYTES=0$' <<<"$out"
+      - name: Protect public and accepted demo surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only '${{ github.event.pull_request.base.sha }}...HEAD' | grep -E 'russkiy-knigi|tilda|demo|scor|payments-reference'; then
+            echo 'Tutor private-staging PR changed protected/public/payment surfaces.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
