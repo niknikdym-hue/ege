@@ -1,0 +1,130 @@
+name: Russian OGE 6.1 route-or-format-only static binding
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_1_meta_operation_identity_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_1_nonsemantic_meta_operation_disposition_candidate.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_1_route_or_format_only_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.1-ROUTE-OR-FORMAT-ONLY-META-OPERATION-DISPOSITION-v0.1.json"
+      - ".github/workflows/russian-oge-6-1-route-or-format-only-static-binding.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-binding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Rebuild OGE 6.1 accepted disposition twice and bind static authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          static="$root/RUSSIAN-OGE-6.1-ROUTE-OR-FORMAT-ONLY-META-OPERATION-DISPOSITION-v0.1.json"
+          python3 -m py_compile "$root/build_oge_6_1_route_or_format_only_acceptance.py"
+          python3 "$root/build_oge_6_1_route_or_format_only_acceptance.py" --output /tmp/oge61-accepted-a.json > /tmp/oge61-accepted-a.txt
+          python3 "$root/build_oge_6_1_route_or_format_only_acceptance.py" --output /tmp/oge61-accepted-b.json > /tmp/oge61-accepted-b.txt
+          cmp /tmp/oge61-accepted-a.json /tmp/oge61-accepted-b.json
+          diff -u /tmp/oge61-accepted-a.txt /tmp/oge61-accepted-b.txt
+          cmp /tmp/oge61-accepted-a.json "$static"
+          cat /tmp/oge61-accepted-a.txt
+      - name: Verify exact ROUTE_OR_FORMAT_ONLY no-semantic admission boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/oge61-accepted-a.json').read_text(encoding='utf-8'))
+          row=d['decision']; guard=row['review_group_contamination_guard']; mastery=row['mastery_boundary']; summary=d['summary']; safety=d['safety']
+          assert d['schema_version']=='0.1.0'
+          assert d['status']=='CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_6_1_ROUTE_OR_FORMAT_ONLY_META_OPERATION_OBJECT_DISPOSITION'
+          assert d['scope']=='FIPI_OGE_2026_CONTENT_CODE_6_1_EXACT_ROUTE_OR_FORMAT_ONLY_META_OPERATION_OBJECT_DISPOSITION'
+          assert d['candidate_disposition_sha256']=='dd7445928c49d80e86b62695595930933e27fd0d6e535b35532eccbf822774c4'
+          assert d['identity_review_sha256']=='ed0487188fae5cd233f02ac0b09f95b36b3134530f5ffc6a0cb22269fb11a6bf'
+          assert d['normalized_sha256']=='537309ed6eaaac11ade9dfb3f26b68c4d9595ce1393b7c24fea32fa1fd811874'
+          assert row['admission_unit_id']=='RAU-532ee826fbf30b195484'
+          assert row['requirement_id']=='RSK-OGE_COD-6-1-P024'
+          assert row['packet_group']=='RUS-SEM-REVIEW-001'
+          assert row['source_id']=='FIPI-OGE-RU-2026-FINAL'
+          assert row['document_id']=='OGE_COD'
+          assert row['content_code']=='6.1'
+          assert row['source_locator']=='FIPI-OGE-RU-2026-FINAL/OGE_COD p.24 6.1'
+          assert row['disposition']=='ROUTE_OR_FORMAT_ONLY'
+          assert row['authority_kind']=='OBJECT_BOUND_ROUTE_OR_FORMAT_ONLY_EXAM_META_OPERATION'
+          assert row['route_inventory_classification']=='EXAM_ROUTE_ONLY'
+          assert row['exact_route_boundary']['canonical_component_refs']==[]
+          assert row['exact_route_boundary']['bounded_ru_semantic_refs']==[]
+          assert row['exact_route_boundary']['new_school_identity'] is False
+          assert row['exact_route_boundary']['new_subject_identity'] is False
+          assert guard['packet_group_normalized_meaning']=='Анализировать звуковую и буквенную форму языковых единиц.'
+          assert guard['packet_group_normalized_meaning_is_exact_6_1_semantic_authority'] is False
+          assert guard['packet_group_phonetics_meaning_in_6_1_exact_scope'] is False
+          assert guard['whole_group_acceptance_allowed'] is False
+          assert guard['non_target_admission_units_preserved_for_separate_review']==20
+          assert guard['non_target_requirements_preserved_for_separate_review']==21
+          assert mastery['semantic_identity_admissions']==0
+          assert mastery['canonical_component_refs']==[]
+          assert mastery['bounded_ru_semantic_refs']==[]
+          assert mastery['exact_component_mastery_effect']==0
+          assert mastery['object_disposition_can_emit_exact_component_mastery'] is False
+          assert summary['disposed_admission_units']==1
+          assert summary['disposed_requirements']==1
+          assert summary['route_or_format_only_dispositions']==1
+          assert summary['semantic_identity_admissions']==0
+          assert summary['canonical_component_refs_unique']==0
+          assert summary['bounded_ru_semantic_refs']==0
+          assert summary['school_denominator_effect']==0
+          assert summary['false_exact_mastery_admissions']==0
+          assert safety['false_exact_mastery_admissions']==0
+          assert safety['learner_audio_persistence']==0
+          assert safety['accepted_demo_or_scorer_change'] is False
+          assert safety['tilda_change'] is False
+          assert safety['production_peis_write'] is False
+          assert safety['provider_execution'] is False
+          assert safety['public_traffic'] is False
+          assert safety['real_payment_or_refund'] is False
+          assert safety['real_message_delivery'] is False
+          print('OGE_6_1_ROUTE_OR_FORMAT_ONLY_OBJECT_DISPOSITION=1')
+          print('OGE_6_1_SEMANTIC_IDENTITY_ADMISSIONS=0')
+          print('OGE_6_1_CANONICAL_COMPONENT_REFS=0')
+          print('OGE_6_1_BOUNDED_RU_SEMANTIC_REFS=0')
+          print('OGE_6_1_SHARED_PHONETICS_MEANING_QUARANTINED=1')
+          print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
+          print('LEARNER_AUDIO_PERSISTENCE=0')
+          print('RUSSIAN_OGE_6_1_ROUTE_OR_FORMAT_ONLY_STATIC_BINDING=PASS')
+          print('NORMALIZED_SHA256='+d['normalized_sha256'])
+          PY
+      - name: Upload static accepted OGE 6.1 authority
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-1-route-or-format-only-static-authority
+          path: /tmp/oge61-accepted-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          pr_head="${{ github.event.pull_request.head.sha }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...$pr_head" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Exact PR-head diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          pr_head="${{ github.event.pull_request.head.sha }}"
+          git diff --check "origin/${{ github.base_ref }}...$pr_head"
