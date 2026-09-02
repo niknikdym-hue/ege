@@ -19,6 +19,7 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 CURRENT_PROGRESS = HERE / "build_russian_semantic_acceptance_progress_launch_current.py"
+TARGET_AUTHORITY_ID = "RUSSIAN_OGE_6_14_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1"
 
 OFFICIAL_SOURCE_SYSTEM = "OGE_COD"
 OFFICIAL_CODE = "6.14"
@@ -48,6 +49,25 @@ def _normalized_sha(value: dict[str, Any]) -> str:
 
 def _current_progress() -> dict[str, Any]:
     namespace = runpy.run_path(str(CURRENT_PROGRESS))
+
+    # 6.14 must never participate in proving its own prerequisite frontier.  Once
+    # the separately accepted 6.14 authority is integrated into current launch
+    # progress, reconstruct the local derivation view from exactly the prerequisite
+    # authorities that existed before that target admission.  This mutates only the
+    # isolated runpy namespace used by this derivation; repository/current progress
+    # remains unchanged.
+    base_builder = namespace.get("_base_build_progress")
+    if not callable(base_builder):
+        raise RuntimeError("current launch progress no longer exposes its base builder")
+    specs = tuple(base_builder.__globals__.get("OBJECT_AUTHORITIES", ()))
+    target_specs = [spec for spec in specs if len(spec) >= 4 and str(spec[3]) == TARGET_AUTHORITY_ID]
+    if len(target_specs) > 1:
+        raise RuntimeError("current launch progress contains duplicate OGE 6.14 target authorities")
+    if target_specs:
+        base_builder.__globals__["OBJECT_AUTHORITIES"] = tuple(
+            spec for spec in specs if not (len(spec) >= 4 and str(spec[3]) == TARGET_AUTHORITY_ID)
+        )
+
     progress = namespace["build_progress"]()
     if progress.get("status") != "CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS":
         raise RuntimeError("current launch semantic progress is not the accepted in-progress authority")
@@ -56,6 +76,8 @@ def _current_progress() -> dict[str, Any]:
     summary = progress.get("progress_summary") or {}
     if summary.get("false_exact_mastery_admissions") != 0:
         raise RuntimeError("current launch progress contains false exact mastery")
+    if any(str(row.get("id")) == TARGET_AUTHORITY_ID for row in progress.get("accepted_authorities", []) if isinstance(row, dict)):
+        raise RuntimeError("OGE 6.14 target authority leaked into its own prerequisite derivation")
     return progress
 
 
