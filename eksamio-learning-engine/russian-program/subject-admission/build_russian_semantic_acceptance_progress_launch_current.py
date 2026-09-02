@@ -53,6 +53,12 @@ NEW_6_12_AUTHORITY = (
     1,
     "RUSSIAN_OGE_6_12_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
 )
+NEW_6_14_AUTHORITY = (
+    HERE / "RUSSIAN-OGE-6.14-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json",
+    "CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_6_14_CANONICAL_COMPONENT_SET",
+    1,
+    "RUSSIAN_OGE_6_14_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+)
 RECONFIRMED_6_13_AUTHORITY = HERE / "RUSSIAN-OGE-6.13-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
 
 _namespace: dict[str, Any] = runpy.run_path(str(LEGACY))
@@ -66,6 +72,7 @@ for spec in (
     NEW_6_9_AUTHORITY,
     NEW_6_11_AUTHORITY,
     NEW_6_12_AUTHORITY,
+    NEW_6_14_AUTHORITY,
 ):
     if any(existing[3] == spec[3] for existing in _current):
         raise RuntimeError(f"current launch authority duplicated: {spec[3]}")
@@ -83,14 +90,6 @@ def _accepted_rows(authority: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def _validate_6_13_reconfirmation_without_double_count() -> None:
-    """6.13 was already object-bound in the historical OGE exact authority.
-
-    The new authority adds current owner/evidence proof, but it must not be appended
-    to OBJECT_AUTHORITIES because that would count the same admission unit and
-    requirement twice. Fail closed unless the reconfirmed decision is the same
-    object and the same five canonical owners with the same exact-mastery guard.
-    """
-
     current = json.loads(RECONFIRMED_6_13_AUTHORITY.read_text(encoding="utf-8"))
     legacy = json.loads(LEGACY_OGE_AUTHORITY.read_text(encoding="utf-8"))
     current_rows = _accepted_rows(current)
@@ -100,8 +99,7 @@ def _validate_6_13_reconfirmation_without_double_count() -> None:
     unit_id = str(current_row.get("admission_unit_id", ""))
     requirement_id = str(current_row.get("requirement_id", ""))
     legacy_matches = [
-        row
-        for row in _accepted_rows(legacy)
+        row for row in _accepted_rows(legacy)
         if str(row.get("admission_unit_id", "")) == unit_id
         or str(row.get("requirement_id", "")) == requirement_id
     ]
@@ -144,6 +142,7 @@ def main() -> int:
         s = result["progress_summary"]
         print("RUSSIAN_SEMANTIC_ACCEPTANCE_PROGRESS_CURRENT=PASS")
         print("OGE_6_13_ACCEPTANCE=LEGACY_OBJECT_RECONFIRMED_NO_COUNT_DELTA")
+        print("OGE_6_14_ACCEPTANCE=CURRENT_OBJECT_ACCEPTED_COUNT_DELTA_1")
         print(f"accepted_authorities={len(result['accepted_authorities'])}")
         for key in (
             "semantic_units_with_accepted_component_sets",
