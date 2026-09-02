@@ -1,0 +1,217 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-09-01",
+  "status": "CURRENT_LAUNCH_OGE_6_11_COMPONENT_EVIDENCE_CANDIDATE_NO_OBJECT_ADMISSION",
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "target": {
+    "source_id": "FIPI-OGE-RU-2026-FINAL",
+    "document_id": "OGE_COD",
+    "content_code": "6.11"
+  },
+  "evidence_policy": {
+    "reuse_first": true,
+    "existing_exact_inventory_evidence_must_be_audited": true,
+    "new_semantic_identity_created": false,
+    "exact_owner_frontier_may_change_here": false,
+    "each_item_must_reference_exactly_one_school_semantic": true,
+    "minimum_independent_items_per_owner": 3,
+    "component_specific_independent_evidence_required": true,
+    "route_attempt_can_emit_exact_component_mastery": false,
+    "evidence_readiness_is_object_acceptance": false,
+    "cross_route_reuse_used": false
+  },
+  "owner_evidence": [
+    {
+      "canonical_ref": "school-conjunction-solid-separate-spelling-base",
+      "title_ru": "Союзы и союзные сочетания: слитное или раздельное написание и омонимическая граница",
+      "semantic_boundary": "Проверяется слитное или раздельное написание союзов и союзных сочетаний вместе с обязательным различением омонимичных сочетаний знаменательных слов с частицами или местоимениями; ответ нельзя переносить на предлоги, частицы НЕ/НИ или иные части речи только по внешнему сходству.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge611-conj-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание: «Я пришёл, ___ спокойно обсудить план».",
+          "options": ["чтобы", "что бы", "что-бы"],
+          "correct_option_index": 0,
+          "feedback": "Здесь «чтобы» — союз цели: его нельзя разложить на местоимение «что» и частицу «бы» без разрушения связи частей предложения.",
+          "school_semantic_refs": ["school-conjunction-solid-separate-spelling-base"]
+        },
+        {
+          "id": "oge611-conj-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание: «Он ___ согласился участвовать в обсуждении».",
+          "options": ["также", "так же", "так-же"],
+          "correct_option_index": 0,
+          "feedback": "В значении «и он тоже» употребляется союз «также» слитно; раздельное «так же» требует значения способа и обычно соотносится с «как».",
+          "school_semantic_refs": ["school-conjunction-solid-separate-spelling-base"]
+        },
+        {
+          "id": "oge611-conj-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни «Он также пришёл на встречу» и «Он сделал так же, как вчера». Объясни, почему в первом случае написание слитное, а во втором раздельное.",
+          "answer_outline": "В первом предложении «также» — союз со значением добавления, близким к «тоже». Во втором «так» сохраняет значение способа действия, а «же» — частица; наличие соотнесения «как вчера» подтверждает раздельное написание.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: в первом примере «также» распознано как союз со значением добавления",
+              "1: во втором примере «так же» разобрано как указательное слово со значением способа + частица, с опорой на «как»"
+            ]
+          },
+          "school_semantic_refs": ["school-conjunction-solid-separate-spelling-base"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-nonnegative-particle-separate-hyphen-spelling-base",
+      "title_ru": "Неотрицательные частицы: раздельное и дефисное написание",
+      "semantic_boundary": "Проверяется написание неотрицательных частиц: раздельное у бы/б, же/ж, ли/ль и дефисное у нормативных постпозитивных частиц вроде -ка и -таки. Этот компонент специально не включает НЕ/НИ, которые имеют отдельный принятый owner frontier OGE 6.9.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge611-part-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативный вариант: «Я ___ предупредил его заранее».",
+          "options": ["бы", "-бы", "бы-"],
+          "correct_option_index": 0,
+          "feedback": "Частица «бы» пишется отдельно от слова, к которому относится: «я бы предупредил».",
+          "school_semantic_refs": ["school-nonnegative-particle-separate-hyphen-spelling-base"]
+        },
+        {
+          "id": "oge611-part-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное оформление: «Скажи___, когда начнётся встреча».",
+          "options": ["-ка", " ка", "ка-"],
+          "correct_option_index": 0,
+          "feedback": "Постпозитивная частица «-ка» присоединяется к слову через дефис: «скажи-ка».",
+          "school_semantic_refs": ["school-nonnegative-particle-separate-hyphen-spelling-base"]
+        },
+        {
+          "id": "oge611-part-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Объясни разницу в оформлении частиц в сочетаниях «сделал бы», «скажи же», «проверь ли» и «скажи-ка», «всё-таки». Укажи, почему это правило не даёт ответа о НЕ/НИ.",
+          "answer_outline": "Бы/б, же/ж и ли/ль пишутся раздельно. -Ка и -таки в соответствующих позициях оформляются через дефис. НЕ/НИ исключены из этого owner: их выбор и написание регулируются отдельной системой отрицательных частиц.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: верно указано раздельное написание бы/же/ли",
+              "1: верно указано дефисное оформление -ка и -таки в приведённых моделях",
+              "1: явно исключено ложное распространение правила на НЕ/НИ"
+            ]
+          },
+          "school_semantic_refs": ["school-nonnegative-particle-separate-hyphen-spelling-base"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-preposition-solid-hyphen-separate-base",
+      "title_ru": "Предлоги: слитное, дефисное и раздельное написание; производный предлог vs свободное сочетание",
+      "semantic_boundary": "Проверяется орфография производных и составных предлогов вместе с функциональной границей «предлог — омонимичное знаменательное сочетание». Для точного evidence нужно установить функцию слова в контексте; формальное совпадение букв без синтаксико-смысловой проверки недостаточно.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "mastery_guard": {
+        "minimum_independent_items_required": 3,
+        "component_specific_only": true,
+        "generic_oge_route_result_can_emit_exact_mastery": false,
+        "assisted_attempt_can_count_as_independent_evidence": false
+      },
+      "independent_verification": [
+        {
+          "id": "oge611-prep-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание: «Матч перенесли ___ сильного дождя».",
+          "options": ["вследствие", "в следствие", "в-следствие"],
+          "correct_option_index": 0,
+          "feedback": "Производный предлог со значением причины пишется слитно: «вследствие сильного дождя».",
+          "school_semantic_refs": ["school-preposition-solid-hyphen-separate-base"]
+        },
+        {
+          "id": "oge611-prep-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание: «___ недели шёл ремонт».",
+          "options": ["В течение", "Втечение", "В-течение"],
+          "correct_option_index": 0,
+          "feedback": "Составной производный предлог времени «в течение» пишется раздельно.",
+          "school_semantic_refs": ["school-preposition-solid-hyphen-separate-base"]
+        },
+        {
+          "id": "oge611-prep-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сравни «Вследствие непогоды рейс задержали» и «В следствии по делу обнаружили ошибку». Объясни различие функции и написания выделенных сочетаний.",
+          "answer_outline": "В первом случае «вследствие» — производный предлог причины и пишется слитно. Во втором «в следствии» — предлог «в» + существительное «следствие» в предложном падеже; существительное сохраняет самостоятельное предметное значение, поэтому написание раздельное.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: первый пример распознан как производный предлог причины и объяснено слитное написание",
+              "1: во втором примере распознано самостоятельное существительное с предлогом и объяснено раздельное написание"
+            ]
+          },
+          "school_semantic_refs": ["school-preposition-solid-hyphen-separate-base"]
+        }
+      ]
+    }
+  ],
+  "source_provenance": [
+    {
+      "ref": "../../255-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-D-O36-O45-v0.1.json",
+      "role": "current canonical primary subject authority for O36-O38 service-word owners"
+    },
+    {
+      "ref": "../subject-admission/build_oge_6_11_service_words_exact_owner_resolution.py",
+      "role": "current exact 6.11 owner-set proof"
+    },
+    {
+      "ref": "../../273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+      "role": "reuse-first current reviewed canonical and learner-evidence inventory"
+    },
+    {
+      "ref": "https://doc.fipi.ru/navigator-podgotovki/navigator-oge/ru-9_6_orfografija.pdf",
+      "role": "official FIPI OGE-2026 orthography navigator; 6.11 source object boundary only"
+    }
+  ],
+  "copyright_guard": {
+    "official_source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "commercial_textbook_prose_copied": 0,
+    "learner_prompts_examples_feedback": "ORIGINAL_EKSAMIO"
+  },
+  "summary": {
+    "exact_owner_frontier": 3,
+    "owners_with_materialized_component_evidence": 3,
+    "independent_items_total": 9,
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "requirements_closed": 0,
+    "false_exact_mastery_admissions": 0
+  },
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "tilda_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_payment_or_refund": false,
+    "real_message_delivery": false
+  }
+}

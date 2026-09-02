@@ -1,0 +1,167 @@
+name: Russian OGE 6.14 current exact acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_current_exact_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.14-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_current_exact_component_derivation.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit_v5.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_object_identity_binding_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
+      - ".github/workflows/russian-oge-6-14-current-exact-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  current-exact-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile exact acceptance candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile "$root/build_oge_6_14_current_exact_acceptance.py"
+      - name: Build deterministic exact acceptance candidate twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_oge_6_14_current_exact_acceptance.py" --output /tmp/oge-6-14-acceptance-a.json > /tmp/oge-6-14-acceptance-a.txt
+          python3 "$root/build_oge_6_14_current_exact_acceptance.py" --output /tmp/oge-6-14-acceptance-b.json > /tmp/oge-6-14-acceptance-b.txt
+          cmp /tmp/oge-6-14-acceptance-a.json /tmp/oge-6-14-acceptance-b.json
+          diff -u /tmp/oge-6-14-acceptance-a.txt /tmp/oge-6-14-acceptance-b.txt
+          cat /tmp/oge-6-14-acceptance-a.txt
+      - name: Verify exact orthography-only object acceptance candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/oge-6-14-acceptance-a.json').read_text(encoding='utf-8'))
+          assert d['schema_version']=='0.2.0'
+          assert d['status']=='CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_6_14_CANONICAL_COMPONENT_SET'
+          assert d['semantic_packet_sha256']=='b35fb420f7a6e96ea11f47e321cae0affe363dc5ed8d6fb79ea8640ac5ac94c4'
+          assert d['object_accounting_sha256']=='f3aef83dab99b554a4cdec9ef8d8fbc8036d557182259ae69db182efa11b925c'
+          assert len(d['decisions'])==1
+          x=d['decisions'][0]
+          assert x['admission_unit_id']=='RAU-af3fa30939d38a3ea03d'
+          assert x['requirement_id']=='RSK-OGE_COD-6-14-P025'
+          assert x['source_id']=='FIPI-OGE-RU-2026-FINAL'
+          assert x['document_id']=='OGE_COD'
+          assert x['content_code']=='6.14'
+          assert x['disposition']=='PARTIAL_OR_COMPOSITE'
+          assert x['component_count']==83
+          assert len(x['canonical_component_refs'])==83
+          assert len(set(x['canonical_component_refs']))==83
+          assert x['canonical_component_refs']==sorted(x['canonical_component_refs'])
+          assert all(ref.startswith('school-') for ref in x['canonical_component_refs'])
+          semantic=x['exact_semantic_boundary']
+          assert semantic['official_label_ru']=='Орфографический анализ'
+          assert semantic['overlay_topic']=='orthographic analysis'
+          assert semantic['overlay_note']=='Rule identification/application over existing skills; zero school-count effect.'
+          assert semantic['operation_scope']=='ORTHOGRAPHY_RULE_IDENTIFICATION_AND_APPLICATION_OVER_EXISTING_SKILLS'
+          assert semantic['orthography_review_boundary_ref']=='review-boundary:899bdadfe84d'
+          assert semantic['punctuation_in_scope'] is False
+          contamination=x['review_group_contamination_guard']
+          assert contamination['packet_group']=='RUS-SEM-REVIEW-056'
+          assert contamination['punctuation_boundary_ref']=='review-boundary:cf5ab34773b8'
+          assert contamination['punctuation_boundary_excluded_from_6_14_exact_scope'] is True
+          assert contamination['accounting_group_normalized_meaning_used_as_exact_scope'] is False
+          r=x['evidence_readiness']
+          assert r['current_exact_component_derivation_normalized_sha256']=='1b792cb24ea88873fb3317d74fa12977a648683727f2e381281554a73c898829'
+          assert r['final_effective_evidence_audit_normalized_sha256']=='cb106fb78cf66ec77daa25662bdd7db931dc4a8108e4de2dcfd84780f6bd6036'
+          assert r['object_identity_and_scope_binding_normalized_sha256']=='7ae02137a36dd87bad5672287277c69f5f3c6b1f670ec114924a1e4a7def0303'
+          assert r['historical_reuse_exhaustion_normalized_sha256']=='9aae09034623cdd73c043bd5c515b9a8271e422d6cac70205300daceaa5a6773'
+          assert r['owners_with_valid_component_evidence']==83
+          assert r['independent_items_total']==262
+          assert r['effective_wave_002_items']==48
+          assert r['structured_repair_replaced_items']==6
+          assert r['structured_repair_additional_items']==0
+          assert r['structured_branch_coverage_complete'] is True
+          m=x['mastery_boundary']
+          assert m['route_or_broad_composite_attempt_can_emit_exact_component_mastery'] is False
+          assert m['component_specific_independent_evidence_required'] is True
+          assert m['validated_exact_component_item_may_support_only_its_single_canonical_ref'] is True
+          assert d['policy']['exact_object_scope_is_orthography_only'] is True
+          assert d['policy']['punctuation_review_boundary_excluded'] is True
+          assert d['policy']['combined_review_group_meaning_used_as_exact_6_14_semantics'] is False
+          s=d['summary']
+          assert s['accepted_admission_units']==1 and s['accepted_requirements']==1
+          assert s['canonical_component_refs_unique']==83
+          assert s['independent_component_evidence_items']==262
+          assert s['new_school_canonical_identities_materialized_in_current_authority_chain']==0
+          assert s['punctuation_boundaries_admitted']==0
+          assert s['ru_proposal_identities_admitted']==0
+          assert s['false_exact_mastery_admissions']==0
+          safe=d['safety']
+          assert safe['learner_audio_persistence']==0
+          assert safe['accepted_demo_or_scorer_change'] is False
+          assert safe['tilda_change'] is False
+          assert safe['production_peis_write'] is False
+          assert safe['provider_execution'] is False
+          assert safe['public_traffic'] is False
+          assert safe['real_payment_or_refund'] is False
+          assert safe['real_message_delivery'] is False
+          digest=d.pop('normalized_sha256')
+          actual=hashlib.sha256(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')).hexdigest()
+          assert digest==actual
+          print('RUSSIAN_OGE_6_14_EXACT_ACCEPTANCE_CANDIDATE=PASS')
+          print('OGE_6_14_EXACT_SCOPE_ORTHOGRAPHY_ONLY=1')
+          print('OGE_6_14_PUNCTUATION_BOUNDARIES_ADMITTED=0')
+          print('OGE_6_14_EXACT_OWNER_FRONTIER=83')
+          print('OGE_6_14_INDEPENDENT_COMPONENT_EVIDENCE_ITEMS=262')
+          print('OGE_6_14_AGGREGATE_DELTA_AFTER_ACCEPTANCE_GREEN=1')
+          print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
+          print('LEARNER_AUDIO_PERSISTENCE=0')
+          print('ACCEPTANCE_NORMALIZED_SHA256='+digest)
+          PY
+      - name: Emit compact candidate for repository materialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/oge-6-14-acceptance-a.json').read_text(encoding='utf-8'))
+          print('OGE_6_14_ACCEPTANCE_JSON_BEGIN')
+          print(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':')))
+          print('OGE_6_14_ACCEPTANCE_JSON_END')
+          PY
+      - name: Upload exact acceptance candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-14-current-exact-acceptance-candidate
+          path: /tmp/oge-6-14-acceptance-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          pr_head="${{ github.event.pull_request.head.sha }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...$pr_head" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Exact PR-head diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          pr_head="${{ github.event.pull_request.head.sha }}"
+          git diff --check "origin/${{ github.base_ref }}...$pr_head"

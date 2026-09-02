@@ -1,0 +1,59 @@
+name: Russian RU13 semantic acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU13-EXPRESSIVE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU13-EXPRESSIVE-COMPONENT-BOUNDARY-REVIEW-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SUBJECT-REVIEWED-SETS-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_bounded_subject_semantics.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_content.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-13-EXPRESSIVE-MEANS-WAVE-002-v0.1.json"
+      - ".github/workflows/russian-ru13-semantic-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru13-semantic-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch current PR base
+        run: git fetch --no-tags origin "${{ github.base_ref }}" --depth=1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU13 acceptance validator
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_bounded_subject_semantics.py
+      - name: Preserve full RU13 learner-content gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_content.py > /tmp/ru13-content-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_content.py > /tmp/ru13-content-b.txt
+          diff -u /tmp/ru13-content-a.txt /tmp/ru13-content-b.txt
+          cat /tmp/ru13-content-a.txt
+      - name: Validate bounded RU13 semantics twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_bounded_subject_semantics.py > /tmp/ru13-accept-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru13_expressive_bounded_subject_semantics.py > /tmp/ru13-accept-b.txt
+          diff -u /tmp/ru13-accept-a.txt /tmp/ru13-accept-b.txt
+          cat /tmp/ru13-accept-a.txt
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed in RU13 semantic acceptance.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"

@@ -1,0 +1,177 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-03",
+  "module_title_ru": "Лексика, значение слова, паронимы и фразеология",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "thematic_trainer", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "repository_audited_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[dictionary_sense_selection]",
+      "coverage_note": "Current repository-audited source identity: selection of the relevant sense of a polysemous word from a dictionary entry; evidence_status=confirmed; EGE task route metadata remains route-only."
+    },
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-009"
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-03"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Repository authorities define the target boundary only. Dictionary-style entries, contexts, explanations and practice below are original Eksamio wording and are not copied from FIPI, EDSOO or commercial dictionaries/textbooks."
+  },
+  "identity_boundary": "The semantic id below is a source-backed proposal for bounded subject acceptance. It is not a school canonical identity and cannot close an official admission unit or requirement without a separate exact object binding.",
+  "units": [
+    {
+      "proposed_semantic_id": "ru-lexis-dictionary-sense-selection",
+      "candidate_ref": "candidate-009",
+      "source_taxonomy_id": "dictionary_sense_selection",
+      "title_ru": "Выбор значения многозначного слова по словарной статье",
+      "canonical_explanation": {
+        "short": "Если в задании дана словарная статья с несколькими значениями одного слова, нужно выбрать именно то пронумерованное значение, которое реализуется в предъявленном контексте. Решение опирается одновременно на смысл предложения и признаки каждого значения в статье.",
+        "boundaries": [
+          "Навык применяется, когда словарная статья или её набор пронумерованных значений явно дан в задании.",
+          "Навык не равен общему определению значения слова по контексту без словарной статьи; это соседняя семантика lexical_meaning_in_context.",
+          "Навык не равен проверке того, соответствует ли отдельно предъявленное толкование употреблению слова; это соседняя семантика definition_context_matching.",
+          "Выбор номера значения не доказывает умение различать омонимию и многозначность и не создаёт mastery соседних лексических навыков."
+        ]
+      },
+      "decision_algorithm": [
+        "Прочитай всё предложение с выделенным словом и установи, что именно обозначает слово в этой ситуации.",
+        "Прочитай все предложенные значения словарной статьи, не выбирая первое знакомое.",
+        "Для каждого значения сформулируй короткий диагностический признак: предмет, действие, источник, причина, способ и т. п.",
+        "Подставь смысл каждого значения в исходный контекст и исключи варианты, нарушающие смысл или сочетаемость.",
+        "Выбери один номер значения, который полностью объясняет употребление; если остаются два возможных варианта, вернись к более широкому контексту, а не угадывай по отдельному слову."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Словарная статья: КЛЮЧ — 1) приспособление для отпирания замка; 2) источник воды, выходящий из земли; 3) способ, помогающий решить задачу. Контекст: «Путники остановились у холодного ключа». Какое значение реализовано?",
+          "answer": "2. В контексте речь об источнике воды; признак «холодного» и ситуация остановки у воды исключают значения 1 и 3."
+        },
+        {
+          "prompt": "Словарная статья: КОРЕНЬ — 1) часть растения, закрепляющая его в почве; 2) основная причина или источник явления; 3) часть слова, несущая основное лексическое значение. Контекст: «Нужно найти корень конфликта». Какое значение реализовано?",
+          "answer": "2. Сочетание «корень конфликта» обозначает основную причину, а не часть растения или морфему."
+        },
+        {
+          "prompt": "Словарная статья: СЕТЬ — 1) изделие из переплетённых нитей; 2) совокупность связанных учреждений или устройств; 3) система цифровых соединений. Контекст: «В районе расширили сеть библиотек». Какое значение реализовано?",
+          "answer": "2. Слово обозначает совокупность связанных учреждений."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Нужно выбирать самое частотное или первое значение в статье.",
+          "correction": "Порядок значений не заменяет анализ контекста: выбирается только значение, реализованное в данном употреблении."
+        },
+        {
+          "wrong": "Достаточно найти в толковании одно слово, похожее на соседнее слово из предложения.",
+          "correction": "Совпадение отдельного слова не является доказательством; проверяется смысл всего толкования и его совместимость с контекстом."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p03-dss-u1-g1",
+          "prompt": "В статье три значения слова. Какое действие выполняется до выбора номера?",
+          "expected": "Нужно определить контекстный смысл употребления и прочитать все предложенные значения."
+        },
+        {
+          "id": "p03-dss-u1-g2",
+          "prompt": "Почему нельзя автоматически выбирать первое значение словарной статьи?",
+          "expected": "Потому что номер и частотность не доказывают, какое значение реализовано в конкретном контексте."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p03-dss-u1-i1",
+          "prompt": "Словарная статья: МОСТ — 1) сооружение для перехода через препятствие; 2) то, что связывает две стороны или области. Контекст: «Диалог стал мостом между поколениями». Выбери значение.",
+          "answer": "2"
+        },
+        {
+          "id": "p03-dss-u1-i2",
+          "prompt": "Словарная статья: КАНАЛ — 1) искусственное русло для воды; 2) путь передачи информации. Контекст: «Сообщение пришло по защищённому каналу». Выбери значение.",
+          "answer": "2"
+        },
+        {
+          "id": "p03-dss-u1-i3",
+          "prompt": "Можно ли считать навык выполненным, если ученик угадал номер, но не может связать выбранное толкование с контекстом?",
+          "answer": "Нет. Для независимой проверки нужна связь выбранного значения с признаками контекста."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p03-dss-u1-t1",
+          "prompt": "Ученик выбрал значение «приспособление для замка» для слова «ключ» в предложении «Исследование дало ключ к пониманию процесса», потому что оно стоит первым в статье. Исправь рассуждение.",
+          "answer": "Нужно сопоставить каждое значение с контекстом. Здесь «ключ» означает средство или способ понимания, поэтому выбирается соответствующее переносное значение, а порядок в статье не является аргументом."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p03-dss-u1-r1",
+          "delay_hint": "24h",
+          "prompt": "Что является главным доказательством выбранного номера значения?",
+          "answer": "Полное смысловое соответствие толкования предъявленному контексту."
+        },
+        {
+          "id": "p03-dss-u1-r2",
+          "delay_hint": "7d",
+          "prompt": "Чем dictionary_sense_selection отличается от общего определения значения слова в контексте?",
+          "answer": "Здесь нужно выбрать одно из явно данных значений словарной статьи; без статьи это другой, более общий навык."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p03-dss-u1-v1",
+          "type": "single_choice",
+          "prompt": "Словарная статья: ОКНО — 1) проём в стене для света; 2) свободный промежуток времени в расписании; 3) область интерфейса на экране. Контекст: «Между встречами появилось часовое окно». Какое значение реализовано?",
+          "options": ["1", "2", "3"],
+          "correct_option_index": 1,
+          "feedback": "Контекст расписания указывает на свободный промежуток времени."
+        },
+        {
+          "id": "p03-dss-u1-v2",
+          "type": "constructed_response",
+          "prompt": "Словарная статья: ЛИНИЯ — 1) черта на поверхности; 2) маршрут транспорта; 3) направление деятельности. Контекст: «Компания открыла новую линию исследований». Назови номер значения и укажи один контекстный признак выбора.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: выбран номер 3",
+              "1: объяснение связано с направлением деятельности/исследований, а не с графической чертой или транспортным маршрутом"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "generic_task_result_can_emit_exact_mastery": false,
+        "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "compare an explicitly provided multi-sense dictionary entry with the presented context",
+          "ask the learner to justify the selected sense by contextual evidence",
+          "diagnose selection-by-order or keyword-only mistakes"
+        ],
+        "forbidden": [
+          "inventing a dictionary sense not present in the task",
+          "treating the first sense as correct without contextual proof",
+          "emitting mastery for lexical_meaning_in_context or definition_context_matching from this unit alone"
+        ],
+        "source_refs": [
+          "03-RUSSIAN-SKILL-GRAPH.json#skills[dictionary_sense_selection]",
+          "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-009"
+        ]
+      }
+    }
+  ]
+}

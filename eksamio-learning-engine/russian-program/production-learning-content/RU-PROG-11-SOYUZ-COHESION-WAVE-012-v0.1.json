@@ -1,0 +1,237 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-11",
+  "module_title_ru": "Текст, смысл и межфразовая связь",
+  "scope": {
+    "routes": ["school", "ege", "diagnostic", "tutor"],
+    "source_candidate_ref": "candidate-005",
+    "source_taxonomy_id": "cohesion_conjunction"
+  },
+  "source_provenance": [
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-005",
+      "coverage_note": "Current draft subject candidate; status is preserved and not silently upgraded."
+    },
+    {
+      "kind": "confirmed_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_conjunction]",
+      "coverage_note": "Confirmed repository-audited EGE taxonomy node under text_cohesion, task 26."
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-11"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Source authorities define the bounded skill identity only; all learner-facing examples and practice below are original Eksamio wording."
+  },
+  "identity_boundary": "This file materializes only the proven candidate-specific verification gap. The ru-* id remains non-school-canonical and is admitted only by a separate Central Brain bounded subject-semantic authority; candidate/taxonomy ids remain source refs.",
+  "reuse_review": {
+    "broader_existing_unit_ref": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-cohesion-link-means]",
+    "broader_existing_unit_reused_for_explanation_and_transfer": true,
+    "broader_existing_unit_direct_conjunction_independent_checks": 0,
+    "broader_existing_direct_check_ids": [],
+    "broader_existing_unit_reused_as_exact_candidate_005_mastery_evidence": false,
+    "minimum_component_specific_independent_checks_for_exact_mastery": 2,
+    "new_content_materialized_only_for_proven_component_verification_gap": true,
+    "reason": "The broader cohesion unit mentions conjunctions in explanation and practice, but its independent verification checks a causal adverb and a demonstrative-pronoun substitution. It contains no direct independent conjunction-as-inter-sentence-cohesion check, so it remains explanation/transfer evidence and cannot establish candidate-005 mastery."
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-text-cohesion-conjunction",
+      "title_ru": "Союз как средство межфразовой связи",
+      "canonical_explanation": {
+        "short": "Союз является средством межфразовой связи, когда он не просто присутствует во втором предложении, а выражает отношение этого предложения к предыдущему контексту — например, присоединение, сопоставление или противопоставление. Для exact mastery нужно назвать союз, доказать межфразовую область его действия и объяснить отношение между предложениями.",
+        "boundaries": [
+          "Этот unit не проверяет полную классификацию союзов и все их разряды.",
+          "Наличие союза внутри второго предложения само по себе не доказывает межфразовую связь.",
+          "Пунктуация при союзах и орфография союзных форм не засчитываются как mastery этого semantic.",
+          "Умение назвать смысловое отношение здесь служит доказательством функции союза, но не выдаёт отдельное generic mastery всех отношений между предложениями.",
+          "Generic Task-26 result и общий unit по средствам связи не могут автоматически выдать exact mastery этого component."
+        ]
+      },
+      "decision_algorithm": [
+        "Найди союз во втором предложении или на его границе с предыдущим контекстом.",
+        "Проверь, соединяет ли он смысл второго предложения с первым, а не только части внутри второго предложения.",
+        "Назови отношение, которое союз оформляет между предложениями: присоединение, сопоставление, противопоставление или другое доказуемое отношение.",
+        "Укажи, какие два смысловых фрагмента связывает союз.",
+        "Проверь контрастный вариант: если убрать предыдущее предложение, остаётся ли союз только внутренним элементом второго предложения? Если да, межфразовая функция не доказана.",
+        "Фиксируй mastery только если одновременно доказаны союз, межфразовая область действия и смысловая связующая функция."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Небо затянуло тучами. Но дождь так и не начался.",
+          "answer": "«Но» связывает второе предложение с первым и оформляет противопоставление ожидаемому развитию ситуации."
+        },
+        {
+          "prompt": "Первая версия отчёта была подробной. А вторая оказалась заметно короче.",
+          "answer": "«А» связывает второе предложение с первым через сопоставление двух версий."
+        },
+        {
+          "prompt": "Команда завершила измерения. И сразу началась обработка данных.",
+          "answer": "«И» присоединяет второе сообщение к первому как продолжение одной смысловой последовательности."
+        },
+        {
+          "prompt": "В саду стало тихо. Когда стемнело, у дорожки зажглись фонари.",
+          "answer": "Само наличие «когда» не доказывает candidate-005: здесь союз связывает придаточную и главную части внутри второго предложения; его межфразовая функция по отношению к первому предложению не установлена."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Если во втором предложении есть союз, он автоматически является средством межфразовой связи.",
+          "correction": "Нужно доказать, что союз связывает именно второе предложение с предыдущим контекстом, а не только части внутри одного предложения."
+        },
+        {
+          "wrong": "Достаточно назвать союз «но» или «а» без объяснения функции.",
+          "correction": "Для exact mastery нужно показать межфразовую область действия и смысловое отношение."
+        },
+        {
+          "wrong": "Любое правильно определённое противопоставление уже доказывает mastery candidate-005.",
+          "correction": "Нужно дополнительно установить, что именно союз оформляет это отношение между предложениями."
+        },
+        {
+          "wrong": "Верный ответ на составное задание 26 автоматически доказывает точное владение этим component.",
+          "correction": "Составной результат не заменяет отдельную component-specific независимую проверку."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p11-conj-g1",
+          "prompt": "В паре «Мы ожидали потепления. Но ночью снова ударил мороз» какую роль выполняет «но»?",
+          "expected": "Связывает второе предложение с первым и выражает противопоставление ожиданию."
+        },
+        {
+          "id": "p11-conj-g2",
+          "prompt": "Почему одного факта «во втором предложении есть союз» недостаточно?",
+          "expected": "Союз может связывать только части внутри второго предложения; нужно доказать межфразовую область действия."
+        },
+        {
+          "id": "p11-conj-g3",
+          "prompt": "Какие три компонента обязательны для exact mastery?",
+          "expected": "Сам союз, межфразовая область его действия и доказанное смысловое отношение между предложениями."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p11-conj-i1",
+          "prompt": "«Маршрут казался коротким. Но дорога заняла весь день». Назови средство связи и отношение.",
+          "answer": "Союз «но»; противопоставление ожидания фактическому результату."
+        },
+        {
+          "id": "p11-conj-i2",
+          "prompt": "«Один образец сохранили. А второй отправили в лабораторию». Как работает «а»?",
+          "answer": "Связывает предложения сопоставлением двух образцов и их разных действий."
+        },
+        {
+          "id": "p11-conj-i3",
+          "prompt": "«Экспедиция вернулась. Когда участники отдохнули, начался разбор материалов». Достаточно ли слова «когда» для candidate-005?",
+          "answer": "Нет; «когда» явно связывает части второго сложного предложения, а межфразовая функция по отношению к первому отдельно не доказана."
+        },
+        {
+          "id": "p11-conj-i4",
+          "prompt": "Можно ли выдать mastery, если ученик назвал «но», но не объяснил, какие предложения и какое отношение оно связывает?",
+          "answer": "Нет."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p11-conj-t1",
+          "prompt": "Ученик выписал все союзы из второго предложения. Какой следующий шаг обязателен?",
+          "answer": "Для каждого кандидата проверить, связывает ли он второе предложение с предыдущим контекстом и какое отношение оформляет."
+        },
+        {
+          "id": "p11-conj-t2",
+          "prompt": "Почему навык candidate-005 не равен общему навыку «определять отношения между предложениями»?",
+          "answer": "Здесь отношение нужно доказать именно через функцию союза как средства связи; отношения могут выражаться и другими средствами."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p11-conj-r1",
+          "delay_hint": "24h",
+          "prompt": "Главный тест союза как межфразового средства?",
+          "answer": "Доказать, что он связывает второе предложение с предыдущим и оформляет конкретное смысловое отношение."
+        },
+        {
+          "id": "p11-conj-r2",
+          "delay_hint": "7d",
+          "prompt": "Союз внутри сложного второго предложения автоматически доказывает candidate-005?",
+          "answer": "Нет."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p11-conj-v1",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «Небо быстро прояснилось. Но ветер оставался холодным». Назови средство, область его действия и смысловое отношение.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: союз «но» назван средством связи",
+              "1: доказано, что он связывает второе предложение с первым",
+              "1: отношение определено как противопоставление/контраст"
+            ]
+          }
+        },
+        {
+          "id": "p11-conj-v2",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «Один вариант уже проверили. А второй ещё ждал проверки». Почему «а» является межфразовым средством?",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: «а» распознано как союз",
+              "1: установлено, что союз связывает два предложения через сопоставление первого и второго вариантов",
+              "1: объяснена межфразовая связующая функция, а не просто наличие союза"
+            ]
+          }
+        },
+        {
+          "id": "p11-conj-v3",
+          "type": "constructed_response",
+          "prompt": "Контрастная проверка: «В лаборатории было пусто. Когда включили свет, приборы стали видны». Можно ли только по слову «когда» выдать mastery «Союз как средство межфразовой связи»? Обоснуй.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: ответ «нет»",
+              "1: отмечено, что «когда» связывает придаточную и главную части внутри второго предложения",
+              "1: указано, что межфразовая функция союза по отношению к первому предложению отдельно не доказана"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "source_candidate_ref": "candidate-005",
+        "source_candidate_review_status": "draft",
+        "independent_verification_required": true,
+        "exact_mastery_requires_two_or_more_component_specific_conjunction_checks": true,
+        "generic_task26_result_can_emit_exact_component_mastery": false,
+        "generic_semantic_relation_result_can_emit_this_mastery": false,
+        "broader_link_means_unit_can_emit_exact_conjunction_mastery": false,
+        "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "identifying a conjunction functioning across a concrete sentence boundary",
+          "proving the inter-sentence scope of the conjunction",
+          "naming the semantic relation needed to justify the conjunction's cohesion function",
+          "distinguishing inter-sentence conjunction use from a conjunction operating only inside one sentence"
+        ],
+        "forbidden": [
+          "emitting mastery from generic Task-26 success",
+          "claiming full conjunction taxonomy or punctuation mastery",
+          "emitting candidate-005 from a generic semantic-relation result without conjunction evidence",
+          "calling every conjunction in the second sentence an inter-sentence cohesion device",
+          "using the broader cohesion-link-means result as exact candidate-005 mastery"
+        ]
+      }
+    }
+  ]
+}

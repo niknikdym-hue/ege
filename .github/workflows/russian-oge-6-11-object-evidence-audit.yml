@@ -1,0 +1,79 @@
+name: Russian OGE 6.11 object evidence audit
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/255-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-D-O36-O45-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.11-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_11_service_words_source_bound_frontier_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_11_service_words_exact_owner_resolution.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_11_object_evidence_audit.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_11_component_evidence.py"
+      - ".github/workflows/russian-oge-6-11-object-evidence-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-11-object-evidence-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile object evidence audit
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_11_service_words_source_bound_frontier_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_11_service_words_exact_owner_resolution.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_11_component_evidence.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_11_object_evidence_audit.py
+      - name: Build deterministic object evidence audit twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_oge_6_11_object_evidence_audit.py" --output /tmp/oge-6-11-audit-a.json > /tmp/oge-6-11-audit-a.txt
+          python3 "$root/build_oge_6_11_object_evidence_audit.py" --output /tmp/oge-6-11-audit-b.json > /tmp/oge-6-11-audit-b.txt
+          cmp /tmp/oge-6-11-audit-a.json /tmp/oge-6-11-audit-b.json
+          diff -u /tmp/oge-6-11-audit-a.txt /tmp/oge-6-11-audit-b.txt
+          cat /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'OGE_6_11_OBJECT_EVIDENCE_AUDIT=PASS' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'OFFICIAL_FIPI_SOURCE_OBJECTS=1' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'OFFICIAL_FIPI_EXPLICIT_SUBBRANCHES=0' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'EXACT_OWNER_FRONTIER=3' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'OWNERS_WITH_EXACT_COMPONENT_EVIDENCE=3' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'MATERIALIZED_EXACT_ITEMS=9' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'REUSED_PREEXISTING_EXACT_ITEMS=0' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'READY_FOR_EXACT_OBJECT_ACCEPTANCE=1' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'SEMANTIC_ADMISSIONS=0' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'OBJECT_CLOSURES=0' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/oge-6-11-audit-a.txt
+          grep -Fx 'LEARNER_AUDIO_PERSISTENCE=0' /tmp/oge-6-11-audit-a.txt
+      - name: Upload object evidence audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-11-object-evidence-audit
+          path: /tmp/oge-6-11-audit-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          git diff --check "origin/${{ github.base_ref }}...HEAD"

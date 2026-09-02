@@ -1,0 +1,177 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-03",
+  "module_title_ru": "Лексика, значение слова, паронимы и фразеология",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "thematic_trainer", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "repository_audited_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[definition_context_matching]",
+      "coverage_note": "Current repository-audited source identity: matching a supplied dictionary-style definition to the contextual use of a word; evidence_status=confirmed; EGE task route metadata remains route-only."
+    },
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-010"
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-03"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Repository authorities define only the target boundary. Definitions, contexts, explanations and practice below are original Eksamio wording and are not copied from FIPI, EDSOO or commercial dictionaries/textbooks."
+  },
+  "identity_boundary": "The semantic id below is a source-backed proposal for bounded subject acceptance. It is not a school canonical identity and cannot close an official admission unit or requirement without a separate exact object binding.",
+  "units": [
+    {
+      "proposed_semantic_id": "ru-lexis-definition-context-matching",
+      "candidate_ref": "candidate-010",
+      "source_taxonomy_id": "definition_context_matching",
+      "title_ru": "Сопоставление словарного толкования с употреблением слова в тексте",
+      "canonical_explanation": {
+        "short": "Если в задании дано конкретное толкование слова, нужно проверить, соответствует ли ему употребление слова в предъявленном контексте, либо найти тот контекст, где реализовано именно это толкование. Доказательство строится по смысловым признакам толкования и всего контекста, а не по совпадению отдельных слов.",
+        "boundaries": [
+          "Навык применяется, когда одно конкретное толкование явно предъявлено и его нужно сопоставить с употреблением слова в тексте.",
+          "Навык не равен выбору номера из нескольких значений словарной статьи; это соседняя семантика dictionary_sense_selection.",
+          "Навык не равен самостоятельному определению значения слова по контексту без предъявленного толкования; это соседняя семантика lexical_meaning_in_context.",
+          "Совпадение толкования с одним контекстом не доказывает общий Task-2 mastery и не создаёт mastery соседних лексических навыков."
+        ]
+      },
+      "decision_algorithm": [
+        "Прочитай предъявленное толкование и выдели в нём два-три обязательных смысловых признака.",
+        "Прочитай предложение или фрагмент целиком и установи, что обозначает проверяемое слово именно здесь.",
+        "Сопоставь признаки толкования с контекстным смыслом: каждый обязательный признак должен подтверждаться, а не противоречить контексту.",
+        "Не считай совпадением одинаковое или похожее слово в формулировке: проверяй отношение между предметом, действием, причиной, способом или ролью в ситуации.",
+        "Сделай вывод «соответствует / не соответствует» либо выбери тот контекст, где все обязательные признаки толкования выполняются, и назови один контекстный аргумент."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "Толкование: «основная причина какого-либо явления». Контекст: «Корень ошибки оказался в неверно заданном условии». Соответствует ли употребление слова «корень» толкованию?",
+          "answer": "Да. В контексте слово обозначает причину ошибки; признак «основная причина» прямо подтверждается смыслом предложения."
+        },
+        {
+          "prompt": "Толкование: «свободный промежуток времени в расписании». Контекст: «Мы распахнули окно, чтобы проветрить комнату». Соответствует ли употребление слова «окно» толкованию?",
+          "answer": "Нет. Здесь «окно» обозначает проём в стене, а не промежуток времени."
+        },
+        {
+          "prompt": "Толкование: «направление или способ достижения цели». Какой контекст ему соответствует: А) «Туристы вышли на узкий путь»; Б) «Команда нашла путь к снижению ошибок»?",
+          "answer": "Б. Во втором контексте «путь» означает способ достижения результата; в первом — дорогу."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Если в толковании и предложении есть похожие слова, значение совпадает.",
+          "correction": "Лексическое совпадение само по себе ничего не доказывает: обязательные смысловые признаки толкования должны соответствовать ситуации целиком."
+        },
+        {
+          "wrong": "Если слово многозначное, нужно перечислить все его значения.",
+          "correction": "В этом навыке проверяется только соответствие конкретно предъявленного толкования конкретному употреблению."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p03-dcm-u1-g1",
+          "prompt": "Что нужно сделать первым: искать знакомое слово в предложении или выделить обязательные признаки предъявленного толкования?",
+          "expected": "Сначала выделить обязательные смысловые признаки толкования."
+        },
+        {
+          "id": "p03-dcm-u1-g2",
+          "prompt": "Почему одного совпавшего слова недостаточно для вывода о соответствии?",
+          "expected": "Потому что проверяется смысл всего употребления и выполнение обязательных признаков толкования."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p03-dcm-u1-i1",
+          "prompt": "Толкование: «ряд однородных предметов или явлений, следующих друг за другом». Контекст: «На экране появилась линия предупреждений». Соответствует ли употребление толкованию?",
+          "answer": "Да, если контекст описывает последовательный ряд предупреждений; аргумент должен опираться на признак ряда/последовательности."
+        },
+        {
+          "id": "p03-dcm-u1-i2",
+          "prompt": "Толкование: «средство связи между двумя сторонами». Контекст: «Через реку построили новый мост». Соответствует ли употребление толкованию?",
+          "answer": "Нет. Здесь слово обозначает физическое сооружение, а не переносное средство связи между сторонами."
+        },
+        {
+          "id": "p03-dcm-u1-i3",
+          "prompt": "Ученик ответил «соответствует», но не может назвать ни одного признака толкования, подтверждённого контекстом. Можно ли засчитать независимую проверку?",
+          "answer": "Нет. Нужен хотя бы один корректный контекстный аргумент, связанный с обязательным признаком толкования."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p03-dcm-u1-t1",
+          "prompt": "Толкование: «способ решения трудной задачи». В предложении «Мастер подобрал ключ к шифру» ученик отверг соответствие, потому что слово «ключ» обычно обозначает предмет для замка. Исправь рассуждение.",
+          "answer": "Нужно анализировать именно контекстное употребление. Здесь «ключ к шифру» означает способ решения, поэтому предъявленное толкование соответствует контексту."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p03-dcm-u1-r1",
+          "delay_hint": "24h",
+          "prompt": "Что является главным доказательством соответствия толкования контексту?",
+          "answer": "Совпадение обязательных смысловых признаков толкования с употреблением слова во всём контексте."
+        },
+        {
+          "id": "p03-dcm-u1-r2",
+          "delay_hint": "7d",
+          "prompt": "Чем definition_context_matching отличается от dictionary_sense_selection?",
+          "answer": "Здесь сопоставляется одно явно данное толкование с употреблением; dictionary_sense_selection требует выбрать одно значение из нескольких предъявленных значений словарной статьи."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p03-dcm-u1-v1",
+          "type": "single_choice",
+          "prompt": "Толкование: «перерыв, свободный промежуток времени в расписании». Контекст: «Между двумя встречами образовалось окно». Соответствует ли употребление толкованию?",
+          "options": ["Да", "Нет"],
+          "correct_option_index": 0,
+          "feedback": "Контекст прямо описывает свободный временной промежуток между событиями."
+        },
+        {
+          "id": "p03-dcm-u1-v2",
+          "type": "constructed_response",
+          "prompt": "Толкование: «основная причина явления». Контексты: А) «Корень дерева ушёл глубоко в землю»; Б) «Корень конфликта был в недоверии». Выбери контекст, соответствующий толкованию, и назови один смысловой признак.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: выбран контекст Б",
+              "1: объяснение связано с причиной/источником конфликта, а не с частью растения"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "generic_task_result_can_emit_exact_mastery": false,
+        "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "extract the mandatory semantic features of an explicitly supplied definition",
+          "compare those features with the presented contextual use",
+          "ask the learner for one contextual argument supporting match or mismatch"
+        ],
+        "forbidden": [
+          "inventing an unstated dictionary definition",
+          "turning this unit into selection among multiple numbered dictionary senses",
+          "emitting mastery for lexical_meaning_in_context, dictionary_sense_selection or generic Task-2 from this unit alone"
+        ],
+        "source_refs": [
+          "03-RUSSIAN-SKILL-GRAPH.json#skills[definition_context_matching]",
+          "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-010"
+        ]
+      }
+    }
+  ]
+}

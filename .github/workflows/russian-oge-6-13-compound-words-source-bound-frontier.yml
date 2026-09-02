@@ -1,0 +1,100 @@
+name: Russian OGE 6.13 compound words source-bound frontier
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_13_compound_words_source_bound_frontier_review.py"
+      - ".github/workflows/russian-oge-6-13-compound-words-source-bound-frontier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-bound-frontier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build deterministic OGE 6.13 source frontier twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile "$root/build_oge_6_13_compound_words_source_bound_frontier_review.py"
+          python3 "$root/build_oge_6_13_compound_words_source_bound_frontier_review.py" --output /tmp/oge-6-13-a.json > /tmp/oge-6-13-a.txt
+          python3 "$root/build_oge_6_13_compound_words_source_bound_frontier_review.py" --output /tmp/oge-6-13-b.json > /tmp/oge-6-13-b.txt
+          cmp /tmp/oge-6-13-a.json /tmp/oge-6-13-b.json
+          diff -u /tmp/oge-6-13-a.txt /tmp/oge-6-13-b.txt
+          cat /tmp/oge-6-13-a.txt
+      - name: Verify fail-closed source frontier
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/oge-6-13-a.json').read_text(encoding='utf-8'))
+          src=d['official_source']
+          frontier=d['frontier']
+          safety=d['safety']
+          assert d['status']=='SOURCE_BOUND_FRONTIER_ONLY_EXACT_OWNER_REVIEW_REQUIRED'
+          assert src['source_system']=='OGE_COD'
+          assert src['cycle']==2026
+          assert src['code']=='6.13'
+          assert src['label']=='Правописание сложных и сложносокращённых слов'
+          assert src['explicit_subbranches']==[]
+          assert src['fabricated_subcodes']==0
+          assert frontier['candidate_refs']==[
+              'school-compound-linking-vowel',
+              'school-compound-first-part-without-linking-vowel-system',
+              'school-compound-noun-solid-hyphen-system',
+              'school-compound-adjective-solid-hyphen-separate-system',
+              'school-abbreviations-capitalization-formation',
+          ]
+          assert frontier['candidate_count']==5
+          assert frontier['exact_owner_refs_accepted_now']==[]
+          assert frontier['exact_owner_acceptance_count']==0
+          assert frontier['unresolved_candidate_count']==5
+          assert len(frontier['explicit_adjacent_exclusions'])==6
+          assert safety['semantic_admissions']==0
+          assert safety['object_closures']==0
+          assert safety['new_school_identities']==0
+          assert safety['school_reopen']==0
+          assert safety['false_exact_mastery_admissions']==0
+          assert safety['learner_audio_persistence']==0
+          assert safety['accepted_demo_or_scorer_change'] is False
+          assert safety['production_peis_write'] is False
+          assert safety['provider_execution'] is False
+          assert safety['public_traffic'] is False
+          print('OGE_6_13_SOURCE_BOUND_CANDIDATES=5')
+          print('OGE_6_13_EXACT_OWNER_ADMISSIONS=0')
+          print('OGE_6_13_OBJECT_CLOSURES=0')
+          print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
+          print('LEARNER_AUDIO_PERSISTENCE=0')
+          print('RUSSIAN_OGE_6_13_SOURCE_BOUND_FRONTIER_GUARD=PASS')
+          PY
+      - name: Upload source-bound frontier
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-13-source-bound-frontier
+          path: /tmp/oge-6-13-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"

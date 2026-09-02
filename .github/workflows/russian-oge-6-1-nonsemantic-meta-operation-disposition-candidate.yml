@@ -1,0 +1,143 @@
+name: Russian OGE 6.1 nonsemantic meta-operation disposition candidate
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_1_meta_operation_identity_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_1_nonsemantic_meta_operation_disposition_candidate.py"
+      - ".github/workflows/russian-oge-6-1-nonsemantic-meta-operation-disposition-candidate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nonsemantic-meta-operation-disposition-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build exact OGE 6.1 disposition candidate twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile "$root/build_oge_6_1_nonsemantic_meta_operation_disposition_candidate.py"
+          python3 "$root/build_oge_6_1_nonsemantic_meta_operation_disposition_candidate.py" --output /tmp/oge61-disp-a.json > /tmp/oge61-disp-a.txt
+          python3 "$root/build_oge_6_1_nonsemantic_meta_operation_disposition_candidate.py" --output /tmp/oge61-disp-b.json > /tmp/oge61-disp-b.txt
+          cmp /tmp/oge61-disp-a.json /tmp/oge61-disp-b.json
+          diff -u /tmp/oge61-disp-a.txt /tmp/oge61-disp-b.txt
+          cat /tmp/oge61-disp-a.txt
+      - name: Verify exact nonsemantic object disposition and contamination quarantine
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/oge61-disp-a.json').read_text(encoding='utf-8'))
+          o=d['official_object']
+          route=d['exact_route_truth']
+          guard=d['shared_review_group_contamination_guard']
+          disp=d['proposed_disposition']
+          effect=d['expected_current_launch_effect_after_separate_integration']
+          safety=d['safety']
+          assert d['schema_version']=='0.1.0'
+          assert d['status']=='OGE_6_1_OBJECT_BOUND_NONSEMANTIC_META_OPERATION_DISPOSITION_CANDIDATE'
+          assert d['identity_review_sha256']=='ed0487188fae5cd233f02ac0b09f95b36b3134530f5ffc6a0cb22269fb11a6bf'
+          assert o['admission_unit_id']=='RAU-532ee826fbf30b195484'
+          assert o['requirement_id']=='RSK-OGE_COD-6-1-P024'
+          assert o['packet_group']=='RUS-SEM-REVIEW-001'
+          assert o['source_locator']=='FIPI-OGE-RU-2026-FINAL/OGE_COD p.24 6.1'
+          assert route['inventory_classification']=='EXAM_ROUTE_ONLY'
+          assert route['canonical_component_refs']==[]
+          assert route['bounded_ru_semantic_refs']==[]
+          assert route['new_school_identity'] is False
+          assert route['new_subject_identity'] is False
+          assert guard['packet_group_admission_units']==21
+          assert guard['packet_group_requirements']==22
+          assert guard['packet_group_normalized_meaning']=='Анализировать звуковую и буквенную форму языковых единиц.'
+          assert guard['packet_group_normalized_meaning_is_exact_6_1_semantic_authority'] is False
+          assert guard['packet_group_phonetics_meaning_in_6_1_exact_scope'] is False
+          assert guard['target_admission_units']==1
+          assert guard['target_requirements']==1
+          assert guard['non_target_admission_units_preserved_for_separate_review']==20
+          assert guard['non_target_requirements_preserved_for_separate_review']==21
+          assert guard['whole_group_acceptance_allowed'] is False
+          assert disp['authority_kind']=='OBJECT_BOUND_NONSEMANTIC_EXAM_META_OPERATION'
+          assert disp['subject_review_status']=='CENTRAL_BRAIN_ACCEPTED_NONSEMANTIC_EXAM_META_OPERATION_OBJECT_DISPOSITION'
+          assert disp['object_disposition_units']==1
+          assert disp['object_disposition_requirements']==1
+          assert disp['semantic_identity_admissions']==0
+          assert disp['canonical_component_refs']==[]
+          assert disp['bounded_ru_semantic_refs']==[]
+          assert disp['exact_component_mastery_effect']==0
+          assert disp['school_denominator_effect']==0
+          assert disp['integration_performed_now'] is False
+          assert effect['accepted_authorities']==49
+          assert effect['semantic_units_with_accepted_component_sets']==28
+          assert effect['semantic_requirements_with_accepted_component_sets']==28
+          assert effect['semantic_units_remaining_without_accepted_component_set']==1288
+          assert effect['semantic_requirements_remaining_without_accepted_component_set']==1363
+          assert effect['nonsemantic_object_disposition_units']==1
+          assert effect['nonsemantic_object_disposition_requirements']==1
+          assert effect['subject_disposed_units_total']==29
+          assert effect['subject_disposed_requirements_total']==29
+          assert effect['subject_review_units_remaining']==1287
+          assert effect['subject_review_requirements_remaining']==1362
+          assert effect['canonical_component_refs_reused_unique']==115
+          assert effect['false_exact_mastery_admissions']==0
+          assert safety['false_exact_mastery_admissions']==0
+          assert safety['learner_audio_persistence']==0
+          assert safety['accepted_demo_or_scorer_change'] is False
+          assert safety['tilda_change'] is False
+          assert safety['production_peis_write'] is False
+          assert safety['provider_execution'] is False
+          assert safety['public_traffic'] is False
+          assert safety['real_payment_or_refund'] is False
+          assert safety['real_message_delivery'] is False
+          print('OGE_6_1_OBJECT_BOUND_NONSEMANTIC_META_OPERATION=1')
+          print('OGE_6_1_SHARED_PHONETICS_MEANING_QUARANTINED=1')
+          print('OGE_6_1_CANONICAL_COMPONENT_REFS=0')
+          print('OGE_6_1_BOUNDED_RU_SEMANTIC_REFS=0')
+          print('OGE_6_1_SEMANTIC_IDENTITY_ADMISSIONS=0')
+          print('OGE_6_1_AGGREGATE_DELTA_NOW=0')
+          print('OGE_6_1_EXPECTED_OBJECT_DISPOSITION_DELTA_AFTER_INTEGRATION=1')
+          print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
+          print('LEARNER_AUDIO_PERSISTENCE=0')
+          print('RUSSIAN_OGE_6_1_NONSEMANTIC_DISPOSITION_CANDIDATE_GUARD=PASS')
+          print('NORMALIZED_SHA256='+d['normalized_sha256'])
+          PY
+      - name: Upload exact OGE 6.1 disposition candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-1-nonsemantic-meta-operation-disposition-candidate
+          path: /tmp/oge61-disp-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          pr_head="${{ github.event.pull_request.head.sha }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...$pr_head" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Exact PR-head diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          pr_head="${{ github.event.pull_request.head.sha }}"
+          git diff --check "origin/${{ github.base_ref }}...$pr_head"

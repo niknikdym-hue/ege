@@ -1,0 +1,116 @@
+name: Russian RU03 contextual synonym content adequacy
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru03_contextual_synonym_source_identity_resolution.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru03_contextual_synonym_content_gap_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru03_contextual_synonym_content_adequacy_review.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-03-CONTEXTUAL-SYNONYM-SELECTION-WAVE-008-v0.1.json"
+      - ".github/workflows/russian-ru03-contextual-synonym-content-adequacy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru03-contextual-synonym-content-adequacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile contextual synonym content reviewer
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru03_contextual_synonym_content_adequacy_review.py
+      - name: Build content adequacy review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru03_contextual_synonym_content_adequacy_review.py --output /tmp/ru03-syn-content-a.json > /tmp/ru03-syn-content-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru03_contextual_synonym_content_adequacy_review.py --output /tmp/ru03-syn-content-b.json > /tmp/ru03-syn-content-b.txt
+          cmp /tmp/ru03-syn-content-a.json /tmp/ru03-syn-content-b.json
+          diff -u /tmp/ru03-syn-content-a.txt /tmp/ru03-syn-content-b.txt
+          cat /tmp/ru03-syn-content-a.txt
+          cp /tmp/ru03-syn-content-a.json RU03-CONTEXTUAL-SYNONYM-CONTENT-ADEQUACY-REVIEW.json
+      - name: Verify content review remains fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path('RU03-CONTEXTUAL-SYNONYM-CONTENT-ADEQUACY-REVIEW.json').read_text(encoding='utf-8'))
+          assert data['status'] == 'CENTRAL_BRAIN_RU03_CONTEXTUAL_SYNONYM_CONTENT_ADEQUACY_REVIEW_COMPLETE_NO_ADMISSION'
+          assert data['authority_issue'] == 161
+          assert data['module_id'] == 'RU-PROG-03'
+          source = data['source_identity']
+          assert source['candidate_ref'] == 'candidate-015'
+          assert source['source_taxonomy_id'] == 'contextual_synonym_selection'
+          assert source['source_identity_status'] == 'EXACT_CURRENT_2026_OFFICIAL_SOURCE_CONFIRMED'
+          reuse = data['reuse_first_result']
+          assert reuse['preexisting_exact_content_reusable'] is False
+          assert reuse['candidate_specific_content_gap_proven'] is True
+          assert reuse['broader_neighbor_semantic_id'] == 'ru-lexis-contextual-meaning-polysemy'
+          assert reuse['broader_neighbor_relation'] == 'ADJACENT_BUT_NOT_EXACT'
+          learner = data['learner_content']
+          assert learner['proposed_semantic_id'] == 'ru-lexis-contextual-synonym-text-fit'
+          assert learner['original_examples'] is True
+          assert learner['source_passages_copied'] == 0
+          assert learner['commercial_textbook_bytes'] == 0
+          assert learner['independent_verification_present'] is True
+          assert learner['assistance_recording_required'] is True
+          assert learner['tutor_grounding_bounded'] is True
+          decision = data['review_decision']
+          assert decision['content_exact_for_candidate_015'] is True
+          assert decision['content_duplicate_of_existing_ru03_unit'] is False
+          assert decision['semantic_admission_by_this_review'] is False
+          assert decision['new_school_canonical_identities'] == 0
+          assert decision['object_level_admission_units_closed'] == 0
+          assert decision['object_level_requirements_closed'] == 0
+          assert decision['false_exact_mastery_admissions'] == 0
+          assert decision['next_status'] == 'READY_FOR_SEPARATE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE'
+          policy = data['policy']
+          assert policy['contextual_meaning_mastery_implies_contextual_synonym_mastery'] is False
+          assert policy['generic_task25_result_can_emit_exact_component_mastery'] is False
+          assert policy['component_specific_independent_verification_required'] is True
+          assert policy['content_adequacy_review_is_semantic_admission'] is False
+          assert policy['accepted_demos_or_scorers_may_change'] is False
+          assert data['summary']['semantic_admissions'] == 0
+          assert data['summary']['false_exact_mastery_admissions'] == 0
+          print('RU03_CONTEXTUAL_SYNONYM_CONTENT_ADEQUACY_FAIL_CLOSED_GUARD=PASS')
+          PY
+      - name: Upload contextual synonym content evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru03-contextual-synonym-content-adequacy
+          path: RU03-CONTEXTUAL-SYNONYM-CONTENT-ADEQUACY-REVIEW.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_ref="${{ github.base_ref }}"
+          if [[ -z "$base_ref" ]]; then
+            base_ref="main"
+          fi
+          git fetch --no-tags origin "+refs/heads/${base_ref}:refs/remotes/origin/${base_ref}"
+          if git diff --name-only "origin/${base_ref}...HEAD" | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_ref="${{ github.base_ref }}"
+          if [[ -z "$base_ref" ]]; then
+            base_ref="main"
+          fi
+          git fetch --no-tags origin "+refs/heads/${base_ref}:refs/remotes/origin/${base_ref}"
+          git diff --check "origin/${base_ref}...HEAD"

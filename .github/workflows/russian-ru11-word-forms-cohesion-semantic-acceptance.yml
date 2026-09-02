@@ -1,0 +1,59 @@
+name: Russian RU11 word-forms cohesion semantic acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU11-WORD-FORMS-COHESION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru11_word_forms_cohesion_bounded_subject_semantics.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-11-WORD-FORMS-COHESION-WAVE-013-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json"
+      - ".github/workflows/russian-ru11-word-forms-cohesion-semantic-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru11-word-forms-cohesion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile validator
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru11_word_forms_cohesion_bounded_subject_semantics.py
+      - name: Validate twice
+        run: |
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru11_word_forms_cohesion_bounded_subject_semantics.py > /tmp/a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru11_word_forms_cohesion_bounded_subject_semantics.py > /tmp/b.txt
+          diff -u /tmp/a.txt /tmp/b.txt
+          grep -Fx 'RU11_WORD_FORMS_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE=PASS' /tmp/a.txt
+          grep -Fx 'SOURCE_CANDIDATE_REVIEW_STATUS=draft' /tmp/a.txt
+          grep -Fx 'ACCEPTED_SEMANTIC=ru-text-cohesion-word-forms' /tmp/a.txt
+          grep -Fx 'BROADER_EXISTING_DIRECT_WORD_FORMS_CHECKS=0' /tmp/a.txt
+          grep -Fx 'EXACT_COMPONENT_CHECKS=3' /tmp/a.txt
+          grep -Fx 'OBJECT_CLOSURES=0/0' /tmp/a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/a.txt
+          cat /tmp/a.txt
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_ref="${{ github.base_ref }}"
+          if [[ -z "$base_ref" ]]; then
+            base_ref="main"
+          fi
+          git fetch --no-tags origin "+refs/heads/${base_ref}:refs/remotes/origin/${base_ref}"
+          if git diff --name-only "origin/${base_ref}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Candidate-006 acceptance changed accepted Russian production surfaces.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check

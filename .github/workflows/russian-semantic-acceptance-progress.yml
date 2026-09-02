@@ -1,0 +1,365 @@
+name: Russian semantic acceptance progress
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/**"
+      - "eksamio-learning-engine/russian-program/object-review/**"
+      - "eksamio-learning-engine/russian-program/source-knowledge/**"
+      - "eksamio-learning-engine/russian-program/ege-task-code-relation/**"
+      - "eksamio-learning-engine/russian-program/production-learning-content/**"
+      - "eksamio-learning-engine/264-RUSSIAN-FIPI-2026-EGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - ".github/workflows/russian-semantic-acceptance-progress.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-progress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild bounded subject reviews deterministically
+        shell: bash
+        run: |
+          set -euo pipefail
+          for spec in \
+            "ru01:build_ru01_phonetics_subject_boundary_review.py:validate_ru01_phonetics_bounded_subject_semantics.py" \
+            "ru04:build_ru04_morphemics_subject_boundary_review.py:validate_ru04_morphemics_bounded_subject_semantics.py" \
+            "ru05:build_ru05_wordformation_subject_boundary_review.py:validate_ru05_wordformation_bounded_subject_semantics.py" \
+            "ru06:build_ru06_morphology_subject_boundary_review.py:validate_ru06_morphology_bounded_subject_semantics.py"
+          do
+            IFS=: read -r tag builder validator <<< "$spec"
+            root="eksamio-learning-engine/russian-program/subject-admission"
+            python3 "$root/$builder" --output "/tmp/${tag}-a.json" > "/tmp/${tag}-a.txt"
+            python3 "$root/$builder" --output "/tmp/${tag}-b.json" > "/tmp/${tag}-b.txt"
+            cmp "/tmp/${tag}-a.json" "/tmp/${tag}-b.json"
+            diff -u "/tmp/${tag}-a.txt" "/tmp/${tag}-b.txt"
+            python3 "$root/$validator"
+          done
+
+      - name: Validate accepted bounded semantics twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          validators=(
+            validate_ru02_normative_stress_bounded_subject_semantics.py
+            validate_ru03_contextual_meaning_bounded_subject_semantics.py
+            validate_ru03_paronym_bounded_subject_semantics.py
+            validate_ru03_dictionary_sense_bounded_subject_semantics.py
+            validate_ru03_definition_context_bounded_subject_semantics.py
+            validate_ru03_lexical_redundancy_bounded_subject_semantics.py
+            validate_ru03_lexical_collocation_bounded_subject_semantics.py
+            validate_ru03_phraseologism_identification_bounded_subject_semantics.py
+            validate_ru03_contextual_synonym_bounded_subject_semantics.py
+            validate_ru07_numeral_oblique_case_bounded_subject_semantics.py
+            validate_ru07_comparative_degree_bounded_subject_semantics.py
+            validate_ru09_syntax_bounded_subject_semantics.py
+            validate_ru11_content_statement_verification_bounded_subject_semantics.py
+            validate_ru11_reasoning_identification_bounded_subject_semantics.py
+            validate_ru11_semantic_relation_bounded_subject_semantics.py
+            validate_ru11_narration_identification_bounded_subject_semantics.py
+            validate_ru11_description_identification_bounded_subject_semantics.py
+            validate_ru11_cohesion_gap_grammatical_fit_bounded_subject_semantics.py
+            validate_ru11_determinative_pronoun_cohesion_bounded_subject_semantics.py
+            validate_ru11_ukazatelnoe_pronoun_cohesion_bounded_subject_semantics.py
+            validate_ru11_prityazhatelnoe_pronoun_cohesion_bounded_subject_semantics.py
+            validate_ru11_soyuz_cohesion_bounded_subject_semantics.py
+            validate_ru11_word_forms_cohesion_bounded_subject_semantics.py
+            validate_ru11_cognate_words_cohesion_bounded_subject_semantics.py
+            validate_ru12_genre_address_purpose_bounded_subject_semantics.py
+            validate_ru12_functional_style_bounded_subject_semantics.py
+          )
+          for validator in "${validators[@]}"; do
+            python3 -m py_compile "$root/$validator"
+            tag="${validator%.py}"
+            python3 "$root/$validator" > "/tmp/${tag}-a.txt"
+            python3 "$root/$validator" > "/tmp/${tag}-b.txt"
+            diff -u "/tmp/${tag}-a.txt" "/tmp/${tag}-b.txt"
+            cat "/tmp/${tag}-a.txt"
+          done
+
+      - name: Build semantic acceptance progress twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 -m py_compile "$root/build_russian_semantic_acceptance_progress.py"
+          python3 "$root/build_russian_semantic_acceptance_progress.py" --output /tmp/progress-a.json > /tmp/progress-report-a.txt
+          python3 "$root/build_russian_semantic_acceptance_progress.py" --output /tmp/progress-b.json > /tmp/progress-report-b.txt
+          cmp /tmp/progress-a.json /tmp/progress-b.json
+          diff -u /tmp/progress-report-a.txt /tmp/progress-report-b.txt
+          cat /tmp/progress-report-a.txt
+          cp /tmp/progress-a.json "$root/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json"
+
+      - name: Verify fail-closed progress summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          s = data['progress_summary']
+
+          assert data['schema_version'] == '0.4.0'
+          assert data['status'] == 'CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS'
+          assert data['russian_content_ready'] is False
+
+          expected_authorities = {
+              'RUSSIAN_EGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_PUNCTUATION_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_DIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_INDIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RU16_TASK27_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU16_TASK27_K5_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU15_OGE_EXPOSITION_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU02_NORMATIVE_STRESS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU03_CONTEXTUAL_MEANING_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU03_PARONYM_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU03_DICTIONARY_SENSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU03_DEFINITION_CONTEXT_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU03_LEXICAL_REDUNDANCY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU03_LEXICAL_COLLOCATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU03_PHRASEOLOGISM_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU03_CONTEXTUAL_SYNONYM_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU04_MORPHEMICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU07_NUMERAL_OBLIQUE_CASE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU07_COMPARATIVE_DEGREE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_CONTENT_STATEMENT_VERIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_REASONING_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_SEMANTIC_RELATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_NARRATION_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_DESCRIPTION_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_COHESION_GAP_GRAMMATICAL_FIT_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_DETERMINATIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_DEMONSTRATIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_POSSESSIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_CONJUNCTION_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_WORD_FORMS_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU11_COGNATE_WORDS_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU12_GENRE_ADDRESS_PURPOSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+              'RU12_FUNCTIONAL_STYLE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1',
+          }
+          assert len(data['accepted_authorities']) == 40
+          assert {a['id'] for a in data['accepted_authorities']} == expected_authorities
+
+          subject_counts = {
+              'RU13_EXPRESSIVE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 14,
+              'RU13_EXPRESSIVE_EXISTING_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 10,
+              'RU01_PHONETICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 3,
+              'RU02_NORMATIVE_STRESS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_CONTEXTUAL_MEANING_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_PARONYM_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_DICTIONARY_SENSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_DEFINITION_CONTEXT_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_LEXICAL_REDUNDANCY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_LEXICAL_COLLOCATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_PHRASEOLOGISM_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU03_CONTEXTUAL_SYNONYM_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU04_MORPHEMICS_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 3,
+              'RU05_WORDFORMATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 3,
+              'RU06_MORPHOLOGY_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 3,
+              'RU07_NUMERAL_OBLIQUE_CASE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU07_COMPARATIVE_DEGREE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU09_SYNTAX_CANDIDATES_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 5,
+              'RU11_CONTENT_STATEMENT_VERIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_REASONING_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_SEMANTIC_RELATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_NARRATION_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_DESCRIPTION_IDENTIFICATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_COHESION_GAP_GRAMMATICAL_FIT_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_DETERMINATIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_DEMONSTRATIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_POSSESSIVE_PRONOUN_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_CONJUNCTION_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_WORD_FORMS_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU11_COGNATE_WORDS_COHESION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU12_GENRE_ADDRESS_PURPOSE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+              'RU12_FUNCTIONAL_STYLE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_v0.1': 1,
+          }
+          by_id = {a['id']: a for a in data['accepted_authorities']}
+          for authority_id, count in subject_counts.items():
+              authority = by_id[authority_id]
+              assert authority['authority_kind'] == 'BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE_WITHOUT_OBJECT_BINDING'
+              assert authority['accepted_admission_units'] == 0
+              assert authority['accepted_requirements'] == 0
+              assert authority['accepted_subject_semantics'] == count
+              assert authority['accepted_route_semantics'] == 0
+
+          ru15 = by_id['RU15_OGE_EXPOSITION_BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_v0.1']
+          assert ru15['authority_kind'] == 'BOUNDED_ROUTE_SEMANTIC_ACCEPTANCE_WITHOUT_OBJECT_BINDING'
+          assert ru15['accepted_admission_units'] == 0
+          assert ru15['accepted_requirements'] == 0
+          assert ru15['accepted_route_semantics'] == 4
+          assert ru15['accepted_subject_semantics'] == 0
+
+          indirect = by_id['RUSSIAN_OGE_INDIRECT_SPEECH_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1']
+          assert indirect['authority_kind'] == 'OBJECT_BOUND_CANONICAL_COMPONENT_SET'
+          assert indirect['accepted_admission_units'] == 1
+          assert indirect['accepted_requirements'] == 1
+
+          assert s['finite_semantic_review_groups'] == 74
+          assert s['fully_accepted_semantic_groups'] == 0
+          assert s['review_groups_with_accepted_component_sets'] == 10
+          assert s['semantic_units_with_accepted_component_sets'] == 20
+          assert s['semantic_requirements_with_accepted_component_sets'] == 20
+          assert s['semantic_units_remaining_without_accepted_component_set'] == 1296
+          assert s['semantic_requirements_remaining_without_accepted_component_set'] == 1371
+          assert s['canonical_component_refs_reused_unique'] == 55
+          assert s['accepted_bounded_ru_route_semantics'] == 9
+          assert s['accepted_bounded_ru_subject_semantics'] == 66
+          assert s['accepted_bounded_ru_semantics_total'] == 75
+          assert s['accepted_route_semantics_without_object_binding'] == 9
+          assert s['accepted_subject_semantics_without_object_binding'] == 66
+          assert s['new_semantic_identities_created'] == 0
+          assert s['ru_proposal_identities_admitted'] == 75
+          assert s['false_exact_mastery_admissions'] == 0
+
+          expected_route = {
+              'ru-ege-essay-author-position',
+              'ru-ege-essay-example-semantic-relation',
+              'ru-ege-essay-logical-composition-cohesion',
+              'ru-ege-essay-own-relation-justification',
+              'ru-ege-essay-source-examples-explanation',
+              'ru-oge-exposition-microtheme-preservation',
+              'ru-oge-exposition-compression-across-text',
+              'ru-oge-exposition-logical-cohesion',
+              'ru-oge-exposition-full-draft-verification',
+          }
+          expected_subject = {
+              'ru-expressive-alliteration',
+              'ru-expressive-personification',
+              'ru-expressive-syntactic-parallelism',
+              'ru-expressive-question-answer-form',
+              'ru-expressive-gradation',
+              'ru-expressive-inversion',
+              'ru-expressive-lexical-repetition',
+              'ru-expressive-epiphora',
+              'ru-expressive-antithesis',
+              'ru-expressive-rhetorical-question',
+              'ru-expressive-rhetorical-exclamation',
+              'ru-expressive-polysyndeton',
+              'ru-expressive-asyndeton',
+              'ru-expressive-litotes',
+              'ru-expressive-assonance',
+              'ru-expressive-hyperbole',
+              'ru-expressive-metonymy',
+              'ru-expressive-anaphora',
+              'ru-expressive-parcellation',
+              'ru-expressive-homogeneous-rows',
+              'ru-expressive-address',
+              'ru-expressive-epithet',
+              'ru-expressive-metaphor',
+              'ru-expressive-comparison',
+              'ru-phonetics-sound-letter-relation',
+              'ru-phonetics-vowel-consonant-features',
+              'ru-phonetics-word-analysis-sequence',
+              'ru-orthoepy-normative-stress-selection',
+              'ru-lexis-contextual-meaning-determination',
+              'ru-lexis-paronym-collocation-choice',
+              'ru-lexis-dictionary-sense-selection',
+              'ru-lexis-definition-context-matching',
+              'ru-lexis-redundancy-extra-word',
+              'ru-lexis-collocation-word-replacement',
+              'ru-lexis-phraseologism-fragment-identification',
+              'ru-lexis-contextual-synonym-text-fit',
+              'ru-morphemics-morpheme-base-ending',
+              'ru-morphemics-root-prefix-suffix-analysis',
+              'ru-morphemics-alternation-and-full-analysis',
+              'ru-wordformation-word-vs-form-building',
+              'ru-wordformation-method-identification',
+              'ru-wordformation-analysis-chain',
+              'ru-morphology-part-of-speech-identification',
+              'ru-morphology-permanent-variable-features',
+              'ru-morphology-analysis-sequence',
+              'ru-grammar-numeral-oblique-case',
+              'ru-grammar-comparative-degree-norm',
+              'ru-syntax-government-case-norm',
+              'ru-syntax-indirect-speech-norm',
+              'ru-syntax-uncoordinated-apposition-norm',
+              'ru-syntax-gerundial-agent-norm',
+              'ru-syntax-homogeneous-members-norm',
+              'ru-text-content-statement-verification',
+              'ru-text-reasoning-identification',
+              'ru-text-semantic-relation-between-sentences',
+              'ru-text-narration-identification',
+              'ru-text-description-identification',
+              'ru-text-cohesion-gap-grammatical-fit',
+              'ru-text-cohesion-determinative-pronoun',
+              'ru-text-cohesion-demonstrative-pronoun',
+              'ru-text-cohesion-possessive-pronoun',
+              'ru-text-cohesion-conjunction',
+              'ru-text-cohesion-word-forms',
+              'ru-text-cohesion-cognate-words',
+              'ru-text-genre-address-purpose-identification',
+              'ru-text-functional-style-identification',
+          }
+          assert set(data['accepted_route_semantic_refs']) == expected_route
+          assert set(data['accepted_subject_semantic_refs']) == expected_subject
+          assert set(data['accepted_bounded_ru_semantic_refs']) == expected_route | expected_subject
+          assert 'ru-expressive-rhetorical-address' not in data['accepted_bounded_ru_semantic_refs']
+          assert data['policy']['route_semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
+          assert data['policy']['subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
+
+          touched = [g for g in data['semantic_review_groups'] if g['accepted_component_set_count']]
+          assert len(touched) == 10
+          assert sum(g['accepted_component_set_count'] for g in touched) == 20
+          assert all(g['status'] == 'SUBJECT_ACCEPTANCE_REQUIRED_WITH_ACCEPTED_COMPONENT_SET' for g in touched)
+          assert all(g['remaining_group_action'].startswith('CONTINUE_EXACT_COMPONENT_REVIEW') for g in touched)
+          print('RUSSIAN_SEMANTIC_ACCEPTANCE_PROGRESS_GUARD=PASS')
+          PY
+
+      - name: Upload semantic progress artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-semantic-acceptance-progress
+          path: eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_ref="${{ github.base_ref }}"
+          if [[ -z "$base_ref" ]]; then
+            base_ref="main"
+          fi
+          git fetch --no-tags origin "+refs/heads/${base_ref}:refs/remotes/origin/${base_ref}"
+          if git diff --name-only "origin/${base_ref}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_ref="${{ github.base_ref }}"
+          if [[ -z "$base_ref" ]]; then
+            base_ref="main"
+          fi
+          git fetch --no-tags origin "+refs/heads/${base_ref}:refs/remotes/origin/${base_ref}"
+          git diff --check "origin/${base_ref}...HEAD"

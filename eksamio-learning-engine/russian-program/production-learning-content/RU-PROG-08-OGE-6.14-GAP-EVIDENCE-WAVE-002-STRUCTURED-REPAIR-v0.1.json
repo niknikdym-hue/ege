@@ -1,0 +1,214 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-09-02",
+  "status": "CURRENT_LAUNCH_OGE_6_14_WAVE_002_STRUCTURED_OWNER_REPLACEMENT_EVIDENCE_NO_OBJECT_ADMISSION",
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "target": {
+    "source_id": "FIPI-OGE-RU-2026-FINAL",
+    "document_id": "OGE_COD",
+    "content_code": "6.14",
+    "source_component_code": "6.2",
+    "classification": "EXAM_ONLY_COMPOSITE"
+  },
+  "repair_policy": {
+    "base_pack": "russian-program/production-learning-content/RU-PROG-08-OGE-6.14-GAP-EVIDENCE-WAVE-002-v0.1.json",
+    "base_pack_blob_sha": "ddd2ea9ef01eaf8495c4c64b56bf3f647752223b",
+    "replacement_owner_count": 2,
+    "replacement_item_count": 6,
+    "additional_effective_item_count": 0,
+    "effective_wave_owner_count": 16,
+    "effective_wave_item_count": 48,
+    "exact_owner_frontier": 83,
+    "exact_owner_frontier_may_change_here": false,
+    "new_semantic_identity_created": false,
+    "route_attempt_can_emit_exact_component_mastery": false,
+    "evidence_readiness_is_object_acceptance": false,
+    "keyword_or_fuzzy_reuse_used": false
+  },
+  "canonical_authority_bindings": {
+    "school-double-consonants-morpheme-junction": {
+      "authority": "249-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A3-E-E-Y-DOUBLE-CONSONANTS-v0.1.json#resolution_O08",
+      "authority_blob_sha": "75a53cbfda81dc0b76db0b6aacdbb11268359ba1",
+      "required_branch_ids": [
+        "prefix_root",
+        "stem_suffix_oge_6_2_numeral",
+        "compound_part_junction"
+      ]
+    },
+    "school-i-e-alternating-verb-roots-stressed-a": {
+      "authority": "248-RUSSIAN-SCHOOL-CANONICAL-PRIMARY-COMPLETENESS-WAVE-A2-ALTERNATING-ROOTS-NORMALIZATION-v0.1.json#new_canonical_units",
+      "authority_blob_sha": "999a1016d128394d051e977ca448d43034bf55dd",
+      "required_branch_ids": [
+        "ber_bir",
+        "der_dir",
+        "mer_mir",
+        "per_pir",
+        "ter_tir",
+        "blest_blist",
+        "zheg_zhig",
+        "stel_stil",
+        "chet_chit",
+        "sochetat_sochetanie_traditional_boundary"
+      ]
+    }
+  },
+  "owner_replacements": [
+    {
+      "canonical_ref": "school-double-consonants-morpheme-junction",
+      "source_oge_code": "6.2",
+      "replaces_item_ids": [
+        "oge614-w2-junction-v1",
+        "oge614-w2-junction-v2",
+        "oge614-w2-junction-v3"
+      ],
+      "title_ru": "Двойная согласная на продуктивной границе частей слова",
+      "semantic_boundary": "Проверяется сохранение двух одинаковых согласных на доказанной продуктивной границе: приставка + корень, основа + суффикс (включая принятый OGE 6.2 случай написания НН в числительном «одиннадцать») и граница частей сложного или сокращённого слова. Словарные удвоения внутри русского или заимствованного корня и N/NN суффиксальная морфология сюда не относятся.",
+      "required_branch_ids": [
+        "prefix_root",
+        "stem_suffix_oge_6_2_numeral",
+        "compound_part_junction"
+      ],
+      "independent_verification": [
+        {
+          "id": "oge614-w2r-junction-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание слова, где одинаковые согласные встречаются на границе приставки и корня.",
+          "options": ["расказать", "рассказать", "разсказать"],
+          "correct_option_index": 1,
+          "feedback": "В слове «рассказать» конечное С приставки рас- встречается с начальным С корня -сказ-, поэтому на границе приставки и корня сохраняется СС.",
+          "covered_branch_ids": ["prefix_root"],
+          "school_semantic_refs": ["school-double-consonants-morpheme-junction"]
+        },
+        {
+          "id": "oge614-w2r-junction-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери нормативное написание числительного 11, относящееся к принятому OGE 6.2 случаю двойной согласной.",
+          "options": ["одинадцать", "одиннадцать", "одиннадццать"],
+          "correct_option_index": 1,
+          "feedback": "Нормативно пишется «одиннадцать» с НН. Этот числительный случай закреплён в принятой ветви основы + суффикса данного canonical owner и не переносится на произвольные словарные удвоения.",
+          "covered_branch_ids": ["stem_suffix_oge_6_2_numeral"],
+          "school_semantic_refs": ["school-double-consonants-morpheme-junction"]
+        },
+        {
+          "id": "oge614-w2r-junction-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Объясни написание двойных согласных в «рассказать», «одиннадцать» и «главврач». Для каждого примера назови тип границы, который сохраняет две одинаковые согласные, и укажи, какие словарные удвоения этот компонент не проверяет.",
+          "answer_outline": "«Рассказать» проверяет границу приставка + корень (С + С). «Одиннадцать» представляет принятую для OGE 6.2 ветвь основы + суффикса с НН. «Главврач» проверяет границу частей сложного/сокращённого слова, где встречаются два В. Словарные удвоения внутри корня и отдельная N/NN суффиксальная морфология не выводятся из этого правила.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: верно разграничены три продуктивные ветви canonical owner и каждый пример привязан к своей границе",
+              "1: явно отделены словарные корневые удвоения и отдельная N/NN суффиксальная морфология"
+            ]
+          },
+          "covered_branch_ids": [
+            "prefix_root",
+            "stem_suffix_oge_6_2_numeral",
+            "compound_part_junction"
+          ],
+          "school_semantic_refs": ["school-double-consonants-morpheme-junction"]
+        }
+      ]
+    },
+    {
+      "canonical_ref": "school-i-e-alternating-verb-roots-stressed-a",
+      "source_oge_code": "6.2",
+      "replaces_item_ids": [
+        "oge614-w2-ie-v1",
+        "oge614-w2-ie-v2",
+        "oge614-w2-ie-v3"
+      ],
+      "title_ru": "Структурная группа И/Е в глагольных корнях при последующем ударном -А-",
+      "semantic_boundary": "Проверяется только принятая структурная группа БЕР/БИР, ДЕР/ДИР, МЕР/МИР, ПЕР/ПИР, ТЕР/ТИР, БЛЕСТ/БЛИСТ, ЖЕГ/ЖИГ, СТЕЛ/СТИЛ, ЧЕТ/ЧИТ в текущей академической формулировке при последующем ударном -А-. Традиционные написания «сочетать», «сочетание» сохраняются как отдельная граница внутри этого owner; правило не является универсальной формулой для любых похожих корней.",
+      "required_branch_ids": [
+        "ber_bir",
+        "der_dir",
+        "mer_mir",
+        "per_pir",
+        "ter_tir",
+        "blest_blist",
+        "zheg_zhig",
+        "stel_stil",
+        "chet_chit",
+        "sochetat_sochetanie_traditional_boundary"
+      ],
+      "independent_verification": [
+        {
+          "id": "oge614-w2r-ie-v1",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери строку, где нормативно написаны все пять форм с принятым И/Е-чередованием в корнях БЕР/БИР, ДЕР/ДИР, МЕР/МИР, ПЕР/ПИР и ТЕР/ТИР перед последующим ударным -А-.",
+          "options": [
+            "собирать, задирать, замирать, запирать, вытирать",
+            "соберать, задерать, замерать, заперать, вытерать",
+            "собирать, задерать, замирать, заперать, вытирать"
+          ],
+          "correct_option_index": 0,
+          "feedback": "В принятой структурной группе перед последующим ударным -А- употребляется вариант с И: собирать, задирать, замирать, запирать, вытирать.",
+          "covered_branch_ids": ["ber_bir", "der_dir", "mer_mir", "per_pir", "ter_tir"],
+          "school_semantic_refs": ["school-i-e-alternating-verb-roots-stressed-a"]
+        },
+        {
+          "id": "oge614-w2r-ie-v2",
+          "type": "single_choice",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Выбери строку, где правильно представлены три другие ветви этой же структурной группы перед последующим ударным -А-.",
+          "options": [
+            "блистать, зажигать, расстилать",
+            "блестать, зажегать, расстелать",
+            "блистеть, зажигать, расстелать"
+          ],
+          "correct_option_index": 0,
+          "feedback": "Нормативны «блистать», «зажигать», «расстилать»: эти формы представляют ветви БЛЕСТ/БЛИСТ, ЖЕГ/ЖИГ и СТЕЛ/СТИЛ в принятой структурной группе.",
+          "covered_branch_ids": ["blest_blist", "zheg_zhig", "stel_stil"],
+          "school_semantic_refs": ["school-i-e-alternating-verb-roots-stressed-a"]
+        },
+        {
+          "id": "oge614-w2r-ie-v3",
+          "type": "constructed_response",
+          "evidence_mode": "INDEPENDENT",
+          "prompt": "Сопоставь «вычитать — вычет» и традиционные написания «сочетать», «сочетание». Объясни ветвь ЧЕТ/ЧИТ и почему «сочетать/сочетание» нельзя механически исправлять по общей модели; затем сформулируй границу всего правила без распространения на неродственные корни.",
+          "answer_outline": "В принятой ветви ЧЕТ/ЧИТ форма с последующим ударным -А- представлена И: вычитать; без неё возможен вариант с Е: вычет. «Сочетать» и «сочетание» сохраняют традиционное Е и являются закреплённой внутренней границей owner. Модель относится только к перечисленной структурной группе глагольных корней и не переносится на любые созвучные корни.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: правильно раскрыта ветвь ЧЕТ/ЧИТ и отдельно сохранены традиционные написания «сочетать», «сочетание»",
+              "1: правило ограничено принятой структурной группой и связано с последующим ударным -А-, без ложного универсального мнемонического расширения"
+            ]
+          },
+          "covered_branch_ids": ["chet_chit", "sochetat_sochetanie_traditional_boundary"],
+          "school_semantic_refs": ["school-i-e-alternating-verb-roots-stressed-a"]
+        }
+      ]
+    }
+  ],
+  "copyright_and_source_guard": {
+    "learner_wording": "ORIGINAL_EKSAMIO",
+    "official_source_passages_copied": false,
+    "commercial_textbook_bytes_used": false,
+    "commercial_textbook_prose_copied": false
+  },
+  "summary": {
+    "replacement_owner_count": 2,
+    "replacement_item_count": 6,
+    "additional_effective_item_count": 0,
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "false_exact_mastery_admissions": 0,
+    "new_school_identities": 0
+  },
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "tilda_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_payment_or_refund": false,
+    "real_message_delivery": false
+  }
+}

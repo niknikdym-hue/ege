@@ -1,0 +1,82 @@
+name: Russian OGE 6.13 current exact acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-08-OGE-6.13-COMPONENT-EVIDENCE-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.13-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_13_compound_words_source_bound_frontier_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_13_compound_words_exact_owner_resolution.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_13_object_evidence_audit.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_13_component_evidence.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_13_current_evidence_audit.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_13_current_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
+      - ".github/workflows/russian-oge-6-13-current-exact-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-6-13-current-exact-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile 6.13 acceptance chain
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_13_compound_words_source_bound_frontier_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_13_compound_words_exact_owner_resolution.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_13_object_evidence_audit.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_oge_6_13_component_evidence.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_oge_6_13_current_evidence_audit.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_russian_oge_6_13_current_acceptance.py
+      - name: Validate 6.13 exact acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/validate_russian_oge_6_13_current_acceptance.py" > /tmp/oge-6-13-acceptance-a.txt
+          python3 "$root/validate_russian_oge_6_13_current_acceptance.py" > /tmp/oge-6-13-acceptance-b.txt
+          diff -u /tmp/oge-6-13-acceptance-a.txt /tmp/oge-6-13-acceptance-b.txt
+          cat /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'RUSSIAN_OGE_6_13_CURRENT_ACCEPTANCE=PASS' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'REQUIREMENT_ID=RSK-OGE_COD-6-13-P025' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'ADMISSION_UNIT_ID=RAU-479a0fc6f772ea8434b1' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'PACKET_GROUP=RUS-SEM-REVIEW-054' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'OFFICIAL_FIPI_SOURCE_OBJECTS=1' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'OFFICIAL_FIPI_EXPLICIT_SUBBRANCHES=0' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'EXACT_OWNER_FRONTIER=5' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'REUSED_CURRENT_CANONICAL_OWNERS=5' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'NEW_SCHOOL_CANONICAL_IDENTITIES=0' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'CURRENT_ROUTE_SUPERSESSION_REQUIRED=0' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'INDEPENDENT_COMPONENT_EVIDENCE_ITEMS=15' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'PREEXISTING_EXACT_INVENTORY_ITEMS_REUSED=0' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'ACCEPTED_OBJECT_UNITS=1' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'ACCEPTED_REQUIREMENTS=1' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'FALSE_EXACT_MASTERY=0' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'LEARNER_AUDIO_PERSISTENCE=0' /tmp/oge-6-13-acceptance-a.txt
+          grep -Fx 'ACCEPTANCE_NORMALIZED_SHA256=c1334e8348c24b3a8cd7d2612a0f5643c92e6b74991119c3e0b3767439a18e4d' /tmp/oge-6-13-acceptance-a.txt
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          git diff --check "origin/${{ github.base_ref }}...HEAD"

@@ -1,0 +1,72 @@
+name: Russian RU15 OGE exposition semantic acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru15_oge_exposition_route_boundary_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU15-OGE-EXPOSITION-BOUNDED-ROUTE-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru15_oge_exposition_bounded_route_semantics.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/PR139-RIGHTS-BLOCKED-SALVAGE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-15-OGE-COMPRESSED-EXPOSITION-WAVE-001-v0.1.json"
+      - "eksamio-learning-engine/russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - ".github/workflows/russian-ru15-oge-exposition-semantic-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru15-oge-exposition-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch current PR base
+        run: git fetch --no-tags origin "${{ github.base_ref }}" --depth=1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU15 boundary and validator
+        run: |
+          python3 -m py_compile \
+            eksamio-learning-engine/russian-program/subject-admission/build_ru15_oge_exposition_route_boundary_review.py \
+            eksamio-learning-engine/russian-program/subject-admission/validate_ru15_oge_exposition_bounded_route_semantics.py
+      - name: Build RU15 route boundary twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru15_oge_exposition_route_boundary_review.py --output /tmp/ru15-a.json > /tmp/ru15-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru15_oge_exposition_route_boundary_review.py --output /tmp/ru15-b.json > /tmp/ru15-b.txt
+          cmp /tmp/ru15-a.json /tmp/ru15-b.json
+          diff -u /tmp/ru15-a.txt /tmp/ru15-b.txt
+          cat /tmp/ru15-a.txt
+          cp /tmp/ru15-a.json eksamio-learning-engine/russian-program/subject-admission/RU15-OGE-EXPOSITION-ROUTE-BOUNDARY-REVIEW.json
+      - name: Validate accepted RU15 bounded route semantics twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru15_oge_exposition_bounded_route_semantics.py > /tmp/ru15-validation-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru15_oge_exposition_bounded_route_semantics.py > /tmp/ru15-validation-b.txt
+          diff -u /tmp/ru15-validation-a.txt /tmp/ru15-validation-b.txt
+          cat /tmp/ru15-validation-a.txt
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
+      - name: Upload RU15 boundary evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru15-oge-exposition-route-boundary
+          path: eksamio-learning-engine/russian-program/subject-admission/RU15-OGE-EXPOSITION-ROUTE-BOUNDARY-REVIEW.json
+          if-no-files-found: error
+          retention-days: 14

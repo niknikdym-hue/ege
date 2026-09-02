@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU16_TASK27_K1_K3_ROUTE_SEMANTICS",
+  "authority_issue": 161,
+  "scope": "EGE_2026_TASK_27_K1_K3_WITH_K2_DECOMPOSED",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "authority": {
+    "tier_a_task27_route": "russian-program/ege-task-code-relation/FIPI-EGE-2026-TASK-CODE-RELATION-v1.0.json#task=27",
+    "tier_a_fipi_spec_sha256": "3b71ec81f954bc32b574a0b3b997ee37bb3bc19ae8825f11217fd7149198b476",
+    "tier_a_locator": "printed_page=20;pdf_page=10;panel=right;task=27",
+    "tier_a_content_codes": ["1.4", "1.5"],
+    "tier_a_checked_requirement_codes": ["1.5", "1.7"],
+    "tier_a_max_primary_score": 22,
+    "tier_b_component_boundary": "53-RUSSIAN-ESSAY-27-CRITERIA-MAP-2026.json#criteria[K1..K3]",
+    "semantic_inventory": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json"
+  },
+  "policy": {
+    "tier_b_may_refine_but_not_expand_tier_a": true,
+    "criterion_label_is_not_semantic_identity": true,
+    "criterion_score_implies_semantic_mastery": false,
+    "generic_essay_attempt_can_emit_exact_component_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "k2_components_must_remain_separate": true,
+    "k4_k6_admitted_by_this_slice": false,
+    "k7_k10_admitted_by_this_slice": false,
+    "candidate_053_general_essay_role": false
+  },
+  "summary": {
+    "accepted_route_semantics": 4,
+    "accepted_criteria_routes": 3,
+    "k2_semantic_components": 2,
+    "accepted_ru_route_semantics": 4,
+    "new_school_canonical_identities": 0,
+    "k4_k6_acceptances": 0,
+    "k7_k10_acceptances": 0,
+    "false_exact_mastery_admissions": 0
+  },
+  "decisions": [
+    {
+      "candidate_ref": "candidate-048",
+      "source_taxonomy_id": "author_position_formulation",
+      "accepted_semantic_id": "ru-ege-essay-author-position",
+      "label_ru": "Формулирование позиции автора по проблеме исходного текста",
+      "criterion_route": "K1",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json",
+      "mastery_boundary": "K1 route scoring does not itself prove independent semantic mastery; component-specific verification is required."
+    },
+    {
+      "candidate_ref": "candidate-049",
+      "source_taxonomy_id": "textual_comment_examples",
+      "accepted_semantic_id": "ru-ege-essay-source-examples-explanation",
+      "label_ru": "Выбор и пояснение двух примеров-иллюстраций из исходного текста",
+      "criterion_route": "K2_COMPONENT",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json",
+      "mastery_boundary": "This is only the examples-plus-explanation component of K2; it cannot represent complete K2 mastery alone."
+    },
+    {
+      "candidate_ref": "candidate-050",
+      "source_taxonomy_id": "example_relation_explanation",
+      "accepted_semantic_id": "ru-ege-essay-example-semantic-relation",
+      "label_ru": "Определение и пояснение смысловой связи между примерами",
+      "criterion_route": "K2_COMPONENT",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json",
+      "mastery_boundary": "This is only the semantic-relation component of K2; it cannot represent complete K2 mastery alone."
+    },
+    {
+      "candidate_ref": "candidate-051",
+      "source_taxonomy_id": "own_position_argumentation",
+      "accepted_semantic_id": "ru-ege-essay-own-relation-justification",
+      "label_ru": "Формулирование и обоснование собственного отношения к позиции автора",
+      "criterion_route": "K3",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_ROUTE_SEMANTIC",
+      "content_ref": "russian-program/production-learning-content/RU-PROG-16-EGE-ESSAY-WAVE-001-v0.1.json",
+      "mastery_boundary": "K3 route scoring does not itself prove independent semantic mastery; component-specific verification is required."
+    }
+  ],
+  "explicit_non_acceptances": [
+    {
+      "candidate_ref": "candidate-054",
+      "proposed_semantic_id": "ru-ege-essay-factual-accuracy",
+      "criterion_route": "K4",
+      "reason": "K4 is criterion-proven, but this first bounded acceptance slice requires a separate current source-verified EGE taxonomy node in addition to Task-27 criterion evidence; candidate-054 remains a separate later decision."
+    },
+    {
+      "candidate_ref": "candidate-052",
+      "proposed_semantic_id": "ru-ege-essay-logical-composition-cohesion",
+      "criterion_route": "K5",
+      "reason": "Bounded route-semantic acceptance remains a separate decision; criterion presence alone is insufficient."
+    },
+    {
+      "candidate_ref": "candidate-055",
+      "proposed_semantic_id": "ru-ege-essay-ethical-norm",
+      "criterion_route": "K6",
+      "reason": "Bounded route-semantic acceptance remains a separate decision; criterion presence alone is insufficient."
+    },
+    {
+      "candidate_ref": "candidate-053",
+      "criterion_route": "K9_CONTRIBUTOR_ONLY",
+      "reason": "Narrow comparison-degree morphology contributor; explicitly forbidden as general K9 or essay-correctness owner."
+    }
+  ],
+  "cross_module_non_acceptances": [
+    {"criterion_route": "K7", "reuse_modules": ["RU-PROG-08"], "status": "EXACT_COMPONENT_REUSE_PENDING"},
+    {"criterion_route": "K8", "reuse_modules": ["RU-PROG-10"], "status": "EXACT_COMPONENT_REUSE_PENDING"},
+    {"criterion_route": "K9", "reuse_modules": ["RU-PROG-07", "RU-PROG-09"], "status": "EXACT_COMPONENT_REUSE_PENDING"},
+    {"criterion_route": "K10", "reuse_modules": ["RU-PROG-14"], "status": "EXACT_COMPONENT_REUSE_PENDING"}
+  ]
+}

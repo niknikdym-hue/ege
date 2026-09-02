@@ -1,0 +1,202 @@
+name: Russian semantic acceptance progress current launch
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-*-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.1-ROUTE-OR-FORMAT-ONLY-META-OPERATION-DISPOSITION-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress*.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_current_exact_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_1_route_or_format_only_acceptance.py"
+      - ".github/workflows/russian-semantic-acceptance-progress-launch-current.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-progress-current-launch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate exact OGE authorities through 6.14 and OGE 6.1 disposition
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/validate_russian_oge_6_2_current_acceptance.py"
+          python3 "$root/validate_oge_6_6_component_evidence.py"
+          python3 "$root/validate_russian_oge_6_7_current_acceptance.py"
+          python3 "$root/validate_russian_oge_6_8_current_acceptance.py"
+          python3 "$root/validate_russian_oge_6_9_current_acceptance.py"
+          python3 "$root/validate_russian_oge_6_11_current_acceptance.py"
+          python3 "$root/validate_russian_oge_6_12_current_acceptance.py"
+          python3 "$root/validate_russian_oge_6_13_current_acceptance.py"
+          python3 "$root/build_oge_6_14_current_exact_acceptance.py" --output /tmp/oge-6-14-regenerated.json
+          cmp /tmp/oge-6-14-regenerated.json "$root/RUSSIAN-OGE-6.14-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+          python3 "$root/build_oge_6_1_route_or_format_only_acceptance.py" --output /tmp/oge-6-1-regenerated.json
+          cmp /tmp/oge-6-1-regenerated.json "$root/RUSSIAN-OGE-6.1-ROUTE-OR-FORMAT-ONLY-META-OPERATION-DISPOSITION-v0.1.json"
+
+      - name: Build current v2 and legacy progress deterministically
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          current="$root/build_russian_semantic_acceptance_progress_launch_current_v2.py"
+          python3 -m py_compile "$current"
+          python3 "$current" --output /tmp/progress-a.json > /tmp/report-a.txt
+          python3 "$current" --output /tmp/progress-b.json > /tmp/report-b.txt
+          cmp /tmp/progress-a.json /tmp/progress-b.json
+          diff -u /tmp/report-a.txt /tmp/report-b.txt
+          python3 "$root/build_russian_semantic_acceptance_progress.py" --output /tmp/progress-legacy.json > /tmp/report-legacy.txt
+          cat /tmp/report-a.txt
+
+      - name: Verify exact 6.14 semantic delta plus 6.1 nonsemantic disposition
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          d=json.loads(Path('/tmp/progress-a.json').read_text(encoding='utf-8'))
+          legacy=json.loads(Path('/tmp/progress-legacy.json').read_text(encoding='utf-8'))
+          s=d['progress_summary']; ls=legacy['progress_summary']
+
+          assert d['schema_version']=='0.5.0'
+          assert d['status']=='CENTRAL_BRAIN_SUBJECT_ACCEPTANCE_IN_PROGRESS'
+          assert d['russian_content_ready'] is False
+          assert d['base_current_launch_progress_sha256']=='3ed606992d2a8d93cfe3797d4e34f8b8c77286c4b02d2bf8bbfa770eff248c72'
+
+          current_ids={a['id'] for a in d['accepted_authorities']}
+          legacy_ids={a['id'] for a in legacy['accepted_authorities']}
+          exact_current_ids={
+              'RUSSIAN_OGE_6_2_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_6_6_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_6_7_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_6_8_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_6_9_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_6_11_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_6_12_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+              'RUSSIAN_OGE_6_14_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1',
+          }
+          disposition_id='RUSSIAN_OGE_6_1_ROUTE_OR_FORMAT_ONLY_META_OPERATION_DISPOSITION_v0.1'
+          assert exact_current_ids.isdisjoint(legacy_ids)
+          assert disposition_id not in legacy_ids
+          assert current_ids == legacy_ids | exact_current_ids | {disposition_id}
+          assert len(d['accepted_authorities']) == 49
+
+          by_id={a['id']:a for a in d['accepted_authorities']}
+          for aid in exact_current_ids:
+              authority=by_id[aid]
+              assert authority['authority_kind']=='OBJECT_BOUND_CANONICAL_COMPONENT_SET'
+              assert authority['accepted_admission_units']==1
+              assert authority['accepted_requirements']==1
+
+          route_only=by_id[disposition_id]
+          assert route_only['authority_kind']=='OBJECT_BOUND_ROUTE_OR_FORMAT_ONLY_EXAM_META_OPERATION'
+          assert route_only['sha256']=='537309ed6eaaac11ade9dfb3f26b68c4d9595ce1393b7c24fea32fa1fd811874'
+          assert route_only['accepted_admission_units']==0
+          assert route_only['accepted_requirements']==0
+          assert route_only['disposed_admission_units']==1
+          assert route_only['disposed_requirements']==1
+          assert route_only['route_or_format_only_dispositions']==1
+          assert route_only['semantic_identity_admissions']==0
+
+          assert s['semantic_units_with_accepted_component_sets'] == ls['semantic_units_with_accepted_component_sets'] + 8 == 28
+          assert s['semantic_requirements_with_accepted_component_sets'] == ls['semantic_requirements_with_accepted_component_sets'] + 8 == 28
+          assert s['semantic_units_remaining_without_accepted_component_set'] == ls['semantic_units_remaining_without_accepted_component_set'] - 8 == 1288
+          assert s['semantic_requirements_remaining_without_accepted_component_set'] == ls['semantic_requirements_remaining_without_accepted_component_set'] - 8 == 1363
+
+          assert s['nonsemantic_object_disposition_units']==1
+          assert s['nonsemantic_object_disposition_requirements']==1
+          assert s['route_or_format_only_object_dispositions']==1
+          assert s['semantic_identity_admissions_from_nonsemantic_object_dispositions']==0
+          assert s['subject_disposed_units_total']==29
+          assert s['subject_disposed_requirements_total']==29
+          assert s['subject_review_units_remaining']==1287
+          assert s['subject_review_requirements_remaining']==1362
+
+          assert s['canonical_component_refs_reused_unique'] == 115
+          assert s['accepted_bounded_ru_route_semantics'] == ls['accepted_bounded_ru_route_semantics'] == 9
+          assert s['accepted_bounded_ru_subject_semantics'] == ls['accepted_bounded_ru_subject_semantics'] == 66
+          assert s['accepted_bounded_ru_semantics_total'] == ls['accepted_bounded_ru_semantics_total'] == 75
+          assert s['false_exact_mastery_admissions']==0
+          assert ls['false_exact_mastery_admissions']==0
+
+          dispositions=d['accepted_nonsemantic_object_dispositions']
+          assert len(dispositions)==1
+          row=dispositions[0]
+          assert row['accepted_authority_id']==disposition_id
+          assert row['admission_unit_id']=='RAU-532ee826fbf30b195484'
+          assert row['requirement_id']=='RSK-OGE_COD-6-1-P024'
+          assert row['packet_group']=='RUS-SEM-REVIEW-001'
+          assert row['document_id']=='OGE_COD'
+          assert row['content_code']=='6.1'
+          assert row['disposition']=='ROUTE_OR_FORMAT_ONLY'
+          assert row['canonical_component_refs']==[]
+          assert row['bounded_ru_semantic_refs']==[]
+          assert row['semantic_identity_admissions']==0
+          assert row['mastery_boundary']['exact_component_mastery_effect']==0
+          assert row['mastery_boundary']['object_disposition_can_emit_exact_component_mastery'] is False
+          assert row['review_group_contamination_guard']['packet_group_normalized_meaning_is_exact_6_1_semantic_authority'] is False
+
+          group=[g for g in d['semantic_review_groups'] if g['group_id']=='RUS-SEM-REVIEW-001']
+          assert len(group)==1
+          group=group[0]
+          assert group['accepted_nonsemantic_object_disposition_count']==1
+          assert len(group['accepted_nonsemantic_object_dispositions'])==1
+          target_component_rows=[
+              r for r in group.get('accepted_component_sets', [])
+              if r.get('admission_unit_id')=='RAU-532ee826fbf30b195484'
+              or r.get('requirement_id')=='RSK-OGE_COD-6-1-P024'
+          ]
+          assert target_component_rows==[]
+
+          print('OGE_6_13_ACCEPTANCE=LEGACY_OBJECT_RECONFIRMED_NO_COUNT_DELTA')
+          print('OGE_6_14_ACCEPTANCE=CURRENT_OBJECT_ACCEPTED_COMPONENT_SET_DELTA_1')
+          print('OGE_6_1_DISPOSITION=CURRENT_OBJECT_ROUTE_OR_FORMAT_ONLY_DELTA_1')
+          print('ACCEPTED_AUTHORITIES=49')
+          print('SEMANTIC_UNITS_WITH_ACCEPTED_COMPONENT_SETS=28')
+          print('SEMANTIC_REQUIREMENTS_WITH_ACCEPTED_COMPONENT_SETS=28')
+          print('SEMANTIC_UNITS_REMAINING_WITHOUT_COMPONENT_SET=1288')
+          print('SEMANTIC_REQUIREMENTS_REMAINING_WITHOUT_COMPONENT_SET=1363')
+          print('NONSEMANTIC_OBJECT_DISPOSITION_UNITS=1')
+          print('NONSEMANTIC_OBJECT_DISPOSITION_REQUIREMENTS=1')
+          print('SUBJECT_DISPOSED_UNITS_TOTAL=29')
+          print('SUBJECT_DISPOSED_REQUIREMENTS_TOTAL=29')
+          print('SUBJECT_REVIEW_UNITS_REMAINING=1287')
+          print('SUBJECT_REVIEW_REQUIREMENTS_REMAINING=1362')
+          print('CANONICAL_COMPONENT_REFS_REUSED_UNIQUE=115')
+          print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
+          print('PROGRESS_NORMALIZED_SHA256='+str(d['normalized_sha256']))
+          print('RUSSIAN_SEMANTIC_ACCEPTANCE_PROGRESS_CURRENT_LAUNCH_GUARD=PASS')
+          PY
+
+      - name: Upload current launch progress
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-semantic-acceptance-progress-current-launch
+          path: /tmp/progress-a.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"

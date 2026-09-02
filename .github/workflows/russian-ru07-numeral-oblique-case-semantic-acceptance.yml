@@ -1,0 +1,94 @@
+name: Russian RU07 numeral oblique-case semantic acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-07-GRAMMAR-NORMS-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru07_grammar_norms_candidate_boundary_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU07-NUMERAL-OBLIQUE-CASE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru07_numeral_oblique_case_bounded_subject_semantics.py"
+      - ".github/workflows/russian-ru07-numeral-oblique-case-semantic-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru07-numeral-oblique-case:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch current PR base
+        run: git fetch --no-tags origin "${{ github.base_ref }}" --depth=1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild RU07 boundary deterministically
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_ru07_grammar_norms_candidate_boundary_review.py" --output /tmp/ru07-a.json > /tmp/ru07-a.txt
+          python3 "$root/build_ru07_grammar_norms_candidate_boundary_review.py" --output /tmp/ru07-b.json > /tmp/ru07-b.txt
+          cmp /tmp/ru07-a.json /tmp/ru07-b.json
+          diff -u /tmp/ru07-a.txt /tmp/ru07-b.txt
+          cat /tmp/ru07-a.txt
+
+      - name: Validate bounded numeral semantic twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          validator="$root/validate_ru07_numeral_oblique_case_bounded_subject_semantics.py"
+          python3 -m py_compile "$validator"
+          python3 "$validator" > /tmp/ru07-num-a.txt
+          python3 "$validator" > /tmp/ru07-num-b.txt
+          diff -u /tmp/ru07-num-a.txt /tmp/ru07-num-b.txt
+          cat /tmp/ru07-num-a.txt
+
+      - name: Verify fail-closed subset boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('eksamio-learning-engine/russian-program/subject-admission/RU07-NUMERAL-OBLIQUE-CASE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          st = data['source_truth']
+          p = data['policy']
+          d = data['decisions'][0]
+          s = data['summary']
+          assert st['candidate_ref'] == 'candidate-026'
+          assert st['candidate_review_status'] == 'draft'
+          assert st['accepted_semantic_is_exact_candidate_equivalent'] is False
+          assert st['accepted_semantic_relation_to_candidate'] == 'BOUNDED_SUBSET'
+          assert p['candidate_ref_admitted'] is False
+          assert p['subset_evidence_can_admit_broader_candidate'] is False
+          assert p['generic_task7_result_can_emit_exact_component_mastery'] is False
+          assert p['subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
+          assert d['accepted_semantic_id'] == 'ru-grammar-numeral-oblique-case'
+          assert d['broader_candidate_status_after_acceptance'] == 'REMAINS_DRAFT_NOT_ADMITTED'
+          assert d['object_binding_status'] == 'NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT'
+          assert s['broader_candidate_records_admitted'] == 0
+          assert s['object_level_admission_units_closed'] == 0
+          assert s['object_level_requirements_closed'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          print('RU07_NUMERAL_SUBSET_FAIL_CLOSED_GUARD=PASS')
+          PY
+
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"

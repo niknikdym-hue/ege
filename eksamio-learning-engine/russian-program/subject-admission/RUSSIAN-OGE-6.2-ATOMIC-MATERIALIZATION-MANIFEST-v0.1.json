@@ -1,0 +1,80 @@
+{
+  "schema_version": "0.1.0",
+  "status": "READY_FOR_ATOMIC_MATERIALIZATION_NOT_APPLIED",
+  "target": {
+    "exam": "OGE-2026 Russian",
+    "content_code": "6.2",
+    "topic": "Правописание корней"
+  },
+  "authority_inputs": [
+    "265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json",
+    "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+    "RUSSIAN-OGE-6.2-SCHOOL-REOPEN-AUTHORITY-IMPACT-AUDIT-v0.1.json",
+    "RUSSIAN-OGE-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+  ],
+  "current_state": {
+    "school_denominator": 185,
+    "new_identity_present": false,
+    "exact_6_2_acceptance_present": false,
+    "legacy_placeholders_present": true,
+    "count_effect_applied_now": 0
+  },
+  "prospective_exact_owner_frontier": {
+    "owner_count": 16,
+    "reused_current_canonical_owner_count": 15,
+    "new_owner_count": 1,
+    "owners": [
+      "school-root-vowel-stress-verification",
+      "school-root-vowel-dictionary-unverifiable",
+      "school-root-o-yo-after-sibilants-base",
+      "school-root-i-y-after-ts-base",
+      "school-root-voiced-voiceless-consonant-verification",
+      "school-unpronounceable-consonant-verification",
+      "school-gor-gar-rare-exception-set",
+      "school-i-e-alternating-verb-roots-stressed-a",
+      "school-kas-kos-a-suffix-alternation",
+      "school-klan-klon-stress-alternation",
+      "school-lag-lozh-polog-exception",
+      "school-rast-rashch-ros-exception-set",
+      "school-skak-skoch-exception-set",
+      "school-zar-zor-stress-alternation",
+      "school-double-consonants-morpheme-junction",
+      "school-root-consonant-dictionary-unverifiable"
+    ],
+    "new_owner": "school-root-consonant-dictionary-unverifiable",
+    "double_consonant_owner": "school-double-consonants-morpheme-junction",
+    "generic_double_consonant_root_owner_admitted": false,
+    "legacy_placeholders_to_remove": [
+      "alternating-root families from file 248",
+      "double-consonant root systems from file 249"
+    ]
+  },
+  "atomic_materialization_plan": {
+    "partial_sync_allowed": false,
+    "required_sync": [
+      "materialize school-root-consonant-dictionary-unverifiable with count_effect=1 under the existing school reopen governance",
+      "replace OGE 6.2 legacy placeholders in 265 with the 16 exact owner refs",
+      "update 273 active school inventory and observed school count from 185 to 186",
+      "add 6.2 exact-component acceptance only after all 16 owners validate fail-closed",
+      "publish a current launch-closure supersession artifact for the bounded 266 zero-gap/185 claim without rewriting historical evidence"
+    ],
+    "projected_school_denominator_after": 186,
+    "materialization_applied": false,
+    "exact_6_2_acceptance_allowed_before_sync": false
+  },
+  "launch_accounting": {
+    "semantic_admissions_this_manifest": 0,
+    "object_closures_this_manifest": 0,
+    "false_exact_mastery_admissions": 0,
+    "bounded_ru_semantic_count_change": 0,
+    "russian_content_status": "BLOCKED_SUBJECT"
+  },
+  "safety": {
+    "production_integration": "HOLD",
+    "accepted_demo_or_scorer_change": false,
+    "learner_audio_persistence": 0,
+    "provider_execution": false,
+    "production_peis_write": false,
+    "public_traffic": false
+  }
+}

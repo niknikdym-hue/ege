@@ -1,0 +1,129 @@
+name: Russian RU02 orthoepy reuse-first boundary review
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_candidate_boundary_review.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-02-ORTHOEPY-STRESS-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - ".github/workflows/russian-ru02-orthoepy-boundary-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru02-orthoepy-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch current PR base
+        run: git fetch --no-tags origin "${{ github.base_ref }}" --depth=1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU02 review builder
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_candidate_boundary_review.py
+      - name: Build RU02 reuse-first review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_candidate_boundary_review.py --output /tmp/ru02-a.json > /tmp/ru02-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_candidate_boundary_review.py --output /tmp/ru02-b.json > /tmp/ru02-b.txt
+          cmp /tmp/ru02-a.json /tmp/ru02-b.json
+          diff -u /tmp/ru02-a.txt /tmp/ru02-b.txt
+          cat /tmp/ru02-a.txt
+          cp /tmp/ru02-a.json RU02-ORTHOEPY-CANDIDATE-BOUNDARY-REVIEW.json
+      - name: Verify fail-closed RU02 outcome
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('RU02-ORTHOEPY-CANDIDATE-BOUNDARY-REVIEW.json').read_text(encoding='utf-8'))
+          assert data['schema_version'] == '0.1.0'
+          assert data['status'] == 'CENTRAL_BRAIN_RU02_ORTHOEPY_REUSE_FIRST_BOUNDARY_REVIEW_ACCEPTANCE_NOT_ADMITTED'
+          assert data['module_id'] == 'RU-PROG-02'
+          assert data['module_binding_mode'] == 'DRAFT_CANDIDATE_BINDING'
+          assert set(data['program_candidate_refs']) == {
+              'candidate-018', 'candidate-019', 'candidate-020', 'candidate-021',
+              'candidate-022', 'candidate-023', 'candidate-024'
+          }
+          assert set(data['proposed_subject_semantic_ids']) == {
+              'ru-orthoepy-stress-form-sensitive',
+              'ru-orthoepy-norm-source-check',
+          }
+          assert len(data['candidate_inventory_snapshot']) == 7
+          statuses = data['candidate_review_status_counts']
+          assert set(statuses) == {'draft', 'needs_review'}
+          assert statuses['draft'] + statuses['needs_review'] == 7
+          decisions = {row['content_semantic_id']: row for row in data['candidate_relation_decisions']}
+          assert set(decisions) == {
+              'ru-orthoepy-stress-form-sensitive',
+              'ru-orthoepy-norm-source-check',
+          }
+          form = decisions['ru-orthoepy-stress-form-sensitive']
+          assert form['candidate_ref'] == 'candidate-018+candidate-021'
+          assert form['relation'] == 'FORM_SENSITIVE_GENERIC_STRESS_WITH_VERB_EXAMPLE_OVERLAP_NO_EXACT_OWNER'
+          assert form['acceptance_effect'] == 'NONE'
+          assert form['no_direct_content_evidence_for_candidate_refs'] == [
+              'candidate-019', 'candidate-020', 'candidate-022', 'candidate-023', 'candidate-024'
+          ]
+          procedure = decisions['ru-orthoepy-norm-source-check']
+          assert procedure['candidate_ref'] == 'none_exact'
+          assert procedure['relation'] == 'SOURCE_VERIFICATION_PROCEDURE_NO_EXACT_DRAFT_CANDIDATE_OWNER'
+          assert procedure['acceptance_effect'] == 'NONE'
+          reuse = data['reuse_review']
+          assert reuse['current_proposed_id_collisions'] == 0
+          assert reuse['exact_existing_owner_reuses_admitted'] == 0
+          assert reuse['cross_candidate_content_relations'] == 1
+          assert reuse['source_verification_procedure_relations'] == 1
+          assert reuse['exact_candidate_equivalence_proven'] == 0
+          assert reuse['school_registry_mutation_required'] is False
+          assert reuse['new_parallel_registry_required'] is False
+          nxt = data['next_exact_work']
+          assert nxt['draft_candidates_requiring_source_identity_resolution'] == 7
+          assert nxt['content_units_requiring_exact_candidate_adequacy_review'] == 2
+          assert nxt['candidate_level_content_gap_may_be_declared_without_separate_review'] is False
+          policy = data['policy']
+          assert policy['reuse_first'] is True
+          assert policy['candidate_ref_is_canonical_id'] is False
+          assert policy['content_presence_implies_acceptance'] is False
+          assert policy['module_membership_implies_exact_owner'] is False
+          assert policy['cross_cutting_content_can_admit_granular_candidates'] is False
+          assert policy['source_check_procedure_can_substitute_for_subject_component'] is False
+          assert policy['component_specific_independent_evidence_required'] is True
+          assert policy['semantic_acceptance_can_reduce_object_counts_without_exact_binding'] is False
+          assert policy['keyword_or_fuzzy_inference_allowed'] is False
+          assert data['summary'] == {
+              'candidate_records_reviewed': 7,
+              'content_semantics_reviewed': 2,
+              'semantic_admissions': 0,
+              'object_level_admission_units_closed': 0,
+              'object_level_requirements_closed': 0,
+              'false_exact_mastery_admissions': 0,
+          }
+          print('RU02_ORTHOEPY_FAIL_CLOSED_GUARD=PASS')
+          PY
+      - name: Upload RU02 review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru02-orthoepy-boundary-review
+          path: RU02-ORTHOEPY-CANDIDATE-BOUNDARY-REVIEW.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"

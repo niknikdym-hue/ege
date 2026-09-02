@@ -1,0 +1,110 @@
+name: Russian OGE 6.14 remaining 6.2 reuse exhaustion
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/**"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-OGE-6.2-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_reuse_first_evidence_audit_v2.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_remaining_6_2_reuse_exhaustion.py"
+      - ".github/workflows/russian-oge-6-14-remaining-6-2-reuse-exhaustion.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  remaining-reuse-exhaustion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build deterministic remaining-gap reuse exhaustion twice
+        run: |
+          set -euo pipefail
+          script="eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_remaining_6_2_reuse_exhaustion.py"
+          python3 -m py_compile "$script"
+          python3 "$script" --output /tmp/oge-6-14-reuse-exhaustion-a.json > /tmp/oge-6-14-reuse-exhaustion-a.txt
+          python3 "$script" --output /tmp/oge-6-14-reuse-exhaustion-b.json > /tmp/oge-6-14-reuse-exhaustion-b.txt
+          cmp /tmp/oge-6-14-reuse-exhaustion-a.json /tmp/oge-6-14-reuse-exhaustion-b.json
+          diff -u /tmp/oge-6-14-reuse-exhaustion-a.txt /tmp/oge-6-14-reuse-exhaustion-b.txt
+          cat /tmp/oge-6-14-reuse-exhaustion-a.txt
+
+      - name: Verify exact remaining frontier and materialization floor
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/oge-6-14-reuse-exhaustion-a.json').read_text(encoding='utf-8'))
+          assert d['status']=='CENTRAL_BRAIN_OGE_6_14_REMAINING_6_2_REUSE_EXHAUSTED_MATERIALIZATION_REQUIRED_NO_OBJECT_ACCEPTANCE'
+          p=d['post_wave_state']
+          assert p['exact_owner_frontier']==83
+          assert p['evidence_ready_owners']==67
+          assert p['exact_independent_items']==214
+          assert p['remaining_owner_count']==16
+          assert p['remaining_source_content_codes']==['6.2']
+          assert len(p['remaining_owner_refs'])==16
+          assert len(set(p['remaining_owner_refs']))==16
+          r=d['reuse_search']
+          assert r['accepted_6_2_embedded_learner_evidence_keys']==[]
+          assert r['reusable_exact_items_found']==0
+          assert r['reusable_mixed_items_found']==0
+          assert not any(r['current_reviewed_inventory_exact_hits'].values())
+          assert not any(r['current_reviewed_inventory_mixed_hits'].values())
+          assert not any(r['production_exact_independent_hits'].values())
+          floor=d['materialization_floor']
+          assert floor['owners_requiring_new_original_eksamio_evidence']==16
+          assert floor['minimum_independent_single_owner_items_per_owner']==3
+          assert floor['minimum_new_items_required']==48
+          s=d['summary']
+          assert s['reuse_exhausted_for_all_remaining_owners'] is True
+          assert s['semantic_admissions']==0
+          assert s['object_closures']==0
+          assert s['false_exact_mastery_admissions']==0
+          assert s['new_school_identities']==0
+          safety=d['safety']
+          assert safety['accepted_demo_or_scorer_change'] is False
+          assert safety['tilda_change'] is False
+          assert safety['learner_audio_persistence']==0
+          assert safety['production_peis_write'] is False
+          assert safety['provider_execution'] is False
+          assert safety['public_traffic'] is False
+          assert safety['real_payment_or_refund'] is False
+          assert safety['real_message_delivery'] is False
+          print('OGE_6_14_REMAINING_6_2_GAPS=16')
+          print('OGE_6_14_REUSABLE_EXACT_ITEMS_FOUND=0')
+          print('OGE_6_14_MINIMUM_NEW_ORIGINAL_ITEMS_REQUIRED=48')
+          print('OGE_6_14_OBJECT_CLOSURES=0')
+          print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
+          print('LEARNER_AUDIO_PERSISTENCE=0')
+          print('RUSSIAN_OGE_6_14_REMAINING_6_2_REUSE_EXHAUSTION=PASS')
+          PY
+
+      - name: Upload reuse exhaustion proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-6-14-remaining-6-2-reuse-exhaustion
+          path: /tmp/oge-6-14-reuse-exhaustion-a.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Protect accepted Russian production surfaces
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"

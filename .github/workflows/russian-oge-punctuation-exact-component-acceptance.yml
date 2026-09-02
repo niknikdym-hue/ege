@@ -1,0 +1,91 @@
+name: Russian OGE punctuation exact component acceptance
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_punctuation_exact_component_acceptance.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
+      - "eksamio-learning-engine/russian-program/source-knowledge/**"
+      - "eksamio-learning-engine/265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+      - "eksamio-learning-engine/266-RUSSIAN-SCHOOL-FINAL-REFREEZE-AND-FIPI-2026-OVERLAY-CLOSURE-v1.0.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - ".github/workflows/russian-oge-punctuation-exact-component-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oge-punctuation-exact-components:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch current PR base
+        run: git fetch --no-tags origin "${{ github.base_ref }}" --depth=1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build exact punctuation acceptance twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_punctuation_exact_component_acceptance.py --output /tmp/punct-a.json > /tmp/punct-report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_oge_punctuation_exact_component_acceptance.py --output /tmp/punct-b.json > /tmp/punct-report-b.txt
+          cmp /tmp/punct-a.json /tmp/punct-b.json
+          diff -u /tmp/punct-report-a.txt /tmp/punct-report-b.txt
+          cat /tmp/punct-report-a.txt
+      - name: Verify exact source and mastery boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('/tmp/punct-a.json').read_text(encoding='utf-8'))
+          assert data['status'] == 'CENTRAL_BRAIN_ACCEPTED_EXACT_OGE_PUNCTUATION_CANONICAL_COMPONENT_SLICE'
+          assert data['official_oge_codifier_sha256'] == '2d83e987ddad08d405827f98dfa490721f2d67b787b2803d8c499eea7b84858a'
+          assert data['object_accounting_sha256'] == 'f3aef83dab99b554a4cdec9ef8d8fbc8036d557182259ae69db182efa11b925c'
+          assert data['semantic_packet_sha256'] == 'b35fb420f7a6e96ea11f47e321cae0affe363dc5ed8d6fb79ea8640ac5ac94c4'
+          s = data['summary']
+          assert s['accepted_admission_units'] == 8
+          assert s['accepted_requirements'] == 8
+          assert s['accepted_content_codes'] == 8
+          assert s['new_semantic_identities_created'] == 0
+          assert s['ru_proposal_identities_admitted'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          assert [row['content_code'] for row in data['decisions']] == ['7.2','7.3','7.13','7.15','7.16','7.18','7.20','7.22']
+          assert len({row['admission_unit_id'] for row in data['decisions']}) == 8
+          assert len({row['requirement_id'] for row in data['decisions']}) == 8
+          for row in data['decisions']:
+              assert row['source_id'] == 'FIPI-OGE-RU-2026-FINAL'
+              assert row['document_id'] == 'OGE_COD'
+              assert row['subject_semantic_status'] == 'CENTRAL_BRAIN_ACCEPTED_CANONICAL_COMPONENT_SET'
+              assert row['disposition'] == 'PARTIAL_OR_COMPOSITE'
+              assert row['canonical_component_refs']
+              assert all(ref.startswith('school-') for ref in row['canonical_component_refs'])
+              b = row['mastery_boundary']
+              assert b['route_or_broad_composite_attempt_can_emit_exact_component_mastery'] is False
+              assert b['component_specific_independent_evidence_required'] is True
+          print('RUSSIAN_OGE_PUNCTUATION_EXACT_COMPONENT_GUARD=PASS')
+          PY
+      - name: Upload exact punctuation authority artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-oge-punctuation-exact-component-acceptance
+          path: /tmp/punct-a.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"

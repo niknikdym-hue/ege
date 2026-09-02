@@ -1,0 +1,244 @@
+{
+  "schema_version": "0.1.0",
+  "date": "2026-09-02",
+  "status": "CURRENT_LAUNCH_OGE_6_14_GAP_EVIDENCE_WAVE_001_NO_OBJECT_ADMISSION",
+  "module_id": "RU-PROG-08",
+  "module_title_ru": "Орфография",
+  "target": {
+    "source_id": "FIPI-OGE-RU-2026-FINAL",
+    "document_id": "OGE_COD",
+    "content_code": "6.14",
+    "label_ru": "Орфографический анализ",
+    "classification": "EXAM_ONLY_COMPOSITE"
+  },
+  "source_exact_authorities": {
+    "6.3": {
+      "accepted_authority_id": "RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+      "accepted_authority_sha256": "c9b40069b7d2f8bb692cfa4e3b1e5ae21fd785e23542d8f6e74b391b0a8674dc",
+      "admission_unit_id": "RAU-df63443de16854027f29",
+      "requirement_id": "RSK-OGE_COD-6-3-P024"
+    },
+    "6.4": {
+      "accepted_authority_id": "RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+      "accepted_authority_sha256": "c9b40069b7d2f8bb692cfa4e3b1e5ae21fd785e23542d8f6e74b391b0a8674dc",
+      "admission_unit_id": "RAU-ab2f8e54d97deb68a369",
+      "requirement_id": "RSK-OGE_COD-6-4-P024"
+    },
+    "6.5": {
+      "accepted_authority_id": "RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+      "accepted_authority_sha256": "c9b40069b7d2f8bb692cfa4e3b1e5ae21fd785e23542d8f6e74b391b0a8674dc",
+      "admission_unit_id": "RAU-5a7cec2c84c6a870a2bd",
+      "requirement_id": "RSK-OGE_COD-6-5-P024"
+    },
+    "6.10": {
+      "accepted_authority_id": "RUSSIAN_OGE_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1",
+      "accepted_authority_sha256": "c9b40069b7d2f8bb692cfa4e3b1e5ae21fd785e23542d8f6e74b391b0a8674dc",
+      "admission_unit_id": "RAU-15917878bce268d60781",
+      "requirement_id": "RSK-OGE_COD-6-10-P025"
+    }
+  },
+  "evidence_policy": {
+    "base_reuse_audit_normalized_sha256": "762983d941220598a43161bac0cceecc1cc1bc3a5f4b50a16b02057c4761b696",
+    "base_exact_owner_frontier": 83,
+    "base_evidence_ready_owners": 54,
+    "base_missing_owners": 29,
+    "materialize_only_proven_missing_owner_refs": true,
+    "wave_owner_count": 13,
+    "minimum_independent_items_per_owner": 3,
+    "each_item_must_reference_exactly_one_school_semantic": true,
+    "new_semantic_identity_created": false,
+    "exact_owner_frontier_may_change_here": false,
+    "route_attempt_can_emit_exact_component_mastery": false,
+    "evidence_readiness_is_object_acceptance": false,
+    "cross_route_fuzzy_reuse_used": false,
+    "mastery_guard": {
+      "minimum_independent_items_required": 3,
+      "component_specific_only": true,
+      "generic_oge_route_result_can_emit_exact_mastery": false,
+      "assisted_attempt_can_count_as_independent_evidence": false
+    }
+  },
+  "copyright_and_source_guard": {
+    "learner_wording": "ORIGINAL_EKSAMIO",
+    "official_source_passages_copied": false,
+    "commercial_textbook_bytes_used": false,
+    "purpose": "Minimal component-specific independent verification for already-proven exact canonical owners only."
+  },
+  "owner_evidence": [
+    {
+      "canonical_ref": "school-invariable-prefix-spelling-base",
+      "source_oge_code": "6.3",
+      "title_ru": "Неизменяемые приставки: сохранение буквенного состава",
+      "semantic_boundary": "Проверяется сохранение нормативного буквенного состава неизменяемой приставки перед корнем; фонетическое оглушение или озвончение не даёт права менять букву приставки.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-invpref-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание слова.","options":["потсказать","подсказать","потзказать"],"correct_option_index":1,"feedback":"Приставка под- сохраняет букву Д: «подсказать».","school_semantic_refs":["school-invariable-prefix-spelling-base"]},
+        {"id":"oge614-w1-invpref-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание слова.","options":["натстроить","надстроить","настроить"],"correct_option_index":1,"feedback":"Приставка над- сохраняет Д перед С: «надстроить».","school_semantic_refs":["school-invariable-prefix-spelling-base"]},
+        {"id":"oge614-w1-invpref-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни, почему в слове «обсудить» пишется Б в приставке, несмотря на последующий глухой [с].","answer_outline":"Приставка об- относится к неизменяемым: её буквенный состав сохраняется, поэтому пишется «обсудить», а не форма с П.","scoring":{"max_points":2,"criteria":["1: названа проверяемая орфографическая закономерность без подмены соседним компонентом","1: нормативное написание объяснено в границах указанного canonical ref"]},"school_semantic_refs":["school-invariable-prefix-spelling-base"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-prefix-z-s-selection",
+      "source_oge_code": "6.3",
+      "title_ru": "Приставки на З/С: выбор конечной согласной",
+      "semantic_boundary": "Проверяется выбор З или С в приставках типа без-/бес-, из-/ис-, раз-/рас- по звонкости или глухости следующего согласного.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-zs-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание.","options":["безкрайний","бескрайний","бесграйний"],"correct_option_index":1,"feedback":"Перед глухим К в приставке пишется С: «бескрайний».","school_semantic_refs":["school-prefix-z-s-selection"]},
+        {"id":"oge614-w1-zs-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание.","options":["бесдомный","бездомный","безтомный"],"correct_option_index":1,"feedback":"Перед звонким Д в приставке пишется З: «бездомный».","school_semantic_refs":["school-prefix-z-s-selection"]},
+        {"id":"oge614-w1-zs-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни различие в написании приставки в словах «бескрайний» и «бездомный». На какой признак следующего согласного нужно опереться?","answer_outline":"В приставках на з/с перед глухим согласным пишется С, а перед звонким — З: в «бескрайний» далее глухой К, в «бездомный» — звонкий Д.","scoring":{"max_points":2,"criteria":["1: сформулирован выбор С перед глухим и З перед звонким согласным","1: правило верно применено к К в «бескрайний» и Д в «бездомный»"]},"school_semantic_refs":["school-prefix-z-s-selection"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-pre-pri-semantic-base",
+      "source_oge_code": "6.3",
+      "title_ru": "ПРЕ-/ПРИ-: продуктивные смысловые значения",
+      "semantic_boundary": "Проверяется смысловой выбор ПРЕ- или ПРИ- там, где приставка сохраняет продуктивное значение: приближение/присоединение/неполнота действия для ПРИ- и высокая степень либо близость к ПЕРЕ- для ПРЕ-.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-prepri-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Как написать слово со значением «приехать к месту, приблизившись к нему»?","options":["преехать","приехать","приъехать"],"correct_option_index":1,"feedback":"Значение приближения выражается приставкой при-: «приехать».","school_semantic_refs":["school-pre-pri-semantic-base"]},
+        {"id":"oge614-w1-prepri-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Как написать глагол со значением «соединить клеем»?","options":["преклеить","приклеить","преклеять"],"correct_option_index":1,"feedback":"Значение присоединения выражается приставкой при-: «приклеить».","school_semantic_refs":["school-pre-pri-semantic-base"]},
+        {"id":"oge614-w1-prepri-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни выбор приставок в словах «приехать», «приклеить» и «преувеличить»: какое значение выражает каждая приставка?","answer_outline":"ПРИ- в «приехать» обозначает приближение, ПРИ- в «приклеить» — присоединение, а ПРЕ- в «преувеличить» выражает высокую или чрезмерную степень.","scoring":{"max_points":2,"criteria":["1: для «приехать» и «приклеить» верно названы значения приближения и присоединения","1: для «преувеличить» верно объяснено значение высокой или чрезмерной степени"]},"school_semantic_refs":["school-pre-pri-semantic-base"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-pre-pri-lexical-contrast-family",
+      "source_oge_code": "6.3",
+      "title_ru": "ПРЕ-/ПРИ-: лексические пары с разным значением",
+      "semantic_boundary": "Проверяются лексически закреплённые пары, где выбор Е/И различает слова и их значения; решение нельзя подменять общим правилом о приближении или высокой степени.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-preprilex-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Вставь слово в смысл «находиться, жить где-либо»: «долго ___ в городе».","options":["прибывать","пребывать","пребевать"],"correct_option_index":1,"feedback":"«Пребывать» означает находиться; «прибывать» — приезжать, поступать.","school_semantic_refs":["school-pre-pri-lexical-contrast-family"]},
+        {"id":"oge614-w1-preprilex-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Вставь слово: «___ план в жизнь».","options":["притворить","претворить","притварить"],"correct_option_index":1,"feedback":"«Претворить в жизнь» — осуществить; «притворить» значит, например, неплотно закрыть дверь.","school_semantic_refs":["school-pre-pri-lexical-contrast-family"]},
+        {"id":"oge614-w1-preprilex-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни смысловое различие слов «пребывать» и «прибывать» и составь краткое словосочетание с каждым, показывающее нужную букву в приставочной части.","answer_outline":"«Пребывать» означает находиться в каком-либо состоянии или месте: «пребывать в городе». «Прибывать» означает приезжать или поступать: «прибывать к станции». Выбор Е/И здесь закреплён лексическим значением слов.","scoring":{"max_points":2,"criteria":["1: значения «пребывать» и «прибывать» разграничены без подмены продуктивным правилом ПРЕ-/ПРИ-","1: приведены контексты, в которых написание соответствует названному лексическому значению"]},"school_semantic_refs":["school-pre-pri-lexical-contrast-family"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-adverb-final-soft-sign-after-sibilant-base",
+      "source_oge_code": "6.4",
+      "title_ru": "Мягкий знак на конце наречий после шипящих",
+      "semantic_boundary": "Проверяется наличие или отсутствие Ь на конце наречий после шипящих с учётом нормативных исключений.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-advsoft-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание наречия.","options":["настеж","настежь","настешь"],"correct_option_index":1,"feedback":"Наречие «настежь» пишется с Ь после Ж.","school_semantic_refs":["school-adverb-final-soft-sign-after-sibilant-base"]},
+        {"id":"oge614-w1-advsoft-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание наречия.","options":["замужь","замуж","замуш"],"correct_option_index":1,"feedback":"«Замуж» — нормативное исключение: мягкий знак после Ж не пишется.","school_semantic_refs":["school-adverb-final-soft-sign-after-sibilant-base"]},
+        {"id":"oge614-w1-advsoft-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни, почему «настежь» пишется с мягким знаком, а «замуж» и «невтерпёж» — без него.","answer_outline":"У наречий после конечной шипящей мягкий знак обычно пишется, как в «настежь». Слова «замуж» и «невтерпёж» относятся к нормативным исключениям и пишутся без Ь.","scoring":{"max_points":2,"criteria":["1: сформулировано базовое правило о мягком знаке на конце наречий после шипящих","1: «замуж» и «невтерпёж» правильно названы исключениями без мягкого знака"]},"school_semantic_refs":["school-adverb-final-soft-sign-after-sibilant-base"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-separating-hard-soft-sign-boundary",
+      "source_oge_code": "6.4",
+      "title_ru": "Разделительные Ъ и Ь",
+      "semantic_boundary": "Проверяется выбор разделительного Ъ после приставки на согласную перед Е/Ё/Ю/Я и разделительного Ь в других нормативных позициях; мягкость согласного как отдельная функция Ь сюда не смешивается.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-signs-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание.","options":["подьезд","подъезд","подезд"],"correct_option_index":1,"feedback":"После приставки под- на согласную перед Е пишется разделительный Ъ: «подъезд».","school_semantic_refs":["school-separating-hard-soft-sign-boundary"]},
+        {"id":"oge614-w1-signs-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание.","options":["въюга","вьюга","вюга"],"correct_option_index":1,"feedback":"Внутри корня перед Ю используется разделительный Ь: «вьюга».","school_semantic_refs":["school-separating-hard-soft-sign-boundary"]},
+        {"id":"oge614-w1-signs-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Сравни «подъезд» и «вьюга». Объясни, почему в первом слове нужен разделительный Ъ, а во втором — разделительный Ь.","answer_outline":"В «подъезд» после приставки под-, оканчивающейся согласной, перед Е пишется Ъ. В «вьюга» разделение внутри корня перед Ю передаётся мягким знаком, так как приставочной границы нет.","scoring":{"max_points":2,"criteria":["1: для «подъезд» указана приставочная граница после согласной перед Е и выбор Ъ","1: для «вьюга» объяснён разделительный Ь внутри слова перед Ю без приставочной границы"]},"school_semantic_refs":["school-separating-hard-soft-sign-boundary"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-verb-soft-sign-forms",
+      "source_oge_code": "6.4",
+      "title_ru": "Мягкий знак в формах глагола",
+      "semantic_boundary": "Проверяется Ь в неопределённой форме, во 2-м лице единственного числа и разграничение -ться/-тся по грамматической форме.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-verbsoft-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание: «Надо ___ регулярно».","options":["учится","учиться","учитьса"],"correct_option_index":1,"feedback":"В неопределённой форме на -ться пишется Ь: «учиться».","school_semantic_refs":["school-verb-soft-sign-forms"]},
+        {"id":"oge614-w1-verbsoft-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание: «Он ___ каждый день».","options":["учиться","учится","учитсья"],"correct_option_index":1,"feedback":"В форме 3-го лица «что делает?» мягкий знак перед -ся не пишется: «учится».","school_semantic_refs":["school-verb-soft-sign-forms"]},
+        {"id":"oge614-w1-verbsoft-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни разницу в написании «надо учиться» и «он учится». Как грамматическая форма определяет наличие мягкого знака?","answer_outline":"«Учиться» — неопределённая форма, отвечает на вопрос «что делать?», поэтому перед -ся есть Ь. «Учится» — форма 3-го лица, отвечает на вопрос «что делает?», поэтому Ь перед -ся нет.","scoring":{"max_points":2,"criteria":["1: «учиться» правильно определено как инфинитив и объяснено написание -ться","1: «учится» правильно определено как личная форма 3-го лица и объяснено написание -тся"]},"school_semantic_refs":["school-verb-soft-sign-forms"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-i-y-after-russian-prefix-base",
+      "source_oge_code": "6.5",
+      "title_ru": "И/Ы после русской приставки: базовый переход",
+      "semantic_boundary": "Проверяется базовое изменение начального И корня на Ы после русской приставки, оканчивающейся согласной, вне специальных исключений и границ сохранения И.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-iybase-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание.","options":["сиграть","сыграть","съиграть"],"correct_option_index":1,"feedback":"После русской приставки с- начальное И корня переходит в Ы: «сыграть».","school_semantic_refs":["school-i-y-after-russian-prefix-base"]},
+        {"id":"oge614-w1-iybase-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание.","options":["предистория","предыстория","предъистория"],"correct_option_index":1,"feedback":"После русской приставки пред- перед корнем с И пишется Ы: «предыстория».","school_semantic_refs":["school-i-y-after-russian-prefix-base"]},
+        {"id":"oge614-w1-iybase-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни, почему пишутся «сыграть», «предыстория» и «разыскать» с Ы после приставки. Назови общую границу правила.","answer_outline":"Если русская приставка оканчивается согласной, начальное И корня в базовой модели переходит в Ы: с- + играть → сыграть, пред- + история → предыстория, раз- + искать → разыскать. Специальные случаи сохранения И рассматриваются отдельно.","scoring":{"max_points":2,"criteria":["1: сформулирован базовый переход И в Ы после русской приставки на согласную","1: правило корректно применено минимум к двум приведённым словам без переноса на исключения"]},"school_semantic_refs":["school-i-y-after-russian-prefix-base"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-i-y-after-prefix-vzimat-exception",
+      "source_oge_code": "6.5",
+      "title_ru": "И после приставки: исключение «взимать»",
+      "semantic_boundary": "Проверяется словарно закреплённое исключение «взимать» и его формы/производные с И; оно не подчиняется базовому переходу И в Ы после русской приставки.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-vzimat-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание глагола.","options":["взымать","взимать","взъимать"],"correct_option_index":1,"feedback":"Нормативное исключение — «взимать» с И.","school_semantic_refs":["school-i-y-after-prefix-vzimat-exception"]},
+        {"id":"oge614-w1-vzimat-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание существительного.","options":["взымание","взимание","взывание"],"correct_option_index":1,"feedback":"В производном «взимание» сохраняется И.","school_semantic_refs":["school-i-y-after-prefix-vzimat-exception"]},
+        {"id":"oge614-w1-vzimat-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни написание «взимать» и «взимание». Почему здесь сохраняется И, хотя после русской приставки на согласную часто появляется Ы?","answer_outline":"«Взимать» — словарно закреплённое исключение из общего перехода И в Ы после русской приставки на согласную. Поэтому И сохраняется и в формах и производных, например «взимание».","scoring":{"max_points":2,"criteria":["1: «взимать» правильно названо исключением из базового перехода И в Ы","1: объяснено сохранение И в производной форме «взимание» без расширения правила"]},"school_semantic_refs":["school-i-y-after-prefix-vzimat-exception"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-i-y-after-prefix-retain-i-boundary",
+      "source_oge_code": "6.5",
+      "title_ru": "Сохранение И после приставок: специальные границы",
+      "semantic_boundary": "Проверяются нормативные позиции, где начальное И корня сохраняется после приставки, в том числе после меж-, сверх- и ряда иноязычных приставочных элементов.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-retaini-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание.","options":["межынститутский","межинститутский","межъинститутский"],"correct_option_index":1,"feedback":"После меж- начальное И сохраняется: «межинститутский».","school_semantic_refs":["school-i-y-after-prefix-retain-i-boundary"]},
+        {"id":"oge614-w1-retaini-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание.","options":["сверхынтересный","сверхинтересный","сверхъинтересный"],"correct_option_index":1,"feedback":"После сверх- начальное И сохраняется: «сверхинтересный».","school_semantic_refs":["school-i-y-after-prefix-retain-i-boundary"]},
+        {"id":"oge614-w1-retaini-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни, почему в словах «межинститутский», «сверхинтересный» и «дезинформация» сохраняется И, а не появляется Ы.","answer_outline":"Начальное И сохраняется после специальных русских приставок меж- и сверх-, а также после ряда иноязычных приставочных элементов, например дез-. Поэтому нормативны «межинститутский», «сверхинтересный», «дезинформация».","scoring":{"max_points":2,"criteria":["1: верно названы границы сохранения И после меж-/сверх- и иноязычного приставочного элемента","1: правило корректно применено к приведённым словам без переноса на обычную русскую приставку"]},"school_semantic_refs":["school-i-y-after-prefix-retain-i-boundary"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-denominal-adjective-n-nn-base",
+      "source_oge_code": "6.10",
+      "title_ru": "Н/НН в прилагательных, образованных от существительных",
+      "semantic_boundary": "Проверяется выбор Н/НН в отымённых прилагательных по суффиксу, стыку основы и суффикса и нормативным исключениям; причастия и отглагольные прилагательные сюда не относятся.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-denomnn-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание.","options":["серебрянный","серебряный","серебренный"],"correct_option_index":1,"feedback":"В прилагательном с суффиксом -ян- «серебряный» пишется одна Н.","school_semantic_refs":["school-denominal-adjective-n-nn-base"]},
+        {"id":"oge614-w1-denomnn-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание.","options":["деревяный","деревянный","деревьянный"],"correct_option_index":1,"feedback":"«Деревянный» относится к традиционным исключениям и пишется с НН.","school_semantic_refs":["school-denominal-adjective-n-nn-base"]},
+        {"id":"oge614-w1-denomnn-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни количество Н в словах «серебряный», «деревянный» и «карманный». Укажи три разные причины написания.","answer_outline":"«Серебряный» пишется с одной Н по суффиксу -ян-. «Деревянный» — нормативное исключение с НН. В «карманный» Н основы «карман» соединяется с суффиксом -н-, поэтому получается НН.","scoring":{"max_points":2,"criteria":["1: верно объяснены одна Н в «серебряный» и исключительное НН в «деревянный»","1: в «карманный» распознан стык Н основы и суффикса -н-, дающий НН"]},"school_semantic_refs":["school-denominal-adjective-n-nn-base"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-participle-verbal-adjective-n-nn-base",
+      "source_oge_code": "6.10",
+      "title_ru": "Н/НН в причастиях и отглагольных прилагательных",
+      "semantic_boundary": "Проверяется разграничение Н/НН в полных страдательных причастиях и отглагольных прилагательных с учётом приставки, зависимых слов и других признаков образования.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-partnn-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание в сочетании без зависимых слов: «___ картошка».","options":["жаренная","жареная","жареннаая"],"correct_option_index":1,"feedback":"В обычном отглагольном прилагательном «жареная картошка» без приставки и зависимых слов пишется одна Н.","school_semantic_refs":["school-participle-verbal-adjective-n-nn-base"]},
+        {"id":"oge614-w1-partnn-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание: «___ картошка».","options":["поджареная","поджаренная","поджаренна"],"correct_option_index":1,"feedback":"Приставка под- указывает на причастное образование; в полной форме пишется НН: «поджаренная».","school_semantic_refs":["school-participle-verbal-adjective-n-nn-base"]},
+        {"id":"oge614-w1-partnn-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Сравни «жареная картошка», «поджаренная картошка» и «картошка, жаренная на масле». Объясни, почему в первом случае одна Н, а в двух других НН.","answer_outline":"«Жареная картошка» без приставки и зависимых слов выступает как отглагольное прилагательное с одной Н. «Поджаренная» имеет приставку, а в «жаренная на масле» есть зависимые слова; эти признаки поддерживают причастное значение полной формы и НН.","scoring":{"max_points":2,"criteria":["1: объяснена одна Н в бесприставочном «жареная» без зависимых слов","1: для двух форм с НН названы соответственно приставка и зависимые слова как признаки причастной формы"]},"school_semantic_refs":["school-participle-verbal-adjective-n-nn-base"]}
+      ]
+    },
+    {
+      "canonical_ref": "school-nn-derived-noun-adverb-inheritance",
+      "source_oge_code": "6.10",
+      "title_ru": "Н/НН в производных наречиях и существительных: наследование основы",
+      "semantic_boundary": "Проверяется сохранение количества Н в производном наречии или существительном от исходного прилагательного/причастия; самостоятельное определение Н/НН в исходной форме относится к другому компоненту.",
+      "evidence_status": "CURRENT_LAUNCH_ORIGINAL_EKSAMIO_COMPONENT_EVIDENCE",
+      "independent_verification": [
+        {"id":"oge614-w1-inheritnn-v1","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание наречия от «медленный».","options":["медлено","медленно","медленнно"],"correct_option_index":1,"feedback":"Наречие «медленно» сохраняет НН исходного прилагательного «медленный».","school_semantic_refs":["school-nn-derived-noun-adverb-inheritance"]},
+        {"id":"oge614-w1-inheritnn-v2","type":"single_choice","evidence_mode":"INDEPENDENT","prompt":"Выбери нормативное написание наречия от «ветреный».","options":["ветренно","ветрено","ветреноо"],"correct_option_index":1,"feedback":"Наречие «ветрено» сохраняет одну Н исходного прилагательного «ветреный».","school_semantic_refs":["school-nn-derived-noun-adverb-inheritance"]},
+        {"id":"oge614-w1-inheritnn-v3","type":"constructed_response","evidence_mode":"INDEPENDENT","prompt":"Объясни написание Н/НН в наречиях «медленно», «ветрено», «торжественно», опираясь на формы, от которых они образованы.","answer_outline":"Производное наречие сохраняет количество Н исходного прилагательного: «медленный» → «медленно» и «торжественный» → «торжественно» сохраняют НН, «ветреный» → «ветрено» сохраняет одну Н.","scoring":{"max_points":2,"criteria":["1: сформулировано наследование количества Н производным наречием от исходного слова","1: корректно сопоставлены примеры с одной Н и НН без самостоятельной переоценки исходной формы"]},"school_semantic_refs":["school-nn-derived-noun-adverb-inheritance"]}
+      ]
+    }
+  ],
+  "summary": {
+    "wave_owner_count": 13,
+    "materialized_new_independent_items": 39,
+    "remaining_missing_owner_refs_after_wave_if_valid": 16,
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "false_exact_mastery_admissions": 0,
+    "new_school_identities": 0
+  },
+  "safety": {
+    "accepted_demo_or_scorer_change": false,
+    "tilda_change": false,
+    "learner_audio_persistence": 0,
+    "production_peis_write": false,
+    "provider_execution": false,
+    "public_traffic": false,
+    "real_payment_or_refund": false,
+    "real_message_delivery": false
+  }
+}

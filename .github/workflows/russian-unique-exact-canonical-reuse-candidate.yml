@@ -1,0 +1,81 @@
+name: Russian unique exact canonical reuse candidate
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_unique_exact_canonical_reuse_candidate.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_subject_accounting_complete.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_packet.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-*-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - ".github/workflows/russian-unique-exact-canonical-reuse-candidate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-unique-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch current PR base
+        run: git fetch --no-tags origin "${{ github.base_ref }}" --depth=1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile candidate builder
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_unique_exact_canonical_reuse_candidate.py
+      - name: Build exact unique reuse candidate twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_unique_exact_canonical_reuse_candidate.py --output /tmp/candidate-a.json > /tmp/report-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_unique_exact_canonical_reuse_candidate.py --output /tmp/candidate-b.json > /tmp/report-b.txt
+          cmp /tmp/candidate-a.json /tmp/candidate-b.json
+          diff -u /tmp/report-a.txt /tmp/report-b.txt
+          cat /tmp/report-a.txt
+          cp /tmp/candidate-a.json eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-UNIQUE-EXACT-CANONICAL-REUSE-CANDIDATE.json
+      - name: Verify candidate is review-only and fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-UNIQUE-EXACT-CANONICAL-REUSE-CANDIDATE.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'CENTRAL_BRAIN_REVIEW_REQUIRED_EXACT_UNIQUE_CANONICAL_REUSE_CANDIDATE'
+          assert d['policy']['exact_normalized_meaning_equality_only'] is True
+          assert d['policy']['unique_current_reviewed_school_owner_required'] is True
+          assert d['policy']['one_member_admission_unit_required'] is True
+          assert d['policy']['keyword_or_fuzzy_inference_allowed'] is False
+          assert d['policy']['module_or_route_only_inference_allowed'] is False
+          assert d['policy']['candidate_can_self_admit'] is False
+          assert d['summary']['semantic_admissions'] == 0
+          assert d['summary']['object_level_closures'] == 0
+          assert all(row['admission_effect'] == 'NONE_REVIEW_CANDIDATE_ONLY' for row in d['candidates'])
+          assert len({row['admission_unit_id'] for row in d['candidates']}) == len(d['candidates'])
+          assert len({row['requirement_id'] for row in d['candidates']}) == len(d['candidates'])
+          print('RUSSIAN_UNIQUE_EXACT_CANONICAL_REUSE_CANDIDATE_GUARD=PASS')
+          PY
+      - name: Upload exact unique candidate artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-unique-exact-canonical-reuse-candidate
+          path: eksamio-learning-engine/russian-program/subject-admission/RUSSIAN-UNIQUE-EXACT-CANONICAL-REUSE-CANDIDATE.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo 'Exact reuse candidate probe changed protected Russian production surfaces.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"

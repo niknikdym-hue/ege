@@ -1,0 +1,236 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-11",
+  "module_title_ru": "Текст, смысл и межфразовая связь",
+  "scope": {
+    "routes": ["school", "ege", "diagnostic", "tutor"],
+    "source_candidate_ref": "candidate-004",
+    "source_taxonomy_id": "cohesion_possessive_pronoun"
+  },
+  "source_provenance": [
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-004",
+      "coverage_note": "Current draft subject candidate; status is preserved and not silently upgraded."
+    },
+    {
+      "kind": "confirmed_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_possessive_pronoun]",
+      "coverage_note": "Confirmed repository-audited EGE taxonomy node under text_cohesion, task 26."
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-11"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Source authorities define the bounded skill identity only; all learner-facing examples and practice below are original Eksamio wording."
+  },
+  "identity_boundary": "This file materializes only the proven candidate-specific verification gap. The ru-* id remains non-school-canonical and is admitted only by a separate Central Brain bounded subject-semantic authority; candidate/taxonomy ids remain source refs.",
+  "reuse_review": {
+    "broader_existing_unit_ref": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-cohesion-link-means]",
+    "broader_existing_unit_reused_for_explanation_and_transfer": true,
+    "broader_existing_unit_direct_possessive_pronoun_independent_checks": 0,
+    "broader_existing_direct_check_ids": [],
+    "broader_existing_unit_reused_as_exact_candidate_004_mastery_evidence": false,
+    "minimum_component_specific_independent_checks_for_exact_mastery": 2,
+    "new_content_materialized_only_for_proven_component_verification_gap": true,
+    "reason": "The broader cohesion unit teaches pronoun reference generally, but its independent verification checks only a causal adverb and a demonstrative-pronoun substitution. It contains no direct independent possessive-pronoun cohesion check, so it is retained as explanation/transfer evidence but cannot establish candidate-004 mastery."
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-text-cohesion-possessive-pronoun",
+      "title_ru": "Притяжательное местоимение как средство связи",
+      "canonical_explanation": {
+        "short": "Притяжательное местоимение связывает предложения, когда во втором фрагменте выражает принадлежность или отношение к уже названному участнику, предмету или группе и тем самым сохраняет его в смысловом фокусе. Для exact mastery нужно доказать притяжательное значение, установить референт в предыдущем контексте и показать межфразовую функцию.",
+        "boundaries": [
+          "Этот unit не проверяет полную морфологию и склонение всех местоимений.",
+          "Форма «его/её/их» засчитывается здесь только при притяжательной функции внутри именной группы: она отвечает на вопрос о принадлежности или отношении к существительному, а не является дополнением при глаголе.",
+          "Указательные и определительные местоимения не засчитываются как mastery этого semantic.",
+          "Generic Task-26 result и общий unit по средствам связи не могут автоматически выдать exact mastery этого component."
+        ]
+      },
+      "decision_algorithm": [
+        "Найди во втором предложении местоименную форму, которая потенциально подхватывает участника, предмет или группу из предыдущего контекста.",
+        "Проверь синтаксическую функцию: местоимение должно выражать принадлежность или отношение к существительному во втором предложении, а не быть объектом действия при глаголе.",
+        "Задай смысловой вопрос «чей / чья / чьё / чьи?» к существительному, с которым связано местоимение.",
+        "Назови точный референт или обладателя из предыдущего предложения.",
+        "Объясни, как притяжательная отсылка сохраняет этот референт и связывает второе предложение с первым.",
+        "Фиксируй mastery только если одновременно доказаны притяжательная функция, референт предыдущего контекста и межфразовая связующая роль."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "В архив передали старую рукопись. Её страницы бережно укрепили.",
+          "answer": "«Её» относится к рукописи и выражает принадлежность страниц рукописи; притяжательная отсылка связывает второе предложение с первым."
+        },
+        {
+          "prompt": "Лаборатория получила новый датчик. Его корпус изготовили из лёгкого сплава.",
+          "answer": "«Его» относится к датчику и определяет существительное «корпус» в притяжательном значении; это поддерживает межфразовую связь."
+        },
+        {
+          "prompt": "Команда представила два проекта. Их результаты обсудили на встрече.",
+          "answer": "«Их» относится к двум проектам и выражает отношение результатов к уже названным проектам, связывая предложения."
+        },
+        {
+          "prompt": "На горизонте появился маяк. Его заметили издалека.",
+          "answer": "Здесь «его» является объектной формой при глаголе «заметили» (заметили кого/что?), а не притяжательным определением при существительном; эта пара не доказывает candidate-004 mastery."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Любая форма «его», «её» или «их» автоматически является притяжательным средством связи.",
+          "correction": "Нужно проверить функцию: форма должна выражать принадлежность/отношение к существительному, а не выступать объектом при глаголе."
+        },
+        {
+          "wrong": "Если местоимение отсылает назад, этого достаточно для candidate-004.",
+          "correction": "Обратная отсылка необходима, но дополнительно нужно доказать именно притяжательное значение и межфразовую функцию."
+        },
+        {
+          "wrong": "«Этот» и «его» можно засчитать как один и тот же component.",
+          "correction": "«Этот» относится к указательному component; candidate-004 ограничен притяжательным значением."
+        },
+        {
+          "wrong": "Верный ответ на составное задание 26 уже доказывает exact mastery притяжательного местоимения.",
+          "correction": "Составной результат не заменяет отдельную component-specific независимую проверку."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p11-pos-g1",
+          "prompt": "«В музей привезли макет самолёта. Его крылья восстановили». Какой референт у «его»?",
+          "expected": "Макет самолёта из первого предложения."
+        },
+        {
+          "id": "p11-pos-g2",
+          "prompt": "Чем отличается «Его обложка порвалась» от «Его увидели у входа» с точки зрения candidate-004?",
+          "expected": "В первом случае «его» определяет существительное «обложка» и выражает притяжательное отношение; во втором является объектом глагола и не доказывает притяжательный component."
+        },
+        {
+          "id": "p11-pos-g3",
+          "prompt": "Какие три компонента обязательны для exact mastery?",
+          "expected": "Притяжательная функция, референт в предыдущем контексте и доказанная межфразовая связь."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p11-pos-i1",
+          "prompt": "«Редакция получила новое письмо. Его автор предложил уточнение». Что подхватывает «его»?",
+          "answer": "Письмо из первого предложения; «его» связывает автора с уже названным письмом через притяжательное/относительное значение."
+        },
+        {
+          "id": "p11-pos-i2",
+          "prompt": "«Исследователи нашли карту. Её края были повреждены». Назови средство связи и референт.",
+          "answer": "Притяжательная форма «её»; референт — карта."
+        },
+        {
+          "id": "p11-pos-i3",
+          "prompt": "«Вдали стоял дом. Его увидели после поворота». Это candidate-004?",
+          "answer": "Нет: «его» является объектом глагола «увидели», а не притяжательным определением при существительном."
+        },
+        {
+          "id": "p11-pos-i4",
+          "prompt": "Достаточно ли назвать «их» притяжательной формой без указания, к кому или чему она относится?",
+          "answer": "Нет; нужно установить референт в предыдущем контексте и доказать связующую функцию."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p11-pos-t1",
+          "prompt": "Ученик нашёл «его» во втором предложении и сразу поставил mastery. Какой контрольный вопрос нужно задать первым?",
+          "answer": "Определяет ли «его» существительное в значении принадлежности/отношения или является объектом глагола?"
+        },
+        {
+          "id": "p11-pos-t2",
+          "prompt": "Сравни «Этот прибор работал сутки» и «Его корпус не нагревался» после упоминания датчика.",
+          "answer": "«Этот» реализует указательную связь, а «его» при существительном «корпус» — притяжательную; это разные bounded semantics."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p11-pos-r1",
+          "delay_hint": "24h",
+          "prompt": "Что кроме притяжательного значения обязательно нужно установить?",
+          "answer": "Референт в предыдущем контексте и межфразовую функцию."
+        },
+        {
+          "id": "p11-pos-r2",
+          "delay_hint": "7d",
+          "prompt": "Можно ли считать объектное «его» при глаголе доказательством candidate-004?",
+          "answer": "Нет; нужна притяжательная функция при существительном."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p11-pos-v1",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «В архив поступила редкая рукопись. Её страницы очистили от пыли». Назови местоименную форму, её функцию, референт и роль в связи предложений.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: «её» распознано в притяжательной функции при существительном «страницы»",
+              "1: референтом названа рукопись из первого предложения",
+              "1: доказано, что притяжательная отсылка к рукописи связывает предложения"
+            ]
+          }
+        },
+        {
+          "id": "p11-pos-v2",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «Лаборатория установила новый прибор. Его корпус защищён от влаги». Почему «его» является средством межфразовой связи?",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: «его» распознано в притяжательной функции при существительном «корпус»",
+              "1: референтом назван новый прибор из первого предложения",
+              "1: объяснено, что притяжательная отсылка сохраняет уже названный референт и связывает второе предложение с первым"
+            ]
+          }
+        },
+        {
+          "id": "p11-pos-v3",
+          "type": "constructed_response",
+          "prompt": "Контрастная проверка: «На горизонте появился маяк. Его заметили издалека». Можно ли по этой паре выдать mastery «Притяжательное местоимение как средство связи»? Обоснуй.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: ответ «нет»",
+              "1: «его» распознано как объектная форма при глаголе, а не притяжательная функция при существительном",
+              "1: отмечено, что местоименная отсылка сама по себе не доказывает exact candidate-004 mastery"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "source_candidate_ref": "candidate-004",
+        "source_candidate_review_status": "draft",
+        "independent_verification_required": true,
+        "exact_mastery_requires_two_or_more_component_specific_possessive_pronoun_checks": true,
+        "generic_task26_result_can_emit_exact_component_mastery": false,
+        "demonstrative_or_determinative_pronoun_result_can_emit_this_mastery": false,
+        "broader_link_means_unit_can_emit_exact_possessive_pronoun_mastery": false,
+        "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "identifying a possessive-pronoun function in a concrete text pair",
+          "resolving the previous-context referent or possessor",
+          "distinguishing possessive use from an object form at a verb",
+          "proving the inter-sentence cohesion function"
+        ],
+        "forbidden": [
+          "emitting mastery from generic Task-26 success",
+          "treating demonstrative or determinative pronouns as candidate-004",
+          "claiming full pronoun morphology mastery",
+          "calling every form его/её/их a possessive cohesion device without checking syntactic function",
+          "using the broader cohesion-link-means result as exact candidate-004 mastery"
+        ]
+      }
+    }
+  ]
+}

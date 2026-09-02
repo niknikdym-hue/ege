@@ -1,0 +1,124 @@
+name: Russian RU02 orthoepy source identity resolution
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_source_identity_resolution.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_candidate_boundary_review.py"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/03-RUSSIAN-SKILL-GRAPH.json"
+      - ".github/workflows/russian-ru02-orthoepy-source-identity-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru02-source-identity-resolution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch current PR base
+        run: git fetch --no-tags origin "${{ github.base_ref }}" --depth=1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU02 source identity resolver
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_source_identity_resolution.py
+      - name: Build RU02 source identity resolution twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_source_identity_resolution.py --output /tmp/ru02-source-a.json > /tmp/ru02-source-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_source_identity_resolution.py --output /tmp/ru02-source-b.json > /tmp/ru02-source-b.txt
+          cmp /tmp/ru02-source-a.json /tmp/ru02-source-b.json
+          diff -u /tmp/ru02-source-a.txt /tmp/ru02-source-b.txt
+          cat /tmp/ru02-source-a.txt
+          cp /tmp/ru02-source-a.json RU02-ORTHOEPY-SOURCE-IDENTITY-RESOLUTION.json
+      - name: Verify exact source identity resolution remains fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path('RU02-ORTHOEPY-SOURCE-IDENTITY-RESOLUTION.json').read_text(encoding='utf-8'))
+          assert data['schema_version'] == '0.1.0'
+          assert data['status'] == 'CENTRAL_BRAIN_RU02_SOURCE_IDENTITIES_RESOLVED_SUBJECT_ACCEPTANCE_NOT_ADMITTED'
+          assert data['module_id'] == 'RU-PROG-02'
+          assert data['prerequisite_boundary_status'] == 'CENTRAL_BRAIN_RU02_ORTHOEPY_REUSE_FIRST_BOUNDARY_REVIEW_ACCEPTANCE_NOT_ADMITTED'
+          expected = {
+              'candidate-018': ('normative_stress_selection', 'confirmed'),
+              'candidate-019': ('stress_nouns', 'partial'),
+              'candidate-020': ('stress_adjectival_forms', 'partial'),
+              'candidate-021': ('stress_verbs', 'partial'),
+              'candidate-022': ('stress_participles', 'partial'),
+              'candidate-023': ('stress_gerunds', 'partial'),
+              'candidate-024': ('stress_adverbs', 'partial'),
+          }
+          rows = data['resolutions']
+          assert len(rows) == 7
+          assert {
+              row['candidate_ref']: (row['source_taxonomy_id'], row['skill_graph_evidence_status'])
+              for row in rows
+          } == expected
+          for row in rows:
+              assert row['source_identity_resolution'] == 'EXACT_CURRENT_SOURCE_VERIFIED_INVENTORY_BACKING_GRAPH_EVIDENCE_PRESERVED'
+              assert row['inventory_source_review_status'] == 'source_verified'
+              assert row['skill_graph_evidence_status'] in {'confirmed', 'partial'}
+              assert row['route_metadata'] == {'ege_task_numbers': [4]}
+              assert row['admission_effect'] == 'NONE'
+              assert row['source_provenance_refs']
+          policy = data['policy']
+          assert policy['source_identity_resolution_is_subject_semantic_admission'] is False
+          assert policy['ege_taxonomy_id_is_canonical_subject_semantic_id'] is False
+          assert policy['candidate_ref_is_canonical_subject_semantic_id'] is False
+          assert policy['task_number_is_semantic_identity'] is False
+          assert policy['exact_source_backing_required'] is True
+          assert policy['exact_label_and_meaning_match_required'] is True
+          assert policy['source_verified_inventory_backing_required'] is True
+          assert policy['skill_graph_evidence_status_must_be_preserved'] is True
+          assert policy['partial_skill_graph_evidence_may_be_promoted_by_resolution'] is False
+          assert policy['content_adequacy_review_still_required_before_gap_or_admission'] is True
+          assert policy['keyword_or_fuzzy_inference_allowed'] is False
+          assert data['summary'] == {
+              'candidate_records': 7,
+              'exact_source_identity_resolutions': 7,
+              'unresolved_source_identities': 0,
+              'confirmed_skill_graph_evidence': 1,
+              'partial_skill_graph_evidence': 6,
+              'semantic_admissions': 0,
+              'object_level_admission_units_closed': 0,
+              'object_level_requirements_closed': 0,
+              'false_exact_mastery_admissions': 0,
+          }
+          assert data['next_exact_work'] == {
+              'draft_candidates_requiring_source_identity_resolution': 0,
+              'candidates_with_partial_skill_graph_evidence_requiring_semantic_acceptance_review': 6,
+              'content_units_requiring_exact_candidate_adequacy_review': 2,
+              'candidate_level_content_gap_may_be_declared_without_separate_review': False,
+              'subject_semantic_admission_may_be_inferred_from_source_resolution': False,
+          }
+          print('RU02_ORTHOEPY_SOURCE_IDENTITY_FAIL_CLOSED_GUARD=PASS')
+          PY
+      - name: Upload RU02 source identity evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru02-orthoepy-source-identity-resolution
+          path: RU02-ORTHOEPY-SOURCE-IDENTITY-RESOLUTION.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"

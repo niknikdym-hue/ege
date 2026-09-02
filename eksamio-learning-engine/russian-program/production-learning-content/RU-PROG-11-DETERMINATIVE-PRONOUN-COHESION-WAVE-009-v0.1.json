@@ -1,0 +1,237 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-11",
+  "module_title_ru": "Текст, смысл и межфразовая связь",
+  "scope": {
+    "routes": [
+      "school",
+      "ege",
+      "diagnostic",
+      "tutor"
+    ],
+    "source_candidate_ref": "candidate-002",
+    "source_taxonomy_id": "cohesion_determinative_pronoun"
+  },
+  "source_provenance": [
+    {
+      "kind": "semantic_candidate_inventory",
+      "ref": "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json#semantic_candidate::candidate-002",
+      "coverage_note": "Current draft subject candidate; status is preserved and not silently upgraded."
+    },
+    {
+      "kind": "confirmed_skill_graph",
+      "ref": "03-RUSSIAN-SKILL-GRAPH.json#skills[cohesion_determinative_pronoun]",
+      "coverage_note": "Confirmed repository-audited EGE taxonomy node under text_cohesion, task 1."
+    },
+    {
+      "kind": "program_authority",
+      "ref": "russian-program/RUSSIAN-FULL-SUBJECT-PROGRAM-v1.1.json#RU-PROG-11"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "commercial_textbook_bytes": 0,
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "rule": "Source authorities define the bounded skill identity only; all learner-facing examples and practice below are original Eksamio wording."
+  },
+  "identity_boundary": "This file materializes an exact candidate-specific verification gap. The ru-* id remains non-school-canonical and is admitted only by the separate Central Brain bounded subject-semantic authority; candidate/taxonomy ids are preserved as source refs.",
+  "reuse_review": {
+    "broader_existing_unit_ref": "russian-program/production-learning-content/RU-PROG-11-TEXT-COHESION-WAVE-002-v0.1.json#units[proposed_semantic_id=ru-text-cohesion-link-means]",
+    "broader_existing_unit_reused_for_explanation_and_transfer": true,
+    "broader_existing_unit_direct_determinative_pronoun_independent_checks": 0,
+    "broader_existing_unit_reused_as_exact_candidate_002_mastery_evidence": false,
+    "new_content_materialized_only_for_proven_component_verification_gap": true,
+    "reason": "The broader cohesion unit teaches referent/function analysis and includes a demonstrative-pronoun example, but it does not independently verify that the learner can identify an attributive/determinative pronoun specifically and prove its inter-sentence cohesion function."
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-text-cohesion-determinative-pronoun",
+      "title_ru": "Определительное местоимение как средство связи",
+      "canonical_explanation": {
+        "short": "Определительное местоимение может связывать предложения, если оно во втором фрагменте подхватывает уже названный объект, множество или участника и задаёт к нему распределительное, обобщающее или выделительное отношение. Для mastery нужно назвать именно определительное местоимение, установить его референт в предыдущем контексте и доказать связующую функцию.",
+        "boundaries": [
+          "Этот unit не проверяет полную морфологию и склонение всех определительных местоимений.",
+          "Указательные и притяжательные местоимения не засчитываются как mastery этого semantic.",
+          "Само наличие слова «каждый», «любой», «весь», «сам», «иной» или «другой» не доказывает межфразовую связь без ясного референта.",
+          "Generic Task-1/Task-26 result и общий unit по средствам связи не могут автоматически выдать exact mastery этого component."
+        ]
+      },
+      "decision_algorithm": [
+        "Найди во втором предложении местоименный элемент, который потенциально подхватывает предыдущий контекст.",
+        "Проверь, относится ли он именно к определительным местоимениям в школьной классификации, а не к указательным или притяжательным.",
+        "Назови конкретный референт: слово, группу лиц/предметов или смысловой объект из предыдущего предложения.",
+        "Определи отношение: распределение по членам множества, обобщение, выделение/самотождественность или выбор любого элемента.",
+        "Убери местоимение мысленно: если пропадает подхват предыдущего контекста, это подтверждает связующую функцию.",
+        "Фиксируй mastery только если одновременно доказаны разряд, референт и межфразовая функция."
+      ],
+      "worked_examples": [
+        {
+          "prompt": "В кружок записались шесть учеников. Каждый выбрал тему для проекта.",
+          "answer": "«Каждый» — определительное местоимение; оно относится ко всем шести ученикам по отдельности и связывает второе предложение с первым."
+        },
+        {
+          "prompt": "Комиссия рассмотрела несколько вариантов. Любой требовал дополнительной проверки.",
+          "answer": "«Любой» подхватывает множество вариантов и выражает выбор произвольного элемента из него; это определительное местоимение в связующей функции."
+        },
+        {
+          "prompt": "Экспедиция вернулась в тот же посёлок. Сам посёлок за год почти не изменился.",
+          "answer": "«Сам» выделяет уже названный посёлок и подхватывает его как референт; связь доказана контекстом."
+        },
+        {
+          "prompt": "Во дворе рос клён. Это дерево пережило сильную бурю.",
+          "answer": "«Это» здесь указательное, а не определительное местоимение. Пара может быть связной, но candidate-002 mastery по ней не выдаётся."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Любое местоимение между предложениями подходит.",
+          "correction": "Нужно доказать именно разряд определительного местоимения и его референт."
+        },
+        {
+          "wrong": "Слово «каждый» автоматически является средством связи.",
+          "correction": "Без подхвата конкретного множества или объекта из предыдущего контекста межфразовая функция не доказана."
+        },
+        {
+          "wrong": "«Этот» и «каждый» можно засчитать одинаково.",
+          "correction": "«Этот» относится к указательным; candidate-002 проверяет только определительное местоимение как средство связи."
+        },
+        {
+          "wrong": "Если ответ на Task-1 верный, mastery определительных местоимений уже доказана.",
+          "correction": "Task result может быть составным; exact component mastery требует отдельной независимой проверки этого компонента."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p11-det-g1",
+          "prompt": "«В команде пять участников. Каждый отвечает за свой участок». Что является референтом слова «каждый»?",
+          "expected": "Множество из пяти участников команды."
+        },
+        {
+          "id": "p11-det-g2",
+          "prompt": "Почему в паре «На полке стоял словарь. Этот справочник часто использовали» нельзя засчитать candidate-002?",
+          "expected": "«Этот» — указательное, а не определительное местоимение."
+        },
+        {
+          "id": "p11-det-g3",
+          "prompt": "Какие три вещи нужно доказать для exact mastery этого semantic?",
+          "expected": "Разряд определительного местоимения, его референт в предыдущем контексте и межфразовую связующую функцию."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p11-det-i1",
+          "prompt": "«Группа получила три задания. Каждое требовало отдельного расчёта». Назови средство связи.",
+          "answer": "Определительное местоимение «каждое», относящееся к трём заданиям."
+        },
+        {
+          "id": "p11-det-i2",
+          "prompt": "«Были предложены разные маршруты. Любой занимал не меньше часа». Что подхватывает «любой»?",
+          "answer": "Множество предложенных маршрутов."
+        },
+        {
+          "id": "p11-det-i3",
+          "prompt": "«Исследователь описал метод. Этот метод повторили коллеги». Это candidate-002?",
+          "answer": "Нет: «этот» — указательное местоимение."
+        },
+        {
+          "id": "p11-det-i4",
+          "prompt": "Достаточно ли назвать «каждый» определительным местоимением, не указывая референт?",
+          "answer": "Нет; нужно доказать, что оно подхватывает конкретный предыдущий контекст и связывает предложения."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p11-det-t1",
+          "prompt": "Ученик выписал «каждый» из отдельного предложения без предыдущего контекста и поставил mastery. Найди ошибку.",
+          "answer": "Без предыдущего контекста нельзя доказать референт и межфразовую функцию."
+        },
+        {
+          "id": "p11-det-t2",
+          "prompt": "Сравни «Каждый получил билет» после упоминания группы и «Этот получил билет» после упоминания человека.",
+          "answer": "Первая связь может доказывать candidate-002; вторая использует указательное местоимение и относится к соседнему semantic."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p11-det-r1",
+          "delay_hint": "24h",
+          "prompt": "Что кроме разряда местоимения обязательно нужно установить?",
+          "answer": "Референт в предыдущем контексте и связующую функцию."
+        },
+        {
+          "id": "p11-det-r2",
+          "delay_hint": "7d",
+          "prompt": "Верный общий ответ по Task-1 равен exact mastery candidate-002?",
+          "answer": "Нет, нужен отдельный component-specific independent evidence."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p11-det-v1",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «На семинар пришли восемь участников. Каждый подготовил один вопрос». Назови местоимение, его разряд, референт и функцию.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: названо местоимение «каждый» и определительный разряд",
+              "1: референтом названы восемь участников/группа участников из первого предложения",
+              "1: доказана распределительная межфразовая связующая функция"
+            ]
+          }
+        },
+        {
+          "id": "p11-det-v2",
+          "type": "constructed_response",
+          "prompt": "Разбери связь: «Редакция получила несколько вариантов заголовка. Любой можно было доработать». Почему «любой» является средством межфразовой связи?",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: «любой» распознан как определительное местоимение",
+              "1: референтом названо множество вариантов заголовка",
+              "1: объяснено, что местоимение подхватывает это множество и связывает второе предложение с первым"
+            ]
+          }
+        },
+        {
+          "id": "p11-det-v3",
+          "type": "constructed_response",
+          "prompt": "Контрастная проверка: «У дома рос клён. Это дерево было видно издалека». Можно ли по этой паре выдать mastery «Определительное местоимение как средство связи»? Обоснуй.",
+          "scoring": {
+            "max_points": 3,
+            "criteria": [
+              "1: ответ «нет»",
+              "1: «это» распознано как указательное, а не определительное местоимение",
+              "1: отмечено, что общая связность пары не доказывает exact candidate-002 mastery"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "source_candidate_ref": "candidate-002",
+        "source_candidate_review_status": "draft",
+        "independent_verification_required": true,
+        "exact_mastery_requires_two_or_more_component_specific_determinative_pronoun_checks": true,
+        "generic_task1_result_can_emit_exact_component_mastery": false,
+        "generic_task26_result_can_emit_exact_component_mastery": false,
+        "demonstrative_or_possessive_pronoun_result_can_emit_this_mastery": false,
+        "broader_link_means_unit_can_emit_exact_determinative_pronoun_mastery": false
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "identify an attributive/determinative pronoun only in a concrete sentence pair",
+          "ask the learner to name its antecedent/referent",
+          "require an explanation of the inter-sentence cohesion function"
+        ],
+        "forbidden": [
+          "claiming mastery from generic Task-1 or Task-26 correctness",
+          "treating demonstrative or possessive pronouns as candidate-002",
+          "claiming full pronoun morphology mastery",
+          "claiming cohesion without a concrete referent"
+        ]
+      }
+    }
+  ]
+}
