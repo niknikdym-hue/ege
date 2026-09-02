@@ -23,6 +23,7 @@ ACCOUNTING_BUILDER = HERE / "build_russian_subject_accounting_complete.py"
 PACKET_BUILDER = HERE / "build_russian_semantic_acceptance_packet.py"
 CURRENT_PROGRESS = HERE / "build_russian_semantic_acceptance_progress_launch_current.py"
 OVERLAY = ENGINE / "265-RUSSIAN-FIPI-2026-OGE-ROUTE-OVERLAY-v0.1.json"
+TARGET_AUTHORITY_ID = "RUSSIAN_OGE_6_14_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1"
 
 SOURCE_ID = "FIPI-OGE-RU-2026-FINAL"
 DOCUMENT_ID = "OGE_COD"
@@ -41,10 +42,30 @@ def canonical_bytes(value: Any) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
+def _pre_admission_progress() -> dict[str, Any]:
+    """Reconstruct the prerequisite progress view without the 6.14 target itself."""
+    namespace = runpy.run_path(str(CURRENT_PROGRESS))
+    base_builder = namespace.get("_base_build_progress")
+    if not callable(base_builder):
+        raise RuntimeError("current launch progress no longer exposes its base builder")
+    specs = tuple(base_builder.__globals__.get("OBJECT_AUTHORITIES", ()))
+    target_specs = [spec for spec in specs if len(spec) >= 4 and str(spec[3]) == TARGET_AUTHORITY_ID]
+    if len(target_specs) > 1:
+        raise RuntimeError("current launch progress contains duplicate OGE 6.14 target authorities")
+    if target_specs:
+        base_builder.__globals__["OBJECT_AUTHORITIES"] = tuple(
+            spec for spec in specs if not (len(spec) >= 4 and str(spec[3]) == TARGET_AUTHORITY_ID)
+        )
+    progress = namespace["build_progress"]()
+    if any(str(row.get("id")) == TARGET_AUTHORITY_ID for row in progress.get("accepted_authorities", []) if isinstance(row, dict)):
+        raise RuntimeError("OGE 6.14 target authority leaked into its own pre-admission identity proof")
+    return progress
+
+
 def build_review() -> dict[str, Any]:
     accounting = runpy.run_path(str(ACCOUNTING_BUILDER))["build_accounting"]()
     packet = runpy.run_path(str(PACKET_BUILDER))["build_packet"]()
-    progress = runpy.run_path(str(CURRENT_PROGRESS))["build_progress"]()
+    progress = _pre_admission_progress()
     overlay = json.loads(OVERLAY.read_text(encoding="utf-8"))
 
     assert accounting["status"] == "RUSSIAN_FULL_SUBJECT_OBJECT_ACCOUNTING_COMPLETE_SEMANTIC_ACCEPTANCE_REQUIRED"
@@ -136,8 +157,8 @@ def build_review() -> dict[str, Any]:
                 accepted_matches.append(accepted)
             if str(accepted.get("admission_unit_id")) == unit_id or str(accepted.get("requirement_id")) == requirement_id:
                 accepted_identity_matches.append(accepted)
-    assert accepted_matches == [], "6.14 is already present in current accepted object progress"
-    assert accepted_identity_matches == [], "6.14 object identity is already counted under another accepted code"
+    assert accepted_matches == [], "6.14 is already present in pre-admission accepted object progress"
+    assert accepted_identity_matches == [], "6.14 object identity is already counted under another pre-admission accepted code"
 
     result: dict[str, Any] = {
         "schema_version": "0.2.0",
