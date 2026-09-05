@@ -66,14 +66,17 @@ class FakeIdentityService:
         challenge_id = f"challenge:{self.counter:04d}"
         normalized = self._normalize_contact("email", payload["contact"])
         user_ref = self._user_identity_ref("email", normalized)
+        expires = 1_800_000_000 + self.counter
         self.auth_store.rows[challenge_id] = {
             "challenge_id": challenge_id,
             "user_identity_ref": user_ref,
+            "channel": "email",
+            "expires_at_epoch": expires,
         }
         return SimpleNamespace(
             challenge_id=challenge_id,
             channel="email",
-            expires_at_epoch=1_800_000_000,
+            expires_at_epoch=expires,
             delivery_ref=f"delivery:{self.counter:04d}",
         )
 
@@ -117,11 +120,11 @@ def payload(
 def row_values(connection):
     return connection.execute(
         """
-        SELECT event_id, user_identity_ref, consent_type, action,
+        SELECT event_seq, event_id, user_identity_ref, consent_type, action,
                captured_at_epoch, document_version, text_version,
-               client_request_id
+               client_request_id, registration_challenge_id
         FROM registration_consent_events
-        ORDER BY captured_at_epoch, event_id
+        ORDER BY event_seq
         """
     ).fetchall()
 
@@ -147,7 +150,7 @@ def main() -> int:
         consent_store=store,
     )
 
-    # 1. Required personal-data consent is a hard gate before delivery.
+    # 1. Required personal-data consent is a hard gate before any delivery.
     try:
         service.begin_registration(payload(pd=False))
         raise AssertionError("registration without personal-data consent was accepted")
@@ -155,20 +158,23 @@ def main() -> int:
         pass
     assert identity.begin_calls == []
 
-    # 2. Optional marketing consent may be false and registration still works.
+    # 2. Marketing may be false and registration still works.
     receipt = service.begin_registration(payload(marketing=False))
     assert receipt.channel == "email"
     assert receipt.marketing_consent is False
     assert identity.begin_calls[-1]["anonymous_host_token"] is None
     user_ref = identity.auth_store.challenge(receipt.challenge_id)["user_identity_ref"]
-    assert store.personal_data_granted(user_identity_ref=user_ref) is True
+    assert store.personal_data_granted_for_challenge(
+        user_identity_ref=user_ref,
+        registration_challenge_id=receipt.challenge_id,
+    ) is True
     assert store.marketing_allowed(user_identity_ref=user_ref) is False
     marketing_row = store.latest_state(
         user_identity_ref=user_ref, consent_type=CONSENT_MARKETING
     )
     assert marketing_row["action"] == ACTION_DECLINE
 
-    # 3. A positive marketing checkbox is recorded separately.
+    # 3. Positive marketing consent is a distinct event from the PD grant.
     now["value"] += 1
     receipt2 = service.begin_registration(
         payload(
@@ -178,27 +184,88 @@ def main() -> int:
         )
     )
     user_ref2 = identity.auth_store.challenge(receipt2.challenge_id)["user_identity_ref"]
-    assert store.personal_data_granted(user_identity_ref=user_ref2) is True
+    assert store.personal_data_granted_for_challenge(
+        user_identity_ref=user_ref2,
+        registration_challenge_id=receipt2.challenge_id,
+    ) is True
     assert store.marketing_allowed(user_identity_ref=user_ref2) is True
-    pd_row = store.latest_state(
-        user_identity_ref=user_ref2, consent_type=CONSENT_PERSONAL_DATA
-    )
-    marketing_row2 = store.latest_state(
-        user_identity_ref=user_ref2, consent_type=CONSENT_MARKETING
-    )
-    assert pd_row["action"] == ACTION_GRANT
-    assert marketing_row2["action"] == ACTION_GRANT
-    assert pd_row["event_id"] != marketing_row2["event_id"]
+    pd_rows = connection.execute(
+        """
+        SELECT * FROM registration_consent_events
+        WHERE user_identity_ref = ? AND consent_type = ?
+          AND registration_challenge_id = ?
+        """,
+        (user_ref2, CONSENT_PERSONAL_DATA, receipt2.challenge_id),
+    ).fetchall()
+    marketing_rows = connection.execute(
+        """
+        SELECT * FROM registration_consent_events
+        WHERE user_identity_ref = ? AND consent_type = ?
+          AND registration_challenge_id = ?
+        """,
+        (user_ref2, CONSENT_MARKETING, receipt2.challenge_id),
+    ).fetchall()
+    assert len(pd_rows) == 1 and pd_rows[0]["action"] == ACTION_GRANT
+    assert len(marketing_rows) == 1 and marketing_rows[0]["action"] == ACTION_GRANT
+    assert pd_rows[0]["event_id"] != marketing_rows[0]["event_id"]
 
     # 4. Consent evidence never stores the raw e-mail/contact.
     serialized = "\n".join(str(tuple(row)) for row in row_values(connection))
     assert "@" not in serialized
     assert "example.invalid" not in serialized.casefold()
 
-    # 5. Timestamp is server-owned, not accepted from browser payload.
-    assert int(pd_row["captured_at_epoch"]) == now["value"]
+    # 5. Legal capture time is server-owned.
+    assert int(pd_rows[0]["captured_at_epoch"]) == now["value"]
 
-    # 6. Exact retry is idempotent at the append-only consent ledger.
+    # 6. Exact browser retry is idempotent and does not send a second code.
+    begin_count = len(identity.begin_calls)
+    receipt2_retry = service.begin_registration(
+        payload(
+            email="OPTIN@example.invalid",
+            marketing=True,
+            request_id="reg-request-0002",
+        )
+    )
+    assert receipt2_retry.challenge_id == receipt2.challenge_id
+    assert receipt2_retry.expires_at_epoch == receipt2.expires_at_epoch
+    assert len(identity.begin_calls) == begin_count
+
+    # 7. Same request id cannot silently change the marketing choice.
+    try:
+        service.begin_registration(
+            payload(
+                email="optin@example.invalid",
+                marketing=False,
+                request_id="reg-request-0002",
+            )
+        )
+        raise AssertionError("conflicting registration retry was accepted")
+    except ConsentReplayConflict:
+        pass
+    assert len(identity.begin_calls) == begin_count
+
+    # 8. Consent for one challenge cannot authorize another challenge, even
+    #    when both challenges resolve to the same e-mail identity.
+    orphan = identity.begin(
+        {"channel": "email", "contact": "optin@example.invalid"},
+        anonymous_host_token=None,
+    )
+    try:
+        service.verify_registration(
+            {"challenge_id": orphan.challenge_id, "code": "123456"}
+        )
+        raise AssertionError("a different challenge inherited old PD consent")
+    except MissingConsentEvidence:
+        pass
+
+    # 9. The exact challenge carrying the PD grant verifies normally.
+    session = service.verify_registration(
+        {"challenge_id": receipt2.challenge_id, "code": "123456"}
+    )
+    assert session.token.startswith("sid.")
+    assert service.marketing_allowed_for_session(session.token) is True
+
+    # 10. A non-registration consent event has exact retry idempotency.
     replay = store.append_event(
         user_identity_ref=user_ref2,
         consent_type=CONSENT_PERSONAL_DATA,
@@ -219,7 +286,7 @@ def main() -> int:
     assert replay2["status"] == "ALREADY_RECORDED"
     assert replay["event_id"] == replay2["event_id"]
 
-    # 7. A retry may not silently change choice or legal text.
+    # 11. Exact retry cannot change action or legal-text version.
     try:
         store.append_event(
             user_identity_ref=user_ref2,
@@ -233,28 +300,10 @@ def main() -> int:
     except ConsentReplayConflict:
         pass
 
-    # 8. Account verification requires the separate PD consent record.
-    orphan = identity.begin(
-        {"channel": "email", "contact": "orphan@example.invalid"},
-        anonymous_host_token=None,
-    )
-    try:
-        service.verify_registration(
-            {"challenge_id": orphan.challenge_id, "code": "123456"}
-        )
-        raise AssertionError("verification without PD consent evidence was accepted")
-    except MissingConsentEvidence:
-        pass
-
-    # 9. Normal registration verifies and yields an authenticated session.
-    session = service.verify_registration(
-        {"challenge_id": receipt2.challenge_id, "code": "123456"}
-    )
-    assert session.token.startswith("sid.")
-    assert service.marketing_allowed_for_session(session.token) is True
-
-    # 10. Marketing revocation is server-owned, authenticated and idempotent.
-    now["value"] += 1
+    # 12. A same-second marketing revocation wins by database sequence, not by
+    #     random event id or timestamp tie.
+    grant_time = int(marketing_rows[0]["captured_at_epoch"])
+    now["value"] = grant_time
     revoke = service.revoke_marketing(
         session_token=session.token,
         document_version="marketing-consent-v0.1",
@@ -273,12 +322,14 @@ def main() -> int:
     latest_marketing = store.latest_state(
         user_identity_ref=user_ref2, consent_type=CONSENT_MARKETING
     )
+    assert int(latest_marketing["captured_at_epoch"]) == grant_time
     assert latest_marketing["action"] == ACTION_REVOKE
+    assert int(latest_marketing["event_seq"]) > int(marketing_rows[0]["event_seq"])
 
-    # 11. No path in this facade opts into anonymous continuity.
+    # 13. The registration facade never opts into anonymous continuity.
     assert all(call["anonymous_host_token"] is None for call in identity.begin_calls)
 
-    print("registration consent acceptance: PASS (11 gates)")
+    print("registration consent acceptance: PASS (13 gates)")
     return 0
 
 
