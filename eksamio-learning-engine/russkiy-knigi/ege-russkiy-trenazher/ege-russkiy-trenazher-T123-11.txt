@@ -158,8 +158,35 @@ function createBrowserHook(options){
   };
 }
 
+/* Transport durability only: this queue is never canonical learner state. */
+function createObservationOutbox(options){
+  options=options||{};
+  var storage=options.storage,transport=options.transport,key="eksamio.pending-observations.v1",limit=20;
+  function read(){try{var rows=JSON.parse(storage.getItem(key)||"[]");return Array.isArray(rows)?rows:[];}catch(e){return[];}}
+  function write(rows){storage.setItem(key,JSON.stringify(rows));}
+  function enqueue(request){
+    var rows=read(),id=request&&request.payload&&request.payload.client_request_id;
+    if(!id)throw new Error("client_request_id is required");
+    if(rows.some(function(r){return r.request.payload.client_request_id===id;}))return{status:"PENDING"};
+    if(rows.length>=limit)return{status:"OUTBOX_FULL"};
+    rows.push({request:cloneJson(request),attempts:0,last_attempt_at:null});write(rows);return{status:"PENDING"};
+  }
+  function flush(){
+    return read().reduce(function(chain,row){return chain.then(function(){
+      return Promise.resolve(transport(cloneJson(row.request))).then(function(reply){
+        var ok=reply&&(reply.status==="ACCEPTED"||reply.status==="ALREADY_APPLIED")&&sanitizeDirective(reply);
+        var current=read(),id=row.request.payload.client_request_id;
+        if(ok)write(current.filter(function(item){return item.request.payload.client_request_id!==id;}));
+        else write(current.map(function(item){if(item.request.payload.client_request_id===id){item.attempts+=1;item.last_attempt_at=new Date().toISOString();}return item;}));
+      },function(){return null;});
+    });},Promise.resolve()).then(read);
+  }
+  return{enqueue:enqueue,flush:flush,read:read,key:key};
+}
+
 return{
   createBrowserHook:createBrowserHook,
+  createObservationOutbox:createObservationOutbox,
   sanitizeDirective:sanitizeDirective,
   directiveFields:DIRECTIVE_FIELDS.slice()
 };
@@ -192,6 +219,16 @@ var hook=window.EksamioPEISBrowserHook.createBrowserHook({
  onDirective:function(directive){window.dispatchEvent(new CustomEvent("eksamio:peis-directive",{detail:directive}));},
  onDiagnostic:function(event){if(event&&event.kind)detail.textContent+="\n"+event.kind;}
 });
+var outbox=window.EksamioPEISBrowserHook.createObservationOutbox({storage:window.localStorage,transport:function(request){
+ return fetch(base()+"/api/peis/checked-card",{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify(request)}).then(function(r){return r.json().then(function(b){if(!r.ok)throw new Error(b.error||("HTTP_"+r.status));return b;});});
+}});
+var originalObserve=hook.observeCheckedCard;
+hook.observeCheckedCard=function(card,session){return originalObserve(card,session).then(function(result){
+ if(result.status!=="DELIVERED"&&result.request){var queued=outbox.enqueue(result.request);show("failed",queued.status==="OUTBOX_FULL"?"Очередь отправки заполнена — попытка не сохранена.":"Попытка сохранена локально для повторной отправки.",queued.status);}
+ return result;
+});};
+hook.flushPending=outbox.flush;
+window.addEventListener("online",outbox.flush);window.addEventListener("eksamio:sync",outbox.flush);setTimeout(outbox.flush,0);
 window.__EKSAMIO_PEIS_HOOK__=hook;
 })();
 </script>
