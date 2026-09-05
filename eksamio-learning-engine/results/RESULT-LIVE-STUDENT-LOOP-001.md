@@ -109,3 +109,9 @@ external resources: HTTPS gateway/domain route, secure cross-origin cookie/CORS
 policy, production passwordless delivery, managed Postgres/Lockbox secrets and
 an admitted Tutor provider path. The slice therefore stops at a production-shaped,
 fully executable loopback STAGING implementation and does not mislabel it LIVE.
+# 2026-09-05 bounded corrections
+
+The staging slice now includes transport-only observation retry durability,
+fresh Tutor reverification lineage, Moscow server-time Today counters, and a
+reproducible native macOS owner panel. Public production remains disconnected
+and T123-11 remains unpublished.
