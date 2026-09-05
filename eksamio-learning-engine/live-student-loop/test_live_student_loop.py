@@ -7,6 +7,8 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest import mock
+from datetime import datetime
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -138,6 +140,28 @@ class LiveStudentLoopTest(unittest.TestCase):
         self.assertEqual(self.app.store.event_count(), 0)
         with self.assertRaises(ValueError):
             runtime.LiveLoopServer(("0.0.0.0", 0), self.app)
+
+    def test_tutor_rehelp_creates_fresh_lineage(self) -> None:
+        _, host, _ = self.login()
+        self.app.submit_practice(host, self.practice_payload("сочитание", 1, "wrong"))
+        first = self.app.tutor_turn(host, "help")
+        verified = self.app.submit_practice(host, self.practice_payload("сочетание", 2, "right"))
+        self.assertTrue(verified["verification_completed"])
+        second = self.app.tutor_turn(host, "help again")
+        self.assertNotEqual(first["context_id"], second["context_id"])
+        self.assertEqual(second["context_id"], self.app.tutor_turn(host, "duplicate")["context_id"])
+
+    def test_today_uses_moscow_server_day(self) -> None:
+        _, host, _ = self.login()
+        self.app.submit_practice(host, self.practice_payload("сочитание", 1, "moscow"))
+        events = self.app.store.list_events(host.learner_profile_id, "russian")
+        events[-1]["timestamps"]["received_at_server"] = "2026-09-05T21:30:00+00:00"
+        fixed = datetime(2026, 9, 6, 1, 0, tzinfo=runtime.REPORTING_TIMEZONE)
+        with mock.patch.object(self.app.store, "list_events", return_value=events), mock.patch.object(runtime, "datetime", wraps=datetime) as dt:
+            dt.now.return_value = fixed
+            profile = self.app.profile(host.learner_profile_id, grade=10, route="ege")
+        self.assertEqual(profile["today"]["solved"], 1)
+        self.assertEqual(profile["reporting_timezone"], "Europe/Moscow")
 
 
 if __name__ == "__main__":
