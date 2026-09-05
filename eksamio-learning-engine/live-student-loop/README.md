@@ -38,3 +38,14 @@ Postgres resources have passed deployment admission.
 The learner browser sends only accepted observation fields. It does not send
 identity, score, semantic truth, mastery, readiness or NBA state. A failed
 backend call is shown as unsynchronised and never as accepted.
+# Owner staging durability
+
+Failed checked-card deliveries use a bounded, non-canonical browser outbox; the
+server remains the sole owner of evidence and mastery. “Today” is calculated
+from `received_at_server` in `Europe/Moscow`. Tutor help after verification
+opens a fresh independent-verification lineage.
+
+On macOS run `macos/install-desktop-app.sh` to replace the local
+`~/Desktop/Eksamio — Ученик STAGING.app`. The panel is loopback-only, keeps its
+stable staging key in Keychain, and stores bounded SQLite state in Application
+Support. This remains STAGING; T123-11 is not published.
