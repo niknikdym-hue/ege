@@ -49,7 +49,8 @@ for(const file of fs.readdirSync(root).filter(x=>/T123-(?:0[1-9]|10|11)\.txt$/.t
 const integration=fs.readFileSync(path.join(root,'ege-russkiy-trenazher-T123-11.txt'),'utf8');
 ok(/EKSAMIO_LEARNER_LOOP_CONFIG/.test(integration)&&/__EKSAMIO_PEIS_HOOK__/.test(integration),'bounded T123-11 installs the accepted PEIS hook only under explicit config');
 ok(/Прогресс временно не синхронизирован/.test(integration),'backend failure is visible and never reported as success');
-ok(!/localStorage/.test(integration)&&!/mastery\s*=/.test(integration),'integration block stores no canonical learner state in the browser');
+ok(/pending-observations/.test(integration)&&!/mastery\s*=/.test(integration),'integration stores only a non-canonical observation delivery outbox');
+ok(/OUTBOX_FULL/.test(integration)&&/client_request_id/.test(integration),'delivery outbox is bounded and preserves request identity');
 ok(!/api[_-]?key|bearer\s+[a-z0-9]/i.test(integration),'integration block contains no client secret');
 const previewPrefix='<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Тренажёр ЕГЭ по русскому языку — локальный предпросмотр</title></head><body style="margin:0">';
 const previewBlocks=['01','02','03','04','05','06','07','08','10'].map(n=>fs.readFileSync(path.join(root,`ege-russkiy-trenazher-T123-${n}.txt`),'utf8').trim());
