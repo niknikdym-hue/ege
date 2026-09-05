@@ -1,0 +1,11 @@
+name: Live student loop macOS panel
+on: [pull_request]
+jobs:
+  panel:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install jsonschema
+      - run: bash -n eksamio-learning-engine/live-student-loop/macos/install-desktop-app.sh
+      - run: eksamio-learning-engine/live-student-loop/macos/install-desktop-app.sh
+      - run: test -x "$HOME/Desktop/Eksamio — Ученик STAGING.app/Contents/MacOS/EksamioStudentStaging"

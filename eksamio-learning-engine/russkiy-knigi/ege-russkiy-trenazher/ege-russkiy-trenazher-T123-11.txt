@@ -1,0 +1,234 @@
+<style>
+#er-live-loop{width:min(1120px,calc(100% - 32px));margin:18px auto;padding:16px 18px;border:1px solid #BBD4FF;border-radius:18px;background:#F5F9FF;color:#19324A;font-family:Inter,Manrope,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#er-live-loop[hidden]{display:none!important}#er-live-loop .erll-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}#er-live-loop strong{display:block}#er-live-loop p{margin:4px 0 0;color:#5A7691;font-size:13px}#er-live-loop a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border-radius:999px;background:#2F80FF;color:#FFF;text-decoration:none;font-weight:800}#er-live-loop details{margin-top:10px;font-size:12px;color:#5A7691}#er-live-loop[data-sync="failed"]{border-color:#FDA29B;background:#FFF1F0}#er-live-loop[data-sync="pass"]{border-color:#ABEFC6;background:#ECFDF3}
+</style>
+<section id="er-live-loop" hidden aria-label="Связь с Мой Eksamio" data-sync="idle">
+ <div class="erll-row"><div><strong>Мой Eksamio</strong><p data-role="erll-status">Серверный прогресс подключён в тестовом контуре.</p></div><a data-role="erll-link" href="/pro/">Открыть мой прогресс</a></div>
+ <details data-role="erll-owner" hidden><summary>Режим проверки</summary><pre data-role="erll-detail">— NOT APPLICABLE</pre></details>
+</section>
+<script>
+(function(root,factory){
+"use strict";
+var api=factory();
+if(typeof module!=="undefined"&&module.exports)module.exports=api;
+if(root)root.EksamioPEISBrowserHook=api;
+})(typeof window!=="undefined"?window:null,function(){
+"use strict";
+
+var DIRECTIVE_FIELDS=[
+  "recommendation_id",
+  "action_type",
+  "semantic_targets",
+  "prerequisite_targets",
+  "reason_codes",
+  "verification_required",
+  "learner_state_watermark",
+  "route",
+  "canonical_state_owner"
+];
+
+function cloneJson(value){
+  if(value===undefined)return null;
+  return JSON.parse(JSON.stringify(value));
+}
+
+function stableHash(text){
+  var h=2166136261;
+  for(var i=0;i<text.length;i++){
+    h^=text.charCodeAt(i);
+    h=Math.imul(h,16777619);
+  }
+  return("00000000"+(h>>>0).toString(16)).slice(-8);
+}
+
+function sanitizeDirective(response){
+  if(!response||typeof response!=="object")return null;
+  var source=response.directive;
+  if(!source||typeof source!=="object")return null;
+  if(source.canonical_state_owner!=="shared_peis")return null;
+  var out={};
+  DIRECTIVE_FIELDS.forEach(function(key){
+    if(Object.prototype.hasOwnProperty.call(source,key))out[key]=cloneJson(source[key]);
+  });
+  return out;
+}
+
+function nonFatalCallback(callback,payload){
+  if(typeof callback!=="function")return"NOT_CONFIGURED";
+  try{
+    callback(payload);
+    return"DELIVERED";
+  }catch(e){
+    return"FAILED_OPEN";
+  }
+}
+
+function settleWithTimeout(operation,timeoutMs){
+  return new Promise(function(resolve){
+    var settled=false;
+    var timer=setTimeout(function(){
+      if(settled)return;
+      settled=true;
+      resolve({kind:"TIMEOUT"});
+    },timeoutMs);
+    Promise.resolve().then(operation).then(function(value){
+      if(settled)return;
+      settled=true;
+      clearTimeout(timer);
+      resolve({kind:"VALUE",value:value});
+    },function(error){
+      if(settled)return;
+      settled=true;
+      clearTimeout(timer);
+      resolve({kind:"ERROR",error:error});
+    });
+  });
+}
+
+function createBrowserHook(options){
+  options=options||{};
+  var enabled=options.enabled===true;
+  var adapterId=typeof options.adapterId==="string"?options.adapterId:"";
+  var transport=typeof options.transport==="function"?options.transport:null;
+  var onDirective=typeof options.onDirective==="function"?options.onDirective:null;
+  var onDiagnostic=typeof options.onDiagnostic==="function"?options.onDiagnostic:null;
+  var clock=typeof options.clock==="function"?options.clock:function(){return new Date().toISOString();};
+  var timeoutMs=Number(options.timeoutMs);
+  if(!Number.isFinite(timeoutMs)||timeoutMs<1)timeoutMs=1500;
+  if(timeoutMs>10000)timeoutMs=10000;
+
+  function buildCheckedCardRequest(card,session){
+    if(!card||typeof card.id!=="string"||!card.id)throw new Error("card.id is required");
+    if(!session||!Number.isFinite(Number(session.startedAt))||Number(session.startedAt)<=0)throw new Error("session.startedAt is required");
+    if(session.mode!=="practice"&&session.mode!=="exam")throw new Error("session.mode is invalid");
+    if(!session.answers||!Object.prototype.hasOwnProperty.call(session.answers,card.id))throw new Error("session answer is missing");
+    if(!adapterId)throw new Error("adapterId is required");
+    var requestKey=adapterId+"|"+String(session.startedAt)+"|"+card.id;
+    return{
+      adapter_id:adapterId,
+      payload:{
+        card_id:card.id,
+        session_started_at_ms:Number(session.startedAt),
+        session_mode:session.mode,
+        answer:cloneJson(session.answers[card.id]),
+        occurred_at_client:String(clock()),
+        client_request_id:"bh."+stableHash(requestKey)
+      }
+    };
+  }
+
+  function observeCheckedCard(card,session){
+    if(!enabled)return Promise.resolve({status:"DISABLED"});
+    if(!transport)return Promise.resolve({status:"FAILED_OPEN",reason:"TRANSPORT_NOT_CONFIGURED"});
+    var request;
+    try{
+      request=buildCheckedCardRequest(card,session);
+    }catch(error){
+      nonFatalCallback(onDiagnostic,{kind:"BUILD_FAILED",message:String(error&&error.message||error)});
+      return Promise.resolve({status:"FAILED_OPEN",reason:"BUILD_FAILED"});
+    }
+    return settleWithTimeout(function(){return transport(cloneJson(request));},timeoutMs).then(function(result){
+      if(result.kind==="TIMEOUT"){
+        nonFatalCallback(onDiagnostic,{kind:"TRANSPORT_TIMEOUT"});
+        return{status:"FAILED_OPEN",reason:"TRANSPORT_TIMEOUT",request:request};
+      }
+      if(result.kind==="ERROR"){
+        nonFatalCallback(onDiagnostic,{kind:"TRANSPORT_ERROR",message:String(result.error&&result.error.message||result.error)});
+        return{status:"FAILED_OPEN",reason:"TRANSPORT_ERROR",request:request};
+      }
+      var directive=sanitizeDirective(result.value);
+      if(!directive){
+        nonFatalCallback(onDiagnostic,{kind:"DIRECTIVE_REJECTED"});
+        return{status:"FAILED_OPEN",reason:"DIRECTIVE_REJECTED",request:request};
+      }
+      var callbackStatus=nonFatalCallback(onDirective,cloneJson(directive));
+      return{
+        status:"DELIVERED",
+        directive:directive,
+        callback_status:callbackStatus,
+        request:request
+      };
+    });
+  }
+
+  return{
+    enabled:enabled,
+    buildCheckedCardRequest:buildCheckedCardRequest,
+    observeCheckedCard:observeCheckedCard
+  };
+}
+
+/* Transport durability only: this queue is never canonical learner state. */
+function createObservationOutbox(options){
+  options=options||{};
+  var storage=options.storage,transport=options.transport,key="eksamio.pending-observations.v1",limit=20;
+  function read(){try{var rows=JSON.parse(storage.getItem(key)||"[]");return Array.isArray(rows)?rows:[];}catch(e){return[];}}
+  function write(rows){storage.setItem(key,JSON.stringify(rows));}
+  function enqueue(request){
+    var rows=read(),id=request&&request.payload&&request.payload.client_request_id;
+    if(!id)throw new Error("client_request_id is required");
+    if(rows.some(function(r){return r.request.payload.client_request_id===id;}))return{status:"PENDING"};
+    if(rows.length>=limit)return{status:"OUTBOX_FULL"};
+    rows.push({request:cloneJson(request),attempts:0,last_attempt_at:null});write(rows);return{status:"PENDING"};
+  }
+  function flush(){
+    return read().reduce(function(chain,row){return chain.then(function(){
+      return Promise.resolve(transport(cloneJson(row.request))).then(function(reply){
+        var ok=reply&&(reply.status==="ACCEPTED"||reply.status==="ALREADY_APPLIED")&&sanitizeDirective(reply);
+        var current=read(),id=row.request.payload.client_request_id;
+        if(ok)write(current.filter(function(item){return item.request.payload.client_request_id!==id;}));
+        else write(current.map(function(item){if(item.request.payload.client_request_id===id){item.attempts+=1;item.last_attempt_at=new Date().toISOString();}return item;}));
+      },function(){return null;});
+    });},Promise.resolve()).then(read);
+  }
+  return{enqueue:enqueue,flush:flush,read:read,key:key};
+}
+
+return{
+  createBrowserHook:createBrowserHook,
+  createObservationOutbox:createObservationOutbox,
+  sanitizeDirective:sanitizeDirective,
+  directiveFields:DIRECTIVE_FIELDS.slice()
+};
+});
+</script>
+<script>
+(function(){
+"use strict";
+var config=window.EKSAMIO_LEARNER_LOOP_CONFIG;
+if(!config||config.enabled!==true)return;
+var panel=document.getElementById("er-live-loop"),status=panel.querySelector('[data-role="erll-status"]'),link=panel.querySelector('[data-role="erll-link"]'),owner=panel.querySelector('[data-role="erll-owner"]'),detail=panel.querySelector('[data-role="erll-detail"]');
+panel.hidden=false;link.href=String(config.proUrl||"/pro/");
+if(config.ownerTest===true)owner.hidden=false;
+function show(kind,text,extra){panel.setAttribute("data-sync",kind);status.textContent=text;if(config.ownerTest===true&&extra)detail.textContent=extra;}
+function base(){return String(config.baseUrl||"").replace(/\/$/,"");}
+var hook=window.EksamioPEISBrowserHook.createBrowserHook({
+ enabled:true,
+ adapterId:"russian-ege-trainer-task12-v0.1",
+ timeoutMs:4000,
+ transport:function(request){
+  show("idle","Сохраняем попытку на сервере…");
+  return fetch(base()+"/api/peis/checked-card",{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify(request)}).then(function(response){
+   return response.json().then(function(body){if(!response.ok)throw new Error(body&&body.error||"HTTP_"+response.status);return body;});
+  }).then(function(body){
+   var receipt=body.event_receipt||{},diag=body.owner_diagnostic||{};
+   show("pass","Попытка принята сервером. Откройте «Мой прогресс».","✓ Server accepted\nevent: "+(receipt.event_id||"—")+"\nwatermark: "+(receipt.server_watermark||"—")+"\nNBA: "+((body.directive||{}).action_type||"—")+"\nmode: "+(diag.mode||"—"));
+   return body;
+  }).catch(function(error){show("failed","Прогресс временно не синхронизирован. Попытка сохранена локально для повторной отправки.","! FAILED\n"+String(error&&error.message||error));throw error;});
+ },
+ onDirective:function(directive){window.dispatchEvent(new CustomEvent("eksamio:peis-directive",{detail:directive}));},
+ onDiagnostic:function(event){if(event&&event.kind)detail.textContent+="\n"+event.kind;}
+});
+var outbox=window.EksamioPEISBrowserHook.createObservationOutbox({storage:window.localStorage,transport:function(request){
+ return fetch(base()+"/api/peis/checked-card",{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify(request)}).then(function(r){return r.json().then(function(b){if(!r.ok)throw new Error(b.error||("HTTP_"+r.status));return b;});});
+}});
+var originalObserve=hook.observeCheckedCard;
+hook.observeCheckedCard=function(card,session){return originalObserve(card,session).then(function(result){
+ if(result.status!=="DELIVERED"&&result.request){var queued=outbox.enqueue(result.request);show("failed",queued.status==="OUTBOX_FULL"?"Очередь отправки заполнена — попытка не сохранена.":"Попытка сохранена локально для повторной отправки.",queued.status);}
+ return result;
+});};
+hook.flushPending=outbox.flush;
+window.addEventListener("online",outbox.flush);window.addEventListener("eksamio:sync",outbox.flush);setTimeout(outbox.flush,0);
+window.__EKSAMIO_PEIS_HOOK__=hook;
+})();
+</script>
