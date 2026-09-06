@@ -21,6 +21,52 @@ if [[ "${YC_IMAGE}" != *@sha256:* ]]; then
   exit 2
 fi
 
+identity_requested="${EKSAMIO_WEB_IDENTITY_REQUIRED:-false}"
+registration_requested="${EKSAMIO_REGISTRATION_BEGIN_ENABLED:-false}"
+postbox_requested="${EKSAMIO_POSTBOX_EXECUTION_ENABLED:-false}"
+external_delivery_authorized="${EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED:-false}"
+
+for name in EKSAMIO_WEB_IDENTITY_REQUIRED EKSAMIO_REGISTRATION_BEGIN_ENABLED EKSAMIO_POSTBOX_EXECUTION_ENABLED EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED; do
+  value="${!name:-false}"
+  if [[ "${value}" != "true" && "${value}" != "false" ]]; then
+    echo "${name} must be true or false" >&2
+    exit 2
+  fi
+done
+
+if [[ "${registration_requested}" == "true" || "${postbox_requested}" == "true" ]]; then
+  if [[ "${registration_requested}" != "true" || "${postbox_requested}" != "true" ]]; then
+    echo "registration begin and Postbox execution must be enabled together" >&2
+    exit 2
+  fi
+  if [[ "${external_delivery_authorized}" != "true" ]]; then
+    echo "real Postbox delivery requires explicit EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED=true" >&2
+    exit 2
+  fi
+  identity_requested=true
+fi
+
+identity_fields=(
+  EKSAMIO_ALLOWED_ORIGIN
+  YC_IDENTITY_SECRET_ID
+  YC_IDENTITY_SECRET_VERSION_ID
+  YC_IDENTITY_CONTACT_HMAC_KEY
+  YC_IDENTITY_VERIFICATION_HMAC_KEY
+  YC_IDENTITY_HOST_SIGNING_KEY
+)
+if [[ "${identity_requested}" == "true" ]]; then
+  for name in "${identity_fields[@]}"; do
+    if [[ -z "${!name:-}" ]]; then
+      echo "missing identity staging field: ${name}" >&2
+      exit 2
+    fi
+  done
+fi
+if [[ "${registration_requested}" == "true" && -z "${EKSAMIO_POSTBOX_SENDER:-}" ]]; then
+  echo "EKSAMIO_POSTBOX_SENDER is required when registration delivery is enabled" >&2
+  exit 2
+fi
+
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TMP_SPEC="$(mktemp)"
 trap 'rm -f "${TMP_SPEC}"' EXIT
@@ -38,25 +84,47 @@ if "${" in src:
 pathlib.Path(sys.argv[2]).write_text(src, encoding="utf-8")
 PY
 
-REVISION_JSON="$(yc serverless container revision deploy \
-  --container-id "${YC_CONTAINER_ID}" \
-  --folder-id "${YC_FOLDER_ID}" \
-  --image "${YC_IMAGE}" \
-  --cores 1 \
-  --memory 512MB \
-  --execution-timeout 15s \
-  --concurrency 8 \
-  --network-id "${YC_NETWORK_ID}" \
-  --service-account-id "${YC_RUNTIME_SA_ID}" \
-  --environment PEIS_NETWORK_WRITES_ENABLED=false \
-  --environment PEIS_PORT=8080 \
-  --secret "environment-variable=PEIS_DATABASE_DSN,id=${YC_DB_SECRET_ID},version-id=${YC_DB_SECRET_VERSION_ID},key=${YC_DB_SECRET_KEY}" \
-  --format json)"
+revision_args=(
+  yc serverless container revision deploy
+  --container-id "${YC_CONTAINER_ID}"
+  --folder-id "${YC_FOLDER_ID}"
+  --image "${YC_IMAGE}"
+  --cores 1
+  --memory 512MB
+  --execution-timeout 15s
+  --concurrency 1
+  --network-id "${YC_NETWORK_ID}"
+  --service-account-id "${YC_RUNTIME_SA_ID}"
+  --metadata-options "aws-v1-http-endpoint=disabled,gce-http-endpoint=enabled"
+  --environment PEIS_NETWORK_WRITES_ENABLED=false
+  --environment PEIS_PORT=8080
+  --environment "EKSAMIO_WEB_IDENTITY_REQUIRED=${identity_requested}"
+  --environment "EKSAMIO_REGISTRATION_BEGIN_ENABLED=${registration_requested}"
+  --environment "EKSAMIO_POSTBOX_EXECUTION_ENABLED=${postbox_requested}"
+  --secret "environment-variable=PEIS_DATABASE_DSN,id=${YC_DB_SECRET_ID},version-id=${YC_DB_SECRET_VERSION_ID},key=${YC_DB_SECRET_KEY}"
+  --format json
+)
 
+if [[ "${identity_requested}" == "true" ]]; then
+  revision_args+=(
+    --environment "EKSAMIO_ALLOWED_ORIGIN=${EKSAMIO_ALLOWED_ORIGIN}"
+    --secret "environment-variable=EKSAMIO_CONTACT_HMAC_KEY,id=${YC_IDENTITY_SECRET_ID},version-id=${YC_IDENTITY_SECRET_VERSION_ID},key=${YC_IDENTITY_CONTACT_HMAC_KEY}"
+    --secret "environment-variable=EKSAMIO_VERIFICATION_HMAC_KEY,id=${YC_IDENTITY_SECRET_ID},version-id=${YC_IDENTITY_SECRET_VERSION_ID},key=${YC_IDENTITY_VERIFICATION_HMAC_KEY}"
+    --secret "environment-variable=EKSAMIO_HOST_SIGNING_KEY,id=${YC_IDENTITY_SECRET_ID},version-id=${YC_IDENTITY_SECRET_VERSION_ID},key=${YC_IDENTITY_HOST_SIGNING_KEY}"
+  )
+fi
+if [[ "${registration_requested}" == "true" ]]; then
+  revision_args+=(--environment "EKSAMIO_POSTBOX_SENDER=${EKSAMIO_POSTBOX_SENDER}")
+fi
+
+REVISION_JSON="$("${revision_args[@]}")"
 REVISION_ID="$(printf '%s' "${REVISION_JSON}" | python3 -c 'import json,sys; print(json.load(sys.stdin)["id"])')"
 echo "staging_revision_id=${REVISION_ID}"
 echo "public_product_traffic=OFF"
 echo "peis_network_writes=false"
+echo "identity_required=${identity_requested}"
+echo "registration_begin_enabled=${registration_requested}"
+echo "postbox_execution_enabled=${postbox_requested}"
 
 if [[ "${YC_GATEWAY_APPLY:-false}" == "true" ]]; then
   if yc serverless api-gateway get "${YC_GATEWAY_NAME}" --folder-id "${YC_FOLDER_ID}" >/dev/null 2>&1; then

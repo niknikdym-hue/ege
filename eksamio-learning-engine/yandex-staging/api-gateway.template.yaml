@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   title: Eksamio PEIS Staging
-  version: "1.0.0"
+  version: "1.1.0"
 
 paths:
   /healthz:
@@ -18,7 +18,46 @@ paths:
         type: serverless_containers
         container_id: ${YC_CONTAINER_ID}
         service_account_id: ${YC_GATEWAY_SA_ID}
+  /v1/registration/begin:
+    options:
+      operationId: registrationBeginOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    post:
+      operationId: registrationBegin
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /v1/registration/verify:
+    options:
+      operationId: registrationVerifyOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    post:
+      operationId: registrationVerify
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /v1/session:
+    get:
+      operationId: sessionStatus
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
   /v0/checked-card:
+    options:
+      operationId: checkedCardOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
     post:
       operationId: checkedCard
       x-yc-apigateway-integration:

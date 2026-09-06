@@ -1,0 +1,49 @@
+name: Authenticated web runtime Postgres
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/identity-reference/**'
+      - 'eksamio-learning-engine/peis-production-substrate/**'
+      - 'eksamio-learning-engine/peis-trusted-host-reference/**'
+      - 'eksamio-learning-engine/peis-service-bridge-reference/**'
+      - 'eksamio-learning-engine/yandex-staging/**'
+      - '.github/workflows/authenticated-web-runtime-postgres.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authenticated-web-runtime:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: eksamio
+          POSTGRES_PASSWORD: eksamio-ci-only
+          POSTGRES_DB: eksamio
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U eksamio -d eksamio"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      EKSAMIO_TEST_POSTGRES_DSN: postgresql://eksamio:eksamio-ci-only@127.0.0.1:5432/eksamio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install declared Postgres runtime dependencies
+        run: python3 -m pip install -r eksamio-learning-engine/peis-production-substrate/requirements.txt
+      - name: Compile private web runtime
+        run: python3 -m py_compile eksamio-learning-engine/peis-production-substrate/runtime.py
+      - name: Validate registration session to authenticated PEIS on real PostgreSQL
+        run: python3 eksamio-learning-engine/peis-production-substrate/validate_authenticated_web_runtime_postgres.py
+      - name: Validate Yandex fail-closed static contract
+        run: python3 eksamio-learning-engine/yandex-staging/validate_yandex_staging.py
+      - name: Validate staging deploy shell
+        run: bash -n eksamio-learning-engine/yandex-staging/deploy_staging.sh
+      - name: Docker build production-shaped runtime
+        run: docker build -f eksamio-learning-engine/peis-production-substrate/Dockerfile eksamio-learning-engine
