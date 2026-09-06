@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 [[ "$(uname)" == Darwin ]] || { echo 'macOS required' >&2; exit 2; }
-HERE="$(cd "$(dirname "$0")" && pwd)"; RUNTIME="$(cd "$HERE/.." && pwd)/runtime.py"
-PYTHON="${EKSAMIO_PYTHON:-$(command -v python3)}"; "$PYTHON" -c "import jsonschema; import sys; sys.path.insert(0,'$(dirname "$RUNTIME")'); import runtime"
+HERE="$(cd "$(dirname "$0")" && pwd)"; RUNTIME="$(cd "$HERE/.." && pwd)/registered_runtime.py"
+PYTHON="${EKSAMIO_PYTHON:-$(command -v python3)}"; "$PYTHON" -c "import jsonschema; import sys; sys.path.insert(0,'$(dirname "$RUNTIME")'); import runtime, registered_runtime"
 APP="$HOME/Desktop/Eksamio — Ученик STAGING.app"; TMP="${APP}.tmp"; rm -rf "$TMP"; mkdir -p "$TMP/Contents/MacOS"
 xcrun swiftc -O -framework AppKit -framework Foundation -framework Security "$HERE/EksamioStudentStaging.swift" -o "$TMP/Contents/MacOS/EksamioStudentStaging"
 cat > "$TMP/Contents/Info.plist" <<EOF
