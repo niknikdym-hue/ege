@@ -45,8 +45,48 @@ def raw_request(port: int, method: str, path: str, *, body: str | None = None, c
     return status, headers_out, payload
 
 
-def json_request(port: int, method: str, path: str, *, body: str | None = None, cookie: str | None = None):
-    status, headers, payload = raw_request(port, method, path, body=body, cookie=cookie)
+def served_raw_request(
+    server,
+    port: int,
+    method: str,
+    path: str,
+    *,
+    body: str | None = None,
+    cookie: str | None = None,
+):
+    """Keep the HTTP handler on the app/SQLite owner thread."""
+    result: dict[str, tuple[int, dict[str, str], bytes]] = {}
+    failures: list[BaseException] = []
+
+    def client() -> None:
+        try:
+            result["response"] = raw_request(port, method, path, body=body, cookie=cookie)
+        except BaseException as exc:
+            failures.append(exc)
+
+    client_thread = threading.Thread(target=client, daemon=True)
+    client_thread.start()
+    server.handle_request()
+    client_thread.join(timeout=3)
+    require(not client_thread.is_alive(), "loopback HTTP client completes")
+    if failures:
+        raise failures[0]
+    require("response" in result, "loopback HTTP response captured")
+    return result["response"]
+
+
+def served_json_request(
+    server,
+    port: int,
+    method: str,
+    path: str,
+    *,
+    body: str | None = None,
+    cookie: str | None = None,
+):
+    status, headers, payload = served_raw_request(
+        server, port, method, path, body=body, cookie=cookie
+    )
     return status, headers, json.loads(payload.decode("utf-8"))
 
 
@@ -73,17 +113,16 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         app = registered.RegisteredLiveStudentLoop(Path(tmp) / "registered.sqlite", b"r" * 48, owner_test=True)
         server = gated.GatedRegisteredLoopServer(("127.0.0.1", 0), app)
+        server.timeout = 3
         port = server.server_address[1]
-        thread = threading.Thread(target=server.serve_forever, daemon=True)
-        thread.start()
         try:
-            status, headers, payload = json_request(port, "GET", "/api/identity/session")
+            status, headers, payload = served_json_request(server, port, "GET", "/api/identity/session")
             require(status == 200 and payload["authenticated"] is False,
                     "unauthenticated session probe stays unauthenticated")
             require("Set-Cookie" not in headers,
                     "unauthenticated read emits no anonymous cookie")
 
-            status, headers, raw = raw_request(port, "GET", "/trainer/")
+            status, headers, raw = served_raw_request(server, port, "GET", "/trainer/")
             html = raw.decode("utf-8")
             require(status == 200, "registered gate page is readable before login")
             require("Set-Cookie" not in headers, "gate page emits no identity cookie")
@@ -94,15 +133,15 @@ def main() -> None:
             require("__EKSAMIO_PEIS_HOOK__" not in html,
                     "PEIS browser hook is not delivered before login")
 
-            status, _headers, payload = json_request(port, "POST", "/api/peis/checked-card", body="{}")
+            status, _headers, payload = served_json_request(server, port, "POST", "/api/peis/checked-card", body="{}")
             require(status == 401 and payload["error"] == "AUTHENTICATION_REQUIRED",
                     "PEIS write is rejected before authentication")
 
-            status, _headers, payload = json_request(port, "GET", "/api/russian/profile")
+            status, _headers, payload = served_json_request(server, port, "GET", "/api/russian/profile")
             require(status == 401 and payload["error"] == "AUTHENTICATION_REQUIRED",
                     "learner progress read is rejected before authentication")
 
-            status, headers, payload = json_request(port, "POST", "/api/identity/owner-test-login", body="{}")
+            status, headers, payload = served_json_request(server, port, "POST", "/api/identity/owner-test-login", body="{}")
             require(status == 200 and payload["authenticated"] is True,
                     "owner-test login creates registered server session")
             set_cookie = headers.get("Set-Cookie", "")
@@ -111,11 +150,15 @@ def main() -> None:
             first_token = session_token(set_cookie)
             first_host = app.identity.resolve_session(first_token)
 
-            status, _headers, payload = json_request(port, "GET", "/api/identity/session", cookie=cookie_pair(set_cookie))
+            status, _headers, payload = served_json_request(
+                server, port, "GET", "/api/identity/session", cookie=cookie_pair(set_cookie)
+            )
             require(status == 200 and payload["authenticated"] is True,
                     "session cookie authenticates learner read path")
 
-            status, headers_after, raw = raw_request(port, "GET", "/trainer/", cookie=cookie_pair(set_cookie))
+            status, headers_after, raw = served_raw_request(
+                server, port, "GET", "/trainer/", cookie=cookie_pair(set_cookie)
+            )
             html = raw.decode("utf-8")
             require(status == 200, "authenticated trainer page is readable")
             require("Set-Cookie" not in headers_after, "authenticated trainer read does not mint another identity")
@@ -129,10 +172,8 @@ def main() -> None:
             require(first_host.learner_profile_id == second_host.learner_profile_id,
                     "same registered email resolves to one learner profile across sessions")
         finally:
-            server.shutdown()
             server.server_close()
             app.close()
-            thread.join(timeout=3)
 
     print("GATED_REGISTERED_LIVE_STUDENT_LOOP=PASS")
     print("trainer_before_auth=BLOCKED")
