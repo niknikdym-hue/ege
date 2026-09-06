@@ -1,0 +1,30 @@
+name: Orthoepy remote source candidate audit
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-integration-reference/audit_orthoepy_remote_source_candidate.py'
+      - '.github/workflows/orthoepy-remote-source-candidate-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  orthoepy-source-candidate-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Fetch exact remote Russian closure source commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin 7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9 --depth=1
+          test "$(git rev-parse FETCH_HEAD)" = "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9"
+      - name: Audit exact orthoepy source candidate without live admission
+        run: python3 eksamio-learning-engine/peis-integration-reference/audit_orthoepy_remote_source_candidate.py
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
