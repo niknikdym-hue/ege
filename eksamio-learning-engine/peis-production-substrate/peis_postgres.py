@@ -52,6 +52,7 @@ class PostgresPeisPersistenceStore(PeisPersistenceStore):
         "0001_peis_postgres",
         "0002_identity_registration_postgres",
         "0003_payments_entitlement_postgres",
+        "0004_tutor_lifecycle_postgres",
     )
     migration_version = migration_versions[-1]
 
@@ -114,6 +115,7 @@ class PostgresPeisPersistenceStore(PeisPersistenceStore):
             for name in (
                 "0002_identity_registration_postgres.sql",
                 "0003_payments_entitlement_postgres.sql",
+                "0004_tutor_lifecycle_postgres.sql",
             ):
                 migration = HERE / "migrations" / name
                 if migration.exists():

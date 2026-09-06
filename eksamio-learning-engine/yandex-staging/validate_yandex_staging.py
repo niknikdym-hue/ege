@@ -48,11 +48,20 @@ def main() -> int:
     rollback = (HERE / "rollback_staging.sh").read_text(encoding="utf-8")
     runtime = (ENGINE / "peis-production-substrate/runtime.py").read_text(encoding="utf-8")
     learner_runtime = (ENGINE / "peis-production-substrate/learner_web_runtime.py").read_text(encoding="utf-8")
+    tutor_runtime = (
+        ENGINE / "peis-production-substrate/learner_tutor_web_runtime.py"
+    ).read_text(encoding="utf-8")
+    tutor_lifecycle = (
+        ENGINE / "peis-production-substrate/tutor_lifecycle.py"
+    ).read_text(encoding="utf-8")
     learner_views = (ENGINE / "peis-production-substrate/learner_views.py").read_text(encoding="utf-8")
     entitlement_reader = (ENGINE / "payments-reference/entitlement_read.py").read_text(encoding="utf-8")
     postgres_runtime = (ENGINE / "peis-production-substrate/peis_postgres.py").read_text(encoding="utf-8")
     payment_migration = (
         ENGINE / "peis-production-substrate/migrations/0003_payments_entitlement_postgres.sql"
+    ).read_text(encoding="utf-8")
+    tutor_migration = (
+        ENGINE / "peis-production-substrate/migrations/0004_tutor_lifecycle_postgres.sql"
     ).read_text(encoding="utf-8")
     dockerfile = (ENGINE / "peis-production-substrate/Dockerfile").read_text(encoding="utf-8")
 
@@ -157,6 +166,26 @@ def main() -> int:
         require(learner_runtime, token, "learner browser runtime")
 
     for token in (
+        '/api/tutor/turn',
+        'PRO_ENTITLEMENT_REQUIRED',
+        'FailClosedTutorProvider',
+        'PostgresTutorLifecycle',
+        'TutorAwareRegisteredLearnerViews',
+        'TUTOR_PROVIDER_NOT_ADMITTED',
+    ):
+        require(tutor_runtime, token, "Tutor learner runtime")
+
+    for token in (
+        'SAME_SESSION_VERIFICATION',
+        'DeterministicNoNetworkTutorProvider',
+        'TutorProviderNotAdmitted',
+        'tutor_contexts',
+        'VERIFICATION_REQUIRED',
+        'VERIFIED',
+    ):
+        require(tutor_lifecycle, token, "Tutor lifecycle")
+
+    for token in (
         'canonical_state_owner',
         'shared_peis',
         'Europe/Moscow',
@@ -179,8 +208,15 @@ def main() -> int:
         require(postgres_runtime + payment_migration, token, "payment Postgres substrate")
 
     for token in (
+        '0004_tutor_lifecycle_postgres',
+        'tutor_contexts',
+        "status = 'VERIFICATION_REQUIRED'",
+    ):
+        require(postgres_runtime + tutor_migration, token, "Tutor Postgres substrate")
+
+    for token in (
         'COPY payments-reference /app/payments-reference',
-        'CMD ["python", "/app/peis-production-substrate/learner_web_runtime.py"]',
+        'CMD ["python", "/app/peis-production-substrate/learner_tutor_web_runtime.py"]',
     ):
         require(dockerfile, token, "Dockerfile")
 
@@ -191,7 +227,8 @@ def main() -> int:
     print("session_owned_entitlement=PASS")
     print("production_payment_write_routes=0")
     print("full_russian_program_fail_closed=PASS")
-    print("production_tutor_fail_closed=PASS")
+    print("production_tutor_state_postgres=PASS")
+    print("production_tutor_provider_fail_closed=PASS")
     print("immutable_image_required=PASS")
     print("lockbox_dsn_boundary=PASS")
     print("private_network_required=PASS")
@@ -201,6 +238,7 @@ def main() -> int:
     print("rollback_command=PASS")
     print("secret_payloads_in_repo=0")
     print("live_yandex_execution=0")
+    print("live_ai_execution=0")
     return 0
 
 

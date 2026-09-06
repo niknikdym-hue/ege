@@ -45,6 +45,9 @@ jobs:
           eksamio-learning-engine/peis-production-substrate/runtime.py
           eksamio-learning-engine/peis-production-substrate/learner_views.py
           eksamio-learning-engine/peis-production-substrate/learner_web_runtime.py
+          eksamio-learning-engine/peis-production-substrate/tutor_lifecycle.py
+          eksamio-learning-engine/peis-production-substrate/learner_tutor_web_runtime.py
+          eksamio-learning-engine/peis-production-substrate/validate_tutor_lifecycle_postgres.py
           eksamio-learning-engine/payments-reference/entitlement_read.py
       - name: Validate registered-only learner admission on Ubuntu
         run: python3 eksamio-learning-engine/live-student-loop/validate_gated_runtime.py
@@ -63,6 +66,17 @@ jobs:
           PY
       - name: Validate authenticated Pro browser routes and entitlement on real PostgreSQL
         run: python3 eksamio-learning-engine/peis-production-substrate/validate_learner_web_runtime_postgres.py
+      - name: Reset PostgreSQL Tutor fixture
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate durable Tutor lifecycle on real PostgreSQL
+        run: python3 eksamio-learning-engine/peis-production-substrate/validate_tutor_lifecycle_postgres.py
       - name: Validate Yandex fail-closed static contract
         run: python3 eksamio-learning-engine/yandex-staging/validate_yandex_staging.py
       - name: Validate staging deploy shell
