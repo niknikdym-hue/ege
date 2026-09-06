@@ -48,7 +48,11 @@ class _PsycopgQmarkConnection:
 class PostgresPeisPersistenceStore(PeisPersistenceStore):
     """Same public contract as PeisPersistenceStore; no SQLite fallback exists."""
 
-    migration_versions = ("0001_peis_postgres", "0002_identity_registration_postgres")
+    migration_versions = (
+        "0001_peis_postgres",
+        "0002_identity_registration_postgres",
+        "0003_payments_entitlement_postgres",
+    )
     migration_version = migration_versions[-1]
 
     def __init__(self, dsn: str, *, evidence_schema: dict[str, Any], nba_schema: dict[str, Any]):
@@ -107,18 +111,21 @@ class PostgresPeisPersistenceStore(PeisPersistenceStore):
         # Tracked migrations are deterministic and idempotent for empty DB/restart use.
         with self.connection:
             self._apply_0001()
-            identity_migration = (
-                HERE / "migrations" / "0002_identity_registration_postgres.sql"
-            )
-            if identity_migration.exists():
-                self._apply_simple_migration(identity_migration.name)
+            for name in (
+                "0002_identity_registration_postgres.sql",
+                "0003_payments_entitlement_postgres.sql",
+            ):
+                migration = HERE / "migrations" / name
+                if migration.exists():
+                    self._apply_simple_migration(name)
 
     def readiness(self) -> bool:
         try:
             rows = self.connection.execute(
-                "SELECT version FROM peis_schema_migrations WHERE version IN (%s, %s)",
-                self.migration_versions,
+                "SELECT version FROM peis_schema_migrations"
             ).fetchall()
-            return {row["version"] for row in rows} == set(self.migration_versions)
+            return set(self.migration_versions).issubset(
+                {str(row["version"]) for row in rows}
+            )
         except Exception:
             return False
