@@ -127,9 +127,8 @@ def main() -> int:
         'PEIS_NETWORK_WRITES_ENABLED',
         'EKSAMIO_REGISTRATION_BEGIN_ENABLED',
         'EKSAMIO_POSTBOX_EXECUTION_ENABLED',
-        'EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED',
         'YandexMetadataIamTokenProvider',
-        'eksamio_pro_session',
+        'SESSION_COOKIE = PasswordlessIdentityService.SESSION_COOKIE_NAME',
         'server.host_identity = None',
     ):
         require(runtime, token, "core runtime")
