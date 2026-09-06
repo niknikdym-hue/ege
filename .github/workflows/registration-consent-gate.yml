@@ -1,0 +1,35 @@
+name: Registration consent gate
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/identity-reference/registration_consent.py"
+      - "eksamio-learning-engine/identity-reference/registration_http.py"
+      - "eksamio-learning-engine/identity-reference/validate_registration_consent_001.py"
+      - "eksamio-learning-engine/identity-reference/validate_registration_http_001.py"
+      - "eksamio-learning-engine/identity-reference/validate_registration_ui_001.py"
+      - "tilda-ready/pages/registration/**"
+      - ".github/workflows/registration-consent-gate.yml"
+  push:
+    branches:
+      - "brain/issue-184-registration-consent"
+    paths:
+      - "eksamio-learning-engine/identity-reference/registration_consent.py"
+      - "eksamio-learning-engine/identity-reference/registration_http.py"
+      - "eksamio-learning-engine/identity-reference/validate_registration_consent_001.py"
+      - "eksamio-learning-engine/identity-reference/validate_registration_http_001.py"
+      - "eksamio-learning-engine/identity-reference/validate_registration_ui_001.py"
+      - "tilda-ready/pages/registration/**"
+      - ".github/workflows/registration-consent-gate.yml"
+
+jobs:
+  registration-consent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate authenticated registration consent boundary
+        run: python3 eksamio-learning-engine/identity-reference/validate_registration_consent_001.py
+      - name: Validate authenticated registration HTTP boundary
+        run: python3 eksamio-learning-engine/identity-reference/validate_registration_http_001.py
+      - name: Validate Tilda registration UI boundary
+        run: python3 eksamio-learning-engine/identity-reference/validate_registration_ui_001.py
