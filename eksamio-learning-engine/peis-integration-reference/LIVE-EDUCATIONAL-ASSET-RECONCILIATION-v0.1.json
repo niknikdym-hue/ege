@@ -1,0 +1,151 @@
+{
+  "schema_version": "0.1.0",
+  "authority_checked_at": "2026-09-06",
+  "status": "LIVE_AUTHORITY_RECONCILIATION_FAIL_CLOSED",
+  "issue": 185,
+  "authority_policy": {
+    "live_site_is_factual_authority_for_current_working_ux": true,
+    "github_is_canonical_reconciliation_target_not_live_invalidation": true,
+    "preserve_existing_live_local_state_until_registered_replacement_ready": true,
+    "existing_live_local_state_is_future_canonical": false
+  },
+  "learner_identity_policy": {
+    "future_canonical_evidence_requires_registered_user_identity_ref": true,
+    "anonymous_learner_evidence_allowed": false,
+    "device_only_progress_is_canonical": false,
+    "anon_to_account_continuity_allowed": false
+  },
+  "mastery_policy": {
+    "false_exact_mastery": 0,
+    "mastery_from_route_name": false,
+    "mastery_from_task_number": false,
+    "mastery_from_trainer_name": false,
+    "mastery_from_page_name": false,
+    "reference_reading_creates_mastery": false,
+    "accepted_exact_semantic_binding_required": true,
+    "unknown_item_identity_is_mastery_blocker": true
+  },
+  "assets": [
+    {
+      "asset_id": "live-russian-ege-full-trainer",
+      "asset_type": "TRAINER_COMPOSITE",
+      "priority": 1,
+      "live_url": "https://eksamio.ru/ege/russkiy/trenazher/",
+      "live_observation": {
+        "working": true,
+        "task_types": 27,
+        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
+        "future_canonical_progress": "REGISTERED_SERVER_OWNED_ONLY"
+      },
+      "canonical_source": {
+        "bank_manifest": "../russkiy-knigi/ege-russkiy-trenazher/BANK-MANIFEST.json",
+        "cards": 174,
+        "source_texts": 9,
+        "mapping_artifact": "RUSSIAN-EGE-TRAINER-SENSOR-MAP-v0.1.json"
+      },
+      "canonical_item_identity_status": "PARTIAL_EXACT_ONLY",
+      "semantic_admission": "EXACT_ACCEPTED_BINDINGS_ONLY",
+      "whole_trainer_mastery": "FORBIDDEN"
+    },
+    {
+      "asset_id": "live-russian-orthoepy-trainer",
+      "asset_type": "THEMATIC_TRAINER",
+      "priority": 2,
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/orfoepiya/",
+      "live_observation": {
+        "working": true,
+        "theme": "normative stress",
+        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION"
+      },
+      "canonical_item_identity_status": "UNKNOWN_BLOCKER",
+      "canonical_item_count": null,
+      "semantic_admission": "BLOCKED_UNTIL_EXACT_ITEM_IDENTITY_AND_ACCEPTED_BINDING",
+      "mastery_from_live_progress": false
+    },
+    {
+      "asset_id": "live-russian-dictionary-words-trainer",
+      "asset_type": "THEMATIC_TRAINER",
+      "priority": 2,
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/slovarnye-slova/",
+      "live_observation": {
+        "working": true,
+        "theme": "dictionary words / unverifiable unstressed root vowels",
+        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION"
+      },
+      "canonical_item_identity_status": "UNKNOWN_BLOCKER",
+      "canonical_item_count": null,
+      "semantic_admission": "BLOCKED_UNTIL_EXACT_ITEM_IDENTITY_AND_ACCEPTED_BINDING",
+      "mastery_from_live_progress": false
+    },
+    {
+      "asset_id": "live-russian-paronyms-trainer",
+      "asset_type": "THEMATIC_TRAINER",
+      "priority": 2,
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/paronimy/",
+      "live_observation": {
+        "working": true,
+        "theme": "paronyms / lexical compatibility",
+        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION"
+      },
+      "canonical_item_identity_status": "UNKNOWN_BLOCKER",
+      "canonical_item_count": null,
+      "semantic_admission": "BLOCKED_UNTIL_EXACT_ITEM_IDENTITY_AND_ACCEPTED_BINDING",
+      "mastery_from_live_progress": false
+    },
+    {
+      "asset_id": "live-russian-phraseology-trainer",
+      "asset_type": "THEMATIC_TRAINER",
+      "priority": 2,
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/frazeologizmy/",
+      "live_observation": {
+        "working": true,
+        "theme": "phraseology / meaning, composition and text boundaries",
+        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION"
+      },
+      "canonical_item_identity_status": "UNKNOWN_BLOCKER",
+      "canonical_item_count": null,
+      "semantic_admission": "BLOCKED_UNTIL_EXACT_ITEM_IDENTITY_AND_ACCEPTED_BINDING",
+      "mastery_from_live_progress": false
+    },
+    {
+      "asset_id": "live-ege-demo-catalog",
+      "asset_type": "INTERACTIVE_DEMO_CATALOG",
+      "priority": 3,
+      "live_url": "https://eksamio.ru/ege/demoversii/",
+      "live_observation": {
+        "working": true,
+        "browser_autosave": true,
+        "timer": true,
+        "answers_hidden_until_completion": true,
+        "subjects": [
+          {"subject": "russian", "task_count": 27, "duration_minutes": 210, "years": [2022, 2023, 2024, 2025, 2026]},
+          {"subject": "math_basic", "task_count": 21, "duration_minutes": 180, "years_observed_in_catalog": [2025, 2026]},
+          {"subject": "math_profile", "task_count": 19, "duration_minutes": 235, "years_observed_in_catalog": [2025, 2026]},
+          {"subject": "physics", "task_count": 26, "duration_minutes": 235},
+          {"subject": "chemistry", "task_count": 34, "duration_minutes": 210},
+          {"subject": "biology", "task_count": 28, "duration_minutes": 235},
+          {"subject": "history", "task_count": 21, "duration_minutes": 210},
+          {"subject": "social_studies", "task_count": 25, "duration_minutes": 210}
+        ]
+      },
+      "russian_demo_routes": [
+        {"year": 2026, "url": "https://eksamio.ru/ege/russkiy/demoversiya/"},
+        {"year": 2025, "url": "https://eksamio.ru/ege/russkiy/demoversiya/2025/"},
+        {"year": 2024, "url": "https://eksamio.ru/ege/russkiy/demoversiya/2024/"},
+        {"year": 2023, "url": "https://eksamio.ru/ege/russkiy/demoversiya/2023/"},
+        {"year": 2022, "url": "https://eksamio.ru/ege/russkiy/demoversiya/2022/"}
+      ],
+      "canonical_item_identity_status": "UNKNOWN_BLOCKER_EXCEPT_EXISTING_EXACT_MAPPINGS",
+      "semantic_admission": "EXACT_ACCEPTED_BINDINGS_ONLY",
+      "browser_autosave_is_future_canonical_progress": false,
+      "demo_completion_or_score_implies_mastery": false
+    }
+  ],
+  "reference_knowledge_policy": {
+    "asset_type": "REFERENCE_CONTENT",
+    "reading_is_evidence_of_mastery": false,
+    "route_or_heading_is_semantic_binding": false,
+    "admit_to_mastery_only_from_independent_exact_learner_evidence": true,
+    "unresolved_reference_inventory_status": "EXPLICIT_BLOCKER_NOT_INFERRED"
+  }
+}
