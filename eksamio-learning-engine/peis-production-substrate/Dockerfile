@@ -13,4 +13,4 @@ COPY 119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json 92-RUSSIAN-
 RUN mkdir -p /app/russian-program
 COPY russian-program/RUSSIAN-EXCEPTIONS-121-SEMANTIC-MAPPING-v1.0.json /app/russian-program/
 EXPOSE 8080
-CMD ["python", "/app/peis-production-substrate/runtime.py"]
+CMD ["python", "/app/peis-production-substrate/learner_web_runtime.py"]
