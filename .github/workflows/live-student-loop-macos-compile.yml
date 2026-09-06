@@ -10,8 +10,8 @@ jobs:
           python3 -m venv .venv-live-loop
           .venv-live-loop/bin/python -m pip install --upgrade pip
           .venv-live-loop/bin/python -m pip install jsonschema
-      - name: Validate registered-only learner admission
-        run: .venv-live-loop/bin/python eksamio-learning-engine/live-student-loop/validate_registered_runtime.py
+      - name: Validate gated registered-only learner admission
+        run: .venv-live-loop/bin/python eksamio-learning-engine/live-student-loop/validate_gated_runtime.py
       - run: bash -n eksamio-learning-engine/live-student-loop/macos/install-desktop-app.sh
       - name: Compile staging desktop panel
         env:
