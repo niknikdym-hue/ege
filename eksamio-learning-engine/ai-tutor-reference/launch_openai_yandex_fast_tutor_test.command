@@ -42,7 +42,7 @@ if [[ -z "${YANDEX_FOLDER_ID:-}" ]] && command -v yc >/dev/null 2>&1; then
 fi
 
 if ! osascript <<'APPLESCRIPT' >/dev/null
-button returned of (display dialog "Запускается приватное сравнение Eksamio Tutor: OpenAI и Яндекс, TEXT и VOICE. Возможны небольшие расходы OpenAI/Yandex API. Voice benchmark использует одинаковый SpeechKit + Lera для обоих мозгов. Публичный сайт и production PEIS остаются выключены; аудио и диалоги не сохраняются. Продолжить?" buttons {"Отмена", "Разрешаю тест"} default button "Разрешаю тест" cancel button "Отмена" with title "Eksamio Tutor — private benchmark" with icon caution)
+button returned of (display dialog "Запускается приватное слепое сравнение Eksamio Tutor: четыре TEXT-мозга, одинаковый сценарий из 10 шагов. Возможны небольшие расходы OpenAI, Qwen, DeepSeek и Yandex AI только после фактических запросов. Voice в этот рейтинг не входит. Публичный сайт и production PEIS остаются выключены; диалоги и оценки не записываются на диск. Продолжить?" buttons {"Отмена", "Разрешаю тест"} default button "Разрешаю тест" cancel button "Отмена" with title "Eksamio Tutor — four-brain TEXT benchmark" with icon caution)
 APPLESCRIPT
 then
   exit 0
@@ -51,4 +51,4 @@ fi
 cd "$SCRIPT_DIR"
 export PYTHONDONTWRITEBYTECODE=1
 export EKSAMIO_TUTOR_CANDIDATE_SHA="$CANDIDATE_SHA"
-exec "$PYTHON" ./private_openai_yandex_resilient_human_ui.py --owner-authorized
+exec "$PYTHON" ./private_four_brain_text_benchmark_ui.py --owner-authorized
