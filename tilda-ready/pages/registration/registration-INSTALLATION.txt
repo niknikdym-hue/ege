@@ -1,0 +1,66 @@
+EKSAMIO — REGISTRATION TILDA INSTALLATION
+STATUS: TILDA-READY / NOT PUBLISHED BY REPOSITORY TASK
+
+PURPOSE
+Passwordless email registration/login for the single authenticated learner profile.
+This package does NOT publish anything and must not be installed publicly until the production API endpoint and externally reviewed legal consent texts/versions are approved.
+
+FILES
+- registration-T123.txt — self-contained T123 UI.
+
+REQUIRED DEPLOYMENT CONFIGURATION
+Before enabling the form, define window.EKSAMIO_REGISTRATION_CONFIG with ALL values below. The shipped T123 keeps these values empty and therefore fails closed.
+
+window.EKSAMIO_REGISTRATION_CONFIG = {
+  apiBaseUrl: "https://<APPROVED-REGISTRATION-API-HOST>",
+  personalDataConsentUrl: "<APPROVED-HTTPS-OR-SAME-SITE-PATH>",
+  personalDataCheckboxText: "<EXTERNALLY-REVIEWED-REQUIRED-CONSENT-TEXT>",
+  personalDataDocumentVersion: "<APPROVED-VERSION-ID>",
+  personalDataTextVersion: "<APPROVED-VERSION-ID>",
+  marketingConsentUrl: "<APPROVED-HTTPS-OR-SAME-SITE-PATH>",
+  marketingCheckboxText: "<EXTERNALLY-REVIEWED-OPTIONAL-MARKETING-CONSENT-TEXT>",
+  marketingDocumentVersion: "<APPROVED-VERSION-ID>",
+  marketingTextVersion: "<APPROVED-VERSION-ID>",
+  authenticatedRedirectUrl: "<OPTIONAL-HTTPS-OR-SAME-SITE-PATH>"
+};
+
+Do not replace unresolved legal values with invented wording. The current repository legal artifact personal-data.html is marked EXTERNAL_REVIEW_REQUIRED and is not final consent authority.
+
+HTTP CONTRACT
+The UI calls only:
+- POST /v1/registration/begin
+- POST /v1/registration/verify
+
+Both requests use credentials: "include".
+The browser never receives, reads, stores, or serializes the session token. Successful verification relies on the server-owned HttpOnly; Secure; SameSite=Lax session cookie.
+
+CONSENT CONTRACT
+The registration form contains exactly two consent checkboxes:
+1. personal_data_consent — required;
+2. marketing_consent — optional and unchecked by default.
+
+Registration must work when marketing_consent=false. Service/security/passwordless-code messages remain separate from marketing consent.
+
+INSTALLATION
+1. Create/select the intended registration/login page in Tilda, but DO NOT publish it yet.
+2. Add the approved deployment configuration before the registration T123 code (or otherwise expose the exact window.EKSAMIO_REGISTRATION_CONFIG object before the block executes).
+3. Insert registration-T123.txt as one T123 block.
+4. Verify the page at 1280 / 768 / 390 / 360 / 320 widths with no horizontal scroll.
+5. Confirm the form stays disabled when any required configuration field is absent or apiBaseUrl is not HTTPS.
+6. Confirm the marketing checkbox is unchecked on first render and registration succeeds with it left unchecked.
+7. Confirm begin returns HTTP 202 / CHALLENGE_SENT and the code step appears.
+8. Confirm verify returns HTTP 200 / AUTHENTICATED and browser JavaScript contains no session token.
+9. Confirm DevTools shows the session only as an HttpOnly cookie set by the server; do not add localStorage/sessionStorage/token handling.
+10. Confirm the authenticated destination opens the SAME server-owned learner profile that owns PEIS/progress/plan/Tutor state.
+11. Publication requires separate owner/Central Brain acceptance after production endpoint, legal texts/versions, CORS origin and learner-state integration are verified.
+
+PROHIBITED
+- no anonymous-profile continuity;
+- no device-only learner state;
+- no localStorage/sessionStorage auth token;
+- no wildcard production CORS;
+- no invented legal consent copy/version;
+- no public publication from this repository task;
+- no provider/paid calls during repository validation.
+
+PUBLICATION STATUS: NOT PUBLISHED BY REPOSITORY TASK.
