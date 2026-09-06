@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fail-closed adapter for assets observed on the live Eksamio site.
 
-The live site is factual authority for what currently exists and works.  This
+The live site is factual authority for what currently exists and works. This
 module only reconciles that surface with canonical learner/PEIS rules; it does
 not make live route names, task numbers, trainer names, browser progress or
 reference-reading into mastery evidence.
@@ -55,9 +55,9 @@ def admit_future_canonical_evidence(
 ) -> EvidenceAdmission:
     """Return a deterministic fail-closed PEIS admission decision.
 
-    `observation_kind` is intentionally explicit.  Reading/reference navigation
-    never creates mastery, and a score/route/task/trainer label cannot substitute
-    for an accepted exact semantic binding.
+    Exact mastery additionally requires the item identity to be explicitly
+    allow-listed in `accepted_exact_item_bindings`. Absence of that list or of
+    the item in it is a blocker; a caller cannot self-assert exactness.
     """
     data = registry or load_registry()
     policy = data["mastery_policy"]
@@ -77,6 +77,15 @@ def admit_future_canonical_evidence(
     identity_status = str(asset.get("canonical_item_identity_status", "UNKNOWN_BLOCKER"))
     if identity_status.startswith("UNKNOWN_BLOCKER"):
         return EvidenceAdmission(False, False, "ASSET_ITEM_IDENTITIES_UNRESOLVED")
+
+    accepted_bindings = asset.get("accepted_exact_item_bindings", [])
+    accepted_identity = any(
+        binding.get("item_identity") == exact_item_identity
+        and binding.get("semantic_binding_status") == "ACCEPTED_EXACT"
+        for binding in accepted_bindings
+    )
+    if not accepted_identity:
+        return EvidenceAdmission(False, False, "ITEM_NOT_IN_ACCEPTED_EXACT_BINDING_REGISTRY")
 
     if policy["accepted_exact_semantic_binding_required"] and semantic_binding_status != "ACCEPTED_EXACT":
         return EvidenceAdmission(True, False, "ACCEPTED_EXACT_SEMANTIC_BINDING_REQUIRED")
@@ -111,6 +120,12 @@ def assert_invariants(registry: dict[str, Any] | None = None) -> None:
     urls = [asset["live_url"] for asset in assets]
     assert len(ids) == len(set(ids))
     assert len(urls) == len(set(urls))
+
+    for asset in assets:
+        for binding in asset.get("accepted_exact_item_bindings", []):
+            assert binding["item_identity"]
+            assert binding["semantic_binding_status"] == "ACCEPTED_EXACT"
+            assert binding["semantic_id"]
 
 
 if __name__ == "__main__":
