@@ -1,5 +1,11 @@
-name: Live student loop macOS panel
-on: [pull_request]
+name: Live student loop macOS panel (optional)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
   panel:
     runs-on: macos-latest
