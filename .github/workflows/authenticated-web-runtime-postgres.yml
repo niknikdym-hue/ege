@@ -37,10 +37,25 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install declared Postgres runtime dependencies
         run: python3 -m pip install -r eksamio-learning-engine/peis-production-substrate/requirements.txt
-      - name: Compile private web runtime
-        run: python3 -m py_compile eksamio-learning-engine/peis-production-substrate/runtime.py
+      - name: Compile private web runtimes
+        run: >-
+          python3 -m py_compile
+          eksamio-learning-engine/peis-production-substrate/runtime.py
+          eksamio-learning-engine/peis-production-substrate/learner_views.py
+          eksamio-learning-engine/peis-production-substrate/learner_web_runtime.py
       - name: Validate registration session to authenticated PEIS on real PostgreSQL
         run: python3 eksamio-learning-engine/peis-production-substrate/validate_authenticated_web_runtime_postgres.py
+      - name: Reset PostgreSQL learner-browser fixture
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate authenticated Pro browser routes on real PostgreSQL
+        run: python3 eksamio-learning-engine/peis-production-substrate/validate_learner_web_runtime_postgres.py
       - name: Validate Yandex fail-closed static contract
         run: python3 eksamio-learning-engine/yandex-staging/validate_yandex_staging.py
       - name: Validate staging deploy shell
