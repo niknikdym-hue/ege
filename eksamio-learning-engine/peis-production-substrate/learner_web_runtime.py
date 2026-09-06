@@ -3,28 +3,38 @@
 
 This adapter exposes the exact HTTP routes already consumed by the Eksamio Pro
 client. It never creates a second learner model: identity comes from the
-passwordless PostgreSQL session and learner views come from the same PEIS store.
-Full Russian-program claims and production Tutor execution remain fail-closed.
+passwordless PostgreSQL session, learning comes from shared PEIS, and Pro access
+is read from the accepted payment entitlement tables in the same PostgreSQL
+substrate. Full Russian-program claims and production Tutor/payment execution
+remain fail-closed.
 """
 from __future__ import annotations
 
 import json
 import os
+import sys
 from http import cookies
 from http.server import HTTPServer
 from typing import Any, Mapping
 from urllib.parse import parse_qs, urlparse
 
 import runtime as core
-from learner_views import RegisteredLearnerViews
-from passwordless_identity import InvalidSession, PasswordlessIdentityService
-from peis_service_bridge import ServiceRequestError
-from registration_consent import RegistrationError
-from russian_exceptions_practice_adapter import RussianExceptionsPracticeAdapter
+
+PAYMENTS = core.ENGINE / "payments-reference"
+if str(PAYMENTS) not in sys.path:
+    sys.path.insert(0, str(PAYMENTS))
+
+from entitlement_read import EntitlementReadError, ProEntitlementReader  # noqa: E402
+from learner_views import RegisteredLearnerViews  # noqa: E402
+from passwordless_identity import InvalidSession, PasswordlessIdentityService  # noqa: E402
+from peis_service_bridge import ServiceRequestError  # noqa: E402
+from registration_consent import RegistrationError  # noqa: E402
+from russian_exceptions_practice_adapter import RussianExceptionsPracticeAdapter  # noqa: E402
 
 SESSION_COOKIE = PasswordlessIdentityService.SESSION_COOKIE_NAME
 READ_PATHS = {
     "/api/identity/session",
+    "/api/payments/entitlement",
     "/api/russian/profile",
     "/api/russian/plan",
     "/api/russian/history",
@@ -52,11 +62,12 @@ def _session_token(cookie_header: str | None) -> str | None:
 def make_handler(
     runtime: core.Runtime,
     views: RegisteredLearnerViews | None,
+    entitlements: ProEntitlementReader | None = None,
 ):
     Base = core.make_handler(runtime)
 
     class Handler(Base):
-        server_version = "EksamioLearnerWeb/0.1"
+        server_version = "EksamioLearnerWeb/0.2"
 
         def _cors(self) -> dict[str, str] | None:
             if not runtime.origin_allowed(self.request_headers()):
@@ -134,6 +145,23 @@ def make_handler(
             host = self._host(cors)
             if host is None:
                 return
+
+            if path == "/api/payments/entitlement":
+                if entitlements is None:
+                    self.send_json(503, {"error": "ENTITLEMENT_UNAVAILABLE"}, extra_headers=cors)
+                    return
+                try:
+                    self.send_json(
+                        200,
+                        entitlements.status(host.learner_profile_id),
+                        extra_headers=cors,
+                    )
+                except EntitlementReadError:
+                    self.send_json(400, {"error": "INVALID_REQUEST"}, extra_headers=cors)
+                except Exception:
+                    self.send_json(503, {"error": "ENTITLEMENT_UNAVAILABLE"}, extra_headers=cors)
+                return
+
             learner_views = self._require_views(cors)
             if learner_views is None:
                 return
@@ -290,6 +318,7 @@ def main() -> int:
 
     runtime = core.build_runtime_from_env(store)
     views: RegisteredLearnerViews | None = None
+    entitlements: ProEntitlementReader | None = None
     if not isinstance(store, core.UnreadyStore):
         try:
             adapter = RussianExceptionsPracticeAdapter(core.ENGINE)
@@ -298,15 +327,17 @@ def main() -> int:
                 bridge=runtime.bridge,
                 adapter=adapter,
             )
+            entitlements = ProEntitlementReader(store.connection)
         except Exception:
             views = None
+            entitlements = None
 
     server = HTTPServer(
         (
             os.getenv("PEIS_BIND_HOST", "0.0.0.0"),
             int(os.getenv("PEIS_PORT", "8080")),
         ),
-        make_handler(runtime, views),
+        make_handler(runtime, views, entitlements),
     )
     server.host_identity = None
     try:
