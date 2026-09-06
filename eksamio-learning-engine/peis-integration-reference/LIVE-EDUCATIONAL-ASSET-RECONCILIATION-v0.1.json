@@ -35,7 +35,11 @@
         "working": true,
         "task_types": 27,
         "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
-        "future_canonical_progress": "REGISTERED_SERVER_OWNED_ONLY"
+        "future_canonical_progress": "REGISTERED_SERVER_OWNED_ONLY",
+        "observed_copy": [
+          "Прогресс без регистрации",
+          "Ваш прогресс на этом устройстве"
+        ]
       },
       "canonical_source": {
         "bank_manifest": "../russkiy-knigi/ege-russkiy-trenazher/BANK-MANIFEST.json",
@@ -55,7 +59,8 @@
       "live_observation": {
         "working": true,
         "theme": "normative stress",
-        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION"
+        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
+        "live_source_provenance": "FIPI_OFFICIAL_ORTHOEPIC_LIST"
       },
       "canonical_item_identity_status": "UNKNOWN_BLOCKER",
       "canonical_item_count": null,
@@ -70,7 +75,8 @@
       "live_observation": {
         "working": true,
         "theme": "dictionary words / unverifiable unstressed root vowels",
-        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION"
+        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
+        "live_source_provenance": "FIPI_OFFICIAL_WORD_LIST"
       },
       "canonical_item_identity_status": "UNKNOWN_BLOCKER",
       "canonical_item_count": null,
@@ -85,7 +91,8 @@
       "live_observation": {
         "working": true,
         "theme": "paronyms / lexical compatibility",
-        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION"
+        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
+        "live_source_provenance": "FIPI_OFFICIAL_PARONYM_LIST"
       },
       "canonical_item_identity_status": "UNKNOWN_BLOCKER",
       "canonical_item_count": null,
@@ -100,7 +107,8 @@
       "live_observation": {
         "working": true,
         "theme": "phraseology / meaning, composition and text boundaries",
-        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION"
+        "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
+        "live_source_provenance": "FIPI_OFFICIAL_PHRASEOLOGY_LIST"
       },
       "canonical_item_identity_status": "UNKNOWN_BLOCKER",
       "canonical_item_count": null,
@@ -118,16 +126,82 @@
         "timer": true,
         "answers_hidden_until_completion": true,
         "subjects": [
-          {"subject": "russian", "task_count": 27, "duration_minutes": 210, "years": [2022, 2023, 2024, 2025, 2026]},
-          {"subject": "math_basic", "task_count": 21, "duration_minutes": 180, "years_observed_in_catalog": [2025, 2026]},
-          {"subject": "math_profile", "task_count": 19, "duration_minutes": 235, "years_observed_in_catalog": [2025, 2026]},
-          {"subject": "physics", "task_count": 26, "duration_minutes": 235},
-          {"subject": "chemistry", "task_count": 34, "duration_minutes": 210},
-          {"subject": "biology", "task_count": 28, "duration_minutes": 235},
-          {"subject": "history", "task_count": 21, "duration_minutes": 210},
-          {"subject": "social_studies", "task_count": 25, "duration_minutes": 210}
+          {
+            "subject": "russian",
+            "years": [2022, 2023, 2024, 2025, 2026],
+            "duration_minutes": 210,
+            "task_count_by_year": {"2022": 27, "2023": 27, "2024": 27, "2025": 27, "2026": 27}
+          },
+          {
+            "subject": "math_basic",
+            "years": [2022, 2023, 2024, 2025, 2026],
+            "duration_minutes": 180,
+            "task_count_by_year": {"2022": 21, "2023": 21, "2024": 21, "2025": 21, "2026": 21}
+          },
+          {
+            "subject": "math_profile",
+            "years": [2022, 2023, 2024, 2025, 2026],
+            "duration_minutes": 235,
+            "task_count_by_year": {"2022": 18, "2023": 18, "2024": 19, "2025": 19, "2026": 19}
+          },
+          {
+            "subject": "physics",
+            "years": [2022, 2023, 2024, 2025, 2026],
+            "duration_minutes": 235,
+            "task_count_by_year": {"2022": 30, "2023": 30, "2024": 26, "2025": 26, "2026": 26}
+          },
+          {
+            "subject": "chemistry",
+            "years": [2026],
+            "duration_minutes": 210,
+            "task_count_by_year": {"2026": 34}
+          },
+          {
+            "subject": "biology",
+            "years": [2026],
+            "duration_minutes": 235,
+            "task_count_by_year": {"2026": 28}
+          },
+          {
+            "subject": "history",
+            "years": [2026],
+            "duration_minutes": 210,
+            "task_count_by_year": {"2026": 21}
+          },
+          {
+            "subject": "social_studies",
+            "years": [2026],
+            "duration_minutes": 210,
+            "task_count_by_year": {"2026": 25}
+          }
         ]
       },
+      "verified_demo_routes": [
+        {"subject": "russian", "year": 2026, "url": "https://eksamio.ru/ege/russkiy/demoversiya/", "task_count": 27, "duration_minutes": 210, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "russian", "year": 2025, "url": "https://eksamio.ru/ege/russkiy/demoversiya/2025/", "task_count": 27, "duration_minutes": 210, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "russian", "year": 2024, "url": "https://eksamio.ru/ege/russkiy/demoversiya/2024/", "task_count": 27, "duration_minutes": 210, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "russian", "year": 2023, "url": "https://eksamio.ru/ege/russkiy/demoversiya/2023/", "task_count": 27, "duration_minutes": 210, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "russian", "year": 2022, "url": "https://eksamio.ru/ege/russkiy/demoversiya/2022/", "task_count": 27, "duration_minutes": 210, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "math_basic", "year": 2026, "url": "https://eksamio.ru/ege/matematika-baza/demoversiya/", "task_count": 21, "duration_minutes": 180, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "math_basic", "year": 2025, "url": "https://eksamio.ru/ege/matematika-baza/demoversiya/2025/", "task_count": 21, "duration_minutes": 180, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "math_basic", "year": 2024, "url": "https://eksamio.ru/ege/matematika-baza/demoversiya/2024/", "task_count": 21, "duration_minutes": 180, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "math_basic", "year": 2023, "url": "https://eksamio.ru/ege/matematika-baza/demoversiya/2023/", "task_count": 21, "duration_minutes": 180, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "math_basic", "year": 2022, "url": "https://eksamio.ru/ege/matematika-baza/demoversiya/2022/", "task_count": 21, "duration_minutes": 180, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "math_profile", "year": 2026, "url": "https://eksamio.ru/ege/matematika-profil/demoversiya/", "task_count": 19, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "math_profile", "year": 2025, "url": "https://eksamio.ru/ege/matematika-profil/demoversiya/2025/", "task_count": 19, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "math_profile", "year": 2024, "url": "https://eksamio.ru/ege/matematika-profil/demoversiya/2024/", "task_count": 19, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "math_profile", "year": 2023, "url": "https://eksamio.ru/ege/matematika-profil/demoversiya/2023/", "task_count": 18, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "math_profile", "year": 2022, "url": "https://eksamio.ru/ege/matematika-profil/demoversiya/2022/", "task_count": 18, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "physics", "year": 2026, "url": "https://eksamio.ru/ege/fizika/demoversiya/", "task_count": 26, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "physics", "year": 2025, "url": "https://eksamio.ru/ege/fizika/demoversiya/2025/", "task_count": 26, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "physics", "year": 2024, "url": "https://eksamio.ru/ege/fizika/demoversiya/2024/", "task_count": 26, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "physics", "year": 2023, "url": "https://eksamio.ru/ege/fizika/demoversiya/2023/", "task_count": 30, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "physics", "year": 2022, "url": "https://eksamio.ru/ege/fizika/demoversiya/2022/", "task_count": 30, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "chemistry", "year": 2026, "url": "https://eksamio.ru/ege/khimiya/demoversiya/", "task_count": 34, "duration_minutes": 210, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "biology", "year": 2026, "url": "https://eksamio.ru/ege/biologiya/demoversiya/", "task_count": 28, "duration_minutes": 235, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "history", "year": 2026, "url": "https://eksamio.ru/ege/istoriya/demoversiya/", "task_count": 21, "duration_minutes": 210, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"},
+        {"subject": "social_studies", "year": 2026, "url": "https://eksamio.ru/ege/obshchestvoznaniye/demoversiya/", "task_count": 25, "duration_minutes": 210, "source_provenance": "LIVE_PAGE_IDENTIFIES_FIPI_DEMO"}
+      ],
       "russian_demo_routes": [
         {"year": 2026, "url": "https://eksamio.ru/ege/russkiy/demoversiya/"},
         {"year": 2025, "url": "https://eksamio.ru/ege/russkiy/demoversiya/2025/"},
