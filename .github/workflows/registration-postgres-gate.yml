@@ -30,6 +30,7 @@ jobs:
           --health-retries=10
     env:
       EKSAMIO_TEST_POSTGRES_DSN: postgresql://eksamio:eksamio-ci-only@127.0.0.1:5432/eksamio
+      PEIS_DATABASE_DSN: postgresql://eksamio:eksamio-ci-only@127.0.0.1:5432/eksamio
     steps:
       - uses: actions/checkout@v4
       - name: Install declared Postgres runtime dependencies
@@ -38,5 +39,9 @@ jobs:
         run: python3 eksamio-learning-engine/identity-reference/validate_registration_consent_001.py
       - name: Validate existing registration HTTP contract
         run: python3 eksamio-learning-engine/identity-reference/validate_registration_http_001.py
+      - name: Validate passwordless identity regression
+        run: python3 eksamio-learning-engine/identity-reference/validate_passwordless_identity_001.py
+      - name: Validate durable delivery concurrency and ambiguity on PostgreSQL
+        run: python3 eksamio-learning-engine/identity-reference/validate_registration_delivery_postgres_001.py
       - name: Validate real registration on PostgreSQL
         run: python3 eksamio-learning-engine/identity-reference/validate_registration_postgres_001.py
