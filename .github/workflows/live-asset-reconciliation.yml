@@ -8,6 +8,7 @@ on:
       - 'eksamio-learning-engine/peis-integration-reference/validate_live_asset_reconciliation.py'
       - 'eksamio-learning-engine/peis-integration-reference/russian_trainer_sensor.py'
       - 'eksamio-learning-engine/peis-integration-reference/validate_registered_russian_trainer_sensor.py'
+      - 'eksamio-learning-engine/peis-integration-reference/validate_peis_integration_001.py'
       - 'eksamio-learning-engine/peis-integration-reference/RUSSIAN-EGE-TRAINER-SENSOR-MAP-v0.1.json'
       - 'eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/BANK-MANIFEST.json'
       - 'eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-06.txt'
@@ -29,9 +30,13 @@ jobs:
           eksamio-learning-engine/peis-integration-reference/validate_live_asset_reconciliation.py
           eksamio-learning-engine/peis-integration-reference/russian_trainer_sensor.py
           eksamio-learning-engine/peis-integration-reference/validate_registered_russian_trainer_sensor.py
+          eksamio-learning-engine/peis-integration-reference/validate_peis_integration_001.py
       - name: Validate live authority reconciliation
         working-directory: eksamio-learning-engine/peis-integration-reference
         run: python3 validate_live_asset_reconciliation.py
       - name: Validate registered-only Russian trainer sensor boundary
         working-directory: eksamio-learning-engine/peis-integration-reference
         run: python3 validate_registered_russian_trainer_sensor.py
+      - name: Validate registered Russian trainer to shared PEIS loop
+        working-directory: eksamio-learning-engine/peis-integration-reference
+        run: python3 validate_peis_integration_001.py
