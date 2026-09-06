@@ -8,6 +8,7 @@ COPY peis-service-bridge-reference /app/peis-service-bridge-reference
 COPY peis-reference-kernel /app/peis-reference-kernel
 COPY peis-trusted-host-reference /app/peis-trusted-host-reference
 COPY identity-reference /app/identity-reference
+COPY payments-reference /app/payments-reference
 COPY 277-EKSAMIO-LEARNER-EVIDENCE-EVENT-SCHEMA-v0.1.json 285-EKSAMIO-NEXT-BEST-ACTION-CONTRACT-v0.1.json /app/
 COPY 119-RUSSIAN-EXCEPTIONS-PRACTICE-CURRENT-CORRECTED-MANIFEST.json 92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json /app/
 RUN mkdir -p /app/russian-program
