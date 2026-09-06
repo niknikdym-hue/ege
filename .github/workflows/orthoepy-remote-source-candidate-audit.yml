@@ -26,5 +26,11 @@ jobs:
           test "$(git rev-parse FETCH_HEAD)" = "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9"
       - name: Audit exact orthoepy source candidate without live admission
         run: python3 eksamio-learning-engine/peis-integration-reference/audit_orthoepy_remote_source_candidate.py
+      - name: Fetch exact PR base for diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.event.pull_request.base.sha }}" --depth=1
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.event.pull_request.base.sha }}"
       - name: Diff hygiene
-        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
+        run: git diff --check "${{ github.event.pull_request.base.sha }}...HEAD"
