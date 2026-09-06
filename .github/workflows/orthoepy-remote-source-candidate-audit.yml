@@ -33,4 +33,4 @@ jobs:
           git fetch --no-tags origin "${{ github.event.pull_request.base.sha }}" --depth=1
           test "$(git rev-parse FETCH_HEAD)" = "${{ github.event.pull_request.base.sha }}"
       - name: Diff hygiene
-        run: git diff --check "${{ github.event.pull_request.base.sha }}...HEAD"
+        run: git diff --check "${{ github.event.pull_request.base.sha }}" HEAD
