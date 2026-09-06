@@ -47,6 +47,8 @@ jobs:
           eksamio-learning-engine/peis-production-substrate/learner_web_runtime.py
           eksamio-learning-engine/peis-production-substrate/tutor_lifecycle.py
           eksamio-learning-engine/peis-production-substrate/learner_tutor_web_runtime.py
+          eksamio-learning-engine/peis-production-substrate/validate_learner_web_runtime_postgres.py
+          eksamio-learning-engine/peis-production-substrate/validate_browser_security_postgres.py
           eksamio-learning-engine/peis-production-substrate/validate_tutor_lifecycle_postgres.py
           eksamio-learning-engine/payments-reference/entitlement_read.py
       - name: Validate registered-only learner admission on Ubuntu
@@ -66,6 +68,17 @@ jobs:
           PY
       - name: Validate authenticated Pro browser routes and entitlement on real PostgreSQL
         run: python3 eksamio-learning-engine/peis-production-substrate/validate_learner_web_runtime_postgres.py
+      - name: Reset PostgreSQL browser-security fixture
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate exact-origin CSRF and secure-cookie boundary on real PostgreSQL
+        run: python3 eksamio-learning-engine/peis-production-substrate/validate_browser_security_postgres.py
       - name: Reset PostgreSQL Tutor fixture
         run: |
           python3 - <<'PY'
