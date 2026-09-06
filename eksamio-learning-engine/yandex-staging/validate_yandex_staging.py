@@ -49,6 +49,11 @@ def main() -> int:
     runtime = (ENGINE / "peis-production-substrate/runtime.py").read_text(encoding="utf-8")
     learner_runtime = (ENGINE / "peis-production-substrate/learner_web_runtime.py").read_text(encoding="utf-8")
     learner_views = (ENGINE / "peis-production-substrate/learner_views.py").read_text(encoding="utf-8")
+    entitlement_reader = (ENGINE / "payments-reference/entitlement_read.py").read_text(encoding="utf-8")
+    postgres_runtime = (ENGINE / "peis-production-substrate/peis_postgres.py").read_text(encoding="utf-8")
+    payment_migration = (
+        ENGINE / "peis-production-substrate/migrations/0003_payments_entitlement_postgres.sql"
+    ).read_text(encoding="utf-8")
     dockerfile = (ENGINE / "peis-production-substrate/Dockerfile").read_text(encoding="utf-8")
 
     for token in (
@@ -64,6 +69,7 @@ def main() -> int:
         '/api/identity/session:',
         '/api/identity/logout:',
         '/api/consent/marketing/revoke:',
+        '/api/payments/entitlement:',
         '/api/russian/profile:',
         '/api/russian/plan:',
         '/api/russian/history:',
@@ -137,11 +143,13 @@ def main() -> int:
         '/api/identity/session',
         '/api/identity/logout',
         '/api/consent/marketing/revoke',
+        '/api/payments/entitlement',
         '/api/russian/profile',
         '/api/russian/plan',
         '/api/russian/history',
         '/api/russian/practice/next',
         '/api/russian/practice/submit',
+        'ProEntitlementReader',
         'TUTOR_PROVIDER_NOT_ADMITTED',
         'RUSSIAN_FULL_SUBJECT_NOT_ADMITTED',
         'PasswordlessIdentityService.clear_session_cookie()',
@@ -156,16 +164,32 @@ def main() -> int:
     ):
         require(learner_views, token, "learner views")
 
-    require(
-        dockerfile,
+    for token in (
+        'PRODUCT_CODE = "EKSAMIO_PRO_RUSSIAN"',
+        "state = 'ACTIVE'",
+        'expires_at_epoch > ?',
+        'active',
+    ):
+        require(entitlement_reader, token, "entitlement reader")
+
+    for token in (
+        '0003_payments_entitlement_postgres',
+        'pro_entitlements',
+    ):
+        require(postgres_runtime + payment_migration, token, "payment Postgres substrate")
+
+    for token in (
+        'COPY payments-reference /app/payments-reference',
         'CMD ["python", "/app/peis-production-substrate/learner_web_runtime.py"]',
-        "Dockerfile",
-    )
+    ):
+        require(dockerfile, token, "Dockerfile")
 
     print("SEP1_YANDEX_STAGING_STATIC_VALIDATION=PASS")
     print("gateway_to_private_container_contract=PASS")
     print("authenticated_pro_routes=PASS")
     print("session_owned_peis=PASS")
+    print("session_owned_entitlement=PASS")
+    print("production_payment_write_routes=0")
     print("full_russian_program_fail_closed=PASS")
     print("production_tutor_fail_closed=PASS")
     print("immutable_image_required=PASS")
