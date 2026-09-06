@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'eksamio-learning-engine/identity-reference/**'
+      - 'eksamio-learning-engine/payments-reference/**'
       - 'eksamio-learning-engine/peis-production-substrate/**'
       - 'eksamio-learning-engine/peis-trusted-host-reference/**'
       - 'eksamio-learning-engine/peis-service-bridge-reference/**'
@@ -43,6 +44,7 @@ jobs:
           eksamio-learning-engine/peis-production-substrate/runtime.py
           eksamio-learning-engine/peis-production-substrate/learner_views.py
           eksamio-learning-engine/peis-production-substrate/learner_web_runtime.py
+          eksamio-learning-engine/payments-reference/entitlement_read.py
       - name: Validate registration session to authenticated PEIS on real PostgreSQL
         run: python3 eksamio-learning-engine/peis-production-substrate/validate_authenticated_web_runtime_postgres.py
       - name: Reset PostgreSQL learner-browser fixture
@@ -54,7 +56,7 @@ jobs:
               connection.execute("DROP SCHEMA public CASCADE")
               connection.execute("CREATE SCHEMA public")
           PY
-      - name: Validate authenticated Pro browser routes on real PostgreSQL
+      - name: Validate authenticated Pro browser routes and entitlement on real PostgreSQL
         run: python3 eksamio-learning-engine/peis-production-substrate/validate_learner_web_runtime_postgres.py
       - name: Validate Yandex fail-closed static contract
         run: python3 eksamio-learning-engine/yandex-staging/validate_yandex_staging.py
