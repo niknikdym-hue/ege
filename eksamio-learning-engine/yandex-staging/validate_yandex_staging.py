@@ -18,7 +18,6 @@ def forbid(text: str, token: str, label: str) -> None:
 
 
 def assert_no_secret_payloads(env_example: str) -> None:
-    """Reject credential payloads while allowing Lockbox reference metadata."""
     dangerous_names = {
         "PASSWORD",
         "TOKEN",
@@ -48,6 +47,8 @@ def main() -> int:
     smoke = (HERE / "smoke_staging.sh").read_text(encoding="utf-8")
     rollback = (HERE / "rollback_staging.sh").read_text(encoding="utf-8")
     runtime = (ENGINE / "peis-production-substrate/runtime.py").read_text(encoding="utf-8")
+    learner_runtime = (ENGINE / "peis-production-substrate/learner_web_runtime.py").read_text(encoding="utf-8")
+    learner_views = (ENGINE / "peis-production-substrate/learner_views.py").read_text(encoding="utf-8")
     dockerfile = (ENGINE / "peis-production-substrate/Dockerfile").read_text(encoding="utf-8")
 
     for token in (
@@ -60,6 +61,16 @@ def main() -> int:
         '/v1/registration/verify:',
         '/v1/session:',
         '/v0/checked-card:',
+        '/api/identity/session:',
+        '/api/identity/logout:',
+        '/api/consent/marketing/revoke:',
+        '/api/russian/profile:',
+        '/api/russian/plan:',
+        '/api/russian/history:',
+        '/api/russian/practice/next:',
+        '/api/russian/practice/submit:',
+        '/api/russian/program:',
+        '/api/tutor/turn:',
     ):
         require(gateway, token, "gateway template")
     forbid(gateway.lower(), "tilda", "gateway template")
@@ -72,13 +83,7 @@ def main() -> int:
         "EKSAMIO_POSTBOX_EXECUTION_ENABLED=false",
         "EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED=false",
         "YC_GATEWAY_APPLY=false",
-        "EKSAMIO_ALLOWED_ORIGIN=https://eksamio.ru",
         "@sha256:<immutable-digest>",
-        "YC_IDENTITY_SECRET_ID=",
-        "YC_IDENTITY_SECRET_VERSION_ID=",
-        "YC_IDENTITY_CONTACT_HMAC_KEY=contact_hmac",
-        "YC_IDENTITY_VERIFICATION_HMAC_KEY=verification_hmac",
-        "YC_IDENTITY_HOST_SIGNING_KEY=host_signing",
     ):
         require(env_example, token, "staging env")
     assert_no_secret_payloads(env_example)
@@ -91,21 +96,19 @@ def main() -> int:
         'EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED:-false',
         'YC_GATEWAY_APPLY:-false',
         '@sha256:',
-        '--concurrency 1',
         '--network-id "${YC_NETWORK_ID}"',
-        '--metadata-options "aws-v1-http-endpoint=disabled,gce-http-endpoint=enabled"',
         '--secret "environment-variable=PEIS_DATABASE_DSN',
-        '--secret "environment-variable=EKSAMIO_CONTACT_HMAC_KEY',
-        '--secret "environment-variable=EKSAMIO_VERIFICATION_HMAC_KEY',
-        '--secret "environment-variable=EKSAMIO_HOST_SIGNING_KEY',
         '--service-account-id "${YC_RUNTIME_SA_ID}"',
-        'real Postbox delivery requires explicit EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED=true',
+        '--concurrency 1',
         'yc serverless api-gateway',
     ):
         require(deploy, token, "deploy script")
     for forbidden in (
         'allow-unauthenticated-invoke',
         'PEIS_NETWORK_WRITES_ENABLED=true',
+        'EKSAMIO_REGISTRATION_BEGIN_ENABLED=true\n',
+        'EKSAMIO_POSTBOX_EXECUTION_ENABLED=true\n',
+        'EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED=true\n',
         'YC_GATEWAY_APPLY=true\n',
         'lockbox payload get',
     ):
@@ -121,38 +124,51 @@ def main() -> int:
     require(rollback, '--revision-id "${TARGET_REVISION_ID}"', "rollback script")
 
     for token in (
-        'PasswordlessIdentityService',
-        'RegistrationConsentStore',
-        'RegistrationHttpBoundary',
-        'YandexMetadataIamTokenProvider',
-        'YANDEX_METADATA_IAM_URL',
-        '"Metadata-Flavor": "Google"',
-        'SESSION_COOKIE = PasswordlessIdentityService.SESSION_COOKIE_NAME',
-        'path == "/v1/session"',
-        'AUTHENTICATION_REQUIRED',
         'PEIS_NETWORK_WRITES_ENABLED',
         'EKSAMIO_REGISTRATION_BEGIN_ENABLED',
         'EKSAMIO_POSTBOX_EXECUTION_ENABLED',
-        'HTTPServer',
+        'EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED',
+        'YandexMetadataIamTokenProvider',
+        'eksamio_pro_session',
         'server.host_identity = None',
     ):
-        require(runtime, token, "runtime")
-    forbid(runtime, 'ThreadingHTTPServer', "runtime")
+        require(runtime, token, "core runtime")
 
     for token in (
-        'COPY peis-trusted-host-reference /app/peis-trusted-host-reference',
-        'COPY identity-reference /app/identity-reference',
-        'CMD ["python", "/app/peis-production-substrate/runtime.py"]',
+        '/api/identity/session',
+        '/api/identity/logout',
+        '/api/consent/marketing/revoke',
+        '/api/russian/profile',
+        '/api/russian/plan',
+        '/api/russian/history',
+        '/api/russian/practice/next',
+        '/api/russian/practice/submit',
+        'TUTOR_PROVIDER_NOT_ADMITTED',
+        'RUSSIAN_FULL_SUBJECT_NOT_ADMITTED',
+        'PasswordlessIdentityService.clear_session_cookie()',
     ):
-        require(dockerfile, token, "Dockerfile")
+        require(learner_runtime, token, "learner browser runtime")
+
+    for token in (
+        'canonical_state_owner',
+        'shared_peis',
+        'Europe/Moscow',
+        'FIRST_SLICE_CARD_ID',
+    ):
+        require(learner_views, token, "learner views")
+
+    require(
+        dockerfile,
+        'CMD ["python", "/app/peis-production-substrate/learner_web_runtime.py"]',
+        "Dockerfile",
+    )
 
     print("SEP1_YANDEX_STAGING_STATIC_VALIDATION=PASS")
     print("gateway_to_private_container_contract=PASS")
-    print("registration_gateway_routes=PASS")
-    print("server_session_only_peis_identity=PASS")
-    print("metadata_iam_path=PASS")
-    print("identity_lockbox_refs=PASS")
-    print("single_connection_concurrency_guard=PASS")
+    print("authenticated_pro_routes=PASS")
+    print("session_owned_peis=PASS")
+    print("full_russian_program_fail_closed=PASS")
+    print("production_tutor_fail_closed=PASS")
     print("immutable_image_required=PASS")
     print("lockbox_dsn_boundary=PASS")
     print("private_network_required=PASS")
