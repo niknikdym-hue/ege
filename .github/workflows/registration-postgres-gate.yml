@@ -39,9 +39,27 @@ jobs:
         run: python3 eksamio-learning-engine/identity-reference/validate_registration_consent_001.py
       - name: Validate existing registration HTTP contract
         run: python3 eksamio-learning-engine/identity-reference/validate_registration_http_001.py
-      - name: Validate passwordless identity regression
-        run: python3 eksamio-learning-engine/identity-reference/validate_passwordless_identity_001.py
-      - name: Validate durable delivery concurrency and ambiguity on PostgreSQL
-        run: python3 eksamio-learning-engine/identity-reference/validate_registration_delivery_postgres_001.py
       - name: Validate real registration on PostgreSQL
         run: python3 eksamio-learning-engine/identity-reference/validate_registration_postgres_001.py
+      - name: Reset PostgreSQL acceptance fixture
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["PEIS_DATABASE_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate passwordless identity regression
+        run: python3 eksamio-learning-engine/identity-reference/validate_passwordless_identity_001.py
+      - name: Reset PostgreSQL delivery fixture
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["PEIS_DATABASE_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate durable delivery concurrency and ambiguity on PostgreSQL
+        run: python3 eksamio-learning-engine/identity-reference/validate_registration_delivery_postgres_001.py
