@@ -8,6 +8,7 @@ on:
       - 'eksamio-learning-engine/peis-production-substrate/**'
       - 'eksamio-learning-engine/peis-trusted-host-reference/**'
       - 'eksamio-learning-engine/peis-service-bridge-reference/**'
+      - 'eksamio-learning-engine/live-student-loop/**'
       - 'eksamio-learning-engine/yandex-staging/**'
       - '.github/workflows/authenticated-web-runtime-postgres.yml'
   workflow_dispatch:
@@ -45,6 +46,10 @@ jobs:
           eksamio-learning-engine/peis-production-substrate/learner_views.py
           eksamio-learning-engine/peis-production-substrate/learner_web_runtime.py
           eksamio-learning-engine/payments-reference/entitlement_read.py
+      - name: Validate registered-only learner admission on Ubuntu
+        run: python3 eksamio-learning-engine/live-student-loop/validate_gated_runtime.py
+      - name: Run registered learner loop regressions on Ubuntu
+        run: python3 eksamio-learning-engine/live-student-loop/test_live_student_loop.py
       - name: Validate registration session to authenticated PEIS on real PostgreSQL
         run: python3 eksamio-learning-engine/peis-production-substrate/validate_authenticated_web_runtime_postgres.py
       - name: Reset PostgreSQL learner-browser fixture
