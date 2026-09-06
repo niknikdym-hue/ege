@@ -6,8 +6,11 @@ on:
       - 'eksamio-learning-engine/peis-integration-reference/LIVE-EDUCATIONAL-ASSET-RECONCILIATION-v0.1.json'
       - 'eksamio-learning-engine/peis-integration-reference/live_asset_registry.py'
       - 'eksamio-learning-engine/peis-integration-reference/validate_live_asset_reconciliation.py'
+      - 'eksamio-learning-engine/peis-integration-reference/russian_trainer_sensor.py'
+      - 'eksamio-learning-engine/peis-integration-reference/validate_registered_russian_trainer_sensor.py'
       - 'eksamio-learning-engine/peis-integration-reference/RUSSIAN-EGE-TRAINER-SENSOR-MAP-v0.1.json'
       - 'eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/BANK-MANIFEST.json'
+      - 'eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-06.txt'
       - '.github/workflows/live-asset-reconciliation.yml'
   workflow_dispatch:
 
@@ -19,11 +22,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Compile fail-closed live asset adapter
+      - name: Compile fail-closed live asset and trainer sensor adapters
         run: >-
           python3 -m py_compile
           eksamio-learning-engine/peis-integration-reference/live_asset_registry.py
           eksamio-learning-engine/peis-integration-reference/validate_live_asset_reconciliation.py
+          eksamio-learning-engine/peis-integration-reference/russian_trainer_sensor.py
+          eksamio-learning-engine/peis-integration-reference/validate_registered_russian_trainer_sensor.py
       - name: Validate live authority reconciliation
         working-directory: eksamio-learning-engine/peis-integration-reference
         run: python3 validate_live_asset_reconciliation.py
+      - name: Validate registered-only Russian trainer sensor boundary
+        working-directory: eksamio-learning-engine/peis-integration-reference
+        run: python3 validate_registered_russian_trainer_sensor.py
