@@ -13,8 +13,10 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 ENGINE = HERE.parent
+PAYMENTS = ENGINE / "payments-reference"
 sys.path[:0] = [
     str(HERE),
+    str(PAYMENTS),
     str(ENGINE / "peis-persistence-reference"),
     str(ENGINE / "peis-service-bridge-reference"),
     str(ENGINE / "peis-reference-kernel"),
@@ -24,8 +26,10 @@ sys.path[:0] = [
 
 import runtime as core  # noqa: E402
 import learner_web_runtime as learner_runtime  # noqa: E402
+from entitlement_read import ProEntitlementReader  # noqa: E402
 from learner_views import RegisteredLearnerViews  # noqa: E402
-from peis_postgres import PostgresPeisPersistenceStore  # noqa: E402
+from payments import Offer, PaymentStore  # noqa: E402
+from peis_postgres import PostgresPeisPersistenceStore, _PsycopgQmarkConnection  # noqa: E402
 from russian_exceptions_practice_adapter import (  # noqa: E402
     FIRST_SLICE_CARD_ID,
     RussianExceptionsPracticeAdapter,
@@ -93,6 +97,71 @@ def registration_payload() -> dict[str, Any]:
     }
 
 
+def grant_fixture_entitlement(dsn: str) -> tuple[str, int]:
+    import psycopg
+    from psycopg.rows import dict_row
+
+    raw = psycopg.connect(dsn, row_factory=dict_row)
+    try:
+        connection = _PsycopgQmarkConnection(raw)
+        identity = connection.execute(
+            """
+            SELECT user_identity_ref, learner_profile_id
+            FROM identity_sessions
+            WHERE revoked_at_epoch IS NULL
+            ORDER BY created_at_epoch DESC LIMIT 1
+            """
+        ).fetchone()
+        require(identity is not None, "verified browser session is persisted before entitlement fixture")
+        store = PaymentStore(connection)
+        offer = Offer(
+            code="RU_PRO_30_TEST",
+            product_code="EKSAMIO_PRO_RUSSIAN",
+            duration_days=30,
+            amount_kopecks=12300,
+            title_ru="Eksamio Pro — Русский — 30 дней (CI fixture)",
+        )
+        now = int(time.time())
+        store.create_order(
+            order_id="ord:learner-web-entitlement-0001",
+            inv_id=990001,
+            user_identity_ref=str(identity["user_identity_ref"]),
+            learner_profile_id=str(identity["learner_profile_id"]),
+            offer=offer,
+            payment_method="SBP",
+            now=now,
+        )
+        store.mark_initiated("ord:learner-web-entitlement-0001", now=now)
+        grant = store.grant_paid_exactly_once(
+            inv_id=990001,
+            provider_payment_ref="ci-provider-ref-no-network",
+            payload_sha256="a" * 64,
+            now=now,
+        )
+        require(grant.replay is False and grant.state == "ACTIVE", "accepted payment state grants entitlement exactly once")
+        return str(identity["learner_profile_id"]), int(grant.expires_at_epoch)
+    finally:
+        raw.close()
+
+
+def refund_fixture_entitlement(dsn: str) -> None:
+    import psycopg
+    from psycopg.rows import dict_row
+
+    raw = psycopg.connect(dsn, row_factory=dict_row)
+    try:
+        store = PaymentStore(_PsycopgQmarkConnection(raw))
+        changed = store.refund_confirmed(
+            "ord:learner-web-entitlement-0001",
+            provider_ref="ci-refund-ref-no-network",
+            payload_sha256="b" * 64,
+            now=int(time.time()),
+        )
+        require(changed, "provider-confirmed refund fixture revokes entitlement")
+    finally:
+        raw.close()
+
+
 def main() -> None:
     dsn = os.environ.get("EKSAMIO_TEST_POSTGRES_DSN", "")
     require(bool(dsn), "EKSAMIO_TEST_POSTGRES_DSN is required")
@@ -125,9 +194,10 @@ def main() -> None:
             )
             adapter = RussianExceptionsPracticeAdapter(ENGINE)
             views = RegisteredLearnerViews(store=store, bridge=runtime.bridge, adapter=adapter)
+            entitlements = ProEntitlementReader(store.connection)
             server = HTTPServer(
                 ("127.0.0.1", 0),
-                learner_runtime.make_handler(runtime, views),
+                learner_runtime.make_handler(runtime, views, entitlements),
             )
             shared["server"] = server
             shared["port"] = int(server.server_address[1])
@@ -155,6 +225,10 @@ def main() -> None:
             port, "GET", "/api/russian/profile?grade=10&route=ege"
         )
         require(status == 401 and unauth.get("error") == "AUTHENTICATION_REQUIRED", "learner reads require session")
+        status, _headers, unauth_entitlement = request_json(
+            port, "GET", "/api/payments/entitlement"
+        )
+        require(status == 401 and unauth_entitlement.get("error") == "AUTHENTICATION_REQUIRED", "entitlement read requires session")
 
         status, _headers, begin = request_json(
             port,
@@ -180,6 +254,24 @@ def main() -> None:
         status, _headers, session = request_json(port, "GET", "/api/identity/session", cookie=cookie)
         require(status == 200 and session.get("authenticated") is True, "Pro identity route resolves session")
         require(session.get("identity_owner") == "server", "session truth remains server-owned")
+
+        status, _headers, inactive = request_json(
+            port, "GET", "/api/payments/entitlement", cookie=cookie
+        )
+        require(status == 200 and inactive == {
+            "active": False,
+            "product_code": "EKSAMIO_PRO_RUSSIAN",
+            "state": "INACTIVE",
+        }, "registered learner without payment has no active entitlement")
+
+        entitled_learner, entitled_until = grant_fixture_entitlement(dsn)
+        status, _headers, active = request_json(
+            port, "GET", "/api/payments/entitlement", cookie=cookie
+        )
+        require(status == 200 and active.get("active") is True, "accepted server payment state activates Pro read")
+        require(active.get("product_code") == "EKSAMIO_PRO_RUSSIAN", "entitlement product is server-owned Russian Pro")
+        require(active.get("state") == "ACTIVE", "active entitlement state is returned")
+        require(active.get("expires_at_epoch") == entitled_until, "entitlement expiry is server-owned")
 
         status, _headers, before = request_json(
             port, "GET", "/api/russian/profile?grade=10&route=ege", cookie=cookie
@@ -247,6 +339,12 @@ def main() -> None:
         )
         require(status == 200 and revoked.get("status") == "RECORDED", "authenticated marketing revoke is persisted")
 
+        refund_fixture_entitlement(dsn)
+        status, _headers, after_refund = request_json(
+            port, "GET", "/api/payments/entitlement", cookie=cookie
+        )
+        require(status == 200 and after_refund.get("active") is False, "provider-confirmed refund removes active entitlement")
+
         status, _headers, wrong_origin = request_json(
             port,
             "GET",
@@ -295,24 +393,33 @@ def main() -> None:
             ORDER BY event_seq DESC LIMIT 1
             """
         ).fetchone()
+        entitlement = connection.execute(
+            "SELECT learner_profile_id, state FROM pro_entitlements WHERE order_id='ord:learner-web-entitlement-0001'"
+        ).fetchone()
         identities = connection.execute(
             "SELECT identity_kind FROM identity_links"
         ).fetchall()
 
     require(session is not None and event is not None, "session and evidence are persisted")
     require(session["learner_profile_id"] == event["learner_profile_id"], "session and PEIS event have the same learner_profile_id")
+    require(session["learner_profile_id"] == entitled_learner, "payment entitlement uses the same learner_profile_id")
     require(session["revoked_at_epoch"] is not None, "logout is durable")
     require(marketing is not None and marketing["action"] == "REVOKE", "marketing revoke is latest durable state")
+    require(entitlement is not None and entitlement["state"] == "REVOKED", "refund durably revokes entitlement")
     require({row["identity_kind"] for row in identities} == {"USER"}, "registered browser path creates no anonymous identity")
     require("@" not in str(session["user_identity_ref"]), "persisted session contains no raw email")
 
     print("LEARNER_WEB_RUNTIME_POSTGRES=PASS")
     print("registration_session_profile_history_plan=PASS")
+    print("server_owned_entitlement_read=PASS")
+    print("entitlement_same_learner_profile=PASS")
+    print("refund_revokes_entitlement=PASS")
     print("practice_to_same_learner_peis=PASS")
     print("logout_durable=PASS")
     print("marketing_revoke_append_only=PASS")
     print("full_russian_program=BLOCKED_UNTIL_SUBJECT_ACCEPTANCE")
     print("production_tutor=BLOCKED_UNTIL_PROVIDER_ADMISSION")
+    print("production_payment_execution=0")
     print("anonymous_identity=0")
     print("real_provider_calls=0")
 
