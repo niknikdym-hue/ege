@@ -69,6 +69,28 @@ def _outcome(score: Any, maximum: Any) -> tuple[str, bool | None]:
     return "INCORRECT", False
 
 
+def _registered_identity_ref(identity_refs: dict[str, str]) -> str:
+    """Return the sole accepted registered identity or fail closed.
+
+    Canonical trainer evidence belongs only to the authenticated server-owned
+    learner. Anonymous/device identity and mixed identity payloads are rejected
+    so the product cannot manufacture anon-to-account continuity.
+    """
+
+    if not isinstance(identity_refs, dict):
+        raise SensorMappingError("registered user_identity_ref is required")
+    if "anonymous_identity_ref" in identity_refs:
+        raise SensorMappingError("anonymous or mixed identity is forbidden for canonical learner evidence")
+    if set(identity_refs) != {"user_identity_ref"}:
+        raise SensorMappingError("exactly one registered user_identity_ref is required")
+    user_identity_ref = identity_refs.get("user_identity_ref")
+    if not isinstance(user_identity_ref, str) or not user_identity_ref.strip():
+        raise SensorMappingError("non-empty registered user_identity_ref is required")
+    if not user_identity_ref.startswith("user:") or len(user_identity_ref) <= len("user:"):
+        raise SensorMappingError("user_identity_ref must use the server-owned user: namespace")
+    return user_identity_ref
+
+
 class RussianTrainerSensorAdapter:
     """Build canonical EvidenceEvent from current trainer card/session/check result."""
 
@@ -98,8 +120,7 @@ class RussianTrainerSensorAdapter:
             raise SensorMappingError("card task disagrees with admitted sensor mapping")
         if not learner_profile_id or len(learner_profile_id) < 3:
             raise SensorMappingError("learner_profile_id must come from the shared host boundary")
-        if not identity_refs or not ({"anonymous_identity_ref", "user_identity_ref"} & set(identity_refs)):
-            raise SensorMappingError("shared host identity ref is required")
+        _registered_identity_ref(identity_refs)
         if not isinstance(session.get("startedAt"), int):
             raise SensorMappingError("current trainer session.startedAt is required for stable source identity")
         if checked.get("max") is None:
