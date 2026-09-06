@@ -32,7 +32,6 @@ def main() -> None:
     require(registry["authority_policy"]["preserve_existing_live_local_state_until_registered_replacement_ready"] is True, "working local UX is preserved until replacement")
     require(registry["authority_policy"]["existing_live_local_state_is_future_canonical"] is False, "local live state is not future canonical")
 
-    # Exact repository authority for the full Russian trainer.
     bank = json.loads(BANK_MANIFEST.read_text(encoding="utf-8"))
     require(bank["cards"] == 174, "full Russian trainer exact card count must remain 174")
     require(bank["sources"] == 9, "full Russian trainer exact source-text count must remain 9")
@@ -49,7 +48,6 @@ def main() -> None:
     sensor = json.loads(SENSOR_MAP.read_text(encoding="utf-8"))
     require(sensor["product"]["route"] == "/ege/russkiy/trenazher/", "existing sensor map points to the same live trainer")
     require(sensor["precision_policy"]["forbidden"] == "whole-card score must not become an exact semantic failure", "existing precision guard is preserved")
-    # Existing map is composite/source-verified, not an accepted exact mastery allow-list.
     require(not full.get("accepted_exact_item_bindings"), "#185 imports no unreviewed exact mastery bindings")
 
     thematic_ids = [
@@ -64,6 +62,7 @@ def main() -> None:
         require(asset["canonical_item_identity_status"] == "UNKNOWN_BLOCKER", f"{asset_id} unknown identities remain explicit")
         require(asset["canonical_item_count"] is None, f"{asset_id} count is not guessed")
         require(asset["mastery_from_live_progress"] is False, f"{asset_id} local progress is not imported as mastery")
+        require(asset["live_observation"]["live_source_provenance"].startswith("FIPI_OFFICIAL_"), f"{asset_id} live provenance remains explicit")
         decision = admit_future_canonical_evidence(
             asset_id=asset_id,
             user_identity_ref="usr_registered_ci",
@@ -81,7 +80,47 @@ def main() -> None:
     require([entry["year"] for entry in russian_routes] == [2026, 2025, 2024, 2023, 2022], "live Russian demo years are explicitly reconciled")
     require(len({entry["url"] for entry in russian_routes}) == 5, "Russian demo routes are unique")
 
-    # Registration is mandatory for all future canonical learner evidence.
+    expected_route_counts = {
+        "russian": {2022: 27, 2023: 27, 2024: 27, 2025: 27, 2026: 27},
+        "math_basic": {2022: 21, 2023: 21, 2024: 21, 2025: 21, 2026: 21},
+        "math_profile": {2022: 18, 2023: 18, 2024: 19, 2025: 19, 2026: 19},
+        "physics": {2022: 30, 2023: 30, 2024: 26, 2025: 26, 2026: 26},
+        "chemistry": {2026: 34},
+        "biology": {2026: 28},
+        "history": {2026: 21},
+        "social_studies": {2026: 25},
+    }
+    expected_durations = {
+        "russian": 210,
+        "math_basic": 180,
+        "math_profile": 235,
+        "physics": 235,
+        "chemistry": 210,
+        "biology": 235,
+        "history": 210,
+        "social_studies": 210,
+    }
+    routes = demo["verified_demo_routes"]
+    require(len(routes) == 24, "verified live demo inventory must contain 24 subject/year routes")
+    route_keys = {(entry["subject"], entry["year"]) for entry in routes}
+    require(len(route_keys) == len(routes), "verified demo subject/year identities are unique")
+    for subject, by_year in expected_route_counts.items():
+        require({year for subj, year in route_keys if subj == subject} == set(by_year), f"{subject} live year coverage is exact")
+        for year, task_count in by_year.items():
+            match = [entry for entry in routes if entry["subject"] == subject and entry["year"] == year]
+            require(len(match) == 1, f"{subject} {year} route resolves exactly once")
+            entry = match[0]
+            require(entry["task_count"] == task_count, f"{subject} {year} task count is live-authority exact")
+            require(entry["duration_minutes"] == expected_durations[subject], f"{subject} {year} duration is live-authority exact")
+            require(entry["url"].startswith("https://eksamio.ru/ege/"), f"{subject} {year} route remains on live Eksamio")
+            require(entry["source_provenance"] == "LIVE_PAGE_IDENTIFIES_FIPI_DEMO", f"{subject} {year} provenance is explicit")
+
+    subjects = {entry["subject"]: entry for entry in demo["live_observation"]["subjects"]}
+    require(set(subjects) == set(expected_route_counts), "catalog subject set is exact")
+    for subject, by_year in expected_route_counts.items():
+        require(subjects[subject]["years"] == sorted(by_year), f"{subject} subject-year catalog is exact")
+        require(subjects[subject]["task_count_by_year"] == {str(year): count for year, count in by_year.items()}, f"{subject} year-sensitive task counts are exact")
+
     anonymous = admit_future_canonical_evidence(
         asset_id="live-russian-ege-full-trainer",
         user_identity_ref=None,
@@ -92,7 +131,6 @@ def main() -> None:
     )
     require(not anonymous.admitted and not anonymous.mastery_eligible, "anonymous evidence cannot enter future canonical learner state")
 
-    # Route/view/reference activity may be observable but is never mastery.
     reference_read = admit_future_canonical_evidence(
         asset_id="live-ege-demo-catalog",
         user_identity_ref="usr_registered_ci",
@@ -103,9 +141,6 @@ def main() -> None:
     )
     require(reference_read.admitted and not reference_read.mastery_eligible, "reading/navigation never creates mastery")
 
-    # Even the known full-trainer card identity cannot self-assert exactness. The
-    # existing repository mapping is composite, so no accepted exact allow-list
-    # exists in this #185 slice.
     not_allowlisted = admit_future_canonical_evidence(
         asset_id="live-russian-ege-full-trainer",
         user_identity_ref="usr_registered_ci",
@@ -120,7 +155,8 @@ def main() -> None:
     print("LIVE_ASSET_RECONCILIATION=PASS")
     print("full_russian_trainer=174_cards/9_sources")
     print("thematic_trainers=4_unknown_item_identity_blockers")
-    print("russian_demo_years=2022-2026")
+    print("verified_demo_routes=24")
+    print("russian_math_basic_math_profile_physics_years=2022-2026")
     print("registered_user_identity_ref_required=PASS")
     print("false_exact_mastery=0")
 
