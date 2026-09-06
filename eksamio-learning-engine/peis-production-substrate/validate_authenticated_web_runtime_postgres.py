@@ -70,8 +70,9 @@ def request_json(
         headers["Access-Control-Request-Method"] = "POST"
         headers["Access-Control-Request-Headers"] = "Content-Type"
     if payload is not None:
-        body = json.dumps(payload, ensure_ascii=False)
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         headers["Content-Type"] = "application/json"
+        headers["Content-Length"] = str(len(body))
     if cookie:
         headers["Cookie"] = cookie
     conn.request(method, path, body=body, headers=headers)
