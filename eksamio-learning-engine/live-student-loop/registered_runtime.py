@@ -12,16 +12,47 @@ import json
 import mimetypes
 import os
 import sys
+import time
 from http.server import HTTPServer
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlparse
+from zoneinfo import ZoneInfo
 
 import runtime as legacy
+
+REPORTING_TIMEZONE = ZoneInfo("Europe/Moscow")
+# Keep the existing regression contract addressable through the reused runtime
+# module while the registered-only path owns the corrected reporting behavior.
+legacy.REPORTING_TIMEZONE = REPORTING_TIMEZONE
 
 
 class RegisteredLiveStudentLoop(legacy.LiveStudentLoop):
     """Same learner engine, but owner-test login never receives an anonymous host."""
+
+    def _create_loop_schema(self) -> None:
+        super()._create_loop_schema()
+        duplicate = self.store.connection.execute(
+            """
+            SELECT learner_profile_id, card_id, COUNT(*) AS n
+            FROM tutor_contexts
+            WHERE status = 'VERIFICATION_REQUIRED'
+            GROUP BY learner_profile_id, card_id
+            HAVING COUNT(*) > 1
+            LIMIT 1
+            """
+        ).fetchone()
+        if duplicate is not None:
+            raise RuntimeError("multiple pending Tutor contexts require explicit repair")
+        with self.store.connection:
+            self.store.connection.execute("DROP INDEX IF EXISTS idx_tutor_context_error")
+            self.store.connection.execute(
+                """
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_tutor_context_pending_card
+                ON tutor_contexts(learner_profile_id, card_id)
+                WHERE status = 'VERIFICATION_REQUIRED'
+                """
+            )
 
     def owner_test_login(self) -> tuple[dict[str, Any], str]:
         if not self.owner_test:
@@ -42,6 +73,132 @@ class RegisteredLiveStudentLoop(legacy.LiveStudentLoop):
             },
             legacy._loopback_cookie(legacy.SESSION_COOKIE, auth.token, max_age=30 * 24 * 60 * 60),
         )
+
+    def tutor_turn(self, host: Any, message: str) -> dict[str, Any]:
+        if not isinstance(message, str) or not message.strip():
+            raise legacy.ServiceRequestError("Tutor message is required")
+
+        events = self.store.list_events(
+            host.learner_profile_id,
+            "russian",
+            semantic_id=legacy.EXACT_SEMANTIC_ID,
+        )
+        wrong = next(
+            (
+                event
+                for event in reversed(events)
+                if event["source"]["object_id"] == legacy.FIRST_SLICE_CARD_ID
+                and event["result"]["outcome"] == "INCORRECT"
+            ),
+            None,
+        )
+        if wrong is None:
+            raise legacy.ServiceRequestError("No exact accepted error is available for Tutor context")
+
+        pending = self.pending_tutor_context(
+            host.learner_profile_id,
+            legacy.FIRST_SLICE_CARD_ID,
+        )
+        if pending is not None:
+            context_id = str(pending["context_id"])
+            pending_wrong = self.store.raw_event(str(pending["error_event_id"]))
+            if pending_wrong is not None:
+                wrong = pending_wrong
+        else:
+            row = self.store.connection.execute(
+                """
+                SELECT COUNT(*) AS n
+                FROM tutor_contexts
+                WHERE learner_profile_id = ? AND card_id = ?
+                """,
+                (host.learner_profile_id, legacy.FIRST_SLICE_CARD_ID),
+            ).fetchone()
+            lineage = int(row["n"]) + 1
+            context_id = "tutorctx." + legacy._digest(
+                host.learner_profile_id
+                + "|"
+                + wrong["event_id"]
+                + "|lineage:"
+                + str(lineage)
+            )
+
+        help_event_id = self._append_tutor_help(host, wrong, context_id)
+        now_epoch = int(time.time())
+        with self.store.connection:
+            self.store.connection.execute(
+                """
+                INSERT INTO tutor_contexts(
+                    context_id, learner_profile_id, card_id, error_event_id,
+                    help_event_id, status, created_at, helped_at_epoch, verified_event_id
+                ) VALUES (?, ?, ?, ?, ?, 'VERIFICATION_REQUIRED', ?, ?, NULL)
+                ON CONFLICT(context_id) DO NOTHING
+                """,
+                (
+                    context_id,
+                    host.learner_profile_id,
+                    legacy.FIRST_SLICE_CARD_ID,
+                    wrong["event_id"],
+                    help_event_id,
+                    legacy._utc_now(),
+                    now_epoch,
+                ),
+            )
+
+        answer = wrong["result"].get("response_value")
+        explanation = self.practice["feedback"]["why"]
+        correct_answer = self.practice["answer"]["text"]
+        return {
+            "status": "TUTOR_ADVISORY_STAGING",
+            "provider_mode": "DETERMINISTIC_STAGING_NO_AI",
+            "context_id": context_id,
+            "card_id": legacy.FIRST_SLICE_CARD_ID,
+            "answer_received": answer,
+            "error_event_id": wrong["event_id"],
+            "accepted_source_refs": [
+                f"source:russian-reviewed-card:{legacy.FIRST_SLICE_CARD_ID}"
+            ],
+            "verification_required": True,
+            "text": (
+                f"Вижу вашу ошибку в слове «{answer or '—'}». "
+                f"{explanation} Проверочный ориентир — «{correct_answer}». "
+                "Теперь выполните новое задание самостоятельно."
+            ),
+        }
+
+    def profile(self, learner_profile_id: str, *, grade: int, route: str) -> dict[str, Any]:
+        profile = super().profile(learner_profile_id, grade=grade, route=route)
+        reporting_day = legacy.datetime.now(REPORTING_TIMEZONE).date()
+        events = self.store.list_events(learner_profile_id, "russian")
+        attempts = []
+
+        for event in events:
+            if event["result"]["outcome"] not in {"CORRECT", "INCORRECT", "PARTIAL"}:
+                continue
+            raw = event["timestamps"].get("received_at_server")
+            if not isinstance(raw, str) or not raw:
+                continue
+            received = legacy.datetime.fromisoformat(raw.replace("Z", "+00:00"))
+            if received.tzinfo is None:
+                received = received.replace(tzinfo=legacy.timezone.utc)
+            if received.astimezone(REPORTING_TIMEZONE).date() == reporting_day:
+                attempts.append(event)
+
+        correct = sum(
+            event["result"]["outcome"] == "CORRECT"
+            for event in attempts
+        )
+        errors = sum(
+            event["result"]["outcome"] == "INCORRECT"
+            for event in attempts
+        )
+        profile["today"] = {
+            "solved": len(attempts),
+            "correct": correct,
+            "errors": errors,
+            "review": errors,
+        }
+        profile["reporting_timezone"] = REPORTING_TIMEZONE.key
+        return profile
 
 
 class RegisteredLoopHandler(legacy.LiveLoopHandler):
