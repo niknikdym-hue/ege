@@ -9,30 +9,41 @@
   const escapeHtml=value=>text(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const opaqueId=prefix=>`${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
+  function safeRegistrationUrl(value,localHost){
+    const raw=String(value||'').trim();
+    if(!raw){if(localHost)return '/registration/';throw new Error('production registration URL is required');}
+    if(raw.startsWith('/')&&!raw.startsWith('//'))return raw;
+    let parsed;
+    try{parsed=new URL(raw,window.location.href);}catch(_error){throw new Error('invalid registration URL');}
+    if(parsed.username||parsed.password)throw new Error('credentials are forbidden in registration URL');
+    if(parsed.protocol!=='https:')throw new Error('production registration URL requires HTTPS');
+    return parsed.href;
+  }
+
   function resolveAdapterRuntime(){
     const host=String(window.location.hostname||'').toLowerCase();
     const localHost=host==='127.0.0.1'||host==='localhost'||host==='[::1]';
     const raw=window.EKSAMIO_PRO_RUNTIME_CONFIG;
     if(raw==null){
-      if(localHost) return {mode:'mock',ownerTest:false};
+      if(localHost)return {mode:'mock',ownerTest:false,registrationUrl:'/registration/'};
       throw new Error('EKSAMIO_PRO_RUNTIME_CONFIG is required outside localhost');
     }
-    if(typeof raw!=='object'||Array.isArray(raw)) throw new Error('invalid EKSAMIO_PRO_RUNTIME_CONFIG');
+    if(typeof raw!=='object'||Array.isArray(raw))throw new Error('invalid EKSAMIO_PRO_RUNTIME_CONFIG');
     const mode=String(raw.mode||'');
     if(mode==='mock'){
-      if(!localHost) throw new Error('mock Pro adapters are forbidden outside localhost');
-      return {mode:'mock',ownerTest:false};
+      if(!localHost)throw new Error('mock Pro adapters are forbidden outside localhost');
+      return {mode:'mock',ownerTest:false,registrationUrl:'/registration/'};
     }
-    if(mode!=='http') throw new Error('unsupported Pro runtime mode');
-    if(!localHost&&window.location.protocol!=='https:') throw new Error('production Pro client requires HTTPS');
+    if(mode!=='http')throw new Error('unsupported Pro runtime mode');
+    if(!localHost&&window.location.protocol!=='https:')throw new Error('production Pro client requires HTTPS');
     const baseUrl=String(raw.baseUrl||'').trim().replace(/\/$/,'');
     if(baseUrl){
       let parsed;
       try{parsed=new URL(baseUrl,window.location.href);}catch(_error){throw new Error('invalid Pro backend base URL');}
-      if(parsed.username||parsed.password) throw new Error('credentials are forbidden in Pro backend URL');
-      if(!localHost&&parsed.protocol!=='https:') throw new Error('production Pro backend requires HTTPS');
+      if(parsed.username||parsed.password)throw new Error('credentials are forbidden in Pro backend URL');
+      if(!localHost&&parsed.protocol!=='https:')throw new Error('production Pro backend requires HTTPS');
     }
-    return {mode:'http',baseUrl,ownerTest:raw.ownerTest===true};
+    return {mode:'http',baseUrl,ownerTest:raw.ownerTest===true,registrationUrl:safeRegistrationUrl(raw.registrationUrl,localHost)};
   }
 
   async function init(){
@@ -42,7 +53,7 @@
     populateGoalControls();renderProgram();
     state.identity=await state.adapters.identity.status();
     bindEvents();renderIdentity();configurePaymentUi();
-    if(state.identity.authenticated) await loadAuthenticatedState();else renderGuestState();
+    if(state.identity.authenticated)await loadAuthenticatedState();else renderGuestState();
     document.documentElement.dataset.appReady='true';
   }
 
@@ -68,7 +79,7 @@
   async function refreshLearningState(){
     if(!state.identity.authenticated){renderGuestState();return;}
     const requests=[state.adapters.learning.profile({grade:state.grade,route:state.route}),state.adapters.learning.plan({grade:state.grade,route:state.route}),state.adapters.learning.history()];
-    if(state.runtime.ownerTest===true) requests.push(state.adapters.learning.diagnostics());
+    if(state.runtime.ownerTest===true)requests.push(state.adapters.learning.diagnostics());
     const values=await Promise.all(requests);
     [state.profile,state.plan,state.history]=values;state.diagnostics=values[3]||null;renderProfile();
   }
@@ -77,10 +88,10 @@
     state.profile=null;state.plan=[];state.history=[];state.diagnostics=null;
     ['todaySolved','todayCorrect','todayErrors','todayReview'].forEach(id=>$('#'+id).textContent='—');
     $('#nbaTitle').textContent='Войдите, чтобы открыть личный план';
-    $('#nbaReason').textContent='Анонимная попытка остаётся доступной в тренажёре; серверный профиль появится только после входа.';
-    $('#planList').innerHTML='<li><span><strong>Выполнить попытку</strong><small>Ответ можно отправить из тренажёра без входа.</small></span><span class="plan-state">доступно</span></li><li><span><strong>Войти в «Мой Eksamio»</strong><small>Тестовый вход свяжет попытку с серверным профилем.</small></span><span class="plan-state">далее</span></li>';
-    $('#skillList').innerHTML='<div class="empty-state">Навыки появятся после входа.</div>';
-    $('#latestChanges').innerHTML='<div class="empty-state">Изменения появятся после принятого сервером evidence.</div>';
+    $('#nbaReason').textContent='Без входа учебные действия не записываются в PEIS и не создают профиль прогресса.';
+    $('#planList').innerHTML='<li><span><strong>Войти в «Мой Eksamio»</strong><small>Регистрация и вход создают один server-owned профиль ученика.</small></span><span class="plan-state">сначала</span></li><li><span><strong>Начать учебную работу</strong><small>После входа попытки, PEIS, план и Tutor используют один профиль.</small></span><span class="plan-state">далее</span></li>';
+    $('#skillList').innerHTML='<div class="empty-state">Навыки появятся после входа и принятого server-owned evidence.</div>';
+    $('#latestChanges').innerHTML='<div class="empty-state">Изменения появятся после входа и принятого сервером evidence.</div>';
     $('#progressPercent').textContent='Вход не выполнен';$('#progressBar').style.width='0';
     $('#historyList').innerHTML='<div class="empty-state">История хранится на сервере и доступна после входа.</div>';
     $('#ownerDiagnostics').hidden=true;renderProgressEvents();
@@ -108,14 +119,14 @@
 
   function renderIdentity(){
     if(state.identity.authenticated){$('#identityStatus').textContent=state.identity.display_label||'Вход выполнен';$('#identityButton').textContent='Мой план';$('#logoutButton').hidden=false;$('#entryContinue').textContent='Открыть мой план';}
-    else{$('#identityStatus').textContent='Гостевой режим';$('#identityButton').textContent='Войти';$('#logoutButton').hidden=true;$('#entryContinue').textContent='Войти в Мой Eksamio';}
+    else{$('#identityStatus').textContent='Вход не выполнен';$('#identityButton').textContent='Войти';$('#logoutButton').hidden=true;$('#entryContinue').textContent='Войти в Мой Eksamio';}
     document.body.dataset.auth=state.identity.authenticated?'authenticated':'anonymous';
   }
 
   function renderEntitlement(){
     const active=state.entitlement&&state.entitlement.active===true;
     $('#tutorLocked').hidden=active;$('#tutorAvailable').hidden=!active;$('#tutorNavLock').hidden=active;document.body.dataset.entitlement=active?'active':'locked';
-    if(active&&!$('#tutorThread').children.length) addTutorMessage('tutor','Tutor готов. Сначала выполните проверенную карточку; контекст ошибки будет взят с сервера.');
+    if(active&&!$('#tutorThread').children.length)addTutorMessage('tutor','Tutor готов. Сначала выполните проверенную карточку; контекст ошибки будет взят с сервера.');
   }
 
   function configurePaymentUi(){
@@ -144,10 +155,24 @@
 
   async function continueIdentity(){
     clearFailure();
+    if(state.identity.authenticated){switchView('plan');return;}
+    if(state.adapters.mode!=='mock'){
+      window.location.assign(state.runtime.registrationUrl);
+      return;
+    }
     try{
-      if(!state.identity.authenticated){state.identity=await state.adapters.identity.continuePasswordless();renderIdentity();state.progressEvents.push({title:'Вход выполнен',detail:'Анонимная попытка связана с server-owned профилем.'});await loadAuthenticatedState();}
-      switchView('plan');
-    }catch(_error){showFailure('Не удалось выполнить вход или загрузить серверный прогресс. Попробуйте ещё раз.');}
+      state.identity=await state.adapters.identity.continuePasswordless();renderIdentity();
+      state.progressEvents.push({title:'Локальный тестовый вход выполнен',detail:'Mock identity используется только localhost/CI и не является production continuity.'});
+      await loadAuthenticatedState();switchView('plan');
+    }catch(_error){showFailure('Не удалось выполнить тестовый вход или загрузить прогресс. Попробуйте ещё раз.');}
+  }
+
+  async function refreshAuthenticatedSession(){
+    if(state.adapters.mode!=='http')return;
+    try{
+      const next=await state.adapters.identity.status();
+      if(next&&next.authenticated===true){state.identity=next;renderIdentity();await loadAuthenticatedState();switchView('plan');}
+    }catch(_error){showFailure('Вход подтверждён, но серверный профиль пока не загрузился. Обновите страницу.');}
   }
 
   async function logout(){
@@ -159,7 +184,7 @@
   async function handleCheck(){
     if(!state.identity.authenticated){await continueIdentity();if(!state.identity.authenticated)return;switchView('practice');}
     const answer=$('#practiceAnswer').value;
-    if(!state.pendingAttempt||state.pendingAttempt.answer!==answer) state.pendingAttempt={card_id:state.practice.card_id,answer,attempt_started_at_ms:Date.now(),client_request_id:opaqueId('practice')};
+    if(!state.pendingAttempt||state.pendingAttempt.answer!==answer)state.pendingAttempt={card_id:state.practice.card_id,answer,attempt_started_at_ms:Date.now(),client_request_id:opaqueId('practice')};
     const button=$('#checkAnswer');button.disabled=true;clearFailure();
     try{
       const result=await state.adapters.learning.submitPractice(state.pendingAttempt);state.pendingAttempt=null;
@@ -190,8 +215,9 @@
     document.addEventListener('click',event=>{const go=event.target.closest('[data-go]');if(go)switchView(go.dataset.go);});
     $('#entryContinue').addEventListener('click',continueIdentity);$('#identityButton').addEventListener('click',continueIdentity);$('#logoutButton').addEventListener('click',logout);
     $('#gradeSelect').addEventListener('change',async event=>{state.grade=Number(event.target.value);await refreshLearningState();});$('#routeSelect').addEventListener('change',async event=>{state.route=event.target.value;await refreshLearningState();});
-    $('#checkAnswer').addEventListener('click',handleCheck);if(state.adapters.mode==='mock') $('#purchaseButton').addEventListener('click',purchaseSandbox);$('#tutorForm').addEventListener('submit',handleTutor);
+    $('#checkAnswer').addEventListener('click',handleCheck);if(state.adapters.mode==='mock')$('#purchaseButton').addEventListener('click',purchaseSandbox);$('#tutorForm').addEventListener('submit',handleTutor);
     window.addEventListener('hashchange',()=>{const view=location.hash.replace('#','');if(['plan','program','practice','tutor','progress'].includes(view))switchView(view);});
+    window.addEventListener('eksamio:authenticated',refreshAuthenticatedSession);
   }
 
   init().catch(error=>{console.error(error);document.documentElement.dataset.appReady='error';document.body.insertAdjacentHTML('afterbegin','<div role="alert" style="padding:12px;background:#fee;color:#700">Мой Eksamio временно недоступен: серверный контур не подключён.</div>');});
