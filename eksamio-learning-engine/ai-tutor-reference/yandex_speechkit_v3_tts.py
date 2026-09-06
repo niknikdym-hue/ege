@@ -4,17 +4,24 @@
 The existing bounded SpeechKit STT adapter is reused. This module only supplies
 v3 synthesis because the selected `lera` voice is v3-only. Audio is returned
 transiently and never retained by provider state.
+
+Visible Tutor text may contain presentation markup for the browser. SpeechKit
+receives a separate Russian pedagogical speech rendering: presentation syntax
+is removed, school notation is normalized, pronunciation hints are added only
+where required, and semantic pauses are generated from reusable Russian clause
+rules rather than per-answer patches.
 """
 from __future__ import annotations
 
 import base64
 import json
 import os
+import re
 import socket
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
-from typing import Callable, Mapping, Protocol, Sequence
+from typing import Mapping, Protocol, Sequence
 
 from sep1_russian_tutor import VoiceProviderFailure
 from yandex_live_adapters import YandexCredential, YandexSpeechKitProvider
@@ -68,8 +75,6 @@ class UrllibStreamingJsonTransport:
         if not text:
             raise ValueError("SpeechKit v3 returned an empty response")
         objects: list[Mapping[str, object]] = []
-        # REST streaming may return sequential JSON objects. Also accept a single
-        # ordinary JSON object to remain robust across gateway implementations.
         try:
             parsed = json.loads(text)
         except json.JSONDecodeError:
@@ -129,22 +134,183 @@ class YandexSpeechKitV3TTSConfig:
             raise ValueError("SpeechKit v3 timeout must be in (0, 60]")
 
 
+_HYPHEN = "-‐‑‒–—"
+_WORD = "A-Za-zА-Яа-яЁё"
+_SENTENCE_PAUSE_MS = 260
+_LETTER_EXAMPLE_PAUSE_MS = 180
+_CONTEXT_SMALL = "<[small]>"
+_CONTEXT_MEDIUM = "<[medium]>"
+_ROOT_CHET_PHONEMES = "[[t͡ɕ ɛ t]]"
+_ROOT_CHIT_PHONEMES = "[[t͡ɕ i t]]"
+_CONTRAST_WORDS = "но|однако|зато|при этом"
+_CONCLUSION_WORDS = "сохраняется|пишется|остаётся|остается|получается|значит|поэтому|следовательно"
+
+
+def _strip_presentation_markup(source: str) -> str:
+    source = re.sub(r"```(?:[^`]|`(?!``))*```", " ", source, flags=re.DOTALL)
+    source = re.sub(r"`([^`]+)`", r"\1", source)
+    source = re.sub(r"!\[([^\]]*)\]\([^)]*\)", r"\1", source)
+    source = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", source)
+    source = re.sub(r"https?://\S+|www\.\S+", " ", source)
+    source = re.sub(r"(?m)^\s{0,3}#{1,6}\s*", "", source)
+    source = re.sub(r"(?m)^\s*[-+*]\s+", "", source)
+    source = re.sub(r"(?m)^\s*\d+[.)]\s+", "", source)
+    source = re.sub(r"\*\*([^*]+)\*\*", r"\1", source)
+    source = re.sub(r"__([^_]+)__", r"\1", source)
+    source = re.sub(r"(?<!\*)\*([^*\n]+)\*(?!\*)", r"\1", source)
+    source = re.sub(r"(?<!_)_([^_\n]+)_(?!_)", r"\1", source)
+    return source.replace("**", "").replace("*", "").replace("`", "")
+
+
+def _normalize_school_notation(source: str) -> str:
+    # Root notation may arrive as -чет-/-чит- or ЧЕТ-/ЧИТ-. Convert the slash to
+    # ordinary Russian speech before phonetic hints are applied.
+    source = re.sub(
+        rf"(?<![{_WORD}])([{_WORD}]+)[{_HYPHEN}]+\s*/\s*([{_WORD}]+)[{_HYPHEN}]+(?![{_WORD}])",
+        r"\1 или \2",
+        source,
+    )
+    source = re.sub(
+        rf"(?<![{_WORD}])[{_HYPHEN}]+([{_WORD}]+)[{_HYPHEN}]+(?![{_WORD}])",
+        r"\1",
+        source,
+    )
+    source = re.sub(rf"(?<=[{_WORD}])\s*/\s*(?=[{_WORD}])", " или ", source)
+
+    # In constructions like "буквы «а» после корня" the pedagogically useful
+    # pause belongs after the named letter, never before it.
+    source = re.sub(
+        r"\b(букв[аы])\s+[«„“\"]\s*([А-Яа-яЁё])\s*[»”\"]\s+(?=после\b)",
+        rf"\1 \2 sil<[{_LETTER_EXAMPLE_PAUSE_MS}]> ",
+        source,
+        flags=re.IGNORECASE,
+    )
+
+    # A sequence of quoted examples followed by a conclusion is a reusable
+    # educational pattern: finish the examples, then make a small semantic pause.
+    source = re.sub(
+        rf"((?:[«„“\"][^»”\"]+[»”\"])(?:\s*,\s*(?:[«„“\"][^»”\"]+[»”\"]))+)(\s+)(?=(?:{_CONCLUSION_WORDS})\b)",
+        rf"\1 {_CONTEXT_SMALL} ",
+        source,
+        flags=re.IGNORECASE,
+    )
+
+    # Quotes are visual punctuation. Once enumeration structure is captured they
+    # are removed from the spoken rendering so they cannot distort timing.
+    source = re.sub(r"[«»„“”\"]", "", source)
+
+    # The isolated school root ЧЕТ is easy for TTS to drift toward ЧЁТ. Lock only
+    # the pedagogical root labels, not ordinary Russian words containing them.
+    source = re.sub(
+        rf"(?<![{_WORD}])чет(?![{_WORD}])",
+        _ROOT_CHET_PHONEMES,
+        source,
+        flags=re.IGNORECASE,
+    )
+    source = re.sub(
+        rf"(?<![{_WORD}])чит(?![{_WORD}])",
+        _ROOT_CHIT_PHONEMES,
+        source,
+        flags=re.IGNORECASE,
+    )
+    return source
+
+
+def _apply_russian_pedagogical_prosody(source: str) -> str:
+    # New lines indicate a thought boundary in generated Tutor text.
+    source = source.replace("|", ", ").replace(" ", " ")
+    source = re.sub(r"\s*\n+\s*", ". ", source)
+
+    # Russian contrastive clauses should be separated after the preceding idea,
+    # not by an accidental pause around a quoted letter or example.
+    source = re.sub(
+        rf",\s*(?=(?:{_CONTRAST_WORDS})\b)",
+        rf", {_CONTEXT_SMALL} ",
+        source,
+        flags=re.IGNORECASE,
+    )
+
+    # Colons in Tutor explanations normally introduce a rule, instruction or
+    # example. Let SpeechKit choose a short context-sensitive pause.
+    source = re.sub(r":\s+(?=[А-Яа-яЁё])", rf": {_CONTEXT_SMALL} ", source)
+
+    # Semicolons carry a stronger intra-sentence boundary than commas.
+    source = re.sub(r";\s+(?=[А-Яа-яЁё])", rf"; {_CONTEXT_MEDIUM} ", source)
+
+    # Clean punctuation before inserting sentence-level pauses.
+    source = re.sub(r"\s+([,.;:!?])", r"\1", source)
+    source = re.sub(r"([!?]){2,}", r"\1", source)
+    source = re.sub(r"\.{3,}", "…", source)
+
+    # Sentence boundaries get a stable pause; clause-level pauses above remain
+    # context-sensitive so the voice retains natural variation.
+    source = re.sub(
+        r"([.!?])\s+(?=[А-ЯЁ])",
+        rf"\1 sil<[{_SENTENCE_PAUSE_MS}]> ",
+        source,
+    )
+    return re.sub(r"\s{2,}", " ", source).strip(" .")
+
+
+def normalize_tutor_text_for_speech(text: str) -> str:
+    """Render browser-facing Tutor text as reusable Russian pedagogical speech.
+
+    This function deliberately separates three concerns: presentation cleanup,
+    school-notation pronunciation, and Russian pedagogical prosody. The rules are
+    generic across Tutor responses; no exact benchmark sentence is hard-coded.
+    """
+
+    if not isinstance(text, str):
+        raise TypeError("Tutor speech text must be a string")
+    source = text.replace("\r\n", "\n").replace("\r", "\n")
+    source = _strip_presentation_markup(source)
+    source = _normalize_school_notation(source)
+    return _apply_russian_pedagogical_prosody(source)
+
+
+def _last_boundary_end(window: str, marks: tuple[str, ...]) -> int:
+    """Return an exclusive boundary index, or -1 when none is suitable."""
+
+    best = -1
+    for mark in marks:
+        pos = window.rfind(mark)
+        if pos >= 0:
+            best = max(best, pos + len(mark))
+    return best
+
+
+def _extend_over_pause_tag(window: str, cut: int) -> int:
+    """Keep a SpeechKit pause tag attached to the phrase before it."""
+
+    if cut < 0:
+        return cut
+    match = re.match(r"(?:sil<\[\d+\]>|<\[(?:tiny|small|medium|large|huge)\]>)\s*", window[cut:])
+    if match:
+        return cut + match.end()
+    return cut
+
+
 def _split_text(text: str, limit: int) -> tuple[str, ...]:
-    """Split on natural boundaries while respecting the v3 utterance limit."""
+    """Split at complete phrase boundaries while respecting the v3 limit."""
+
     source = " ".join(text.strip().split())
     if not source:
         return ()
     chunks: list[str] = []
+    strong_marks = (". ", "! ", "? ", "; ", ": ")
+    weak_marks = (", ", " — ", " – ", " ")
     while source:
         if len(source) <= limit:
             chunks.append(source)
             break
         window = source[: limit + 1]
-        cut = max(window.rfind(mark) for mark in (". ", "! ", "? ", "; ", ": ", ", ", " "))
+        cut = _last_boundary_end(window, strong_marks)
+        if cut < max(60, limit // 2):
+            cut = _last_boundary_end(window, weak_marks)
         if cut < max(40, limit // 3):
             cut = limit
         else:
-            cut += 1
+            cut = _extend_over_pause_tag(window, cut)
         chunk = source[:cut].strip()
         if chunk:
             chunks.append(chunk)
@@ -190,7 +356,10 @@ class YandexSpeechKitV3TTS:
             raise VoiceProviderFailure("invalid SpeechKit v3 TTS input")
         if len(text) > self.config.max_total_text_chars:
             raise VoiceProviderFailure("SpeechKit v3 TTS text exceeds configured bound")
-        chunks = _split_text(text, self.config.max_chunk_chars)
+        spoken_text = normalize_tutor_text_for_speech(text)
+        if not spoken_text:
+            raise VoiceProviderFailure("SpeechKit v3 TTS normalization produced no speech text")
+        chunks = _split_text(spoken_text, self.config.max_chunk_chars)
         if not chunks:
             raise VoiceProviderFailure("SpeechKit v3 TTS text produced no utterances")
 

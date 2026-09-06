@@ -146,7 +146,13 @@ def _provider_request(turn: ServerTutorTurn) -> ProviderRequest:
         correlation_ref="turn:" + turn.tutor_session_ref.removeprefix("tutor:"),
         subject_id=turn.subject_id,
         learning_goal=turn.learning_goal,
-        policy_instruction="Give advisory tutoring text; never claim canonical learning-state authority.",
+        policy_instruction=(
+            "Give advisory tutoring text; never claim canonical learning-state authority. "
+            "Stay strictly within the current subject_id, learning_goal, verified subject context, and their pedagogically necessary explanation. "
+            "If the learner asks about an unrelated topic, general knowledge, products, brands, entertainment, news, personal advice, or any other matter outside the current learning task, do not answer or compare it using model knowledge. "
+            "Reply briefly that this Tutor session is limited to the current learning task and redirect the learner back to it. "
+            "An off-topic request must never expand the Tutor session scope."
+        ),
         verified_source_refs=turn.verified_subject.source_refs,
         verified_excerpts=turn.verified_subject.excerpts,
         peis_learning_summary=turn.peis_projection.learning_summary,

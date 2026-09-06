@@ -1,0 +1,156 @@
+name: Tutor four-brain text acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/ai-tutor-reference/four_brain_text_benchmark.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/four_brain_provider_adapters.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/private_four_brain_text_benchmark_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_four_brain_text_benchmark.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/deepseek_secret_provider.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/TUTOR-FOUR-BRAIN-TEXT-BENCHMARK-v1.md'
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/validate_private_openai_yandex_121_tutor.py'
+      - 'eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command'
+      - '.github/workflows/tutor-openai-yandex-fast-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tutor-four-brain-text-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Prove provider secrets are absent in CI
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "${OPENAI_API_KEY:-}"
+          test -z "${QWEN_API_KEY:-}"
+          test -z "${DASHSCOPE_API_KEY:-}"
+          test -z "${DEEPSEEK_API_KEY:-}"
+          test -z "${YANDEX_AI_STUDIO_API_KEY:-}"
+          test -z "${YANDEX_SPEECHKIT_API_KEY:-}"
+          echo 'LIVE_PROVIDER_SECRETS_IN_CI=0'
+
+      - name: Compile four-brain and legacy voice guards
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/ai-tutor-reference/four_brain_text_benchmark.py \
+            eksamio-learning-engine/ai-tutor-reference/four_brain_provider_adapters.py \
+            eksamio-learning-engine/ai-tutor-reference/private_four_brain_text_benchmark_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_four_brain_text_benchmark.py \
+            eksamio-learning-engine/ai-tutor-reference/deepseek_secret_provider.py \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor.py \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_121_tutor_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/private_openai_yandex_resilient_human_ui.py \
+            eksamio-learning-engine/ai-tutor-reference/validate_private_openai_yandex_121_tutor.py
+
+      - name: Validate exactly four forced TEXT brain contracts
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_four_brain_text_benchmark.py
+
+      - name: Preserve separate OpenAI Yandex bounded voice regression
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_private_openai_yandex_121_tutor.py
+
+      - name: Prove benchmark uses merged 121-card exact grounding
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('eksamio-learning-engine/ai-tutor-reference/four_brain_text_benchmark.py').read_text(encoding='utf-8')
+          assert 'ex-practice-alt-sochetat-001' in text
+          assert 'school-i-e-alternating-verb-roots-stressed-a' in text
+          assert 'RussianTutorVerticalSlice' in text
+          assert 'AcceptedSemanticRussianTutorVerticalSlice' not in text
+          print('FOUR_BRAIN_GROUNDING=MERGED_121_CARD_EXACT')
+          PY
+
+      - name: Prove blind scorecard and reveal boundary
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          root = Path('eksamio-learning-engine/ai-tutor-reference')
+          sys.path.insert(0, str(root))
+          import private_four_brain_text_benchmark_ui as ui
+          assert len(ui.BENCHMARK_STEPS) == 10
+          assert len(ui.SCORE_DIMENSIONS) == 10
+          assert set(ui.LABEL_TO_PROVIDER) == {'A', 'B', 'C', 'D'}
+          assert all(name not in ui.PAGE for name in ('OpenAI', 'Qwen', 'DeepSeek', 'Yandex'))
+          try:
+              ui.App().reveal()
+          except PermissionError:
+              pass
+          else:
+              raise AssertionError('provider mapping revealed before scoring')
+          print('BLIND_A_B_C_D=PASS')
+          print('SCORE_DIMENSIONS=10')
+          print('PROVIDER_MAPPING_PREMATURE_REVEAL=0')
+          PY
+
+      - name: Prove UI cannot start without explicit owner gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          out="$(python eksamio-learning-engine/ai-tutor-reference/private_four_brain_text_benchmark_ui.py --no-browser 2>&1)"
+          code=$?
+          set -e
+          test "$code" -eq 2
+          grep -q '^FOUR_BRAIN_TEXT_UI=BLOCKED_OWNER_AUTHORIZATION$' <<<"$out"
+          echo 'FOUR_BRAIN_OWNER_GATE=PASS'
+
+      - name: Validate owner launcher boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          grep -q '^#!/bin/zsh$' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          grep -q 'private_four_brain_text_benchmark_ui.py --owner-authorized' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          grep -q 'EKSAMIO_TUTOR_CANDIDATE_SHA' eksamio-learning-engine/ai-tutor-reference/launch_openai_yandex_fast_tutor_test.command
+          echo 'FOUR_BRAIN_LAUNCHER=PASS'
+
+      - name: Preserve privacy and launch boundaries
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          runtime = Path('eksamio-learning-engine/ai-tutor-reference/four_brain_text_benchmark.py').read_text(encoding='utf-8')
+          ui = Path('eksamio-learning-engine/ai-tutor-reference/private_four_brain_text_benchmark_ui.py').read_text(encoding='utf-8')
+          assert '127.0.0.1' in ui
+          assert 'PERSISTENT_EVIDENCE=0' in ui
+          assert 'production_peis_writes_enabled' in runtime
+          assert 'learner_audio_persisted_bytes' in runtime
+          assert 'voice_in_brain_ranking' in runtime
+          print('PERSISTENT_EVIDENCE=0')
+          print('RAW_AUDIO_PERSISTED_BYTES=0')
+          print('PUBLIC_TRAFFIC_ENABLED=0')
+          print('PRODUCTION_PEIS_WRITES_ENABLED=0')
+          print('VOICE_IN_BRAIN_RANKING=0')
+          print('LIVE_PROVIDER_CALLS=0')
+          PY
+
+      - name: Diff hygiene
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --check '${{ github.event.pull_request.base.sha }}...HEAD'
+          else
+            git diff --check HEAD^
+          fi

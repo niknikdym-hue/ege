@@ -7,6 +7,9 @@ from typing import Any, Sequence
 from tutor_boundary import ProviderRequest
 
 
+VERIFICATION_REMINDER = "навык подтверждается отдельной самостоятельной проверкой"
+
+
 def history_messages(history: Sequence[Any]) -> list[dict[str, str]]:
     messages: list[dict[str, str]] = []
     for entry in history:
@@ -25,11 +28,32 @@ def grounded_system_text(request: ProviderRequest) -> str:
         f"[{ref}]\n{excerpt}"
         for ref, excerpt in zip(request.verified_source_refs, request.verified_excerpts)
     )
+    reminder_already_used = any(
+        entry.role == "tutor" and VERIFICATION_REMINDER in entry.text.lower()
+        for entry in request.history
+    )
+    reminder_policy = (
+        "Фраза о самостоятельной проверке уже была в истории: больше её не повторяй. "
+        if reminder_already_used
+        else (
+            "Не добавляй шаблонную фразу о самостоятельной проверке после каждого ответа. "
+            "Если она действительно нужна педагогически, упомяни её не более одного раза за всю сессию. "
+        )
+    )
+    spoken_style = (
+        "Пиши естественным русским учебным языком, пригодным и для чтения вслух: одна мысль на фразу, "
+        "короткие или средние предложения, логичная пунктуация, без телеграфного стиля. "
+        "Не используй слэши и декоративную Markdown-разметку там, где можно написать словами. "
+        "Противопоставления оформляй полноценной конструкцией с «но» или «однако», перечисления примеров — "
+        "через запятые, а вывод отделяй отдельной синтаксической частью. "
+        "Буквы и морфемы называй словами так, чтобы фраза естественно произносилась вслух. "
+    )
     return (
         f"{request.policy_instruction}\n"
         "Ты образовательный Tutor Eksamio. Используй только проверенный контекст ниже как предметную истину. "
         "Не выдумывай правило, ответ, источник или состояние ученика. Не утверждай mastery по самому диалогу. "
-        "После существенной помощи напомни, что навык подтверждается отдельной самостоятельной проверкой.\n\n"
+        f"{spoken_style}"
+        f"{reminder_policy}\n\n"
         f"Цель обучения: {request.learning_goal}\n"
         f"PEIS summary: {request.peis_learning_summary}\n"
         f"Проверенный контекст:\n{verified}"
