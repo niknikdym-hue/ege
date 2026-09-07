@@ -1,0 +1,34 @@
+name: Phraseology admission authority capture
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-production-substrate/admissions/capture_phraseology_admission_authority.mjs'
+      - '.github/workflows/phraseology-admission-authority-capture.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Capture exact phraseology row authority read-only
+        env:
+          PROBE_OUT: phraseology-admission-authority-capture.json
+        run: node eksamio-learning-engine/peis-production-substrate/admissions/capture_phraseology_admission_authority.mjs
+      - name: Upload exact capture
+        uses: actions/upload-artifact@v4
+        with:
+          name: phraseology-admission-authority-capture
+          path: phraseology-admission-authority-capture.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Diff hygiene
+        run: git diff --check
