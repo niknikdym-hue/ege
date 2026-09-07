@@ -20,8 +20,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y poppler-utils
       - name: Probe official FIPI 2026 thematic sources
+        id: probe
+        shell: bash
         run: |
-          python eksamio-learning-engine/peis-integration-reference/probe_fipi_2026_thematic_source_authority.py > fipi-2026-thematic-source-authority-probe.json
+          set +e
+          python eksamio-learning-engine/peis-integration-reference/probe_fipi_2026_thematic_source_authority.py > fipi-2026-thematic-source-authority-probe.json 2> fipi-2026-thematic-source-authority-probe.stderr.txt
+          code=$?
+          echo "$code" > fipi-2026-thematic-source-authority-probe.exitcode.txt
+          if [ "$code" -ne 0 ]; then
+            cat fipi-2026-thematic-source-authority-probe.stderr.txt
+            exit "$code"
+          fi
           python - <<'PY'
           import json
           p='fipi-2026-thematic-source-authority-probe.json'
@@ -39,6 +48,11 @@ jobs:
           print('FIPI 2026 thematic source authority probe PASS')
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: fipi-2026-thematic-source-authority-probe
-          path: fipi-2026-thematic-source-authority-probe.json
+          path: |
+            fipi-2026-thematic-source-authority-probe.json
+            fipi-2026-thematic-source-authority-probe.stderr.txt
+            fipi-2026-thematic-source-authority-probe.exitcode.txt
+          if-no-files-found: warn
