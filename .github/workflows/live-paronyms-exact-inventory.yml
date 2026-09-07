@@ -1,0 +1,54 @@
+name: Live paronyms exact inventory
+
+on:
+  push:
+    branches:
+      - 'brain/issue-185-live-asset-reconciliation'
+    paths:
+      - '.github/workflows/live-paronyms-exact-inventory.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_paronyms_exact_inventory.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-PARONYMS-EXACT-INVENTORY-v0.1.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-paronyms-exact-inventory.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_paronyms_exact_inventory.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-PARONYMS-EXACT-INVENTORY-v0.1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Extract paronyms exact live inventory read-only
+        env:
+          PROBE_OUT: live-paronyms-exact-inventory.json
+        run: node eksamio-learning-engine/peis-integration-reference/probe_live_paronyms_exact_inventory.mjs
+      - name: Assert deterministic live identity candidates and fail-closed canonical boundary
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const x = JSON.parse(fs.readFileSync('live-paronyms-exact-inventory.json', 'utf8'));
+          if (x.live_row_count !== 30) throw new Error(`expected 30 live paronym rows, got ${x.live_row_count}`);
+          if (x.deterministic_row_fingerprint_count !== 30 || x.unique_deterministic_row_fingerprint_count !== 30) throw new Error('row fingerprints must be complete and unique');
+          if (x.deterministic_live_candidate_id_count !== 30 || x.unique_deterministic_live_candidate_id_count !== 30) throw new Error('deterministic candidate IDs must be complete and unique');
+          if (x.live_item_identity_discovery_status !== 'COMPLETE_DETERMINISTIC_CONTENT_ADDRESSED_CANDIDATES') throw new Error('paronym live identity discovery incomplete');
+          if (x.canonical_item_identity_status !== 'UNKNOWN_BLOCKER' || x.provenance_binding_status !== 'UNKNOWN_BLOCKER') throw new Error('canonical/provenance admission must remain blocked');
+          for (const key of ['semantic_admissions','object_closures','mastery_admissions','false_exact_mastery']) {
+            if (x[key] !== 0) throw new Error(`${key} must stay 0`);
+          }
+          if (x.registered_user_identity_required_for_future_canonical_evidence !== true) throw new Error('registered identity invariant lost');
+          NODE
+      - name: Upload exact paronyms inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-paronyms-exact-inventory
+          path: live-paronyms-exact-inventory.json
+          if-no-files-found: error
