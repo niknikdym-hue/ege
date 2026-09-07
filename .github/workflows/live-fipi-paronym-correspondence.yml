@@ -1,0 +1,27 @@
+name: Live FIPI paronym correspondence probe
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-fipi-paronym-correspondence.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_fipi_paronym_correspondence.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Probe exact full live-to-FIPI paronym correspondence
+        run: python eksamio-learning-engine/peis-integration-reference/probe_live_fipi_paronym_correspondence.py
+      - name: Upload exact correspondence result
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-fipi-paronym-correspondence
+          path: live-fipi-paronym-correspondence.json
+          if-no-files-found: error
