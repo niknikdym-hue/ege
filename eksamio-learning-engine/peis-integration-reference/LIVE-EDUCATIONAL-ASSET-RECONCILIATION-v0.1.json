@@ -1,8 +1,10 @@
 {
   "schema_version": "0.1.0",
-  "authority_checked_at": "2026-09-06",
-  "status": "LIVE_AUTHORITY_RECONCILIATION_FAIL_CLOSED",
+  "authority_checked_at": "2026-09-07",
+  "status": "LIVE_AUTHORITY_RECONCILIATION_CURRENT_FAIL_CLOSED",
   "issue": 185,
+  "thematic_reconciliation_artifact": "THEMATIC-TRAINER-CANONICAL-RECONCILIATION-v0.1.json",
+  "thematic_action_binding_artifact": "THEMATIC-TRAINER-ACTION-SCOPED-SEMANTIC-BINDINGS-v0.1.json",
   "authority_policy": {
     "live_site_is_factual_authority_for_current_working_ux": true,
     "github_is_canonical_reconciliation_target_not_live_invalidation": true,
@@ -36,10 +38,7 @@
         "task_types": 27,
         "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
         "future_canonical_progress": "REGISTERED_SERVER_OWNED_ONLY",
-        "observed_copy": [
-          "Прогресс без регистрации",
-          "Ваш прогресс на этом устройстве"
-        ]
+        "observed_copy": ["Прогресс без регистрации", "Ваш прогресс на этом устройстве"]
       },
       "canonical_source": {
         "bank_manifest": "../russkiy-knigi/ege-russkiy-trenazher/BANK-MANIFEST.json",
@@ -62,9 +61,12 @@
         "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
         "live_source_provenance": "FIPI_OFFICIAL_ORTHOEPIC_LIST"
       },
-      "canonical_item_identity_status": "UNKNOWN_BLOCKER",
-      "canonical_item_count": null,
-      "semantic_admission": "BLOCKED_UNTIL_EXACT_ITEM_IDENTITY_AND_ACCEPTED_BINDING",
+      "canonical_item_identity_status": "EXACT_LIVE_IDS_CAPTURED",
+      "canonical_item_count": 291,
+      "canonical_identity_detail": "w001..w291; 291/291 exact stressed-token correspondence to pinned FIPI 2026 list",
+      "accepted_action_scoped_semantic_id": "ru-orthoepy-normative-stress-selection",
+      "semantic_admission": "ACTION_SCOPED_ACCEPTED_NO_PRODUCTION_EVENT_ADMISSION",
+      "production_event_admission": "BLOCKED_UNTIL_REGISTERED_EXACT_ITEM_ACTION_EVENT",
       "mastery_from_live_progress": false
     },
     {
@@ -78,9 +80,12 @@
         "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
         "live_source_provenance": "FIPI_OFFICIAL_WORD_LIST"
       },
-      "canonical_item_identity_status": "UNKNOWN_BLOCKER",
-      "canonical_item_count": null,
-      "semantic_admission": "BLOCKED_UNTIL_EXACT_ITEM_IDENTITY_AND_ACCEPTED_BINDING",
+      "canonical_item_identity_status": "EXACT_LIVE_IDS_CAPTURED",
+      "canonical_item_count": 308,
+      "canonical_identity_detail": "308/308 source-backed; 307 exact FIPI same-row plus one directly attested ровесник/ровесники lexeme relation",
+      "accepted_action_scoped_semantic_id": "school-root-vowel-dictionary-unverifiable",
+      "semantic_admission": "ACTION_SCOPED_ACCEPTED_NO_PRODUCTION_EVENT_ADMISSION",
+      "production_event_admission": "BLOCKED_UNTIL_REGISTERED_EXACT_ITEM_ACTION_EVENT",
       "mastery_from_live_progress": false
     },
     {
@@ -94,9 +99,13 @@
         "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
         "live_source_provenance": "FIPI_OFFICIAL_PARONYM_LIST"
       },
-      "canonical_item_identity_status": "UNKNOWN_BLOCKER",
-      "canonical_item_count": null,
-      "semantic_admission": "BLOCKED_UNTIL_EXACT_ITEM_IDENTITY_AND_ACCEPTED_BINDING",
+      "canonical_item_identity_status": "EXACT_LIVE_GROUP_AND_ENTRY_IDS_CAPTURED",
+      "canonical_group_count": 144,
+      "canonical_entry_count": 334,
+      "canonical_identity_detail": "144/144 exact live/FIPI group correspondence; 334 unique live entries",
+      "accepted_action_scoped_semantic_id": "ru-lexis-paronym-collocation-choice",
+      "semantic_admission": "ACTION_SCOPED_ACCEPTED_ASSET_WIDE_MULTI_ACTION_UNBOUND",
+      "production_event_admission": "BLOCKED_UNTIL_REGISTERED_EXACT_ITEM_ACTION_EVENT",
       "mastery_from_live_progress": false
     },
     {
@@ -110,9 +119,12 @@
         "current_progress_ux": "LOCAL_DEVICE_NO_REGISTRATION",
         "live_source_provenance": "FIPI_OFFICIAL_PHRASEOLOGY_LIST"
       },
-      "canonical_item_identity_status": "UNKNOWN_BLOCKER",
-      "canonical_item_count": null,
-      "semantic_admission": "BLOCKED_UNTIL_EXACT_ITEM_IDENTITY_AND_ACCEPTED_BINDING",
+      "canonical_item_identity_status": "EXACT_LIVE_IDS_CAPTURED",
+      "canonical_item_count": 285,
+      "canonical_identity_detail": "285/285 exact live/FIPI primary-row correspondence",
+      "accepted_action_scoped_semantic_id": "ru-lexis-phraseologism-fragment-identification",
+      "semantic_admission": "ACTION_SCOPED_ACCEPTED_ASSET_WIDE_MULTI_ACTION_UNBOUND",
+      "production_event_admission": "BLOCKED_UNTIL_REGISTERED_EXACT_ITEM_ACTION_EVENT",
       "mastery_from_live_progress": false
     },
     {
@@ -126,54 +138,14 @@
         "timer": true,
         "answers_hidden_until_completion": true,
         "subjects": [
-          {
-            "subject": "russian",
-            "years": [2022, 2023, 2024, 2025, 2026],
-            "duration_minutes": 210,
-            "task_count_by_year": {"2022": 27, "2023": 27, "2024": 27, "2025": 27, "2026": 27}
-          },
-          {
-            "subject": "math_basic",
-            "years": [2022, 2023, 2024, 2025, 2026],
-            "duration_minutes": 180,
-            "task_count_by_year": {"2022": 21, "2023": 21, "2024": 21, "2025": 21, "2026": 21}
-          },
-          {
-            "subject": "math_profile",
-            "years": [2022, 2023, 2024, 2025, 2026],
-            "duration_minutes": 235,
-            "task_count_by_year": {"2022": 18, "2023": 18, "2024": 19, "2025": 19, "2026": 19}
-          },
-          {
-            "subject": "physics",
-            "years": [2022, 2023, 2024, 2025, 2026],
-            "duration_minutes": 235,
-            "task_count_by_year": {"2022": 30, "2023": 30, "2024": 26, "2025": 26, "2026": 26}
-          },
-          {
-            "subject": "chemistry",
-            "years": [2026],
-            "duration_minutes": 210,
-            "task_count_by_year": {"2026": 34}
-          },
-          {
-            "subject": "biology",
-            "years": [2026],
-            "duration_minutes": 235,
-            "task_count_by_year": {"2026": 28}
-          },
-          {
-            "subject": "history",
-            "years": [2026],
-            "duration_minutes": 210,
-            "task_count_by_year": {"2026": 21}
-          },
-          {
-            "subject": "social_studies",
-            "years": [2026],
-            "duration_minutes": 210,
-            "task_count_by_year": {"2026": 25}
-          }
+          {"subject": "russian", "years": [2022, 2023, 2024, 2025, 2026], "duration_minutes": 210, "task_count_by_year": {"2022": 27, "2023": 27, "2024": 27, "2025": 27, "2026": 27}},
+          {"subject": "math_basic", "years": [2022, 2023, 2024, 2025, 2026], "duration_minutes": 180, "task_count_by_year": {"2022": 21, "2023": 21, "2024": 21, "2025": 21, "2026": 21}},
+          {"subject": "math_profile", "years": [2022, 2023, 2024, 2025, 2026], "duration_minutes": 235, "task_count_by_year": {"2022": 18, "2023": 18, "2024": 19, "2025": 19, "2026": 19}},
+          {"subject": "physics", "years": [2022, 2023, 2024, 2025, 2026], "duration_minutes": 235, "task_count_by_year": {"2022": 30, "2023": 30, "2024": 26, "2025": 26, "2026": 26}},
+          {"subject": "chemistry", "years": [2026], "duration_minutes": 210, "task_count_by_year": {"2026": 34}},
+          {"subject": "biology", "years": [2026], "duration_minutes": 235, "task_count_by_year": {"2026": 28}},
+          {"subject": "history", "years": [2026], "duration_minutes": 210, "task_count_by_year": {"2026": 21}},
+          {"subject": "social_studies", "years": [2026], "duration_minutes": 210, "task_count_by_year": {"2026": 25}}
         ]
       },
       "verified_demo_routes": [

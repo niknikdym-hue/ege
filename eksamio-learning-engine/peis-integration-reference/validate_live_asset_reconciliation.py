@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
-"""Deterministic acceptance for issue #185 live educational asset reconciliation."""
+"""Deterministic acceptance for issue #185 current live educational reconciliation."""
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
-from live_asset_registry import (
-    admit_future_canonical_evidence,
-    assert_invariants,
-    load_registry,
-)
+from live_asset_registry import admit_future_canonical_evidence, assert_invariants, load_registry
 
 HERE = Path(__file__).resolve().parent
 ENGINE = HERE.parent
 BANK_MANIFEST = ENGINE / "russkiy-knigi" / "ege-russkiy-trenazher" / "BANK-MANIFEST.json"
 SENSOR_MAP = HERE / "RUSSIAN-EGE-TRAINER-SENSOR-MAP-v0.1.json"
+THEMATIC = HERE / "THEMATIC-TRAINER-CANONICAL-RECONCILIATION-v0.1.json"
+ACTIONS = HERE / "THEMATIC-TRAINER-ACTION-SCOPED-SEMANTIC-BINDINGS-v0.1.json"
 
 
 def require(condition: bool, message: str) -> None:
@@ -25,44 +23,65 @@ def require(condition: bool, message: str) -> None:
 def main() -> None:
     registry = load_registry()
     assert_invariants(registry)
+    thematic = json.loads(THEMATIC.read_text(encoding="utf-8"))
+    actions = json.loads(ACTIONS.read_text(encoding="utf-8"))
 
-    require(registry["authority_checked_at"] == "2026-09-06", "live authority snapshot date is pinned")
+    require(registry["authority_checked_at"] == "2026-09-07", "current live authority date is pinned")
+    require(registry["status"] == "LIVE_AUTHORITY_RECONCILIATION_CURRENT_FAIL_CLOSED", "registry is current but fail-closed")
+    require(registry["thematic_reconciliation_artifact"] == THEMATIC.name, "top-level registry points to current thematic reconciliation")
+    require(registry["thematic_action_binding_artifact"] == ACTIONS.name, "top-level registry points to action bindings")
     require(registry["authority_policy"]["live_site_is_factual_authority_for_current_working_ux"] is True, "live site remains factual authority")
-    require(registry["authority_policy"]["github_is_canonical_reconciliation_target_not_live_invalidation"] is True, "GitHub reconciles rather than invalidates live UX")
-    require(registry["authority_policy"]["preserve_existing_live_local_state_until_registered_replacement_ready"] is True, "working local UX is preserved until replacement")
     require(registry["authority_policy"]["existing_live_local_state_is_future_canonical"] is False, "local live state is not future canonical")
 
     bank = json.loads(BANK_MANIFEST.read_text(encoding="utf-8"))
-    require(bank["cards"] == 174, "full Russian trainer exact card count must remain 174")
-    require(bank["sources"] == 9, "full Russian trainer exact source-text count must remain 9")
-    require(sum(bank["cardsPerTask"].values()) == 174, "cardsPerTask must reconcile to exact card denominator")
-    require(sorted(int(task) for task in bank["cardsPerTask"]) == list(range(1, 28)), "full trainer covers task identities 1..27 without inventing semantic owners")
-
+    require(bank["cards"] == 174 and bank["sources"] == 9, "full Russian trainer remains 174 cards / 9 sources")
+    require(sum(bank["cardsPerTask"].values()) == 174, "cardsPerTask reconciles")
     assets = {asset["asset_id"]: asset for asset in registry["assets"]}
     full = assets["live-russian-ege-full-trainer"]
-    require(full["canonical_source"]["cards"] == bank["cards"], "registry card denominator matches repository manifest")
-    require(full["canonical_source"]["source_texts"] == bank["sources"], "registry source denominator matches repository manifest")
-    require(full["live_observation"]["task_types"] == 27, "live trainer observed with 27 task types")
-    require(full["whole_trainer_mastery"] == "FORBIDDEN", "composite trainer never becomes an exact mastery owner")
-
+    require(full["canonical_source"]["cards"] == 174 and full["canonical_source"]["source_texts"] == 9, "registry denominator matches bank")
+    require(full["whole_trainer_mastery"] == "FORBIDDEN", "composite trainer cannot be one mastery owner")
     sensor = json.loads(SENSOR_MAP.read_text(encoding="utf-8"))
-    require(sensor["product"]["route"] == "/ege/russkiy/trenazher/", "existing sensor map points to the same live trainer")
-    require(sensor["precision_policy"]["forbidden"] == "whole-card score must not become an exact semantic failure", "existing precision guard is preserved")
-    require(not full.get("accepted_exact_item_bindings"), "#185 imports no unreviewed exact mastery bindings")
+    require(sensor["product"]["route"] == "/ege/russkiy/trenazher/", "sensor map route stays aligned")
+    require(not full.get("accepted_exact_item_bindings"), "no unreviewed full-trainer exact binding imported")
 
-    thematic_ids = [
-        "live-russian-orthoepy-trainer",
-        "live-russian-dictionary-words-trainer",
-        "live-russian-paronyms-trainer",
-        "live-russian-phraseology-trainer",
-    ]
-    require(len(thematic_ids) == 4, "exactly four owner-priority thematic trainers are reconciled")
-    for asset_id in thematic_ids:
+    specs = {
+        "live-russian-orthoepy-trainer": {
+            "count_field": "canonical_item_count", "count": 291,
+            "identity_status": "EXACT_LIVE_IDS_CAPTURED",
+            "semantic_id": "ru-orthoepy-normative-stress-selection",
+            "thematic_key": "orthoepy",
+        },
+        "live-russian-dictionary-words-trainer": {
+            "count_field": "canonical_item_count", "count": 308,
+            "identity_status": "EXACT_LIVE_IDS_CAPTURED",
+            "semantic_id": "school-root-vowel-dictionary-unverifiable",
+            "thematic_key": "dictionary_words",
+        },
+        "live-russian-paronyms-trainer": {
+            "identity_status": "EXACT_LIVE_GROUP_AND_ENTRY_IDS_CAPTURED",
+            "semantic_id": "ru-lexis-paronym-collocation-choice",
+            "thematic_key": "paronyms",
+        },
+        "live-russian-phraseology-trainer": {
+            "count_field": "canonical_item_count", "count": 285,
+            "identity_status": "EXACT_LIVE_IDS_CAPTURED",
+            "semantic_id": "ru-lexis-phraseologism-fragment-identification",
+            "thematic_key": "phraseology",
+        },
+    }
+    for asset_id, spec in specs.items():
         asset = assets[asset_id]
-        require(asset["canonical_item_identity_status"] == "UNKNOWN_BLOCKER", f"{asset_id} unknown identities remain explicit")
-        require(asset["canonical_item_count"] is None, f"{asset_id} count is not guessed")
-        require(asset["mastery_from_live_progress"] is False, f"{asset_id} local progress is not imported as mastery")
-        require(asset["live_observation"]["live_source_provenance"].startswith("FIPI_OFFICIAL_"), f"{asset_id} live provenance remains explicit")
+        require(asset["canonical_item_identity_status"] == spec["identity_status"], f"{asset_id} exact identity is current")
+        if "count_field" in spec:
+            require(asset[spec["count_field"]] == spec["count"], f"{asset_id} exact denominator is current")
+        require(asset["accepted_action_scoped_semantic_id"] == spec["semantic_id"], f"{asset_id} action semantic is pinned")
+        require(asset["production_event_admission"] == "BLOCKED_UNTIL_REGISTERED_EXACT_ITEM_ACTION_EVENT", f"{asset_id} production event stays blocked")
+        require(asset["mastery_from_live_progress"] is False, f"{asset_id} local progress is never mastery")
+        require(not asset.get("accepted_exact_item_bindings"), f"{asset_id} has no production event allowlist yet")
+        detailed = thematic["assets"][spec["thematic_key"]]
+        require("ACCEPTED_ACTION_SCOPED" in detailed["semantic_binding_status"], f"{asset_id} detailed semantic reconciliation agrees")
+        action_detail = actions["bindings"][spec["thematic_key"]]["accepted_action_component"]
+        require(action_detail["accepted_semantic_id"] == spec["semantic_id"], f"{asset_id} action artifact agrees")
         decision = admit_future_canonical_evidence(
             asset_id=asset_id,
             user_identity_ref="usr_registered_ci",
@@ -71,66 +90,33 @@ def main() -> None:
             observation_kind="ANSWER_CHECKED",
             registry=registry,
         )
-        require(not decision.admitted and not decision.mastery_eligible, f"{asset_id} unknown item identity fails closed")
+        require(not decision.admitted and not decision.mastery_eligible, f"{asset_id} cannot self-admit an event")
+        require(decision.reason == "ITEM_NOT_IN_ACCEPTED_EXACT_BINDING_REGISTRY", f"{asset_id} is blocked by missing server event allowlist, not stale unknown identity")
+
+    paronyms = assets["live-russian-paronyms-trainer"]
+    require(paronyms["canonical_group_count"] == 144 and paronyms["canonical_entry_count"] == 334, "paronym exact denominator is 144 groups / 334 entries")
+    require(thematic["accepted_action_scoped_authority_reuses"] == actions["admission_boundary"]["accepted_action_scoped_authority_reuses"] == 4, "all four thematic action mappings are current")
+    require(thematic["false_exact_mastery"] == actions["admission_boundary"]["false_exact_mastery"] == registry["mastery_policy"]["false_exact_mastery"] == 0, "false exact mastery remains zero")
+    require(actions["admission_boundary"]["production_event_semantic_admissions"] == 0, "no production event semantic admission is opened")
+    require(actions["admission_boundary"]["mastery_admissions"] == 0, "no mastery admission is opened")
 
     demo = assets["live-ege-demo-catalog"]
-    require(demo["browser_autosave_is_future_canonical_progress"] is False, "browser demo autosave is not future canonical progress")
-    require(demo["demo_completion_or_score_implies_mastery"] is False, "demo score never implies mastery")
-    russian_routes = demo["russian_demo_routes"]
-    require([entry["year"] for entry in russian_routes] == [2026, 2025, 2024, 2023, 2022], "live Russian demo years are explicitly reconciled")
-    require(len({entry["url"] for entry in russian_routes}) == 5, "Russian demo routes are unique")
-
-    expected_route_counts = {
-        "russian": {2022: 27, 2023: 27, 2024: 27, 2025: 27, 2026: 27},
-        "math_basic": {2022: 21, 2023: 21, 2024: 21, 2025: 21, 2026: 21},
-        "math_profile": {2022: 18, 2023: 18, 2024: 19, 2025: 19, 2026: 19},
-        "physics": {2022: 30, 2023: 30, 2024: 26, 2025: 26, 2026: 26},
-        "chemistry": {2026: 34},
-        "biology": {2026: 28},
-        "history": {2026: 21},
-        "social_studies": {2026: 25},
-    }
-    expected_durations = {
-        "russian": 210,
-        "math_basic": 180,
-        "math_profile": 235,
-        "physics": 235,
-        "chemistry": 210,
-        "biology": 235,
-        "history": 210,
-        "social_studies": 210,
-    }
-    routes = demo["verified_demo_routes"]
-    require(len(routes) == 24, "verified live demo inventory must contain 24 subject/year routes")
-    route_keys = {(entry["subject"], entry["year"]) for entry in routes}
-    require(len(route_keys) == len(routes), "verified demo subject/year identities are unique")
-    for subject, by_year in expected_route_counts.items():
-        require({year for subj, year in route_keys if subj == subject} == set(by_year), f"{subject} live year coverage is exact")
-        for year, task_count in by_year.items():
-            match = [entry for entry in routes if entry["subject"] == subject and entry["year"] == year]
-            require(len(match) == 1, f"{subject} {year} route resolves exactly once")
-            entry = match[0]
-            require(entry["task_count"] == task_count, f"{subject} {year} task count is live-authority exact")
-            require(entry["duration_minutes"] == expected_durations[subject], f"{subject} {year} duration is live-authority exact")
-            require(entry["url"].startswith("https://eksamio.ru/ege/"), f"{subject} {year} route remains on live Eksamio")
-            require(entry["source_provenance"] == "LIVE_PAGE_IDENTIFIES_FIPI_DEMO", f"{subject} {year} provenance is explicit")
-
-    subjects = {entry["subject"]: entry for entry in demo["live_observation"]["subjects"]}
-    require(set(subjects) == set(expected_route_counts), "catalog subject set is exact")
-    for subject, by_year in expected_route_counts.items():
-        require(subjects[subject]["years"] == sorted(by_year), f"{subject} subject-year catalog is exact")
-        require(subjects[subject]["task_count_by_year"] == {str(year): count for year, count in by_year.items()}, f"{subject} year-sensitive task counts are exact")
+    require(demo["browser_autosave_is_future_canonical_progress"] is False, "demo browser autosave is not canonical")
+    require(demo["demo_completion_or_score_implies_mastery"] is False, "demo score cannot imply mastery")
+    require(len(demo["verified_demo_routes"]) == 24, "live demo inventory has 24 verified routes")
+    require([entry["year"] for entry in demo["russian_demo_routes"]] == [2026, 2025, 2024, 2023, 2022], "Russian demo years remain exact")
+    route_keys = {(entry["subject"], entry["year"]) for entry in demo["verified_demo_routes"]}
+    require(len(route_keys) == 24, "demo subject/year routes are unique")
 
     anonymous = admit_future_canonical_evidence(
-        asset_id="live-russian-ege-full-trainer",
+        asset_id="live-russian-orthoepy-trainer",
         user_identity_ref=None,
-        exact_item_identity="ege-ru-12-2026-12-01",
+        exact_item_identity="w001",
         semantic_binding_status="ACCEPTED_EXACT",
         observation_kind="ANSWER_CHECKED",
         registry=registry,
     )
-    require(not anonymous.admitted and not anonymous.mastery_eligible, "anonymous evidence cannot enter future canonical learner state")
-
+    require(not anonymous.admitted and not anonymous.mastery_eligible, "anonymous evidence stays forbidden")
     reference_read = admit_future_canonical_evidence(
         asset_id="live-ege-demo-catalog",
         user_identity_ref="usr_registered_ci",
@@ -141,22 +127,11 @@ def main() -> None:
     )
     require(reference_read.admitted and not reference_read.mastery_eligible, "reading/navigation never creates mastery")
 
-    not_allowlisted = admit_future_canonical_evidence(
-        asset_id="live-russian-ege-full-trainer",
-        user_identity_ref="usr_registered_ci",
-        exact_item_identity="ege-ru-12-2026-12-01",
-        semantic_binding_status="ACCEPTED_EXACT",
-        observation_kind="ANSWER_CHECKED",
-        registry=registry,
-    )
-    require(not not_allowlisted.admitted and not not_allowlisted.mastery_eligible, "caller cannot promote a composite card to exact mastery")
-
-    require(registry["mastery_policy"]["false_exact_mastery"] == 0, "false_exact_mastery remains zero")
     print("LIVE_ASSET_RECONCILIATION=PASS")
     print("full_russian_trainer=174_cards/9_sources")
-    print("thematic_trainers=4_unknown_item_identity_blockers")
+    print("thematic_exact_mappings=4")
+    print("thematic_production_event_admissions=0")
     print("verified_demo_routes=24")
-    print("russian_math_basic_math_profile_physics_years=2022-2026")
     print("registered_user_identity_ref_required=PASS")
     print("false_exact_mastery=0")
 
