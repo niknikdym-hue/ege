@@ -8,13 +8,16 @@ on:
       - 'eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py'
       - 'eksamio-learning-engine/peis-production-substrate/validate_dictionary_words_admissions_gate_postgres.py'
       - 'eksamio-learning-engine/peis-production-substrate/validate_phraseology_fragment_admissions_gate_postgres.py'
+      - 'eksamio-learning-engine/peis-production-substrate/validate_paronym_context_admissions_gate_postgres.py'
       - 'eksamio-learning-engine/peis-production-substrate/Dockerfile'
       - 'eksamio-learning-engine/peis-service-bridge-reference/russian_orthoepy_stress_adapter.py'
       - 'eksamio-learning-engine/peis-service-bridge-reference/russian_dictionary_words_adapter.py'
       - 'eksamio-learning-engine/peis-service-bridge-reference/russian_phraseology_fragment_adapter.py'
+      - 'eksamio-learning-engine/peis-service-bridge-reference/russian_paronym_context_adapter.py'
       - 'eksamio-learning-engine/yandex-staging/api-gateway.template.yaml'
       - 'eksamio-learning-engine/yandex-staging/validate_dictionary_admission_yandex_contract.py'
       - 'eksamio-learning-engine/yandex-staging/validate_phraseology_admission_yandex_contract.py'
+      - 'eksamio-learning-engine/yandex-staging/validate_paronym_admission_yandex_contract.py'
       - '.github/workflows/admissions-gate-postgres.yml'
   workflow_dispatch:
 
@@ -52,12 +55,15 @@ jobs:
           eksamio-learning-engine/peis-service-bridge-reference/russian_orthoepy_stress_adapter.py
           eksamio-learning-engine/peis-service-bridge-reference/russian_dictionary_words_adapter.py
           eksamio-learning-engine/peis-service-bridge-reference/russian_phraseology_fragment_adapter.py
+          eksamio-learning-engine/peis-service-bridge-reference/russian_paronym_context_adapter.py
           eksamio-learning-engine/peis-production-substrate/learner_admissions_tutor_web_runtime.py
           eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py
           eksamio-learning-engine/peis-production-substrate/validate_dictionary_words_admissions_gate_postgres.py
           eksamio-learning-engine/peis-production-substrate/validate_phraseology_fragment_admissions_gate_postgres.py
+          eksamio-learning-engine/peis-production-substrate/validate_paronym_context_admissions_gate_postgres.py
           eksamio-learning-engine/yandex-staging/validate_dictionary_admission_yandex_contract.py
           eksamio-learning-engine/yandex-staging/validate_phraseology_admission_yandex_contract.py
+          eksamio-learning-engine/yandex-staging/validate_paronym_admission_yandex_contract.py
       - name: Validate registered orthoepy exact-item + exact-action admission
         shell: bash
         run: |
@@ -95,6 +101,22 @@ jobs:
           python3 eksamio-learning-engine/peis-production-substrate/validate_phraseology_fragment_admissions_gate_postgres.py 2>&1 | tee admissions-gate-phraseology-postgres.log
       - name: Validate phraseology private Yandex runtime contract
         run: python3 eksamio-learning-engine/yandex-staging/validate_phraseology_admission_yandex_contract.py
+      - name: Reset PostgreSQL fixture before paronym admission
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate registered paronym exact-item + exact-action admission
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 eksamio-learning-engine/peis-production-substrate/validate_paronym_context_admissions_gate_postgres.py 2>&1 | tee admissions-gate-paronym-postgres.log
+      - name: Validate paronym private Yandex runtime contract
+        run: python3 eksamio-learning-engine/yandex-staging/validate_paronym_admission_yandex_contract.py
       - name: Upload Admissions Gate diagnostics
         if: always()
         uses: actions/upload-artifact@v4
