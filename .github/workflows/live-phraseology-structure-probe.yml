@@ -1,0 +1,42 @@
+name: Live phraseology structure probe
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-phraseology-structure-probe.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_structure.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Capture phraseology live backing structure read-only
+        env:
+          PROBE_OUT: live-phraseology-structure-probe.json
+        run: node eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_structure.mjs
+      - name: Assert fail-closed acceptance boundary
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const x = JSON.parse(fs.readFileSync('live-phraseology-structure-probe.json', 'utf8'));
+          if (x.canonical_item_identity_status !== 'UNKNOWN_BLOCKER') throw new Error('unexpected identity admission');
+          for (const key of ['semantic_admissions','object_closures','mastery_admissions','false_exact_mastery']) {
+            if (x[key] !== 0) throw new Error(`${key} must stay 0`);
+          }
+          if (x.registered_user_identity_required_for_future_canonical_evidence !== true) throw new Error('registered identity invariant lost');
+          NODE
+      - name: Upload phraseology structure result
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-phraseology-structure-probe
+          path: live-phraseology-structure-probe.json
+          if-no-files-found: error
