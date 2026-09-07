@@ -207,6 +207,19 @@ paths:
         type: serverless_containers
         container_id: ${YC_CONTAINER_ID}
         service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/russian/thematic/phraseology/fragment-identification/submit:
+    options:
+      operationId: russianPhraseologyFragmentIdentificationSubmitOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    post:
+      operationId: russianPhraseologyFragmentIdentificationSubmit
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
   /api/russian/program:
     options:
       operationId: russianProgramOptions
