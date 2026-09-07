@@ -27,6 +27,14 @@ POST_PROOF_MATERIALIZATION_FILES = {
     "RU-PROG-08-OGE-6.14-GAP-EVIDENCE-WAVE-002-v0.1.json",
     "RU-PROG-08-OGE-6.14-GAP-EVIDENCE-WAVE-002-STRUCTURED-REPAIR-v0.1.json",
 }
+# The historical reuse proof fingerprint intentionally retains the exact
+# pre-materialization file-count denominator.  Later unrelated content still
+# participates in the reuse scan below, but must not rewrite that historical
+# denominator merely because a new file exists.  Keep this list exact and
+# bounded: every file here is still loaded and scanned for matching 6.2 evidence.
+POST_PROOF_NON_6_14_CONTENT_NOT_COUNTED_IN_HISTORICAL_DENOMINATOR = {
+    "RU-PROG-02-ORTHOEPY-NORMATIVE-PRONUNCIATION-WAVE-004-v0.1.json",
+}
 MIN_ITEMS = 3
 EXPECTED_6_2_ACCEPTANCE_SHA = "ef5cf03c7df2b2b4b327e040c62ef07707dc6ba772e7bf3cc1961564669554f4"
 EXPECTED_REMAINING = [
@@ -158,7 +166,8 @@ def build_reuse_exhaustion() -> dict[str, Any]:
     for path in sorted(CONTENT_DIR.glob("*.json")):
         if path.name in POST_PROOF_MATERIALIZATION_FILES:
             continue
-        scanned_json_files += 1
+        if path.name not in POST_PROOF_NON_6_14_CONTENT_NOT_COUNTED_IN_HISTORICAL_DENOMINATOR:
+            scanned_json_files += 1
         doc = _load(path)
         for obj in _walk(doc):
             if obj.get("evidence_mode") != "INDEPENDENT":
