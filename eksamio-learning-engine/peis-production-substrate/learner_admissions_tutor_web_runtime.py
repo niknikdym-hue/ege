@@ -82,10 +82,11 @@ def make_handler(
                     payload=payload,
                     host_identity=host,
                 )
+                public_status = "REPLAY" if result["status"] == "ALREADY_APPLIED" else result["status"]
                 self.send_json(
                     200,
                     {
-                        "status": result["status"],
+                        "status": public_status,
                         "event_receipt": result["event_receipt"],
                         "directive": result["directive"],
                         "canonical_state_owner": "shared_peis",
