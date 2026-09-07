@@ -1,0 +1,47 @@
+name: Russian RU02 normative pronunciation component evidence
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-PRONUNCIATION-OWNER-RESOLUTION-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-02-ORTHOEPY-NORMATIVE-PRONUNCIATION-WAVE-004-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_component_evidence.py'
+      - '.github/workflows/russian-ru02-normative-pronunciation-component-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.number == 164
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pin exact PR head
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout --detach "${{ github.event.pull_request.head.sha }}"
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - name: Validate RU02 pronunciation evidence twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_component_evidence.py > /tmp/ru02-pronunciation-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_component_evidence.py > /tmp/ru02-pronunciation-b.txt
+          diff -u /tmp/ru02-pronunciation-a.txt /tmp/ru02-pronunciation-b.txt
+          cat /tmp/ru02-pronunciation-a.txt
+
+      - name: Diff hygiene against exact PR base
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
