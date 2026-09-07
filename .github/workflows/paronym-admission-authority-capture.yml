@@ -1,0 +1,60 @@
+name: Paronym admission authority capture
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-production-substrate/admissions/capture_paronym_admission_authority.mjs'
+      - '.github/workflows/paronym-admission-authority-capture.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Capture exact live paronym authority candidates
+        env:
+          PROBE_OUT: paronym-admission-authority-capture.json
+        run: node eksamio-learning-engine/peis-production-substrate/admissions/capture_paronym_admission_authority.mjs
+      - name: Verify fail-closed capture invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('paronym-admission-authority-capture.json').read_text(encoding='utf-8'))
+          assert data['status'] == 'READ_ONLY_CAPTURE_NO_PRODUCTION_ADMISSION'
+          assert data['issue_185_exact_head'] == 'c5592c212557b91578ed48e1bf778e30dd489dc7'
+          assert data['live_html_sha256'] == '63ac66e839505930b2a9a2f3b5243d60e422226ec90890553aac5abc52b7cbda'
+          assert data['group_count'] == 144
+          assert data['entry_count'] == 334
+          assert data['ordered_group_id_sha256'] == '81c91d069a28cd9a2c1c7547c9fc92cb9df92c6cde38f3100750e2585c113813'
+          assert data['ordered_entry_id_sha256'] == '48eedc3e5f3751cec57152671456d314b7bcb6b13f2ee5002f35ec6660482c99'
+          assert data['fipi_2026_exact_group_correspondence'] == '144/144'
+          assert data['semantic_admissions'] == 0
+          assert data['object_closures'] == 0
+          assert data['mastery_admissions'] == 0
+          assert data['false_exact_mastery'] == 0
+          assert data['registered_user_identity_required_for_future_canonical_evidence'] is True
+          assert data['boundaries']['meaning_match_admitted'] is False
+          assert data['boundaries']['independent_paronym_recall_admitted'] is False
+          assert data['boundaries']['exam_error_correction_admitted'] is False
+          assert data['boundaries']['generic_trainer_completion_mastery'] is False
+          assert data['boundaries']['browser_local_progress_mastery'] is False
+          assert data['boundaries']['asset_wide_mastery'] is False
+          print('capture invariants PASS; context-choice candidates=', data['context_choice_candidate_count'])
+          PY
+      - name: Capture digest
+        run: sha256sum paronym-admission-authority-capture.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paronym-admission-authority-capture
+          path: paronym-admission-authority-capture.json
+          if-no-files-found: error
+          retention-days: 90
