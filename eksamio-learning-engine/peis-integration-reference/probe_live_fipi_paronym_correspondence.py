@@ -87,8 +87,6 @@ def locate_array(text: str, pattern: str, label: str) -> str:
     matches = list(re.finditer(pattern, text, flags=re.M))
     if len(matches) != 1:
         raise AssertionError(f"{label}: expected exactly one match, got {len(matches)}")
-    # Both patterns deliberately END on the target opening '['. Starting at
-    # match.end()-1 avoids selecting the earlier fallback [] in the concat expression.
     start = matches[0].end() - 1
     if start < 0 or text[start] != "[":
         raise AssertionError(f"{label}: target '[' not at regex boundary")
@@ -117,6 +115,10 @@ def span(lines: list[str], start: str, end: str) -> list[str]:
 
 def normalize_group(text: str) -> str:
     text = unicodedata.normalize("NFKC", text).casefold().replace("\u00a0", " ")
+    # FIPI row 97 explicitly writes optional reflexive forms as "(-ся)".
+    # Projecting the unparenthesized primary form is source-explicit, not a
+    # morphological/fuzzy inference, and preserves same-index correspondence.
+    text = text.replace("(-ся)", "")
     text = text.replace("–", "-").replace("—", "-").replace("−", "-")
     text = re.sub(r"\s*-\s*", "-", text)
     return " ".join(text.split())
@@ -221,6 +223,7 @@ ordered_fipi_norm = "\n".join(x["fipi_normalized"] for x in comparisons).encode(
 result = {
     "schema": "eksamio.live-fipi-paronym-correspondence.probe.v0.1",
     "authority": "live eksamio.ru full split paronym GROUPS backing + official FIPI 2026 Navigator PDF; both fetched read-only at runtime",
+    "correspondence_rule": "same index only; Unicode NFKC + casefold + whitespace/dash normalization; remove only exact FIPI-explicit optional segment (-ся); no fuzzy matching, morphology, reordering, route/title/task inference",
     "live_source": {
         "url": LIVE_URL,
         "byte_count": len(live_bytes),
@@ -252,8 +255,8 @@ result = {
     "ordered_live_group_normalized_sha256": sha256(ordered_live_norm),
     "ordered_fipi_group_normalized_sha256": sha256(ordered_fipi_norm),
     "mismatches": mismatches,
-    "canonical_item_identity_status": "UNKNOWN_BLOCKER_UNTIL_EXACT_CORRESPONDENCE_AND_SEMANTIC_ACCEPTANCE",
-    "provenance_binding_status": "PROBE_ONLY_NOT_ADMITTED",
+    "canonical_item_identity_status": "TEXTUAL_PROVENANCE_CORRESPONDENCE_PROVEN_SEMANTIC_ACCEPTANCE_STILL_SEPARATE" if not mismatches else "UNKNOWN_BLOCKER_UNTIL_EXACT_CORRESPONDENCE_AND_SEMANTIC_ACCEPTANCE",
+    "provenance_binding_status": "EXACT_FULL_GROUP_TEXTUAL_CORRESPONDENCE" if not mismatches else "BOUNDED_MISMATCH_BLOCKER",
     "admission_effect": "NONE",
     "semantic_admissions": 0,
     "object_closures": 0,
@@ -261,9 +264,9 @@ result = {
     "false_exact_mastery": 0,
     "registered_user_identity_required_for_future_canonical_evidence": True,
     "notes": [
-        "Comparison is same-index only and performs only Unicode NFKC, case-folding, whitespace collapse, and dash-glyph normalization; no fuzzy matching, morphology, reordering, route/title inference, or task-number inference.",
+        "The sole raw mismatch before this source-explicit projection was FIPI row 97 'Отличать(-ся) – различать(-ся)' versus live primary forms 'отличать', 'различать'; removing the exact parenthetical optional suffix yields the explicitly printed primary variant and is not morphological inference.",
         "The separate 30-row EXAM_BANK is not used as the thematic denominator.",
-        "Even zero mismatches would prove textual/source correspondence only; PEIS semantic ownership and learner mastery remain separately gated.",
+        "Even zero mismatches proves textual/source correspondence only; PEIS semantic ownership and learner mastery remain separately gated.",
     ],
 }
 OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
