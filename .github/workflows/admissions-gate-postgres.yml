@@ -6,8 +6,10 @@ on:
       - 'eksamio-learning-engine/peis-production-substrate/admissions/**'
       - 'eksamio-learning-engine/peis-production-substrate/learner_admissions_tutor_web_runtime.py'
       - 'eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py'
+      - 'eksamio-learning-engine/peis-production-substrate/validate_dictionary_words_admissions_gate_postgres.py'
       - 'eksamio-learning-engine/peis-production-substrate/Dockerfile'
       - 'eksamio-learning-engine/peis-service-bridge-reference/russian_orthoepy_stress_adapter.py'
+      - 'eksamio-learning-engine/peis-service-bridge-reference/russian_dictionary_words_adapter.py'
       - '.github/workflows/admissions-gate-postgres.yml'
   workflow_dispatch:
 
@@ -15,7 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  orthoepy-stress-admission:
+  exact-event-admissions:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -43,19 +45,35 @@ jobs:
         run: >-
           python3 -m py_compile
           eksamio-learning-engine/peis-service-bridge-reference/russian_orthoepy_stress_adapter.py
+          eksamio-learning-engine/peis-service-bridge-reference/russian_dictionary_words_adapter.py
           eksamio-learning-engine/peis-production-substrate/learner_admissions_tutor_web_runtime.py
           eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py
-      - name: Validate registered exact-item + exact-action admission on real PostgreSQL
+          eksamio-learning-engine/peis-production-substrate/validate_dictionary_words_admissions_gate_postgres.py
+      - name: Validate registered orthoepy exact-item + exact-action admission
         shell: bash
         run: |
           set -o pipefail
-          python3 eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py 2>&1 | tee admissions-gate-postgres.log
-      - name: Upload Admissions Gate diagnostic
+          python3 eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py 2>&1 | tee admissions-gate-orthoepy-postgres.log
+      - name: Reset PostgreSQL fixture between admitted components
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate registered dictionary exact-item + exact-action admission
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 eksamio-learning-engine/peis-production-substrate/validate_dictionary_words_admissions_gate_postgres.py 2>&1 | tee admissions-gate-dictionary-postgres.log
+      - name: Upload Admissions Gate diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: admissions-gate-postgres-log
-          path: admissions-gate-postgres.log
+          name: admissions-gate-postgres-logs
+          path: admissions-gate-*-postgres.log
           if-no-files-found: warn
       - name: Reset PostgreSQL accepted-runtime fixture
         run: |
