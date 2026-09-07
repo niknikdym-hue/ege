@@ -125,24 +125,57 @@ function evaluateLiteral(literal) {
 }
 
 async function fetchHtml(url) {
-  const headers = {
-    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
-    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'accept-language': 'ru-RU,ru;q=0.9,en;q=0.8',
-    'cache-control': 'no-cache',
-    'pragma': 'no-cache',
-    'referer': 'https://eksamio.ru/trenazhery/russkiy/',
-  };
-  const response = await fetch(url, { redirect: 'follow', headers });
-  const html = await response.text();
-  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
-  return {
-    html,
-    http_status: response.status,
-    final_url: response.url,
-    html_bytes_utf8: Buffer.byteLength(html, 'utf8'),
-    html_sha256: sha256(html),
-  };
+  const profiles = [
+    {
+      name: 'browser-compatible',
+      headers: {
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'accept-language': 'ru-RU,ru;q=0.9,en;q=0.8',
+        'cache-control': 'no-cache',
+        'pragma': 'no-cache',
+        'referer': 'https://eksamio.ru/trenazhery/russkiy/',
+        'upgrade-insecure-requests': '1',
+      },
+    },
+    {
+      name: 'reconciliation-bot',
+      headers: {
+        'user-agent': 'Eksamio-live-asset-reconciliation/0.1 (+https://github.com/niknikdym-hue/ege)',
+        'accept': 'text/html,application/xhtml+xml',
+      },
+    },
+  ];
+  const attempts = [];
+  for (let round = 1; round <= 3; round += 1) {
+    for (const profile of profiles) {
+      const response = await fetch(url, { redirect: 'follow', headers: profile.headers });
+      const html = await response.text();
+      attempts.push({
+        round,
+        profile: profile.name,
+        http_status: response.status,
+        final_url: response.url,
+        html_bytes_utf8: Buffer.byteLength(html, 'utf8'),
+        html_sha256: sha256(html),
+      });
+      if (response.ok) {
+        return {
+          html,
+          attempts,
+          selected_profile: profile.name,
+          http_status: response.status,
+          final_url: response.url,
+          html_bytes_utf8: Buffer.byteLength(html, 'utf8'),
+          html_sha256: sha256(html),
+        };
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+    }
+    await new Promise((resolve) => setTimeout(resolve, 3000 * round));
+  }
+  const last = attempts[attempts.length - 1];
+  throw new Error(`${url}: all read-only profiles failed; last HTTP ${last?.http_status ?? 'unknown'}`);
 }
 
 function summarizeNamedArray(assignments, variable, expectedCount, candidateKey) {
@@ -230,6 +263,8 @@ for (const [key, spec] of Object.entries(pages)) {
     requested_url: spec.url,
     final_url: live.final_url,
     http_status: live.http_status,
+    selected_profile: live.selected_profile,
+    attempts: live.attempts,
     html_bytes_utf8: live.html_bytes_utf8,
     html_sha256: live.html_sha256,
     script_tag_count: scriptMatches.length,
