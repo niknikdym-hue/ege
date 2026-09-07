@@ -20,47 +20,27 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def fetch_live() -> tuple[bytes, list[dict], str]:
-    profiles = [
-        (
-            "browser-compatible",
-            {
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                "Accept-Language": "ru-RU,ru;q=0.9,en;q=0.8",
-                "Cache-Control": "no-cache",
-                "Pragma": "no-cache",
-                "Referer": "https://eksamio.ru/trenazhery/russkiy/",
-            },
-        ),
-        (
-            "reconciliation-bot",
-            {
-                "User-Agent": "Eksamio-live-asset-reconciliation/0.1 (+https://github.com/niknikdym-hue/ege)",
-                "Accept": "text/html,application/xhtml+xml",
-            },
-        ),
-    ]
+def fetch_bytes(url: str, profiles: list[tuple[str, dict[str, str]]], require_pdf: bool = False) -> tuple[bytes, list[dict], str]:
     attempts: list[dict] = []
     last: Exception | None = None
     for round_no in range(1, 4):
         for name, headers in profiles:
             try:
-                req = urllib.request.Request(LIVE_URL, headers=headers)
+                req = urllib.request.Request(url, headers=headers)
                 with urllib.request.urlopen(req, timeout=45) as resp:
                     data = resp.read()
                     status = getattr(resp, "status", 200)
                     final_url = resp.geturl()
-                attempts.append(
-                    {
-                        "round": round_no,
-                        "profile": name,
-                        "http_status": status,
-                        "final_url": final_url,
-                        "byte_count": len(data),
-                        "sha256": sha256(data),
-                    }
-                )
+                attempts.append({
+                    "round": round_no,
+                    "profile": name,
+                    "http_status": status,
+                    "final_url": final_url,
+                    "byte_count": len(data),
+                    "sha256": sha256(data),
+                })
+                if require_pdf and not data.startswith(b"%PDF-"):
+                    raise RuntimeError(f"not PDF bytes: {data[:16]!r}")
                 if 200 <= status < 300:
                     return data, attempts, name
             except Exception as exc:  # pragma: no cover - network boundary
@@ -68,29 +48,7 @@ def fetch_live() -> tuple[bytes, list[dict], str]:
                 attempts.append({"round": round_no, "profile": name, "error": str(exc)[:240]})
             time.sleep(1.2)
         time.sleep(2.5 * round_no)
-    raise RuntimeError(f"live fetch failed: {last}; attempts={attempts}")
-
-
-def fetch_pdf() -> bytes:
-    last: Exception | None = None
-    for attempt in range(1, 4):
-        try:
-            req = urllib.request.Request(
-                FIPI_URL,
-                headers={
-                    "User-Agent": "Eksamio-source-reconciliation/0.1 (+https://github.com/niknikdym-hue/ege)",
-                    "Accept": "application/pdf,*/*",
-                },
-            )
-            with urllib.request.urlopen(req, timeout=45) as resp:
-                data = resp.read()
-            if not data.startswith(b"%PDF-"):
-                raise RuntimeError(f"not PDF bytes: {data[:16]!r}")
-            return data
-        except Exception as exc:  # pragma: no cover - network boundary
-            last = exc
-            time.sleep(attempt * 2)
-    raise RuntimeError(f"FIPI fetch failed: {last}")
+    raise RuntimeError(f"fetch failed for {url}: {last}; attempts={attempts}")
 
 
 def extract_balanced_array(text: str, start: int) -> str:
@@ -99,24 +57,9 @@ def extract_balanced_array(text: str, start: int) -> str:
     depth = 0
     quote: str | None = None
     escaped = False
-    line_comment = False
-    block_comment = False
     i = start
     while i < len(text):
         ch = text[i]
-        nxt = text[i + 1] if i + 1 < len(text) else ""
-        if line_comment:
-            if ch == "\n":
-                line_comment = False
-            i += 1
-            continue
-        if block_comment:
-            if ch == "*" and nxt == "/":
-                block_comment = False
-                i += 2
-                continue
-            i += 1
-            continue
         if quote:
             if escaped:
                 escaped = False
@@ -126,17 +69,9 @@ def extract_balanced_array(text: str, start: int) -> str:
                 quote = None
             i += 1
             continue
-        if ch in {'"', "'", "`"}:
+        if ch in {'"', "'"}:
             quote = ch
             i += 1
-            continue
-        if ch == "/" and nxt == "/":
-            line_comment = True
-            i += 2
-            continue
-        if ch == "/" and nxt == "*":
-            block_comment = True
-            i += 2
             continue
         if ch == "[":
             depth += 1
@@ -152,9 +87,11 @@ def locate_array(text: str, pattern: str, label: str) -> str:
     matches = list(re.finditer(pattern, text, flags=re.M))
     if len(matches) != 1:
         raise AssertionError(f"{label}: expected exactly one match, got {len(matches)}")
-    start = text.find("[", matches[0].start())
-    if start < 0:
-        raise AssertionError(f"{label}: '[' not found")
+    # Both patterns deliberately END on the target opening '['. Starting at
+    # match.end()-1 avoids selecting the earlier fallback [] in the concat expression.
+    start = matches[0].end() - 1
+    if start < 0 or text[start] != "[":
+        raise AssertionError(f"{label}: target '[' not at regex boundary")
     return extract_balanced_array(text, start)
 
 
@@ -182,11 +119,40 @@ def normalize_group(text: str) -> str:
     text = unicodedata.normalize("NFKC", text).casefold().replace("\u00a0", " ")
     text = text.replace("–", "-").replace("—", "-").replace("−", "-")
     text = re.sub(r"\s*-\s*", "-", text)
-    text = " ".join(text.split())
-    return text
+    return " ".join(text.split())
 
 
-live_bytes, live_attempts, selected_profile = fetch_live()
+live_profiles = [
+    (
+        "browser-compatible",
+        {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "ru-RU,ru;q=0.9,en;q=0.8",
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache",
+            "Referer": "https://eksamio.ru/trenazhery/russkiy/",
+        },
+    ),
+    (
+        "reconciliation-bot",
+        {
+            "User-Agent": "Eksamio-live-asset-reconciliation/0.1 (+https://github.com/niknikdym-hue/ege)",
+            "Accept": "text/html,application/xhtml+xml",
+        },
+    ),
+]
+fipi_profiles = [
+    (
+        "source-reconciliation",
+        {
+            "User-Agent": "Eksamio-source-reconciliation/0.1 (+https://github.com/niknikdym-hue/ege)",
+            "Accept": "application/pdf,*/*",
+        },
+    )
+]
+
+live_bytes, live_attempts, selected_profile = fetch_bytes(LIVE_URL, live_profiles)
 live_html = live_bytes.decode("utf-8", errors="strict")
 prefix_literal = locate_array(
     live_html,
@@ -202,8 +168,8 @@ prefix = json.loads(prefix_literal)
 suffix = json.loads(suffix_literal)
 groups = prefix + suffix
 
+fipi_bytes, fipi_attempts, fipi_profile = fetch_bytes(FIPI_URL, fipi_profiles, require_pdf=True)
 with tempfile.TemporaryDirectory() as tmp:
-    fipi_bytes = fetch_pdf()
     pdf = Path(tmp) / "ru-2-leksika-i-frazeologija.pdf"
     pdf.write_bytes(fipi_bytes)
     fipi_groups: list[str] = []
@@ -218,26 +184,18 @@ with tempfile.TemporaryDirectory() as tmp:
             raise AssertionError(f"FIPI page {page}: expected {expected}, got {len(values)}")
         fipi_groups.extend(values)
 
-if len(groups) != 144:
-    raise AssertionError(f"live full group count expected 144, got {len(groups)}")
+if len(prefix) != 76 or len(suffix) != 68 or len(groups) != 144:
+    raise AssertionError(f"live split expected 76+68=144, got {len(prefix)}+{len(suffix)}={len(groups)}")
 if len(fipi_groups) != 144:
     raise AssertionError(f"FIPI group count expected 144, got {len(fipi_groups)}")
 
 group_ids = [g.get("id") for g in groups]
-if not all(isinstance(x, str) and x for x in group_ids):
-    raise AssertionError("missing live group id")
-if len(set(group_ids)) != len(group_ids):
-    raise AssertionError("duplicate live group id")
+if not all(isinstance(x, str) and x for x in group_ids) or len(set(group_ids)) != 144:
+    raise AssertionError("live group IDs are missing or non-unique")
 entry_ids = [entry.get("id") for g in groups for entry in g.get("entries", [])]
-if not all(isinstance(x, str) and x for x in entry_ids):
-    raise AssertionError("missing live entry id")
-if len(set(entry_ids)) != len(entry_ids):
-    raise AssertionError("duplicate live entry id")
-
-sequence_numbers: list[int | None] = []
-for group_id in group_ids:
-    m = re.match(r"^p(\d{3})-", group_id)
-    sequence_numbers.append(int(m.group(1)) if m else None)
+if not all(isinstance(x, str) and x for x in entry_ids) or len(set(entry_ids)) != len(entry_ids):
+    raise AssertionError("live entry IDs are missing or non-unique")
+sequence_numbers = [int(m.group(1)) if (m := re.match(r"^p(\d{3})-", gid)) else None for gid in group_ids]
 sequence_exact = sequence_numbers == list(range(1, 145))
 
 comparisons = []
@@ -245,22 +203,20 @@ for index, (group, fipi_row) in enumerate(zip(groups, fipi_groups), start=1):
     live_text = " - ".join(group["words"])
     live_norm = normalize_group(live_text)
     fipi_norm = normalize_group(fipi_row)
-    comparisons.append(
-        {
-            "index_1based": index,
-            "live_group_id": group["id"],
-            "live_words": group["words"],
-            "live_normalized": live_norm,
-            "fipi_row": fipi_row,
-            "fipi_normalized": fipi_norm,
-            "exact_normalized_same_index_match": live_norm == fipi_norm,
-        }
-    )
+    comparisons.append({
+        "index_1based": index,
+        "live_group_id": group["id"],
+        "live_words": group["words"],
+        "live_normalized": live_norm,
+        "fipi_row": fipi_row,
+        "fipi_normalized": fipi_norm,
+        "exact_normalized_same_index_match": live_norm == fipi_norm,
+    })
 
 matches = [x for x in comparisons if x["exact_normalized_same_index_match"]]
 mismatches = [x for x in comparisons if not x["exact_normalized_same_index_match"]]
-ordered_live_norm = "\n".join(x["live_normalized"] for x in comparisons)
-ordered_fipi_norm = "\n".join(x["fipi_normalized"] for x in comparisons)
+ordered_live_norm = "\n".join(x["live_normalized"] for x in comparisons).encode("utf-8")
+ordered_fipi_norm = "\n".join(x["fipi_normalized"] for x in comparisons).encode("utf-8")
 
 result = {
     "schema": "eksamio.live-fipi-paronym-correspondence.probe.v0.1",
@@ -276,7 +232,13 @@ result = {
         "suffix_literal_byte_count": len(suffix_literal.encode("utf-8")),
         "suffix_literal_sha256": sha256(suffix_literal.encode("utf-8")),
     },
-    "fipi_source": {"url": FIPI_URL, "byte_count": len(fipi_bytes), "sha256": sha256(fipi_bytes)},
+    "fipi_source": {
+        "url": FIPI_URL,
+        "byte_count": len(fipi_bytes),
+        "sha256": sha256(fipi_bytes),
+        "selected_profile": fipi_profile,
+        "attempts": fipi_attempts,
+    },
     "live_prefix_group_count": len(prefix),
     "live_suffix_group_count": len(suffix),
     "live_full_group_count": len(groups),
@@ -287,8 +249,8 @@ result = {
     "live_group_id_sequence_p001_through_p144_exact": sequence_exact,
     "exact_same_index_normalized_match_count": len(matches),
     "exact_same_index_normalized_mismatch_count": len(mismatches),
-    "ordered_live_group_normalized_sha256": sha256(ordered_live_norm.encode("utf-8")),
-    "ordered_fipi_group_normalized_sha256": sha256(ordered_fipi_norm.encode("utf-8")),
+    "ordered_live_group_normalized_sha256": sha256(ordered_live_norm),
+    "ordered_fipi_group_normalized_sha256": sha256(ordered_fipi_norm),
     "mismatches": mismatches,
     "canonical_item_identity_status": "UNKNOWN_BLOCKER_UNTIL_EXACT_CORRESPONDENCE_AND_SEMANTIC_ACCEPTANCE",
     "provenance_binding_status": "PROBE_ONLY_NOT_ADMITTED",
