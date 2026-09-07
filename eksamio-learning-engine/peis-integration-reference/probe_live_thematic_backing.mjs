@@ -1,0 +1,221 @@
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import vm from 'node:vm';
+
+const pages = {
+  orthoepy: 'https://eksamio.ru/trenazhery/russkiy/orfoepiya/',
+  dictionary_words: 'https://eksamio.ru/trenazhery/russkiy/slovarnye-slova/',
+  paronyms: 'https://eksamio.ru/trenazhery/russkiy/paronimy/',
+  phraseology: 'https://eksamio.ru/trenazhery/russkiy/frazeologizmy/',
+};
+
+function sha256(text) {
+  return crypto.createHash('sha256').update(text, 'utf8').digest('hex');
+}
+
+function extractBalanced(source, start) {
+  const open = source[start];
+  const close = open === '[' ? ']' : open === '{' ? '}' : null;
+  if (!close) return null;
+  let depth = 0;
+  let quote = null;
+  let escaped = false;
+  let lineComment = false;
+  let blockComment = false;
+  for (let i = start; i < source.length; i += 1) {
+    const ch = source[i];
+    const next = source[i + 1] ?? '';
+    if (lineComment) {
+      if (ch === '\n') lineComment = false;
+      continue;
+    }
+    if (blockComment) {
+      if (ch === '*' && next === '/') {
+        blockComment = false;
+        i += 1;
+      }
+      continue;
+    }
+    if (quote) {
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+      if (ch === '\\') {
+        escaped = true;
+        continue;
+      }
+      if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === '/' && next === '/') {
+      lineComment = true;
+      i += 1;
+      continue;
+    }
+    if (ch === '/' && next === '*') {
+      blockComment = true;
+      i += 1;
+      continue;
+    }
+    if (ch === '"' || ch === "'" || ch === '`') {
+      quote = ch;
+      continue;
+    }
+    if (ch === open) depth += 1;
+    else if (ch === close) {
+      depth -= 1;
+      if (depth === 0) return source.slice(start, i + 1);
+    }
+  }
+  return null;
+}
+
+function findLiteralAssignments(script) {
+  const assignments = [];
+  const re = /(?:^|[;\n])\s*(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*/g;
+  let match;
+  while ((match = re.exec(script)) !== null) {
+    const name = match[1];
+    let start = re.lastIndex;
+    while (/\s/.test(script[start] ?? '')) start += 1;
+    if (!['[', '{'].includes(script[start])) continue;
+    const literal = extractBalanced(script, start);
+    if (!literal) continue;
+    assignments.push({ name, literal });
+    re.lastIndex = start + literal.length;
+  }
+  return assignments;
+}
+
+function commonKeys(rows) {
+  if (!rows.length) return [];
+  const counts = new Map();
+  for (const row of rows) {
+    for (const key of Object.keys(row)) counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .filter(([, count]) => count === rows.length)
+    .map(([key]) => key)
+    .sort();
+}
+
+function summarizeArrays(root, maxDepth = 6) {
+  const seen = new Set();
+  const arrays = [];
+  function walk(value, path, depth) {
+    if (depth > maxDepth || value === null || typeof value !== 'object') return;
+    if (seen.has(value)) return;
+    seen.add(value);
+    if (Array.isArray(value)) {
+      const objectRows = value.filter((row) => row && typeof row === 'object' && !Array.isArray(row));
+      const rowCount = value.length;
+      const summary = {
+        path,
+        length: rowCount,
+        object_rows: objectRows.length,
+      };
+      if (objectRows.length === rowCount && rowCount > 0) {
+        summary.common_keys = commonKeys(objectRows);
+        for (const key of ['id', 'item_id', 'word', 'phrase', 'term', 'text', 'answer']) {
+          const vals = objectRows.map((row) => row[key]).filter((v) => typeof v === 'string' || typeof v === 'number');
+          if (vals.length === rowCount) {
+            summary[`${key}_unique`] = new Set(vals.map(String)).size;
+          }
+        }
+      }
+      arrays.push(summary);
+      value.forEach((item, index) => walk(item, `${path}[${index}]`, depth + 1));
+      return;
+    }
+    for (const [key, child] of Object.entries(value)) walk(child, `${path}.${key}`, depth + 1);
+  }
+  walk(root, 'root', 0);
+  return arrays
+    .filter((x) => x.length >= 2)
+    .sort((a, b) => b.length - a.length || a.path.localeCompare(b.path))
+    .slice(0, 20);
+}
+
+function safeEvaluateLiteral(literal) {
+  const sandbox = Object.create(null);
+  return vm.runInNewContext(`(${literal})`, sandbox, { timeout: 250, microtaskMode: 'afterEvaluate' });
+}
+
+async function inspectPage(key, url) {
+  const response = await fetch(url, {
+    redirect: 'follow',
+    headers: {
+      'user-agent': 'Eksamio-live-asset-reconciliation/0.1 (+https://github.com/niknikdym-hue/ege)',
+      'accept': 'text/html,application/xhtml+xml',
+    },
+  });
+  if (!response.ok) throw new Error(`${key}: HTTP ${response.status}`);
+  const html = await response.text();
+  const scriptMatches = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
+  const inlineScripts = scriptMatches
+    .map((m, index) => ({ index, attrs: m[1], text: m[2] }))
+    .filter((s) => s.text.trim().length > 0);
+
+  const assignments = [];
+  for (const script of inlineScripts) {
+    for (const candidate of findLiteralAssignments(script.text)) {
+      let evaluation = { status: 'NOT_EVALUATED' };
+      try {
+        const value = safeEvaluateLiteral(candidate.literal);
+        evaluation = {
+          status: 'EVALUATED_LITERAL',
+          root_type: Array.isArray(value) ? 'array' : typeof value,
+          root_keys: value && typeof value === 'object' && !Array.isArray(value) ? Object.keys(value).sort() : [],
+          arrays: summarizeArrays(value),
+        };
+      } catch (error) {
+        evaluation = {
+          status: 'LITERAL_EVALUATION_FAILED',
+          error: String(error?.message ?? error).slice(0, 240),
+        };
+      }
+      assignments.push({
+        script_index: script.index,
+        variable: candidate.name,
+        literal_bytes_utf8: Buffer.byteLength(candidate.literal, 'utf8'),
+        literal_sha256: sha256(candidate.literal),
+        ...evaluation,
+      });
+    }
+  }
+
+  return {
+    key,
+    requested_url: url,
+    final_url: response.url,
+    http_status: response.status,
+    content_type: response.headers.get('content-type'),
+    html_bytes_utf8: Buffer.byteLength(html, 'utf8'),
+    html_sha256: sha256(html),
+    script_tag_count: scriptMatches.length,
+    inline_script_count: inlineScripts.length,
+    literal_assignment_count: assignments.length,
+    literal_assignments: assignments,
+  };
+}
+
+const results = [];
+for (const [key, url] of Object.entries(pages)) {
+  results.push(await inspectPage(key, url));
+}
+
+const output = {
+  schema: 'eksamio.live-thematic-backing-probe.v0.1',
+  authority: 'live eksamio.ru public trainer surfaces; read-only GET probe',
+  admission_effect: 'NONE',
+  semantic_admissions: 0,
+  object_closures: 0,
+  mastery_admissions: 0,
+  false_exact_mastery: 0,
+  pages: results,
+};
+
+const outPath = process.env.PROBE_OUT || 'live-thematic-backing-probe.json';
+fs.writeFileSync(outPath, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
+console.log(JSON.stringify(output));
