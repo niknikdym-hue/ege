@@ -1,0 +1,144 @@
+name: Registered exact-event Admissions Gate
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-production-substrate/admissions/**'
+      - 'eksamio-learning-engine/peis-production-substrate/learner_admissions_tutor_web_runtime.py'
+      - 'eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py'
+      - 'eksamio-learning-engine/peis-production-substrate/validate_dictionary_words_admissions_gate_postgres.py'
+      - 'eksamio-learning-engine/peis-production-substrate/validate_phraseology_fragment_admissions_gate_postgres.py'
+      - 'eksamio-learning-engine/peis-production-substrate/validate_paronym_context_admissions_gate_postgres.py'
+      - 'eksamio-learning-engine/peis-production-substrate/Dockerfile'
+      - 'eksamio-learning-engine/peis-service-bridge-reference/russian_orthoepy_stress_adapter.py'
+      - 'eksamio-learning-engine/peis-service-bridge-reference/russian_dictionary_words_adapter.py'
+      - 'eksamio-learning-engine/peis-service-bridge-reference/russian_phraseology_fragment_adapter.py'
+      - 'eksamio-learning-engine/peis-service-bridge-reference/russian_paronym_context_adapter.py'
+      - 'eksamio-learning-engine/yandex-staging/api-gateway.template.yaml'
+      - 'eksamio-learning-engine/yandex-staging/validate_dictionary_admission_yandex_contract.py'
+      - 'eksamio-learning-engine/yandex-staging/validate_phraseology_admission_yandex_contract.py'
+      - 'eksamio-learning-engine/yandex-staging/validate_paronym_admission_yandex_contract.py'
+      - '.github/workflows/admissions-gate-postgres.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-event-admissions:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: eksamio
+          POSTGRES_PASSWORD: eksamio-ci-only
+          POSTGRES_DB: eksamio
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U eksamio -d eksamio"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      EKSAMIO_TEST_POSTGRES_DSN: postgresql://eksamio:eksamio-ci-only@127.0.0.1:5432/eksamio
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install declared PostgreSQL runtime dependencies
+        run: python3 -m pip install -r eksamio-learning-engine/peis-production-substrate/requirements.txt
+      - name: Compile bounded Admissions Gate runtime
+        run: >-
+          python3 -m py_compile
+          eksamio-learning-engine/peis-service-bridge-reference/russian_orthoepy_stress_adapter.py
+          eksamio-learning-engine/peis-service-bridge-reference/russian_dictionary_words_adapter.py
+          eksamio-learning-engine/peis-service-bridge-reference/russian_phraseology_fragment_adapter.py
+          eksamio-learning-engine/peis-service-bridge-reference/russian_paronym_context_adapter.py
+          eksamio-learning-engine/peis-production-substrate/learner_admissions_tutor_web_runtime.py
+          eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py
+          eksamio-learning-engine/peis-production-substrate/validate_dictionary_words_admissions_gate_postgres.py
+          eksamio-learning-engine/peis-production-substrate/validate_phraseology_fragment_admissions_gate_postgres.py
+          eksamio-learning-engine/peis-production-substrate/validate_paronym_context_admissions_gate_postgres.py
+          eksamio-learning-engine/yandex-staging/validate_dictionary_admission_yandex_contract.py
+          eksamio-learning-engine/yandex-staging/validate_phraseology_admission_yandex_contract.py
+          eksamio-learning-engine/yandex-staging/validate_paronym_admission_yandex_contract.py
+      - name: Validate registered orthoepy exact-item + exact-action admission
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py 2>&1 | tee admissions-gate-orthoepy-postgres.log
+      - name: Reset PostgreSQL fixture between admitted components
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate registered dictionary exact-item + exact-action admission
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 eksamio-learning-engine/peis-production-substrate/validate_dictionary_words_admissions_gate_postgres.py 2>&1 | tee admissions-gate-dictionary-postgres.log
+      - name: Validate dictionary private Yandex runtime contract
+        run: python3 eksamio-learning-engine/yandex-staging/validate_dictionary_admission_yandex_contract.py
+      - name: Reset PostgreSQL fixture before phraseology admission
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate registered phraseology exact-item + exact-action admission
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 eksamio-learning-engine/peis-production-substrate/validate_phraseology_fragment_admissions_gate_postgres.py 2>&1 | tee admissions-gate-phraseology-postgres.log
+      - name: Validate phraseology private Yandex runtime contract
+        run: python3 eksamio-learning-engine/yandex-staging/validate_phraseology_admission_yandex_contract.py
+      - name: Reset PostgreSQL fixture before paronym admission
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate registered paronym exact-item + exact-action admission
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 eksamio-learning-engine/peis-production-substrate/validate_paronym_context_admissions_gate_postgres.py 2>&1 | tee admissions-gate-paronym-postgres.log
+      - name: Validate paronym private Yandex runtime contract
+        run: python3 eksamio-learning-engine/yandex-staging/validate_paronym_admission_yandex_contract.py
+      - name: Upload Admissions Gate diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: admissions-gate-postgres-logs
+          path: admissions-gate-*-postgres.log
+          if-no-files-found: warn
+      - name: Reset PostgreSQL accepted-runtime fixture
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Preserve accepted #186 registration and authenticated runtime regressions
+        run: python3 eksamio-learning-engine/peis-production-substrate/validate_authenticated_web_runtime_postgres.py
+      - name: Exact-base diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check "${{ github.event.pull_request.base.sha }}"...HEAD
+      - name: Docker build production-shaped Admissions Gate runtime
+        run: docker build -f eksamio-learning-engine/peis-production-substrate/Dockerfile eksamio-learning-engine

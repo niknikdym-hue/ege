@@ -51,6 +51,9 @@ def main() -> int:
     tutor_runtime = (
         ENGINE / "peis-production-substrate/learner_tutor_web_runtime.py"
     ).read_text(encoding="utf-8")
+    admissions_runtime = (
+        ENGINE / "peis-production-substrate/learner_admissions_tutor_web_runtime.py"
+    ).read_text(encoding="utf-8")
     tutor_lifecycle = (
         ENGINE / "peis-production-substrate/tutor_lifecycle.py"
     ).read_text(encoding="utf-8")
@@ -84,6 +87,7 @@ def main() -> int:
         '/api/russian/history:',
         '/api/russian/practice/next:',
         '/api/russian/practice/submit:',
+        '/api/russian/thematic/orthoepy/stress/submit:',
         '/api/russian/program:',
         '/api/tutor/turn:',
     ):
@@ -176,6 +180,16 @@ def main() -> int:
         require(tutor_runtime, token, "Tutor learner runtime")
 
     for token in (
+        '/api/russian/thematic/orthoepy/stress/submit',
+        'RussianOrthoepyStressAdmissionAdapter',
+        'canonical_state_owner',
+        'shared_peis',
+        'ALREADY_APPLIED',
+        'REPLAY',
+    ):
+        require(admissions_runtime, token, "Admissions Gate runtime")
+
+    for token in (
         'SAME_SESSION_VERIFICATION',
         'DeterministicNoNetworkTutorProvider',
         'TutorProviderNotAdmitted',
@@ -216,13 +230,14 @@ def main() -> int:
 
     for token in (
         'COPY payments-reference /app/payments-reference',
-        'CMD ["python", "/app/peis-production-substrate/learner_tutor_web_runtime.py"]',
+        'CMD ["python", "/app/peis-production-substrate/learner_admissions_tutor_web_runtime.py"]',
     ):
         require(dockerfile, token, "Dockerfile")
 
     print("SEP1_YANDEX_STAGING_STATIC_VALIDATION=PASS")
     print("gateway_to_private_container_contract=PASS")
     print("authenticated_pro_routes=PASS")
+    print("registered_exact_event_admission_route=PASS")
     print("session_owned_peis=PASS")
     print("session_owned_entitlement=PASS")
     print("production_payment_write_routes=0")
