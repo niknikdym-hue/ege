@@ -4,11 +4,12 @@ on:
   pull_request:
     paths:
       - 'eksamio-learning-engine/peis-production-substrate/admissions/capture_paronym_admission_authority.mjs'
+      - 'eksamio-learning-engine/peis-production-substrate/admissions/build_paronym_admission_authority.mjs'
       - '.github/workflows/paronym-admission-authority-capture.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   capture:
@@ -16,6 +17,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -34,8 +37,12 @@ jobs:
           assert data['live_html_sha256'] == '63ac66e839505930b2a9a2f3b5243d60e422226ec90890553aac5abc52b7cbda'
           assert data['group_count'] == 144
           assert data['entry_count'] == 334
+          assert data['context_choice_candidate_count'] == 334
           assert data['ordered_group_id_sha256'] == '81c91d069a28cd9a2c1c7547c9fc92cb9df92c6cde38f3100750e2585c113813'
           assert data['ordered_entry_id_sha256'] == '48eedc3e5f3751cec57152671456d314b7bcb6b13f2ee5002f35ec6660482c99'
+          assert data['ordered_candidate_correct_word_sha256'] == '75ed53cc846cc36009aa66220acb4e9959f3a88dd2068f5ef3b5ec057af569bc'
+          assert data['ordered_candidate_context_sha256'] == '491de4e281c06bbd93a7bdb2e5dbc659909e336b49d5fa316930f35c0943c3f8'
+          assert data['ordered_candidate_group_choices_sha256'] == '4c96b0a49684a7d2988b527feabe831de1dfec60adfa4364ca927ff169b0b41e'
           assert data['fipi_2026_exact_group_correspondence'] == '144/144'
           assert data['semantic_admissions'] == 0
           assert data['object_closures'] == 0
@@ -50,11 +57,57 @@ jobs:
           assert data['boundaries']['asset_wide_mastery'] is False
           print('capture invariants PASS; context-choice candidates=', data['context_choice_candidate_count'])
           PY
+      - name: Build pinned production admission authority
+        env:
+          PROBE_IN: paronym-admission-authority-capture.json
+          AUTHORITY_OUT: eksamio-learning-engine/peis-production-substrate/admissions/PARONYM-CONTEXT-CHOICE-ADMISSION-AUTHORITY-v0.1.json
+          CAPTURE_HEAD: f4b5208c35c7f668229703915ca00680d6bfb36e
+          CAPTURE_RUN: '34134503428'
+          CAPTURE_ARTIFACT_ID: '10023421401'
+          CAPTURE_ARTIFACT_DIGEST: 'sha256:389c89e9f77dc03affc940fb529d8962a337bbb5afbc7867bba8d16d7d890309'
+        run: node eksamio-learning-engine/peis-production-substrate/admissions/build_paronym_admission_authority.mjs
+      - name: Verify materialized authority boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('eksamio-learning-engine/peis-production-substrate/admissions/PARONYM-CONTEXT-CHOICE-ADMISSION-AUTHORITY-v0.1.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          assert data['status'] == 'BOUNDED_PRODUCTION_EVENT_ADMISSION_KEY'
+          assert data['admission']['item_count'] == 334
+          assert data['admission']['action_id'] == 'context_collocation_choice'
+          assert data['admission']['semantic_id'] == 'ru-lexis-paronym-collocation-choice'
+          assert len(data['groups']) == 144
+          assert len(data['entries']) == 334
+          assert all(data['boundaries'][key] is False for key in (
+              'meaning_match_admitted', 'independent_paronym_recall_admitted',
+              'exam_error_correction_admitted', 'generic_trainer_completion_mastery',
+              'browser_local_progress_mastery', 'asset_wide_mastery'))
+          assert data['boundaries']['false_exact_mastery'] == 0
+          print('materialized authority PASS')
+          PY
+      - name: Commit authority to exact PR branch when changed
+        if: github.event_name == 'pull_request'
+        run: |
+          path='eksamio-learning-engine/peis-production-substrate/admissions/PARONYM-CONTEXT-CHOICE-ADMISSION-AUTHORITY-v0.1.json'
+          git add "$path"
+          if git diff --cached --quiet; then
+            echo 'authority already exact; no commit required'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Materialize exact paronym context-choice authority'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
       - name: Capture digest
-        run: sha256sum paronym-admission-authority-capture.json
+        run: |
+          sha256sum paronym-admission-authority-capture.json
+          sha256sum eksamio-learning-engine/peis-production-substrate/admissions/PARONYM-CONTEXT-CHOICE-ADMISSION-AUTHORITY-v0.1.json
       - uses: actions/upload-artifact@v4
         with:
           name: paronym-admission-authority-capture
-          path: paronym-admission-authority-capture.json
+          path: |
+            paronym-admission-authority-capture.json
+            eksamio-learning-engine/peis-production-substrate/admissions/PARONYM-CONTEXT-CHOICE-ADMISSION-AUTHORITY-v0.1.json
           if-no-files-found: error
           retention-days: 90
