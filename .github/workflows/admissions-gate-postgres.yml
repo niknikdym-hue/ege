@@ -46,7 +46,17 @@ jobs:
           eksamio-learning-engine/peis-production-substrate/learner_admissions_tutor_web_runtime.py
           eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py
       - name: Validate registered exact-item + exact-action admission on real PostgreSQL
-        run: python3 eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 eksamio-learning-engine/peis-production-substrate/validate_orthoepy_admissions_gate_postgres.py 2>&1 | tee admissions-gate-postgres.log
+      - name: Upload Admissions Gate diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: admissions-gate-postgres-log
+          path: admissions-gate-postgres.log
+          if-no-files-found: warn
       - name: Preserve accepted #186 registration and authenticated runtime regressions
         run: python3 eksamio-learning-engine/peis-production-substrate/validate_authenticated_web_runtime_postgres.py
       - name: Exact-base diff hygiene
