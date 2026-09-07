@@ -1,6 +1,12 @@
 name: Live phraseology structure probe
 
 on:
+  push:
+    branches:
+      - 'brain/issue-185-live-asset-reconciliation'
+    paths:
+      - '.github/workflows/live-phraseology-structure-probe.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_structure.mjs'
   pull_request:
     branches: [main]
     paths:
