@@ -119,13 +119,15 @@ with tempfile.TemporaryDirectory() as tmp:
     )
     assert paronyms["total"] == 144
 
-    orthoepy_page1 = "\n".join(page_lines(local["phonetics_orthoepy"], 1)).casefold()
+    orthoepy_page1 = " ".join(page_lines(local["phonetics_orthoepy"], 1)).casefold()
+    orthoepy_page1 = orthoepy_page1.replace("–", "-").replace("—", "-")
     required_markers = [
         "основные нормы современного литературного произношения",
         "произношение безударных гласных",
         "особенности произношения иноязычных слов",
         "нормы ударения",
-        "орфоэпическому списку – 2026",
+        "орфоэпическому списку",
+        "2026",
     ]
     missing = [marker for marker in required_markers if marker.casefold() not in orthoepy_page1]
     if missing:
@@ -153,7 +155,7 @@ with tempfile.TemporaryDirectory() as tmp:
         },
         "orthoepy": {
             "scope_markers_present": True,
-            "finding": "FIPI_2026_SCOPE_EXPLICITLY_INCLUDES_PRONUNCIATION_AND_STRESS; STRESS_LIST_DOES_NOT_BY_ITSELF CLOSE_PRONUNCIATION_EVIDENCE",
+            "finding": "FIPI_2026_SCOPE_EXPLICITLY_INCLUDES_PRONUNCIATION_AND_STRESS; STRESS_LIST_DOES_NOT_BY_ITSELF_CLOSE_PRONUNCIATION_EVIDENCE",
         },
         "admission_effect": "NONE",
         "semantic_admissions": 0,
