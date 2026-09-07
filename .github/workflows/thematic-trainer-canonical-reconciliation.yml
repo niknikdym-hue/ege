@@ -1,0 +1,45 @@
+name: Thematic trainer canonical reconciliation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/thematic-trainer-canonical-reconciliation.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/THEMATIC-TRAINER-CANONICAL-RECONCILIATION-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/validate_thematic_trainer_canonical_reconciliation.py'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_thematic_exact_identity.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-FIPI-THEMATIC-CORRESPONDENCE-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-FIPI-PARONYM-CORRESPONDENCE-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-PHRASEOLOGY-EXACT-INVENTORY-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/RU02-NORMATIVE-PRONUNCIATION-SOURCE-BACKED-CANDIDATE-RESOLUTION-v0.1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Capture exact current live orthoepy and dictionary identities read-only
+        env:
+          PROBE_OUT: live-thematic-exact-identity-probe.json
+        run: node eksamio-learning-engine/peis-integration-reference/probe_live_thematic_exact_identity.mjs
+      - name: Validate current thematic reconciliation and fail-closed boundaries
+        run: python eksamio-learning-engine/peis-integration-reference/validate_thematic_trainer_canonical_reconciliation.py
+      - name: Diff hygiene against exact PR base
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "${{ github.event.pull_request.base.sha }}"
+          git diff --check "${{ github.event.pull_request.base.sha }}" HEAD
+      - name: Upload current live identity probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: thematic-trainer-canonical-reconciliation-live-probe
+          path: live-thematic-exact-identity-probe.json
+          if-no-files-found: error
