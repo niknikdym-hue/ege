@@ -1,0 +1,44 @@
+name: FIPI 2026 thematic source authority probe
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-integration-reference/probe_fipi_2026_thematic_source_authority.py'
+      - '.github/workflows/fipi-2026-thematic-source-authority-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Probe official FIPI 2026 thematic sources
+        run: |
+          python eksamio-learning-engine/peis-integration-reference/probe_fipi_2026_thematic_source_authority.py > fipi-2026-thematic-source-authority-probe.json
+          python - <<'PY'
+          import json
+          p='fipi-2026-thematic-source-authority-probe.json'
+          d=json.load(open(p, encoding='utf-8'))
+          assert d['dictionary_words']['total'] == 308
+          assert d['phraseology']['total'] == 285
+          assert d['paronyms']['official_group_count'] == 144
+          assert d['paronyms']['live_exam_bank_row_count'] == 30
+          assert d['orthoepy']['scope_markers_present'] is True
+          assert d['semantic_admissions'] == 0
+          assert d['object_closures'] == 0
+          assert d['mastery_admissions'] == 0
+          assert d['false_exact_mastery'] == 0
+          assert d['registered_user_identity_required_for_future_canonical_evidence'] is True
+          print('FIPI 2026 thematic source authority probe PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fipi-2026-thematic-source-authority-probe
+          path: fipi-2026-thematic-source-authority-probe.json
