@@ -1,0 +1,205 @@
+{
+  "schema_version": "0.1.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-02",
+  "module_title_ru": "Орфоэпия и ударение",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9, 10, 11],
+    "routes": ["school", "oge", "ege", "thematic_trainer", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "bounded_pronunciation_owner_resolution",
+      "ref": "russian-program/subject-admission/RU02-NORMATIVE-PRONUNCIATION-OWNER-RESOLUTION-v0.1.json",
+      "coverage_note": "Pins the five pronunciation subdomains and five independently checked norm facts without semantic admission."
+    },
+    {
+      "kind": "official_scope",
+      "ref": "FIPI 2026 navigator, ru-1-fonetika.pdf, p.1, codifier position 3.2.3",
+      "coverage_note": "Separates non-stress literary-pronunciation components from stress norms."
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "learner_explanations": "ORIGINAL_EKSAMIO",
+    "learner_examples": "ORIGINAL_EKSAMIO_AROUND_SHORT_NORM_FACTS",
+    "commercial_textbook_bytes_in_git": 0
+  },
+  "identity_boundary": {
+    "proposed_semantic_id": "ru-orthoepy-normative-pronunciation-selection",
+    "source_taxonomy_id": "normative_pronunciation_selection",
+    "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+    "rule": "This unit targets bounded selection/application of non-stress normative literary pronunciation only. Stress remains the separately accepted ru-orthoepy-normative-stress-selection component.",
+    "object_level_admission_effect": "NONE_UNTIL_SEPARATE_EXACT_OBJECT_BINDING",
+    "generic_orthoepy_result_can_emit_exact_component_mastery": false
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-orthoepy-normative-pronunciation-selection",
+      "title_ru": "Нормативное произношение: выбрать и применить подтверждённую произносительную норму",
+      "canonical_explanation": {
+        "short": "Нормативное произношение не всегда совпадает с буквенным обликом слова. Для точного ответа нужно сохранить предъявленное слово или форму, определить тип произносительной нормы и применить подтверждённый нормативный вариант без подмены ударением или орфографией.",
+        "boundaries": [
+          "Проверяется произношение безударных гласных, отдельных согласных, сочетаний согласных, отдельных грамматических форм и заимствованных слов.",
+          "Место ударения — отдельный семантический компонент и здесь не оценивается.",
+          "Знание написания слова само по себе не доказывает знание его нормативного произношения.",
+          "Чтение справки или словаря не создаёт mastery: нужна независимая component-specific проверка."
+        ]
+      },
+      "decision_algorithm": [
+        "Сохрани точное предъявленное слово или форму: не заменяй его близким словом и не меняй грамматическую форму.",
+        "Определи, какой произносительный компонент проверяется: безударный гласный, согласный, сочетание согласных, грамматическая форма или заимствованное слово.",
+        "Сопоставь вариант с подтверждённой нормой для этого слова или модели; буквенное написание не используй как автоматический ответ.",
+        "Отбрось вариант, который противоречит подтверждённому нормативному факту, даже если он кажется привычным.",
+        "Для независимой проверки выбери или воспроизведи нормативный вариант без открытой подсказки."
+      ],
+      "worked_examples": [
+        {
+          "source_fact_id": "pron-vowel-moloko",
+          "category": "unstressed_vowel_pronunciation",
+          "prompt": "Какой вариант отражает нормативное произношение безударных гласных в слове «молоко»: [малако́] или [молоко́]?",
+          "answer": "[малако́]. В безударной позиции буквенное о не сохраняет звучание [о]."
+        },
+        {
+          "source_fact_id": "pron-consonant-dub",
+          "category": "selected_consonant_pronunciation",
+          "prompt": "Как произносится конечный согласный в слове «дуб»: [б] или [п]?",
+          "answer": "[п]: нормативная транскрипционная форма — [дуп]."
+        },
+        {
+          "source_fact_id": "pron-cluster-chto",
+          "category": "consonant_combination_pronunciation",
+          "prompt": "Какой нормативный вариант для слова «что»: [что] или [што]?",
+          "answer": "[што]."
+        },
+        {
+          "source_fact_id": "pron-form-ogo",
+          "category": "selected_grammatical_form_pronunciation",
+          "prompt": "Какой согласный произносится на месте буквы г в окончании слова «доброго»?",
+          "answer": "[в]."
+        },
+        {
+          "source_fact_id": "pron-loan-computer",
+          "category": "loanword_pronunciation",
+          "prompt": "В слове «компьютер» согласный т перед е произносится мягко или твёрдо?",
+          "answer": "Твёрдо: сочетание передаётся как [тэ]."
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Достаточно произнести слово так, как оно написано.",
+          "correction": "Буквенный облик не кодирует все позиционные и словарно закреплённые произносительные нормы."
+        },
+        {
+          "wrong": "Если я знаю ударение, значит знаю всю орфоэпическую норму.",
+          "correction": "Ударение — только отдельный компонент; нормативное произношение включает и другие явления."
+        },
+        {
+          "wrong": "Любой часто слышимый вариант можно считать нормативным.",
+          "correction": "Для спорных или словарно закреплённых случаев нужна подтверждённая норма."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p02-u4-g1",
+          "category": "unstressed_vowel_pronunciation",
+          "prompt": "Почему вариант [молоко́] нельзя выбирать только по буквам?",
+          "expected": "Потому что безударные гласные редуцируются; для данного факта подтверждён вариант [малако́]."
+        },
+        {
+          "id": "p02-u4-g2",
+          "category": "selected_consonant_pronunciation",
+          "prompt": "Что происходит с конечным б в слове «дуб»?",
+          "expected": "Он оглушается; нормативная транскрипция содержит [п]."
+        },
+        {
+          "id": "p02-u4-g3",
+          "category": "consonant_combination_pronunciation",
+          "prompt": "Какой звук реализуется в начале слова «что»?",
+          "expected": "[ш], нормативный вариант [што]."
+        },
+        {
+          "id": "p02-u4-g4",
+          "category": "selected_grammatical_form_pronunciation",
+          "prompt": "Что важно в форме «доброго»: буква г или реальный произносимый согласный?",
+          "expected": "Реальный произносимый согласный [в] в окончании -ого."
+        },
+        {
+          "id": "p02-u4-g5",
+          "category": "loanword_pronunciation",
+          "prompt": "Почему в «компьютер» нельзя автоматически смягчить т перед е?",
+          "expected": "В ряде заимствованных слов норма сохраняет твёрдый согласный; здесь подтверждён [тэ]."
+        }
+      ],
+      "independent_practice": [
+        {"id": "p02-u4-i1", "category": "unstressed_vowel_pronunciation", "prompt": "Выбери нормативный вариант: молоко — [малако́] / [молоко́].", "answer": "[малако́]"},
+        {"id": "p02-u4-i2", "category": "selected_consonant_pronunciation", "prompt": "Выбери нормативный вариант: дуб — [дуб] / [дуп].", "answer": "[дуп]"},
+        {"id": "p02-u4-i3", "category": "consonant_combination_pronunciation", "prompt": "Выбери нормативный вариант: что — [что] / [што].", "answer": "[што]"},
+        {"id": "p02-u4-i4", "category": "selected_grammatical_form_pronunciation", "prompt": "В окончании «доброго» буква г произносится как [г] / [в].", "answer": "[в]"},
+        {"id": "p02-u4-i5", "category": "loanword_pronunciation", "prompt": "В «компьютер» т перед е произносится мягко / твёрдо.", "answer": "твёрдо"}
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p02-u4-t1",
+          "prompt": "Ученик верно ставит ударение, но произносит «что» как [что]. Какой компонент не доказан?",
+          "answer": "Нормативное произношение сочетания согласных; стресс-компонент не заменяет pronunciation-компонент."
+        },
+        {
+          "id": "p02-u4-t2",
+          "prompt": "Ученик правильно пишет «доброго», но на месте г произносит [г]. Что проверять?",
+          "answer": "Отдельную произносительную норму грамматической формы: в окончании -ого произносится [в]."
+        }
+      ],
+      "retention_items": [
+        {"id": "p02-u4-r1", "delay_hint": "24h", "source_fact_id": "pron-vowel-moloko", "prompt": "Без подсказки выбери транскрипционный вариант для «молоко».", "answer": "[малако́]"},
+        {"id": "p02-u4-r2", "delay_hint": "24h", "source_fact_id": "pron-consonant-dub", "prompt": "Без подсказки произнеси конечный согласный в «дуб».", "answer": "[п]"},
+        {"id": "p02-u4-r3", "delay_hint": "7d", "source_fact_id": "pron-cluster-chto", "prompt": "Без подсказки укажи нормативное произношение «что».", "answer": "[што]"},
+        {"id": "p02-u4-r4", "delay_hint": "7d", "source_fact_id": "pron-form-ogo", "prompt": "Какой звук на месте г в окончании «доброго»?", "answer": "[в]"},
+        {"id": "p02-u4-r5", "delay_hint": "14d", "source_fact_id": "pron-loan-computer", "prompt": "Как произносится т перед е в «компьютер»?", "answer": "твёрдо, [тэ]"}
+      ],
+      "independent_verification": [
+        {"id": "p02-u4-v1", "category": "unstressed_vowel_pronunciation", "type": "single_choice", "source_fact_id": "pron-vowel-moloko", "prompt": "Выбери нормативное произношение слова «молоко».", "options": ["[молоко́]", "[малако́]"], "correct_option_index": 1},
+        {"id": "p02-u4-v2", "category": "selected_consonant_pronunciation", "type": "single_choice", "source_fact_id": "pron-consonant-dub", "prompt": "Выбери нормативную транскрипционную форму слова «дуб».", "options": ["[дуб]", "[дуп]"], "correct_option_index": 1},
+        {"id": "p02-u4-v3", "category": "consonant_combination_pronunciation", "type": "single_choice", "source_fact_id": "pron-cluster-chto", "prompt": "Выбери нормативное произношение слова «что».", "options": ["[что]", "[што]"], "correct_option_index": 1},
+        {"id": "p02-u4-v4", "category": "selected_grammatical_form_pronunciation", "type": "single_choice", "source_fact_id": "pron-form-ogo", "prompt": "Какой согласный произносится на месте г в окончании слова «доброго»?", "options": ["[г]", "[в]"], "correct_option_index": 1},
+        {"id": "p02-u4-v5", "category": "loanword_pronunciation", "type": "single_choice", "source_fact_id": "pron-loan-computer", "prompt": "Как произносится т перед е в слове «компьютер»?", "options": ["мягко", "твёрдо"], "correct_option_index": 1}
+      ],
+      "scoring": {
+        "independent_verification_item_count": 5,
+        "pass_rule": "5/5 exact category-specific items correct in one unassisted attempt",
+        "partial_credit_can_create_exact_component_mastery": false,
+        "cross_category_substitution_allowed": false
+      },
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "component_specific_independent_evidence_required": true,
+        "assistance_must_be_recorded": true,
+        "generic_orthoepy_score_can_emit_exact_mastery": false,
+        "stress_mastery_can_substitute_for_pronunciation_mastery": false,
+        "false_exact_mastery": 0
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "identify the exact pronunciation subdomain",
+          "explain the source-backed norm fact",
+          "ask the learner to choose or reproduce a normative variant"
+        ],
+        "forbidden": [
+          "claim stress mastery proves pronunciation",
+          "invent unverified lexical pronunciation facts",
+          "treat source reading as mastery"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "production_content_units": 1,
+    "pronunciation_categories_covered": 5,
+    "independent_verification_items": 5,
+    "semantic_admissions": 0,
+    "object_level_closures": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
