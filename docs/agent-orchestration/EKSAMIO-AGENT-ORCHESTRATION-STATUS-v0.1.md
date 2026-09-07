@@ -1,6 +1,6 @@
 # EKSAMIO Agent Orchestration Status v0.1
 
-Status: ACTIVE IMPLEMENTATION / DRAFT PR #190 / NO MERGE / NO DEPLOY
+Status: ACTIVE IMPLEMENTATION / DRAFT PR #190 / NO MERGE / NO DEPLOY / NO LIVE SPEND
 Date: 2026-09-07
 Branch: `brain/agent-orchestration-v0-1-20260907`
 
@@ -72,7 +72,7 @@ Exact-head GitHub Actions evidence:
 - PR merge-test checkout SHA used by GitHub Actions: `3815cc0500b7caa36b25edd2ff2fddce17cb319f`;
 - result: SUCCESS;
 - compile: SUCCESS;
-- 22 total network-free unit tests: SUCCESS (`Ran 22 tests ... OK`);
+- 22 total network-free unit tests: SUCCESS;
 - safe dry-run: SUCCESS;
 - no OpenAI/Astra/Codex live API call occurred;
 - no secret was supplied to CI.
@@ -80,20 +80,52 @@ Exact-head GitHub Actions evidence:
 Codex SDK boundary documentation:
 `agent-orchestration/CODEX-SDK.md`
 
-## Current limitation / next bounded slice
+### Slice C — owner-gated live-smoke controller
 
-The development loop is now implemented and CI-proven through the **offline boundary**, including the real official Codex SDK adapter, but no paid/live Astra or Codex development-agent turn has been executed yet.
+Exact code HEAD:
+`c67a9b07eb3f6cf594d34e57800f68773f4fba15`
 
-Next bounded implementation slice is a **live-smoke harness**, not an unbounded autonomous system. It must:
-- require an explicit owner/live-provider authorization flag in addition to credentials;
-- bind the run to an exact Git repository, base SHA and dedicated target branch/worktree;
-- run `Astra plan -> Codex SDK execution -> deterministic checks -> Astra review`;
-- persist a machine-readable run artifact with exact Git SHA, input hashes, requested/returned model identity and usage metadata;
-- remain fail-closed for merge/deploy/publication/payment/production learner writes/email/SMS/secret actions;
-- have mocked/network-free tests proving that a live provider cannot be reached without the explicit authorization gate;
-- keep ordinary PR CI free of paid/live provider calls.
+Implemented:
+- `agent-orchestration/live_smoke.py` controller for `Astra plan -> Codex SDK -> deterministic checks -> Astra review`;
+- explicit owner live-provider authorization gate is checked **before** the first call to Astra;
+- a live-provider grant does not grant deploy/merge/payment/production/publication or other dangerous product actions;
+- live smoke requires a clean exact Git checkout, exact `base_sha` and exact target branch;
+- Astra cannot change owner-controlled repository/base SHA/target branch;
+- task acceptance commands must be exact members of an owner-provided allowlist and are executed without `shell=True`;
+- changed paths must fit both Astra task scope and owner maximum scope;
+- first live smoke forbids Codex commit/push by requiring Git HEAD to remain equal to the pinned base SHA;
+- review receives the actual bounded diff, changed paths, deterministic acceptance results and a SHA-256 of the diff;
+- oversized review diffs fail closed rather than being partially reviewed;
+- run artifact contains exact base SHA, context/task/diff hashes, provider usage metadata and Astra decision;
+- artifact output is forced outside the mutable checkout so the controller cannot silently contaminate the reviewed diff;
+- ordinary CI still performs no paid/live provider calls.
 
-A real paid live smoke must be separately owner-bounded before execution. This status file does not authorize spend by itself.
+Exact-head GitHub Actions evidence:
+- workflow: `Agent orchestration v0.1`;
+- run: `34155825825`;
+- head SHA: `c67a9b07eb3f6cf594d34e57800f68773f4fba15`;
+- PR merge-test checkout SHA used by GitHub Actions: `d45c3788f641797e9fdd1a3deec2174b588ff2f0`;
+- result: SUCCESS;
+- all three orchestration modules compile: SUCCESS;
+- 30 total network-free unit tests: SUCCESS (`Ran 30 tests ... OK`);
+- safe dry-run: SUCCESS;
+- owner-flag-before-Astra, exact-SHA, dirty-workspace, out-of-scope-change, arbitrary-command and dangerous-action rejection are explicitly covered;
+- no OpenAI/Astra/Codex live API call occurred;
+- no secret was supplied to CI.
+
+## Current limitation / next execution gate
+
+The full v0.1 **code path needed for a bounded live development-agent smoke is now implemented and offline-CI proven**. The remaining step is no longer missing orchestration code; it is a separately owner-bounded live execution with credentials and a deliberately tiny task.
+
+Before any real paid live run, Central Brain must:
+1. re-read exact current GitHub state and choose a dedicated bounded smoke branch/worktree;
+2. define the exact task brief, maximum file scope and exact acceptance-command allowlist;
+3. define a small spend boundary for Astra plan + Astra review + one Codex turn;
+4. receive explicit owner authorization for that live-provider smoke;
+5. run the harness and persist the sanitized machine-readable result back to GitHub;
+6. treat the live result as `PASS`, `REWORK` or `BLOCKED` only from actual provider output + deterministic evidence.
+
+This status file **does not authorize spend by itself**.
 
 ## Hard boundaries still in force
 
