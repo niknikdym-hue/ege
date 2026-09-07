@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   title: Eksamio PEIS Staging
-  version: "1.4.0"
+  version: "1.5.0"
 
 paths:
   /healthz:
@@ -190,6 +190,19 @@ paths:
         service_account_id: ${YC_GATEWAY_SA_ID}
     post:
       operationId: russianOrthoepyStressSubmit
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/russian/thematic/dictionary-words/missing-root-vowel/submit:
+    options:
+      operationId: russianDictionaryMissingRootVowelSubmitOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    post:
+      operationId: russianDictionaryMissingRootVowelSubmit
       x-yc-apigateway-integration:
         type: serverless_containers
         container_id: ${YC_CONTAINER_ID}
