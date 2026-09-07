@@ -4,6 +4,7 @@
   "status": "BOUNDED_ACTION_SCOPED_BINDING_ACCEPTED_NO_MASTERY_ADMISSION",
   "authority": {
     "russian_subject_head_sha": "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9",
+    "semantic_inventory_path": "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
     "paronym_acceptance_path": "eksamio-learning-engine/russian-program/subject-admission/RU03-PARONYM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
     "phraseology_acceptance_path": "eksamio-learning-engine/russian-program/subject-admission/RU03-PHRASEOLOGISM-IDENTIFICATION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
     "live_paronym_provenance": "LIVE-FIPI-PARONYM-CORRESPONDENCE-v0.1.json",
@@ -11,6 +12,33 @@
     "live_thematic_provenance": "LIVE-FIPI-THEMATIC-CORRESPONDENCE-v0.1.json"
   },
   "bindings": {
+    "dictionary_words": {
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/slovarnye-slova/",
+      "content_identity": {
+        "row_count": 308,
+        "unique_id_count": 308,
+        "ordered_id_sha256": "989ff8c27d3017bd3c5d3b7cb3a4a47979d7354a18daa0318589a6a01a116ea2",
+        "source_backed_textual_provenance": "308/308"
+      },
+      "accepted_content_owner": {
+        "skill_graph_source_id": "unchecked_root_vowels",
+        "canonical_owner_id": "school-root-vowel-dictionary-unverifiable",
+        "canonical_label_ru": "Непроверяемая безударная гласная в корне: словарная проверка",
+        "binding_relation": "SAME_MEANING_AS_EXISTING_CANONICAL_SCHOOL_IDENTITY",
+        "binding_status": "ACCEPTED_EXISTING_CANONICAL_CONTENT_OWNER"
+      },
+      "accepted_action_component": {
+        "live_action_marker_ru": "сначала нужно вставить букву",
+        "live_scope_marker_ru": "только слова с непроверяемыми безударными гласными в корне",
+        "accepted_semantic_id": "school-root-vowel-dictionary-unverifiable",
+        "binding_status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY"
+      },
+      "event_modes_not_admitted_yet": [
+        "выбрать или написать слово целиком",
+        "пять рядов слов: найдите варианты с одной и той же пропущенной буквой"
+      ],
+      "future_mastery_event_requirement": "registered server-owned event must carry exact 308-ID item identity plus exact missing-root-vowel action identity; browser word status, whole-word recall and generic exam completion cannot emit mastery"
+    },
     "paronyms": {
       "live_url": "https://eksamio.ru/trenazhery/russkiy/paronimy/",
       "live_html_sha256_snapshot": "63ac66e839505930b2a9a2f3b5243d60e422226ec90890553aac5abc52b7cbda",
@@ -63,11 +91,11 @@
     }
   },
   "still_blocked": {
-    "orthoepy": "exact live-291 provenance/source binding and independent normative-pronunciation learner evidence remain missing",
-    "dictionary_words": "no exact accepted bounded semantic owner for the live 308-ID spelling action has been proven from current Russian subject authority; do not infer RU08 ownership from route/title/topic"
+    "orthoepy": "exact live-291 provenance/source binding and independent normative-pronunciation learner evidence remain missing"
   },
   "admission_boundary": {
-    "accepted_action_scoped_authority_reuses": 2,
+    "accepted_action_scoped_authority_reuses": 3,
+    "accepted_existing_canonical_content_owner_bindings": 1,
     "asset_wide_semantic_admissions": 0,
     "production_event_semantic_admissions": 0,
     "object_closures": 0,
