@@ -1,0 +1,69 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU02_NORMATIVE_PRONUNCIATION_BOUNDED_SUBJECT_SEMANTIC",
+  "authority_issue": 161,
+  "scope": "RU02_NORMATIVE_PRONUNCIATION_SOURCE_BACKED_OWNER_PLUS_ORIGINAL_EXACT_LEARNER_CONTENT_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "authority": {
+    "source_reconciliation_pr": 187,
+    "source_reconciliation_head": "c5592c212557b91578ed48e1bf778e30dd489dc7",
+    "owner_resolution": "russian-program/subject-admission/RU02-NORMATIVE-PRONUNCIATION-OWNER-RESOLUTION-v0.1.json",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-02-ORTHOEPY-NORMATIVE-PRONUNCIATION-WAVE-004-v0.1.json",
+    "component_evidence_validator": "russian-program/subject-admission/validate_ru02_normative_pronunciation_component_evidence.py",
+    "owner_normalized_sha256": "61d57a8a19c24ebb87c9f975a8fb340b448e3878eb17dbc7e6c57172355296fa",
+    "content_normalized_sha256": "f6587f11c3d9f8b515d795327253aa83ea21f14eb1e260279e75bc2ba2b8c557"
+  },
+  "policy": {
+    "exact_source_backed_owner_resolution_required": true,
+    "official_fipi_scope_required": true,
+    "independent_norm_fact_sources_required": true,
+    "original_exact_learner_content_required": true,
+    "stress_component_may_substitute_for_pronunciation": false,
+    "route_or_task_name_can_admit_semantics": false,
+    "canonical_school_registry_mutation_required": false,
+    "parallel_registry_creation_forbidden": true,
+    "content_or_evidence_presence_alone_is_semantic_admission": false,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "generic_orthoepy_result_can_emit_exact_pronunciation_mastery": false,
+    "generic_stress_result_can_emit_exact_pronunciation_mastery": false,
+    "component_specific_independent_evidence_required": true,
+    "exact_object_binding_requires_all_object_components": true
+  },
+  "decisions": [
+    {
+      "source_taxonomy_id": "normative_pronunciation_selection",
+      "accepted_semantic_id": "ru-orthoepy-normative-pronunciation-selection",
+      "canonical_label_ru": "Выбор нормативного литературного произношения",
+      "entity_type": "PRONUNCIATION_SELECTION_SKILL",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+      "owner_search_result": "NO_EXACT_CURRENT_PRONUNCIATION_OWNER",
+      "source_evidence_status": "confirmed",
+      "independent_verification_item_ids": [
+        "p02-u4-v1",
+        "p02-u4-v2",
+        "p02-u4-v3",
+        "p02-u4-v4",
+        "p02-u4-v5"
+      ],
+      "pronunciation_categories": [
+        "unstressed_vowel_pronunciation",
+        "selected_consonant_pronunciation",
+        "consonant_combination_pronunciation",
+        "selected_grammatical_form_pronunciation",
+        "loanword_pronunciation"
+      ],
+      "boundary_guard": "bounded selection/application of independently source-backed non-stress normative literary pronunciation for the exact presented word or form; explicitly excludes normative stress selection, spelling, generic phonetic analysis, route/task inference and source lookup without independent application",
+      "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+    }
+  ],
+  "summary": {
+    "accepted_bounded_subject_semantics": 1,
+    "accepted_ru_subject_semantics": 1,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "exact_mastery_admissions": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
