@@ -111,7 +111,7 @@ function collectSplitLiteralShapes(script) {
 
 function collectTokenCounts(script) {
   const tokens = [
-    'BY_ID', 'used', 'neutral', 'JSON.parse', 'JSON.stringify', '.split(', '.map(', '.forEach(', '.reduce(',
+    'PHRASES', 'BY_ID', 'used', 'neutral', 'JSON.parse', 'JSON.stringify', '.split(', '.map(', '.forEach(', '.reduce(',
     'querySelectorAll', 'querySelector', 'getElementById', 'dataset', 'textContent', 'innerHTML', 'fetch(', 'atob(',
     'localStorage', 'sessionStorage', 'Object.keys', 'Object.values', 'Object.entries',
   ];
@@ -120,12 +120,12 @@ function collectTokenCounts(script) {
   return out;
 }
 
-function collectByIdMutationShapes(script) {
+function normalizedReferenceShapes(script, token) {
   const lines = script.split(/\r?\n/);
   const rows = [];
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
-    if (!line.includes('BY_ID')) continue;
+    if (!line.includes(token)) continue;
     const normalized = line.replace(/\s+/g, ' ').trim();
     rows.push({
       line_number: index + 1,
@@ -134,7 +134,7 @@ function collectByIdMutationShapes(script) {
       normalized_shape: normalized
         .replace(/(["'])(?:(?!\1).|\\.)*\1/g, '<STRING>')
         .replace(/\b\d+(?:\.\d+)?\b/g, '<N>')
-        .slice(0, 800),
+        .slice(0, 1200),
     });
   }
   return rows;
@@ -151,7 +151,7 @@ if (candidateScripts.length !== 1) {
 const script = candidateScripts[0];
 
 const result = {
-  schema: 'eksamio.live-phraseology-structure-probe.v0.1',
+  schema: 'eksamio.live-phraseology-structure-probe.v0.2',
   authority: 'live eksamio.ru phraseology trainer HTML; read-only GET',
   authority_checked_at_runtime: new Date().toISOString(),
   requested_url: URL,
@@ -169,7 +169,8 @@ const result = {
   selectors: collectSelectors(script.text),
   element_ids: collectElementIds(script.text),
   split_literal_shapes: collectSplitLiteralShapes(script.text),
-  by_id_mutation_shapes: collectByIdMutationShapes(script.text),
+  phrases_reference_shapes: normalizedReferenceShapes(script.text, 'PHRASES'),
+  by_id_mutation_shapes: normalizedReferenceShapes(script.text, 'BY_ID'),
   html_data_attribute_inventory: collectDataAttributes(html),
   canonical_item_identity_status: 'UNKNOWN_BLOCKER',
   admission_effect: 'NONE',
@@ -183,4 +184,4 @@ const result = {
 fs.writeFileSync(OUT, `${JSON.stringify(result, null, 2)}\n`, 'utf8');
 console.log(`wrote ${OUT}`);
 console.log(`phraseology html=${result.html_sha256} script=${result.phraseology_script_sha256}`);
-console.log(`BY_ID occurrences=${result.token_counts.BY_ID}; data attributes=${result.html_data_attribute_inventory.length}`);
+console.log(`PHRASES occurrences=${result.token_counts.PHRASES}; BY_ID occurrences=${result.token_counts.BY_ID}`);
