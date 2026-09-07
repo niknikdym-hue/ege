@@ -143,15 +143,60 @@ function safeEvaluateLiteral(literal) {
 }
 
 async function inspectPage(key, url) {
-  const response = await fetch(url, {
-    redirect: 'follow',
-    headers: {
-      'user-agent': 'Eksamio-live-asset-reconciliation/0.1 (+https://github.com/niknikdym-hue/ege)',
-      'accept': 'text/html,application/xhtml+xml',
+  const profiles = [
+    {
+      name: 'reconciliation-bot',
+      headers: {
+        'user-agent': 'Eksamio-live-asset-reconciliation/0.1 (+https://github.com/niknikdym-hue/ege)',
+        'accept': 'text/html,application/xhtml+xml',
+      },
     },
-  });
-  if (!response.ok) throw new Error(`${key}: HTTP ${response.status}`);
-  const html = await response.text();
+    {
+      name: 'browser-compatible',
+      headers: {
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'accept-language': 'ru-RU,ru;q=0.9,en;q=0.8',
+        'cache-control': 'no-cache',
+        'pragma': 'no-cache',
+        'upgrade-insecure-requests': '1',
+      },
+    },
+  ];
+
+  const attempts = [];
+  let response = null;
+  let html = null;
+  let selectedProfile = null;
+  for (const profile of profiles) {
+    const candidate = await fetch(url, { redirect: 'follow', headers: profile.headers });
+    const body = await candidate.text();
+    attempts.push({
+      profile: profile.name,
+      http_status: candidate.status,
+      final_url: candidate.url,
+      content_type: candidate.headers.get('content-type'),
+      body_bytes_utf8: Buffer.byteLength(body, 'utf8'),
+      body_sha256: sha256(body),
+    });
+    if (candidate.ok) {
+      response = candidate;
+      html = body;
+      selectedProfile = profile.name;
+      break;
+    }
+  }
+
+  if (!response || html === null) {
+    return {
+      key,
+      requested_url: url,
+      probe_status: 'FAIL_CLOSED_HTTP_BLOCKED',
+      attempts,
+      admission_effect: 'NONE',
+    };
+  }
+
   const scriptMatches = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
   const inlineScripts = scriptMatches
     .map((m, index) => ({ index, attrs: m[1], text: m[2] }))
@@ -188,6 +233,9 @@ async function inspectPage(key, url) {
   return {
     key,
     requested_url: url,
+    probe_status: 'LIVE_HTML_FETCHED',
+    selected_profile: selectedProfile,
+    attempts,
     final_url: response.url,
     http_status: response.status,
     content_type: response.headers.get('content-type'),
@@ -213,6 +261,8 @@ const output = {
   object_closures: 0,
   mastery_admissions: 0,
   false_exact_mastery: 0,
+  resolved_page_count: results.filter((x) => x.probe_status === 'LIVE_HTML_FETCHED').length,
+  blocked_page_count: results.filter((x) => x.probe_status !== 'LIVE_HTML_FETCHED').length,
   pages: results,
 };
 
