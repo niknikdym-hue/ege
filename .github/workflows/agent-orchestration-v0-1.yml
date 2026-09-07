@@ -1,0 +1,32 @@
+name: Agent orchestration v0.1
+
+on:
+  pull_request:
+    paths:
+      - 'agent-orchestration/**'
+      - 'docs/agent-orchestration/**'
+      - 'docs/handoffs/EKSAMIO-NEW-CHAT-HANDOFF-2026-09-07.md'
+      - '.github/workflows/agent-orchestration-v0-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-contract-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile runner
+        run: python3 -m py_compile agent-orchestration/eksamio_agent_runner.py
+      - name: Run network-free unit tests
+        run: python3 -m unittest discover -s agent-orchestration/tests -v
+      - name: Prove safe dry-run contract
+        run: >-
+          python3 agent-orchestration/eksamio_agent_runner.py dry-run
+          agent-orchestration/examples/dry-run-task.json
+          --git-sha "$GITHUB_SHA"
