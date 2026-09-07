@@ -3,8 +3,8 @@
 
 This is the production-shaped successor entrypoint to learner_tutor_web_runtime.
 It preserves all accepted #186 registration/session/PEIS/Tutor boundaries and
-adds one bounded registered-only admission route for the exact live orthoepy
-stress action accepted by #185/#187. No live/GitHub lookup occurs at runtime.
+adds registered-only admission routes for exact action-scoped live thematic
+evidence accepted by #185/#187. No live/GitHub lookup occurs at runtime.
 """
 from __future__ import annotations
 
@@ -17,11 +17,25 @@ import learner_tutor_web_runtime as tutor_web
 import runtime as core
 from entitlement_read import ProEntitlementReader
 from peis_service_bridge import IntegrityConflict, ServiceRequestError, UnknownAdapter
+from russian_dictionary_words_adapter import (
+    ADAPTER_ID as DICTIONARY_ADAPTER_ID,
+    RussianDictionaryWordsAdmissionAdapter,
+)
 from russian_exceptions_practice_adapter import RussianExceptionsPracticeAdapter
-from russian_orthoepy_stress_adapter import ADAPTER_ID, RussianOrthoepyStressAdmissionAdapter
+from russian_orthoepy_stress_adapter import (
+    ADAPTER_ID as ORTHOEPY_ADAPTER_ID,
+    RussianOrthoepyStressAdmissionAdapter,
+)
 from tutor_lifecycle import FailClosedTutorProvider, PostgresTutorLifecycle, build_tutor_aware_bridge
 
-ADMISSION_PATH = "/api/russian/thematic/orthoepy/stress/submit"
+ORTHOEPY_ADMISSION_PATH = "/api/russian/thematic/orthoepy/stress/submit"
+DICTIONARY_ADMISSION_PATH = "/api/russian/thematic/dictionary-words/missing-root-vowel/submit"
+# Backward-compatible name used by the already accepted first-slice regression.
+ADMISSION_PATH = ORTHOEPY_ADMISSION_PATH
+ADMISSION_ADAPTER_BY_PATH = {
+    ORTHOEPY_ADMISSION_PATH: ORTHOEPY_ADAPTER_ID,
+    DICTIONARY_ADMISSION_PATH: DICTIONARY_ADAPTER_ID,
+}
 
 
 def make_handler(
@@ -33,11 +47,11 @@ def make_handler(
     Base = tutor_web.make_handler(runtime, views, entitlements, tutor)
 
     class Handler(Base):
-        server_version = "EksamioLearnerAdmissionsTutorWeb/0.1"
+        server_version = "EksamioLearnerAdmissionsTutorWeb/0.2"
 
         def do_OPTIONS(self):  # noqa: N802
             path = self.path.split("?", 1)[0]
-            if path != ADMISSION_PATH:
+            if path not in ADMISSION_ADAPTER_BY_PATH:
                 super().do_OPTIONS()
                 return
             cors = self._cors()
@@ -62,7 +76,8 @@ def make_handler(
 
         def do_POST(self):  # noqa: N802
             path = self.path.split("?", 1)[0]
-            if path != ADMISSION_PATH:
+            adapter_id = ADMISSION_ADAPTER_BY_PATH.get(path)
+            if adapter_id is None:
                 super().do_POST()
                 return
 
@@ -78,7 +93,7 @@ def make_handler(
             try:
                 payload = self.read_json_object()
                 result = runtime.bridge.submit_checked_card(
-                    adapter_id=ADAPTER_ID,
+                    adapter_id=adapter_id,
                     payload=payload,
                     host_identity=host,
                 )
@@ -134,9 +149,14 @@ def main() -> int:
     tutor: PostgresTutorLifecycle | None = None
     if not isinstance(store, core.UnreadyStore):
         try:
-            admission_adapter = RussianOrthoepyStressAdmissionAdapter(core.ENGINE)
-            if ADAPTER_ID not in runtime.bridge.registry.adapter_ids():
-                runtime.bridge.registry.register(admission_adapter)
+            admission_adapters = (
+                RussianOrthoepyStressAdmissionAdapter(core.ENGINE),
+                RussianDictionaryWordsAdmissionAdapter(core.ENGINE),
+            )
+            registered_ids = runtime.bridge.registry.adapter_ids()
+            for admission_adapter in admission_adapters:
+                if admission_adapter.adapter_id not in registered_ids:
+                    runtime.bridge.registry.register(admission_adapter)
 
             base_adapter = RussianExceptionsPracticeAdapter(core.ENGINE)
             tutor = PostgresTutorLifecycle(
