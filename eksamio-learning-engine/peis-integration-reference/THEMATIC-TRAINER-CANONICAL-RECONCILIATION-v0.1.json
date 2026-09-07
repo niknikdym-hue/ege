@@ -12,7 +12,7 @@
     "orthoepy": {
       "live_url": "https://eksamio.ru/trenazhery/russkiy/orfoepiya/",
       "live_item_identity": {
-        "status": "EXACT_LIVE_CANDIDATE_KEYS_CAPTURED",
+        "status": "EXACT_LIVE_IDS_CAPTURED",
         "row_count": 291,
         "unique_key_count": 291,
         "key_field": "i",
@@ -31,13 +31,25 @@
         "fipi_pdf_sha256": "6e1b6dcaf835f6b7294c9426de406dea3614bb81d9d28e25fc423c9c8036f389",
         "fipi_bounded_list_span_sha256": "3bd60e916ae6acfdf6c94547e6a43bef421292c73a8614cdb59a503f34b69e39"
       },
-      "provenance_status": "BLOCKED_PRONUNCIATION_COMPONENT_NOT_STRESS_PROVENANCE",
-      "semantic_binding_status": "BLOCKED",
-      "pronunciation_component_evidence_status": "MISSING_BLOCKER",
+      "provenance_status": "EXACT_LIVE_STRESS_PROVENANCE_ACCEPTED_291_OF_291",
+      "action_scoped_binding": {
+        "status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY",
+        "accepted_action": "normative stress position selection for the exact presented word or word form",
+        "accepted_semantic_id": "ru-orthoepy-normative-stress-selection",
+        "authority_sha": "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9",
+        "authority_path": "eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-STRESS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
+        "production_event_admission": "BLOCKED_UNTIL_REGISTERED_EXACT_ITEM_ACTION_EVENT"
+      },
+      "semantic_binding_status": "ACCEPTED_ACTION_SCOPED_STRESS_SEMANTIC_ONLY_NO_PRODUCTION_EVENT_ADMISSION",
+      "nonstress_pronunciation_boundary": {
+        "status": "SEPARATE_RU02_SUBJECT_BLOCKER_NOT_ISSUE_185_STRESS_ASSET_BLOCKER",
+        "current_subject_status": "MISSING_BLOCKER",
+        "reason": "the live asset trains stress placement only and the accepted stress semantic explicitly excludes non-stress orthoepic pronunciation rules"
+      },
       "notes": [
-        "The exact live stress denominator is 291 candidate rows/keys, and all 291 rendered stressed tokens correspond exactly to the bounded official FIPI 2026 orthoepic stress list.",
-        "The separate repository bank with cardCount=36 and 96 unique entries is not admitted as the live denominator.",
-        "Exact stress provenance does not close normative pronunciation; component-specific independent pronunciation learner evidence remains required."
+        "All 291 rendered live stressed tokens correspond exactly to the bounded official FIPI 2026 orthoepic stress list.",
+        "The old repository bank with cardCount=36 and 96 unique entries is not used as the live denominator.",
+        "Browser-local learned/review/error status is not server-owned evidence and cannot emit mastery."
       ]
     },
     "dictionary_words": {
@@ -73,7 +85,7 @@
         "accepted_action": "missing-root-vowel insertion",
         "production_event_admission": "BLOCKED_UNTIL_REGISTERED_EXACT_ACTION_EVENT"
       },
-      "semantic_binding_status": "BLOCKED_SEMANTIC_ACCEPTANCE_SEPARATE"
+      "semantic_binding_status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY_NO_PRODUCTION_EVENT_ADMISSION"
     },
     "paronyms": {
       "live_url": "https://eksamio.ru/trenazhery/russkiy/paronimy/",
@@ -93,8 +105,14 @@
         "mismatch_count": 0,
         "ordered_normalized_sha256": "4315528d9d6e76b8362c2a9869392a943dee854e2d911dad92d1c7f08c93a9bb"
       },
+      "action_scoped_binding": {
+        "status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY",
+        "accepted_semantic_id": "ru-lexis-paronym-collocation-choice",
+        "accepted_action": "context/collocation choice",
+        "production_event_admission": "BLOCKED_UNTIL_REGISTERED_EXACT_ITEM_ACTION_EVENT"
+      },
       "exam_bank_30_row_status": "SEPARATE_EXAM_CHECK_SUB_BANK_NOT_FULL_THEMATIC_DENOMINATOR",
-      "semantic_binding_status": "BLOCKED_SEMANTIC_ACCEPTANCE_SEPARATE"
+      "semantic_binding_status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY_ASSET_WIDE_MULTI_ACTION_REMAINS_UNBOUND"
     },
     "phraseology": {
       "live_url": "https://eksamio.ru/trenazhery/russkiy/frazeologizmy/",
@@ -112,17 +130,26 @@
         "mismatch_count": 0,
         "ordered_normalized_sha256": "3fd6b8d2b67e086a78228c32e84cd843adc267f96c8743dac4aaa27f54216c88"
       },
-      "semantic_binding_status": "BLOCKED_SEMANTIC_ACCEPTANCE_SEPARATE"
+      "action_scoped_binding": {
+        "status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY",
+        "accepted_semantic_id": "ru-lexis-phraseologism-fragment-identification",
+        "accepted_action": "fragment identification",
+        "production_event_admission": "BLOCKED_UNTIL_REGISTERED_EXACT_ITEM_ACTION_EVENT"
+      },
+      "semantic_binding_status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY_ASSET_WIDE_MULTI_ACTION_REMAINS_UNBOUND"
     }
   },
   "remaining_exact_blockers": [
-    "orthoepy: independent component-specific normative-pronunciation learner evidence remains missing; exact live stress provenance is 291/291 but cannot close pronunciation",
+    "orthoepy: wire registered exact-item stress-selection events before any mastery admission; browser-local learned/review/error status and aggregate EGE mode remain non-mastery",
     "dictionary_words: wire registered exact-action server events before any mastery admission; whole-word recall and generic exam completion remain unadmitted",
-    "paronyms: only context/collocation choice is action-scoped to the accepted semantic; other live actions and generic trainer status remain unadmitted",
-    "phraseology: only fragment-identification is action-scoped to the accepted semantic; meaning/recall modes and generic trainer status remain unadmitted"
+    "paronyms: wire registered exact context/collocation-choice events before any mastery admission; other live actions and generic trainer status remain unadmitted",
+    "phraseology: wire registered exact fragment-identification events before any mastery admission; meaning/recall modes and generic trainer status remain unadmitted"
+  ],
+  "separate_subject_blockers_not_issue_185_asset_reconciliation": [
+    "RU02 non-stress normative-pronunciation learner evidence remains MISSING_BLOCKER in Russian subject closure #164"
   ],
   "accepted_content_owner_bindings": 1,
-  "accepted_action_scoped_authority_reuses": 3,
+  "accepted_action_scoped_authority_reuses": 4,
   "semantic_admissions": 0,
   "object_closures": 0,
   "mastery_admissions": 0,
