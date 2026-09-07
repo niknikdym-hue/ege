@@ -3,10 +3,10 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 
 const pages = {
+  phraseology: 'https://eksamio.ru/trenazhery/russkiy/frazeologizmy/',
   orthoepy: 'https://eksamio.ru/trenazhery/russkiy/orfoepiya/',
   dictionary_words: 'https://eksamio.ru/trenazhery/russkiy/slovarnye-slova/',
   paronyms: 'https://eksamio.ru/trenazhery/russkiy/paronimy/',
-  phraseology: 'https://eksamio.ru/trenazhery/russkiy/frazeologizmy/',
 };
 
 function sha256(text) {
@@ -194,13 +194,6 @@ function safeEvaluateLiteral(literal) {
 async function inspectPage(key, url) {
   const profiles = [
     {
-      name: 'reconciliation-bot',
-      headers: {
-        'user-agent': 'Eksamio-live-asset-reconciliation/0.1 (+https://github.com/niknikdym-hue/ege)',
-        'accept': 'text/html,application/xhtml+xml',
-      },
-    },
-    {
       name: 'browser-compatible',
       headers: {
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
@@ -208,7 +201,15 @@ async function inspectPage(key, url) {
         'accept-language': 'ru-RU,ru;q=0.9,en;q=0.8',
         'cache-control': 'no-cache',
         'pragma': 'no-cache',
+        'referer': 'https://eksamio.ru/trenazhery/russkiy/',
         'upgrade-insecure-requests': '1',
+      },
+    },
+    {
+      name: 'reconciliation-bot',
+      headers: {
+        'user-agent': 'Eksamio-live-asset-reconciliation/0.1 (+https://github.com/niknikdym-hue/ege)',
+        'accept': 'text/html,application/xhtml+xml',
       },
     },
   ];
@@ -247,9 +248,12 @@ async function inspectPage(key, url) {
   }
 
   const scriptMatches = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
-  const inlineScripts = scriptMatches
-    .map((m, index) => ({ index, attrs: m[1], text: m[2] }))
-    .filter((s) => s.text.trim().length > 0);
+  const scripts = scriptMatches.map((m, index) => ({ index, attrs: m[1], text: m[2] }));
+  const inlineScripts = scripts.filter((s) => s.text.trim().length > 0);
+  const externalScriptSrcs = scripts.map((s) => {
+    const m = s.attrs.match(/\bsrc=[\"']([^\"']+)[\"']/i);
+    return m ? m[1] : null;
+  }).filter(Boolean);
 
   const assignments = [];
   for (const script of inlineScripts) {
@@ -317,6 +321,7 @@ async function inspectPage(key, url) {
     html_sha256: sha256(html),
     script_tag_count: scriptMatches.length,
     inline_script_count: inlineScripts.length,
+    external_script_srcs: externalScriptSrcs,
     literal_assignment_count: assignments.length,
     literal_assignments: assignments,
     string_assignment_count: stringAssignments.length,
@@ -327,6 +332,7 @@ async function inspectPage(key, url) {
 const results = [];
 for (const [key, url] of Object.entries(pages)) {
   results.push(await inspectPage(key, url));
+  await new Promise((resolve) => setTimeout(resolve, 3000));
 }
 
 const output = {
