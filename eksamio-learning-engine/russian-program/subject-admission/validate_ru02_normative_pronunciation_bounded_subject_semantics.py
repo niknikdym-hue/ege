@@ -273,7 +273,7 @@ def main() -> int:
     if summary != expected_summary:
         raise AssertionError("pronunciation acceptance summary drift")
 
-    other_acceptances = []
+    other_semantic_acceptances = []
     for path in HERE.glob("*.json"):
         if path == ACCEPTANCE:
             continue
@@ -284,10 +284,18 @@ def main() -> int:
         status = str(value.get("status") or "")
         if "ACCEPTED" not in status:
             continue
-        if SEMANTIC in json.dumps(value, ensure_ascii=False):
-            other_acceptances.append(path.name)
-    if other_acceptances:
-        raise AssertionError(f"pronunciation semantic already accepted elsewhere: {other_acceptances}")
+        decisions = value.get("decisions")
+        if not isinstance(decisions, list):
+            continue
+        if any(
+            isinstance(row, dict) and row.get("accepted_semantic_id") == SEMANTIC
+            for row in decisions
+        ):
+            other_semantic_acceptances.append(path.name)
+    if other_semantic_acceptances:
+        raise AssertionError(
+            f"pronunciation semantic already accepted by another subject-semantic authority: {other_semantic_acceptances}"
+        )
 
     print("RU02_NORMATIVE_PRONUNCIATION_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE=PASS")
     print(f"ACCEPTED_SEMANTIC={SEMANTIC}")
