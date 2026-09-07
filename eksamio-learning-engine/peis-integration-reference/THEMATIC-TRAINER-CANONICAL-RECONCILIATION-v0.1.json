@@ -1,0 +1,100 @@
+{
+  "schema": "eksamio.thematic-trainer-canonical-reconciliation.v0.1",
+  "issue": 185,
+  "basis_head_sha": "1dfab7d51363df479d4e657107c35fe0245639ab",
+  "authority": "exact remote GitHub snapshots plus read-only live eksamio.ru probe; no title/route/task-number inference",
+  "learner_identity_policy": {
+    "registered_user_identity_ref_required_for_future_canonical_evidence": true,
+    "anonymous_or_device_only_canonical_state_allowed": false,
+    "anon_to_account_continuity_allowed": false
+  },
+  "assets": {
+    "orthoepy": {
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/orfoepiya/",
+      "live_item_identity": {
+        "status": "EXACT_LIVE_CANDIDATE_KEYS_CAPTURED",
+        "row_count": 291,
+        "unique_key_count": 291,
+        "key_field": "i",
+        "first_key": "w001",
+        "last_key": "w291",
+        "ordered_key_sha256": "73a3c847ec79a9a1f98f4703aacadd81561d05f74bf3b12293fd60a27fe4f583"
+      },
+      "provenance_status": "BLOCKED_LIVE_291_NOT_PROVEN_EQUAL_TO_REPO_36_DECLARED_96_UNIQUE_ENTRY_BANK",
+      "semantic_binding_status": "BLOCKED",
+      "pronunciation_component_evidence_status": "MISSING_BLOCKER",
+      "notes": [
+        "The exact live denominator is 291 candidate rows/keys, so the separate repository bank with cardCount=36 and 96 unique entries is not admitted as the live denominator.",
+        "Stress evidence does not close normative pronunciation; component-specific independent pronunciation evidence remains required."
+      ]
+    },
+    "dictionary_words": {
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/slovarnye-slova/",
+      "live_item_identity": {
+        "status": "EXACT_LIVE_IDS_CAPTURED",
+        "row_count": 308,
+        "unique_id_count": 308,
+        "id_field": "id",
+        "ordered_id_sha256": "989ff8c27d3017bd3c5d3b7cb3a4a47979d7354a18daa0318589a6a01a116ea2"
+      },
+      "fipi_2026_textual_provenance": {
+        "same_row_supported_count": 307,
+        "unresolved_count": 1,
+        "unresolved_live_id": "rovesnik",
+        "unresolved_live_form": "ровесник",
+        "exact_fipi_row": "ровесники",
+        "status": "ONE_BOUNDED_EXACT_TEXT_BLOCKER_NO_MORPHOLOGY_INFERRED"
+      },
+      "semantic_binding_status": "BLOCKED"
+    },
+    "paronyms": {
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/paronimy/",
+      "full_thematic_identity": {
+        "status": "EXACT_FULL_LIVE_GROUP_AND_ENTRY_IDS_CAPTURED",
+        "group_count": 144,
+        "unique_group_id_count": 144,
+        "entry_count": 334,
+        "unique_entry_id_count": 334,
+        "group_id_sequence": "p001..p144",
+        "ordered_group_id_sha256": "81c91d069a28cd9a2c1c7547c9fc92cb9df92c6cde38f3100750e2585c113813",
+        "ordered_entry_id_sha256": "48eedc3e5f3751cec57152671456d314b7bcb6b13f2ee5002f35ec6660482c99"
+      },
+      "fipi_2026_textual_provenance": {
+        "status": "EXACT_FULL_GROUP_TEXTUAL_CORRESPONDENCE",
+        "same_index_exact_match_count": 144,
+        "mismatch_count": 0,
+        "ordered_normalized_sha256": "4315528d9d6e76b8362c2a9869392a943dee854e2d911dad92d1c7f08c93a9bb"
+      },
+      "exam_bank_30_row_status": "SEPARATE_EXAM_CHECK_SUB_BANK_NOT_FULL_THEMATIC_DENOMINATOR",
+      "semantic_binding_status": "BLOCKED_SEMANTIC_ACCEPTANCE_SEPARATE"
+    },
+    "phraseology": {
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/frazeologizmy/",
+      "live_item_identity": {
+        "status": "EXACT_EXPLICIT_UNIQUE_IDS_CAPTURED",
+        "row_count": 285,
+        "unique_id_count": 285,
+        "first_id": "f001-alfa-i-omega",
+        "last_id": "f285-yazyk-ne-povernulsya",
+        "ordered_id_sha256": "22b33854b09b4b212310169f48c69237d4a4c8ee1ed0b5aed95b50f9ec63b534"
+      },
+      "fipi_2026_textual_provenance": {
+        "status": "EXACT_PRIMARY_ROW_CORRESPONDENCE",
+        "same_index_exact_match_count": 285,
+        "mismatch_count": 0,
+        "ordered_normalized_sha256": "3fd6b8d2b67e086a78228c32e84cd843adc267f96c8743dac4aaa27f54216c88"
+      },
+      "semantic_binding_status": "BLOCKED_SEMANTIC_ACCEPTANCE_SEPARATE"
+    }
+  },
+  "remaining_exact_blockers": [
+    "orthoepy: prove exact live-291 provenance/source binding and supply independent normative-pronunciation learner evidence",
+    "dictionary_words: resolve live ровесник versus exact FIPI row ровесники without morphology inference, then perform separate semantic acceptance",
+    "paronyms: perform separate semantic acceptance for the exact 144-group/334-entry live identity after proven full textual provenance",
+    "phraseology: perform separate semantic acceptance for the exact 285 live IDs after proven full textual provenance"
+  ],
+  "semantic_admissions": 0,
+  "object_closures": 0,
+  "mastery_admissions": 0,
+  "false_exact_mastery": 0
+}
