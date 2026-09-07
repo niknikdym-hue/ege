@@ -1,0 +1,34 @@
+name: Live FIPI thematic correspondence snapshot gate
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-FIPI-THEMATIC-CORRESPONDENCE-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_fipi_primary_correspondence.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_dictionary_same_row_family_membership.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/validate_live_fipi_thematic_correspondence_snapshot.py'
+      - '.github/workflows/live-fipi-thematic-correspondence-snapshot.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Validate exact live/FIPI correspondence snapshot
+        run: python eksamio-learning-engine/peis-integration-reference/validate_live_fipi_thematic_correspondence_snapshot.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-fipi-thematic-correspondence-snapshot
+          path: |
+            live-fipi-correspondence-snapshot-primary.json
+            live-fipi-correspondence-snapshot-membership.json
+          if-no-files-found: warn
