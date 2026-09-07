@@ -7,11 +7,13 @@ on:
     paths:
       - '.github/workflows/live-phraseology-exact-inventory.yml'
       - 'eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_exact_inventory.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-PHRASEOLOGY-EXACT-INVENTORY-v0.1.json'
   pull_request:
     branches: [main]
     paths:
       - '.github/workflows/live-phraseology-exact-inventory.yml'
       - 'eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_exact_inventory.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-PHRASEOLOGY-EXACT-INVENTORY-v0.1.json'
   workflow_dispatch:
 
 permissions:
@@ -29,18 +31,28 @@ jobs:
         env:
           PROBE_OUT: live-phraseology-exact-inventory.json
         run: node eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_exact_inventory.mjs
-      - name: Assert explicit live identity discovery and fail-closed canonical boundary
+      - name: Assert durable snapshot identity and fail-closed canonical boundary
         run: |
           node - <<'NODE'
           const fs = require('fs');
-          const x = JSON.parse(fs.readFileSync('live-phraseology-exact-inventory.json', 'utf8'));
-          if (x.live_item_identity_discovery_status !== 'COMPLETE_EXPLICIT_UNIQUE_ID_CANDIDATES') throw new Error('live phraseology identity discovery incomplete');
-          if (!(x.live_row_count > 0 && x.live_row_count === x.explicit_id_count && x.explicit_id_count === x.unique_explicit_id_count)) throw new Error('phraseology ids must be complete and unique');
-          if (x.canonical_item_identity_status !== 'UNKNOWN_BLOCKER' || x.provenance_binding_status !== 'UNKNOWN_BLOCKER') throw new Error('canonical/provenance admission must remain blocked');
-          for (const key of ['semantic_admissions','object_closures','mastery_admissions','false_exact_mastery']) {
-            if (x[key] !== 0) throw new Error(`${key} must stay 0`);
+          const observed = JSON.parse(fs.readFileSync('live-phraseology-exact-inventory.json', 'utf8'));
+          const expected = JSON.parse(fs.readFileSync('eksamio-learning-engine/peis-integration-reference/LIVE-PHRASEOLOGY-EXACT-INVENTORY-v0.1.json', 'utf8'));
+          const exactKeys = [
+            'html_bytes_utf8','html_sha256','phraseology_script_bytes_utf8','phraseology_script_sha256',
+            'live_row_count','explicit_id_count','unique_explicit_id_count','ordered_id_sha256','sorted_id_sha256',
+            'first_id','last_id','ordered_row_fingerprint_sha256','live_item_identity_discovery_status',
+            'canonical_item_identity_status','provenance_binding_status','registered_user_identity_required_for_future_canonical_evidence'
+          ];
+          for (const key of exactKeys) {
+            if (observed[key] !== expected[key]) throw new Error(`snapshot drift for ${key}: observed=${observed[key]} expected=${expected[key]}`);
           }
-          if (x.registered_user_identity_required_for_future_canonical_evidence !== true) throw new Error('registered identity invariant lost');
+          const expectedParts = expected.inventory_parts;
+          if (observed.part1_array_bytes_utf8 !== expectedParts[0].array_bytes_utf8 || observed.part1_array_sha256 !== expectedParts[0].array_sha256 || observed.part1_row_count !== expectedParts[0].row_count) throw new Error('PART1 snapshot drift');
+          if (observed.part2_array_bytes_utf8 !== expectedParts[1].array_bytes_utf8 || observed.part2_array_sha256 !== expectedParts[1].array_sha256 || observed.part2_row_count !== expectedParts[1].row_count) throw new Error('PART2 snapshot drift');
+          if (!(observed.live_row_count > 0 && observed.live_row_count === observed.explicit_id_count && observed.explicit_id_count === observed.unique_explicit_id_count)) throw new Error('phraseology ids must be complete and unique');
+          for (const key of ['semantic_admissions','object_closures','mastery_admissions','false_exact_mastery']) {
+            if (observed[key] !== 0 || expected[key] !== 0) throw new Error(`${key} must stay 0`);
+          }
           NODE
       - name: Upload exact phraseology inventory
         uses: actions/upload-artifact@v4
