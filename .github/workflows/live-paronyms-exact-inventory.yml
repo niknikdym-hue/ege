@@ -31,20 +31,29 @@ jobs:
         env:
           PROBE_OUT: live-paronyms-exact-inventory.json
         run: node eksamio-learning-engine/peis-integration-reference/probe_live_paronyms_exact_inventory.mjs
-      - name: Assert deterministic live identity candidates and fail-closed canonical boundary
+      - name: Assert durable snapshot identity and fail-closed canonical boundary
         run: |
           node - <<'NODE'
           const fs = require('fs');
-          const x = JSON.parse(fs.readFileSync('live-paronyms-exact-inventory.json', 'utf8'));
-          if (x.live_row_count !== 30) throw new Error(`expected 30 live paronym rows, got ${x.live_row_count}`);
-          if (x.deterministic_row_fingerprint_count !== 30 || x.unique_deterministic_row_fingerprint_count !== 30) throw new Error('row fingerprints must be complete and unique');
-          if (x.deterministic_live_candidate_id_count !== 30 || x.unique_deterministic_live_candidate_id_count !== 30) throw new Error('deterministic candidate IDs must be complete and unique');
-          if (x.live_item_identity_discovery_status !== 'COMPLETE_DETERMINISTIC_CONTENT_ADDRESSED_CANDIDATES') throw new Error('paronym live identity discovery incomplete');
-          if (x.canonical_item_identity_status !== 'UNKNOWN_BLOCKER' || x.provenance_binding_status !== 'UNKNOWN_BLOCKER') throw new Error('canonical/provenance admission must remain blocked');
-          for (const key of ['semantic_admissions','object_closures','mastery_admissions','false_exact_mastery']) {
-            if (x[key] !== 0) throw new Error(`${key} must stay 0`);
+          const observed = JSON.parse(fs.readFileSync('live-paronyms-exact-inventory.json', 'utf8'));
+          const expected = JSON.parse(fs.readFileSync('eksamio-learning-engine/peis-integration-reference/LIVE-PARONYMS-EXACT-INVENTORY-v0.1.json', 'utf8'));
+          const exactKeys = [
+            'html_bytes_utf8','html_sha256','variable','literal_bytes_utf8','literal_sha256','live_row_count',
+            'deterministic_row_fingerprint_count','unique_deterministic_row_fingerprint_count',
+            'ordered_row_fingerprint_sha256','sorted_row_fingerprint_sha256','deterministic_live_candidate_id_scheme',
+            'deterministic_live_candidate_id_count','unique_deterministic_live_candidate_id_count',
+            'ordered_candidate_id_sha256','sorted_candidate_id_sha256','first_candidate_id','last_candidate_id',
+            'live_item_identity_discovery_status','canonical_item_identity_status','provenance_binding_status',
+            'registered_user_identity_required_for_future_canonical_evidence'
+          ];
+          for (const key of exactKeys) {
+            if (observed[key] !== expected[key]) throw new Error(`snapshot drift for ${key}: observed=${observed[key]} expected=${expected[key]}`);
           }
-          if (x.registered_user_identity_required_for_future_canonical_evidence !== true) throw new Error('registered identity invariant lost');
+          if (JSON.stringify(observed.deterministic_live_candidate_ids) !== JSON.stringify(expected.deterministic_live_candidate_ids)) throw new Error('candidate id sequence drift');
+          if (!(observed.live_row_count === 30 && observed.deterministic_live_candidate_id_count === 30 && observed.unique_deterministic_live_candidate_id_count === 30)) throw new Error('paronym candidate identities must remain complete and unique');
+          for (const key of ['semantic_admissions','object_closures','mastery_admissions','false_exact_mastery']) {
+            if (observed[key] !== 0 || expected[key] !== 0) throw new Error(`${key} must stay 0`);
+          }
           NODE
       - name: Upload exact paronyms inventory
         uses: actions/upload-artifact@v4
