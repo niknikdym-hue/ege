@@ -1,0 +1,119 @@
+{
+  "schema_version": "0.1.0",
+  "status": "BOUNDED_SOURCE_BACKED_PRONUNCIATION_OWNER_RESOLUTION_NO_ADMISSION",
+  "authority_issue": 161,
+  "source_reconciliation_pr": 187,
+  "source_reconciliation_head": "c5592c212557b91578ed48e1bf778e30dd489dc7",
+  "russian_closure_start_head": "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9",
+  "target_object": {
+    "admission_unit_id": "RAU-a8f2ad0b357c9e369c51",
+    "requirement_id": "RSK-EDSOO1011-2-2-4-P074",
+    "review_group_id": "RUS-SEM-REVIEW-047",
+    "source_locator": "EDSOO1011 2.2.4 p.74",
+    "module_id": "RU-PROG-02",
+    "normalized_meaning": "Применять нормативное произношение и ударение."
+  },
+  "existing_owner_search": {
+    "exact_current_canonical_pronunciation_owner_found": false,
+    "normative_stress_owner": {
+      "semantic_id": "ru-orthoepy-normative-stress-selection",
+      "candidate_ref": "candidate-018",
+      "scope": "stress-position selection only",
+      "may_cover_pronunciation_component": false
+    },
+    "source_check_nonowner": {
+      "semantic_id": "ru-orthoepy-norm-source-check",
+      "scope": "normative source-check meta-procedure",
+      "may_cover_pronunciation_component": false
+    },
+    "resolution": "NO_EXACT_CURRENT_PRONUNCIATION_OWNER"
+  },
+  "proposed_owner": {
+    "semantic_id": "ru-orthoepy-normative-pronunciation-selection",
+    "source_taxonomy_id": "normative_pronunciation_selection",
+    "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+    "label_ru": "Выбор нормативного литературного произношения",
+    "definition_ru": "Определять и применять нормативное произношение предъявленного слова или формы по подтверждённой произносительной норме, отдельно от выбора места ударения.",
+    "boundary": {
+      "includes": [
+        "unstressed_vowel_pronunciation",
+        "selected_consonant_pronunciation",
+        "consonant_combination_pronunciation",
+        "selected_grammatical_form_pronunciation",
+        "loanword_pronunciation"
+      ],
+      "excludes": [
+        "normative_stress_selection",
+        "spelling",
+        "generic_phonetic_analysis",
+        "source_lookup_without_independent_application"
+      ]
+    },
+    "official_scope_source": {
+      "publisher": "ФГБНУ ФИПИ",
+      "document": "Навигатор самостоятельной подготовки к ЕГЭ 2026 — Русский язык — Фонетика и орфоэпия",
+      "url": "https://doc.fipi.ru/navigator-podgotovki/navigator-ege/2026/ru-1-fonetika.pdf",
+      "page": 1,
+      "codifier_position": "3.2.3",
+      "verified_on": "2026-09-07",
+      "scope_note": "Official scope separately names unstressed-vowel, consonant, consonant-combination, grammatical-form and loanword pronunciation, then stress norms."
+    },
+    "independent_norm_fact_sources": [
+      {
+        "fact_id": "pron-vowel-moloko",
+        "category": "unstressed_vowel_pronunciation",
+        "prompt_form": "молоко",
+        "normative_fact": "[малако́]",
+        "source_kind": "GRAMOTA_SCHOOL_THEORY",
+        "source_url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/bezudarnye-glasnye-v-kornyakh",
+        "verified_on": "2026-09-07"
+      },
+      {
+        "fact_id": "pron-consonant-dub",
+        "category": "selected_consonant_pronunciation",
+        "prompt_form": "дуб",
+        "normative_fact": "[дуп]",
+        "source_kind": "GRAMOTA_REFERENCE_SERVICE",
+        "source_url": "https://gramota.ru/spravka/vopros/257534",
+        "verified_on": "2026-09-07"
+      },
+      {
+        "fact_id": "pron-cluster-chto",
+        "category": "consonant_combination_pronunciation",
+        "prompt_form": "что",
+        "normative_fact": "[што]",
+        "source_kind": "GRAMOTA_REFERENCE_SERVICE",
+        "source_url": "https://gramota.ru/spravka/vopros/265854",
+        "verified_on": "2026-09-07"
+      },
+      {
+        "fact_id": "pron-form-ogo",
+        "category": "selected_grammatical_form_pronunciation",
+        "prompt_form": "доброго",
+        "normative_fact": "в окончании -ого буква г произносится как [в]",
+        "source_kind": "GRAMOTA_ORTHOGRAPHY_RULES",
+        "source_url": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/bukva-g-v-okonchanii-ogo-ego",
+        "verified_on": "2026-09-07"
+      },
+      {
+        "fact_id": "pron-loan-computer",
+        "category": "loanword_pronunciation",
+        "prompt_form": "компьютер",
+        "normative_fact": "в сочетании те произносится твёрдый [т] перед [э]",
+        "source_kind": "GRAMOTA_REFERENCE_SERVICE",
+        "source_url": "https://gramota.ru/spravka/vopros/221709",
+        "verified_on": "2026-09-07"
+      }
+    ]
+  },
+  "acceptance_boundary": {
+    "semantic_admission_effect": "NONE",
+    "object_closure_effect": "NONE",
+    "exact_mastery_effect": "NONE",
+    "component_specific_independent_learner_evidence_required": true,
+    "candidate_owner_resolution_can_self_admit": false,
+    "route_or_task_name_can_admit_semantics": false,
+    "reference_reading_can_create_mastery": false,
+    "false_exact_mastery": 0
+  }
+}
