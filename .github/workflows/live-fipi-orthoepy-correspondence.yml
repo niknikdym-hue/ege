@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'eksamio-learning-engine/peis-integration-reference/probe_live_fipi_orthoepy_correspondence.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-FIPI-ORTHOEPY-STRESS-CORRESPONDENCE-v0.1.json'
       - '.github/workflows/live-fipi-orthoepy-correspondence.yml'
   workflow_dispatch:
 
@@ -28,11 +29,14 @@ jobs:
           node eksamio-learning-engine/peis-integration-reference/probe_live_fipi_orthoepy_correspondence.mjs
           python - <<'PY'
           import json
-          d=json.load(open('live-fipi-orthoepy-correspondence-probe.json', encoding='utf-8'))
-          assert d['live']['row_count'] == 291
-          assert d['live']['unique_id_count'] == 291
-          assert d['correspondence']['exact_live_stressed_token_match_count'] + d['correspondence']['exact_live_stressed_token_mismatch_count'] == 291
-          b=d['admission_boundary']
+          observed=json.load(open('live-fipi-orthoepy-correspondence-probe.json', encoding='utf-8'))
+          pinned=json.load(open('eksamio-learning-engine/peis-integration-reference/LIVE-FIPI-ORTHOEPY-STRESS-CORRESPONDENCE-v0.1.json', encoding='utf-8'))
+          assert observed == pinned, 'live/FIPI orthoepy stress correspondence drifted from pinned exact snapshot'
+          assert observed['live']['row_count'] == observed['live']['unique_id_count'] == 291
+          assert observed['correspondence']['exact_live_stressed_token_match_count'] == 291
+          assert observed['correspondence']['exact_live_stressed_token_mismatch_count'] == 0
+          assert observed['correspondence']['mismatches'] == []
+          b=observed['admission_boundary']
           assert b['forensic_provenance_probe_only'] is True
           assert b['semantic_admissions'] == 0
           assert b['object_closures'] == 0
@@ -41,7 +45,7 @@ jobs:
           assert b['normative_pronunciation_evidence_status'] == 'MISSING_BLOCKER'
           assert b['stress_correspondence_alone_can_close_pronunciation_component'] is False
           assert b['registered_user_identity_ref_required_for_future_canonical_evidence'] is True
-          print('LIVE FIPI ORTHOEPY correspondence forensic gate PASS')
+          print('LIVE FIPI ORTHOEPY exact stress provenance drift gate PASS')
           PY
       - name: Exact-base diff hygiene
         shell: bash
