@@ -26,15 +26,21 @@ from russian_orthoepy_stress_adapter import (
     ADAPTER_ID as ORTHOEPY_ADAPTER_ID,
     RussianOrthoepyStressAdmissionAdapter,
 )
+from russian_phraseology_fragment_adapter import (
+    ADAPTER_ID as PHRASEOLOGY_ADAPTER_ID,
+    RussianPhraseologyFragmentAdmissionAdapter,
+)
 from tutor_lifecycle import FailClosedTutorProvider, PostgresTutorLifecycle, build_tutor_aware_bridge
 
 ORTHOEPY_ADMISSION_PATH = "/api/russian/thematic/orthoepy/stress/submit"
 DICTIONARY_ADMISSION_PATH = "/api/russian/thematic/dictionary-words/missing-root-vowel/submit"
+PHRASEOLOGY_ADMISSION_PATH = "/api/russian/thematic/phraseology/fragment-identification/submit"
 # Backward-compatible name used by the already accepted first-slice regression.
 ADMISSION_PATH = ORTHOEPY_ADMISSION_PATH
 ADMISSION_ADAPTER_BY_PATH = {
     ORTHOEPY_ADMISSION_PATH: ORTHOEPY_ADAPTER_ID,
     DICTIONARY_ADMISSION_PATH: DICTIONARY_ADAPTER_ID,
+    PHRASEOLOGY_ADMISSION_PATH: PHRASEOLOGY_ADAPTER_ID,
 }
 
 
@@ -47,7 +53,7 @@ def make_handler(
     Base = tutor_web.make_handler(runtime, views, entitlements, tutor)
 
     class Handler(Base):
-        server_version = "EksamioLearnerAdmissionsTutorWeb/0.2"
+        server_version = "EksamioLearnerAdmissionsTutorWeb/0.3"
 
         def do_OPTIONS(self):  # noqa: N802
             path = self.path.split("?", 1)[0]
@@ -152,6 +158,7 @@ def main() -> int:
             admission_adapters = (
                 RussianOrthoepyStressAdmissionAdapter(core.ENGINE),
                 RussianDictionaryWordsAdmissionAdapter(core.ENGINE),
+                RussianPhraseologyFragmentAdmissionAdapter(core.ENGINE),
             )
             registered_ids = runtime.bridge.registry.adapter_ids()
             for admission_adapter in admission_adapters:
