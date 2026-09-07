@@ -1,0 +1,108 @@
+name: Russian RU02 orthoepy current exact acceptance
+
+on:
+  push:
+    branches:
+      - brain/sep1-russian-subject-closure
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU02-ORTHOEPY-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v3.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_exact_object_binding_review.py'
+      - '.github/workflows/russian-ru02-orthoepy-current-exact-acceptance.yml'
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU02-ORTHOEPY-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v3.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_exact_object_binding_review.py'
+      - '.github/workflows/russian-ru02-orthoepy-current-exact-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-ru02-object-acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Rebuild prerequisite exact binding review
+        run: |
+          set -euo pipefail
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_exact_object_binding_review.py --output /tmp/ru02-review-a.json
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_exact_object_binding_review.py --output /tmp/ru02-review-b.json
+          cmp /tmp/ru02-review-a.json /tmp/ru02-review-b.json
+          python - <<'PY'
+          import json
+          p='/tmp/ru02-review-a.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['normalized_sha256']=='60c0465cf74090388732a0d010043a77b6856597b8e022d93e0b074ee70ad666'
+          assert d['acceptance_readiness']['object_accepted_by_this_review'] is False
+          assert d['source_backed_exact_component_decomposition']['exact_component_refs']==[
+              'ru-orthoepy-normative-pronunciation-selection',
+              'ru-orthoepy-normative-stress-selection',
+          ]
+          assert d['source_backed_exact_component_decomposition']['independent_evidence_items']==9
+          assert d['summary']['false_exact_mastery_admissions']==0
+          PY
+
+      - name: Rebuild accepted current-v3 progress deterministically
+        run: |
+          set -euo pipefail
+          python eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v3.py --output /tmp/progress-v3-a.json
+          python eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v3.py --output /tmp/progress-v3-b.json
+          cmp /tmp/progress-v3-a.json /tmp/progress-v3-b.json
+
+      - name: Verify bounded RU02 acceptance and aggregate delta
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/progress-v3-a.json',encoding='utf-8'))
+          s=d['progress_summary']
+          expected={
+              'semantic_units_with_accepted_component_sets':29,
+              'semantic_requirements_with_accepted_component_sets':29,
+              'semantic_units_remaining_without_accepted_component_set':1287,
+              'semantic_requirements_remaining_without_accepted_component_set':1362,
+              'subject_disposed_units_total':30,
+              'subject_disposed_requirements_total':30,
+              'subject_review_units_remaining':1286,
+              'subject_review_requirements_remaining':1361,
+              'canonical_component_refs_reused_unique':117,
+              'review_groups_with_accepted_component_sets':13,
+              'false_exact_mastery_admissions':0,
+          }
+          for k,v in expected.items():
+              assert s[k]==v,(k,s[k],v)
+          assert len(d['accepted_authorities'])==50
+          g=[x for x in d['semantic_review_groups'] if x.get('group_id')=='RUS-SEM-REVIEW-047']
+          assert len(g)==1
+          rows=[x for x in g[0]['accepted_component_sets'] if x.get('admission_unit_id')=='RAU-a8f2ad0b357c9e369c51']
+          assert len(rows)==1
+          row=rows[0]
+          assert row['requirement_id']=='RSK-EDSOO1011-2-2-4-P074'
+          assert row['canonical_component_refs']==[
+              'ru-orthoepy-normative-pronunciation-selection',
+              'ru-orthoepy-normative-stress-selection',
+          ]
+          assert row['mastery_boundary']['generic_orthoepy_attempt_can_emit_exact_component_mastery'] is False
+          assert row['mastery_boundary']['stress_evidence_can_substitute_for_pronunciation'] is False
+          assert row['mastery_boundary']['pronunciation_evidence_can_substitute_for_stress'] is False
+          PY
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Upload exact current-v3 progress
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru02-orthoepy-current-exact-acceptance
+          path: /tmp/progress-v3-a.json
+          if-no-files-found: error
