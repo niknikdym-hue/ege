@@ -290,7 +290,7 @@ def main() -> None:
         require(event["source"]["object_id"] == ITEM_ID, "exact live paronym item identity is preserved")
         require(event["result"]["correctness"] is True and event["result"]["score"] == 1, "server deterministically scores correct pinned choice")
         require(event["result"]["response_value"] == CORRECT_WORD, "observed selected word is preserved")
-        require(event["response_mode"] == "SINGLE_SELECT", "paronym observation remains single-select")
+        require(event["response_mode"] == "SELECTED_OPTION", "paronym observation uses canonical selected-option response mode")
         require(event["evaluator"]["evaluator_type"] == "DETERMINISTIC_VALIDATOR", "browser never owns evaluator truth")
         require(event["timestamps"]["received_at_server"] == event["created_at"], "server owns received_at_server/created_at")
         require("mastery" not in event, "raw paronym event contains observation, not client mastery")
