@@ -1,0 +1,107 @@
+name: Russian RU02 normative-pronunciation semantic acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-PRONUNCIATION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_bounded_subject_semantics.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-PRONUNCIATION-OWNER-RESOLUTION-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-02-ORTHOEPY-NORMATIVE-PRONUNCIATION-WAVE-004-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_component_evidence.py'
+      - '.github/workflows/russian-ru02-normative-pronunciation-semantic-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.number == 164
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pin exact PR head
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout --detach "${{ github.event.pull_request.head.sha }}"
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile bounded pronunciation validators
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_component_evidence.py \
+            eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_bounded_subject_semantics.py
+
+      - name: Revalidate exact pronunciation component evidence twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_component_evidence.py > /tmp/ru02-pron-component-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_component_evidence.py > /tmp/ru02-pron-component-b.txt
+          diff -u /tmp/ru02-pron-component-a.txt /tmp/ru02-pron-component-b.txt
+          cat /tmp/ru02-pron-component-a.txt
+
+      - name: Validate bounded pronunciation subject semantic twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_bounded_subject_semantics.py > /tmp/ru02-pron-accept-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_bounded_subject_semantics.py > /tmp/ru02-pron-accept-b.txt
+          diff -u /tmp/ru02-pron-accept-a.txt /tmp/ru02-pron-accept-b.txt
+          cat /tmp/ru02-pron-accept-a.txt
+
+      - name: Require fail-closed pronunciation acceptance boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-PRONUNCIATION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'CENTRAL_BRAIN_ACCEPTED_RU02_NORMATIVE_PRONUNCIATION_BOUNDED_SUBJECT_SEMANTIC'
+          assert d['canonical_school_registry_mutated'] is False
+          assert d['new_parallel_registry_created'] is False
+          assert len(d['decisions']) == 1
+          row = d['decisions'][0]
+          assert row['source_taxonomy_id'] == 'normative_pronunciation_selection'
+          assert row['accepted_semantic_id'] == 'ru-orthoepy-normative-pronunciation-selection'
+          assert row['subject_semantic_status'] == 'CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC'
+          assert row['object_binding_status'] == 'NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT'
+          assert d['policy']['stress_component_may_substitute_for_pronunciation'] is False
+          assert d['policy']['component_specific_independent_evidence_required'] is True
+          assert d['policy']['exact_object_binding_requires_all_object_components'] is True
+          s = d['summary']
+          assert s['accepted_bounded_subject_semantics'] == 1
+          assert s['object_level_admission_units_closed'] == 0
+          assert s['object_level_requirements_closed'] == 0
+          assert s['exact_mastery_admissions'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+          print('RU02_NORMATIVE_PRONUNCIATION_FAIL_CLOSED_GUARD=PASS')
+          PY
+
+      - name: Diff hygiene for exact bounded pronunciation semantic delta
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          baseline='7161218ebfc91271ec80b47dfc1ed5fefce6113b'
+          head='${{ github.event.pull_request.head.sha }}'
+          git merge-base --is-ancestor "$baseline" "$head"
+          git diff --check "$baseline..$head" -- \
+            eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-PRONUNCIATION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json \
+            eksamio-learning-engine/russian-program/subject-admission/validate_ru02_normative_pronunciation_bounded_subject_semantics.py \
+            .github/workflows/russian-ru02-normative-pronunciation-semantic-acceptance.yml
