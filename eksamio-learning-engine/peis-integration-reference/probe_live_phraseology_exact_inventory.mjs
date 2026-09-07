@@ -3,6 +3,7 @@ import fs from 'node:fs';
 
 const URL = 'https://eksamio.ru/trenazhery/russkiy/frazeologizmy/';
 const OUT = process.env.PROBE_OUT || 'live-phraseology-exact-inventory.json';
+const PART1 = '__EKSAMIO_PHRASEOLOGY_PART1';
 
 function sha256(value) {
   return crypto.createHash('sha256').update(value, 'utf8').digest('hex');
@@ -55,10 +56,7 @@ function skipString(source, index) {
   const quote = source[index];
   let i = index + 1;
   while (i < source.length) {
-    if (source[i] === '\\') {
-      i += 2;
-      continue;
-    }
+    if (source[i] === '\\') { i += 2; continue; }
     if (source[i] === quote) return i + 1;
     i += 1;
   }
@@ -82,18 +80,9 @@ function extractBalanced(source, start, open, close) {
   let i = start;
   while (i < source.length) {
     const ch = source[i];
-    if (ch === '"' || ch === "'" || ch === '`') {
-      i = skipString(source, i);
-      continue;
-    }
-    if (ch === '/' && source[i + 1] === '/') {
-      i = skipLineComment(source, i);
-      continue;
-    }
-    if (ch === '/' && source[i + 1] === '*') {
-      i = skipBlockComment(source, i);
-      continue;
-    }
+    if (ch === '"' || ch === "'" || ch === '`') { i = skipString(source, i); continue; }
+    if (ch === '/' && source[i + 1] === '/') { i = skipLineComment(source, i); continue; }
+    if (ch === '/' && source[i + 1] === '*') { i = skipBlockComment(source, i); continue; }
     if (ch === open) depth += 1;
     if (ch === close) {
       depth -= 1;
@@ -104,29 +93,20 @@ function extractBalanced(source, start, open, close) {
   throw new Error(`unterminated ${open}${close} literal at ${start}`);
 }
 
-function splitTopLevelObjects(arrayLiteral) {
+function splitTopLevelObjects(arrayLiteral, label) {
   const rows = [];
   let i = 1;
   const end = arrayLiteral.length - 1;
   while (i < end) {
     while (i < end) {
       const ch = arrayLiteral[i];
-      if (/\s|,/.test(ch)) {
-        i += 1;
-        continue;
-      }
-      if (ch === '/' && arrayLiteral[i + 1] === '/') {
-        i = skipLineComment(arrayLiteral, i);
-        continue;
-      }
-      if (ch === '/' && arrayLiteral[i + 1] === '*') {
-        i = skipBlockComment(arrayLiteral, i);
-        continue;
-      }
+      if (/\s|,/.test(ch)) { i += 1; continue; }
+      if (ch === '/' && arrayLiteral[i + 1] === '/') { i = skipLineComment(arrayLiteral, i); continue; }
+      if (ch === '/' && arrayLiteral[i + 1] === '*') { i = skipBlockComment(arrayLiteral, i); continue; }
       break;
     }
     if (i >= end) break;
-    if (arrayLiteral[i] !== '{') throw new Error(`PHRASES contains non-object top-level value at ${i}`);
+    if (arrayLiteral[i] !== '{') throw new Error(`${label} contains non-object top-level value at ${i}`);
     const object = extractBalanced(arrayLiteral, i, '{', '}');
     rows.push(object.text);
     i = object.end;
@@ -140,6 +120,21 @@ function extractSafeId(objectLiteral, rowIndex) {
   return matches[0][2];
 }
 
+function locatePart1Array(html) {
+  const re = new RegExp(`(?:window\\.)?${PART1}\\s*=\\s*\\[`, 'm');
+  const match = re.exec(html);
+  if (!match) throw new Error(`${PART1} array assignment not found`);
+  const start = match.index + match[0].lastIndexOf('[');
+  return extractBalanced(html, start, '[', ']');
+}
+
+function locatePart2Array(script) {
+  const declaration = /\b(?:var|let|const)\s+PHRASES\s*=\s*\(\s*window\.__EKSAMIO_PHRASEOLOGY_PART1\s*\|\|\s*\[\s*\]\s*\)\s*\.concat\s*\(\s*\[/m.exec(script);
+  if (!declaration) throw new Error('split PHRASES concat declaration not found');
+  const start = declaration.index + declaration[0].lastIndexOf('[');
+  return extractBalanced(script, start, '[', ']');
+}
+
 const { response, html, attempts, selected_profile } = await fetchHtml();
 const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
   .map((match, index) => ({ index, attrs: match[1], text: match[2] }))
@@ -148,19 +143,19 @@ const candidateScripts = scripts.filter((entry) => entry.text.includes('BY_ID') 
 if (candidateScripts.length !== 1) throw new Error(`expected exactly one inline PHRASES/BY_ID script, got ${candidateScripts.length}`);
 const script = candidateScripts[0];
 
-const declaration = /\b(?:var|let|const)\s+PHRASES\s*=\s*\[/m.exec(script.text);
-if (!declaration) throw new Error('PHRASES array declaration not found');
-const arrayStart = declaration.index + declaration[0].lastIndexOf('[');
-const array = extractBalanced(script.text, arrayStart, '[', ']');
-const rows = splitTopLevelObjects(array.text);
-if (rows.length === 0) throw new Error('PHRASES array is empty');
+const part1Array = locatePart1Array(html);
+const part2Array = locatePart2Array(script.text);
+const part1Rows = splitTopLevelObjects(part1Array.text, 'PART1');
+const part2Rows = splitTopLevelObjects(part2Array.text, 'PART2');
+const rows = [...part1Rows, ...part2Rows];
+if (part1Rows.length === 0 || part2Rows.length === 0) throw new Error(`both phraseology parts must be non-empty; part1=${part1Rows.length} part2=${part2Rows.length}`);
 const ids = rows.map((row, index) => extractSafeId(row, index));
 const uniqueIds = new Set(ids);
 if (uniqueIds.size !== ids.length) throw new Error(`PHRASES ids are not unique: ${ids.length} rows / ${uniqueIds.size} unique ids`);
 
 const orderedRowFingerprints = rows.map((row) => sha256(row));
 const result = {
-  schema: 'eksamio.live-phraseology-exact-inventory.v0.1',
+  schema: 'eksamio.live-phraseology-exact-inventory.v0.2',
   authority: 'live eksamio.ru phraseology trainer HTML; read-only GET',
   authority_checked_at_runtime: new Date().toISOString(),
   requested_url: URL,
@@ -173,8 +168,12 @@ const result = {
   phraseology_script_index: script.index,
   phraseology_script_bytes_utf8: Buffer.byteLength(script.text, 'utf8'),
   phraseology_script_sha256: sha256(script.text),
-  phrases_array_bytes_utf8: Buffer.byteLength(array.text, 'utf8'),
-  phrases_array_sha256: sha256(array.text),
+  part1_array_bytes_utf8: Buffer.byteLength(part1Array.text, 'utf8'),
+  part1_array_sha256: sha256(part1Array.text),
+  part1_row_count: part1Rows.length,
+  part2_array_bytes_utf8: Buffer.byteLength(part2Array.text, 'utf8'),
+  part2_array_sha256: sha256(part2Array.text),
+  part2_row_count: part2Rows.length,
   live_row_count: rows.length,
   explicit_id_count: ids.length,
   unique_explicit_id_count: uniqueIds.size,
@@ -196,5 +195,5 @@ const result = {
 
 fs.writeFileSync(OUT, `${JSON.stringify(result, null, 2)}\n`, 'utf8');
 console.log(`wrote ${OUT}`);
-console.log(`phraseology rows=${result.live_row_count} ids=${result.unique_explicit_id_count}/${result.explicit_id_count}`);
-console.log(`PHRASES=${result.phrases_array_sha256} ids=${result.ordered_id_sha256}`);
+console.log(`phraseology part1=${result.part1_row_count} part2=${result.part2_row_count} total=${result.live_row_count}`);
+console.log(`ids=${result.unique_explicit_id_count}/${result.explicit_id_count} hash=${result.ordered_id_sha256}`);
