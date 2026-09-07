@@ -349,7 +349,7 @@ class RussianParonymContextChoiceAdmissionAdapter:
                     "choice_contract": "EXACT_PINNED_GROUP_MEMBER_ONLY",
                 },
             },
-            "response_mode": "SINGLE_SELECT",
+            "response_mode": "SELECTED_OPTION",
             "assistance": {"level": "UNASSISTED", "help_event_refs": [], "assistance_provider": None},
             "evaluator": {
                 "evaluator_type": "DETERMINISTIC_VALIDATOR",
