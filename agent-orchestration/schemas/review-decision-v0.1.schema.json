@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eksamio.ru/schemas/agent-review-decision-v0.1.schema.json",
+  "title": "Eksamio Astra Review Decision v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision", "reviewed_sha", "invariants", "evidence", "reason", "next_action"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "decision": {"type": "string", "enum": ["PASS", "REWORK", "BLOCKED"]},
+    "reviewed_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["false_exact_mastery_zero", "server_owned_truth_preserved", "owner_gates_preserved"],
+      "properties": {
+        "false_exact_mastery_zero": {"type": "boolean"},
+        "server_owned_truth_preserved": {"type": "boolean"},
+        "owner_gates_preserved": {"type": "boolean"}
+      }
+    },
+    "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "reason": {"type": "string", "minLength": 1},
+    "next_action": {"type": "string", "minLength": 1}
+  }
+}
