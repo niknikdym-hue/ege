@@ -1,0 +1,108 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU01_SOUND_CHANGES_IN_SPEECH_FLOW_BOUNDED_SUBJECT_SEMANTIC",
+  "authority_issue": 161,
+  "scope": "RU01_SOUND_CHANGES_IN_SPEECH_FLOW_SOURCE_BACKED_CANDIDATE_PLUS_ORIGINAL_COMPONENT_SPECIFIC_LEARNER_EVIDENCE_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "authority": {
+    "source_binding_review": "russian-program/subject-admission/RU01-SOUND-CHANGES-EXACT-SOURCE-BINDING-REVIEW-v0.1.json",
+    "content_readiness_builder": "russian-program/subject-admission/build_ru01_sound_changes_content_readiness.py",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-01-SOUND-CHANGES-WAVE-003-v0.1.json",
+    "target_admission_unit_ids": [
+      "RAU-b1ba48cb81e96255122a",
+      "RAU-f709f1855bb0b8d104bc"
+    ],
+    "target_requirement_ids": [
+      "RSK-EDSOO59-4-1-3-P187",
+      "RSK-OGE_COD-4-1-3-P021"
+    ],
+    "source_locators": [
+      "EDSOO-RU-5-9-2025/EDSOO59 p.187 4.1.3",
+      "FIPI-OGE-RU-2026-FINAL/OGE_COD p.21 4.1.3"
+    ]
+  },
+  "policy": {
+    "exact_source_backed_owner_resolution_required": true,
+    "original_dedicated_learner_content_required": true,
+    "component_specific_independent_evidence_required": true,
+    "sound_letter_relation_semantic_may_substitute": false,
+    "vowel_consonant_features_semantic_may_substitute": false,
+    "word_analysis_semantic_may_substitute": false,
+    "phonetic_transcription_semantic_may_substitute": false,
+    "normative_pronunciation_semantic_may_substitute": false,
+    "normative_stress_semantic_may_substitute": false,
+    "route_title_task_number_keyword_fuzzy_or_embedding_can_admit_semantics": false,
+    "canonical_school_registry_mutation_required": false,
+    "parallel_registry_creation_forbidden": true,
+    "content_or_evidence_presence_alone_is_semantic_admission": false,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "generic_ru01_result_can_emit_exact_component_mastery": false,
+    "shared_evidence_can_close_both_source_objects_without_separate_acceptance": false,
+    "separate_exact_object_acceptance_required_for_each_target": true,
+    "whole_group_acceptance_allowed": false
+  },
+  "decisions": [
+    {
+      "source_taxonomy_id": "sound_changes_in_speech_flow",
+      "accepted_semantic_id": "ru-phonetics-sound-changes-in-speech-flow",
+      "canonical_label_ru": "Изменения звуков в речевом потоке: распознавание, сопоставление и объяснение причины изменения",
+      "entity_type": "PHONETIC_SOUND_CHANGE_SKILL",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+      "owner_search_result": "NO_EXACT_CURRENT_SOUND_CHANGES_OWNER_WITH_COMPONENT_SPECIFIC_EVIDENCE",
+      "source_evidence_status": "confirmed_for_two_exact_official_source_objects",
+      "independent_verification_item_ids": [
+        "p01-u5-v1",
+        "p01-u5-v2",
+        "p01-u5-v3",
+        "p01-u5-v4",
+        "p01-u5-v5",
+        "p01-u5-v6"
+      ],
+      "covered_skills": [
+        "identify_contextual_sound_change",
+        "compare_base_and_realized_sound",
+        "explain_trigger_and_result",
+        "distinguish_change_from_static_feature",
+        "distinguish_sound_change_from_adjacent_semantics",
+        "recognize_fail_closed_normative_boundary"
+      ],
+      "boundary_guard": "bounded identification, comparison, and explanation of contextual sound changes in speech flow; excludes substitution by static sound/letter or vowel/consonant features, generic phonetic word analysis, phonetic transcription, normative pronunciation or stress, route/title/task inference, and any source-object closure before a separate exact acceptance for each target",
+      "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+    }
+  ],
+  "summary": {
+    "accepted_bounded_subject_semantics": 1,
+    "accepted_ru_subject_semantics": 1,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "exact_mastery_admissions": 0,
+    "false_exact_mastery_admissions": 0
+  },
+  "next_exact_work": {
+    "separate_exact_object_acceptance_required": true,
+    "target_count": 2,
+    "targets": [
+      {
+        "admission_unit_id": "RAU-b1ba48cb81e96255122a",
+        "requirement_id": "RSK-EDSOO59-4-1-3-P187",
+        "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.187 4.1.3"
+      },
+      {
+        "admission_unit_id": "RAU-f709f1855bb0b8d104bc",
+        "requirement_id": "RSK-OGE_COD-4-1-3-P021",
+        "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_COD p.21 4.1.3"
+      }
+    ],
+    "component_specific_evidence_ids": [
+      "p01-u5-v1",
+      "p01-u5-v2",
+      "p01-u5-v3",
+      "p01-u5-v4",
+      "p01-u5-v5",
+      "p01-u5-v6"
+    ],
+    "each_target_remains_pending_until_its_own_exact_head_object_gate_passes": true
+  }
+}
