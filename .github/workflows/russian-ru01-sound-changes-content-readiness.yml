@@ -146,20 +146,28 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git fetch --no-tags origin main --depth=1
-          changed=$(git diff --name-only origin/main...HEAD)
-          printf '%s\n' "$changed" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor' > /tmp/blocked.txt || true
-          # This long-lived Russian closure branch predates this wave and may already
-          # contain unrelated protected-surface diffs. Prove the three newest commits
-          # that constitute this wave do not add any such path.
-          recent=$(git diff --name-only HEAD~3..HEAD)
+          wave_base='dbd8904fec85c14c00099b6fc9f34b315b033d39'
+          git merge-base --is-ancestor "$wave_base" HEAD
+          recent=$(git diff --name-only "$wave_base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru01-sound-changes-content-readiness.yml
+          eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-CHANGES-WAVE-003-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_changes_content_readiness.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          if [[ -n "$unexpected" ]]; then
+            echo 'Current sound-changes wave touched files outside the exact bounded allowlist:' >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
           if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
             echo 'Current sound-changes wave touched a protected public/production surface.' >&2
             exit 1
           fi
 
       - name: Diff hygiene for current bounded wave
-        run: git diff --check HEAD~3..HEAD
+        run: git diff --check dbd8904fec85c14c00099b6fc9f34b315b033d39..HEAD
 
       - name: Upload durable readiness evidence
         uses: actions/upload-artifact@v4
