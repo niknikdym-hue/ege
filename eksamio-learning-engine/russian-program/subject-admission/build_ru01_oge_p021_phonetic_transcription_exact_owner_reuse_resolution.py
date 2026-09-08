@@ -104,7 +104,7 @@ def build_resolution() -> dict[str, Any]:
         raise ValueError("historical binding review unexpectedly pre-admitted target semantics")
 
     semantic_auth = json.loads(SEMANTIC_AUTH.read_text(encoding="utf-8"))
-    if semantic_auth.get("normalized_sha256") != SEMANTIC_AUTH_SHA256:
+    if hashlib.sha256(canonical_json(semantic_auth)).hexdigest() != SEMANTIC_AUTH_SHA256:
         raise ValueError("accepted transcription semantic authority SHA drift")
     if semantic_auth.get("status") != "CENTRAL_BRAIN_ACCEPTED_RU01_PHONETIC_TRANSCRIPTION_BOUNDED_SUBJECT_SEMANTIC":
         raise ValueError("transcription semantic is not accepted")
