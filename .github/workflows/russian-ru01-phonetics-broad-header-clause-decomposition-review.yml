@@ -1,0 +1,116 @@
+name: Russian RU01 phonetics broad-header clause decomposition review
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_clause_decomposition_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_residual_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v19.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETICS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-TRANSCRIPTION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-CHANGES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - ".github/workflows/russian-ru01-phonetics-broad-header-clause-decomposition-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-broad-header-clause-decomposition-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile exact-clause builder
+        run: python -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_clause_decomposition_review.py
+
+      - name: Build deterministic exact-clause review twice
+        run: |
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_clause_decomposition_review.py --output /tmp/ru01-clause-a.json
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_clause_decomposition_review.py --output /tmp/ru01-clause-b.json
+          cmp /tmp/ru01-clause-a.json /tmp/ru01-clause-b.json
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_clause_decomposition_review.py
+
+      - name: Fail closed on exact source clauses and zero admissions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          d = json.loads(Path('/tmp/ru01-clause-a.json').read_text(encoding='utf-8'))
+          assert d['status'] == 'CENTRAL_BRAIN_RU01_BROAD_HEADER_EXACT_CLAUSE_DECOMPOSITION_REVIEW_READY_NOT_ACCEPTED'
+          assert d['base_current_label'] == 'current-v19'
+
+          s = d['summary']
+          assert s == {
+              'source_requirements_decomposed': 3,
+              'exact_official_clauses': 17,
+              'clauses_with_exact_current_owner': 7,
+              'clauses_with_partial_current_owner_only': 5,
+              'unbound_exact_clauses': 5,
+              'new_semantic_candidates': 0,
+              'semantic_admissions': 0,
+              'object_level_closures': 0,
+              'exact_mastery_admissions': 0,
+              'false_exact_mastery_admissions': 0,
+          }
+
+          records = d['records']
+          assert len(records) == 17
+          assert len({r['clause_id'] for r in records}) == 17
+          by_req = {}
+          for row in records:
+              by_req[row['requirement_id']] = by_req.get(row['requirement_id'], 0) + 1
+          assert by_req == {
+              'RSK-EDSOO59-4-1-P181': 3,
+              'RSK-EDSOO59-4-1-P187': 7,
+              'RSK-OGE_COD-4-1-P020': 7,
+          }
+
+          statuses = {r['owner_match_status'] for r in records}
+          assert statuses == {
+              'EXACT_CURRENT_OWNER',
+              'PARTIAL_CURRENT_OWNER_NOT_ENOUGH_FOR_CLAUSE_CLOSURE',
+              'UNBOUND_EXACT_CLAUSE',
+          }
+          assert all(r['current_owner_refs'] for r in records if r['owner_match_status'] == 'EXACT_CURRENT_OWNER')
+          assert all(not r['current_owner_refs'] for r in records if r['owner_match_status'] == 'UNBOUND_EXACT_CLAUSE')
+
+          non = d['explicit_non_inference']
+          assert non['normative_orthoepy_stress_can_substitute_for_generic_phonetic_stress'] is False
+          assert non['vowel_consonant_feature_owner_can_close_full_sound_system_or_full_vowel_consonant_system'] is False
+          assert non['broad_header_can_be_closed_from_title_route_task_number_keyword_fuzzy_or_embedding'] is False
+          assert non['partial_owner_match_is_exact_owner_match'] is False
+
+          guard = d['current_aggregate_guard']
+          assert guard['semantic_units_with_accepted_component_sets'] == 41
+          assert guard['semantic_requirements_with_accepted_component_sets'] == 41
+          assert guard['subject_disposed_units_total'] == 42
+          assert guard['subject_review_units_remaining'] == 1274
+          assert guard['subject_review_requirements_remaining'] == 1349
+          assert guard['canonical_component_refs_reused_unique'] == 122
+          assert guard['accepted_bounded_ru_subject_semantics'] == 69
+          assert guard['accepted_bounded_ru_semantics_total'] == 78
+          assert guard['false_exact_mastery_admissions'] == 0
+
+          nxt = d['next_required_action']
+          assert nxt['object_acceptance'].startswith('FORBIDDEN_UNTIL_EVERY_REQUIRED_CLAUSE')
+          assert 'SEARCH_EXACT_CURRENT_CANONICAL_OWNER_BY_SOURCE_SCOPE' in nxt['partial_or_unbound_clauses']
+          print('RU01_BROAD_HEADER_EXACT_CLAUSE_FAIL_CLOSED=PASS')
+          PY
+
+      - name: Protect tracked repository hygiene
+        run: |
+          git diff --check
+          git diff --exit-code
