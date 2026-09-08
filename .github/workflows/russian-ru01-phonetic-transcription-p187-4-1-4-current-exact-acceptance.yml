@@ -1,0 +1,113 @@
+name: Russian RU01 phonetic transcription P187 4.1.4 current exact acceptance
+
+on:
+  push:
+    branches:
+      - brain/sep1-russian-subject-closure
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-TRANSCRIPTION-P187-4-1-4-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v12.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v11.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-TRANSCRIPTION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetic_transcription_content_readiness.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-PHONETIC-TRANSCRIPTION-WAVE-002-v0.1.json'
+      - '.github/workflows/russian-ru01-phonetic-transcription-p187-4-1-4-current-exact-acceptance.yml'
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-TRANSCRIPTION-P187-4-1-4-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v12.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v11.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-TRANSCRIPTION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetic_transcription_content_readiness.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-PHONETIC-TRANSCRIPTION-WAVE-002-v0.1.json'
+      - '.github/workflows/russian-ru01-phonetic-transcription-p187-4-1-4-current-exact-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-ru01-transcription-p187-4-1-4-object-acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Rebuild accepted current-v12 progress deterministically
+        run: |
+          set -euo pipefail
+          root=eksamio-learning-engine/russian-program/subject-admission
+          python -m py_compile "$root/build_russian_semantic_acceptance_progress_launch_current_v12.py"
+          python "$root/build_russian_semantic_acceptance_progress_launch_current_v12.py" --output /tmp/progress-v12-a.json
+          python "$root/build_russian_semantic_acceptance_progress_launch_current_v12.py" --output /tmp/progress-v12-b.json
+          cmp /tmp/progress-v12-a.json /tmp/progress-v12-b.json
+
+      - name: Verify exact P187 4.1.4 transcription acceptance and bounded aggregate delta
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/progress-v12-a.json',encoding='utf-8'))
+          s=d['progress_summary']
+          expected={
+              'semantic_units_with_accepted_component_sets':37,
+              'semantic_requirements_with_accepted_component_sets':37,
+              'semantic_units_remaining_without_accepted_component_set':1279,
+              'semantic_requirements_remaining_without_accepted_component_set':1354,
+              'subject_disposed_units_total':38,
+              'subject_disposed_requirements_total':38,
+              'subject_review_units_remaining':1278,
+              'subject_review_requirements_remaining':1353,
+              'canonical_component_refs_reused_unique':119,
+              'review_groups_with_accepted_component_sets':14,
+              'accepted_bounded_ru_route_semantics':9,
+              'accepted_bounded_ru_subject_semantics':67,
+              'accepted_bounded_ru_semantics_total':76,
+              'false_exact_mastery_admissions':0,
+          }
+          for k,v in expected.items():
+              assert s[k]==v,(k,s[k],v)
+          assert d['schema_version']=='0.15.0'
+          assert len(d['accepted_authorities'])==59
+          assert d['base_current_launch_progress_v11_head_sha']=='a537f7426c122e14c4d5bc903ed3787bc1ebe7a3'
+          assert d['base_current_launch_progress_v11_builder_git_blob_sha1']=='68a7902bd4fef33d6328a5b02c7ec973ff59e9a4'
+          assert d['base_current_launch_progress_v11_normalized_sha256']=='26f33c517b3c7015be48d42fdb08b1a68569931d33cbcef198da4d84aeccce58'
+          groups=[x for x in d['semantic_review_groups'] if x.get('group_id')=='RUS-SEM-REVIEW-001']
+          assert len(groups)==1
+          g=groups[0]
+          assert g['accepted_component_set_count']==8
+          aid='RU01_PHONETIC_TRANSCRIPTION_P187_4_1_4_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1'
+          rows=[x for x in g['accepted_component_sets'] if x.get('accepted_authority_id')==aid]
+          assert len(rows)==1
+          row=rows[0]
+          assert row['admission_unit_id']=='RAU-2725ee5b709b70502748'
+          assert row['requirement_id']=='RSK-EDSOO59-4-1-4-P187'
+          assert row['canonical_component_refs']==['ru-phonetics-phonetic-transcription-elements']
+          assert row['authority']['component_specific_independent_evidence_items']==5
+          assert row['mastery_boundary']['accepted_bounded_subject_semantic_required'] is True
+          assert row['mastery_boundary']['component_specific_independent_evidence_required'] is True
+          assert row['mastery_boundary']['generic_ru01_attempt_can_emit_exact_component_mastery'] is False
+          assert row['mastery_boundary']['word_analysis_evidence_can_substitute_for_transcription'] is False
+          assert row['mastery_boundary']['normative_pronunciation_or_stress_evidence_can_substitute_for_transcription'] is False
+          assert row['mastery_boundary']['shared_evidence_can_close_sibling_source_objects_without_separate_acceptance'] is False
+          new=d['newly_accepted_exact_object']
+          assert new['admission_unit_id']=='RAU-2725ee5b709b70502748'
+          assert new['requirement_id']=='RSK-EDSOO59-4-1-4-P187'
+          assert new['component_specific_independent_evidence_ids']==['p01-u4-v1','p01-u4-v2','p01-u4-v3','p01-u4-v4','p01-u4-v5']
+          assert new['sibling_source_objects_accepted']==0
+          PY
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Upload exact current-v12 progress
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-phonetic-transcription-p187-4-1-4-current-exact-acceptance
+          path: /tmp/progress-v12-a.json
+          if-no-files-found: error
