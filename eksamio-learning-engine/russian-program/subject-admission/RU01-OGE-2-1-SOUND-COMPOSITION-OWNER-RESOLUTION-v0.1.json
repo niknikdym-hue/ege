@@ -1,0 +1,99 @@
+{
+  "acceptance_boundary": {
+    "candidate_owner_resolution_can_self_admit": false,
+    "component_specific_independent_learner_evidence_required": true,
+    "exact_mastery_effect": "NONE",
+    "existing_partial_component_is_preserved": true,
+    "false_exact_mastery": 0,
+    "keyword_fuzzy_or_embedding_inference_allowed": false,
+    "object_closure_effect": "NONE",
+    "route_or_task_name_can_admit_semantics": false,
+    "semantic_admission_effect": "NONE"
+  },
+  "authority_issue": 161,
+  "current_launch_progress_v16_normalized_sha256": "43ccb3968f98540d32e54ef99c1c73b864c55caea22289b9e2764d77e32fc147",
+  "exact_source_requirement": {
+    "already_bound_component_ref": "ru-phonetics-vowel-consonant-features",
+    "code": "2.1",
+    "document_sha256": "2d83e987ddad08d405827f98dfa490721f2d67b787b2803d8c499eea7b84858a",
+    "page": 10,
+    "remaining_exact_blocker": "SOUND_COMPOSITION_FACET_UNBOUND",
+    "source_manifest_path": "russian-program/source-knowledge/RUSSIAN-OFFICIAL-SOURCE-MANIFEST-v1.0.json",
+    "source_requirement_index_path": "russian-program/source-knowledge/requirements/requirements-11.json",
+    "source_review_classification": "COMPOSITE",
+    "source_review_signature": "SOUND_IDENTIFICATION_FEATURES_COMPOSITION",
+    "source_scope_paraphrase_ru": "Вычленять звуки речи и характеризовать их фонетические признаки; распознавать звуки по заданным характеристикам; определять звуковой состав слова."
+  },
+  "existing_owner_search": {
+    "exact_current_sound_composition_owner_found": false,
+    "resolution": "NO_EXACT_CURRENT_SOUND_COMPOSITION_OWNER",
+    "reviewed_current_phonetics_semantics": [
+      {
+        "reason": "Owns written-letter versus speech-sound relation, not the standalone sound-composition facet.",
+        "result": "NOT_EXACT_OWNER",
+        "semantic_id": "ru-phonetics-sound-letter-relation"
+      },
+      {
+        "reason": "Owns phonetic feature classification for actually pronounced sounds; the exact binding review already binds this component and leaves sound composition unbound.",
+        "result": "PARTIAL_COMPONENT_ALREADY_BOUND",
+        "semantic_id": "ru-phonetics-vowel-consonant-features"
+      },
+      {
+        "reason": "Owns the broader school phonetic-analysis procedure; the exact object-binding review does not bind it as the standalone sound-composition component.",
+        "result": "NOT_EXACT_OWNER_FOR_STANDALONE_FACET",
+        "semantic_id": "ru-phonetics-word-analysis-sequence"
+      },
+      {
+        "reason": "Owns phonetic transcription elements, not determining sound composition.",
+        "result": "NOT_EXACT_OWNER",
+        "semantic_id": "ru-phonetics-phonetic-transcription-elements"
+      },
+      {
+        "reason": "Owns sound changes in speech flow, not determining sound composition.",
+        "result": "NOT_EXACT_OWNER",
+        "semantic_id": "ru-phonetics-sound-changes-in-speech-flow"
+      }
+    ]
+  },
+  "next_required_gates": [
+    "ORIGINAL_LEARNER_CONTENT",
+    "INDEPENDENT_SOUND_COMPOSITION_SPECIFIC_EVIDENCE",
+    "BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE",
+    "EXACT_OBJECT_COMPONENT_SET_ACCEPTANCE_FOR_RAU-b6f5dff93864358672bc"
+  ],
+  "normalized_sha256": "c3c01a40b7877ba400bebe2e0de6a2ea503bca4b00eae38b96a02432d4d6bac9",
+  "proposed_owner": {
+    "boundary": {
+      "excludes": [
+        "vowel_consonant_feature_classification",
+        "full_phonetic_analysis_sequence",
+        "phonetic_transcription",
+        "sound_letter_relation_as_standalone_task",
+        "sound_changes_in_speech_flow",
+        "normative_pronunciation_or_stress",
+        "spelling"
+      ],
+      "includes": [
+        "sound_composition_determination_for_presented_word"
+      ]
+    },
+    "definition_ru": "Определять звуковой состав предъявленного слова как состав реально произносимых звуков, не подменяя его буквенным составом.",
+    "label_ru": "Определение звукового состава слова",
+    "semantic_id": "ru-phonetics-sound-composition-determination",
+    "source_taxonomy_id": "sound_composition_determination",
+    "status": "PROPOSED_NOT_CANONICAL"
+  },
+  "russian_closure_input_head": "5dad71b64577f0e51b94fc0191fb4b1c3b6fb543",
+  "schema_version": "0.1.0",
+  "status": "BOUNDED_SOURCE_BACKED_SOUND_COMPOSITION_OWNER_RESOLUTION_NO_ADMISSION",
+  "target_object": {
+    "admission_unit_id": "RAU-b6f5dff93864358672bc",
+    "document_id": "OGE_COD",
+    "module_id": "RU-PROG-01",
+    "normalized_meaning": "Анализировать звуковую и буквенную форму языковых единиц.",
+    "requirement_id": "RSK-OGE_COD-2-1-P010",
+    "review_group_id": "RUS-SEM-REVIEW-001",
+    "source_id": "FIPI-OGE-RU-2026-FINAL",
+    "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_COD p.10 2.1"
+  }
+}

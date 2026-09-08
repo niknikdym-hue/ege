@@ -1,0 +1,62 @@
+name: Russian RU01 OGE 2.1 sound composition owner resolution
+
+on:
+  push:
+    branches: [brain/sep1-russian-subject-closure]
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-OGE-2-1-SOUND-COMPOSITION-OWNER-RESOLUTION-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru01_oge_2_1_sound_composition_owner_resolution.py'
+      - '.github/workflows/russian-ru01-oge-2-1-sound-composition-owner-resolution.yml'
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-OGE-2-1-SOUND-COMPOSITION-OWNER-RESOLUTION-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru01_oge_2_1_sound_composition_owner_resolution.py'
+      - '.github/workflows/russian-ru01-oge-2-1-sound-composition-owner-resolution.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-owner-resolution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify bounded source-backed owner resolution
+        run: |
+          set -euo pipefail
+          root=eksamio-learning-engine/russian-program/subject-admission
+          python -m py_compile "$root/validate_ru01_oge_2_1_sound_composition_owner_resolution.py"
+          python "$root/validate_ru01_oge_2_1_sound_composition_owner_resolution.py" | tee /tmp/owner-resolution.txt
+      - name: Protect bounded resolution
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=5dad71b64577f0e51b94fc0191fb4b1c3b6fb543
+          git merge-base --is-ancestor "$base" HEAD
+          recent=$(git diff --name-only "$base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru01-oge-2-1-sound-composition-owner-resolution.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU01-OGE-2-1-SOUND-COMPOSITION-OWNER-RESOLUTION-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/validate_ru01_oge_2_1_sound_composition_owner_resolution.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          test -z "$unexpected" || { printf '%s\n' "$unexpected" >&2; exit 1; }
+          ! printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor|payment|provider|openai'
+          git diff --check "$base"..HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-oge-2-1-sound-composition-owner-resolution
+          path: |
+            /tmp/owner-resolution.txt
+            eksamio-learning-engine/russian-program/subject-admission/RU01-OGE-2-1-SOUND-COMPOSITION-OWNER-RESOLUTION-v0.1.json
+          if-no-files-found: error
+          retention-days: 14
