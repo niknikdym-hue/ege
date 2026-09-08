@@ -1,0 +1,276 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CONTENT_AND_EVIDENCE_READY_SEMANTIC_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-01",
+  "module_title_ru": "Фонетика и графика",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9],
+    "routes": ["school", "oge", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "bounded_owner_resolution",
+      "ref": "russian-program/subject-admission/build_ru01_phonetic_transcription_owner_resolution.py",
+      "coverage_note": "Pins EDSOO59 p.187 §4.1.4 as a source-backed new semantic candidate and explicitly forbids substituting word-analysis evidence."
+    },
+    {
+      "kind": "official_program",
+      "authority": "EDSOO Federal Working Program Russian 5-9, 2025",
+      "document_id": "EDSOO59",
+      "document_sha256": "1d2f68b5e77e7b67fccd52ce0fed36d84141dc719e50db7b225f40b1313eeb0d",
+      "page": 187,
+      "code": "4.1.4",
+      "official_requirement": "Элементы фонетической транскрипции",
+      "official_learning_action": "Объяснять с помощью элементов транскрипции особенности произношения и написания слов."
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "learner_explanations": "ORIGINAL_EKSAMIO",
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "commercial_textbook_bytes_in_git": 0
+  },
+  "identity_boundary": {
+    "proposed_semantic_id": "ru-phonetics-phonetic-transcription-elements",
+    "source_taxonomy_id": "phonetic_transcription_elements",
+    "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+    "rule": "This unit teaches reading and using elementary school phonetic transcription to explain a pronunciation-versus-spelling relation. It does not independently establish a disputed pronunciation or normative stress.",
+    "word_analysis_semantic_may_substitute": false,
+    "normative_pronunciation_semantic_may_substitute": false,
+    "normative_stress_semantic_may_substitute": false,
+    "object_level_admission_effect": "NONE_UNTIL_SEPARATE_SEMANTIC_AND_EXACT_OBJECT_ACCEPTANCE",
+    "generic_ru01_result_can_emit_exact_component_mastery": false
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-phonetics-phonetic-transcription-elements",
+      "title_ru": "Фонетическая транскрипция: прочитать звуковую запись и объяснить расхождение с написанием",
+      "canonical_explanation": {
+        "short": "Фонетическая транскрипция записывает звучание, а не орфографический облик слова. В учебной записи звуки помещают в квадратные скобки; мягкость согласного отмечают у самого согласного; если буква и звук расходятся, объяснение строят по сопоставлению написания с транскрипцией.",
+        "boundaries": [
+          "Транскрипция не равна переписыванию слова буквами: в ней фиксируется звуковая последовательность.",
+          "Квадратные скобки показывают, что перед нами звуковая запись; ь и ъ как буквы не получают отдельного звука.",
+          "Мягкость относится к согласному звуку и отмечается рядом с ним; буква, которая указывает на мягкость, не становится отдельным звуком.",
+          "Если произношение слова само по себе спорно или словарно закреплено, сначала нужна отдельная нормативная произносительная authority; этот компонент не имеет права её придумывать.",
+          "Место нормативного ударения относится к отдельному stress-компоненту; здесь оно может быть дано условием, но не выводится как отдельная освоенная норма.",
+          "Знание последовательности фонетического разбора не доказывает умение читать и использовать транскрипцию."
+        ]
+      },
+      "notation_contract": {
+        "square_brackets": "В учебных заданиях звуковая запись заключена в [ ].",
+        "softness_marker": "Знак ’ после согласного показывает мягкость именно этого согласного.",
+        "sound_not_letter": "Символ внутри транскрипции относится к произносимому звуку; орфографическая буква может с ним не совпадать.",
+        "iotated_fragment": "Если условие уже устанавливает сочетание [й’] + гласный, в транскрипции эти звуки записываются раздельно.",
+        "scope_guard": "Задания не требуют угадывать спорное произношение по написанию; нормативный факт либо общеучебно однозначен в данном примере, либо явно дан в условии."
+      },
+      "decision_algorithm": [
+        "Сначала отдели написанное слово от звуковой записи: транскрипция находится в квадратных скобках.",
+        "Прочитай транскрипцию слева направо как последовательность звуков, а не букв.",
+        "Для согласных учитывай знак мягкости у самого звука; не превращай ь или ъ в самостоятельный звук.",
+        "Сопоставь конкретное место в написании с конкретным звуком или сочетанием звуков в транскрипции.",
+        "Сформулируй расхождение: какая буква написана и какой звук реально зафиксирован в транскрипции.",
+        "Если для ответа пришлось бы самостоятельно выбирать спорную норму произношения или ударения, остановись и передай этот выбор соответствующей нормативной authority."
+      ],
+      "worked_examples": [
+        {
+          "id": "p01-u4-e1",
+          "prompt": "Дано: слово «дуб», а произношение конечного согласного уже установлено как [п]. Какая учебная запись показывает это расхождение?",
+          "answer": "[дуп]. Транскрипция фиксирует произносимый [п], хотя в написании стоит буква б.",
+          "measures": "read_and_apply_sound_not_letter"
+        },
+        {
+          "id": "p01-u4-e2",
+          "prompt": "Дано: в начале слова «ёлка» буква ё передаёт два звука [й’] и [о]. Какой фрагмент должен быть виден в звуковой записи?",
+          "answer": "[й’о]. Два установленных условием звука записываются раздельно.",
+          "measures": "read_iotated_fragment"
+        },
+        {
+          "id": "p01-u4-e3",
+          "prompt": "В записи [м’ач’] какой знак показывает мягкость первого согласного?",
+          "answer": "Знак ’ после [м]. Он относится к согласному звуку, а не является отдельным звуком.",
+          "measures": "read_softness_marker"
+        },
+        {
+          "id": "p01-u4-e4",
+          "prompt": "Сравни написание «конь» и учебную звуковую запись [кон’]. Что видно из сопоставления?",
+          "answer": "Буква ь отдельного звука не обозначает; она связана с мягкостью предыдущего согласного, которая отражена знаком ’ у [н’].",
+          "measures": "explain_spelling_pronunciation_relation"
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Транскрипция — это слово, переписанное теми же буквами в квадратных скобках.",
+          "correction": "Транскрипция фиксирует звуки; поэтому символы могут расходиться с буквами исходного написания."
+        },
+        {
+          "wrong": "Если в слове есть ь или ъ, в транскрипции для него нужен отдельный звук.",
+          "correction": "Эти буквы собственного звука не обозначают; транскрипция фиксирует звуковой результат."
+        },
+        {
+          "wrong": "Можно по одной транскрипции объявить освоенной нормативную орфоэпию или ударение.",
+          "correction": "Normative pronunciation и stress — отдельные семантические владельцы и требуют своей независимой evidence."
+        },
+        {
+          "wrong": "Если ученик знает план фонетического разбора, он автоматически умеет пользоваться транскрипцией.",
+          "correction": "Для этого компонента нужна самостоятельная проверка чтения и применения транскрипционной записи."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p01-u4-g1",
+          "prompt": "В паре «дуб — [дуп]» укажи букву и звук, которые расходятся.",
+          "expected": "В написании б, в транскрипции конечный звук [п]."
+        },
+        {
+          "id": "p01-u4-g2",
+          "prompt": "В записи [м’ач’] назови оба согласных и укажи, какие из них отмечены как мягкие.",
+          "expected": "[м’] и [ч’]; знак ’ показывает мягкость каждого соответствующего согласного."
+        },
+        {
+          "id": "p01-u4-g3",
+          "prompt": "Почему в паре «конь — [кон’]» нельзя добавлять в звуковую запись отдельный «звук мягкого знака»?",
+          "expected": "Потому что ь — буква без собственного звука; мягкость отражена у согласного [н’]."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p01-u4-i1",
+          "prompt": "Дано произношение конечного согласного слова «дуб» как [п]. Запиши учебную транскрипцию слова.",
+          "answer": "[дуп]"
+        },
+        {
+          "id": "p01-u4-i2",
+          "prompt": "Дано, что начальная ё передаёт [й’] + [о]. Запиши только этот начальный транскрипционный фрагмент.",
+          "answer": "[й’о]"
+        },
+        {
+          "id": "p01-u4-i3",
+          "prompt": "Объясни одним предложением, что означает знак ’ в записи [м’ач’].",
+          "answer": "Он отмечает мягкость согласного звука, после которого стоит."
+        },
+        {
+          "id": "p01-u4-i4",
+          "prompt": "Сопоставь «конь» и [кон’]: какой письменный знак не имеет собственного звука?",
+          "answer": "ь"
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p01-u4-t1",
+          "prompt": "Ученик записал «дуб» как [дуб], потому что решил просто перенести буквы в скобки. Исправь способ решения, если условие уже сообщает конечный звук [п].",
+          "answer": "Нужно записывать звуки, а не буквы: [дуп], затем объяснить расхождение б → [п]."
+        },
+        {
+          "id": "p01-u4-t2",
+          "prompt": "Для незнакомого заимствованного слова ученик не знает нормативного произношения, но хочет придумать транскрипцию по буквам. Как действовать?",
+          "answer": "Не угадывать. Сначала получить нормативное произношение из отдельной произносительной authority, затем транскрибировать установленное звучание."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p01-u4-r1",
+          "delay_hint": "24h",
+          "prompt": "Что принципиально записывает транскрипция: буквы или звуки?",
+          "answer": "Звуки."
+        },
+        {
+          "id": "p01-u4-r2",
+          "delay_hint": "7d",
+          "prompt": "Как в учебной транскрипции показать мягкость согласного?",
+          "answer": "Знаком ’ рядом с соответствующим согласным звуком."
+        },
+        {
+          "id": "p01-u4-r3",
+          "delay_hint": "14d",
+          "prompt": "Почему нельзя превращать ь в самостоятельный звук при транскрибировании?",
+          "answer": "Потому что ь не имеет собственного звука; он участвует в письменном обозначении, а транскрипция фиксирует звуковой результат."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p01-u4-v1",
+          "type": "single_choice",
+          "skill": "sound_not_letter",
+          "prompt": "Дано: в слове «дуб» конечный согласный произносится [п]. Какая запись является транскрипцией установленного звучания?",
+          "options": ["[дуб]", "[дуп]", "дуп", "«дуб»"],
+          "correct_option_index": 1
+        },
+        {
+          "id": "p01-u4-v2",
+          "type": "single_choice",
+          "skill": "iotated_fragment",
+          "prompt": "Дано: начальная ё передаёт два звука [й’] и [о]. Какой фрагмент транскрипции записывает оба звука?",
+          "options": ["[ё]", "[й’о]", "[о]", "[й’]"],
+          "correct_option_index": 1
+        },
+        {
+          "id": "p01-u4-v3",
+          "type": "single_choice",
+          "skill": "softness_marker",
+          "prompt": "Что показывает знак ’ в записи [м’ач’]?",
+          "options": ["границу слова", "ударение", "мягкость соответствующего согласного", "отдельный звук"],
+          "correct_option_index": 2
+        },
+        {
+          "id": "p01-u4-v4",
+          "type": "constructed_response",
+          "skill": "explain_spelling_pronunciation_relation",
+          "prompt": "Сопоставь «конь» и [кон’]. Объясни, что произошло с буквой ь в звуковой записи и где отражён её фонетический результат.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: указано, что ь собственного звука не обозначает",
+              "1: указано, что мягкость отражена у согласного [н’]"
+            ]
+          }
+        },
+        {
+          "id": "p01-u4-v5",
+          "type": "constructed_response",
+          "skill": "explain_spelling_pronunciation_relation",
+          "prompt": "Сопоставь «дуб» и данную условием транскрипцию [дуп]. Одним-двумя предложениями объясни, какое расхождение между написанием и звучанием показывает транскрипция.",
+          "scoring": {
+            "max_points": 2,
+            "criteria": [
+              "1: названо письменное б",
+              "1: назван произносимый конечный [п] и указано, что транскрипция фиксирует звук"
+            ]
+          }
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "verification_ids": ["p01-u4-v1", "p01-u4-v2", "p01-u4-v3", "p01-u4-v4", "p01-u4-v5"],
+        "mastery_emission_before_semantic_acceptance": false,
+        "object_mastery_emission_before_exact_object_acceptance": false
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "read an explicitly supplied school transcription",
+          "map a supplied sound sequence to elementary transcription symbols",
+          "explain a spelling-versus-sound mismatch from supplied transcription",
+          "explain square brackets and the consonant-softness marker"
+        ],
+        "forbidden": [
+          "inventing disputed pronunciation",
+          "inventing normative stress",
+          "treating p01-u3-v1 or p01-u3-v2 as transcription evidence",
+          "emitting exact transcription-component mastery before semantic acceptance",
+          "closing RSK-EDSOO59-4-1-4-P187 before separate exact object acceptance"
+        ]
+      }
+    }
+  ],
+  "release_boundary": {
+    "semantic_acceptance_effect": "NONE",
+    "object_acceptance_effect": "NONE",
+    "school_canonical_identity_created": false,
+    "false_exact_mastery_admissions": 0,
+    "public_runtime_change": false,
+    "production_peis_write": false
+  }
+}
