@@ -1,0 +1,136 @@
+name: Russian RU01 phonetic transcription owner resolution
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetic_transcription_owner_resolution.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_exact_object_binding_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v10.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-PHONETICS-GRAPHICS-WAVE-001-v0.1.json"
+      - ".github/workflows/russian-ru01-phonetic-transcription-owner-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-phonetic-transcription-owner-resolution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch current PR base
+        run: git fetch --no-tags origin "${{ github.base_ref }}" --depth=1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile RU01 transcription owner resolver
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetic_transcription_owner_resolution.py
+      - name: Build RU01 transcription owner resolution twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetic_transcription_owner_resolution.py --output /tmp/ru01-transcription-a.json > /tmp/ru01-transcription-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetic_transcription_owner_resolution.py --output /tmp/ru01-transcription-b.json > /tmp/ru01-transcription-b.txt
+          cmp /tmp/ru01-transcription-a.json /tmp/ru01-transcription-b.json
+          diff -u /tmp/ru01-transcription-a.txt /tmp/ru01-transcription-b.txt
+          cat /tmp/ru01-transcription-a.txt
+          cp /tmp/ru01-transcription-a.json RU01-PHONETIC-TRANSCRIPTION-OWNER-RESOLUTION.json
+      - name: Verify exact source-backed candidate remains fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path("RU01-PHONETIC-TRANSCRIPTION-OWNER-RESOLUTION.json").read_text(encoding="utf-8"))
+          assert data["schema_version"] == "0.1.0"
+          assert data["status"] == "CENTRAL_BRAIN_RU01_PHONETIC_TRANSCRIPTION_SOURCE_BACKED_CANDIDATE_RESOLVED_NOT_ACCEPTED"
+          assert data["module_id"] == "RU-PROG-01"
+          assert data["current_launch_progress_v10_normalized_sha256"] == "e770aa9528d4db14b3be8a703bc3f6fcbd195787a34e851532ebc4649c96f9b1"
+          assert data["exact_object_binding_review_normalized_sha256"] == "9e903409896463f350eb06e7bf5874eaaf9f1e21037c76f7c9c4b9e53831613e"
+
+          target = data["target"]
+          assert target["admission_unit_id"] == "RAU-2725ee5b709b70502748"
+          assert target["requirement_id"] == "RSK-EDSOO59-4-1-4-P187"
+          assert target["source_id"] == "EDSOO-RU-5-9-2025"
+          assert target["document_id"] == "EDSOO59"
+          assert target["document_sha256"] == "1d2f68b5e77e7b67fccd52ce0fed36d84141dc719e50db7b225f40b1313eeb0d"
+          assert target["page"] == 187
+          assert target["code"] == "4.1.4"
+          assert target["source_label_ru"] == "Элементы фонетической транскрипции"
+          assert target["normalized_source_signature"] == "PHONETIC_TRANSCRIPTION"
+          assert target["prior_review_classification"] == "PENDING"
+          assert target["prior_blocker"] == "TRANSCRIPTION_SEMANTIC_REQUIRED"
+
+          search = data["exact_current_owner_search"]
+          assert search["accepted_ru01_semantic_ids_checked"] == [
+              "ru-phonetics-sound-letter-relation",
+              "ru-phonetics-vowel-consonant-features",
+              "ru-phonetics-word-analysis-sequence",
+          ]
+          assert search["exact_current_owner_found"] is False
+          assert search["keyword_title_route_task_or_embedding_inference_used"] is False
+
+          candidate = data["candidate_resolution"]
+          assert candidate["candidate_semantic_id"] == "ru-phonetics-phonetic-transcription-elements"
+          assert candidate["resolution"] == "SOURCE_BACKED_NEW_SUBJECT_SEMANTIC_CANDIDATE_REQUIRED"
+          assert candidate["canonical_subject_semantic_admitted"] is False
+          assert candidate["school_canonical_identity_created"] is False
+          assert candidate["source_basis"]["official_requirement"] == "Элементы фонетической транскрипции"
+          assert candidate["source_basis"]["official_learning_action"] == "Объяснять с помощью элементов транскрипции особенности произношения и написания слов."
+
+          gap = data["content_and_evidence_gap"]
+          assert gap["dedicated_candidate_content_unit_present"] is False
+          assert gap["dedicated_candidate_independent_verification_present"] is False
+          assert gap["word_analysis_evidence_may_substitute"] is False
+          assert gap["word_analysis_evidence_ids_checked"] == ["p01-u3-v1", "p01-u3-v2"]
+
+          assert data["summary"] == {
+              "pending_source_objects_resolved_to_exact_existing_owner": 0,
+              "source_backed_new_semantic_candidates": 1,
+              "semantic_admissions": 0,
+              "object_level_admission_units_closed": 0,
+              "object_level_requirements_closed": 0,
+              "new_school_canonical_identities": 0,
+              "false_exact_mastery_admissions": 0,
+              "current_subject_review_units_remaining": 1279,
+              "current_subject_review_requirements_remaining": 1354,
+          }
+          policy = data["policy"]
+          assert policy["resolution_is_semantic_acceptance"] is False
+          assert policy["resolution_is_object_acceptance"] is False
+          assert policy["candidate_id_is_canonical_before_separate_acceptance"] is False
+          assert policy["shared_word_analysis_evidence_can_close_transcription"] is False
+          assert policy["sibling_source_objects_auto_closed"] is False
+          assert policy["whole_group_acceptance_allowed"] is False
+          assert policy["false_exact_mastery_admissions"] == 0
+
+          nxt = data["next_exact_work"]
+          assert nxt["learner_content_required"] is True
+          assert nxt["component_specific_independent_evidence_required"] is True
+          assert nxt["separate_semantic_acceptance_required"] is True
+          assert nxt["separate_object_acceptance_required_after_semantic_acceptance"] is True
+          assert nxt["target_remains_pending_until_all_gates_pass"] is True
+          print("RU01_PHONETIC_TRANSCRIPTION_OWNER_RESOLUTION_FAIL_CLOSED=PASS")
+          PY
+      - name: Upload RU01 transcription owner-resolution evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-phonetic-transcription-owner-resolution
+          path: RU01-PHONETIC-TRANSCRIPTION-OWNER-RESOLUTION.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Protect accepted Russian production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" | grep -E 'russkiy-knigi|tilda|demo|scor'; then
+            echo 'Accepted Russian demo/scorer/Tilda surfaces changed.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check "origin/${{ github.base_ref }}...HEAD"
