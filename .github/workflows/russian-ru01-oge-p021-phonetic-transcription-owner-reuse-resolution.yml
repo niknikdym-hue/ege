@@ -92,3 +92,90 @@ jobs:
           name: russian-ru01-oge-p021-phonetic-transcription-owner-reuse-resolution
           path: /tmp/owner-resolution-a.json
           if-no-files-found: error
+
+  exact-object-acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Rebuild accepted current-v13 progress deterministically
+        run: |
+          set -euo pipefail
+          root=eksamio-learning-engine/russian-program/subject-admission
+          python -m py_compile "$root/build_russian_semantic_acceptance_progress_launch_current_v13.py"
+          python "$root/build_russian_semantic_acceptance_progress_launch_current_v13.py" --output /tmp/progress-v13-a.json
+          python "$root/build_russian_semantic_acceptance_progress_launch_current_v13.py" --output /tmp/progress-v13-b.json
+          cmp /tmp/progress-v13-a.json /tmp/progress-v13-b.json
+
+      - name: Verify exact OGE P021 4.1.4 transcription acceptance and bounded aggregate delta
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/progress-v13-a.json',encoding='utf-8'))
+          s=d['progress_summary']
+          expected={
+              'semantic_units_with_accepted_component_sets':38,
+              'semantic_requirements_with_accepted_component_sets':38,
+              'semantic_units_remaining_without_accepted_component_set':1278,
+              'semantic_requirements_remaining_without_accepted_component_set':1353,
+              'subject_disposed_units_total':39,
+              'subject_disposed_requirements_total':39,
+              'subject_review_units_remaining':1277,
+              'subject_review_requirements_remaining':1352,
+              'canonical_component_refs_reused_unique':119,
+              'review_groups_with_accepted_component_sets':14,
+              'accepted_bounded_ru_route_semantics':9,
+              'accepted_bounded_ru_subject_semantics':67,
+              'accepted_bounded_ru_semantics_total':76,
+              'false_exact_mastery_admissions':0,
+          }
+          for k,v in expected.items():
+              assert s[k]==v,(k,s[k],v)
+          assert d['schema_version']=='0.16.0'
+          assert len(d['accepted_authorities'])==60
+          assert d['base_current_launch_progress_v12_head_sha']=='a1ab7c475535b8b904fecc1fe915e64c9ace1eac'
+          assert d['base_current_launch_progress_v12_builder_git_blob_sha1']=='872b08739081224bafc7576e90b8c5fc7082869b'
+          assert d['base_current_launch_progress_v12_normalized_sha256']=='dfe5bd5ccf1f87c75691d5adc57ad6aff96525384c3fccae4fe1eebb50ebdebf'
+          groups=[x for x in d['semantic_review_groups'] if x.get('group_id')=='RUS-SEM-REVIEW-001']
+          assert len(groups)==1
+          g=groups[0]
+          assert g['accepted_component_set_count']==9
+          aid='RU01_OGE_P021_PHONETIC_TRANSCRIPTION_4_1_4_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1'
+          rows=[x for x in g['accepted_component_sets'] if x.get('accepted_authority_id')==aid]
+          assert len(rows)==1
+          row=rows[0]
+          assert row['admission_unit_id']=='RAU-f12c55d19d60877d22ef'
+          assert row['requirement_id']=='RSK-OGE_COD-4-1-4-P021'
+          assert row['canonical_component_refs']==['ru-phonetics-phonetic-transcription-elements']
+          assert row['authority']['exact_owner_reuse_resolution_normalized_sha256']=='60196b61d4d4f1ff47cac309fdb1fe7b8f542296de1572836fe8c8da267f4f9c'
+          assert row['authority']['component_specific_independent_evidence_items']==5
+          assert row['mastery_boundary']['accepted_bounded_subject_semantic_required'] is True
+          assert row['mastery_boundary']['exact_current_owner_resolution_required'] is True
+          assert row['mastery_boundary']['component_specific_independent_evidence_required'] is True
+          assert row['mastery_boundary']['generic_ru01_attempt_can_emit_exact_component_mastery'] is False
+          assert row['mastery_boundary']['word_analysis_evidence_can_substitute_for_transcription'] is False
+          assert row['mastery_boundary']['normative_pronunciation_or_stress_evidence_can_substitute_for_transcription'] is False
+          assert row['mastery_boundary']['shared_evidence_can_close_sibling_source_objects_without_separate_acceptance'] is False
+          new=d['newly_accepted_exact_object']
+          assert new['admission_unit_id']=='RAU-f12c55d19d60877d22ef'
+          assert new['requirement_id']=='RSK-OGE_COD-4-1-4-P021'
+          assert new['component_specific_independent_evidence_ids']==['p01-u4-v1','p01-u4-v2','p01-u4-v3','p01-u4-v4','p01-u4-v5']
+          assert new['sibling_source_objects_accepted']==0
+          PY
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Upload exact current-v13 progress
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-oge-p021-phonetic-transcription-current-exact-acceptance
+          path: /tmp/progress-v13-a.json
+          if-no-files-found: error
