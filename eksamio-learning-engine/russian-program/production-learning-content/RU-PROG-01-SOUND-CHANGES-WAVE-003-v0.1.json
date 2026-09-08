@@ -1,0 +1,277 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CONTENT_AND_EVIDENCE_READY_SEMANTIC_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-01",
+  "module_title_ru": "Фонетика и графика",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9],
+    "routes": ["school", "oge", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "bounded_source_binding_review",
+      "ref": "russian-program/subject-admission/RU01-SOUND-CHANGES-EXACT-SOURCE-BINDING-REVIEW-v0.1.json",
+      "coverage_note": "Exact current review proves that none of the three existing RU01 semantics owns the standalone source component with component-specific evidence and resolves a bounded source-backed candidate without accepting it."
+    },
+    {
+      "kind": "official_program",
+      "authority": "EDSOO Federal Working Program Russian 5-9, 2025",
+      "document_id": "EDSOO59",
+      "document_sha256": "1d2f68b5e77e7b67fccd52ce0fed36d84141dc719e50db7b225f40b1313eeb0d",
+      "page": 187,
+      "code": "4.1.3",
+      "official_requirement": "Изменения звуков в речевом потоке"
+    },
+    {
+      "kind": "official_codifier",
+      "authority": "FIPI OGE Russian 2026 final codifier",
+      "document_id": "OGE_COD",
+      "document_sha256": "2d83e987ddad08d405827f98dfa490721f2d67b787b2803d8c499eea7b84858a",
+      "page": 21,
+      "code": "4.1.3",
+      "official_requirement": "Изменения звуков в речевом потоке"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "learner_explanations": "ORIGINAL_EKSAMIO",
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "commercial_textbook_bytes_in_git": 0
+  },
+  "identity_boundary": {
+    "proposed_semantic_id": "ru-phonetics-sound-changes-in-speech-flow",
+    "source_taxonomy_id": "sound_changes_in_speech_flow",
+    "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+    "rule": "This unit teaches the learner to compare a context-free or condition-given sound with its context-realized sound, identify the changed phonetic feature, and explain that the change is caused by speech context. It does not independently establish a disputed lexical pronunciation, normative stress, transcription mastery, or the full phonetic-analysis procedure.",
+    "sound_letter_relation_semantic_may_substitute": false,
+    "vowel_consonant_features_semantic_may_substitute": false,
+    "word_analysis_semantic_may_substitute": false,
+    "phonetic_transcription_semantic_may_substitute": false,
+    "normative_pronunciation_semantic_may_substitute": false,
+    "normative_stress_semantic_may_substitute": false,
+    "object_level_admission_effect": "NONE_UNTIL_SEPARATE_SEMANTIC_AND_TWO_EXACT_OBJECT_ACCEPTANCES",
+    "generic_ru01_result_can_emit_exact_component_mastery": false
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-phonetics-sound-changes-in-speech-flow",
+      "title_ru": "Изменения звуков в речевом потоке: увидеть исходный звук, контекст и результат",
+      "canonical_explanation": {
+        "short": "Звук в речи рассматривают не изолированно: соседние звуки и позиция могут влиять на то, как он реализуется. Чтобы доказать изменение звука, нужно сравнить исходный или заданный условием звук с его реализацией в конкретном речевом контексте, назвать изменившийся признак и связать результат с контекстом. Одна только буква, статическая характеристика звука или знание плана фонетического разбора такого доказательства не дают.",
+        "boundaries": [
+          "Изменение звука доказывается сравнением двух состояний: исходного или заданного условием и реализованного в речевом контексте.",
+          "Если меняется звонкость и [б] реализуется как [п], это изменение по признаку звонкости; если [с] реализуется как [з], это изменение по тому же признаку в обратную сторону.",
+          "Если звук сохраняет те же признаки, статическая характеристика звука сама по себе не является доказательством изменения в речевом потоке.",
+          "Буква и звук — разные уровни. Расхождение между буквой и звуком может сопровождать изменение, но одного sound-letter correspondence недостаточно для признания этого компонента освоенным.",
+          "Фонетическая транскрипция может служить способом показать звуковую реализацию, но владение транскрипцией является отдельным компонентом и не подменяет объяснение изменения.",
+          "Если нормативное произношение конкретного слова не дано условием и требует словарного решения, этот компонент не имеет права его придумывать; сначала нужна отдельная normative-pronunciation authority.",
+          "Нормативное ударение относится к отдельному stress-компоненту и не выводится из данного навыка.",
+          "Знание последовательности полного фонетического разбора не означает автоматически умение выделять и объяснять изменение звука в потоке речи."
+        ]
+      },
+      "decision_algorithm": [
+        "Определи, какой звук или его характеристика заданы как исходные либо сопоставимые вне текущего контекста.",
+        "Определи, какая реализация звука дана или наблюдается в конкретном речевом контексте.",
+        "Сравни признаки двух состояний: прежде всего звонкость/глухость, мягкость/твёрдость и другие признаки только в той мере, в какой они прямо заданы материалом.",
+        "Если признак изменился, назови результат как изменение звука и укажи, какой именно признак изменился.",
+        "Свяжи изменение с речевым контекстом, а не с одной лишь буквой в написании.",
+        "Если фактическую реализацию пришлось бы угадывать по спорному произношению слова, остановись: сначала требуется отдельная произносительная authority."
+      ],
+      "worked_examples": [
+        {
+          "id": "p01-u5-e1",
+          "prompt": "Условие уже задаёт: исходный согласный [б] — звонкий, а в рассматриваемом речевом контексте он реализуется как [п] — глухой. Что именно изменилось?",
+          "answer": "Изменилась звонкость: звонкий [б] реализовался как глухой [п]. Это contextual sound change, потому что сравниваются исходное и контекстное состояния.",
+          "measures": "identify_contextual_sound_change"
+        },
+        {
+          "id": "p01-u5-e2",
+          "prompt": "Условие уже задаёт: [с] в данном сочетании реализуется как [з]. Как описать изменение, не делая вывода о написании?",
+          "answer": "Глухой [с] реализуется как звонкий [з]; изменился признак звонкости. Буквенный состав для этого вывода не нужен.",
+          "measures": "explain_trigger_and_result"
+        },
+        {
+          "id": "p01-u5-e3",
+          "prompt": "Даны две позиции, и в обеих произносится [м] с теми же признаками. Можно ли на этом основании заявить изменение звука?",
+          "answer": "Нет. Если сопоставимые признаки не изменились, есть характеристика звука в двух позициях, но нет доказанного sound change.",
+          "measures": "distinguish_change_from_static_feature"
+        },
+        {
+          "id": "p01-u5-e4",
+          "prompt": "Для незнакомого слова фактическое произношение не дано. Ученик хочет вывести изменение звука только по написанию. Что делать?",
+          "answer": "Не угадывать. Сначала установить фактическое нормативное произношение через отдельную pronunciation authority; затем уже сравнивать звуковые состояния.",
+          "measures": "recognize_fail_closed_normative_boundary"
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Любое расхождение между буквой и звуком автоматически доказывает освоение изменений звуков в речевом потоке.",
+          "correction": "Нужно показать именно сравнение звуковых состояний и изменившийся признак; sound-letter relation является отдельным компонентом."
+        },
+        {
+          "wrong": "Достаточно назвать звук звонким или глухим — значит изменение уже найдено.",
+          "correction": "Статическая характеристика одного звука недостаточна: нужен переход между сопоставимыми состояниями."
+        },
+        {
+          "wrong": "Если ученик умеет транскрибировать, он автоматически умеет объяснять sound change.",
+          "correction": "Транскрипция фиксирует звуковую запись; этот компонент отдельно проверяет сравнение исходного и контекстного звука и объяснение изменившегося признака."
+        },
+        {
+          "wrong": "Можно придумать произношение незнакомого слова по буквам и использовать его как evidence.",
+          "correction": "Спорное или словарное произношение должно быть установлено отдельной нормативной authority до проверки sound-change компонента."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p01-u5-g1",
+          "prompt": "Дано [д] → [т]. Какой признак изменился, если [д] задан как звонкий, а [т] как глухой?",
+          "expected": "Звонкость: звонкий звук реализовался как глухой."
+        },
+        {
+          "id": "p01-u5-g2",
+          "prompt": "Дано [с] → [з]. Сформулируй изменение одним предложением.",
+          "expected": "Глухой [с] реализовался как звонкий [з]; изменился признак звонкости."
+        },
+        {
+          "id": "p01-u5-g3",
+          "prompt": "Дано [м] → [м] без изменения признаков. Какой вывод допустим?",
+          "expected": "В заданном сравнении изменение звука не доказано."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p01-u5-i1",
+          "prompt": "Условие задаёт [б] как исходный звонкий звук и [п] как его контекстную глухую реализацию. Назови изменившийся признак.",
+          "answer": "Звонкость/глухость: звонкий [б] реализовался как глухой [п]."
+        },
+        {
+          "id": "p01-u5-i2",
+          "prompt": "Почему одной записи буквы недостаточно, чтобы доказать sound change?",
+          "answer": "Потому что изменение устанавливают сравнением звуковых состояний в контексте, а не только письменного знака и звука."
+        },
+        {
+          "id": "p01-u5-i3",
+          "prompt": "Что делать, если контекстная реализация звука в слове неизвестна и произношение может быть словарным?",
+          "answer": "Не выводить её самостоятельно; сначала установить нормативное произношение через отдельную pronunciation authority."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p01-u5-t1",
+          "prompt": "Ученик видит [с] → [з] и отвечает только: «[з] — звонкий согласный». Чего не хватает?",
+          "answer": "Нужно сравнить состояния и назвать изменение: исходный глухой [с] реализовался как звонкий [з], то есть изменился признак звонкости."
+        },
+        {
+          "id": "p01-u5-t2",
+          "prompt": "Ученик умеет записывать звуки в квадратных скобках, но не может объяснить, какой признак изменился между [д] и [т]. Можно ли считать sound-change компонент освоенным?",
+          "answer": "Нет. Транскрипционная запись не заменяет самостоятельное доказательство изменения признака."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p01-u5-r1",
+          "delay_hint": "24h",
+          "prompt": "Что обязательно нужно сравнить, чтобы доказать изменение звука в речевом потоке?",
+          "answer": "Исходное или заданное состояние звука и его реализацию в конкретном контексте."
+        },
+        {
+          "id": "p01-u5-r2",
+          "delay_hint": "7d",
+          "prompt": "Почему статическая характеристика «звук звонкий» ещё не доказывает sound change?",
+          "answer": "Потому что не показано второе сопоставимое состояние и переход между ними."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p01-u5-v1",
+          "type": "multiple_choice",
+          "skill": "identify_contextual_sound_change",
+          "prompt": "Какой набор данных достаточен для доказательства изменения звука?",
+          "options": [
+            "Только буква в написании",
+            "Только характеристика одного звука",
+            "Исходное/заданное состояние, контекстная реализация и изменившийся признак",
+            "Только знание плана фонетического разбора"
+          ],
+          "answer_index": 2
+        },
+        {
+          "id": "p01-u5-v2",
+          "type": "constructed_response",
+          "skill": "compare_base_and_realized_sound",
+          "prompt": "Условие задаёт: [б] — исходный звонкий согласный, [п] — его контекстная глухая реализация. Опиши изменение одним предложением.",
+          "rubric": "Ответ должен явно сравнить [б] и [п] и назвать переход звонкий → глухой; ссылка только на букву или только на статическую характеристику недостаточна."
+        },
+        {
+          "id": "p01-u5-v3",
+          "type": "constructed_response",
+          "skill": "explain_trigger_and_result",
+          "prompt": "Дано: в рассматриваемом контексте [с] реализуется как [з]. Какой признак изменился и почему это относится к sound change?",
+          "rubric": "Нужно назвать глухой → звонкий и указать, что сравниваются исходный звук и его контекстная реализация."
+        },
+        {
+          "id": "p01-u5-v4",
+          "type": "constructed_response",
+          "skill": "distinguish_change_from_static_feature",
+          "prompt": "Даны две позиции: [м] → [м], и условие сообщает, что сопоставимые признаки одинаковы. Есть ли доказанное изменение звука? Объясни.",
+          "rubric": "Правильный ответ: нет; одинаковая реализация и неизменные признаки не доказывают sound change."
+        },
+        {
+          "id": "p01-u5-v5",
+          "type": "multiple_choice",
+          "skill": "distinguish_sound_change_from_adjacent_semantics",
+          "prompt": "Какой ответ относится именно к этому компоненту, а не только к соседней фонетической семантике?",
+          "options": [
+            "Назвать букву и звук",
+            "Назвать звук звонким",
+            "Показать [д] → [т], назвать изменение звонкости и связать его с заданным контекстом",
+            "Перечислить шаги полного фонетического разбора"
+          ],
+          "answer_index": 2
+        },
+        {
+          "id": "p01-u5-v6",
+          "type": "constructed_response",
+          "skill": "recognize_fail_closed_normative_boundary",
+          "prompt": "Фактическое произношение незнакомого слова не дано, а ученик хочет определить sound change только по буквам. Как должен действовать корректный Tutor?",
+          "rubric": "Не угадывать произношение; сначала получить нормативное произношение из отдельной pronunciation authority, затем выполнять сравнение звуковых состояний."
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref": "ru-phonetics-sound-changes-in-speech-flow",
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "verification_ids": ["p01-u5-v1", "p01-u5-v2", "p01-u5-v3", "p01-u5-v4", "p01-u5-v5", "p01-u5-v6"],
+        "mastery_emission_before_semantic_acceptance": false,
+        "object_mastery_emission_before_exact_object_acceptance": false,
+        "evidence_reusable_across_two_source_objects_only_after_separate_object_acceptance": true,
+        "false_exact_mastery_admissions": 0
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "Compare condition-given base and context-realized sounds.",
+          "Ask the learner to name the changed phonetic feature.",
+          "Explain why a static sound feature is not itself evidence of change.",
+          "Use condition-supplied sound realizations without inventing lexical pronunciation."
+        ],
+        "forbidden": [
+          "Do not infer disputed or dictionary-dependent pronunciation without the separate normative-pronunciation authority.",
+          "Do not infer normative stress from this component.",
+          "Do not reuse p01-u1-v1, p01-u1-v2, p01-u2-v1, p01-u2-v2, p01-u3-v1, p01-u3-v2, or p01-u4-v1..v5 as sound-changes-specific evidence.",
+          "Do not treat sound-letter relation, static sound classification, transcription, or the full phonetic-analysis sequence as semantic acceptance of this candidate.",
+          "Do not emit exact component mastery before separate bounded semantic acceptance.",
+          "Do not close RSK-EDSOO59-4-1-3-P187 or RSK-OGE_COD-4-1-3-P021 before their separate exact object-acceptance gates."
+        ]
+      }
+    }
+  ],
+  "release_boundary": {
+    "semantic_acceptance_effect": "NONE",
+    "object_acceptance_effect": "NONE",
+    "school_canonical_identity_created": false,
+    "false_exact_mastery_admissions": 0,
+    "public_runtime_change": false,
+    "production_peis_write": false
+  }
+}
