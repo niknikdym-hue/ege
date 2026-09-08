@@ -1,0 +1,158 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CONTENT_AND_EVIDENCE_READY_SEMANTIC_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-01",
+  "module_title_ru": "Фонетика и графика",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9],
+    "routes": ["school", "oge", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "bounded_owner_resolution",
+      "ref": "russian-program/subject-admission/RU01-OGE-2-1-SOUND-COMPOSITION-OWNER-RESOLUTION-v0.1.json",
+      "coverage_note": "Exact remote owner resolution preserves the already-bound vowel/consonant-features component, proves that no exact current owner exists for standalone sound-composition determination, and allows only this bounded candidate without semantic or object admission."
+    },
+    {
+      "kind": "exact_head_prerequisite_gate",
+      "workflow": "Russian RU01 OGE 2.1 sound composition owner resolution",
+      "run_id": 34248497114,
+      "head_sha": "a975713626334adb4c2e459ed66b2235d1dec3b7",
+      "conclusion": "SUCCESS"
+    },
+    {
+      "kind": "official_codifier",
+      "authority": "FIPI OGE Russian 2026 final codifier",
+      "document_id": "OGE_COD",
+      "document_sha256": "2d83e987ddad08d405827f98dfa490721f2d67b787b2803d8c499eea7b84858a",
+      "page": 10,
+      "code": "2.1",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_COD p.10 2.1",
+      "scope_paraphrase_ru": "Определять звуковой состав слова как отдельную часть анализа его звуковой формы."
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "learner_explanations": "ORIGINAL_EKSAMIO",
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "commercial_textbook_bytes_in_git": 0
+  },
+  "identity_boundary": {
+    "proposed_semantic_id": "ru-phonetics-sound-composition-determination",
+    "source_taxonomy_id": "sound_composition_determination",
+    "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+    "rule": "This unit measures determination of the ordered sound composition and sound count of a word from an explicitly established spoken realization. It does not independently establish the pronunciation of an unknown word, classify all sound features, prove letter-sound relations, require transcription conventions, or substitute for the full phonetic-analysis sequence.",
+    "vowel_consonant_features_existing_partial_component_preserved": true,
+    "sound_letter_relation_semantic_may_substitute": false,
+    "vowel_consonant_features_semantic_may_substitute": false,
+    "word_analysis_semantic_may_substitute": false,
+    "phonetic_transcription_semantic_may_substitute": false,
+    "sound_changes_semantic_may_substitute": false,
+    "normative_pronunciation_semantic_may_substitute": false,
+    "normative_stress_semantic_may_substitute": false,
+    "object_level_admission_effect": "NONE_UNTIL_SEPARATE_SEMANTIC_AND_EXACT_OBJECT_ACCEPTANCE",
+    "generic_ru01_result_can_emit_exact_component_mastery": false
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-phonetics-sound-composition-determination",
+      "title_ru": "Звуковой состав слова: определить последовательность реально произносимых звуков",
+      "canonical_explanation": {
+        "short": "Звуковой состав слова — это упорядоченная последовательность звуков, которые реально произносятся в установленной звуковой форме слова. Чтобы определить состав, нужно идти по произнесённой форме слева направо, выделить каждый звук по одному разу и посчитать получившуюся последовательность. Буквы, мягкий и твёрдый знаки и правила записи транскрипции нельзя автоматически считать звуками.",
+        "boundaries": [
+          "Звуковой состав отвечает на вопросы «какие звуки и в каком порядке произносятся?» и «сколько их?».",
+          "Буквенный состав и звуковой состав не тождественны: число букв нельзя использовать вместо подсчёта звуков.",
+          "Мягкий и твёрдый знаки сами по себе не добавляют отдельный звук; их наличие в написании не является самостоятельным элементом звуковой последовательности.",
+          "Одна буква может участвовать в обозначении звуковой реализации, которая не сводится к одному элементу; exact evidence должно опираться на установленную произнесённую форму, а не на механический подсчёт букв.",
+          "Характеристика звука как гласного/согласного, звонкого/глухого, мягкого/твёрдого относится к отдельному уже существующему компоненту и не подменяет определение самой последовательности звуков.",
+          "Фонетическая транскрипция — способ записи звуковой формы. Владение условными обозначениями транскрипции не является обязательной заменой умения выделить последовательность и число звуков.",
+          "Если фактическое произношение слова не установлено и может требовать словарного решения, компонент о звуковом составе работает fail-closed: сначала нужна отдельная normative-pronunciation authority.",
+          "Определение звукового состава не доказывает освоение изменений звуков в речевом потоке, нормативного ударения или полного фонетического разбора."
+        ]
+      },
+      "decision_algorithm": [
+        "Установи звуковую реализацию слова только из условия или из уже принятой произносительной authority; не угадывай спорное произношение по написанию.",
+        "Пройди по произнесённой форме слева направо и выдели отдельные звуковые элементы в порядке произнесения.",
+        "Запиши или назови получившуюся последовательность звуков без добавления букв, которые сами не являются звуками.",
+        "Посчитай элементы звуковой последовательности; не заменяй этот шаг подсчётом букв.",
+        "Если требуется только звуковой состав, не расширяй ответ до полной классификации признаков каждого звука.",
+        "Если для решения пришлось бы предположить неизвестное нормативное произношение, остановись и зафиксируй pronunciation blocker."
+      ],
+      "worked_examples": [
+        {"id": "p01-u6-e1", "prompt": "В условии звуковая реализация слова «яма» уже установлена как последовательность [й’][а][м][а]. Определи звуковой состав и число звуков.", "answer": "Звуковой состав: [й’], [а], [м], [а]; всего 4 звука. Три буквы в написании не используются как готовый ответ на вопрос о числе звуков.", "measures": "determine_ordered_sound_sequence"},
+        {"id": "p01-u6-e2", "prompt": "В условии для слова «конь» дана реализация [к][о][н’]. Ученик насчитал четыре звука, потому что видит четыре буквы. Исправь решение.", "answer": "В данной реализации три звука: [к], [о], [н’]. Буква ь сама не образует четвёртый звук.", "measures": "count_sounds_without_counting_letters"},
+        {"id": "p01-u6-e3", "prompt": "Для условного слова дана произнесённая форма [м][а][й][а][к]. Что нужно назвать, если вопрос просит только звуковой состав?", "answer": "Нужно назвать последовательность [м], [а], [й], [а], [к] и число 5. Полная характеристика каждого звука не требуется.", "measures": "separate_composition_from_feature_classification"},
+        {"id": "p01-u6-e4", "prompt": "Написание слова дано, но фактическое произношение не установлено и может быть словарным. Можно ли выдать exact звуковой состав по одним буквам?", "answer": "Нет. Нужно сначала установить нормативное произношение через отдельную authority; до этого exact sound-composition evidence закрыто.", "measures": "recognize_fail_closed_pronunciation_boundary"}
+      ],
+      "misconceptions": [
+        {"wrong": "Число букв всегда равно числу звуков.", "correction": "Звуки считают по установленной произнесённой форме, а не по количеству письменных знаков."},
+        {"wrong": "Если ученик умеет назвать звук гласным или согласным, звуковой состав слова уже определён.", "correction": "Классификация признаков относится к другому компоненту. Здесь нужна точная последовательность звуков и их число."},
+        {"wrong": "Правильная транскрипционная запись автоматически заменяет отдельную проверку звукового состава.", "correction": "Транскрипция может представлять звуковую форму, но evidence этого компонента отдельно проверяет выделение упорядоченной последовательности и подсчёт звуков."},
+        {"wrong": "Неизвестное произношение можно достроить по буквам и использовать как exact evidence.", "correction": "При неизвестном или словарном произношении компонент обязан остановиться до отдельного pronunciation resolution."}
+      ],
+      "guided_practice": [
+        {"id": "p01-u6-g1", "prompt": "Дана произнесённая форма [д][о][м]. Назови звуковой состав и количество.", "expected": "[д], [о], [м]; 3 звука."},
+        {"id": "p01-u6-g2", "prompt": "Дана реализация [к][о][н’] и написание «конь». Нужно ли считать ь отдельным звуком?", "expected": "Нет; звуковая последовательность содержит 3 звука."},
+        {"id": "p01-u6-g3", "prompt": "Дана последовательность [й’][а][м][а]. Какая часть ответа относится именно к sound composition?", "expected": "Порядок [й’], [а], [м], [а] и число 4."}
+      ],
+      "independent_practice": [
+        {"id": "p01-u6-i1", "prompt": "Дана реализация [л][у][к]. Определи звуковой состав.", "answer": "[л], [у], [к]; 3 звука."},
+        {"id": "p01-u6-i2", "prompt": "Почему нельзя использовать число букв как доказательство числа звуков?", "answer": "Потому что письменные знаки и реально произносимые звуки относятся к разным формам слова; звуки нужно выделить из установленной звуковой реализации."},
+        {"id": "p01-u6-i3", "prompt": "Когда определение звукового состава должно остановиться без exact результата?", "answer": "Когда фактическое произношение не установлено и его пришлось бы угадывать; сначала нужна отдельная произносительная authority."}
+      ],
+      "mixed_transfer_practice": [
+        {"id": "p01-u6-t1", "prompt": "Ученик для [м][а][й][а][к] пишет только: «два гласных, три согласных». Достаточно ли этого для sound-composition evidence?", "answer": "Нет. Нужна сама упорядоченная последовательность [м], [а], [й], [а], [к] и число 5; классификация признаков — отдельный компонент."},
+        {"id": "p01-u6-t2", "prompt": "Ученик видит написание «конь» и отвечает «четыре звука», не используя данную реализацию [к][о][н’]. Какой тип ошибки?", "answer": "Он подменил звуковой состав буквенным. В данной реализации три звука; ь не считается отдельным звуком."},
+        {"id": "p01-u6-t3", "prompt": "Ученик получил готовую транскрипцию и считает, что тем самым автоматически освоил и транскрипцию, и звуковой состав, и полный фонетический разбор. Что принять?", "answer": "Ничего автоматически. Для этого компонента можно учитывать только отдельную проверку последовательности/числа звуков; транскрипция и полный разбор имеют собственные semantics и evidence."}
+      ],
+      "independent_verification": [
+        {"id": "p01-u6-v1", "type": "constructed_response", "prompt": "В условии звуковая реализация слова дана как [м][а][к]. Запиши звуковой состав по порядку и укажи число звуков.", "expected": "[м], [а], [к]; 3 звука.", "skill": "determine_ordered_sound_sequence"},
+        {"id": "p01-u6-v2", "type": "constructed_response", "prompt": "Для написания «конь» условие отдельно устанавливает звуковую реализацию [к][о][н’]. Сколько звуков и почему ь не добавляет ещё один?", "expected": "3 звука: [к], [о], [н’]. ь — письменный знак и в данной реализации не является отдельным звуком.", "skill": "count_sounds_without_counting_letters"},
+        {"id": "p01-u6-v3", "type": "constructed_response", "prompt": "Дана реализация [й’][а][м][а]. Назови последовательность и число звуков, не заменяя ответ числом букв.", "expected": "[й’], [а], [м], [а]; 4 звука.", "skill": "distinguish_sound_composition_from_letter_composition"},
+        {"id": "p01-u6-v4", "type": "constructed_response", "prompt": "Дана реализация [м][а][й][а][к]. Ученик отвечает только «два гласных и три согласных». Чего не хватает для доказательства именно звукового состава?", "expected": "Не хватает упорядоченной последовательности звуков и их общего числа: [м], [а], [й], [а], [к]; 5.", "skill": "separate_composition_from_feature_classification"},
+        {"id": "p01-u6-v5", "type": "selected_response", "prompt": "Что может заменить independent evidence звукового состава: A) правильная характеристика гласных/согласных; B) умение писать транскрипцию; C) отдельное выделение последовательности и числа звуков; D) знание плана фонетического разбора?", "options": ["A", "B", "C", "D"], "answer": "C", "skill": "distinguish_sound_composition_from_adjacent_semantics"},
+        {"id": "p01-u6-v6", "type": "constructed_response", "prompt": "Дано только написание слова; фактическое произношение не установлено и может требовать словаря. Что обязан сделать fail-closed scorer перед exact sound-composition result?", "expected": "Не выводить звуковой состав по буквам; сначала потребовать установленное нормативное произношение через отдельную pronunciation authority.", "skill": "recognize_fail_closed_pronunciation_boundary"}
+      ],
+      "peis_evidence": {
+        "semantic_ref": "ru-phonetics-sound-composition-determination",
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "verification_ids": ["p01-u6-v1", "p01-u6-v2", "p01-u6-v3", "p01-u6-v4", "p01-u6-v5", "p01-u6-v6"],
+        "requires_exact_item_identity": true,
+        "requires_registered_user_identity_ref": true,
+        "requires_server_owned_received_at": true,
+        "mastery_emission_before_semantic_acceptance": false,
+        "object_mastery_emission_before_exact_object_acceptance": false,
+        "existing_partial_vowel_consonant_component_is_not_modified": true,
+        "false_exact_mastery_admissions": 0
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "Explain the difference between ordered sound composition and written letter count.",
+          "Ask the learner to enumerate sounds from an explicitly established spoken realization.",
+          "Explain why classifying sound features is adjacent evidence, not a substitute for sound-composition evidence.",
+          "Stop on unknown normative pronunciation and require a separate pronunciation authority."
+        ],
+        "forbidden": [
+          "Do not invent a normative pronunciation when the spoken realization is not established.",
+          "Do not infer normative stress from sound-composition work.",
+          "Do not reuse p01-u1-v1, p01-u2-v1, p01-u3-v1, p01-u4-v1, or p01-u5-v1 as sound-composition evidence.",
+          "Do not treat ru-phonetics-vowel-consonant-features, ru-phonetics-sound-letter-relation, ru-phonetics-word-analysis-sequence, ru-phonetics-phonetic-transcription-elements, or ru-phonetics-sound-changes-in-speech-flow as substitutes for this candidate.",
+          "Do not mark the candidate canonical before separate semantic acceptance.",
+          "Do not close RSK-OGE_COD-2-1-P010 before its separate exact object acceptance.",
+          "Do not emit exact mastery from generic RU01 attempts."
+        ]
+      }
+    }
+  ],
+  "release_boundary": {
+    "semantic_acceptance_effect": "NONE",
+    "object_acceptance_effect": "NONE",
+    "school_canonical_identity_created": false,
+    "existing_partial_component_modified": false,
+    "false_exact_mastery_admissions": 0,
+    "public_runtime_change": false,
+    "production_peis_write": false
+  }
+}
