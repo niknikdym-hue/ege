@@ -1,0 +1,111 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_RU01_SOUND_CHANGES_NO_EXACT_CURRENT_OWNER_SOURCE_BACKED_CANDIDATE_NOT_ACCEPTED",
+  "scope": "RU01_SOUND_CHANGES_IN_SPEECH_FLOW_EXACT_SOURCE_BINDING_AND_COMPONENT_EVIDENCE_REVIEW",
+  "authority_issue": 161,
+  "source_signature": "SOUND_CHANGES_IN_SPEECH_FLOW",
+  "targets": [
+    {
+      "admission_unit_id": "RAU-b1ba48cb81e96255122a",
+      "requirement_id": "RSK-EDSOO59-4-1-3-P187",
+      "source_id": "EDSOO-RU-5-9-2025",
+      "document_id": "EDSOO59",
+      "page": 187,
+      "content_code": "4.1.3",
+      "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.187 4.1.3",
+      "binding_review_classification": "PENDING",
+      "binding_review_blocker": "SOUND_CHANGES_SEMANTIC_REQUIRED"
+    },
+    {
+      "admission_unit_id": "RAU-f709f1855bb0b8d104bc",
+      "requirement_id": "RSK-OGE_COD-4-1-3-P021",
+      "source_id": "FIPI-OGE-RU-2026-FINAL",
+      "document_id": "OGE_COD",
+      "page": 21,
+      "content_code": "4.1.3",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_COD p.21 4.1.3",
+      "binding_review_classification": "PENDING",
+      "binding_review_blocker": "SOUND_CHANGES_SEMANTIC_REQUIRED"
+    }
+  ],
+  "current_exact_owner_search": {
+    "source": "russian-program/subject-admission/build_ru01_sound_changes_exact_owner_resolution.py",
+    "exact_head": "e7384d75f080bc9c8edae1b58aa616501831f4f2",
+    "workflow_run": 34209909668,
+    "workflow_conclusion": "SUCCESS",
+    "artifact_normalized_sha256": "3856594b8952f73d49bb1ce0f952e9ae408be5d1ee9ea5c19c80baf8ac5bef08",
+    "accepted_owner_candidates_returned": [
+      "ru-phonetics-sound-letter-relation",
+      "ru-phonetics-vowel-consonant-features",
+      "ru-phonetics-word-analysis-sequence"
+    ],
+    "note": "The owner-search artifact found these three only through the broad RU01 authority file that lists the target source objects. This review therefore performs the required exact semantic-boundary and component-evidence test; broad-domain co-occurrence is not source binding."
+  },
+  "candidate_reviews": [
+    {
+      "semantic_id": "ru-phonetics-sound-letter-relation",
+      "semantic_boundary": "Distinguish written letters from speech sounds and apply position-dependent sound-letter relations; this does not by itself admit full phonetic analysis or disputed pronunciation claims.",
+      "independent_evidence_ids": [
+        "p01-u1-v1",
+        "p01-u1-v2"
+      ],
+      "decision": "NOT_EXACT_OWNER",
+      "reason": "The accepted component is about sound-letter correspondence and grapheme position. Its independent verification tests letter/sound function, not a standalone learner capability to recognize and explain sound changes in the speech flow."
+    },
+    {
+      "semantic_id": "ru-phonetics-vowel-consonant-features",
+      "semantic_boundary": "Classify properties of the actually pronounced sound, including position-dependent pronunciation; letter identity alone is insufficient.",
+      "independent_evidence_ids": [
+        "p01-u2-v1",
+        "p01-u2-v2"
+      ],
+      "decision": "ADJACENT_BUT_INSUFFICIENT_FOR_EXACT_OWNER",
+      "reason": "This is the nearest accepted component and includes one positional-devoicing example, but its admitted skill is classification of sound properties. The verification set does not independently establish the broader source object 'sound changes in speech flow' as its own component."
+    },
+    {
+      "semantic_id": "ru-phonetics-word-analysis-sequence",
+      "semantic_boundary": "Perform the school phonetic-analysis procedure from pronunciation and stress through sound sequence/features to final sound-letter comparison.",
+      "independent_evidence_ids": [
+        "p01-u3-v1",
+        "p01-u3-v2"
+      ],
+      "decision": "NOT_EXACT_OWNER",
+      "reason": "The accepted component owns analysis sequence/procedure. Its evidence verifies ordering and analysis-plan construction, not the phenomenon class 'sound changes in speech flow'."
+    }
+  ],
+  "resolution": {
+    "exact_current_canonical_owner_with_component_specific_evidence_found": false,
+    "candidate_semantic_id": "ru-phonetics-sound-changes-in-speech-flow",
+    "candidate_status": "PROPOSED_NOT_CANONICAL",
+    "derivation": "Two exact official source objects share content code 4.1.3 and normalized source signature SOUND_CHANGES_IN_SPEECH_FLOW; no reviewed accepted component owns the same learner capability with component-specific independent evidence.",
+    "source_object_count": 2,
+    "next_required_gates": [
+      "ORIGINAL_LEARNER_CONTENT",
+      "INDEPENDENT_SOUND_CHANGES_SPECIFIC_EVIDENCE",
+      "BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE",
+      "SEPARATE_EXACT_OBJECT_ACCEPTANCE_EDSOO59_4_1_3_P187",
+      "SEPARATE_EXACT_OBJECT_ACCEPTANCE_OGE_COD_4_1_3_P021"
+    ]
+  },
+  "decision_boundary": {
+    "review_is_semantic_acceptance": false,
+    "review_is_object_acceptance": false,
+    "object_closure_effect": "NONE",
+    "exact_mastery_effect": "NONE",
+    "generic_ru01_attempt_can_emit_exact_component_mastery": false,
+    "shared_future_evidence_can_close_both_source_objects_without_separate_object_acceptance": false,
+    "title_route_task_keyword_fuzzy_or_embedding_inference_allowed": false,
+    "broad_domain_cooccurrence_counts_as_exact_source_binding": false,
+    "false_exact_mastery": 0
+  },
+  "current_launch_state": {
+    "accepted_authorities": 60,
+    "subject_disposed_units_total": 39,
+    "subject_disposed_requirements_total": 39,
+    "subject_review_units_remaining": 1277,
+    "subject_review_requirements_remaining": 1352,
+    "accepted_bounded_ru_subject_semantics": 67,
+    "accepted_bounded_ru_semantics_total": 76,
+    "false_exact_mastery_admissions": 0
+  }
+}
