@@ -72,7 +72,7 @@ jobs:
           print('RU01_BROAD_HEADER_FAIL_CLOSED=PASS')
           PY
 
-      - name: Protect repository hygiene
+      - name: Protect tracked repository hygiene
         run: |
           git diff --check
-          test -z "$(git status --porcelain)"
+          git diff --exit-code
