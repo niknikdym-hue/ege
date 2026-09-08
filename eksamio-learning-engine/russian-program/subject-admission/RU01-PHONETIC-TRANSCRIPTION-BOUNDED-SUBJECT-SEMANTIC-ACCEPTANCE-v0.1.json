@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU01_PHONETIC_TRANSCRIPTION_BOUNDED_SUBJECT_SEMANTIC",
+  "authority_issue": 161,
+  "scope": "RU01_PHONETIC_TRANSCRIPTION_SOURCE_BACKED_CANDIDATE_PLUS_ORIGINAL_COMPONENT_SPECIFIC_LEARNER_EVIDENCE_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "authority": {
+    "owner_resolution_builder": "russian-program/subject-admission/build_ru01_phonetic_transcription_owner_resolution.py",
+    "content_readiness_builder": "russian-program/subject-admission/build_ru01_phonetic_transcription_content_readiness.py",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-01-PHONETIC-TRANSCRIPTION-WAVE-002-v0.1.json",
+    "target_admission_unit_id": "RAU-2725ee5b709b70502748",
+    "target_requirement_id": "RSK-EDSOO59-4-1-4-P187",
+    "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.187 4.1.4"
+  },
+  "policy": {
+    "exact_source_backed_owner_resolution_required": true,
+    "original_dedicated_learner_content_required": true,
+    "component_specific_independent_evidence_required": true,
+    "word_analysis_evidence_may_substitute": false,
+    "normative_pronunciation_semantic_may_substitute": false,
+    "normative_stress_semantic_may_substitute": false,
+    "route_title_task_number_keyword_or_embedding_can_admit_semantics": false,
+    "canonical_school_registry_mutation_required": false,
+    "parallel_registry_creation_forbidden": true,
+    "content_or_evidence_presence_alone_is_semantic_admission": false,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "generic_ru01_result_can_emit_exact_component_mastery": false,
+    "separate_exact_object_acceptance_required": true,
+    "shared_evidence_can_close_sibling_source_objects": false,
+    "whole_group_acceptance_allowed": false
+  },
+  "decisions": [
+    {
+      "source_taxonomy_id": "phonetic_transcription_elements",
+      "accepted_semantic_id": "ru-phonetics-phonetic-transcription-elements",
+      "canonical_label_ru": "Элементы фонетической транскрипции: чтение и применение звуковой записи",
+      "entity_type": "PHONETIC_TRANSCRIPTION_SKILL",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+      "owner_search_result": "NO_EXACT_CURRENT_TRANSCRIPTION_OWNER",
+      "source_evidence_status": "confirmed",
+      "independent_verification_item_ids": [
+        "p01-u4-v1",
+        "p01-u4-v2",
+        "p01-u4-v3",
+        "p01-u4-v4",
+        "p01-u4-v5"
+      ],
+      "covered_skills": [
+        "sound_not_letter",
+        "iotated_fragment",
+        "softness_marker",
+        "explain_spelling_pronunciation_relation"
+      ],
+      "boundary_guard": "bounded reading and use of elementary phonetic transcription to explain a pronunciation-versus-spelling relation; excludes inventing normative pronunciation or stress, generic phonetic word-analysis substitution, route/title/task inference, and any object closure before a separate exact object-binding acceptance",
+      "object_binding_status": "NOT_BOUND_TO_ANY_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+    }
+  ],
+  "summary": {
+    "accepted_bounded_subject_semantics": 1,
+    "accepted_ru_subject_semantics": 1,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "exact_mastery_admissions": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
