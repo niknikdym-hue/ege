@@ -1,0 +1,106 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_RU01_SOUND_COMPOSITION_DETERMINATION_BOUNDED_SUBJECT_SEMANTIC",
+  "authority_issue": 161,
+  "scope": "RU01_SOUND_COMPOSITION_SOURCE_BACKED_CANDIDATE_PLUS_ORIGINAL_COMPONENT_SPECIFIC_LEARNER_EVIDENCE_WITHOUT_OBJECT_CLOSURE",
+  "canonical_school_registry_mutated": false,
+  "new_parallel_registry_created": false,
+  "authority": {
+    "owner_resolution": "russian-program/subject-admission/RU01-OGE-2-1-SOUND-COMPOSITION-OWNER-RESOLUTION-v0.1.json",
+    "content_readiness_builder": "russian-program/subject-admission/build_ru01_sound_composition_content_readiness.py",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-01-SOUND-COMPOSITION-WAVE-004-v0.1.json",
+    "content_readiness_exact_head_gate": {
+      "workflow": "Russian RU01 sound composition content readiness",
+      "run_id": 34255891455,
+      "head_sha": "b4684caae27f1ff73a67b5e1cd176f567cfdc3e1",
+      "conclusion": "SUCCESS"
+    },
+    "target_admission_unit_id": "RAU-b6f5dff93864358672bc",
+    "target_requirement_id": "RSK-OGE_COD-2-1-P010",
+    "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_COD p.10 2.1",
+    "already_bound_component_ref_preserved": "ru-phonetics-vowel-consonant-features"
+  },
+  "policy": {
+    "exact_source_backed_owner_resolution_required": true,
+    "original_dedicated_learner_content_required": true,
+    "component_specific_independent_evidence_required": true,
+    "existing_partial_component_must_be_preserved": true,
+    "sound_letter_relation_semantic_may_substitute": false,
+    "vowel_consonant_features_semantic_may_substitute_for_sound_composition": false,
+    "word_analysis_semantic_may_substitute": false,
+    "phonetic_transcription_semantic_may_substitute": false,
+    "sound_changes_semantic_may_substitute": false,
+    "normative_pronunciation_semantic_may_substitute": false,
+    "normative_stress_semantic_may_substitute": false,
+    "route_title_task_number_keyword_fuzzy_or_embedding_can_admit_semantics": false,
+    "canonical_school_registry_mutation_required": false,
+    "parallel_registry_creation_forbidden": true,
+    "content_or_evidence_presence_alone_is_semantic_admission": false,
+    "subject_semantic_acceptance_can_reduce_object_counts_without_exact_binding": false,
+    "generic_ru01_result_can_emit_exact_component_mastery": false,
+    "semantic_acceptance_modifies_existing_partial_component": false,
+    "separate_exact_object_component_set_acceptance_required": true,
+    "whole_group_acceptance_allowed": false
+  },
+  "decisions": [
+    {
+      "source_taxonomy_id": "sound_composition_determination",
+      "accepted_semantic_id": "ru-phonetics-sound-composition-determination",
+      "canonical_label_ru": "Определение звукового состава слова по установленной звуковой реализации",
+      "entity_type": "PHONETIC_SOUND_COMPOSITION_SKILL",
+      "subject_semantic_status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+      "owner_search_result": "NO_EXACT_CURRENT_SOUND_COMPOSITION_OWNER",
+      "source_evidence_status": "confirmed_for_exact_official_source_object",
+      "independent_verification_item_ids": [
+        "p01-u6-v1",
+        "p01-u6-v2",
+        "p01-u6-v3",
+        "p01-u6-v4",
+        "p01-u6-v5",
+        "p01-u6-v6"
+      ],
+      "covered_skills": [
+        "count_sounds_without_counting_letters",
+        "determine_ordered_sound_sequence",
+        "distinguish_sound_composition_from_adjacent_semantics",
+        "distinguish_sound_composition_from_letter_composition",
+        "recognize_fail_closed_pronunciation_boundary",
+        "separate_composition_from_feature_classification"
+      ],
+      "boundary_guard": "bounded determination of the ordered sound composition and sound count of a word only from an explicitly established spoken realization; excludes substitution by sound-letter relation, vowel/consonant feature classification, full phonetic analysis, transcription, sound changes in speech flow, normative pronunciation or stress, spelling, route/title/task inference, and any exact source-object closure before a separate component-set acceptance that preserves the already-bound vowel/consonant-features component",
+      "object_binding_status": "NOT_BOUND_TO_EXACT_ADMISSION_UNIT_OR_REQUIREMENT"
+    }
+  ],
+  "summary": {
+    "accepted_bounded_subject_semantics": 1,
+    "accepted_ru_subject_semantics": 1,
+    "new_school_canonical_identities": 0,
+    "object_level_admission_units_closed": 0,
+    "object_level_requirements_closed": 0,
+    "existing_partial_components_modified": 0,
+    "exact_mastery_admissions": 0,
+    "false_exact_mastery_admissions": 0
+  },
+  "next_exact_work": {
+    "separate_exact_object_component_set_acceptance_required": true,
+    "target": {
+      "admission_unit_id": "RAU-b6f5dff93864358672bc",
+      "requirement_id": "RSK-OGE_COD-2-1-P010",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_COD p.10 2.1"
+    },
+    "required_component_refs": [
+      "ru-phonetics-vowel-consonant-features",
+      "ru-phonetics-sound-composition-determination"
+    ],
+    "sound_composition_component_specific_evidence_ids": [
+      "p01-u6-v1",
+      "p01-u6-v2",
+      "p01-u6-v3",
+      "p01-u6-v4",
+      "p01-u6-v5",
+      "p01-u6-v6"
+    ],
+    "existing_vowel_consonant_component_must_retain_its_own_component_specific_evidence": true,
+    "target_remains_pending_until_its_own_exact_head_object_gate_passes": true
+  }
+}

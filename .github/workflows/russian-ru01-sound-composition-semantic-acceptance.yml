@@ -1,0 +1,141 @@
+name: Russian RU01 sound composition semantic acceptance
+
+on:
+  push:
+    branches:
+      - brain/sep1-russian-subject-closure
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-COMPOSITION-DETERMINATION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_composition_bounded_subject_semantics.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_composition_content_readiness.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v16.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v17.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-COMPOSITION-WAVE-004-v0.1.json'
+      - '.github/workflows/russian-ru01-sound-composition-semantic-acceptance.yml'
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-COMPOSITION-DETERMINATION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_composition_bounded_subject_semantics.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_composition_content_readiness.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v16.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v17.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-COMPOSITION-WAVE-004-v0.1.json'
+      - '.github/workflows/russian-ru01-sound-composition-semantic-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-sound-composition-semantic-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile exact semantic gate
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_composition_bounded_subject_semantics.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v17.py
+
+      - name: Validate bounded sound-composition semantic acceptance
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_composition_bounded_subject_semantics.py
+
+      - name: Build current-v17 twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v17.py --output /tmp/ru-current-v17-a.json > /tmp/ru-current-v17-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v17.py --output /tmp/ru-current-v17-b.json > /tmp/ru-current-v17-b.txt
+          cmp /tmp/ru-current-v17-a.json /tmp/ru-current-v17-b.json
+          diff -u /tmp/ru-current-v17-a.txt /tmp/ru-current-v17-b.txt
+          cat /tmp/ru-current-v17-a.txt
+          cp /tmp/ru-current-v17-a.json RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v17.json
+
+      - name: Verify bounded aggregate delta only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data=json.loads(Path('RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v17.json').read_text(encoding='utf-8'))
+          assert data['schema_version']=='0.20.0'
+          summary=data['progress_summary']
+          assert len(data['accepted_authorities'])==64
+          assert summary['accepted_bounded_ru_route_semantics']==9
+          assert summary['accepted_bounded_ru_subject_semantics']==69
+          assert summary['accepted_bounded_ru_semantics_total']==78
+          assert summary['semantic_units_with_accepted_component_sets']==40
+          assert summary['semantic_requirements_with_accepted_component_sets']==40
+          assert summary['semantic_units_remaining_without_accepted_component_set']==1276
+          assert summary['semantic_requirements_remaining_without_accepted_component_set']==1351
+          assert summary['subject_disposed_units_total']==41
+          assert summary['subject_disposed_requirements_total']==41
+          assert summary['subject_review_units_remaining']==1275
+          assert summary['subject_review_requirements_remaining']==1350
+          assert summary['canonical_component_refs_reused_unique']==120
+          assert summary['false_exact_mastery_admissions']==0
+          new=data['newly_accepted_bounded_subject_semantic']
+          assert new['semantic_id']=='ru-phonetics-sound-composition-determination'
+          assert new['independent_verification_item_ids']==[
+              'p01-u6-v1','p01-u6-v2','p01-u6-v3','p01-u6-v4','p01-u6-v5','p01-u6-v6'
+          ]
+          assert new['target_count_requiring_separate_exact_object_component_set_acceptance']==1
+          assert new['target']=={
+              'admission_unit_id':'RAU-b6f5dff93864358672bc',
+              'requirement_id':'RSK-OGE_COD-2-1-P010',
+              'source_locator':'FIPI-OGE-RU-2026-FINAL/OGE_COD p.10 2.1',
+          }
+          assert new['existing_partial_component_ref_preserved']=='ru-phonetics-vowel-consonant-features'
+          assert new['required_component_refs_for_future_exact_object_acceptance']==[
+              'ru-phonetics-vowel-consonant-features',
+              'ru-phonetics-sound-composition-determination',
+          ]
+          assert new['object_acceptance_effect']=='NONE_UNTIL_SEPARATE_EXACT_OBJECT_COMPONENT_SET_ACCEPTANCE'
+          print('RU01_SOUND_COMPOSITION_SEMANTIC_AGGREGATE_DELTA=PASS')
+          PY
+
+      - name: Protect public/production surfaces in this bounded wave
+        shell: bash
+        run: |
+          set -euo pipefail
+          wave_base='b4684caae27f1ff73a67b5e1cd176f567cfdc3e1'
+          git merge-base --is-ancestor "$wave_base" HEAD
+          recent=$(git diff --name-only "$wave_base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru01-sound-composition-semantic-acceptance.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-COMPOSITION-DETERMINATION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v17.py
+          eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_composition_bounded_subject_semantics.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          if [[ -n "$unexpected" ]]; then
+            echo 'Current sound-composition semantic wave touched files outside the exact bounded allowlist:' >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
+          if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
+            echo 'Current sound-composition semantic wave touched a protected public/production surface.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene for current bounded wave
+        run: git diff --check b4684caae27f1ff73a67b5e1cd176f567cfdc3e1..HEAD
+
+      - name: Upload exact semantic acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-sound-composition-semantic-acceptance
+          path: RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v17.json
+          if-no-files-found: error
+          retention-days: 14
