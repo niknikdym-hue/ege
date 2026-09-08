@@ -1,0 +1,143 @@
+name: Russian RU01 sound changes semantic acceptance
+
+on:
+  push:
+    branches:
+      - brain/sep1-russian-subject-closure
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-CHANGES-IN-SPEECH-FLOW-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_changes_bounded_subject_semantics.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_changes_content_readiness.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v13.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v14.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-CHANGES-WAVE-003-v0.1.json'
+      - '.github/workflows/russian-ru01-sound-changes-semantic-acceptance.yml'
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-CHANGES-IN-SPEECH-FLOW-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_changes_bounded_subject_semantics.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_changes_content_readiness.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v13.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v14.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-CHANGES-WAVE-003-v0.1.json'
+      - '.github/workflows/russian-ru01-sound-changes-semantic-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-sound-changes-semantic-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile exact semantic gate
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_changes_bounded_subject_semantics.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v14.py
+
+      - name: Validate bounded sound-changes semantic acceptance
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_changes_bounded_subject_semantics.py
+
+      - name: Build current-v14 twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v14.py --output /tmp/ru-current-v14-a.json > /tmp/ru-current-v14-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v14.py --output /tmp/ru-current-v14-b.json > /tmp/ru-current-v14-b.txt
+          cmp /tmp/ru-current-v14-a.json /tmp/ru-current-v14-b.json
+          diff -u /tmp/ru-current-v14-a.txt /tmp/ru-current-v14-b.txt
+          cat /tmp/ru-current-v14-a.txt
+          cp /tmp/ru-current-v14-a.json RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v14.json
+
+      - name: Verify bounded aggregate delta only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data=json.loads(Path('RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v14.json').read_text(encoding='utf-8'))
+          assert data['schema_version']=='0.17.0'
+          summary=data['progress_summary']
+          assert len(data['accepted_authorities'])==61
+          assert summary['accepted_bounded_ru_route_semantics']==9
+          assert summary['accepted_bounded_ru_subject_semantics']==68
+          assert summary['accepted_bounded_ru_semantics_total']==77
+          assert summary['semantic_units_with_accepted_component_sets']==38
+          assert summary['semantic_requirements_with_accepted_component_sets']==38
+          assert summary['semantic_units_remaining_without_accepted_component_set']==1278
+          assert summary['semantic_requirements_remaining_without_accepted_component_set']==1353
+          assert summary['subject_disposed_units_total']==39
+          assert summary['subject_disposed_requirements_total']==39
+          assert summary['subject_review_units_remaining']==1277
+          assert summary['subject_review_requirements_remaining']==1352
+          assert summary['canonical_component_refs_reused_unique']==119
+          assert summary['false_exact_mastery_admissions']==0
+          new=data['newly_accepted_bounded_subject_semantic']
+          assert new['semantic_id']=='ru-phonetics-sound-changes-in-speech-flow'
+          assert new['independent_verification_item_ids']==[
+              'p01-u5-v1','p01-u5-v2','p01-u5-v3','p01-u5-v4','p01-u5-v5','p01-u5-v6'
+          ]
+          assert new['target_count_requiring_separate_exact_object_acceptance']==2
+          assert new['targets']==[
+              {
+                  'admission_unit_id':'RAU-b1ba48cb81e96255122a',
+                  'requirement_id':'RSK-EDSOO59-4-1-3-P187',
+                  'source_locator':'EDSOO-RU-5-9-2025/EDSOO59 p.187 4.1.3',
+              },
+              {
+                  'admission_unit_id':'RAU-f709f1855bb0b8d104bc',
+                  'requirement_id':'RSK-OGE_COD-4-1-3-P021',
+                  'source_locator':'FIPI-OGE-RU-2026-FINAL/OGE_COD p.21 4.1.3',
+              },
+          ]
+          assert new['object_acceptance_effect']=='NONE_UNTIL_SEPARATE_EXACT_OBJECT_ACCEPTANCE_FOR_EACH_TARGET'
+          print('RU01_SOUND_CHANGES_SEMANTIC_AGGREGATE_DELTA=PASS')
+          PY
+
+      - name: Protect public/production surfaces in this bounded wave
+        shell: bash
+        run: |
+          set -euo pipefail
+          wave_base='6b2e8d37f23438cc8200249f10ec8b805ba38030'
+          git merge-base --is-ancestor "$wave_base" HEAD
+          recent=$(git diff --name-only "$wave_base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru01-sound-changes-semantic-acceptance.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-CHANGES-IN-SPEECH-FLOW-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v14.py
+          eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_changes_bounded_subject_semantics.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          if [[ -n "$unexpected" ]]; then
+            echo 'Current sound-changes semantic wave touched files outside the exact bounded allowlist:' >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
+          if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
+            echo 'Current sound-changes semantic wave touched a protected public/production surface.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene for current bounded wave
+        run: git diff --check 6b2e8d37f23438cc8200249f10ec8b805ba38030..HEAD
+
+      - name: Upload exact semantic acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-sound-changes-semantic-acceptance
+          path: RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v14.json
+          if-no-files-found: error
+          retention-days: 14
