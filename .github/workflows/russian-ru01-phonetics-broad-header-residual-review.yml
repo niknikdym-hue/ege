@@ -1,0 +1,78 @@
+name: Russian RU01 phonetics broad-header residual review
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_residual_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_exact_object_binding_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v19.py"
+      - ".github/workflows/russian-ru01-phonetics-broad-header-residual-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-broad-header-residual-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile review builder
+        run: python -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_residual_review.py
+
+      - name: Build deterministic residual review twice
+        run: |
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_residual_review.py --output /tmp/ru01-broad-a.json
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_residual_review.py --output /tmp/ru01-broad-b.json
+          cmp /tmp/ru01-broad-a.json /tmp/ru01-broad-b.json
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_residual_review.py
+
+      - name: Fail closed on residual scope and zero admissions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/ru01-broad-a.json').read_text(encoding='utf-8'))
+          assert d['status']=='CENTRAL_BRAIN_RU01_BROAD_HEADER_RESIDUAL_SOURCE_DECOMPOSITION_REQUIRED_NOT_ACCEPTED'
+          assert d['residual_admission_units']==['RAU-3916b5e3da77ed038830','RAU-5a6511267f156745f93c']
+          assert d['residual_requirement_ids']==['RSK-EDSOO59-4-1-P181','RSK-EDSOO59-4-1-P187','RSK-OGE_COD-4-1-P020']
+          s=d['summary']
+          assert s=={
+            'residual_admission_units':2,
+            'residual_requirements':3,
+            'requirements_with_some_existing_exact_refs':1,
+            'requirements_with_no_exact_refs':2,
+            'new_semantic_candidates':0,
+            'semantic_admissions':0,
+            'object_level_closures':0,
+            'false_exact_mastery_admissions':0,
+          }
+          p=d['policy']
+          assert p['review_is_acceptance'] is False
+          assert p['broad_header_can_be_closed_by_title_or_route'] is False
+          assert p['partial_component_refs_can_close_sibling_broad_requirement'] is False
+          assert p['keyword_fuzzy_embedding_or_task_number_inference_allowed'] is False
+          assert p['unknown_component_scope_can_emit_mastery'] is False
+          assert p['false_exact_mastery_admissions']==0
+          r=d['resolution']
+          assert r['new_semantic_candidate_created'] is False
+          assert r['next_required_action'].startswith('EXTRACT_EXACT_OFFICIAL_SOURCE_CLAUSES_')
+          print('RU01_BROAD_HEADER_FAIL_CLOSED=PASS')
+          PY
+
+      - name: Protect repository hygiene
+        run: |
+          git diff --check
+          test -z "$(git status --porcelain)"
