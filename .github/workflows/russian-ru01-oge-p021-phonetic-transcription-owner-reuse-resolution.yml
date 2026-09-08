@@ -1,0 +1,94 @@
+name: Russian RU01 OGE P021 phonetic transcription owner reuse resolution
+
+on:
+  push:
+    branches:
+      - brain/sep1-russian-subject-closure
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_oge_p021_phonetic_transcription_exact_owner_reuse_resolution.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v12.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_exact_object_binding_review.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-TRANSCRIPTION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-TRANSCRIPTION-P187-4-1-4-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetic_transcription_content_readiness.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-PHONETIC-TRANSCRIPTION-WAVE-002-v0.1.json'
+      - '.github/workflows/russian-ru01-oge-p021-phonetic-transcription-owner-reuse-resolution.yml'
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_oge_p021_phonetic_transcription_exact_owner_reuse_resolution.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v12.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_exact_object_binding_review.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-TRANSCRIPTION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-TRANSCRIPTION-P187-4-1-4-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetic_transcription_content_readiness.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-PHONETIC-TRANSCRIPTION-WAVE-002-v0.1.json'
+      - '.github/workflows/russian-ru01-oge-p021-phonetic-transcription-owner-reuse-resolution.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-owner-reuse-resolution:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Rebuild exact owner-reuse resolution deterministically
+        run: |
+          set -euo pipefail
+          root=eksamio-learning-engine/russian-program/subject-admission
+          python -m py_compile "$root/build_ru01_oge_p021_phonetic_transcription_exact_owner_reuse_resolution.py"
+          python "$root/build_ru01_oge_p021_phonetic_transcription_exact_owner_reuse_resolution.py" --output /tmp/owner-resolution-a.json
+          python "$root/build_ru01_oge_p021_phonetic_transcription_exact_owner_reuse_resolution.py" --output /tmp/owner-resolution-b.json
+          cmp /tmp/owner-resolution-a.json /tmp/owner-resolution-b.json
+
+      - name: Verify fail-closed no-admission boundary
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/owner-resolution-a.json',encoding='utf-8'))
+          assert d['status']=='CENTRAL_BRAIN_RU01_OGE_P021_PHONETIC_TRANSCRIPTION_EXACT_OWNER_REUSE_READY_NOT_ACCEPTED'
+          t=d['target_object']
+          assert t['admission_unit_id']=='RAU-f12c55d19d60877d22ef'
+          assert t['requirement_id']=='RSK-OGE_COD-4-1-4-P021'
+          assert t['source_id']=='FIPI-OGE-RU-2026-FINAL'
+          assert t['document_id']=='OGE_COD'
+          assert t['document_sha256']=='2d83e987ddad08d405827f98dfa490721f2d67b787b2803d8c499eea7b84858a'
+          assert t['page']==21 and t['content_code']=='4.1.4'
+          assert t['normalized_source_signature']=='PHONETIC_TRANSCRIPTION'
+          r=d['exact_current_owner_resolution']
+          assert r['resolution']=='EXACT_CURRENT_CANONICAL_OWNER_REUSE_READY'
+          assert r['canonical_component_refs']==['ru-phonetics-phonetic-transcription-elements']
+          assert r['component_specific_independent_evidence']['ru-phonetics-phonetic-transcription-elements']==['p01-u4-v1','p01-u4-v2','p01-u4-v3','p01-u4-v4','p01-u4-v5']
+          b=d['acceptance_boundary']
+          assert b['review_is_acceptance'] is False
+          assert b['object_closure_effect']=='NONE'
+          assert b['exact_mastery_effect']=='NONE'
+          assert b['separate_exact_object_acceptance_required'] is True
+          assert b['shared_evidence_can_close_sibling_source_objects_without_separate_acceptance'] is False
+          assert b['task_module_route_title_keyword_fuzzy_or_embedding_inference_allowed'] is False
+          assert b['false_exact_mastery']==0
+          c=d['current_launch_state']
+          assert c['accepted_authorities']==59
+          assert c['subject_review_units_remaining']==1278
+          assert c['subject_review_requirements_remaining']==1353
+          assert c['false_exact_mastery_admissions']==0
+          PY
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Upload exact owner-reuse resolution
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-oge-p021-phonetic-transcription-owner-reuse-resolution
+          path: /tmp/owner-resolution-a.json
+          if-no-files-found: error
