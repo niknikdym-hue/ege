@@ -1,0 +1,109 @@
+name: Russian RU01 sound changes OGE P021 4.1.3 exact acceptance
+
+on:
+  push:
+    branches: [brain/sep1-russian-subject-closure]
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-CHANGES-OGE-P021-4-1-3-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v16.py'
+      - '.github/workflows/russian-ru01-sound-changes-oge-p021-4-1-3-exact-acceptance.yml'
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-CHANGES-OGE-P021-4-1-3-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v16.py'
+      - '.github/workflows/russian-ru01-sound-changes-oge-p021-4-1-3-exact-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-oge-p021-sound-changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Deterministic current-v16
+        run: |
+          set -euo pipefail
+          root=eksamio-learning-engine/russian-program/subject-admission
+          python -m py_compile "$root/build_russian_semantic_acceptance_progress_launch_current_v16.py"
+          python "$root/build_russian_semantic_acceptance_progress_launch_current_v16.py" --output /tmp/v16-a.json
+          python "$root/build_russian_semantic_acceptance_progress_launch_current_v16.py" --output /tmp/v16-b.json
+          cmp /tmp/v16-a.json /tmp/v16-b.json
+      - name: Verify bounded OGE P021 acceptance
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/v16-a.json',encoding='utf-8')); s=d['progress_summary']
+          expected={
+            'semantic_units_with_accepted_component_sets':40,
+            'semantic_requirements_with_accepted_component_sets':40,
+            'semantic_units_remaining_without_accepted_component_set':1276,
+            'semantic_requirements_remaining_without_accepted_component_set':1351,
+            'subject_disposed_units_total':41,
+            'subject_disposed_requirements_total':41,
+            'subject_review_units_remaining':1275,
+            'subject_review_requirements_remaining':1350,
+            'canonical_component_refs_reused_unique':120,
+            'review_groups_with_accepted_component_sets':14,
+            'accepted_bounded_ru_route_semantics':9,
+            'accepted_bounded_ru_subject_semantics':68,
+            'accepted_bounded_ru_semantics_total':77,
+            'false_exact_mastery_admissions':0,
+          }
+          for k,v in expected.items(): assert s[k]==v,(k,s[k],v)
+          assert d['schema_version']=='0.19.0' and len(d['accepted_authorities'])==63
+          assert d['base_current_launch_progress_v15_head_sha']=='90b373cb5c268eaf9d17982d2f656625fb9f8c0a'
+          assert d['base_current_launch_progress_v15_builder_git_blob_sha1']=='d2fc2495d67e6f08fe32b076fcc8c785efb3f519'
+          assert d['base_current_launch_progress_v15_normalized_sha256']=='7786e2ddf2d622d39be0eb087cdb9eb4c817386a2a437b61eb98005df477445d'
+          g=[x for x in d['semantic_review_groups'] if x.get('group_id')=='RUS-SEM-REVIEW-001']; assert len(g)==1
+          assert g[0]['accepted_component_set_count']==11
+          aid='RU01_SOUND_CHANGES_OGE_P021_4_1_3_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1'
+          row=[x for x in g[0]['accepted_component_sets'] if x.get('accepted_authority_id')==aid]; assert len(row)==1; row=row[0]
+          assert row['admission_unit_id']=='RAU-f709f1855bb0b8d104bc'
+          assert row['requirement_id']=='RSK-OGE_COD-4-1-3-P021'
+          assert row['canonical_component_refs']==['ru-phonetics-sound-changes-in-speech-flow']
+          assert row['authority']['component_specific_independent_evidence_items']==6
+          m=row['mastery_boundary']
+          assert m['accepted_bounded_subject_semantic_required'] is True
+          assert m['component_specific_independent_evidence_required'] is True
+          assert m['prior_same_signature_object_acceptance_required'] is True
+          for k in ('generic_ru01_attempt_can_emit_exact_component_mastery','sound_letter_relation_evidence_can_substitute_for_sound_changes','vowel_consonant_features_evidence_can_substitute_for_sound_changes','word_analysis_evidence_can_substitute_for_sound_changes','phonetic_transcription_evidence_can_substitute_for_sound_changes','normative_pronunciation_or_stress_evidence_can_substitute_for_sound_changes','shared_evidence_can_close_sibling_source_objects_without_separate_acceptance'):
+              assert m[k] is False,k
+          ref=[x for x in g[0]['accepted_component_sets'] if x.get('requirement_id')=='RSK-EDSOO59-4-1-3-P187']; assert len(ref)==1
+          assert ref[0]['accepted_authority_id']=='RU01_SOUND_CHANGES_P187_4_1_3_EXACT_CANONICAL_COMPONENT_ACCEPTANCE_v0.1'
+          new=d['newly_accepted_exact_object']
+          assert new['admission_unit_id']=='RAU-f709f1855bb0b8d104bc' and new['requirement_id']=='RSK-OGE_COD-4-1-3-P021'
+          assert new['component_specific_independent_evidence_ids']==['p01-u5-v1','p01-u5-v2','p01-u5-v3','p01-u5-v4','p01-u5-v5','p01-u5-v6']
+          assert new['sibling_source_objects_accepted']==0 and new['remaining_same_signature_targets']==[]
+          PY
+      - name: Protect bounded wave
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=90b373cb5c268eaf9d17982d2f656625fb9f8c0a
+          git merge-base --is-ancestor "$base" HEAD
+          recent=$(git diff --name-only "$base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru01-sound-changes-oge-p021-4-1-3-exact-acceptance.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-CHANGES-OGE-P021-4-1-3-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v16.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent"|sed '/^$/d'|sort -u) <(printf '%s\n' "$allowed"|sed '/^$/d'|sort -u))
+          test -z "$unexpected" || { printf '%s\n' "$unexpected" >&2; exit 1; }
+          ! printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'
+          git diff --check "$base"..HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-sound-changes-oge-p021-4-1-3-current-exact-acceptance
+          path: /tmp/v16-a.json
+          if-no-files-found: error
+          retention-days: 14
