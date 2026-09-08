@@ -117,7 +117,7 @@ def build_resolution() -> dict[str, Any]:
     if "транскрип" in verification_text or "transcript" in verification_text:
         raise ValueError("word-analysis evidence unexpectedly became transcription-specific")
     forbidden = [str(x).lower() for x in ((wa.get("tutor_grounding") or {}).get("forbidden") or [])]
-    if not any("транскрип" in x for x in forbidden):
+    if not any("транскрип" in x or "transcript" in x for x in forbidden):
         raise ValueError("word-analysis transcription safety boundary drift")
 
     result: dict[str, Any] = {
