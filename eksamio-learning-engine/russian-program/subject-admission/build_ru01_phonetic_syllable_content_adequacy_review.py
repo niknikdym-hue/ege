@@ -124,7 +124,8 @@ def build_review() -> dict[str, Any]:
     v4 = next(row for row in verification if row.get("id") == "p01-u7-v4")
     require("не может" in str(v4.get("expected") or "").lower() and "границ" in str(v4.get("expected") or "").lower(), "ambiguous-boundary fail-closed evidence drift")
     v5 = next(row for row in verification if row.get("id") == "p01-u7-v5")
-    require("отдельн" in str(v5.get("expected") or "").lower() and "stress" in str(v5.get("expected") or "").lower(), "stress-separation evidence drift")
+    v5_expected = str(v5.get("expected") or "").lower()
+    require("отдельн" in v5_expected and ("stress" in v5_expected or "ударен" in v5_expected), "stress-separation evidence drift")
 
     peis = unit.get("peis_evidence") or {}
     require(peis.get("semantic_ref") == SEMANTIC, "PEIS semantic drift")
