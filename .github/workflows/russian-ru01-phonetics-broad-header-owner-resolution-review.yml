@@ -1,0 +1,113 @@
+name: Russian RU01 phonetics broad-header owner resolution review
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_clause_decomposition_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v19.py"
+      - ".github/workflows/russian-ru01-phonetics-broad-header-owner-resolution-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-broad-header-owner-resolution-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile exact owner-resolution builder
+        run: python -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py
+
+      - name: Build deterministic owner resolution twice
+        run: |
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py --output /tmp/ru01-owner-a.json
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py --output /tmp/ru01-owner-b.json
+          cmp /tmp/ru01-owner-a.json /tmp/ru01-owner-b.json
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py
+
+      - name: Fail closed on exact owner search and zero admissions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          d = json.loads(Path('/tmp/ru01-owner-a.json').read_text(encoding='utf-8'))
+          assert d['status'] == 'CENTRAL_BRAIN_RU01_BROAD_HEADER_EXACT_OWNER_RESOLUTION_READY_NOT_ACCEPTED'
+          assert d['base_current_label'] == 'current-v19'
+          assert d['owner_search_basis'].startswith('EXACT_CURRENT_ACCEPTED_CLAUSE_DECOMPOSITION_ON_CURRENT_V19')
+
+          s = d['summary']
+          assert s == {
+              'source_requirements': 3,
+              'exact_official_clauses': 17,
+              'clauses_with_exact_current_owner': 7,
+              'unresolved_clauses_resolved_to_distinct_candidate_scopes': 10,
+              'distinct_proposed_owner_candidates': 6,
+              'semantic_admissions': 0,
+              'object_level_closures': 0,
+              'exact_mastery_admissions': 0,
+              'false_exact_mastery_admissions': 0,
+          }
+
+          candidates = d['proposed_owner_candidates']
+          assert {row['candidate_semantic_id'] for row in candidates} == {
+              'ru-phonetics-sound-characterization',
+              'ru-phonetics-sound-system',
+              'ru-phonetics-vowel-system',
+              'ru-phonetics-consonant-system',
+              'ru-phonetics-syllable',
+              'ru-phonetics-stress',
+          }
+          assert all(row['candidate_status'] == 'PROPOSED_NOT_CANONICAL' for row in candidates)
+          assert all(row['semantic_admission'] is False for row in candidates)
+          assert all(row['object_closure'] is False for row in candidates)
+          assert all(row['mastery_admission'] is False for row in candidates)
+          assert {row['exact_current_owner_search_result'] for row in candidates} == {
+              'PARTIAL_ONLY_NO_EXACT_CURRENT_OWNER',
+              'NO_EXACT_CURRENT_OWNER',
+          }
+
+          target = d['target_objects']
+          assert len(target) == 3
+          assert all(row['status'] == 'PENDING_EXACT_OWNER_AND_COMPONENT_EVIDENCE' for row in target)
+          assert {row['requirement_id'] for row in target} == {
+              'RSK-EDSOO59-4-1-P181',
+              'RSK-EDSOO59-4-1-P187',
+              'RSK-OGE_COD-4-1-P020',
+          }
+
+          non = d['explicit_non_inference']
+          assert all(value is False for value in non.values())
+
+          guard = d['current_aggregate_guard']
+          assert guard['semantic_units_with_accepted_component_sets'] == 41
+          assert guard['subject_disposed_units_total'] == 42
+          assert guard['subject_review_units_remaining'] == 1274
+          assert guard['subject_review_requirements_remaining'] == 1349
+          assert guard['canonical_component_refs_reused_unique'] == 122
+          assert guard['accepted_bounded_ru_subject_semantics'] == 69
+          assert guard['accepted_bounded_ru_semantics_total'] == 78
+          assert guard['false_exact_mastery_admissions'] == 0
+
+          assert d['next_required_action']['object_acceptance'].startswith('FORBIDDEN_UNTIL_EVERY_REQUIRED_CLAUSE')
+          print('RU01_BROAD_HEADER_EXACT_OWNER_RESOLUTION_FAIL_CLOSED=PASS')
+          PY
+
+      - name: Protect tracked repository hygiene
+        run: |
+          git diff --check
+          git diff --exit-code
