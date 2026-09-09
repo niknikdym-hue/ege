@@ -1,0 +1,115 @@
+name: Russian RU01 phonetics broad-header candidate content gap review
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_candidate_content_gap_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py"
+      - "eksamio-learning-engine/russian-program/production-learning-content/*.json"
+      - ".github/workflows/russian-ru01-phonetics-broad-header-candidate-content-gap-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-broad-header-candidate-content-gap-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile candidate content-gap builder
+        run: python -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_candidate_content_gap_review.py
+
+      - name: Build deterministic content gap review twice
+        run: |
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_candidate_content_gap_review.py --output /tmp/ru01-content-gap-a.json
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_candidate_content_gap_review.py --output /tmp/ru01-content-gap-b.json
+          cmp /tmp/ru01-content-gap-a.json /tmp/ru01-content-gap-b.json
+
+      - name: Fail closed on candidate inventory and zero admissions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          d = json.loads(Path('/tmp/ru01-content-gap-a.json').read_text(encoding='utf-8'))
+          assert d['status'] == 'CENTRAL_BRAIN_RU01_BROAD_HEADER_CANDIDATE_CONTENT_EVIDENCE_GAP_REVIEW_READY_NOT_ACCEPTED'
+          assert d['base_current_label'] == 'current-v19'
+          assert d['owner_resolution_exact_head_gate'] == {
+              'run_id': 34306870268,
+              'head_sha': '41dc6749d96697f393a11e67ca3da36ab73e6aa1',
+              'conclusion': 'SUCCESS',
+          }
+
+          candidates = d['candidates']
+          assert {row['candidate_semantic_id'] for row in candidates} == {
+              'ru-phonetics-sound-characterization',
+              'ru-phonetics-sound-system',
+              'ru-phonetics-vowel-system',
+              'ru-phonetics-consonant-system',
+              'ru-phonetics-syllable',
+              'ru-phonetics-stress',
+          }
+          assert len(candidates) == 6
+          assert all(row['candidate_status'] == 'PROPOSED_NOT_CANONICAL' for row in candidates)
+          assert all(row['semantic_admission'] is False for row in candidates)
+          assert all(row['object_closure'] is False for row in candidates)
+          assert all(row['mastery_admission'] is False for row in candidates)
+          allowed = {
+              'NO_DEDICATED_CANDIDATE_CONTENT_FOUND',
+              'CONTENT_PRESENT_COMPONENT_EVIDENCE_MISSING',
+              'CONTENT_AND_EVIDENCE_PRESENT_REQUIRES_SEPARATE_ADEQUACY_REVIEW',
+          }
+          assert {row['content_evidence_status'] for row in candidates} <= allowed
+
+          s = d['summary']
+          assert s['proposed_owner_candidates'] == 6
+          assert (
+              s['candidates_missing_dedicated_content']
+              + s['candidates_with_content_but_no_component_evidence']
+              + s['candidates_with_content_and_evidence_requiring_review']
+          ) == 6
+          assert s['semantic_admissions'] == 0
+          assert s['object_level_closures'] == 0
+          assert s['exact_mastery_admissions'] == 0
+          assert s['false_exact_mastery_admissions'] == 0
+
+          guard = d['current_aggregate_guard']
+          assert guard['semantic_units_with_accepted_component_sets'] == 41
+          assert guard['subject_disposed_units_total'] == 42
+          assert guard['subject_review_units_remaining'] == 1274
+          assert guard['subject_review_requirements_remaining'] == 1349
+          assert guard['canonical_component_refs_reused_unique'] == 122
+          assert guard['accepted_bounded_ru_subject_semantics'] == 69
+          assert guard['accepted_bounded_ru_semantics_total'] == 78
+          assert guard['false_exact_mastery_admissions'] == 0
+
+          non = d['explicit_non_inference']
+          assert all(value is False for value in non.values())
+          print('RU01_BROAD_HEADER_CANDIDATE_CONTENT_GAP_FAIL_CLOSED=PASS')
+          print('SUMMARY=' + json.dumps(s, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Upload exact-head gap ledger
+        uses: actions/upload-artifact@v4
+        with:
+          name: ru01-broad-header-candidate-content-gap
+          path: /tmp/ru01-content-gap-a.json
+          if-no-files-found: error
+
+      - name: Protect tracked repository hygiene
+        run: |
+          git diff --check
+          git diff --exit-code
