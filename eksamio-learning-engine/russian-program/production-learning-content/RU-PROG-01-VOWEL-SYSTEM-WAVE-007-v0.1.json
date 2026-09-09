@@ -1,0 +1,206 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CONTENT_AND_EVIDENCE_READY_SEMANTIC_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-01",
+  "module_title_ru": "Фонетика и графика",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9],
+    "routes": ["school", "oge", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "bounded_owner_resolution",
+      "candidate_semantic_id": "ru-phonetics-vowel-system",
+      "source_clause_ids": ["EDSOO59-P187-4.1.1", "OGE-COD-P020-4.1.1"],
+      "ref": "russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py",
+      "coverage_note": "Exact current-owner search found only the narrower vowel/consonant-features owner and therefore kept the full vowel-system scope as a separate PROPOSED_NOT_CANONICAL candidate."
+    },
+    {
+      "kind": "exact_head_prerequisite_gate",
+      "workflow": "Russian RU01 phonetics broad header owner resolution review",
+      "run_id": 34306870268,
+      "head_sha": "41dc6749d96697f393a11e67ca3da36ab73e6aa1",
+      "conclusion": "SUCCESS"
+    },
+    {
+      "kind": "candidate_content_gap_gate",
+      "workflow": "Russian RU01 phonetics broad header candidate content gap review",
+      "run_id": 34311280167,
+      "head_sha": "07a93daf82b66f5357d8b3bac8b03522b8afa135",
+      "conclusion": "SUCCESS",
+      "result_before_this_wave": "NO_DEDICATED_CANDIDATE_CONTENT_FOUND"
+    },
+    {
+      "kind": "official_program",
+      "source_id": "EDSOO-RU-5-9-2025",
+      "document_id": "EDSOO59",
+      "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.187 4.1.1",
+      "official_requirement": "Система гласных звуков"
+    },
+    {
+      "kind": "official_codifier",
+      "source_id": "FIPI-OGE-RU-2026-FINAL",
+      "document_id": "OGE_COD",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_COD p.20 4.1.1",
+      "official_requirement": "Система гласных звуков"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "learner_explanations": "ORIGINAL_EKSAMIO",
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "commercial_textbook_bytes_in_git": 0
+  },
+  "identity_boundary": {
+    "proposed_semantic_id": "ru-phonetics-vowel-system",
+    "source_taxonomy_id": "vowel_system",
+    "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+    "rule": "This unit targets the system-level organization and recognition of Russian vowel sounds, not merely one feature classification and not vowel letters, spelling, syllable count, stress placement or normative pronunciation.",
+    "vowel_consonant_features_partial_owner_may_substitute": false,
+    "consonant_system_semantic_may_substitute": false,
+    "sound_letter_relation_semantic_may_substitute": false,
+    "sound_composition_semantic_may_substitute": false,
+    "normative_pronunciation_semantic_may_substitute": false,
+    "normative_stress_semantic_may_substitute": false,
+    "generic_ru01_result_can_emit_exact_component_mastery": false,
+    "object_level_admission_effect": "NONE_UNTIL_SEPARATE_BOUNDED_SEMANTIC_ACCEPTANCE_AND_COMPLETE_PARENT_OBJECT_GATE"
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-phonetics-vowel-system",
+      "title_ru": "Система гласных звуков: видеть целое, а не отдельный признак",
+      "canonical_explanation": {
+        "short": "Система гласных звуков — это не список букв и не отдельное умение назвать звук гласным. На школьном уровне нужно удерживать звуковой инвентарь [а], [о], [у], [э], [ы], [и] как систему, отличать звуки от буквенных обозначений и распознавать, какие элементы относятся именно к системе гласных звуков.",
+        "boundaries": [
+          "Гласный звук и буква, которой он может обозначаться, — разные объекты; десять гласных букв нельзя подменять ими систему гласных звуков.",
+          "Отдельная классификация предъявленного звука как гласного — лишь часть более широкого системного знания и сама по себе не доказывает освоение всей системы.",
+          "Система согласных звуков — отдельный компонент; смешивать её с системой гласных нельзя.",
+          "Ударность конкретного слога, нормативное ударение и словарное произношение не выводятся из знания системы гласных звуков.",
+          "Если задание требует точного произношения конкретного слова, нужен отдельный pronunciation owner; этот компонент не угадывает произношение по написанию."
+        ]
+      },
+      "decision_algorithm": [
+        "Определи, спрашивает ли задание о звуках как элементах системы, а не о буквах или написании слова.",
+        "Сопоставь предъявленные элементы со звуковым инвентарём гласных [а], [о], [у], [э], [ы], [и].",
+        "Отдели гласные звуки от согласных и от буквенных знаков, даже если буква обычно связана с гласным звучанием.",
+        "Проверь системность ответа: он должен работать для набора элементов, а не только для одного выученного примера.",
+        "Не делай из системного знания вывод о нормативном произношении или ударении конкретного слова без отдельной authority."
+      ],
+      "worked_examples": [
+        {
+          "id": "p01-u9-e1",
+          "prompt": "Из набора [а], [м], [ы], [т], [э] выбери элементы системы гласных звуков.",
+          "answer": "[а], [ы], [э]. [м] и [т] относятся к согласным звукам.",
+          "measures": "recognize_vowel_system_members"
+        },
+        {
+          "id": "p01-u9-e2",
+          "prompt": "Ученик перечислил буквы а, я, о, ё, у, ю, э, е, ы, и и сказал, что перечислил систему гласных звуков. Что исправить?",
+          "answer": "Он перечислил гласные буквы. Для системы гласных звуков школьный инвентарь задаётся звуками [а], [о], [у], [э], [ы], [и].",
+          "measures": "separate_vowel_sounds_from_vowel_letters"
+        },
+        {
+          "id": "p01-u9-e3",
+          "prompt": "Ученик верно определил один звук [у] как гласный. Доказано ли этим знание системы гласных звуков?",
+          "answer": "Нет. Это подтверждает только локальную классификацию одного элемента; системное знание требует работать с составом и границами всей системы.",
+          "measures": "separate_single_feature_from_system_scope"
+        }
+      ],
+      "guided_practice": [
+        {"id": "p01-u9-g1", "prompt": "Какие элементы из [и], [р], [о], [с] входят в систему гласных?", "expected": "[и], [о]."},
+        {"id": "p01-u9-g2", "prompt": "Почему буква я не является отдельным седьмым гласным звуком?", "expected": "Потому что буква и звук — разные единицы; система гласных описывается звуками, а не количеством гласных букв."},
+        {"id": "p01-u9-g3", "prompt": "Можно ли по знанию системы гласных определить ударение в неизвестном слове?", "expected": "Нет; ударение и нормативное произношение требуют отдельных компонентов."}
+      ],
+      "independent_practice": [
+        {"id": "p01-u9-i1", "prompt": "Выбери только гласные звуки: [э], [н], [а], [й], [ы].", "answer": "[э], [а], [ы]."},
+        {"id": "p01-u9-i2", "prompt": "Что системно неверно в ответе «гласных звуков десять, потому что десять гласных букв»?", "answer": "Смешаны звуки и буквы; буквенные обозначения не равны элементам звуковой системы."},
+        {"id": "p01-u9-i3", "prompt": "Какой компонент остаётся недоказанным, если ученик умеет только сказать «[а] — гласный»?", "answer": "Полное системное владение составом и границами системы гласных звуков."}
+      ],
+      "mixed_transfer_practice": [
+        {"id": "p01-u9-t1", "prompt": "Ученик знает все гласные звуки, но по написанию незнакомого слова угадывает его произношение. Что принять?", "answer": "Знание системы гласных не даёт права принимать угаданное произношение; pronunciation evidence остаётся отдельным."},
+        {"id": "p01-u9-t2", "prompt": "Ученик правильно выбрал [а], [о], [у], [э], [ы], [и] из смешанного списка, но ошибся в ударении слова. Аннулирует ли это системный ответ?", "answer": "Нет, это разные компоненты; при этом системный ответ не создаёт mastery по ударению."}
+      ],
+      "retention_items": [
+        {"id": "p01-u9-r1", "delay_hint": "24h", "prompt": "Без списка-подсказки назови школьный инвентарь гласных звуков.", "answer": "[а], [о], [у], [э], [ы], [и]."},
+        {"id": "p01-u9-r2", "delay_hint": "7d", "prompt": "Объясни одним предложением, почему гласные буквы и гласные звуки нельзя считать одной системой.", "answer": "Буквы — письменные знаки, а звуки — элементы звучащей речи; их состав и функции не совпадают."}
+      ],
+      "independent_verification": [
+        {
+          "id": "p01-u9-v1",
+          "type": "multi_select",
+          "measures": "recognize_vowel_system_members",
+          "prompt": "Выбери все элементы системы гласных звуков: [а], [к], [э], [й], [ы].",
+          "correct": ["[а]", "[э]", "[ы]"],
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u9-v2",
+          "type": "single_choice",
+          "measures": "identify_complete_school_vowel_inventory",
+          "prompt": "Какой набор содержит школьный инвентарь гласных звуков?",
+          "options": ["[а], [о], [у], [э], [ы], [и]", "а, я, о, ё, у, ю, э, е, ы, и", "[а], [о], [м], [э], [ы], [и]"],
+          "correct_option_index": 0,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u9-v3",
+          "type": "single_choice",
+          "measures": "separate_vowel_sounds_from_letters",
+          "prompt": "Что верно описывает систему гласных звуков?",
+          "options": ["Она совпадает со списком десяти гласных букв", "Она описывает звуковые элементы и не равна списку букв", "Она определяется ударением конкретного слова"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u9-v4",
+          "type": "single_choice",
+          "measures": "separate_partial_feature_from_full_system",
+          "prompt": "Ученик правильно определил [у] как гласный. Что этим доказано?",
+          "options": ["Полное владение системой гласных", "Только корректная классификация предъявленного звука; система целиком ещё требует отдельной проверки", "Нормативное произношение любого слова"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u9-v5",
+          "type": "single_choice",
+          "measures": "preserve_pronunciation_stress_boundary",
+          "prompt": "Можно ли из знания системы гласных вывести нормативное ударение и произношение незнакомого слова?",
+          "options": ["Да", "Нет; это отдельные компоненты с отдельной evidence"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref": "ru-phonetics-vowel-system",
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "user_identity_ref": "REGISTERED_USER_REQUIRED",
+        "item_identity": "EXACT_VERSIONED_ITEM_REQUIRED",
+        "received_at": "SERVER_OWNED_TIMESTAMP_REQUIRED",
+        "today_timezone": "Europe/Moscow",
+        "durable_evidence_event_required": true,
+        "mastery_before_separate_semantic_acceptance": false,
+        "generic_ru01_attempt_can_emit_exact_mastery": false,
+        "anonymous_progress_allowed": false,
+        "device_only_canonical_state_allowed": false
+      }
+    }
+  ],
+  "admission_boundary": {
+    "semantic_admissions": 0,
+    "object_level_closures": 0,
+    "exact_mastery_admissions": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
