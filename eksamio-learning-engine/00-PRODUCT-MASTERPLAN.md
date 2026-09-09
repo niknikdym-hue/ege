@@ -1,370 +1,408 @@
 # Eksamio Learning Engine — Product Masterplan
 
 **Статус:** PRODUCT / ARCHITECTURE AUTHORITY  
-**Версия:** 1.5
-**Дата исходной фиксации:** 2026-08-18  
-**Актуализация:** 2026-08-31
+**Версия:** 2.0  
+**Актуализация:** 2026-09-09  
+**Baseline main:** `85d2f2b3dd0cf56c428f57c8a5c7d1b636ecebbb`  
 **Корень системы:** `eksamio-learning-engine/`
 
-Утверждённые owner decisions по первому Pro launch, product client, production cloud, AI/provider boundary, audio privacy, identity, payments и Tutor policy зафиксированы в `OWNER-DECISIONS-2026-08-22.md`. Они являются частью текущей product/architecture authority и явно заменяют прежний порядок, в котором realtime voice относился к позднему/P3-слою после первого Pro launch.
+Этот документ задаёт целевой продукт, обязательную последовательность его реализации и границы архитектуры. Исполнимый текущий статус до запуска ведётся в `00B-PROJECT-PRIORITIES-CURRENT.md`. Более новое явно подтверждённое owner decision может изменить план только через явное обновление authority; исторические PR, чаты и промежуточные handoff не могут тихо переписать этот документ.
 
 ## 1. Целевой продукт
 
-Eksamio — не набор независимых страниц «демоверсия / тренажёр / теория» и не универсальный AI-чат для ЕГЭ.
+Eksamio — **умная образовательная платформа / Personal Exam Intelligence System (PEIS)**, а не набор отдельных страниц, тренажёров и AI-чатов.
 
-Целевая модель:
+Главная единица ценности — **доказанное изменение знания и экзаменационной готовности конкретного ученика**.
 
-> **Eksamio = Personal Exam Intelligence System (PEIS)**
-
-Система должна понимать:
-
-- какие проверенные знания, умения и решения составляют предмет;
-- что конкретный ученик действительно умеет;
-- где и почему он системно теряет баллы;
-- какие prerequisite gaps мешают продвижению;
-- что выгоднее изучать следующим;
-- помогло ли конкретное объяснение или тренировка;
-- сохранился ли навык через время;
-- как меняется ожидаемый экзаменационный результат.
-
-Главная единица ценности — не просмотренный урок и не ответ AI, а **доказанное изменение состояния знания ученика**.
-
-## 2. Предметный приоритет
-
-Зафиксированный порядок предметов Eksamio:
-
-1. **Русский язык** — первый предмет.
-2. **Математика** — второй предмет.
-3. **Физика** — третий предмет.
-
-Приоритет ресурсов:
-
-- **P0: русский язык + математика** — два главных предметных направления Eksamio;
-- **P1: физика** — развивается параллельно, но не должна замедлять русский и математику.
-
-Для математики учитываются оба экзаменационных маршрута: **профильная и базовая математика**. Профильная математика является ключевым интеллектуальным маршрутом второго предмета; базовая математика сохраняется как отдельный официальный exam route той же Mathematics Identity Model, а не как отдельная система.
-
-## 3. Единый PEIS, а не отдельные предметные движки
-
-Русский, математика и физика подключаются к **одной системе**.
-
-Нельзя создавать для нового предмета параллельные:
-
-- Student Model;
-- learner state architecture;
-- универсальный Evidence contract;
-- mastery engine;
-- readiness engine;
-- retention engine;
-- Recommendation / Next Best Action engine.
-
-У каждого предмета свой предметный слой:
-
-- verified source authority;
-- semantic / identity model;
-- prerequisite relationships;
-- exam-route mapping;
-- content/program layer;
-- demo/trainer mappings.
-
-Общий PEIS-слой получает предметные semantic identities и evidence, но не дублируется по предметам.
-
-## 4. Исторический официальный корпус
-
-Для каждого предмета целевой исторический корпус демоверсий и связанных официальных материалов — **2022–2026**.
-
-Принципы:
-
-- официальный источник является source of truth;
-- существующие 2026-source не реконструируются и не переписываются без необходимости;
-- готовая интерактивная демоверсия Eksamio не считается официальным source;
-- отсутствующее не синтезируется «по смыслу»;
-- provenance и целостность должны быть проверяемыми;
-- предметные source-контуры не должны ломать уже проверенные специализированные build/audit-контуры, особенно математики.
-
-## 5. Единый learning loop
-
-Все части продукта замыкаются в один цикл:
+Единый цикл:
 
 `DIAGNOSE -> MODEL -> PRIORITIZE -> TEACH/PRACTICE -> VERIFY -> RETAIN -> REASSESS -> REPLAN`
 
-1. **DIAGNOSE** — демоверсия, контрольная или отдельное задание дают evidence.
-2. **MODEL** — evidence обновляет состояние конкретных semantic skills/subskills.
-3. **PRIORITIZE** — система выбирает следующий лучший шаг.
-4. **TEACH/PRACTICE** — правило, тренировка или персональная помощь.
-5. **VERIFY** — новый независимый item без помощи.
-6. **RETAIN** — проверка навыка позже.
-7. **REASSESS** — контроль/демоверсия проверяет перенос в экзамен.
-8. **REPLAN** — маршрут и прогноз пересчитываются.
+Платформа должна понимать:
 
-Функции, которые не усиливают этот цикл и не дают самостоятельной ценности ученику, имеют меньший приоритет.
+- что ученик действительно знает и умеет;
+- где и почему он теряет баллы;
+- какие prerequisite gaps мешают продвижению;
+- что выгоднее делать следующим;
+- помогла ли конкретная тренировка или помощь Tutor;
+- сохранился ли навык через время;
+- как меняется ожидаемый экзаменационный результат.
 
-## 6. Роль существующих продуктов
+## 2. Главная последовательность проекта — зафиксирована
 
-### Демоверсии
+Работа идёт не «по всем предметам понемногу», а по продуктовым завершениям.
 
-Остаются максимально точными симуляторами официального экзамена и не становятся адаптивными внутри экзаменационного режима.
+### Этап A — критический запуск Eksamio Pro — Русский
 
-В PEIS демоверсия дополнительно является **диагностическим сенсором** и должна передавать структурированные evidence-события, а не только итоговый балл.
+Сначала должен появиться **реальный, видимый и оплачиваемый продукт Русского**, которым ученик может воспользоваться от входа на сайт до повторного входа и сохранённого прогресса.
 
-### ЕГЭ-тренажёры
+Критический launch chain:
 
-Становятся двигателями персонального маршрута, практики и подтверждения mastery. Они должны уметь принимать handoff из диагностики и работать с конкретными слабостями.
+`PUBLIC SITE -> REGISTRATION/LOGIN -> PURCHASE -> RECEIPT -> ENTITLEMENT -> RUSSIAN LEARNING -> PEIS -> PRACTICE/ERROR WORK -> TUTOR TEXT/VOICE -> INDEPENDENT VERIFY -> PROGRESS -> RETURN LOGIN -> REFUND/REVOKE -> PUBLIC GO-LIVE`
 
-### Тематические тренажёры
+### Этап B — полная реализация Русского
 
-Не должны иметь отдельную несвязанную модель знания. Проверяемые items связываются со стабильными semantic identities и, где применимо, пишут evidence в единый Student Model.
+После первого production launch Русский доводится до полной продуктовой системы на одной canonical Russian truth layer: 5–11 классы, ОГЭ, ЕГЭ, курс, тренажёры, конструктор, персональная тренировка, работа над ошибками, retention, план, прогресс и Tutor. Нельзя переключать основной продуктовый ресурс на следующий предмет, оставив Русский набором незавершённых внутренних веток.
 
-### Полные предметные программы
+### Этап C — масштабирование умной платформы на другие предметы
 
-Полная программа — не отдельный линейный курс, а knowledge/content layer PEIS:
+Только после устойчивого работающего Русского общий PEIS/runtime/product shell переиспользуется для следующих предметов.
 
-- карта знаний и навыков;
-- verified rules / explanations / methods;
-- prerequisites;
-- типичные ошибки и контрасты;
-- teach/practice/check content;
-- база adaptive practice;
-- база AI Tutor / retrieval;
-- retention/transfer layer.
+Зафиксированный порядок:
 
-## 7. Identity Model — обязательный предметный фундамент
+1. **Русский язык** — первый полностью реализуемый предмет и доказательство всей платформы.
+2. **Математика** — второй предмет; база и профиль являются exam routes одной Mathematics Identity Model.
+3. **Физика** — третий предмет.
+4. Остальные предметы — по коммерческому приоритету после доказанной повторяемости PEIS на первых трёх.
 
-Exam task number, элемент содержания, проверяемое умение и semantic identity — не одно и то же.
+До завершения критического запуска Русского Mathematics/Physics могут сохранять уже принятые assets и устранять только действительно критические regressions, но **не конкурируют за основной delivery capacity**.
 
-Для каждого предмета должна существовать единая непротиворечивая identity model, связывающая:
+## 3. Что считается «готово»
 
-`official sources -> school knowledge/skills -> semantic identities -> prerequisites -> exam routes -> demo items -> trainer items -> full program -> learner evidence`
+Eksamio не считает работу готовой только потому, что существует код, PR, тест, документ или staging-кандидат.
 
-Нельзя создавать вторую ontology только потому, что появился новый курс, тренажёр или AI-функция.
+Используются разные состояния:
 
-## 8. Student Learning Twin
+- `DESIGNED` — решение описано;
+- `CODE_READY` — код существует и локальные/CI проверки прошли;
+- `INTEGRATED` — код безопасно интегрирован в канонический release path;
+- `PRIVATE_PRODUCTION_PASS` — реальный production contour доказан без публичного трафика;
+- `VISIBLE_TO_LEARNER` — пользователь реально видит и может использовать функцию через продукт;
+- `PUBLIC_LAUNCH_PASS` — один exact release прошёл полный E2E и owner go-live.
 
-Рабочее понятие: **Student Learning Twin**.
+**Пользовательская функция не считается законченной, пока она не видна и не работает в соответствующем production surface.** Это правило специально запрещает бесконечную работу «внутри репозитория», не превращающуюся в продукт.
 
-Это не профиль с процентами. Для skill/subskill система постепенно хранит evidence и выводы о:
+## 4. Архитектура продукта Русского
 
-- mastery;
-- последних attempts;
-- повторяющихся error patterns;
-- assisted / unassisted evidence;
-- transfer;
-- retention;
-- давности проверки;
-- prerequisite gaps;
-- confidence / uncertainty;
-- intervention effectiveness;
-- recommendation results.
+Для ученика существует один Eksamio.
 
-Персонализация объяснения должна опираться на наблюдаемый learning outcome, а не на псевдотипологии вроде «визуал/аудиал».
+- `eksamio.ru` / Tilda — public marketing, бесплатные демоверсии, понятные входы в регистрацию/Pro.
+- Protected Eksamio web application — регистрация, кабинет, Русский, PEIS, прогресс, entitlement, Tutor и Pro-функции.
+- Primary production runtime — **Yandex Cloud Russia**.
+- Canonical learner state, PEIS, entitlement и session — server-owned.
+- GitHub — development/source-of-truth infrastructure, **не learner runtime dependency**.
+- Google Drive может быть Source Archive, но не normal learner runtime dependency.
+- Core PEIS/business/subject contracts должны оставаться portable/provider-neutral.
 
-## 9. Что должно отличать Eksamio
+Hard invariants:
 
-Просто `diagnosis -> adaptive plan -> lesson -> quiz` уже является мировым baseline.
+- `GitHub outage != Eksamio outage`;
+- `Drive outage != Eksamio outage` после ingestion;
+- browser/localStorage не является canonical learner identity/mastery authority;
+- learner audio persisted bytes = `0`;
+- `false_exact_mastery = 0`.
 
-Eksamio строится вокруг пяти более сильных механизмов:
+## 5. Регистрация и learner identity
 
-### Score Gain per Minute
+Бесплатные публичные демоверсии могут проходиться без регистрации.
 
-Recommendation Engine оптимизирует ожидаемую полезность следующего шага:
+Canonical learner history начинается только в server-owned registered identity contour:
 
-`expected_exam_gain / expected_study_time`
+- passwordless registration/login;
+- verified e-mail и/или другой отдельно production-admitted delivery method;
+- один registered identity -> один canonical `learner_profile_id`;
+- free/paid различаются entitlement, а не разными learner identities;
+- device-only/anonymous browser state не становится canonical mastery;
+- consent boundaries и privacy/legal versioning server-verifiable;
+- session cookie secure / HttpOnly / SameSite и exact-origin CSRF/CORS boundary.
 
-### Error Fingerprint
+Если anonymous demo evidence позднее связывается с аккаунтом, это допускается только как отдельно доказанный server-owned import/link contract без выдачи недоказанного mastery. Наличие localStorage само по себе такого права не даёт.
 
-Система должна различать с evidence/confidence как минимум:
+## 6. Серверы и production contour
 
-- knowledge gap;
-- prerequisite gap;
-- confusion между похожими правилами/методами;
-- application error;
-- reading/formulation error;
-- unstable skill;
-- retention failure;
-- likely accidental error;
-- high-confidence misconception.
+До публичного Pro должны реально существовать и пройти acceptance:
 
-### Intervention Effectiveness
+1. Yandex application runtime / immutable release artifact;
+2. Managed PostgreSQL или другой явно admitted server-owned persistence substrate;
+3. API Gateway / edge;
+4. TLS/domain/CORS/session boundary;
+5. secrets в production secret storage, не в Git/browser/logs;
+6. migrations + persistence proof;
+7. monitoring / redacted logs / health checks;
+8. backup + restore proof;
+9. rollback и provider/payment/Tutor kill switches;
+10. production independence from GitHub/Drive.
 
-После помощи измеряется не «понравилось объяснение», а результат следующего независимого действия, серии, transfer и retention.
+`CODE_READY` deployment templates не равны реальному production resource.
 
-### Calibrated Score Forecast
+## 7. Полное отображение продукта на сайте
 
-Прогноз — диапазон с uncertainty и последующей проверкой calibration на реальных контрольных попытках.
+Запуск считается реальным только если ученик видит законченную цепочку, а не внутренние технические компоненты.
 
-### Explainable Next Best Action
+Обязательные visible surfaces первого production launch:
 
-Система объясняет, почему именно этот следующий шаг выбран: evidence, exam value, prerequisite/readiness, retention state, история ошибок и ожидаемая стоимость времени.
+- понятная public entry page;
+- регистрация / вход;
+- purchase/checkout path;
+- подтверждение доступа Pro;
+- личный кабинет / профиль;
+- Русский как активный предмет;
+- диагностика / результаты / ошибки;
+- следующий рекомендуемый шаг;
+- тренировка / работа над ошибкой;
+- Tutor text;
+- Tutor realtime voice;
+- независимая проверка после помощи;
+- прогресс / weak points / readiness;
+- сохранение состояния после logout/login;
+- понятные access dates без автопродления;
+- support/refund path;
+- корректный desktop + mobile browser UX.
 
-## 10. Продуктовые слои
+Нельзя объявлять Pro подключённым, если learner-facing UI всё ещё работает на fixtures/mocks или скрыт от реального production route.
 
-### Eksamio Base — бесплатный базовый learning loop
+## 8. Eksamio Base и Eksamio Pro
 
-- демоверсии;
-- тренажёры;
-- базовая проверка;
-- карта слабых мест;
-- работа над ошибками;
-- demo -> trainer handoff;
-- базовый персональный маршрут;
-- next-item correctness;
-- spaced repetition / retention;
-- reassessment.
+### Бесплатный Base
 
-Базовый learning loop не должен деградировать ради paywall.
+- официальные демоверсии;
+- базовая диагностика;
+- доступные бесплатные тренировки;
+- корректный результат и handoff к дальнейшей работе.
 
-### Eksamio Pro — платный персональный слой
+Base не должен искусственно портиться ради paywall.
 
-- глубокий AI-разбор ошибки;
-- персональный AI Tutor с text и realtime voice как двумя интерфейсами одного Tutor и одного learning episode;
-- расширенный Error Fingerprint;
-- долгосрочная оптимизация маршрута;
-- расширенный score forecast;
-- AI-проверка сочинения/развёрнутого ответа как учебная оценка;
-- персональные аналитические отчёты.
+### Pro
 
-Первый paid Pro launch запрещён, пока одновременно не production-ready:
+Первый коммерческий contour включает:
 
-- text AI Tutor;
-- realtime voice AI Tutor.
+- server-owned learner state;
+- персональный learning loop;
+- расширенную диагностику слабых мест;
+- работу над ошибками и Next Best Action;
+- AI Tutor text + realtime voice как два интерфейса одной Tutor session;
+- progress/retention/personal plan по мере admission соответствующих Russian surfaces;
+- ограниченные AI-квоты и прозрачный entitlement.
 
-Text-only и voice-only Pro launch запрещены. Переключение `voice -> text -> voice` внутри одной сессии не должно терять learning context или PEIS state. Voice является P0 launch capability, но не отдельным Tutor и не разрешением обходить shared PEIS dependency graph.
+Owner product contract: 30/90 дней без автопродления; отдельные AI-продукты/пакеты допускаются только как явные SKU, а не скрытые billing side effects.
 
-### Позднее расширение Pro
+## 9. Payments / receipt / entitlement
 
-- vision/photo analysis;
-- совместный разбор черновика/изображения;
-- richer multimodal coaching после доказанного production contour text + realtime voice.
+Production paid path должен доказать:
 
-## 11. Роль AI
+`order -> provider payment -> verified callback -> receipt -> entitlement grant -> use -> refund -> entitlement revoke`
 
-AI — reasoning/teaching layer поверх verified structure.
+Обязательно:
 
-AI может:
+- exact SKU/amount/duration server-owned;
+- SBP/card production acceptance для выбранного provider contour;
+- NPD/receipt compliance;
+- webhook idempotency и replay protection;
+- exactly-once entitlement semantics;
+- refund/revoke path;
+- отсутствие случайного auto-renewal/saved-card поведения, если оно не утверждено.
 
-- объяснять конкретную ошибку;
-- задавать наводящие вопросы;
-- менять форму объяснения;
-- формировать персональный разбор из structured evidence;
-- выдвигать гипотезу причины ошибки с confidence;
-- вести диалог по verified knowledge base;
-- проверять развёрнутые ответы по явной rubric в учебном режиме;
-- работать через text и realtime voice в общем Tutor session state;
-- позже расширяться на фото/vision и другие multimodal inputs.
+Payment code без реального bounded provider acceptance не является launch PASS.
 
-AI **не является source of truth** для:
+## 10. Russian truth — один предмет, одна authority
 
-- официальных ответов;
-- критериев;
-- task numbering;
-- scoring;
-- exam rules;
-- canonical semantic identity;
-- mastery state без deterministic policy/evidence contract.
+Полная программа Русского является одной canonical knowledge/content layer для всех learner surfaces.
 
-После существенной AI-помощи, где применимо, обязателен новый независимый verification item.
+Она связывает:
 
-## 12. Общие PEIS-контракты
+`official sources -> Russian semantic identities -> prerequisites -> 5–11 -> OGE/EGE routes -> demos -> trainers -> course -> Tutor grounding -> learner evidence`
 
-Предметы должны переиспользовать уже созданные общие контракты learner evidence / state и последующие PEIS contracts, включая materialized contracts TASK-004 и TASK-005.
+Нельзя создавать отдельные ontology/mastery databases для курса, ОГЭ, ЕГЭ, thematic trainers или Tutor.
 
-Логическая цепочка:
+Все **16/16 Russian program modules** входят в full-subject scope. Текущий exact closure ведётся в PR #164 и остаётся fail-closed до полного acceptance соответствующего заявляемого scope.
+
+Hard rule: title/route/task number/fuzzy match/embedding не создают exact semantic mastery.
+
+## 11. Полная продуктовая реализация Русского
+
+До перехода основного продукта на следующий предмет Русский должен иметь единый production-capable набор:
+
+1. official demos / diagnostics;
+2. diagnosis -> exact errors -> weak skills;
+3. work on mistakes;
+4. thematic trainer;
+5. EGE Russian trainer/route;
+6. OGE Russian trainer/route;
+7. school Russian 5–11 views;
+8. trainer constructor;
+9. personal `Training for today` / Next Best Action;
+10. guided Russian course;
+11. prerequisite repair and return-to-goal logic;
+12. progress / weak-points / readiness;
+13. independent verification after substantial help;
+14. retention / spaced recheck;
+15. personalized exam/study plan;
+16. Tutor text;
+17. Tutor realtime voice;
+18. Tutor <-> trainer/course handoff without losing PEIS context;
+19. extended-answer/essay support only after rubric/source/eval admission;
+20. reliable cross-session learner history and explainable next action.
+
+Progressive rollout is allowed, но скрытая функция не считается реализованной. Board должен показывать и launch milestone, и остаток до `RUSSIAN_FULL_PRODUCT_PASS`.
+
+## 12. AI Tutor и provider architecture
+
+Tutor — teaching/reasoning layer поверх verified Russian truth и server-owned learner state, не source of truth.
+
+Shortlist learner-facing brain для реального педагогического Eksamio acceptance:
+
+- OpenAI;
+- Qwen;
+- DeepSeek;
+- Yandex.
+
+Порядок списка **не является рейтингом**. Финальный primary/fallback policy определяется собственным сравнительным педагогическим тестом Eksamio и production/accessibility/security/cost evidence.
+
+Voice layer остаётся provider-neutral относительно brain. Yandex SpeechKit может быть production STT/TTS независимо от выбранного AI-brain.
+
+После существенной Tutor-помощи требуется независимый verification item; фраза ученика «я понял» и сам ответ AI не создают mastery.
+
+## 13. PEIS — общий движок будущей платформы
+
+Все предметы переиспользуют общие контракты:
 
 `Attempt -> EvidenceEvent -> StudentSkillState -> Mastery -> Readiness -> Next Best Action -> Practice/Help -> Independent Verify -> Retention -> Reassess`
 
-Контракты mastery/readiness/retention/NBA не содержат предметную истину. Предметные prerequisite edges и semantic truth допускаются только через source-backed reviewed authority.
+Общие platform services после доказательства на Русском:
 
-Learning policy также фиксирует:
+- identity/account/session;
+- learner state persistence;
+- PEIS evidence/mastery/readiness/retention/NBA;
+- entitlement/billing limits;
+- AI Gateway/provider routing;
+- Tutor session/reliability/cost telemetry;
+- observability/audit;
+- transient speech/realtime transport;
+- product shell/navigation/progress surfaces.
 
-- фраза ученика «я понял» не является mastery evidence;
-- существенная AI-помощь требует независимой проверки, а её провал меняет объяснение/диагностику вместо автоматического продвижения;
-- prerequisite repair может временно изменить маршрут, после чего система возвращается к исходной цели;
-- полный worked solution допустим после реальных попыток, но просмотр решения не считается mastery;
-- immediate mastery и retained mastery различаются; retention перепроверяется индивидуально, а failure снижает confidence и возвращает skill в review;
-- deadline/exam value могут менять приоритет, не отменяя critical prerequisites;
-- score forecast всегда range/probability, не гарантия;
-- ученик может отойти от рекомендованного маршрута; critical prerequisite даёт объяснимое предупреждение, но не hard lock;
-- Next Best Action имеет понятное человеку объяснение.
+Предмет-специфичны:
 
-## 13. Приоритет реализации
+- source authority;
+- semantic identity model;
+- prerequisites;
+- exam routes/scoring;
+- content/program;
+- subject-specific evidence semantics.
 
-### P0 — сейчас
+## 14. Критический план запуска Русского
 
-1. Masterplan + hierarchy of authority должны быть доступны из актуального `main`.
-2. Не останавливать verified production-работу по демоверсиям.
-3. **Русский:** завершить Unified Russian Identity Model и data alignment между 185 identities, Skill Graph, demo, 174 trainer items, thematic trainers и full program.
-4. **Математика:** провести non-destructive inventory существующих profile/base source/audit/build-контуров и закрыть реальные gaps исторического корпуса 2022–2026 без повторной переделки готового.
-5. **Физика:** вести source 2022–2026 и Physics Identity Model параллельно, не отбирая темп у русского и математики.
-6. Зафиксировать стабильные identity/mapping contracts предметов.
-7. Переиспользовать общие Student / Attempt / Evidence / StudentSkillState / Mastery / Readiness / Retention / NBA contracts.
-8. Реализовать и проверить первый полный vertical slice: `demo -> diagnosis -> trainer -> verify`.
-9. Начать outcome telemetry: NIC-1, NIC-3, transfer, retention, recommendation result.
-10. Только затем подключить первый AI-разбор поверх structured evidence.
+Исполнимые детали и exact evidence находятся в `00B-PROJECT-PRIORITIES-CURRENT.md`. Masterplan фиксирует обязательные классы результата:
 
-### P0.5 — первый монетизируемый AI-срез
+1. **Russian truth:** заявляемый launch scope source-backed и subject-accepted.
+2. **Identity:** real registration/login -> one server-owned learner profile.
+3. **Visible product:** public site -> protected Pro UX на desktop/mobile.
+4. **PEIS assembly:** attempts/errors/practice/NBA/progress/persistence соединены с real backend.
+5. **Admissions:** production evidence принимается только по exact registered learner/item/action/evaluator contract.
+6. **Yandex production:** runtime/database/edge/TLS/secrets/monitoring/backup/rollback реально подняты и приняты.
+7. **Delivery:** passwordless delivery реально доказана.
+8. **Commercial:** exact SKU -> payment -> receipt -> entitlement -> refund/revoke реально доказаны.
+9. **Tutor:** pedagogically selected brain + grounded text + realtime voice + reliability + independent verify.
+10. **Legal/privacy/operations:** production values/docs/support/refund/audio-zero policy accepted.
+11. **Private production E2E:** один exact release проходит всю learner цепочку.
+12. **Public go-live:** owner gate, launch links/site visible, post-launch smoke + rollback readiness.
 
-`verified attempt -> failed skill -> grounded AI explanation -> personalized help -> independent item -> measured outcome`
+Если хотя бы один обязательный класс не `PASS`, публичный paid launch не считается завершённым.
 
-Первый AI-продукт: **AI-разбор результата / конкретной ошибки + следующий проверочный шаг**.
+## 15. После первого запуска: `RUSSIAN_FULL_PRODUCT_PASS`
 
-Не начинать с универсального пустого чата.
+Первый paid launch не даёт права бросить Русский. Следующая основная цель — закрыть все Russian surfaces из раздела 11 и доказать:
 
-Этот ранний bounded AI-срез не является разрешением на text-only Pro launch. До первого paid Pro должны быть закрыты production gates для одного Tutor в обоих интерфейсах — text и realtime voice — поверх shared PEIS, deployment/security и verified knowledge foundations.
+- единый registered learner profile;
+- cross-session persistence;
+- одна canonical Russian truth layer;
+- один PEIS;
+- корректный handoff между demo/course/trainer/Tutor;
+- полный visible navigation по фактически admitted Russian product;
+- learner-facing status не обещает скрытые/непринятые функции;
+- production observability и support позволяют сопровождать реальных пользователей.
 
-### P1
+Только после `RUSSIAN_FULL_PRODUCT_PASS` основной roadmap переходит к следующему предмету.
 
-- account/server sync;
-- «Тренировка на сегодня»;
-- retention schedule;
-- Recommendation Engine;
-- Error Fingerprint v1;
-- paid entitlements/limits;
-- AI cost/outcome telemetry;
-- Student Learning Twin v1.
+## 16. Математика — второй предмет
 
-### P2
+Математика подключается к уже работающим platform services, а не строит свой новый Eksamio.
 
-- AI essay/extended-answer evaluation с criterion evidence и uncertainty;
-- calibrated score forecast;
-- dynamic plan to exam;
-- confidence calibration;
-- vision/photo analysis;
-- intervention experiments.
+Порядок:
 
-### P3
+1. source corpus 2022–2026 + gap closure;
+2. Mathematics Identity Model;
+3. BASE + PROFILE route mappings;
+4. demo/trainer/course content alignment;
+5. exact evidence semantics;
+6. reuse registration/server/PEIS/Pro/Tutor/product shell;
+7. visible mathematics learner loop;
+8. private production E2E;
+9. public rollout.
 
-- richer multimodal live sessions после первого Pro launch;
-- richer Student Learning Twin;
-- proactive replanning;
-- long-term cross-session personalization.
+Base и Profile — маршруты одной предметной модели.
 
-### P4
+## 17. Физика — третий предмет
 
-- масштабирование PEIS на следующие предметы после русского, математики и физики;
-- cross-subject profile;
-- dashboards при доказанной потребности;
-- извлечение proven shared Living Core services;
-- internationalization после product-market proof.
+После математического platform reuse доказательства Физика проходит тот же предметный pipeline:
 
-## 14. Что не делать сейчас
+`official sources -> Physics identities -> content/routes -> exact evidence -> shared PEIS -> Tutor -> visible learner product -> E2E -> rollout`.
 
-- не строить generic AI-чат для ЕГЭ;
-- не трактовать P0 voice launch gate как voice-first обход PEIS: первый implementation slice остаётся verified attempt -> grounded help -> independent verify, но первый paid Pro не может быть text-only или voice-only;
-- не делать отдельные базы прогресса для demo/trainer/program;
-- не создавать вторую Skill Graph/ontology поверх current canonical layer;
-- не давать AI владеть official answers/scoring;
-- не ставить завершение 100% всей программы блокером первого безопасного vertical slice;
-- не строить абстрактную универсальную платформу раньше работающего Eksamio loop;
-- не оптимизировать продукт прежде всего по времени на сайте/числу сообщений;
-- не менять verified production demo content ради персонализации;
-- не переносить старые разрозненные localStorage состояния в cloud как есть без versioned data contract.
+Существующие принятые physics/demo assets сохраняются; они не дают права создать отдельный learner engine.
 
-## 15. Метрики
+## 18. Остальные предметы
 
-Learning:
+После Русского, Математики и Физики новые предметы добавляются только через повторяемый subject onboarding contract. Новый предмет не может дублировать account, PEIS, billing, Tutor session platform или progress engine.
 
-- NIC-1;
-- NIC-3;
+Порядок следующих предметов определяется commercial demand, quality/corpus readiness и стоимостью full-subject admission.
+
+## 19. Owner Console — обязательная панель управления проектом
+
+Разработка Eksamio должна иметь отдельную **Owner Console / Project Control Panel** для владельца. Это development/management surface, а не learner-facing часть `eksamio.ru`.
+
+Панель обязана показывать **весь проект целиком**, а не только текущий PR или сегодняшнюю работу.
+
+Верхний уровень всегда отображает:
+
+`CRITICAL RUSSIAN LAUNCH -> RUSSIAN FULL PRODUCT -> MATHEMATICS -> PHYSICS -> NEXT SUBJECTS / PLATFORM SCALE`
+
+Для каждого этапа и каждой задачи должны быть видны:
+
+- название и конечный пользовательский результат;
+- stage / workstream;
+- приоритет;
+- статус по словарю раздела 3;
+- `%` или finite denominator только там, где он математически честный;
+- зависимости;
+- blocking reason;
+- exact branch / PR / SHA;
+- CI/evidence status;
+- `VISIBLE_TO_LEARNER: yes/no`;
+- production status;
+- owner gate, если требуется;
+- текущий исполнитель: Astra / Codex / owner / external provider;
+- следующий конкретный action;
+- дата последнего доказанного изменения;
+- исторически завершённые этапы, чтобы прогресс не исчезал из поля зрения.
+
+Панель должна иметь минимум пять представлений:
+
+1. **Whole Project** — все этапы и задачи от критического запуска до следующих предметов.
+2. **Critical Path** — только блокеры ближайшего реального пользовательского milestone.
+3. **Russian Product** — полный путь Русского, включая launch + остаток до `RUSSIAN_FULL_PRODUCT_PASS`.
+4. **Visible Product** — что реально доступно пользователю сейчас на сайте/в Pro, отдельно от `CODE_READY`.
+5. **Owner Gates** — только решения/действия, где действительно требуется владелец.
+
+Панель не должна быть ручным вторым источником истины. План/смысл берётся из canonical Masterplan + Operational Board, а фактические branch/PR/SHA/CI — из GitHub. Если панель и GitHub расходятся, она обязана показать `STALE/CONFLICT`, а не скрыть расхождение.
+
+## 20. Astra / Codex как development layer
+
+Development automation не является частью learner runtime.
+
+- Astra может быть Senior Brain / planner / reviewer проекта через отдельный agent-orchestration contour.
+- Codex — bounded execution engineer.
+- GitHub — source of truth.
+- CI — deterministic evidence.
+- Owner Console — человекочитаемая проекция полного project state.
+
+Ни Astra, ни Codex не получают автоматического права на merge, deploy, production learner writes, payment/refund, provider spend, secret rotation или public publication без соответствующей owner policy/gate.
+
+Learner-facing Tutor provider policy является отдельным решением и не выводится из выбора development Brain.
+
+## 21. Метрики
+
+### Learning
+
+- NIC-1 / NIC-3;
 - transfer success;
 - retention success;
 - mastery gain;
@@ -374,316 +412,48 @@ Learning:
 - expected/actual score gain per study minute;
 - forecast calibration.
 
-AI:
+### AI
 
 - outcome after help;
-- direct-answer leakage rate;
-- unsupported/factual error rate;
+- direct-answer leakage;
+- unsupported/factual error;
 - latency;
 - cost per successful learning intervention;
-- fallback rate.
+- fallback/error rate.
 
-Business:
+### Product / delivery
 
+- registration success;
+- purchase -> entitlement success;
+- return-login continuity;
 - diagnosis -> practice conversion;
 - repeat study days;
-- paid conversion after demonstrated free value;
-- paid retention;
+- paid conversion after demonstrated value;
 - AI cost / revenue;
-- share of users with measurable improvement.
+- share of learners with measurable improvement;
+- visible-feature completion vs code-only completion.
 
-## 16. AI evaluation gate
+## 22. No-circle execution rules
 
-Каждая новая AI-функция до массового rollout получает фиксированный eval set.
+1. Не проводить новый проект-wide audit, если можно продолжить от текущей exact truth.
+2. Не считать документ/PR/CI пользовательским результатом.
+3. Любой большой workstream должен двигать конкретную строку Owner Console к `VISIBLE_TO_LEARNER` / `PUBLIC_LAUNCH_PASS`.
+4. Не открывать новый предмет, чтобы избежать трудного blocker Русского.
+5. Не создавать вторую ontology/PEIS/account/billing систему для нового learner surface или предмета.
+6. Не допускать false exact mastery ради ускорения.
+7. Не создавать runtime dependency от GitHub/Drive.
+8. Не хранить learner audio.
+9. Не публиковать paid feature, не прошедшую exact production E2E.
+10. После каждого существенного accepted delta обновлять Operational Board/structured project state, чтобы Owner Console показывала новый факт.
 
-Минимум:
+## 23. Текущий главный milestone
 
-- factual/source correctness;
-- правильная skill binding;
-- отсутствие подмены official answer;
-- pedagogical protocol;
-- отсутствие преждевременной выдачи ответа;
-- uncertainty;
-- structured output contract;
-- post-help learning outcome после запуска.
+**Следующая цель проекта: `RUSSIAN_PUBLIC_PAID_LAUNCH_PASS`.**
 
-AI не является единственным судьёй собственного качества. Нужны deterministic checks, source-backed fixtures и reviewed evaluation contour.
+До неё вся работа ранжируется по тому, сокращает ли она путь к реальному ученику:
 
-## 17. Eksamio-first / Living-Core-aware
+`registration + servers + visible site/app + Russian truth + PEIS + Pro + payments + Tutor + persistence + E2E + go-live`.
 
-Не строить сейчас абстрактную универсальную платформу для всех будущих проектов до запуска работающего Eksamio.
+После неё следующая цель: **`RUSSIAN_FULL_PRODUCT_PASS`**.
 
-Стратегия: **product-first, core-aware**.
-
-Потенциально shared services позже:
-
-- identity/account;
-- session/memory;
-- AI Gateway/provider routing;
-- knowledge retrieval;
-- usage/cost accounting;
-- entitlements/billing limits;
-- safety/moderation;
-- analytics/experimentation;
-- audit/logging;
-- transient speech/realtime transport без persistent learner audio storage.
-
-Предметное ядро Eksamio не надо преждевременно делать generic:
-
-- semantic identity models;
-- Skill Graph;
-- exam routes;
-- subject source authority;
-- mastery/readiness interpretation;
-- recommendation policy;
-- score forecast;
-- exam scoring;
-- learning evidence semantics.
-
-## 18. Provider architecture
-
-Предметная логика не зависит напрямую от конкретного AI/cloud provider.
-
-Provider-specific model/API не должен становиться частью Student Model или subject source-of-truth.
-
-Нужны provider abstraction, model/version logging, prompt/policy version logging, cost telemetry, fallback policy и feature flags.
-
-Production architecture должна обеспечивать работу в России без VPN, включая text и realtime voice Tutor; learner browser не обращается напрямую к foreign AI service. Primary production cloud — Yandex Cloud Russia, но canonical PEIS/learner/subject state и core business logic остаются portable/provider-neutral.
-
-OpenAI и Google являются principal candidates для conversational brain, а Yandex SpeechKit — priority candidate для Russian STT/TTS. Candidate не означает production approval. Admission требует применимых Russia/accessibility, legal, quality и security gates; automatic fallback допустим только между pre-approved production providers. Learner provider не выбирает.
-
-## 19. Production, client, identity, payment и privacy boundaries
-
-- Первый Pro client — отдельное Eksamio web application с качественным desktop/mobile-browser UX; native mobile apps не обязательны для первого launch.
-- Tilda остаётся public/site/free-demo layer и не владеет accounts, canonical learner state, PEIS, AI Tutor или payments.
-- Pro authentication passwordless: verified e-mail или phone по выбору пользователя; anonymous same-device free-demo progress безопасно связывается с permanent account, но browser не становится identity authority.
-- Первый payment candidate для self-employed/NPD contour — Robokassa + Robocheki SMZ; payment layer replaceable, а production admission требует legal/API/webhook-idempotency/receipt/SBP-card/refund/failure-retry validation. Плательщик — фактически платящее и юридически способное лицо; blanket parent-only rule отсутствует.
-- Tutor session text/structured history может сохраняться для continuity/PEIS по privacy/retention policy.
-- **Learner audio не хранится вообще и ни в какой форме.** Допустима только transient обработка текущего realtime pipeline; recordings/fragments/copies/backups/voiceprints/persistent speaker embeddings/audio datasets запрещены. Launch legal/privacy documentation должна явно сообщать отсутствие audio storage; выбор конкретного legal document остаётся отдельным review.
-
-Полный owner-decision contract: `OWNER-DECISIONS-2026-08-22.md`.
-
-## 20. Change control
-
-Следующие решения нельзя молча менять историческим checkpoint, локальной задачей или отдельным предметным чатом:
-
-- `eksamio-learning-engine/` — корень интеллектуальной системы;
-- Eksamio = Personal Exam Intelligence System;
-- единый semantic/skill identity principle;
-- единый Student Model и общие PEIS contracts;
-- русский и математика — P0;
-- математика — второй предмет;
-- физика — третий предмет;
-- исторический source-корпус каждого предмета — 2022–2026;
-- бесплатный базовый learning loop;
-- AI не является source of truth;
-- первый Pro launch только при совместной production readiness text + realtime voice одного Tutor;
-- learner audio non-storage;
-- learning outcome важнее engagement;
-- Eksamio-first / Living-Core-aware;
-- provider abstraction.
-
-Если требуется изменить одно из этих решений — обновить этот masterplan или создать явный ADR/product decision.
-
-## 21. Ближайшая обязательная последовательность
-
-Если нет более нового явно утверждённого product decision:
-
-1. сохранить и синхронизировать product authority в `main`;
-2. Unified Russian Identity Model / alignment;
-3. Mathematics inventory + 2022–2026 gaps + Mathematics Identity Model;
-4. Physics source 2022–2026 + Physics Identity Model — параллельно, но P1;
-5. первый `demo -> diagnosis -> trainer -> verify` vertical slice;
-6. NIC/transfer/retention measurement;
-7. AI Review MVP на verified vertical slice;
-8. usage/cost/eval telemetry;
-9. production deployment/security + Russia/no-VPN + portable Yandex Cloud contour;
-10. passwordless account/server sync, anonymous-to-account linking, entitlements и replaceable payment contour gates;
-11. один production Tutor поверх shared PEIS: text + realtime voice с общей session continuity; paid Pro launch только после прохождения gates обоими интерфейсами;
-12. Student Learning Twin / Recommendation Engine expansion;
-13. essay/vision и richer multimodal capabilities;
-14. scale to further subjects;
-15. extract proven shared Living Core services.
-
-## 22. Короткая формула
-
-**Имеем:** verified exam sources + демоверсии + тренажёры + предметный контент + общие PEIS contracts.
-
-**Строим:**
-
-`точный экзамен -> semantic evidence -> Student Learning Twin -> следующий лучший шаг -> персональная помощь -> независимая проверка -> retention -> прогноз -> новый план`
-
-Именно эта система, а не отдельный AI-чат, является целевым продуктом Eksamio.
-
-## 23. Full Subject source completeness, source archive и runtime independence
-
-Это глобальные launch-инварианты Eksamio и они обязательны вместе с:
-
-- `FULL-SUBJECT-SOURCE-AND-TEXTBOOK-INGESTION-POLICY-v0.1.md`;
-- `FULL-SUBJECT-TEXTBOOK-INGESTION-PRIORITY-2026-08-23.md`;
-- `SOURCE-ARCHIVE-AND-PRODUCT-KNOWLEDGE-STORAGE-POLICY-v0.1.md`;
-- `LOCAL-WORKSPACE-POLICY.md`.
-
-### Full Subject scope — launch-blocking
-
-Полноценный платный предмет нельзя считать готовым только потому, что существуют демоверсии, ФИПИ-корпус, тренажёры или частичная semantic inventory.
-
-Для каждого полного предмета обязателен gate `FULL_SUBJECT_SCOPE_SOURCE_COMPLETE`: нормативная школьная программа должна быть полностью покрыта source-backed semantic model, а обязательные элементы не могут молча исчезать только потому, что они не встречаются в текущем ЕГЭ/ОГЭ.
-
-Источник полного предметного scope строится иерархически:
-
-`official school-program authority -> canonical semantic capabilities -> textbooks/pedagogical evidence -> exam/diagnostic overlays -> original Eksamio content -> shared PEIS`.
-
-Учебники являются knowledge/pedagogy evidence, но не автоматически canonical truth и не разрешением копировать learner-facing текст или банки задач.
-
-### Последовательность первой source/textbook wave
-
-Первая волна строго последовательная:
-
-`Russian -> Mathematics -> Physics`.
-
-Активный шаг на 2026-08-23: `RUSSIAN_TEXTBOOK_SELECTION_MATRIX`.
-
-Нельзя batch-download Русский до принятия матрицы. Нельзя начинать Mathematics source/textbook acquisition до `FULL_SUBJECT_SCOPE_SOURCE_COMPLETE` Русского. Нельзя начинать Physics source/textbook acquisition до такого же PASS Математики.
-
-Central PEIS/Tutor/infrastructure работа может идти параллельно, если она не подменяет отсутствующую предметную истину.
-
-### Source Archive != Product Knowledge Store
-
-Исходный выбранный учебник сохраняется как Source Archive для provenance, повторного ingestion, аудита и сравнения изданий, когда это допускается rights/retention policy.
-
-GitHub хранит каталог, hashes, locators, statuses и ingestion provenance. Production knowledge layer хранит уже проверенные структурированные Eksamio knowledge/artifacts, а не целые учебники по умолчанию.
-
-Google Drive допускается как начальный bounded Source Archive, но **никогда не является production hot path**.
-
-После успешного ingestion нормальная работа Eksamio в Yandex должна продолжаться при полной недоступности Google Drive:
-
-- PEIS работает;
-- Tutor работает на уже принятом structured knowledge;
-- диагностика и тренажёры работают;
-- learner-facing проверка и learning loop работают;
-- никакой emergency fetch целого PDF из Drive в runtime не допускается.
-
-Недоступность Drive может блокировать только операции, которым действительно нужен raw source binary: первичный ingestion, re-ingestion, page-level source audit, edition comparison или dispute resolution.
-
-Если Yandex runtime не способен продолжать normal learner operation без Google Drive после ingestion, соответствующий production gate считается FAIL.
-
-### Срочность перед учебным годом
-
-На 2026-08-23 до 1 сентября остаётся короткое launch-окно. Поэтому приоритет — не формальное закрытие документов, а получение **реально работающего первого контура Русского**, который опирается на проверенную предметную истину и не создаёт ложного claim полноты.
-
-До 1 сентября и в начале учебного года приоритеты должны оцениваться по тому, насколько они приближают работающий путь:
-
-`verified Russian scope -> PEIS evidence -> personalized practice/help -> independent verification -> retained state`.
-
-Нельзя ради календаря обходить source truth, security, identity, Tutor verification или privacy gates. Но нельзя и откладывать первый полезный working contour ради необязательной архитектурной полноты других предметов или поздних функций.
-
-## 24. Russian learner product family and progressive rollout — owner clarification 2026-08-31
-
-Полная программа Русского языка является **единой предметной базой для всей линейки ученических продуктов**, а не только «курсом».
-
-Из одной принятой canonical Russian knowledge/content layer должны последовательно собираться и открываться:
-
-- бесплатные демоверсии и диагностики;
-- работа над ошибками;
-- тематические тренажёры;
-- ЕГЭ-тренажёры;
-- ОГЭ-тренажёры;
-- **конструктор тренажера**, который собирает тренировку из уже принятых canonical skills/items по выбранным темам, типам заданий, объёму и допустимой сложности;
-- персональная «Тренировка на сегодня»;
-- полный учебный маршрут / курс Русского;
-- школьные маршруты 5–11 классов;
-- подготовка к ОГЭ;
-- подготовка к ЕГЭ;
-- персональная работа с prerequisite gaps;
-- text + realtime voice Tutor;
-- независимая проверка после помощи;
-- retention/spaced practice;
-- карта слабых мест, прогресс и readiness;
-- персональный план до экзамена;
-- essay/extended-answer support после отдельного rubric/eval gate;
-- дальнейшие learner/parent analytics и multimodal функции после их собственных acceptance gates.
-
-Ни один из этих продуктов не получает отдельную ontology, отдельную базу знаний или отдельную модель mastery. Все они являются разными интерфейсами одного полного предмета и одного PEIS learner state.
-
-### Progressive opening
-
-Разделы разрешено открывать ученику поэтапно, когда конкретный раздел прошёл свои subject/runtime/product gates. Поэтапное открытие не разрешает ложный claim полноты: UI и коммерческое описание должны точно соответствовать реально доступному покрытию.
-
-Рабочая последовательность открытия:
-
-1. **R0 — private production assembly:** Yandex backend/persistence, account/session, accepted Russian content, protected client, payment candidate, Tutor integration; public paid traffic OFF.
-2. **R1 — first paid closed loop:** diagnosis/attempt -> error -> practice/help -> independent verify -> persisted learner state -> next action; account, entitlement, trainer, work on mistakes, personal route and both Tutor interfaces are real.
-3. **R2 — EGE Russian surface:** complete admitted EGE route + exam-task trainer + thematic trainer + trainer constructor + course/personal route + Tutor/retention.
-4. **R3 — OGE Russian surface:** complete admitted OGE route over the same school identities/PEIS state.
-5. **R4 — school Russian 5–11 surfaces:** grade/program navigation, topic study, thematic practice and prerequisite repair over the full school program.
-6. **R5 — advanced services:** essay/extended answers, richer forecast/analytics, parent/reporting surfaces and later multimodal capabilities after their own gates.
-
-Full-subject truth and the visual rollout of specialized sections are different concepts. Once the full program is accepted, specialized learner surfaces should be released progressively without rebuilding the subject.
-
-## 25. Russian launch AI/speech policy — owner decision 2026-08-31
-
-For learners in Russia, conversational brain routing is internal and not a learner-facing choice.
-
-Launch policy:
-
-- **Yandex conversational brain is the default brain for Russian learners**;
-- OpenAI is fallback/escalation only after applicable production admission;
-- the learner sees one product identity: `Tutor Eksamio`;
-- provider/model choice remains server-side, logged/versioned and replaceable;
-- provider-specific representation may not enter canonical subject truth or PEIS learner state.
-
-The Russian voice casting decision is closed unless a new production defect appears:
-
-- Yandex SpeechKit voice: **Lera**;
-- accepted profile: `neutral / speed 1.04 / pitch 0 Hz / marked pauses`;
-- further subjective Lera casting is not launch-critical work;
-- learner audio persistence remains exactly `0`.
-
-This section supersedes older candidate-only wording for the **Russian launch routing default**. It does not make Yandex proprietary representations part of the core architecture.
-
-## 26. Repository-host independence — hard production invariant 2026-08-31
-
-GitHub is currently the development/version-control source of truth, but **Eksamio must not depend on GitHub for normal production operation or for its long-term architecture**.
-
-Hard invariant:
-
-> **GitHub outage != Eksamio outage.**
-
-After a release is deployed, GitHub may become completely unavailable and normal learner operation must continue from the production contour.
-
-Therefore production must not fetch GitHub in the learner hot path for:
-
-- application startup/runtime;
-- Russian knowledge required by already admitted learner features;
-- PEIS state;
-- account/session state;
-- entitlements;
-- Tutor runtime configuration required for an already deployed release;
-- production assets required for normal service.
-
-Release artifacts/images and production configuration needed to run the admitted version must exist in the production environment independently of GitHub. Secrets and learner data are never stored in GitHub.
-
-Repository hosting is replaceable. Future migration from GitHub to SourceCraft or another Git host may be evaluated after launch, but it is **not** part of the current launch critical path. Such a migration must not require redesign of PEIS, subject truth, business logic, learner data or product interfaces.
-
-Primary Russian production cloud remains Yandex Cloud Russia, while code/business contracts remain portable/provider-neutral.
-
-## 27. Progressive Public Release — hard release invariant 2026-08-31
-
-Owner decision: `OWNER-DECISION-PROGRESSIVE-PUBLIC-RELEASE-2026-08-31.md`.
-
-Eksamio не ждёт полного завершения всей платформы, чтобы показать ученикам уже готовую и безопасную ценность.
-
-Любая learner-facing функция, раздел, предметный срез, тренажёр, диагностика, маршрут или иной продуктовый этап, который прошёл собственные обязательные subject/runtime/product acceptance gates, не создаёт ложного claim полноты и production-ready для заявленного публичного scope, **должен быть опубликован на живом сайте Eksamio без ожидания полного Pro launch или закрытия несвязанных launch blockers**.
-
-Для уже опубликованной бесплатной и безопасной ценности разрешено и требуется начинать привлечение реальных пользователей и измерение поведения/learning outcomes. Незавершённые платные/Pro/payment/identity/Tutor функции не обещаются как доступные и остаются за своими production gates.
-
-Каждый закрытый learner-facing этап обязан иметь один publication status:
-
-- `LIVE` — реально доступен ученику на production-сайте;
-- `READY_TO_PUBLISH` — acceptance пройден, требуется только фактическая публикация;
-- `BLOCKED:<reason>` — существует конкретный blocker, мешающий безопасной публикации.
-
-`DONE` без `LIVE` либо явного `BLOCKED:<reason>` не считается операционно завершённым. Удержание готового learner-facing этапа «под капотом» без конкретного blocker запрещено.
-
-Этот инвариант отменяет blanket-подход «ничего нового не показывать ученикам до полного запуска всей системы» для уже готового, правдивого и безопасного публичного scope. Он не отменяет отдельные production gates для платного Pro, оплаты, identity, entitlements, receipt/refund/revoke, privacy и Tutor.
+Только затем основной продуктовый roadmap переходит к Mathematics, затем Physics и дальнейшему построению умной многопредметной образовательной платформы.
