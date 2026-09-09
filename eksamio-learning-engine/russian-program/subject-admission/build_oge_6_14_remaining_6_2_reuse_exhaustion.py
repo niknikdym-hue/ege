@@ -28,11 +28,17 @@ POST_PROOF_MATERIALIZATION_FILES = {
     "RU-PROG-08-OGE-6.14-GAP-EVIDENCE-WAVE-002-STRUCTURED-REPAIR-v0.1.json",
 }
 # The historical reuse proof fingerprint intentionally retains the exact
-# pre-materialization file-count denominator.  Later unrelated content still
-# participates in the reuse scan below, but must not rewrite that historical
-# denominator merely because a new file exists.  Keep this list exact and
-# bounded: every file here is still loaded and scanned for matching 6.2 evidence.
+# pre-materialization file-count denominator. Later unrelated content is still
+# loaded and scanned below for matching 6.2 evidence, but must not rewrite that
+# historical denominator merely because a new unrelated production file exists.
+# Keep this set explicit so every excluded count-only file is still audited.
 POST_PROOF_NON_6_14_CONTENT_NOT_COUNTED_IN_HISTORICAL_DENOMINATOR = {
+    "RU-PROG-01-PHONETIC-STRESS-WAVE-006-v0.1.json",
+    "RU-PROG-01-PHONETIC-TRANSCRIPTION-WAVE-002-v0.1.json",
+    "RU-PROG-01-SOUND-CHANGES-WAVE-003-v0.1.json",
+    "RU-PROG-01-SOUND-COMPOSITION-WAVE-004-v0.1.json",
+    "RU-PROG-01-SYLLABLE-WAVE-005-v0.1.json",
+    "RU-PROG-01-VOWEL-SYSTEM-WAVE-007-v0.1.json",
     "RU-PROG-02-ORTHOEPY-NORMATIVE-PRONUNCIATION-WAVE-004-v0.1.json",
 }
 MIN_ITEMS = 3
