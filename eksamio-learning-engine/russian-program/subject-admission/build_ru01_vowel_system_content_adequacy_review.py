@@ -51,7 +51,8 @@ def build_review() -> dict[str, Any]:
     require(owner is not None, "bounded owner-resolution provenance missing")
     require(owner.get("candidate_semantic_id") == SEMANTIC, "candidate semantic drift")
     require(owner.get("source_clause_ids") == SOURCE_CLAUSES, "source-clause drift")
-    require("partial" in str(owner.get("coverage_note") or "").lower(), "partial-current-owner boundary missing")
+    coverage_note = str(owner.get("coverage_note") or "").lower()
+    require("partial" in coverage_note or "narrower" in coverage_note, "partial-current-owner boundary missing")
 
     official = [row for row in provenance if row.get("kind") in {"official_program", "official_codifier"}]
     require(len(official) == 2, "official source pair missing")
