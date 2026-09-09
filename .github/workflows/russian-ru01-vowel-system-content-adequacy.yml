@@ -1,0 +1,152 @@
+name: Russian RU01 vowel system content adequacy
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-VOWEL-SYSTEM-WAVE-007-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru01_vowel_system_candidate_content.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_vowel_system_content_adequacy_review.py"
+      - ".github/workflows/russian-ru01-vowel-system-content-adequacy.yml"
+  push:
+    branches:
+      - "brain/sep1-russian-subject-closure"
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-VOWEL-SYSTEM-WAVE-007-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru01_vowel_system_candidate_content.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_vowel_system_content_adequacy_review.py"
+      - ".github/workflows/russian-ru01-vowel-system-content-adequacy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-vowel-system-content-adequacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile bounded vowel-system adequacy gate
+        run: |
+          python -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru01_vowel_system_candidate_content.py
+          python -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru01_vowel_system_content_adequacy_review.py
+
+      - name: Recheck vowel-system readiness boundary
+        run: python eksamio-learning-engine/russian-program/subject-admission/validate_ru01_vowel_system_candidate_content.py
+
+      - name: Build content adequacy review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_vowel_system_content_adequacy_review.py --output /tmp/ru01-vowel-system-adequacy-a.json > /tmp/ru01-vowel-system-adequacy-a.txt
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_vowel_system_content_adequacy_review.py --output /tmp/ru01-vowel-system-adequacy-b.json > /tmp/ru01-vowel-system-adequacy-b.txt
+          cmp /tmp/ru01-vowel-system-adequacy-a.json /tmp/ru01-vowel-system-adequacy-b.json
+          diff -u /tmp/ru01-vowel-system-adequacy-a.txt /tmp/ru01-vowel-system-adequacy-b.txt
+          cat /tmp/ru01-vowel-system-adequacy-a.txt
+
+      - name: Verify adequacy review remains fail closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path('/tmp/ru01-vowel-system-adequacy-a.json').read_text(encoding='utf-8'))
+          assert data['status'] == 'CENTRAL_BRAIN_RU01_VOWEL_SYSTEM_CONTENT_ADEQUACY_REVIEW_COMPLETE_NO_ADMISSION'
+          assert data['authority_pr'] == 164
+          assert data['module_id'] == 'RU-PROG-01'
+          assert data['candidate'] == {
+              'semantic_id': 'ru-phonetics-vowel-system',
+              'source_taxonomy_id': 'vowel_system',
+              'source_clause_ids': ['EDSOO59-P187-4.1.1', 'OGE-COD-P020-4.1.1'],
+              'semantic_ref_status': 'PROPOSED_NOT_CANONICAL',
+          }
+          assert data['prerequisite_remote_gate'] == {
+              'workflow': 'Russian RU01 vowel system candidate content readiness',
+              'run_id': 34393961634,
+              'head_sha': '6d57a04a05b81e18dae99288043cd19c7ad2dd8b',
+              'conclusion': 'SUCCESS',
+          }
+          learner = data['learner_content']
+          assert learner['git_blob_sha1'] == '37bbbb2793915ab45142cbb758b201c5ac8129be'
+          assert learner['component_specific_verification_ids'] == [
+              'p01-u9-v1', 'p01-u9-v2', 'p01-u9-v3', 'p01-u9-v4', 'p01-u9-v5'
+          ]
+          assert learner['registered_user_identity_required'] is True
+          assert learner['exact_item_identity_required'] is True
+          assert learner['server_owned_received_at_required'] is True
+          assert learner['durable_evidence_event_required_before_future_canonical_write'] is True
+
+          decision = data['adequacy_decision']
+          for key in (
+              'content_exact_for_bounded_vowel_system_candidate',
+              'official_clause_scope_covered',
+              'full_school_vowel_inventory_covered',
+              'vowel_sounds_and_vowel_letters_separated',
+              'partial_vowel_consonant_feature_owner_not_promoted_to_full_system',
+              'consonant_system_separated',
+              'stress_and_normative_pronunciation_separated',
+              'sound_composition_and_sound_letter_relation_do_not_substitute',
+          ):
+              assert decision[key] is True, key
+          assert decision['semantic_admission_by_this_review'] is False
+          assert decision['object_level_admission_units_closed'] == 0
+          assert decision['object_level_requirements_closed'] == 0
+          assert decision['exact_mastery_admissions'] == 0
+          assert decision['false_exact_mastery_admissions'] == 0
+          assert decision['next_status'] == 'READY_FOR_SEPARATE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE'
+
+          policy = data['policy']
+          assert policy['title_route_task_or_fuzzy_inference_allowed'] is False
+          assert policy['content_adequacy_review_is_semantic_admission'] is False
+          assert policy['content_adequacy_review_is_object_closure'] is False
+          assert policy['component_specific_independent_verification_required'] is True
+          assert policy['generic_ru01_attempt_can_emit_exact_component_mastery'] is False
+          assert policy['anonymous_or_device_only_canonical_progress_allowed'] is False
+          assert policy['accepted_demo_scorer_tilda_surfaces_may_change'] is False
+
+          assert data['summary']['semantic_admissions'] == 0
+          assert data['summary']['object_level_admission_units_closed'] == 0
+          assert data['summary']['object_level_requirements_closed'] == 0
+          assert data['summary']['exact_mastery_admissions'] == 0
+          assert data['summary']['false_exact_mastery_admissions'] == 0
+          print('RU01_VOWEL_SYSTEM_CONTENT_ADEQUACY_FAIL_CLOSED_GUARD=PASS')
+          PY
+
+      - name: Pin candidate content bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          content="eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-VOWEL-SYSTEM-WAVE-007-v0.1.json"
+          blob="$(git hash-object "$content")"
+          test "$blob" = "37bbbb2793915ab45142cbb758b201c5ac8129be"
+          echo "VOWEL_SYSTEM_CONTENT_BLOB=$blob"
+          echo "SEMANTIC_ADMISSIONS=0"
+          echo "OBJECT_LEVEL_CLOSURES=0"
+          echo "EXACT_MASTERY_ADMISSIONS=0"
+          echo "FALSE_EXACT_MASTERY_ADMISSIONS=0"
+
+      - name: Upload vowel-system adequacy evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-vowel-system-content-adequacy
+          path: /tmp/ru01-vowel-system-adequacy-a.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Protect tracked repository hygiene
+        run: |
+          git diff --check HEAD^
+          git diff --exit-code
