@@ -1,0 +1,144 @@
+name: Russian RU01 phonetic syllable semantic acceptance
+
+on:
+  push:
+    branches:
+      - brain/sep1-russian-subject-closure
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-SYLLABLE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru01_phonetic_syllable_bounded_subject_semantics.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetic_syllable_content_adequacy_review.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v19.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v20.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SYLLABLE-WAVE-005-v0.1.json'
+      - '.github/workflows/russian-ru01-phonetic-syllable-semantic-acceptance.yml'
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-SYLLABLE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru01_phonetic_syllable_bounded_subject_semantics.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetic_syllable_content_adequacy_review.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v19.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v20.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SYLLABLE-WAVE-005-v0.1.json'
+      - '.github/workflows/russian-ru01-phonetic-syllable-semantic-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-phonetic-syllable-semantic-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile exact semantic gate
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru01_phonetic_syllable_bounded_subject_semantics.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v20.py
+
+      - name: Validate bounded phonetic-syllable semantic acceptance
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru01_phonetic_syllable_bounded_subject_semantics.py
+
+      - name: Build current-v20 twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v20.py --output /tmp/ru-current-v20-a.json > /tmp/ru-current-v20-a.txt
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v20.py --output /tmp/ru-current-v20-b.json > /tmp/ru-current-v20-b.txt
+          cmp /tmp/ru-current-v20-a.json /tmp/ru-current-v20-b.json
+          diff -u /tmp/ru-current-v20-a.txt /tmp/ru-current-v20-b.txt
+          cat /tmp/ru-current-v20-a.txt
+          cp /tmp/ru-current-v20-a.json RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v20.json
+
+      - name: Verify bounded aggregate delta only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data=json.loads(Path('RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v20.json').read_text(encoding='utf-8'))
+          assert data['schema_version']=='0.22.0'
+          summary=data['progress_summary']
+          assert len(data['accepted_authorities'])==66
+          assert summary['accepted_bounded_ru_route_semantics']==9
+          assert summary['accepted_bounded_ru_subject_semantics']==70
+          assert summary['accepted_bounded_ru_semantics_total']==79
+          assert summary['semantic_units_with_accepted_component_sets']==41
+          assert summary['semantic_requirements_with_accepted_component_sets']==41
+          assert summary['semantic_units_remaining_without_accepted_component_set']==1275
+          assert summary['semantic_requirements_remaining_without_accepted_component_set']==1350
+          assert summary['subject_disposed_units_total']==42
+          assert summary['subject_disposed_requirements_total']==42
+          assert summary['subject_review_units_remaining']==1274
+          assert summary['subject_review_requirements_remaining']==1349
+          assert summary['canonical_component_refs_reused_unique']==122
+          assert summary['false_exact_mastery_admissions']==0
+          new=data['newly_accepted_bounded_subject_semantic']
+          assert new['semantic_id']=='ru-phonetics-syllable'
+          assert new['independent_verification_item_ids']==[
+              'p01-u7-v1','p01-u7-v2','p01-u7-v3','p01-u7-v4','p01-u7-v5'
+          ]
+          assert new['source_clause_ids']==['EDSOO59-P187-4.1.5','OGE-COD-P020-4.1.5']
+          assert new['parent_object_count_requiring_future_complete_component_set_acceptance']==2
+          assert new['parent_objects_remain_pending']==[
+              {
+                  'admission_unit_id':'RAU-5a6511267f156745f93c',
+                  'requirement_id':'RSK-EDSOO59-4-1-P187',
+                  'syllable_clause_id':'EDSOO59-P187-4.1.5',
+              },
+              {
+                  'admission_unit_id':'RAU-3916b5e3da77ed038830',
+                  'requirement_id':'RSK-OGE_COD-4-1-P020',
+                  'syllable_clause_id':'OGE-COD-P020-4.1.5',
+              },
+          ]
+          assert new['object_acceptance_effect']=='NONE_UNTIL_ALL_REQUIRED_BROAD_HEADER_CLAUSES_HAVE_EXACT_ACCEPTED_OWNERS_AND_COMPONENT_SPECIFIC_EVIDENCE_AND_SEPARATE_EXACT_HEAD_OBJECT_GATE_PASSES'
+          print('RU01_PHONETIC_SYLLABLE_SEMANTIC_AGGREGATE_DELTA=PASS')
+          PY
+
+      - name: Protect public and production surfaces in bounded wave
+        shell: bash
+        run: |
+          set -euo pipefail
+          wave_base='874b8a57307c4cfc1ce11cd9ed22fd0970ffa552'
+          git merge-base --is-ancestor "$wave_base" HEAD
+          recent=$(git diff --name-only "$wave_base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru01-phonetic-syllable-semantic-acceptance.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-SYLLABLE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v20.py
+          eksamio-learning-engine/russian-program/subject-admission/validate_ru01_phonetic_syllable_bounded_subject_semantics.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          if [[ -n "$unexpected" ]]; then
+            echo 'Current syllable semantic wave touched files outside the exact bounded allowlist:' >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
+          if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
+            echo 'Current syllable semantic wave touched a protected public/production surface.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene for current bounded wave
+        run: git diff --check 874b8a57307c4cfc1ce11cd9ed22fd0970ffa552..HEAD
+
+      - name: Upload exact semantic acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-phonetic-syllable-semantic-acceptance
+          path: RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v20.json
+          if-no-files-found: error
+          retention-days: 14
