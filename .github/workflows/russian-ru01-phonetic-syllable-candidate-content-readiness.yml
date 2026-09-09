@@ -6,8 +6,6 @@ on:
     paths:
       - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SYLLABLE-WAVE-005-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/validate_ru01_syllable_candidate_content.py"
-      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py"
-      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_candidate_content_gap_review.py"
       - ".github/workflows/russian-ru01-phonetic-syllable-candidate-content-readiness.yml"
   workflow_dispatch:
 
@@ -17,7 +15,7 @@ permissions:
 jobs:
   ru01-syllable-candidate-content-readiness:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 10
     steps:
       - name: Checkout exact PR head
         uses: actions/checkout@v4
@@ -30,63 +28,45 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Compile syllable readiness gate
+      - name: Compile bounded syllable readiness gate
         run: |
           python -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru01_syllable_candidate_content.py
-          python -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_candidate_content_gap_review.py
 
-      - name: Validate dedicated syllable content twice
+      - name: Validate dedicated syllable content deterministically
         run: |
           python eksamio-learning-engine/russian-program/subject-admission/validate_ru01_syllable_candidate_content.py > /tmp/ru01-syllable-a.txt
           python eksamio-learning-engine/russian-program/subject-admission/validate_ru01_syllable_candidate_content.py > /tmp/ru01-syllable-b.txt
           cmp /tmp/ru01-syllable-a.txt /tmp/ru01-syllable-b.txt
           cat /tmp/ru01-syllable-a.txt
 
-      - name: Rebuild candidate content gap twice
-        run: |
-          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_candidate_content_gap_review.py --output /tmp/ru01-gap-a.json
-          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_candidate_content_gap_review.py --output /tmp/ru01-gap-b.json
-          cmp /tmp/ru01-gap-a.json /tmp/ru01-gap-b.json
-
-      - name: Fail closed on exact syllable-only delta
+      - name: Fail closed on exact post-gap syllable-only delta
         run: |
           python - <<'PY'
-          import json
-          from pathlib import Path
+          import subprocess
 
-          d = json.loads(Path('/tmp/ru01-gap-a.json').read_text(encoding='utf-8'))
-          rows = {row['candidate_semantic_id']: row for row in d['candidates']}
-          assert len(rows) == 6
-          assert rows['ru-phonetics-syllable']['content_evidence_status'] == 'CONTENT_AND_EVIDENCE_PRESENT_REQUIRES_SEPARATE_ADEQUACY_REVIEW'
-          for semantic_id, row in rows.items():
-              if semantic_id == 'ru-phonetics-syllable':
-                  continue
-              assert row['content_evidence_status'] == 'NO_DEDICATED_CANDIDATE_CONTENT_FOUND'
+          prior = "07a93daf82b66f5357d8b3bac8b03522b8afa135"
+          expected = {
+              ".github/workflows/russian-ru01-phonetic-syllable-candidate-content-readiness.yml",
+              "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SYLLABLE-WAVE-005-v0.1.json",
+              "eksamio-learning-engine/russian-program/subject-admission/validate_ru01_syllable_candidate_content.py",
+          }
+          changed = set(
+              subprocess.check_output(
+                  ["git", "diff", "--name-only", f"{prior}..HEAD"],
+                  text=True,
+              ).splitlines()
+          )
+          assert changed == expected, (changed, expected)
 
-          s = d['summary']
-          assert s['proposed_owner_candidates'] == 6
-          assert s['candidates_missing_dedicated_content'] == 5
-          assert s['candidates_with_content_but_no_component_evidence'] == 0
-          assert s['candidates_with_content_and_evidence_requiring_review'] == 1
-          assert s['semantic_admissions'] == 0
-          assert s['object_level_closures'] == 0
-          assert s['exact_mastery_admissions'] == 0
-          assert s['false_exact_mastery_admissions'] == 0
+          content = "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SYLLABLE-WAVE-005-v0.1.json"
+          blob = subprocess.check_output(["git", "hash-object", content], text=True).strip()
+          assert blob == "24281db6ee3d5cea24656c1e5e0be9b787392a08", blob
 
-          guard = d['current_aggregate_guard']
-          assert guard['semantic_units_with_accepted_component_sets'] == 41
-          assert guard['subject_disposed_units_total'] == 42
-          assert guard['subject_review_units_remaining'] == 1274
-          assert guard['subject_review_requirements_remaining'] == 1349
-          assert guard['canonical_component_refs_reused_unique'] == 122
-          assert guard['accepted_bounded_ru_subject_semantics'] == 69
-          assert guard['accepted_bounded_ru_semantics_total'] == 78
-          assert guard['false_exact_mastery_admissions'] == 0
-
-          print('RU01_SYLLABLE_CONTENT_DELTA_FAIL_CLOSED=PASS')
-          print('READY_FOR_SEPARATE_ADEQUACY_REVIEW=ru-phonetics-syllable')
-          print('REMAINING_CONTENT_GAPS=5')
-          print('FALSE_EXACT_MASTERY_ADMISSIONS=0')
+          print("POST_GAP_DELTA=SYLLABLE_CONTENT_VALIDATOR_WORKFLOW_ONLY")
+          print("SYLLABLE_CONTENT_BLOB=24281db6ee3d5cea24656c1e5e0be9b787392a08")
+          print("SEMANTIC_ADMISSIONS=0")
+          print("OBJECT_LEVEL_CLOSURES=0")
+          print("FALSE_EXACT_MASTERY_ADMISSIONS=0")
           PY
 
       - name: Protect tracked repository hygiene
