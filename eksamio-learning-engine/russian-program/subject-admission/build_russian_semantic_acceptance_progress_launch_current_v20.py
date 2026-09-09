@@ -22,13 +22,13 @@ TARGETS = [
         "admission_unit_id": "RAU-5a6511267f156745f93c",
         "requirement_id": "RSK-EDSOO59-4-1-P187",
         "syllable_clause_id": "EDSOO59-P187-4.1.5",
-        "source_locator": "EDSOO59 p.187 4.1",
+        "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.187 4.1",
     },
     {
         "admission_unit_id": "RAU-3916b5e3da77ed038830",
         "requirement_id": "RSK-OGE_COD-4-1-P020",
         "syllable_clause_id": "OGE-COD-P020-4.1.5",
-        "source_locator": "OGE_COD p.20 4.1",
+        "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_COD p.20 4.1",
     },
 ]
 EXPECTED_BASE = {
