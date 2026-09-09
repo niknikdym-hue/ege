@@ -1,0 +1,62 @@
+name: Russian RU01 vowel system candidate content readiness
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-VOWEL-SYSTEM-WAVE-007-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru01_vowel_system_candidate_content.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py"
+      - ".github/workflows/russian-ru01-vowel-system-candidate-content-readiness.yml"
+  push:
+    branches:
+      - "brain/sep1-russian-subject-closure"
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-VOWEL-SYSTEM-WAVE-007-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru01_vowel_system_candidate_content.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py"
+      - ".github/workflows/russian-ru01-vowel-system-candidate-content-readiness.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  vowel-system-candidate-content-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile bounded validator
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru01_vowel_system_candidate_content.py
+      - name: Validate vowel-system candidate content A
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru01_vowel_system_candidate_content.py | tee /tmp/vowel-system-a.txt
+      - name: Validate vowel-system candidate content B
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru01_vowel_system_candidate_content.py | tee /tmp/vowel-system-b.txt
+      - name: Require deterministic validator output
+        run: diff -u /tmp/vowel-system-a.txt /tmp/vowel-system-b.txt
+      - name: Require exact content JSON and no admission by content layer
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          p=Path('eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-VOWEL-SYSTEM-WAVE-007-v0.1.json')
+          raw=p.read_bytes()
+          d=json.loads(raw.decode('utf-8'))
+          assert d['identity_boundary']['proposed_semantic_id']=='ru-phonetics-vowel-system'
+          assert d['identity_boundary']['semantic_ref_status']=='PROPOSED_NOT_CANONICAL'
+          assert d['admission_boundary']['semantic_admissions']==0
+          assert d['admission_boundary']['object_level_closures']==0
+          assert d['admission_boundary']['exact_mastery_admissions']==0
+          assert d['admission_boundary']['false_exact_mastery_admissions']==0
+          print('CONTENT_BYTES='+str(len(raw)))
+          print('CONTENT_SHA256='+hashlib.sha256(raw).hexdigest())
+          PY
+      - name: Diff hygiene
+        run: git diff --check HEAD^
