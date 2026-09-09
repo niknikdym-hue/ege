@@ -1,0 +1,206 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CONTENT_AND_EVIDENCE_READY_SEMANTIC_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-01",
+  "module_title_ru": "Фонетика и графика",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9],
+    "routes": ["school", "oge", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "bounded_owner_resolution",
+      "candidate_semantic_id": "ru-phonetics-consonant-system",
+      "source_clause_ids": ["EDSOO59-P187-4.1.2", "OGE-COD-P020-4.1.2"],
+      "ref": "russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py",
+      "coverage_note": "Exact current-owner search found only the narrower vowel/consonant-features owner and therefore kept the full consonant-system scope as a separate PROPOSED_NOT_CANONICAL candidate."
+    },
+    {
+      "kind": "exact_head_prerequisite_gate",
+      "workflow": "Russian RU01 phonetics broad header owner resolution review",
+      "run_id": 34306870268,
+      "head_sha": "41dc6749d96697f393a11e67ca3da36ab73e6aa1",
+      "conclusion": "SUCCESS"
+    },
+    {
+      "kind": "candidate_content_gap_gate",
+      "workflow": "Russian RU01 phonetics broad header candidate content gap review",
+      "run_id": 34311280167,
+      "head_sha": "07a93daf82b66f5357d8b3bac8b03522b8afa135",
+      "conclusion": "SUCCESS",
+      "result_before_this_wave": "NO_DEDICATED_CANDIDATE_CONTENT_FOUND"
+    },
+    {
+      "kind": "official_program",
+      "source_id": "EDSOO-RU-5-9-2025",
+      "document_id": "EDSOO59",
+      "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.187 4.1.2",
+      "official_requirement": "Система согласных звуков"
+    },
+    {
+      "kind": "official_codifier",
+      "source_id": "FIPI-OGE-RU-2026-FINAL",
+      "document_id": "OGE_COD",
+      "source_locator": "FIPI-OGE-RU-2026-FINAL/OGE_COD p.20 4.1.2",
+      "official_requirement": "Система согласных звуков"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "learner_explanations": "ORIGINAL_EKSAMIO",
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "commercial_textbook_bytes_in_git": 0
+  },
+  "identity_boundary": {
+    "proposed_semantic_id": "ru-phonetics-consonant-system",
+    "source_taxonomy_id": "consonant_system",
+    "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+    "rule": "This unit targets the system-level organization and recognition of Russian consonant sounds, including voiced/voiceless and hard/soft contrasts with paired and unpaired cases; it is not merely one local sound feature and does not substitute for letters, spelling, sound composition, stress or normative pronunciation.",
+    "vowel_consonant_features_partial_owner_may_substitute": false,
+    "vowel_system_semantic_may_substitute": false,
+    "sound_letter_relation_semantic_may_substitute": false,
+    "sound_composition_semantic_may_substitute": false,
+    "normative_pronunciation_semantic_may_substitute": false,
+    "normative_stress_semantic_may_substitute": false,
+    "generic_ru01_result_can_emit_exact_component_mastery": false,
+    "object_level_admission_effect": "NONE_UNTIL_SEPARATE_BOUNDED_SEMANTIC_ACCEPTANCE_AND_COMPLETE_PARENT_OBJECT_GATE"
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-phonetics-consonant-system",
+      "title_ru": "Система согласных звуков: признаки, пары и границы системы",
+      "canonical_explanation": {
+        "short": "Система согласных звуков — это не список согласных букв и не одно умение назвать звук согласным. На школьном уровне согласные рассматриваются как звуки речи и системно характеризуются, в частности, по звонкости/глухости и твёрдости/мягкости; часть согласных образует пары по этим признакам, а часть является непарной.",
+        "boundaries": [
+          "Согласный звук и буква, которой он обозначается на письме, — разные объекты; буквенный знак нельзя автоматически считать отдельным звуком системы.",
+          "Верная характеристика одного предъявленного звука — лишь локальное доказательство и сама по себе не подтверждает владение всей системой согласных.",
+          "Гласные образуют отдельную систему; их признаки нельзя переносить на согласные.",
+          "Не все согласные образуют пары по каждому признаку: в школьной модели есть парные и непарные случаи по звонкости/глухости и твёрдости/мягкости.",
+          "Знание системы согласных не даёт права угадывать написание, ударение или нормативное произношение конкретного слова без соответствующей отдельной authority."
+        ]
+      },
+      "decision_algorithm": [
+        "Определи, спрашивает ли задание о согласных звуках и их системных отношениях, а не о буквах или орфографии.",
+        "Для предъявленного согласного установи требуемый системный признак: звонкость/глухость или твёрдость/мягкость.",
+        "Если проверяется парность, сопоставляй звуки только по одному заявленному признаку и не считай любой похожий звук парой автоматически.",
+        "Учитывай, что по каждому признаку существуют непарные согласные; отсутствие пары не превращает звук в исключение из системы.",
+        "Не выводи из системной характеристики написание, ударение или нормативное произношение слова без отдельного компонента."
+      ],
+      "worked_examples": [
+        {
+          "id": "p01-u10-e1",
+          "prompt": "Какое системное отношение есть между [д] и [т]?",
+          "answer": "Это парные согласные по звонкости/глухости: [д] — звонкий, [т] — глухой.",
+          "measures": "identify_voicing_pair_relation"
+        },
+        {
+          "id": "p01-u10-e2",
+          "prompt": "Какое системное отношение есть между [м] и [м’]?",
+          "answer": "Это пара по твёрдости/мягкости: [м] — твёрдый, [м’] — мягкий.",
+          "measures": "identify_hardness_pair_relation"
+        },
+        {
+          "id": "p01-u10-e3",
+          "prompt": "Ученик правильно сказал, что [с] — согласный звук. Доказал ли он этим владение системой согласных?",
+          "answer": "Нет. Он верно классифицировал один звук, но системное владение требует различать признаки, парные и непарные отношения и границы системы.",
+          "measures": "separate_single_feature_from_system_scope"
+        }
+      ],
+      "guided_practice": [
+        {"id": "p01-u10-g1", "prompt": "Какие элементы из [а], [б], [т], [ы] являются согласными звуками?", "expected": "[б], [т]."},
+        {"id": "p01-u10-g2", "prompt": "По какому признаку [з] и [с] образуют пару?", "expected": "По звонкости/глухости: [з] звонкий, [с] глухой."},
+        {"id": "p01-u10-g3", "prompt": "Почему нельзя утверждать, что каждый согласный обязательно имеет пару и по звонкости, и по твёрдости?", "expected": "Потому что в системе есть непарные согласные; парность устанавливают отдельно по каждому признаку."}
+      ],
+      "independent_practice": [
+        {"id": "p01-u10-i1", "prompt": "Выбери только согласные звуки: [э], [р], [о], [ш].", "answer": "[р], [ш]."},
+        {"id": "p01-u10-i2", "prompt": "Назови отношение между [б] и [п].", "answer": "Они парные по звонкости/глухости: [б] звонкий, [п] глухой."},
+        {"id": "p01-u10-i3", "prompt": "Назови отношение между [л] и [л’].", "answer": "Они парные по твёрдости/мягкости: [л] твёрдый, [л’] мягкий."}
+      ],
+      "mixed_transfer_practice": [
+        {"id": "p01-u10-t1", "prompt": "Ученик умеет находить пару [д] — [т], но пытается по этому сразу выбрать орфограмму в неизвестном слове. Что принять?", "answer": "Принять можно только доказанную фонетическую связь по звонкости/глухости; орфографическое решение требует отдельного правила и evidence."},
+        {"id": "p01-u10-t2", "prompt": "Ученик верно характеризует [ч’] как мягкий согласный, но не знает нормативного произношения незнакомого слова. Противоречит ли это знанию системы согласных?", "answer": "Нет. Системная характеристика согласного и нормативное произношение конкретного слова — разные компоненты."}
+      ],
+      "retention_items": [
+        {"id": "p01-u10-r1", "delay_hint": "24h", "prompt": "Назови два основных школьных противопоставления, по которым системно характеризуют согласные.", "answer": "Звонкость/глухость и твёрдость/мягкость."},
+        {"id": "p01-u10-r2", "delay_hint": "7d", "prompt": "Объясни, почему правильная характеристика одного согласного не равна знанию всей системы согласных.", "answer": "Система включает отношения между звуками, разные признаки и парные/непарные случаи, а не только один локальный признак."}
+      ],
+      "independent_verification": [
+        {
+          "id": "p01-u10-v1",
+          "type": "multi_select",
+          "measures": "recognize_consonant_system_members",
+          "prompt": "Выбери согласные звуки: [а], [м], [э], [т], [й’].",
+          "correct": ["[м]", "[т]", "[й’]"],
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u10-v2",
+          "type": "single_choice",
+          "measures": "separate_consonant_sounds_from_letters",
+          "prompt": "Что верно о системе согласных звуков?",
+          "options": ["Она совпадает со списком согласных букв", "Она описывает звуки речи и их системные признаки, а не список букв", "Она определяется написанием конкретного слова"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u10-v3",
+          "type": "single_choice",
+          "measures": "identify_voicing_pair_relation",
+          "prompt": "Какая пара противопоставлена по звонкости/глухости?",
+          "options": ["[д] — [т]", "[д] — [д’]", "[а] — [о]"],
+          "correct_option_index": 0,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u10-v4",
+          "type": "single_choice",
+          "measures": "identify_hardness_pair_relation",
+          "prompt": "Какая пара противопоставлена по твёрдости/мягкости?",
+          "options": ["[м] — [м’]", "[м] — [п]", "[о] — [у]"],
+          "correct_option_index": 0,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u10-v5",
+          "type": "single_choice",
+          "measures": "preserve_consonant_system_boundary",
+          "prompt": "Ученик верно определил [т] как глухой твёрдый согласный. Что этим доказано?",
+          "options": ["Полное владение всей системой согласных и нормативным произношением", "Точная характеристика предъявленного звука; полное системное владение и другие компоненты требуют отдельной проверки", "Правильное написание любого слова с буквой т"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref": "ru-phonetics-consonant-system",
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "user_identity_ref": "REGISTERED_USER_REQUIRED",
+        "item_identity": "EXACT_VERSIONED_ITEM_REQUIRED",
+        "received_at": "SERVER_OWNED_TIMESTAMP_REQUIRED",
+        "today_timezone": "Europe/Moscow",
+        "durable_evidence_event_required": true,
+        "mastery_before_separate_semantic_acceptance": false,
+        "generic_ru01_attempt_can_emit_exact_mastery": false,
+        "anonymous_progress_allowed": false,
+        "device_only_canonical_state_allowed": false
+      }
+    }
+  ],
+  "admission_boundary": {
+    "semantic_admissions": 0,
+    "object_level_closures": 0,
+    "exact_mastery_admissions": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
