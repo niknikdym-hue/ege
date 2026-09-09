@@ -48,14 +48,34 @@ jobs:
       - name: Validate bounded phonetic-syllable semantic acceptance
         run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru01_phonetic_syllable_bounded_subject_semantics.py
 
-      - name: Build current-v20 twice
+      - name: Build current-v20 A
         shell: bash
         run: |
           set -euo pipefail
           python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v20.py --output /tmp/ru-current-v20-a.json > /tmp/ru-current-v20-a.txt
+
+      - name: Build current-v20 B
+        shell: bash
+        run: |
+          set -euo pipefail
           python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v20.py --output /tmp/ru-current-v20-b.json > /tmp/ru-current-v20-b.txt
+
+      - name: Verify deterministic current-v20 JSON
+        shell: bash
+        run: |
+          set -euo pipefail
           cmp /tmp/ru-current-v20-a.json /tmp/ru-current-v20-b.json
+
+      - name: Verify deterministic current-v20 stdout
+        shell: bash
+        run: |
+          set -euo pipefail
           diff -u /tmp/ru-current-v20-a.txt /tmp/ru-current-v20-b.txt
+
+      - name: Materialize current-v20 for downstream checks
+        shell: bash
+        run: |
+          set -euo pipefail
           cat /tmp/ru-current-v20-a.txt
           cp /tmp/ru-current-v20-a.json RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v20.json
 
