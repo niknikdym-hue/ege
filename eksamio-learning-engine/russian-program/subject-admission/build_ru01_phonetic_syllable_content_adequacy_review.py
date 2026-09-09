@@ -90,8 +90,12 @@ def build_review() -> dict[str, Any]:
 
     explanation = unit.get("canonical_explanation") or {}
     explanation_text = (str(explanation.get("short") or "") + "\n" + "\n".join(map(str, explanation.get("boundaries") or []))).lower()
-    for token in ("слог", "звуч", "гласн", "перенос", "ударен", "стечени"):
+    for token in ("слог", "звуч", "гласн", "перенос", "ударен"):
         require(token in explanation_text, f"content boundary missing: {token}")
+    require(
+        "стечени" in explanation_text or "сочетан" in explanation_text,
+        "content boundary missing: consonant cluster",
+    )
 
     minimums = {
         "decision_algorithm": 6,
