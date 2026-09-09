@@ -1,292 +1,315 @@
-# Eksamio — Current Project Priorities / Operational Launch Board
+# Eksamio — Current Project Priorities / Whole-Project Operational Board
 
-**Status:** CURRENT PRODUCT / DELIVERY AUTHORITY
-**Updated:** 2026-08-31
-**Baseline main:** `ab3839085743759ac61857dec6cec1607e306e68`
-**Primary deadline:** paid `Eksamio Pro — Russian` production launch by **2026-09-01**
+**Status:** CURRENT PRODUCT / DELIVERY AUTHORITY  
+**Updated:** 2026-09-09  
+**Baseline main:** `85d2f2b3dd0cf56c428f57c8a5c7d1b636ecebbb`  
+**Masterplan:** `00-PRODUCT-MASTERPLAN.md` v2.0
 
-This file is the single operational launch board for the current Russian launch. It supplements `00-PRODUCT-MASTERPLAN.md` v1.4 and approved owner decisions.
+This file is the executable whole-project board. It exists so the owner can always see where Eksamio is from the next launch action through the complete Russian product and subsequent subjects.
 
-Its purpose is to prevent late surprises about product scope, missing learner surfaces, infrastructure, commercial dependencies or rollout stages. A launch-critical item must be present here. A new mandatory item may be added only when new owner, legal, security or production evidence genuinely creates a new gate; ordinary implementation detail does not expand launch scope.
+## 1. Top-level project route
 
-## 1. One launch definition
+`A. RUSSIAN PUBLIC PAID LAUNCH -> B. RUSSIAN FULL PRODUCT -> C. MATHEMATICS -> D. PHYSICS -> E. NEXT SUBJECTS / PLATFORM SCALE`
 
-The launch is not “content ready”, “Tutor ready”, “checkout ready” or “site ready” in isolation.
+Current active milestone: **A — `RUSSIAN_PUBLIC_PAID_LAUNCH_PASS`**.
 
-The paid Russian launch is complete only when one exact production release proves:
+Next milestone after A: **B — `RUSSIAN_FULL_PRODUCT_PASS`**.
 
-`public entry -> identity -> purchase -> receipt -> entitlement -> Russian learning -> PEIS state -> practice -> Tutor text/voice -> independent verification -> persisted progress -> return login -> refund/revoke`
+No new subject may displace the active critical path merely because its work is easier or already has candidate assets.
 
-Primary dependency chain:
+## 2. Status vocabulary
 
-`FULL_RUSSIAN_TRUTH -> WORKING_RUSSIAN_PRODUCT -> YANDEX_PRODUCTION -> REAL_IDENTITY -> REAL_PAYMENT -> REAL_TUTOR -> END_TO_END_ACCEPTANCE -> PUBLIC_GO_LIVE`
+- `NOT_STARTED` — required but no accepted implementation yet.
+- `DESIGNED` — authority/specification exists.
+- `CODE_READY` — implementation + deterministic code/CI evidence exist.
+- `INTEGRATION_PENDING` — code exists but is not on the accepted integrated release path.
+- `BLOCKED_SUBJECT` — exact subject/content truth still blocks admission.
+- `BLOCKED_EXTERNAL` — external cloud/provider/operator evidence is missing.
+- `PRIVATE_PRODUCTION_PASS` — exact real contour works with public traffic OFF.
+- `VISIBLE_TO_LEARNER` — real user can use the feature on the intended product surface.
+- `PUBLIC_LAUNCH_PASS` — exact production release + owner go-live passed.
+- `DONE` — final required state for that row is proven.
 
-Until this chain is complete, Mathematics, Physics, nonessential historical work, SourceCraft migration, visual polish and speculative platform work are deferred.
+`CODE_READY != VISIBLE_TO_LEARNER`.
 
-## 2. Status vocabulary — use only these meanings
+## 3. Whole-project summary
 
-- **ЕСТЬ** — merged/accepted capability exists for its current boundary; do not reopen without a concrete regression.
-- **КОД ЕСТЬ — НУЖНО ПОДКЛЮЧИТЬ/ПРИНЯТЬ** — implementation exists, but real production provider, persistence, subject content, live backend or external acceptance is still missing.
-- **НУЖНО СДЕЛАТЬ** — no durable production-capable implementation is proven in current `main`; it requires an implementation delta before the relevant rollout stage.
-- **BLOCKED_SUBJECT** — blocked by exact Russian subject/content acceptance; credentials cannot cure it.
-- **BLOCKED_EXTERNAL** — code boundary exists; real external/provider/operator evidence is missing.
-- **LATER** — intentionally outside first public paid closed loop and must not delay it unless marketed as available.
-
-A mock, sandbox or browser fixture is never renamed `ЕСТЬ В PRODUCTION`.
-
-## 3. Product architecture — fixed
-
-For the learner there is one Eksamio.
-
-Technically:
-
-- `eksamio.ru` / Tilda = public marketing + free-demo entry layer;
-- protected Eksamio web application = account, Russian learning, PEIS, progress, entitlement and Tutor;
-- primary Russian production runtime = **Yandex Cloud Russia**;
-- canonical learner state, PEIS and entitlements are server-owned;
-- GitHub is development/version-control infrastructure, not a runtime dependency;
-- Google Drive may be a Source Archive, never a learner runtime dependency;
-- provider/repository hosting remains replaceable.
-
-Hard invariant: **GitHub outage != Eksamio outage**.
-
-## 4. Russian program — one truth, many learner products
-
-The full Russian program is one canonical knowledge/content layer. Course, EGE, OGE, school routes, trainers, constructor, Tutor and progress do not get separate ontologies or separate mastery databases.
-
-All **16/16 Russian program modules** are part of the full-subject scope. The official denominator is already finite and accounted: `1325 / 1325` admission units and `1400 / 1400` official requirements. The remaining bottleneck is exact subject acceptance throughput, not discovery of what the program contains.
-
-## 5. Learner product launch inventory
-
-| Learner surface | Rollout | Current truth | Durable evidence | Remaining blocker / next executable action |
-| --- | --- | --- | --- | --- |
-| Public `eksamio.ru` entry | REQUIRED | **ЕСТЬ** | existing Tilda/public site and accepted demo surfaces | Preserve; add only launch entry/sign-in/purchase links when production target is admitted. |
-| Free demos / diagnostics | REQUIRED BASE | **ЕСТЬ** | accepted demo/scorer surfaces; protected by Russian closure gates | Keep anonymous and free; connect evidence handoff without modifying accepted exam truth. |
-| Protected Eksamio Pro shell | REQUIRED | **КОД ЕСТЬ — НУЖНО ПОДКЛЮЧИТЬ/ПРИНЯТЬ** | merged PR #142 | Replace mock adapters with admitted real backend/TLS/CORS/session endpoints and rerun mobile/desktop E2E. |
-| Full Russian program navigation / course shell | REQUIRED | **КОД ЕСТЬ — BLOCKED_SUBJECT** | PR #142 renders 5–11 + all 16 modules + OGE/EGE routes | Bind only subject-accepted content; full learner content opens as PR #164 denominator is accepted. |
-| Work on mistakes | REQUIRED R1 | **КОД ЕСТЬ — НУЖНО ПОДКЛЮЧИТЬ** | Pro-client vertical slice + PEIS contracts | Wire real failed-attempt -> exact skill -> practice/help -> verify handoff to server-owned PEIS. |
-| Thematic trainer | REQUIRED R1 | **КОД/ITEM BASE ЕСТЬ — НУЖНО ПОДКЛЮЧИТЬ** | reviewed Russian trainer/semantic mappings + Pro client | Connect admitted items to real PEIS evidence/persistence; never create a second trainer knowledge model. |
-| EGE Russian trainer / route | FIRST COMMERCIAL EXAM ROUTE | **КОД/ROUTE ЕСТЬ — BLOCKED_SUBJECT** | Pro client + reviewed EGE/demo/trainer authority | Finish subject acceptance for marketed EGE scope; connect route to live PEIS. |
-| OGE Russian trainer / route | PROGRESSIVE R3 | **SHELL/ROUTE ЕСТЬ — BLOCKED_SUBJECT** | Pro client + current OGE authority work in PR #164 | Open after exact OGE component acceptance; reuse same school identities and PEIS. |
-| School Russian 5–11 views | PROGRESSIVE R4 | **SHELL ЕСТЬ — BLOCKED_SUBJECT** | PR #142 + full-subject 16-module model | Open grade/topic views only over accepted full-school content. |
-| Trainer constructor | PROGRESSIVE R2 | **НУЖНО СДЕЛАТЬ** | no durable current-main production implementation is being assumed | Build selection UI/service over admitted canonical topics/task families/item pool; no separate ontology. Not a first R1 blocker unless marketed at launch. |
-| Personal “Training for today” / NBA | REQUIRED R1 as next action | **КОД/CONTRACTS ЕСТЬ — НУЖНО ПОДКЛЮЧИТЬ** | PEIS NBA contracts + PR #142 progress/NBA shell | Connect real server-owned learner evidence, retention risk and exam value to generated next action. |
-| Russian guided course / learning route | REQUIRED CORE, progressively filled | **SHELL ЕСТЬ — BLOCKED_SUBJECT** | PR #142 program shell | Materialize accepted teach/practice/verify content and prerequisite traversal from full program. |
-| Progress / weak-points / readiness | REQUIRED R1 | **КОД ЕСТЬ — НУЖНО ПОДКЛЮЧИТЬ** | PR #142 progress/NBA surface + shared PEIS contracts | Replace fixture state with real persistence/recompute and cross-session proof. |
-| Independent verification after help | REQUIRED | **КОД/CONTRACT ЕСТЬ — НУЖНО LIVE E2E** | shared PEIS/Tutor policy and merged Tutor slice | Prove exactly-once independent evidence after substantial Tutor help. |
-| Retention / spaced recheck | REQUIRED CORE | **КОД/CONTRACT ЕСТЬ — НУЖНО LIVE E2E** | shared retention contracts | Persist schedule/state and prove later recheck changes retained mastery correctly. |
-| Tutor text | REQUIRED | **КОД ЕСТЬ — НУЖНО PRODUCTION INTEGRATION** | merged grounded Tutor slice + current PR #172 benchmark work | Land final Russian provider policy into production Tutor path; Yandex brain default; prove latency/reliability/PEIS continuity. |
-| Tutor realtime voice | REQUIRED | **КОД ЕСТЬ — НУЖНО PRODUCTION INTEGRATION** | SpeechKit adapters + PR #172 human acceptance | Use accepted Lera profile; finish production streaming/continuity/reliability; audio persistence exactly 0. |
-| Trainer/course Tutor handoff | REQUIRED | **КОДОВЫЕ ОСНОВЫ ЕСТЬ — НУЖНО E2E** | shared Tutor + PEIS boundaries | One learning episode must preserve goal/evidence when moving trainer -> Tutor -> verify. |
-| Essay / extended-answer AI support | LATER / R5 | **LATER** | architecture authority only for gated expansion | Add only after rubric/source/eval gate; not a Sep-1 closed-loop blocker unless marketed. |
-| Parent/reporting surfaces | LATER / R5 | **LATER** | product authority | Do not delay first closed loop; implement under separate privacy/access rules later. |
-| Vision/photo/richer multimodal | LATER | **LATER** | masterplan | Explicitly deferred. |
-
-### Product-scope rule
-
-Full Russian **subject truth** is mandatory for any claim that Eksamio offers the complete Russian subject. Specialized learner surfaces may be released progressively after their own UI/runtime gates without rebuilding the subject.
-
-If a progressive surface is not ready, it is hidden or described as unavailable; it does not silently expand the first-release blocker list.
-
-## 6. Commercial / account launch inventory
-
-| Capability | Rollout | Current truth | Evidence | Remaining blocker / next action |
-| --- | --- | --- | --- | --- |
-| Passwordless account core | REQUIRED | **ЕСТЬ КАК КОД** | merged identity core | Connect real delivery and production persistence. |
-| Yandex Postbox e-mail delivery | REQUIRED | **КОД ЕСТЬ — BLOCKED_EXTERNAL** | merged PR #148 | Verify sender/domain, IAM/service-account role and bounded real delivery smoke. |
-| SMS.RU phone delivery | REQUIRED while phone login is offered | **КОД ЕСТЬ — BLOCKED_EXTERNAL** | merged PR #148 | Configure real account/API credential/sender and bounded real SMS smoke; otherwise do not advertise phone login. |
-| Anonymous demo -> account continuity | REQUIRED | **КОД ЕСТЬ — НУЖНО PRODUCTION E2E** | identity/Pro-client contracts | Prove safe link to server-owned identity without duplicate/lost learner evidence. |
-| Pro offer / SKU contract | REQUIRED | **НУЖНО ДОКОНЦА МАТЕРИАЛИЗОВАТЬ** | payment/entitlement architecture exists | Persist exact launch SKUs, durations, prices, quotas and entitlement IDs before real checkout; do not invent prices in adapter code. |
-| Pro 30-day access | COMMERCIAL | **OWNER PRODUCT DECISION — НУЖНО SKU** | existing product decision | Materialize server-owned SKU/price/entitlement; no auto-renewal. |
-| Pro 90-day access | COMMERCIAL | **OWNER PRODUCT DECISION — НУЖНО SKU** | existing product decision | Materialize server-owned SKU/price/entitlement; 90-day daily value may be better; no auto-renewal. |
-| Separate paid full AI analysis | PROGRESSIVE COMMERCIAL | **PRODUCT DECISION — НУЖНО PRODUCTIZATION** | existing product decision | Do not block R1 if not marketed on day one; when enabled, define exact price/quota/credit-to-Pro rule server-side. |
-| Robokassa initiation | REQUIRED | **КОД ЕСТЬ — BLOCKED_EXTERNAL** | merged PR #147 | Actual merchant settings/credentials + bounded real SBP/card acceptance. |
-| NPD receipt / Robocheki SMZ | REQUIRED | **КОД ЕСТЬ — BLOCKED_EXTERNAL/LEGAL** | PR #147 candidate | Accept fiscal/legal configuration and prove real receipt lifecycle. |
-| Exactly-once entitlement grant | REQUIRED | **КОД ЕСТЬ — НУЖНО REAL E2E** | payment core / E2E harness | Prove provider webhook replay/idempotency with server-owned amount/order identity. |
-| Refund -> entitlement revoke | REQUIRED | **КОД ЕСТЬ — НУЖНО REAL E2E** | payment candidate + E2E harness | Prove real/safely bounded refund path and deterministic revoke. |
-| Saved card / auto-renewal | NOT IN FIRST OFFER | **НЕ ДЕЛАЕМ** | product decision | Must not appear accidentally in checkout. |
-
-## 7. Production infrastructure launch inventory
-
-| Production capability | Current truth | Evidence | Remaining blocker / next action |
+| Stage | Product result | Current status | Critical now? |
 | --- | --- | --- | --- |
-| Yandex Cloud deployment package | **КОД ЕСТЬ — BLOCKED_EXTERNAL** | merged PR #150 | Create/admit real staging/production resources and exact release deployment. |
-| Application runtime | **КОД ЕСТЬ — НУЖНО DEPLOY** | PR #150 | Deploy immutable release artifact/image in Yandex; runtime must not fetch GitHub. |
-| Managed PostgreSQL / admitted persistence | **КОД/SCHEMA ЕСТЬ — НУЖНО REAL RESOURCE** | portable substrate + PR #150 | Provision/admit database, migrations, connection, persistence and restore proof. |
-| Lockbox / production secrets | **КОД/CONFIG ЕСТЬ — НУЖНО REAL RESOURCE** | PR #150 | Provision secrets outside Git/client/logs with minimum roles and rotation path. |
-| API edge / TLS / CORS | **КОД ЕСТЬ — НУЖНО REAL ACCEPTANCE** | Pro client + Yandex package | Admit domains/origins/certificates and reject untrusted origins. |
-| Monitoring / redacted logs | **КОДОВЫЕ ОСНОВЫ ЕСТЬ — НУЖНО OPERATIONAL PROOF** | staging/operational packages | Verify health, failure alerts, no secret/contact/audio leakage. |
-| Backup / restore | **НУЖНО PRODUCTION PROOF** | production architecture | Prove restore path for canonical state before public go-live. |
-| Rollback / kill switches | **КОД ЕСТЬ — НУЖНО PRODUCTION PROOF** | reliability/deployment/E2E contracts | Prove release rollback and provider/payment/Tutor kill-switch behavior. |
-| GitHub runtime independence | **AUTHORITY FIXED — НУЖНО PRODUCTION PROOF** | masterplan v1.4 | Deployed release must run with GitHub unavailable; images/config/knowledge required at runtime exist in Yandex contour. |
-| Google Drive runtime independence | **AUTHORITY FIXED — НУЖНО PRODUCTION PROOF** | source-storage policy | Normal learning/Tutor/trainer must work after ingestion with Drive unavailable. |
-| Learner audio persistence | **MUST = 0** | Tutor/privacy authority | Production E2E must prove no recording/fragment/voiceprint/persistent acoustic representation is stored. |
+| A | Russian public paid launch | **IN PROGRESS / NO-GO** | YES |
+| B | Russian full product | **PLANNED + PARTIAL CODE/CONTENT** | NEXT |
+| C | Mathematics full product | **DEFERRED / EXISTING ASSETS PRESERVED** | NO |
+| D | Physics full product | **DEFERRED / EXISTING ASSETS PRESERVED** | NO |
+| E | Next subjects / platform scale | **FUTURE** | NO |
 
-## 8. Subject truth launch inventory — current finite denominator
+## 4. Stage A — Russian public paid launch
 
-Current PR #164 exact state:
+Target learner path:
 
-- admission units accounted: **1325 / 1325**;
-- official requirements accounted: **1400 / 1400**;
-- exact object-bound accepted component sets: **21 units / 21 requirements**;
-- remaining without accepted component set: **1295 units / 1370 requirements**;
-- accepted bounded `ru-*` semantics: **75**;
-- finite semantic review groups: **74**;
-- modules with reviewed accounting: **16 / 16**;
-- false exact-mastery admissions: **0**.
+`eksamio.ru -> registration/login -> Pro purchase -> receipt -> entitlement -> Russian learning -> PEIS -> practice/error work -> Tutor text/voice -> independent verify -> progress -> logout/login -> refund/revoke`
 
-This is a finite closure problem. No new broad scope audit is allowed unless a concrete source contradiction appears.
+### A1. Product authority / project control
 
-### Mandatory acceleration algorithm
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A1.1 Russian-first masterplan | **DESIGNED in current authority branch** | v2.0 update | Review/merge after CI/doc sanity |
+| A1.2 Whole-project operational board | **DESIGNED in current authority branch** | this file | Bind structured board to Owner Console |
+| A1.3 Owner Console whole-project view | **DESIGNED / IMPLEMENTATION REQUIRED** | masterplan §19 | Build local development console; no learner runtime dependency |
+| A1.4 GitHub/CI live status ingestion | **NOT_STARTED for console** | GitHub remains source of truth | Auto-read PR/SHA/CI; display conflicts/staleness |
 
-Do not process 1295 objects one by one when multiple objects share an already proven exact owner set.
+### A2. Russian source/content/semantic truth
 
-Use this implementation loop:
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A2.1 Source corpus / official scope | **CODE/CONTENT AUTHORITY EXISTS** | PR #164; 16/16 modules accounted | Preserve accepted source truth |
+| A2.2 Exact semantic/object closure | **BLOCKED_SUBJECT** | PR #164 current branch truth: 36 exact component-set acceptances; 1280 units / 1355 requirements remain without accepted semantic component set; false exact mastery = 0 | Continue bounded exact acceptance from current remainder; no fuzzy/title admission |
+| A2.3 Rights-safe learner content | **PARTIAL / BLOCKED_SUBJECT** | #139 salvage input; rights-blocked bytes not admitted | Materialize only source-backed/original accepted content |
+| A2.4 Launch-scope content visibility | **BLOCKED_SUBJECT** | full product shell cannot honestly expose unaccepted scope | Open only accepted content via feature/admission gates |
 
-`74 review groups -> batch-eligibility computation -> exact canonical owner sets -> source-backed batch packet -> deterministic object bindings -> subject acceptance -> denominator reconciliation`
+### A3. Registration / identity / sessions
 
-A group is batch-eligible only when every object admitted by the batch has:
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A3.1 Passwordless registration core | **CODE_READY / INTEGRATION_PENDING** | PR #186 HEAD `ae169c82a6f6e515e95293625e31e342b447f867` | Integrate into exact release path when owner allows |
+| A3.2 One registered identity -> one learner profile | **CODE_READY / INTEGRATION_PENDING** | PR #186 | Real production persistence proof |
+| A3.3 Consent boundary | **CODE_READY / INTEGRATION_PENDING** | PR #186 | Production legal/version acceptance |
+| A3.4 Secure cookie/CORS/CSRF boundary | **CODE_READY / INTEGRATION_PENDING** | PR #186 | Real domain/TLS/browser E2E |
+| A3.5 Return login / same profile continuity | **CODE_READY / NEEDS PRODUCTION E2E** | PR #186 | Prove across real logout/login |
+| A3.6 Anonymous demo handling | **DESIGNED FAIL-CLOSED** | browser state is not canonical mastery | If imported later, use separate server-owned bounded import contract |
 
-- an exact source-supported component owner set;
-- no unresolved family placeholder;
-- no broader/nonexact owner substituted for an explicit atomic owner;
-- no rights-blocked learner prose dependency;
-- deterministic object and requirement identities;
-- independent-evidence semantics that cannot emit false atomic mastery.
+### A4. Servers / production infrastructure
 
-If a group fails those conditions, split only that group at the smallest meaningful semantic boundary. Do not reopen unrelated accepted groups.
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A4.1 Yandex application runtime | **CODE_READY / BLOCKED_EXTERNAL** | deployment/runtime candidate exists | Provision/admit real private production runtime |
+| A4.2 PostgreSQL canonical persistence | **CODE_READY / BLOCKED_EXTERNAL** | #186 runtime/schema path | Provision real DB, migrate, persist, restore |
+| A4.3 API Gateway / edge | **CODE_READY / BLOCKED_EXTERNAL** | Yandex-ready candidate | Admit real gateway/origin contracts |
+| A4.4 TLS + production domains | **BLOCKED_EXTERNAL** | code boundary exists | Issue/admit certs and exact origins |
+| A4.5 Production secret storage | **BLOCKED_EXTERNAL** | config boundary exists | Provision Lockbox/equivalent + minimum roles |
+| A4.6 Monitoring / redacted logs | **PARTIAL CODE / BLOCKED_EXTERNAL** | operational foundations exist | Prove real alerts/health/redaction |
+| A4.7 Backup + restore | **NOT PRODUCTION-PROVEN** | production architecture requires it | Execute bounded restore proof |
+| A4.8 Rollback / kill switches | **CODE/POLICY EXISTS / NOT PRODUCTION-PROVEN** | release/provider contracts | Rehearse exact release rollback |
+| A4.9 GitHub/Drive runtime independence | **DESIGNED / NEEDS PRODUCTION PROOF** | hard invariant | Test runtime with those sources unavailable |
 
-## 9. Tutor launch policy — closed decisions vs remaining work
+### A5. Admissions Gate / server-owned learning evidence
 
-Closed decisions — do not revisit without a new defect:
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A5.1 Live educational asset identities/provenance | **CODE_READY / INTEGRATION_PENDING** | PR #187 HEAD `c5592c212557b91578ed48e1bf778e30dd489dc7` | Reuse accepted identities, do not rebuild |
+| A5.2 Registered exact-event contract | **NOT YET PRODUCTION-ADMITTED** | #187 intentionally leaves production_event_semantic_admissions=0 | Implement exact learner/item/action event admission on #186 runtime |
+| A5.3 No mastery from page/route/local state | **POLICY/CODE GUARD EXISTS** | #187 + PEIS rules | Preserve in integrated runtime |
+| A5.4 Exactly-once EvidenceEvent -> PEIS | **PARTIAL CONTRACTS / NEEDS E2E** | shared PEIS + server runtime | Prove retry/idempotency with real persistence |
 
-- Russian learner default conversational brain: **Yandex**;
-- OpenAI: fallback/escalation after production admission;
-- learner provider selector: none;
-- voice: **Yandex SpeechKit Lera**;
-- reading profile: **neutral / 1.04 / 0 Hz / marked pauses**;
-- learner audio persistence: **0**.
+### A6. Visible site / protected product UX
 
-Remaining executable work:
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A6.1 Public Eksamio entry | **VISIBLE BASE EXISTS** | current eksamio.ru | Add honest registration/Pro entry only when target is ready |
+| A6.2 Registration/login UI | **CODE_READY / NOT PUBLICLY VISIBLE AS PRODUCT** | staged Tilda-ready/web UI in #186 | Bind to real production API and publish after private E2E |
+| A6.3 Protected Pro shell | **CODE_READY / NEEDS REAL BACKEND** | merged product client foundations | Replace fixtures/mocks with admitted backend |
+| A6.4 Russian subject navigation | **SHELL EXISTS / BLOCKED_SUBJECT** | program shell + subject authority | Render only admitted Russian surfaces |
+| A6.5 Profile/account page | **CODE/PATH EXISTS / NEEDS PRODUCTION E2E** | #186 account runtime + client | Bind and test desktop/mobile |
+| A6.6 Progress / weak points / readiness view | **CODE/SHELL EXISTS / NEEDS REAL PEIS** | client + PEIS contracts | Bind server-owned learner state |
+| A6.7 Purchase/access state in UI | **PARTIAL / NEEDS COMMERCIAL INTEGRATION** | entitlement contract exists | Show exact SKU/access dates/entitlement from server |
+| A6.8 Mobile browser acceptance | **NOT FINAL PRODUCTION-PROVEN** | client tests exist | Run exact release mobile E2E |
+| A6.9 Desktop browser acceptance | **NOT FINAL PRODUCTION-PROVEN** | client tests exist | Run exact release desktop E2E |
 
-1. integrate the accepted PR #172 policy/results into the production Tutor path based on current `main`;
-2. retain one session across text <-> voice;
-3. prove Yandex default routing and bounded fallback/kill switch;
-4. reduce/guard unacceptable latency and provider failures;
-5. prove Tutor help -> independent verification -> exactly-once PEIS evidence;
-6. do not run more subjective voice casting.
+### A7. Russian learning loop / PEIS assembly
 
-## 10. Legal / privacy / operations
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A7.1 Demo/diagnosis evidence handoff | **PARTIAL CODE / NEEDS REGISTERED ADMISSION** | demos + PEIS sensor foundations | Convert exact eligible outcomes into server events |
+| A7.2 Error -> exact weak skill | **PARTIAL / BLOCKED BY A2/A5** | semantic mappings + PEIS | Wire accepted exact bindings |
+| A7.3 Work on mistakes | **CODE FOUNDATION / NEEDS E2E** | product client + PEIS | Real error -> practice/help -> verify |
+| A7.4 Next Best Action / Training today | **CONTRACT/SHELL EXISTS / NEEDS REAL STATE** | PEIS NBA contracts | Generate from persisted evidence |
+| A7.5 Progress persistence | **CODE FOUNDATION / NEEDS PRODUCTION PROOF** | #186 + PEIS | Cross-session exact release proof |
+| A7.6 Independent verification | **CONTRACT EXISTS / NEEDS LIVE E2E** | Tutor/PEIS policy | Exactly-once fresh item after help |
+| A7.7 Retention schedule | **CONTRACT EXISTS / NEEDS LIVE E2E** | retention contracts | Persist and later recheck |
 
-The production-facing legal/privacy/operational packet is implemented and linked from the Pro client (merged PR #153), but real external/operator acceptance remains required.
+### A8. Pro SKU / payment / receipt / entitlement
 
-Before public paid traffic:
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A8.1 Pro 30-day SKU | **OWNER DECISION / NEEDS MATERIALIZED SKU** | no auto-renewal | Persist exact price/duration/quota/entitlement |
+| A8.2 Pro 90-day SKU | **OWNER DECISION / NEEDS MATERIALIZED SKU** | no auto-renewal | Persist exact price/duration/quota/entitlement |
+| A8.3 Robokassa initiation | **CODE_READY / BLOCKED_EXTERNAL** | merged payment candidate | Real merchant credential/settings + bounded payment smoke |
+| A8.4 SBP/card acceptance | **BLOCKED_EXTERNAL** | provider contour required | Prove exact real payment path |
+| A8.5 NPD / Robocheki receipt | **CODE_READY / BLOCKED_EXTERNAL/LEGAL** | payment candidate | Prove real receipt lifecycle |
+| A8.6 Exactly-once entitlement | **CODE FOUNDATION / NEEDS REAL E2E** | server entitlement core | Callback replay/idempotency proof |
+| A8.7 Refund -> revoke | **CODE FOUNDATION / NEEDS REAL E2E** | payment/E2E contracts | Bounded real refund/revoke proof |
+| A8.8 No auto-renewal / no accidental saved card | **OWNER POLICY** | product decision | Verify checkout UI/provider settings |
 
-- operator/legal values and versions must be current and accepted;
-- product claims must match actually open Russian surfaces;
-- payment/refund/receipt disclosures must match production behavior;
-- privacy wording must state learner audio is not stored;
-- support/escalation and privacy/audio incident procedures must be operational;
-- no document may claim `READY` from code presence alone.
+### A9. Tutor text + realtime voice
 
-Status: **КОД ЕСТЬ — BLOCKED_EXTERNAL**.
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A9.1 Provider-neutral Tutor/PEIS boundary | **CODE FOUNDATION EXISTS** | merged/shared Tutor contracts | Preserve one learning episode across providers/interfaces |
+| A9.2 Brain shortlist: OpenAI/Qwen/DeepSeek/Yandex | **TEST CANDIDATES EXIST / FINAL PEDAGOGICAL ACCEPTANCE PENDING** | PRs #171/#172 and accepted owner shortlist | Run same bounded pedagogical comparison; list order is not ranking |
+| A9.3 Final learner brain primary/fallback policy | **NOT FINAL** | requires own Eksamio test + production evidence | Decide from pedagogical quality/access/reliability/cost |
+| A9.4 Yandex SpeechKit voice layer | **CODE FOUNDATION EXISTS** | SpeechKit adapters / selected voice profile work | Production streaming/latency/reliability acceptance |
+| A9.5 Text <-> voice same session | **NEEDS PRODUCTION E2E** | shared Tutor session policy | Prove context/PEIS continuity |
+| A9.6 Help -> independent verify -> evidence | **NEEDS PRODUCTION E2E** | Tutor/PEIS contract | Exactly-once verified learner outcome |
+| A9.7 Learner audio persistence = 0 | **HARD POLICY / NEEDS PROD PROOF** | privacy/Tutor authority | Verify logs/storage/backups contain no audio |
+| A9.8 Tutor kill switch/failure handling | **CODE/POLICY PARTIAL** | reliability gateway foundations | Prove production behavior |
 
-## 11. Final E2E — do not redesign
+### A10. Legal / privacy / support / operations
 
-The exact-release production E2E harness is already merged (PR #163). It is the acceptance skeleton, not a simulation to be rewritten.
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A10.1 Personal data / consent texts | **CODE/DOC FOUNDATION / NEEDS FINAL PRODUCTION VALUES** | legal/privacy packet exists | Accept actual operator/version values |
+| A10.2 Offer/payment/refund disclosure | **PARTIAL / NEEDS COMMERCIAL FINALIZATION** | existing product/payment docs | Match actual SKU/provider behavior |
+| A10.3 Audio non-storage disclosure | **POLICY EXISTS** | audio persisted = 0 | Ensure public docs match runtime |
+| A10.4 Support/escalation | **NEEDS OPERATIONAL PROOF** | process foundations | Make real support path visible |
+| A10.5 Privacy/security incident process | **NEEDS OPERATIONAL PROOF** | operational docs | Prove owner/operator handling path |
 
-Remaining job is to feed it real admitted evidence for one release identity and prove:
+### A11. Exact-release private production E2E
 
-`public entry -> passwordless account -> anonymous link -> purchase -> receipt -> entitlement -> Russian PEIS persistence -> trainer -> Tutor text/voice -> independent verify -> progress -> logout/login -> refund/revoke -> kill switch`
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A11.1 Freeze exact release identity | **NOT STARTED FOR FINAL RELEASE** | E2E harness exists | Pin commit/image/config/provider versions |
+| A11.2 Full private production flow | **BLOCKED_DEPENDENCIES** | merged E2E skeleton | Run exact chain with real admitted resources |
+| A11.3 Failure/retry/idempotency scenarios | **PARTIAL HARNESS / NEEDS PROD** | code gates exist | Execute provider/payment/session failures |
+| A11.4 Rollback rehearsal | **NEEDS PROD** | policy/code foundations | Roll back exact candidate |
+| A11.5 Owner acceptance packet | **NOT READY** | requires all evidence | Present only factual PASS/FAIL |
 
-Status: **КОД ЕСТЬ — BLOCKED_DEPENDENCY** until Russian subject + external production gates pass.
+### A12. Public go-live
 
-## 12. The finite blocker list as of 2026-08-31
+| Task | Status | Evidence / current truth | Next action |
+| --- | --- | --- | --- |
+| A12.1 Owner go-live approval | **BLOCKED** | A1–A11 incomplete | Ask only when all mandatory gates pass |
+| A12.2 Publish/enable registration + Pro routes | **BLOCKED** | public traffic remains off for new Pro contour | Enable exact accepted release |
+| A12.3 Public paid traffic | **BLOCKED** | launch NO-GO | Turn on only after owner gate |
+| A12.4 Post-launch smoke | **NOT STARTED** | follows public release | Verify real learner path immediately |
+| A12.5 Monitoring / rollback readiness | **NOT STARTED FOR PUBLIC RELEASE** | follows candidate admission | Watch exact launch signals |
 
-There are **eight launch blocker classes**. Do not invent a ninth class merely because an implementation contains subtasks.
+## 5. Stage B — Russian full product
 
-1. **Russian subject/content acceptance** — PR #164; convert the known 1325/1400 denominator to exact accepted component ownership at batch throughput.
-2. **Russian PEIS/product live assembly** — connect real accepted content, trainer/work-on-errors/NBA/progress and account state to the real backend.
-3. **Tutor production integration** — land final Yandex-default/Lera policy from PR #172 into the production path and prove text/voice continuity/reliability.
-4. **Yandex production infrastructure** — real runtime, PostgreSQL, Lockbox, API edge/TLS/CORS, monitoring, backup/rollback and runtime independence from GitHub/Drive.
-5. **Identity delivery** — real Postbox and, if offered, SMS.RU delivery acceptance plus anonymous->account continuity.
-6. **Payment/receipt/entitlement** — materialize exact launch SKU(s), accept Robokassa/Robocheki and prove payment -> receipt -> entitlement -> refund/revoke.
-7. **Legal/privacy/operator acceptance** — accept actual production values/docs/operations; audio storage remains zero.
-8. **Exact-release production E2E + owner go-live** — run the merged harness against the admitted release, then explicitly enable public paid traffic.
+Stage B begins immediately after the first paid Russian launch; it is not optional polish.
 
-If all eight are PASS, there is no hidden “architecture completion” gate after them.
+| Task | Required product result | Current state |
+| --- | --- | --- |
+| B1 | Full accepted 5–11 Russian program | **BLOCKED_SUBJECT / partial assets** |
+| B2 | Full EGE Russian route | **PARTIAL assets / subject gate** |
+| B3 | Full OGE Russian route | **PARTIAL shell/assets / subject gate** |
+| B4 | Thematic trainers on canonical identities | **PARTIAL accepted reconciliation** |
+| B5 | Trainer constructor | **NOT FULLY IMPLEMENTED** |
+| B6 | Work-on-mistakes across admitted Russian scope | **PARTIAL platform foundation** |
+| B7 | Training for today / NBA | **CONTRACT/SHELL exists** |
+| B8 | Guided course + prerequisite repair | **PARTIAL shell / content admission required** |
+| B9 | Retention / spaced recheck | **CONTRACT exists / production E2E pending** |
+| B10 | Progress / readiness / weak-point analytics | **SHELL/CONTRACT exists / real PEIS pending** |
+| B11 | Personalized plan / replan | **PARTIAL PEIS foundation** |
+| B12 | Tutor across course/trainer/errors with one context | **PARTIAL Tutor foundation** |
+| B13 | Essay/extended answer support with rubric/eval gate | **LATER IN RUSSIAN FULL** |
+| B14 | Stable production support/observability for Russian | **REQUIRED before Russian full PASS** |
+| B15 | Honest complete Russian navigation on site/app | **NOT YET VISIBLE AS FULL PRODUCT** |
 
-## 13. Parallel execution lanes — start now
+Exit criterion: **`RUSSIAN_FULL_PRODUCT_PASS`**.
 
-Run independent work in parallel without waiting for another planning cycle:
+Only after B exits does the main product delivery lane move to Mathematics.
 
-### P0-A — Russian subject batch closure
+## 6. Stage C — Mathematics
 
-- compute batch-eligible groups from the existing 74 finite semantic review groups;
-- materialize the first high-throughput exact acceptance wave;
-- reconcile counters;
-- repeat immediately until `russian_content = PASS` or a genuinely new source/semantic blocker is isolated.
+Existing mathematics assets are preserved, but active expansion waits for Russian full-product completion except urgent regressions.
 
-### P0-B — production Russian assembly
+| Task | Required result | Current state |
+| --- | --- | --- |
+| C1 | Official source corpus 2022–2026 | **EXISTING WORK / gaps to reconcile later** |
+| C2 | Mathematics Identity Model | **PARTIAL candidate work exists** |
+| C3 | Base route mapping | **PARTIAL** |
+| C4 | Profile route mapping | **PARTIAL** |
+| C5 | Demo/trainer/course alignment | **PARTIAL** |
+| C6 | Exact evidence semantics | **NOT FULL PRODUCT-ADMITTED** |
+| C7 | Reuse account/server/PEIS | **MUST REUSE RUSSIAN PLATFORM** |
+| C8 | Reuse Pro/payment/Tutor shell | **MUST REUSE RUSSIAN PLATFORM** |
+| C9 | Visible Mathematics learner product | **NOT STARTED AS FULL PRODUCT** |
+| C10 | Mathematics private production E2E | **NOT STARTED** |
+| C11 | Mathematics public rollout | **NOT STARTED** |
 
-- wire PR #142 client to production-shaped backend;
-- real PEIS state for attempt/error/practice/NBA/progress;
-- accepted Russian content only;
-- prepare dedicated surface feature flags so progressive R2–R5 sections can open without redeploying subject truth.
+## 7. Stage D — Physics
 
-### P0-C — Tutor integration
+| Task | Required result | Current state |
+| --- | --- | --- |
+| D1 | Official source corpus 2022–2026 | **PARTIAL / accepted historical assets exist** |
+| D2 | Physics Identity Model | **PARTIAL subject work exists** |
+| D3 | Demo/trainer/course alignment | **PARTIAL** |
+| D4 | Exact evidence semantics | **NOT FULL PRODUCT-ADMITTED** |
+| D5 | Reuse shared platform | **REQUIRED** |
+| D6 | Visible Physics learner product | **NOT STARTED AS FULL PRODUCT** |
+| D7 | Physics private production E2E | **NOT STARTED** |
+| D8 | Physics public rollout | **NOT STARTED** |
 
-- rebase/extract final accepted PR #172 delta onto current-main production Tutor boundary;
-- Yandex brain default;
-- accepted Lera profile;
-- text/voice continuity, latency/reliability and kill-switch gates.
+## 8. Stage E — next subjects / platform scale
 
-### P0-D — external production acceptance
+| Task | Required result | Current state |
+| --- | --- | --- |
+| E1 | Standard subject-onboarding contract | **FUTURE** |
+| E2 | Next-subject commercial prioritization | **FUTURE** |
+| E3 | Cross-subject learner profile where useful | **FUTURE** |
+| E4 | Shared platform service extraction only after proof | **FUTURE** |
+| E5 | Advanced analytics / experimentation | **FUTURE** |
+| E6 | Additional multimodal capabilities | **FUTURE** |
+| E7 | Internationalization only after product-market proof | **FUTURE** |
 
-- Yandex resources/deployment;
-- Postbox/SMS delivery;
-- launch SKU + Robokassa/Robocheki;
-- legal/operator values;
-- exact evidence URIs/checksums for preflight/E2E.
+## 9. Owner Console rendering contract
 
-### P0-E — final release
+Owner Console must render **all rows from stages A–E**, including future rows. It may default to Critical Path, but it may never make later stages disappear.
 
-- freeze exact candidate identity;
-- production E2E;
-- rollback/kill-switch rehearsal;
-- owner go-live;
-- public traffic ON only after all mandatory gates pass.
+Required views:
 
-## 14. Progressive rollout stages
+1. `Whole Project` — A through E, expandable to every task.
+2. `Critical Path` — currently A only, ordered by dependency.
+3. `Russian Full Product` — A + B together so launch does not hide the remaining Russian product.
+4. `Visible Product` — what a real learner can use today versus code-only work.
+5. `Owner Gates` — only tasks genuinely waiting for owner action.
+6. `Blockers` — subject, external, integration, production, legal.
+7. `History` — completed milestones/PRs remain visible instead of disappearing.
 
-- **R0 — private production assembly:** all real components connected, public paid traffic OFF.
-- **R1 — first paid Russian closed loop:** account + entitlement + accepted Russian learning + trainer/work on mistakes + next action + progress + Tutor text/voice + independent verify + persistence + refund/revoke.
-- **R2 — EGE expansion:** full admitted EGE route, richer thematic/exam training, trainer constructor when implemented, complete EGE course/personal route and retention.
-- **R3 — OGE expansion:** full admitted OGE learner surface over the same full-subject identities.
-- **R4 — school 5–11 expansion:** grade/topic navigation and full school-program learning surfaces.
-- **R5 — advanced:** essay/extended answers, richer forecast/analytics, parent/reporting and later multimodal features.
+Every task card/row must show:
 
-A rollout stage controls what is visible; it does not create a new Russian knowledge base.
+- task ID;
+- user-visible outcome;
+- stage/workstream;
+- priority;
+- status;
+- dependencies;
+- blocker class;
+- exact PR/branch/SHA when applicable;
+- exact CI/evidence state;
+- production state;
+- `VISIBLE_TO_LEARNER` yes/no;
+- executor (`Astra`, `Codex`, `Owner`, `External`);
+- owner gate yes/no;
+- next action;
+- last evidence timestamp.
 
-## 15. No-surprise / no-circle execution rules
+The panel is **not** an independent manual truth store. Semantic plan comes from Masterplan + this board; repository facts come from GitHub/CI. Mismatch must render `STALE/CONFLICT`.
 
-1. **Do not reopen merged accepted work** without a concrete regression, changed external requirement or source contradiction.
-2. **Do not repeat scope discovery:** the Russian denominator is already 1325/1400 and 16/16 modules.
-3. **Audit only to make a decision that immediately changes code/content/admission.** Narrative audit with no executable consequence is deferred.
-4. **Prefer batch execution:** if one exact authority safely resolves many objects, bind them in one reviewed wave.
-5. **No hidden feature inflation:** progressive/later features do not become Sep-1 blockers unless the product markets them as present or a hard law/security invariant requires them.
-6. **No false readiness:** code-ready, provider-ready and production-ready are different statuses.
-7. **No provider lock in core:** Yandex is the Russian production default/runtime, but PEIS/business/subject contracts remain portable.
-8. **No GitHub/Drive runtime dependency.**
-9. **No secrets or learner audio persistence.**
-10. After each accepted delta, update only the affected board row/counter and move to the next blocker; do not run a new project-wide audit.
+## 10. Current critical path — ordered
 
-## 16. Immediate next executable action
+Work now proceeds in this order, with safe parallelism only where dependencies allow:
 
-The next Central Brain action is **not another plan**.
+1. keep Russian subject closure moving on exact current #164 remainder;
+2. integrate registered server runtime (#186) with exact live asset identities (#187) through the Admissions Gate;
+3. provision/admit private Yandex production resources;
+4. bind the real protected web app + registration/login + learner state to those resources;
+5. materialize launch Pro SKU(s) and real payment/receipt/entitlement contour;
+6. complete the learner-facing Tutor pedagogical provider test and production text/voice integration;
+7. finish legal/privacy/support production values;
+8. run exact private-production E2E;
+9. expose the complete accepted Russian launch flow on the site/app;
+10. owner go-live -> public paid launch;
+11. continue immediately to `RUSSIAN_FULL_PRODUCT_PASS`;
+12. only then move the main product lane to Mathematics, then Physics.
 
-Start P0-A on PR #164 by creating a deterministic **batch-eligibility + batch-acceptance wave** over the existing 74 finite semantic review groups. The first wave must maximize exact object/requirement closure using already canonical source-supported owners while preserving `false_exact_mastery = 0`.
+## 11. No-circle rules
 
-In parallel, P0-B/P0-C/P0-D may proceed where they do not conflict.
-
-The operational success measure is no longer “documents produced”. It is the downward movement of the eight blocker classes and the exact Russian remaining denominator.
+- Do not reopen accepted work without a concrete regression/source contradiction.
+- Do not call code/CI completion a learner-visible result.
+- Do not switch to another subject to avoid a Russian blocker.
+- Do not create hidden launch classes outside this board; if a genuinely mandatory new class appears, add it explicitly with evidence.
+- Do not create a second PEIS/account/billing/Tutor platform for another subject.
+- Do not claim exact mastery from broad/fuzzy/title/route evidence.
+- Do not make GitHub/Drive a production runtime dependency.
+- Do not persist learner audio.
+- Every accepted delta must move one or more board rows and therefore become visible in Owner Console.
