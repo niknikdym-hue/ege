@@ -24,7 +24,7 @@ AUTHORITY_FILES = {
     "ru-phonetics-vowel-consonant-features": H / "RU01-PHONETICS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
     "ru-phonetics-word-analysis-sequence": H / "RU01-PHONETICS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
     "ru-phonetics-phonetic-transcription-elements": H / "RU01-PHONETIC-TRANSCRIPTION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
-    "ru-phonetics-sound-changes-in-speech-flow": H / "RU01-SOUND-CHANGES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
+    "ru-phonetics-sound-changes-in-speech-flow": H / "RU01-SOUND-CHANGES-IN-SPEECH-FLOW-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
 }
 
 EXPECTED_CURRENT_SUMMARY = {
