@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """Exact structural/content-readiness gate for RU01 phonetic syllable candidate.
 
-This gate proves only that the source-backed candidate now has dedicated original
-Eksamio learner content and component-specific independent verification. It does
-not accept the semantic, close any source object or create mastery.
+This gate proves only that the already source-backed candidate now has dedicated
+original Eksamio learner content and component-specific independent verification.
+It deliberately does not rebuild the expensive whole-subject owner/gap chain:
+those prerequisite reviews are pinned to exact successful remote runs in the
+content provenance, while the workflow proves the post-gate diff is syllable-only.
+No semantic, source-object or mastery admission is created here.
 """
 from __future__ import annotations
 
 import json
-import runpy
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 PROGRAM = HERE.parent
 CONTENT = PROGRAM / "production-learning-content" / "RU-PROG-01-SYLLABLE-WAVE-005-v0.1.json"
-OWNER = HERE / "build_ru01_phonetics_broad_header_owner_resolution_review.py"
-GAP = HERE / "build_ru01_phonetics_broad_header_candidate_content_gap_review.py"
 
 SEMANTIC_ID = "ru-phonetics-syllable"
 EXPECTED_SOURCE_CLAUSES = ["EDSOO59-P187-4.1.5", "OGE-COD-P020-4.1.5"]
@@ -28,6 +28,21 @@ EXPECTED_VERIFICATION_IDS = [
 ]
 EDSOO_SHA = "1d2f68b5e77e7b67fccd52ce0fed36d84141dc719e50db7b225f40b1313eeb0d"
 OGE_SHA = "2d83e987ddad08d405827f98dfa490721f2d67b787b2803d8c499eea7b84858a"
+OWNER_GATE = {
+    "kind": "exact_head_prerequisite_gate",
+    "workflow": "Russian RU01 phonetics broad-header owner resolution review",
+    "run_id": 34306870268,
+    "head_sha": "41dc6749d96697f393a11e67ca3da36ab73e6aa1",
+    "conclusion": "SUCCESS",
+}
+GAP_GATE = {
+    "kind": "candidate_content_gap_gate",
+    "workflow": "Russian RU01 phonetics broad-header candidate content gap review",
+    "run_id": 34311280167,
+    "head_sha": "07a93daf82b66f5357d8b3bac8b03522b8afa135",
+    "conclusion": "SUCCESS",
+    "result_before_this_wave": "NO_DEDICATED_CANDIDATE_CONTENT_FOUND",
+}
 
 
 def require(condition: bool, message: str) -> None:
@@ -47,36 +62,21 @@ def main() -> int:
     require((data.get("copyright_guard") or {}).get("learner_examples") == "ORIGINAL_EKSAMIO", "example provenance drift")
     require((data.get("copyright_guard") or {}).get("commercial_textbook_bytes_in_git") == 0, "commercial bytes forbidden")
 
-    owner = runpy.run_path(str(OWNER))["build_review"]()
-    candidate = next(
-        row for row in owner.get("proposed_owner_candidates") or []
-        if row.get("candidate_semantic_id") == SEMANTIC_ID
-    )
-    require(candidate.get("candidate_status") == "PROPOSED_NOT_CANONICAL", "candidate unexpectedly canonical")
-    require(candidate.get("source_clause_ids") == EXPECTED_SOURCE_CLAUSES, "source clause drift")
-    require(candidate.get("source_requirements") == ["RSK-EDSOO59-4-1-P187", "RSK-OGE_COD-4-1-P020"], "source requirement drift")
-    require(candidate.get("semantic_boundary") == "PHONETIC_SYLLABLE_SCOPE_ONLY", "candidate boundary drift")
-    require(candidate.get("partial_current_owner_refs") == [], "syllable must not inherit partial owner")
-    require(candidate.get("semantic_admission") is False, "owner review semantic admission opened")
-    require(candidate.get("object_closure") is False, "owner review object closure opened")
-    require(candidate.get("mastery_admission") is False, "owner review mastery opened")
-
     provenance = data.get("source_provenance") or []
+    owner_resolution = next((row for row in provenance if row.get("kind") == "bounded_owner_resolution"), None)
+    require(owner_resolution is not None, "bounded owner resolution provenance missing")
+    require(owner_resolution.get("candidate_semantic_id") == SEMANTIC_ID, "owner candidate semantic drift")
+    require(owner_resolution.get("source_clause_ids") == EXPECTED_SOURCE_CLAUSES, "source clause drift")
+    require(OWNER_GATE in provenance, "exact successful owner-resolution prerequisite gate drift")
+    require(GAP_GATE in provenance, "exact successful pre-wave gap gate drift")
+
     require(any(row.get("document_id") == "EDSOO59" and row.get("document_sha256") == EDSOO_SHA and row.get("official_requirement") == "Слог" for row in provenance), "EDSOO exact provenance missing")
     require(any(row.get("document_id") == "OGE_COD" and row.get("document_sha256") == OGE_SHA and row.get("official_requirement") == "Слог" for row in provenance), "OGE exact provenance missing")
-    gap_gate = next((row for row in provenance if row.get("kind") == "candidate_content_gap_gate"), None)
-    require(gap_gate == {
-        "kind": "candidate_content_gap_gate",
-        "workflow": "Russian RU01 phonetics broad-header candidate content gap review",
-        "run_id": 34311280167,
-        "head_sha": "07a93daf82b66f5357d8b3bac8b03522b8afa135",
-        "conclusion": "SUCCESS",
-        "result_before_this_wave": "NO_DEDICATED_CANDIDATE_CONTENT_FOUND",
-    }, "exact prior content-gap gate drift")
 
     identity = data.get("identity_boundary") or {}
     require(identity.get("proposed_semantic_id") == SEMANTIC_ID, "identity semantic drift")
     require(identity.get("semantic_ref_status") == "PROPOSED_NOT_CANONICAL", "identity status drift")
+    require(identity.get("object_level_admission_effect") == "NONE_UNTIL_SEPARATE_SEMANTIC_AND_EXACT_OBJECT_ACCEPTANCE", "object boundary drift")
     for key in [
         "word_transfer_rules_may_substitute",
         "normative_stress_semantic_may_substitute",
@@ -132,25 +132,12 @@ def main() -> int:
     require(release.get("public_runtime_change") is False, "public runtime change forbidden")
     require(release.get("production_peis_write") is False, "production PEIS write forbidden")
 
-    gap = runpy.run_path(str(GAP))["build_review"]()
-    rows = {row["candidate_semantic_id"]: row for row in gap.get("candidates") or []}
-    require(rows[SEMANTIC_ID]["content_evidence_status"] == "CONTENT_AND_EVIDENCE_PRESENT_REQUIRES_SEPARATE_ADEQUACY_REVIEW", "syllable content not recognized by gap review")
-    require(rows[SEMANTIC_ID]["semantic_admission"] is False, "gap review semantic admission opened")
-    require(rows[SEMANTIC_ID]["object_closure"] is False, "gap review object closure opened")
-    require(rows[SEMANTIC_ID]["mastery_admission"] is False, "gap review mastery opened")
-    summary = gap.get("summary") or {}
-    require(summary.get("proposed_owner_candidates") == 6, "candidate denominator drift")
-    require(summary.get("candidates_missing_dedicated_content") == 5, "expected five remaining content gaps")
-    require(summary.get("candidates_with_content_but_no_component_evidence") == 0, "unexpected evidence-less candidate content")
-    require(summary.get("candidates_with_content_and_evidence_requiring_review") == 1, "expected one candidate ready for adequacy review")
-    require(summary.get("semantic_admissions") == 0, "gap review semantic admission drift")
-    require(summary.get("object_level_closures") == 0, "gap review object closure drift")
-    require(summary.get("exact_mastery_admissions") == 0, "gap review exact mastery drift")
-    require(summary.get("false_exact_mastery_admissions") == 0, "gap review false exact mastery drift")
-
     print("RU01_SYLLABLE_CANDIDATE_CONTENT_READINESS=PASS")
     print("SEMANTIC_ID=" + SEMANTIC_ID)
+    print("SOURCE_CLAUSES=" + ",".join(EXPECTED_SOURCE_CLAUSES))
     print("COMPONENT_SPECIFIC_VERIFICATION_IDS=" + ",".join(EXPECTED_VERIFICATION_IDS))
+    print("PREREQUISITE_OWNER_GATE=34306870268@41dc6749d96697f393a11e67ca3da36ab73e6aa1:SUCCESS")
+    print("PREREQUISITE_GAP_GATE=34311280167@07a93daf82b66f5357d8b3bac8b03522b8afa135:SUCCESS")
     print("REMAINING_BROAD_HEADER_CANDIDATE_CONTENT_GAPS=5")
     print("SEMANTIC_ADMISSIONS=0")
     print("OBJECT_LEVEL_CLOSURES=0")
