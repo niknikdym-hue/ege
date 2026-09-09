@@ -1,0 +1,255 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CONTENT_AND_EVIDENCE_READY_SEMANTIC_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-01",
+  "module_title_ru": "Фонетика и графика",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9],
+    "routes": ["school", "oge", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "bounded_owner_resolution",
+      "ref": "russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py",
+      "candidate_semantic_id": "ru-phonetics-stress",
+      "source_clause_ids": ["EDSOO59-P187-4.1.6", "OGE-COD-P020-4.1.6"],
+      "coverage_note": "Exact current owner search found no exact canonical owner for the generic phonetic clause «Ударение». This file supplies original Eksamio learner content and component-specific evidence only; it does not admit a semantic, close a source object or create mastery."
+    },
+    {
+      "kind": "exact_head_prerequisite_gate",
+      "workflow": "Russian RU01 phonetics broad-header owner resolution review",
+      "run_id": 34306870268,
+      "head_sha": "41dc6749d96697f393a11e67ca3da36ab73e6aa1",
+      "conclusion": "SUCCESS"
+    },
+    {
+      "kind": "candidate_content_gap_gate",
+      "workflow": "Russian RU01 phonetics broad-header candidate content gap review",
+      "run_id": 34311280167,
+      "head_sha": "07a93daf82b66f5357d8b3bac8b03522b8afa135",
+      "conclusion": "SUCCESS",
+      "result_before_this_wave": "NO_DEDICATED_CANDIDATE_CONTENT_FOUND"
+    },
+    {
+      "kind": "official_program",
+      "authority": "EDSOO Federal Working Program Russian 5-9, 2025",
+      "document_id": "EDSOO59",
+      "document_sha256": "1d2f68b5e77e7b67fccd52ce0fed36d84141dc719e50db7b225f40b1313eeb0d",
+      "source_locator": "EDSOO59 p.187 4.1 / clause 4.1.6",
+      "official_requirement": "Ударение"
+    },
+    {
+      "kind": "official_codifier",
+      "authority": "FIPI OGE Russian 2026 final codifier",
+      "document_id": "OGE_COD",
+      "document_sha256": "2d83e987ddad08d405827f98dfa490721f2d67b787b2803d8c499eea7b84858a",
+      "source_locator": "OGE_COD p.20 4.1 / clause 4.1.6",
+      "official_requirement": "Ударение"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "learner_explanations": "ORIGINAL_EKSAMIO",
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "commercial_textbook_bytes_in_git": 0
+  },
+  "identity_boundary": {
+    "proposed_semantic_id": "ru-phonetics-stress",
+    "source_taxonomy_id": "phonetic_stress",
+    "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+    "rule": "This unit measures the generic phonetic concept of stress: recognizing that one syllable in an explicitly established spoken word form is made prominent, identifying a stressed syllable when the spoken form or stress mark is supplied, and separating stressed from unstressed syllables. It does not choose the normative stress position for an unmarked lexical item and does not substitute for orthoepic normative-stress selection or normative pronunciation.",
+    "normative_orthoepy_stress_semantic_may_substitute": false,
+    "normative_pronunciation_semantic_may_substitute": false,
+    "spelling_may_determine_unmarked_stress": false,
+    "syllable_count_alone_may_determine_stress": false,
+    "word_analysis_semantic_may_substitute": false,
+    "candidate_name_or_route_or_task_number_can_create_acceptance": false,
+    "object_level_admission_effect": "NONE_UNTIL_SEPARATE_SEMANTIC_AND_EXACT_OBJECT_ACCEPTANCE",
+    "generic_ru01_result_can_emit_exact_component_mastery": false
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-phonetics-stress",
+      "title_ru": "Ударение как фонетическое выделение слога",
+      "canonical_explanation": {
+        "short": "Ударение — фонетическое выделение одного слога в слове. В этой теме мы умеем распознать ударный слог, когда произношение или знак ударения уже заданы, и отличить его от безударных. Мы не угадываем нормативное место ударения по написанию: выбор нормы для конкретного слова относится к отдельному орфоэпическому компоненту.",
+        "boundaries": [
+          "Ударение относится к звучащей форме слова и выделяет один слог относительно других слогов той же словоформы.",
+          "Если в условии уже дана произнесённая форма или поставлен знак ударения, можно определить ударный и безударные слоги без отдельного выбора орфоэпической нормы.",
+          "Само количество слогов не показывает, какой из них ударный.",
+          "Написание слова без отдельной authority не является доказательством нормативного места ударения.",
+          "Generic phonetic stress и normative orthoepy stress selection — разные компоненты: первый объясняет и распознаёт явление, второй выбирает нормативное место ударения в конкретной лексеме или форме.",
+          "Normative pronunciation не выводится из умения видеть знак ударения; произносительная норма остаётся отдельной authority.",
+          "Полный фонетический анализ слова, транскрипция, система гласных и согласных не принимаются автоматически из stress evidence."
+        ]
+      },
+      "decision_algorithm": [
+        "Проверь, задано ли произношение или явно отмечено ударение. Если нет и вопрос требует выбрать нормативный вариант конкретного слова, передай задачу отдельной orthoepy-stress authority и не угадывай.",
+        "Определи слоги только настолько, насколько это доказуемо из установленной звучащей формы.",
+        "Найди слог, который условие или установленная форма обозначает как ударный.",
+        "Остальные слоги этой словоформы обозначь как безударные.",
+        "Не переноси ударение из похожего слова, другой формы, написания или привычки без принятой нормативной authority.",
+        "Не превращай правильное распознавание ударного слога в доказательство полного фонетического анализа или нормативного произношения."
+      ],
+      "worked_examples": [
+        {
+          "id": "p01-u8-e1",
+          "prompt": "В условии форма дана как [ма-МА]. Какой слог ударный?",
+          "answer": "Второй. Ударение уже задано условием, поэтому проверяется распознавание фонетического выделения, а не выбор орфоэпической нормы.",
+          "measures": "identify_stressed_syllable_from_explicit_spoken_form"
+        },
+        {
+          "id": "p01-u8-e2",
+          "prompt": "В записи условно отмечено до́ма. Можно ли назвать первый слог ударным?",
+          "answer": "Да, потому что знак ударения уже дан. Это не доказывает, что мы умеем выбирать нормативное ударение в любом незнакомом слове.",
+          "measures": "read_explicit_stress_mark"
+        },
+        {
+          "id": "p01-u8-e3",
+          "prompt": "Известно только, что в слове три слога. Можно ли определить ударный слог?",
+          "answer": "Нет. Число слогов не определяет место ударения.",
+          "measures": "separate_stress_from_syllable_count"
+        },
+        {
+          "id": "p01-u8-e4",
+          "prompt": "Нужно выбрать нормативное ударение в слове без знака ударения. Достаточно ли generic phonetic stress?",
+          "answer": "Нет. Нужна отдельная нормативная орфоэпическая authority; generic stress не должен подменять normative stress selection.",
+          "measures": "separate_generic_stress_from_normative_stress_selection"
+        }
+      ],
+      "misconceptions": [
+        {
+          "wrong": "Если я посчитал слоги, я автоматически знаю место ударения.",
+          "correction": "Количество слогов и место ударения — разные сведения; для ударного слога нужна явно установленная звучащая форма или отдельная нормативная authority."
+        },
+        {
+          "wrong": "По написанию любого слова можно надёжно восстановить нормативное ударение.",
+          "correction": "Нет. Орфография не заменяет орфоэпическую норму; сомнительное место ударения должно оставаться fail-closed до отдельной authority."
+        },
+        {
+          "wrong": "Умение видеть знак ударения равно знанию всех орфоэпических норм.",
+          "correction": "Нет. Распознавание явно заданного ударения — generic phonetic skill; выбор нормы для конкретных слов — отдельный нормативный компонент."
+        },
+        {
+          "wrong": "Если ударный слог найден, полная транскрипция и произношение тоже доказаны.",
+          "correction": "Нет. Stress evidence не заменяет transcription или normative pronunciation evidence."
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p01-u8-g1",
+          "prompt": "В условии дана форма [во-ДА]. Назови ударный слог.",
+          "expected": "Второй; ударение явно задано формой в условии."
+        },
+        {
+          "id": "p01-u8-g2",
+          "prompt": "Дано только: слово двусложное. Какой слог ударный?",
+          "expected": "Определить нельзя: количество слогов не указывает место ударения."
+        },
+        {
+          "id": "p01-u8-g3",
+          "prompt": "Нужно выбрать норму ударения для незнакомого слова без отметки. Что делать?",
+          "expected": "Не угадывать; использовать отдельную принятую normative-stress authority."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p01-u8-i1",
+          "prompt": "В форме [бе-РЕ-г] ударение условием поставлено на второй слог. Что можно принять?",
+          "answer": "Можно принять распознавание второго слога как ударного; нельзя из этого принять нормативность такой формы вне условия."
+        },
+        {
+          "id": "p01-u8-i2",
+          "prompt": "В форме три слога, но ударение не отмечено. Можно ли выбрать второй слог только потому, что он средний?",
+          "answer": "Нет. Позиция ударения не выводится из количества или порядкового номера слогов."
+        },
+        {
+          "id": "p01-u8-i3",
+          "prompt": "Ученик правильно нашёл ударный слог по готовой отметке. Доказывает ли это normative pronunciation mastery?",
+          "answer": "Нет. Нормативное произношение требует отдельной component-specific evidence."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p01-u8-t1",
+          "prompt": "В условии отмечено [го-РА]. Ученик отвечает: «Второй слог ударный, значит я знаю нормативное ударение этого слова вообще». Оцени ответ.",
+          "answer": "Первая часть допустима только как чтение явно заданной формы. Вторая часть не доказана: нормативный выбор требует отдельной орфоэпической authority."
+        },
+        {
+          "id": "p01-u8-t2",
+          "prompt": "Ученик знает, что слово состоит из двух слогов, и выбирает первый ударным без иных данных. Что фиксирует scorer?",
+          "answer": "Недостаточность evidence. Exact stress mastery не создаётся."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p01-u8-v1",
+          "prompt": "Форма дана как [ма-ШИ-на], выделение второго слога явно задано. Какой слог ударный?",
+          "expected": "Второй слог. Решение опирается только на явную звуковую отметку в условии.",
+          "measures": "identify_explicit_stress",
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u8-v2",
+          "prompt": "Известно: форма трёхсложная, ударение не задано. Можно ли exact определить ударный слог?",
+          "expected": "Нет. Трёхсложность не определяет место ударения.",
+          "measures": "reject_stress_from_syllable_count_only",
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u8-v3",
+          "prompt": "В записи ка́рта знак ударения уже есть. Что именно проверяет ответ «первый слог ударный»?",
+          "expected": "Распознавание явно заданного фонетического ударения, но не самостоятельный выбор нормативного ударения для незаданной формы.",
+          "measures": "read_stress_mark_without_normative_overclaim",
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u8-v4",
+          "prompt": "Незнакомое слово дано без ударения, требуется выбрать нормативный вариант. Может ли generic ru-phonetics-stress дать exact ответ?",
+          "expected": "Нет. Нужна отдельная normative orthoepy stress authority; generic stress должен остаться fail-closed.",
+          "measures": "separate_generic_from_normative_stress",
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u8-v5",
+          "prompt": "Ударный слог распознан по готовой отметке. Что ещё нельзя считать автоматически освоенным?",
+          "expected": "Нельзя автоматически принимать normative pronunciation, transcription, full phonetic analysis или другие RU01 semantics без их component-specific evidence.",
+          "measures": "preserve_component_boundaries",
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref": "ru-phonetics-stress",
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "user_identity_ref": "REGISTERED_USER_REQUIRED",
+        "item_identity": "EXACT_VERSIONED_ITEM_REQUIRED",
+        "received_at": "SERVER_OWNED_TIMESTAMP_REQUIRED",
+        "today_timezone": "Europe/Moscow",
+        "evidence_event_outbox": "DURABLE_REQUIRED_BEFORE_FUTURE_CANONICAL_WRITE",
+        "mastery_before_separate_semantic_acceptance": false,
+        "generic_ru01_attempt_can_emit_exact_mastery": false,
+        "anonymous_progress_allowed": false,
+        "device_only_canonical_state_allowed": false
+      }
+    }
+  ],
+  "admission_boundary": {
+    "semantic_admissions": 0,
+    "object_level_closures": 0,
+    "exact_mastery_admissions": 0,
+    "false_exact_mastery_admissions": 0,
+    "next_required_action": "SEPARATE_CANDIDATE_CONTENT_READINESS_AND_ADEQUACY_REVIEW_THEN_BOUNDED_SEMANTIC_ACCEPTANCE"
+  }
+}
