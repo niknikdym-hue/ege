@@ -1,0 +1,154 @@
+name: Russian RU01 sound characterization content adequacy
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-CHARACTERIZATION-WAVE-009-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_characterization_candidate_content.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_characterization_content_adequacy_review.py"
+      - ".github/workflows/russian-ru01-sound-characterization-content-adequacy.yml"
+  push:
+    branches:
+      - "brain/sep1-russian-subject-closure"
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-CHARACTERIZATION-WAVE-009-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_characterization_candidate_content.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_characterization_content_adequacy_review.py"
+      - ".github/workflows/russian-ru01-sound-characterization-content-adequacy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-sound-characterization-content-adequacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile bounded sound-characterization adequacy gate
+        run: |
+          python -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_characterization_candidate_content.py
+          python -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_characterization_content_adequacy_review.py
+
+      - name: Recheck sound-characterization readiness boundary
+        run: python eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_characterization_candidate_content.py
+
+      - name: Build content adequacy review twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_characterization_content_adequacy_review.py --output /tmp/ru01-sound-characterization-adequacy-a.json > /tmp/ru01-sound-characterization-adequacy-a.txt
+          python eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_characterization_content_adequacy_review.py --output /tmp/ru01-sound-characterization-adequacy-b.json > /tmp/ru01-sound-characterization-adequacy-b.txt
+          cmp /tmp/ru01-sound-characterization-adequacy-a.json /tmp/ru01-sound-characterization-adequacy-b.json
+          diff -u /tmp/ru01-sound-characterization-adequacy-a.txt /tmp/ru01-sound-characterization-adequacy-b.txt
+          cat /tmp/ru01-sound-characterization-adequacy-a.txt
+
+      - name: Verify adequacy review remains fail closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path('/tmp/ru01-sound-characterization-adequacy-a.json').read_text(encoding='utf-8'))
+          assert data['status'] == 'CENTRAL_BRAIN_RU01_SOUND_CHARACTERIZATION_CONTENT_ADEQUACY_REVIEW_COMPLETE_NO_ADMISSION'
+          assert data['authority_pr'] == 164
+          assert data['module_id'] == 'RU-PROG-01'
+          assert data['candidate'] == {
+              'semantic_id': 'ru-phonetics-sound-characterization',
+              'source_taxonomy_id': 'sound_characterization',
+              'source_clause_ids': ['EDSOO59-P181-4.1-A'],
+              'semantic_ref_status': 'PROPOSED_NOT_CANONICAL',
+          }
+          assert data['prerequisite_remote_gate'] == {
+              'workflow': 'Russian RU01 sound characterization candidate content readiness',
+              'run_id': 34457434857,
+              'head_sha': 'a185d5f5e957d5ed602d7a5dafbecad86e19bc24',
+              'conclusion': 'SUCCESS',
+          }
+          learner = data['learner_content']
+          assert learner['git_blob_sha1'] == 'b150eb27fa112034b96d4bdb7c6d2f631c2b5979'
+          assert learner['component_specific_verification_ids'] == [
+              'p01-u11-v1', 'p01-u11-v2', 'p01-u11-v3', 'p01-u11-v4', 'p01-u11-v5'
+          ]
+          assert learner['registered_user_identity_required'] is True
+          assert learner['exact_item_identity_required'] is True
+          assert learner['server_owned_received_at_required'] is True
+          assert learner['durable_evidence_event_required_before_future_canonical_write'] is True
+
+          decision = data['adequacy_decision']
+          for key in (
+              'content_exact_for_bounded_sound_characterization_candidate',
+              'official_clause_scope_covered',
+              'explicit_sound_object_required_before_characterization',
+              'vowel_and_consonant_feature_paths_distinguished',
+              'sound_letter_boundary_preserved',
+              'partial_vowel_consonant_feature_owner_not_promoted_to_exact_owner',
+              'vowel_system_not_substituted',
+              'consonant_system_not_substituted',
+              'whole_sound_system_not_substituted',
+              'normative_pronunciation_not_inferred',
+          ):
+              assert decision[key] is True, key
+          assert decision['semantic_admission_by_this_review'] is False
+          assert decision['object_level_admission_units_closed'] == 0
+          assert decision['object_level_requirements_closed'] == 0
+          assert decision['exact_mastery_admissions'] == 0
+          assert decision['false_exact_mastery_admissions'] == 0
+          assert decision['next_status'] == 'READY_FOR_SEPARATE_BOUNDED_SUBJECT_SEMANTIC_ACCEPTANCE'
+
+          policy = data['policy']
+          assert policy['title_route_task_or_fuzzy_inference_allowed'] is False
+          assert policy['content_adequacy_review_is_semantic_admission'] is False
+          assert policy['content_adequacy_review_is_object_closure'] is False
+          assert policy['component_specific_independent_verification_required'] is True
+          assert policy['generic_ru01_attempt_can_emit_exact_component_mastery'] is False
+          assert policy['anonymous_or_device_only_canonical_progress_allowed'] is False
+          assert policy['accepted_demo_scorer_tilda_surfaces_may_change'] is False
+
+          assert data['summary']['semantic_admissions'] == 0
+          assert data['summary']['object_level_admission_units_closed'] == 0
+          assert data['summary']['object_level_requirements_closed'] == 0
+          assert data['summary']['exact_mastery_admissions'] == 0
+          assert data['summary']['false_exact_mastery_admissions'] == 0
+          print('RU01_SOUND_CHARACTERIZATION_CONTENT_ADEQUACY_FAIL_CLOSED_GUARD=PASS')
+          PY
+
+      - name: Pin candidate content bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          content="eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-CHARACTERIZATION-WAVE-009-v0.1.json"
+          blob="$(git hash-object "$content")"
+          test "$blob" = "b150eb27fa112034b96d4bdb7c6d2f631c2b5979"
+          echo "SOUND_CHARACTERIZATION_CONTENT_BLOB=$blob"
+          echo "SEMANTIC_ADMISSIONS=0"
+          echo "OBJECT_LEVEL_CLOSURES=0"
+          echo "EXACT_MASTERY_ADMISSIONS=0"
+          echo "FALSE_EXACT_MASTERY_ADMISSIONS=0"
+
+      - name: Upload sound-characterization adequacy evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-sound-characterization-content-adequacy
+          path: /tmp/ru01-sound-characterization-adequacy-a.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Protect tracked repository hygiene
+        run: |
+          git diff --check HEAD^
+          git diff --exit-code
