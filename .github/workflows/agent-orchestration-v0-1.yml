@@ -91,3 +91,98 @@ jobs:
           path: ${{ runner.temp }}/astra-paid-smoke.json
           if-no-files-found: error
           retention-days: 7
+
+  astra-codex-joint-smoke:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+          sparse-checkout: |
+            agent-orchestration
+          sparse-checkout-cone-mode: true
+      - name: Verify one-shot joint-smoke owner trigger
+        id: trigger
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          trigger_path = Path("agent-orchestration/astra-codex-joint-smoke-trigger.json")
+          enabled = False
+          if trigger_path.is_file():
+              trigger = json.loads(trigger_path.read_text(encoding="utf-8"))
+              parent = subprocess.check_output(["git", "rev-parse", "HEAD^"], text=True).strip()
+              enabled = (
+                  trigger.get("enabled") is True
+                  and trigger.get("expected_parent_sha") == parent
+                  and trigger.get("astra_model") == "gpt-6-astra"
+                  and trigger.get("codex_model") == "gpt-5.6-terra"
+              )
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"enabled={'true' if enabled else 'false'}\n")
+          print("One-shot Astra/Codex joint trigger:", "ENABLED" if enabled else "SKIPPED")
+          PY
+      - name: Astra Brain creates the bounded task
+        if: steps.trigger.outputs.enabled == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_ASTRA_MODEL: gpt-6-astra
+        run: >-
+          python3 agent-orchestration/astra_codex_joint_smoke.py plan
+          --branch "${{ github.event.pull_request.head.ref }}"
+          --head-sha "${{ github.event.pull_request.head.sha }}"
+          --plan-out "$RUNNER_TEMP/astra-plan.json"
+          --prompt-out "$RUNNER_TEMP/codex-prompt.txt"
+      - name: Codex executes the Astra task
+        if: steps.trigger.outputs.enabled == 'true'
+        id: codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: ${{ runner.temp }}/codex-prompt.txt
+          output-file: ${{ runner.temp }}/codex-output.txt
+          model: gpt-5.6-terra
+          effort: low
+          sandbox: read-only
+          codex-args: '["--ephemeral", "--ignore-user-config"]'
+      - name: Prove Codex kept the checkout read-only
+        if: steps.trigger.outputs.enabled == 'true'
+        run: |
+          test -z "$(git status --short)"
+          echo "true" > "$RUNNER_TEMP/checkout-clean.txt"
+      - name: Astra Brain reviews Codex evidence
+        if: steps.trigger.outputs.enabled == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_ASTRA_MODEL: gpt-6-astra
+        run: >-
+          python3 agent-orchestration/astra_codex_joint_smoke.py review
+          --plan "$RUNNER_TEMP/astra-plan.json"
+          --codex-output "$RUNNER_TEMP/codex-output.txt"
+          --checkout-clean "$(cat "$RUNNER_TEMP/checkout-clean.txt")"
+          --result-out "$RUNNER_TEMP/astra-codex-joint-smoke.json"
+      - name: Upload sanitized joint-smoke evidence
+        if: steps.trigger.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: astra-codex-joint-smoke-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/astra-plan.json
+            ${{ runner.temp }}/codex-output.txt
+            ${{ runner.temp }}/checkout-clean.txt
+            ${{ runner.temp }}/astra-codex-joint-smoke.json
+          if-no-files-found: warn
+          retention-days: 7
