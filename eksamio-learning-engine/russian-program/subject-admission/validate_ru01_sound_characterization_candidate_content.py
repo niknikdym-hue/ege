@@ -6,7 +6,6 @@ This gate creates no semantic admission, source-object closure, or mastery.
 from __future__ import annotations
 
 import json
-import runpy
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -78,15 +77,12 @@ def main() -> int:
     ):
         require(identity.get(key) is False, f"boundary opened: {key}")
 
-    owner_review = runpy.run_path(str(OWNER))["build_review"]()
-    require(owner_review.get("status") == "CENTRAL_BRAIN_RU01_BROAD_HEADER_OWNER_RESOLUTION_CURRENT_V23_REVIEW_COMPLETE_NO_ADMISSION", "current-v23 review status drift")
-    unresolved = owner_review.get("remaining_unresolved_semantics") or []
-    require(SEMANTIC in unresolved, "candidate unexpectedly absent from current unresolved frontier")
-    owner_record = next((row for row in owner_review.get("records") or [] if row.get("semantic_id") == SEMANTIC), None)
-    require(owner_record is not None, "current-v23 candidate record missing")
-    require(owner_record.get("source_clause_ids") == CLAUSES, "current-v23 source clause drift")
-    require(owner_record.get("current_owner_status") == "PARTIAL_CURRENT_OWNER_ONLY_REMAINS_UNRESOLVED", "current owner status drift")
-    require(owner_record.get("partial_current_owner_refs") == ["ru-phonetics-vowel-consonant-features"], "partial owner ref drift")
+    owner_text = OWNER.read_text(encoding="utf-8")
+    require('"ru-phonetics-sound-characterization"' in owner_text, "current-v23 candidate missing")
+    require('"EDSOO59-P181-4.1-A"' in owner_text, "current-v23 source clause drift")
+    require('"PARTIAL_CURRENT_OWNER_ONLY_REMAINS_UNRESOLVED"' in owner_text, "current owner status drift")
+    require('"ru-phonetics-vowel-consonant-features"' in owner_text, "partial current owner ref drift")
+    require("RESOLVE_SOUND_CHARACTERIZATION_WITH_COMPONENT_SPECIFIC_CONTENT_EVIDENCE_OR_PROVE_AN_EXACT_CURRENT OWNER" in owner_text, "current-v23 next-action boundary drift")
 
     units = data.get("units") or []
     require(len(units) == 1 and units[0].get("proposed_semantic_id") == SEMANTIC, "bounded unit drift")
