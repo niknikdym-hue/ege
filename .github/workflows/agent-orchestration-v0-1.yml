@@ -35,3 +35,59 @@ jobs:
           python3 agent-orchestration/eksamio_agent_runner.py dry-run
           agent-orchestration/examples/dry-run-task.json
           --git-sha "$GITHUB_SHA"
+
+  astra-paid-smoke:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+          sparse-checkout: |
+            agent-orchestration
+          sparse-checkout-cone-mode: true
+      - name: Verify one-shot owner trigger
+        id: trigger
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          trigger_path = Path("agent-orchestration/astra-paid-smoke-trigger.json")
+          enabled = False
+          if trigger_path.is_file():
+              trigger = json.loads(trigger_path.read_text(encoding="utf-8"))
+              parent = subprocess.check_output(["git", "rev-parse", "HEAD^"], text=True).strip()
+              enabled = (
+                  trigger.get("enabled") is True
+                  and trigger.get("expected_parent_sha") == parent
+                  and trigger.get("model") == "gpt-6-astra"
+              )
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"enabled={'true' if enabled else 'false'}\n")
+          print("One-shot Astra smoke trigger:", "ENABLED" if enabled else "SKIPPED")
+          PY
+      - name: Run one bounded paid GPT-6 Astra call
+        if: steps.trigger.outputs.enabled == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_ASTRA_MODEL: gpt-6-astra
+        run: >-
+          python3 agent-orchestration/astra_paid_smoke.py
+          --output "$RUNNER_TEMP/astra-paid-smoke.json"
+      - name: Upload sanitized provider evidence
+        if: steps.trigger.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: astra-paid-smoke-${{ github.sha }}
+          path: ${{ runner.temp }}/astra-paid-smoke.json
+          if-no-files-found: error
+          retention-days: 7
