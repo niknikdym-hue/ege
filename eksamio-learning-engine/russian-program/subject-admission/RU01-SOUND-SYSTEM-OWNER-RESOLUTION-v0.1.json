@@ -1,0 +1,115 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_RU01_SOUND_SYSTEM_OWNER_RESOLUTION_CANDIDATE_NOT_ACCEPTED",
+  "authority_pr": 164,
+  "scope": "RU01_EDSOO59_P181_4_1_C_EXACT_OWNER_SEARCH_AND_SOURCE_BOUND_COMPONENT_CANDIDATE_ONLY_NO_ADMISSION",
+  "base_current_label": "current-v24",
+  "target": {
+    "admission_unit_id": "RAU-5a6511267f156745f93c",
+    "requirement_id": "RSK-EDSOO59-4-1-P181",
+    "source_id": "EDSOO-RU-5-9-2025",
+    "document_id": "EDSOO59",
+    "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.181 4.1",
+    "clause_id": "EDSOO59-P181-4.1-C",
+    "official_clause_ru": "характеризовать систему звуков",
+    "module_id": "RU-PROG-01"
+  },
+  "existing_owner_search": {
+    "basis": "EXACT_CURRENT_V24_ACCEPTED_AUTHORITIES_AND_EXACT_SOURCE_CLAUSE_DECOMPOSITION_ONLY",
+    "resolution": "NO_EXACT_CURRENT_SINGLE_SOUND_SYSTEM_OWNER",
+    "forbidden_inference": [
+      "title",
+      "route",
+      "task_number",
+      "keyword",
+      "fuzzy_match",
+      "embedding"
+    ],
+    "exact_single_owner_refs": []
+  },
+  "source_backed_component_candidate": {
+    "status": "CANDIDATE_COMPONENT_SET_NOT_YET_EXACT_PARENT_BINDING",
+    "candidate_component_refs": [
+      "ru-phonetics-vowel-system",
+      "ru-phonetics-consonant-system"
+    ],
+    "supporting_source_taxonomy": [
+      {
+        "clause_id": "EDSOO59-P187-4.1.1",
+        "official_requirement": "Система гласных звуков",
+        "accepted_semantic_ref": "ru-phonetics-vowel-system",
+        "independent_evidence_refs": [
+          "p01-u9-v1",
+          "p01-u9-v2",
+          "p01-u9-v3",
+          "p01-u9-v4",
+          "p01-u9-v5"
+        ]
+      },
+      {
+        "clause_id": "EDSOO59-P187-4.1.2",
+        "official_requirement": "Система согласных звуков",
+        "accepted_semantic_ref": "ru-phonetics-consonant-system",
+        "independent_evidence_refs": [
+          "p01-u10-v1",
+          "p01-u10-v2",
+          "p01-u10-v3",
+          "p01-u10-v4",
+          "p01-u10-v5"
+        ]
+      }
+    ],
+    "component_evidence_items": 10,
+    "component_evidence_overlap": [],
+    "exact_parent_component_set_proven": false,
+    "blocker": "EDSOO59_P181_4_1_C_HAS_NO_DEDICATED_INTEGRATED_SOUND_SYSTEM_EVIDENCE_OR_SEPARATE_EXACT_PARENT_COMPONENT_SET_GATE"
+  },
+  "proposed_owner": {
+    "semantic_id": "ru-phonetics-sound-system",
+    "source_taxonomy_id": "sound_system",
+    "status": "PROPOSED_NOT_CANONICAL",
+    "semantic_boundary": "WHOLE_SCHOOL_SOUND_SYSTEM_SCOPE_ONLY; VOWEL_AND_CONSONANT_SYSTEMS_ARE_CANDIDATE_COMPONENTS_BUT_DO_NOT_AUTO_CREATE_PARENT_OWNER",
+    "canonical_school_registry_mutation": false,
+    "parallel_registry_creation": false
+  },
+  "required_next_evidence": {
+    "dedicated_original_learner_content_required": true,
+    "integrated_sound_system_verification_required": true,
+    "component_specific_independent_evidence_required": true,
+    "minimum_distinct_integrated_verification_items": 5,
+    "must_test_both_vowel_and_consonant_system_membership_and_boundaries": true,
+    "must_preserve_sound_vs_letter_boundary": true,
+    "must_not_infer_normative_pronunciation_or_stress": true,
+    "must_not_reuse_vowel_or_consonant_component_evidence_as_parent_evidence_without_new_lineage": true
+  },
+  "acceptance_boundary": {
+    "semantic_admission_effect": "NONE",
+    "object_closure_effect": "NONE",
+    "mastery_admission_effect": "NONE",
+    "production_peis_write_effect": "NONE",
+    "false_exact_mastery": 0,
+    "separate_content_adequacy_gate_required": true,
+    "separate_bounded_semantic_acceptance_required": true,
+    "separate_exact_parent_object_gate_required": true
+  },
+  "policy": {
+    "review_is_acceptance": false,
+    "component_titles_auto_prove_parent_scope": false,
+    "two_component_presence_auto_closes_parent": false,
+    "generic_ru01_attempt_can_emit_exact_sound_system_mastery": false,
+    "anonymous_or_device_only_evidence_can_be_canonical": false,
+    "registered_user_identity_ref_required_for_future_canonical_evidence": true,
+    "server_owned_received_at_required_for_future_canonical_evidence": true,
+    "durable_evidence_event_required_for_future_canonical_evidence": true
+  },
+  "summary": {
+    "exact_single_current_owner_refs": 0,
+    "candidate_component_refs": 2,
+    "component_specific_evidence_items": 10,
+    "integrated_sound_system_evidence_items": 0,
+    "semantic_admissions": 0,
+    "object_level_closures": 0,
+    "exact_mastery_admissions": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
