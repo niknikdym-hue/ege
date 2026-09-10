@@ -1,0 +1,100 @@
+name: Russian RU01 phonetics broad-header owner resolution current-v23
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_current_v23.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v23.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-SYLLABLE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-STRESS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-VOWEL-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-CONSONANT-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - ".github/workflows/russian-ru01-phonetics-broad-header-owner-resolution-current-v23.yml"
+  push:
+    branches:
+      - "brain/sep1-russian-subject-closure"
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_current_v23.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v23.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-SYLLABLE-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-PHONETIC-STRESS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-VOWEL-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-CONSONANT-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - ".github/workflows/russian-ru01-phonetics-broad-header-owner-resolution-current-v23.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  owner-resolution-current-v23:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile current owner refresh
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_current_v23.py
+      - name: Build current owner refresh A
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_current_v23.py --output /tmp/owner-a.json
+      - name: Build current owner refresh B
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_current_v23.py --output /tmp/owner-b.json
+      - name: Require deterministic review
+        run: diff -u /tmp/owner-a.json /tmp/owner-b.json
+      - name: Require fail-closed current-v23 frontier
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/owner-a.json').read_text(encoding='utf-8'))
+          assert d['status']=='CENTRAL_BRAIN_RU01_BROAD_HEADER_OWNER_RESOLUTION_CURRENT_V23_REVIEW_COMPLETE_NO_ADMISSION'
+          assert d['base_current_label']=='current-v23'
+          assert d['remaining_unresolved_semantics']==['ru-phonetics-sound-characterization','ru-phonetics-sound-system']
+          s=d['summary']
+          assert s['original_proposed_owner_candidates']==6
+          assert s['candidates_now_exact_accepted']==4
+          assert s['remaining_unresolved_candidates']==2
+          assert s['semantic_admissions']==0
+          assert s['object_level_closures']==0
+          assert s['exact_mastery_admissions']==0
+          assert s['false_exact_mastery_admissions']==0
+          rows={row['semantic_id']:row for row in d['records']}
+          assert rows['ru-phonetics-sound-characterization']['current_owner_status']=='PARTIAL_CURRENT_OWNER_ONLY_REMAINS_UNRESOLVED'
+          assert rows['ru-phonetics-sound-system']['current_owner_status']=='NO_SINGLE_EXACT_ACCEPTED_OWNER'
+          assert rows['ru-phonetics-sound-system']['component_set_is_exact_owner_by_this_review'] is False
+          print('CURRENT_V23_UNRESOLVED_OWNER_CANDIDATES=2')
+          print('SEMANTIC_ADMISSIONS=0')
+          print('OBJECT_LEVEL_CLOSURES=0')
+          print('FALSE_EXACT_MASTERY=0')
+          PY
+      - name: Protect production and public surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='e99e8b484952b1df33fdf51ce2e3dae86eaffc74'
+          git merge-base --is-ancestor "$base" HEAD
+          recent=$(git diff --name-only "$base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru01-phonetics-broad-header-owner-resolution-current-v23.yml
+          eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_current_v23.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          if [[ -n "$unexpected" ]]; then
+            echo 'Current-v23 owner refresh touched files outside the exact review allowlist:' >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
+          if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor|production-learning-content'; then
+            echo 'Owner refresh touched a protected learner/public surface.' >&2
+            exit 1
+          fi
+      - name: Diff hygiene
+        run: git diff --check e99e8b484952b1df33fdf51ce2e3dae86eaffc74..HEAD
