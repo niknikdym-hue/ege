@@ -33,6 +33,7 @@ POST_PROOF_MATERIALIZATION_FILES = {
 # historical denominator merely because a new unrelated production file exists.
 # Keep this set explicit so every excluded count-only file is still audited.
 POST_PROOF_NON_6_14_CONTENT_NOT_COUNTED_IN_HISTORICAL_DENOMINATOR = {
+    "RU-PROG-01-CONSONANT-SYSTEM-WAVE-008-v0.1.json",
     "RU-PROG-01-PHONETIC-STRESS-WAVE-006-v0.1.json",
     "RU-PROG-01-PHONETIC-TRANSCRIPTION-WAVE-002-v0.1.json",
     "RU-PROG-01-SOUND-CHANGES-WAVE-003-v0.1.json",
