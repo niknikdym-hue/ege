@@ -136,8 +136,10 @@ jobs:
         run: |
           set -euo pipefail
           wave_base='d3cc6d3fa08c902a9f123d9364e6bdb6b95ad784'
-          git merge-base --is-ancestor "$wave_base" HEAD
-          recent=$(git diff --name-only "$wave_base"..HEAD)
+          wave_tip='8bc35051db6b0811dca9d380ec1430cfb06c9706'
+          git merge-base --is-ancestor "$wave_base" "$wave_tip"
+          git merge-base --is-ancestor "$wave_tip" HEAD
+          recent=$(git diff --name-only "$wave_base".."$wave_tip")
           allowed=$(cat <<'EOF'
           .github/workflows/russian-ru01-consonant-system-semantic-acceptance.yml
           eksamio-learning-engine/russian-program/subject-admission/RU01-CONSONANT-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json
@@ -147,17 +149,25 @@ jobs:
           )
           unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
           if [[ -n "$unexpected" ]]; then
-            echo 'Current consonant-system semantic wave touched files outside the exact bounded allowlist:' >&2
+            echo 'Consonant-system semantic wave touched files outside the exact bounded allowlist:' >&2
             printf '%s\n' "$unexpected" >&2
             exit 1
           fi
           if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
-            echo 'Current consonant-system semantic wave touched a protected public/production surface.' >&2
+            echo 'Consonant-system semantic wave touched a protected public/production surface.' >&2
             exit 1
           fi
+          git diff --exit-code "$wave_tip"..HEAD -- \
+            eksamio-learning-engine/russian-program/subject-admission/RU01-CONSONANT-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json \
+            eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v23.py \
+            eksamio-learning-engine/russian-program/subject-admission/validate_ru01_consonant_system_bounded_subject_semantics.py
 
       - name: Diff hygiene for current bounded wave
-        run: git diff --check d3cc6d3fa08c902a9f123d9364e6bdb6b95ad784..HEAD
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check d3cc6d3fa08c902a9f123d9364e6bdb6b95ad784..8bc35051db6b0811dca9d380ec1430cfb06c9706
+          git diff --check 8bc35051db6b0811dca9d380ec1430cfb06c9706..HEAD -- .github/workflows/russian-ru01-consonant-system-semantic-acceptance.yml
 
       - name: Upload exact semantic acceptance evidence
         uses: actions/upload-artifact@v4
