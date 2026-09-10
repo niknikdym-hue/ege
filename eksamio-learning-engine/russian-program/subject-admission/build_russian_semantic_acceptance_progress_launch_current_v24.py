@@ -21,7 +21,7 @@ TARGET = {
     "admission_unit_id": "RAU-5a6511267f156745f93c",
     "requirement_id": "RSK-EDSOO59-4-1-P181",
     "sound_characterization_clause_id": "EDSOO59-P181-4.1-A",
-    "source_locator": "EDSOO59 p.181 4.1",
+    "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.181 4.1",
 }
 EXPECTED_BASE = {
     "semantic_units_with_accepted_component_sets": 41,
