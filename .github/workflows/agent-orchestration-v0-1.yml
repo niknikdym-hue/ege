@@ -135,16 +135,11 @@ jobs:
               output.write(f"enabled={'true' if enabled else 'false'}\n")
           print("One-shot Astra/Codex joint trigger:", "ENABLED" if enabled else "SKIPPED")
           PY
-      - name: Astra Brain creates the bounded task
+      - name: Reuse the successful Astra Brain task
         if: steps.trigger.outputs.enabled == 'true'
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_ASTRA_MODEL: gpt-6-astra
         run: >-
-          python3 agent-orchestration/astra_codex_joint_smoke.py plan
-          --branch "${{ github.event.pull_request.head.ref }}"
-          --head-sha "${{ github.event.pull_request.head.sha }}"
-          --plan-out "$RUNNER_TEMP/astra-plan.json"
+          python3 agent-orchestration/astra_codex_joint_smoke.py resume-plan
+          --plan agent-orchestration/evidence/astra-plan-run-34503072353.json
           --prompt-out "$RUNNER_TEMP/codex-prompt.txt"
       - name: Codex executes the Astra task
         if: steps.trigger.outputs.enabled == 'true'
@@ -157,7 +152,7 @@ jobs:
           model: gpt-5.6-terra
           effort: low
           sandbox: read-only
-          codex-args: '["--ephemeral", "--ignore-user-config"]'
+          codex-args: '["--ephemeral"]'
       - name: Prove Codex kept the checkout read-only
         if: steps.trigger.outputs.enabled == 'true'
         run: |
@@ -170,7 +165,7 @@ jobs:
           OPENAI_ASTRA_MODEL: gpt-6-astra
         run: >-
           python3 agent-orchestration/astra_codex_joint_smoke.py review
-          --plan "$RUNNER_TEMP/astra-plan.json"
+          --plan agent-orchestration/evidence/astra-plan-run-34503072353.json
           --codex-output "$RUNNER_TEMP/codex-output.txt"
           --checkout-clean "$(cat "$RUNNER_TEMP/checkout-clean.txt")"
           --result-out "$RUNNER_TEMP/astra-codex-joint-smoke.json"
@@ -180,7 +175,7 @@ jobs:
         with:
           name: astra-codex-joint-smoke-${{ github.sha }}
           path: |
-            ${{ runner.temp }}/astra-plan.json
+            agent-orchestration/evidence/astra-plan-run-34503072353.json
             ${{ runner.temp }}/codex-output.txt
             ${{ runner.temp }}/checkout-clean.txt
             ${{ runner.temp }}/astra-codex-joint-smoke.json

@@ -213,6 +213,34 @@ def plan(*, branch: str, head_sha: str, plan_path: Path, prompt_path: Path) -> i
     return 0
 
 
+def resume_plan(*, plan_path: Path, prompt_path: Path) -> int:
+    plan_record = json.loads(plan_path.read_text(encoding="utf-8"))
+    plan_output = plan_record.get("plan") if isinstance(plan_record, dict) else None
+    if not isinstance(plan_output, dict):
+        raise SmokeError("saved Astra plan is missing")
+    if (
+        plan_record.get("status") != "PASS"
+        or plan_output.get("task_id") != "astra-codex-joint-smoke-v0.1"
+        or plan_output.get("executor") != "codex"
+        or plan_output.get("mode") != "read_only"
+        or plan_output.get("target_file") != TARGET_FILE
+        or plan_output.get("expected_architecture") != EXPECTED_ARCHITECTURE
+    ):
+        raise SmokeError("saved Astra plan changed a controller-owned boundary")
+    prompt_path.write_text(
+        "You are the bounded Codex executor. Execute the saved Astra plan below.\n"
+        "This is a retry after the GitHub Action rejected a controller CLI flag before Codex execution.\n"
+        "The target file is unchanged from the planned head. Use read-only inspection.\n"
+        "Do not edit, commit, push, merge, deploy, or call network tools.\n"
+        "Return concise JSON with keys status, target_file, observed_architecture, matches_expected, files_changed.\n\n"
+        + json.dumps(plan_output, ensure_ascii=False, indent=2, sort_keys=True)
+        + "\n",
+        encoding="utf-8",
+    )
+    print(json.dumps({"status": "PASS", "phase": "ASTRA_PLAN_REUSED"}, ensure_ascii=False))
+    return 0
+
+
 def review(*, plan_path: Path, codex_path: Path, checkout_clean: bool, result_path: Path) -> int:
     plan_record = json.loads(plan_path.read_text(encoding="utf-8"))
     codex_output = codex_path.read_text(encoding="utf-8", errors="replace")[:8000]
@@ -264,6 +292,10 @@ def main(argv: list[str] | None = None) -> int:
     plan_parser.add_argument("--plan-out", required=True, type=Path)
     plan_parser.add_argument("--prompt-out", required=True, type=Path)
 
+    resume_parser = subparsers.add_parser("resume-plan")
+    resume_parser.add_argument("--plan", required=True, type=Path)
+    resume_parser.add_argument("--prompt-out", required=True, type=Path)
+
     review_parser = subparsers.add_parser("review")
     review_parser.add_argument("--plan", required=True, type=Path)
     review_parser.add_argument("--codex-output", required=True, type=Path)
@@ -273,6 +305,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.command == "plan":
         return plan(branch=args.branch, head_sha=args.head_sha, plan_path=args.plan_out, prompt_path=args.prompt_out)
+    if args.command == "resume-plan":
+        return resume_plan(plan_path=args.plan, prompt_path=args.prompt_out)
     return review(
         plan_path=args.plan,
         codex_path=args.codex_output,
