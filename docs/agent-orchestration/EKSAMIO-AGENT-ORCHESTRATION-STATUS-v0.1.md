@@ -1,7 +1,7 @@
 # EKSAMIO Agent Orchestration Status v0.1
 
-Status: ACTIVE IMPLEMENTATION / DRAFT PR #190 / NO MERGE / NO DEPLOY / NO LIVE SPEND
-Date: 2026-09-07
+Status: LIVE INTEGRATION PROVEN / DRAFT PR #190 / NO MERGE / NO DEPLOY
+Date: 2026-09-10
 Branch: `brain/agent-orchestration-v0-1-20260907`
 
 ## Durable checkpoint
@@ -113,19 +113,29 @@ Exact-head GitHub Actions evidence:
 - no OpenAI/Astra/Codex live API call occurred;
 - no secret was supplied to CI.
 
-## Current limitation / next execution gate
+## Slice D — first live Astra -> Codex -> Astra proof
 
-The full v0.1 **code path needed for a bounded live development-agent smoke is now implemented and offline-CI proven**. The remaining step is no longer missing orchestration code; it is a separately owner-bounded live execution with credentials and a deliberately tiny task.
+Successful execution HEAD:
+`06f10c212c5ae7bf1c6e83e42f877a18a1d20854`
 
-Before any real paid live run, Central Brain must:
-1. re-read exact current GitHub state and choose a dedicated bounded smoke branch/worktree;
-2. define the exact task brief, maximum file scope and exact acceptance-command allowlist;
-3. define a small spend boundary for Astra plan + Astra review + one Codex turn;
-4. receive explicit owner authorization for that live-provider smoke;
-5. run the harness and persist the sanitized machine-readable result back to GitHub;
-6. treat the live result as `PASS`, `REWORK` or `BLOCKED` only from actual provider output + deterministic evidence.
+GitHub Actions evidence:
+- workflow run: `34503423279`;
+- result: SUCCESS;
+- Astra Brain produced the bounded read-only task with `gpt-6-astra`;
+- Codex executed it with `gpt-5.6-terra` through `openai/codex-action@v1` in `read-only` sandbox;
+- Codex inspected only `agent-orchestration/README.md` and reported no changed files;
+- deterministic checkout-clean assertion: `true`;
+- Astra reviewed the Codex evidence with `gpt-6-astra` and returned `PASS`;
+- Astra plan usage: 334 input + 233 output = 567 tokens;
+- Astra review usage: 495 input + 81 output = 576 tokens;
+- provider storage was disabled for both Astra calls (`store: false`);
+- sanitized durable evidence: `agent-orchestration/evidence/astra-codex-joint-run-34503423279.json`.
 
-This status file **does not authorize spend by itself**.
+The preceding one-model Astra connectivity smoke also passed in workflow run `34502398594` at HEAD `30974f6ee0abee2b721362577e4a5e2c750753c8`; its sanitized durable evidence is `agent-orchestration/evidence/astra-paid-smoke-run-34502398594.json`. The first joint attempt, run `34503072353`, stopped before the Codex provider call because of an incompatible action flag; its successful Astra plan was reused for the corrected joint run.
+
+The one-shot triggers have been removed. A future paid/live task still requires a new explicit owner authorization and a new SHA-bound trigger. This status file does **not** authorize further spend by itself.
+
+This development-agent path is `GitHub Actions -> OpenAI`; it does not use Yandex as an intermediary or execution host.
 
 ## Hard boundaries still in force
 
