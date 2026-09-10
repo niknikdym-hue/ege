@@ -1,0 +1,159 @@
+name: Russian RU01 sound system exact component-set review
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-SYSTEM-OWNER-RESOLUTION-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_system_exact_component_set_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v24.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_phonetics_broad_header_clause_decomposition_review.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-VOWEL-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-CONSONANT-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - ".github/workflows/russian-ru01-sound-system-exact-component-set-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sound-system-component-set-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build sound-system review deterministically
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          builder="$root/build_ru01_sound_system_exact_component_set_review.py"
+          python3 -m py_compile "$builder"
+          python3 "$builder" --output /tmp/ru01-sound-system-a.json > /tmp/ru01-sound-system-a.txt
+          python3 "$builder" --output /tmp/ru01-sound-system-b.json > /tmp/ru01-sound-system-b.txt
+          cmp /tmp/ru01-sound-system-a.json /tmp/ru01-sound-system-b.json
+          diff -u /tmp/ru01-sound-system-a.txt /tmp/ru01-sound-system-b.txt
+          cat /tmp/ru01-sound-system-a.txt
+
+      - name: Verify exact source boundary and fail-closed result
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="eksamio-learning-engine/russian-program/subject-admission"
+          python3 "$root/build_russian_semantic_acceptance_progress_launch_current_v24.py" --output /tmp/current-v24.json >/tmp/current-v24.txt
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          review=json.loads(Path('/tmp/ru01-sound-system-a.json').read_text(encoding='utf-8'))
+          current=json.loads(Path('/tmp/current-v24.json').read_text(encoding='utf-8'))
+          s=review['summary']; cs=current['progress_summary']
+
+          assert review['status']=='CENTRAL_BRAIN_RU01_SOUND_SYSTEM_EXACT_COMPONENT_SET_REVIEW_COMPLETE_COMPONENT_CANDIDATE_NOT_ACCEPTED'
+          assert review['base_current_label']=='current-v24'
+          clause=review['selected_source_clause']
+          assert clause=={
+              'admission_unit_id':'RAU-5a6511267f156745f93c',
+              'requirement_id':'RSK-EDSOO59-4-1-P181',
+              'source_id':'EDSOO-RU-5-9-2025',
+              'document_id':'EDSOO59',
+              'source_locator':'EDSOO-RU-5-9-2025/EDSOO59 p.181 4.1',
+              'clause_id':'EDSOO59-P181-4.1-C',
+              'official_clause_ru':'характеризовать систему звуков',
+              'module_id':'RU-PROG-01',
+          }
+
+          search=review['exact_current_owner_search']
+          assert search['result']=='NO_EXACT_CURRENT_SINGLE_SOUND_SYSTEM_OWNER'
+          assert search['accepted_sound_system_owner_refs']==[]
+
+          candidate=review['source_backed_component_candidate']
+          assert candidate['candidate_component_refs']==[
+              'ru-phonetics-vowel-system',
+              'ru-phonetics-consonant-system',
+          ]
+          assert candidate['component_status']=='BOTH_INDEPENDENTLY_ACCEPTED_BOUNDED_SUBJECT_SEMANTICS'
+          assert candidate['component_specific_independent_evidence_refs']==[
+              'p01-u9-v1','p01-u9-v2','p01-u9-v3','p01-u9-v4','p01-u9-v5',
+              'p01-u10-v1','p01-u10-v2','p01-u10-v3','p01-u10-v4','p01-u10-v5',
+          ]
+          assert candidate['component_specific_independent_evidence_items']==10
+          assert candidate['component_evidence_overlap']==[]
+          assert candidate['exact_parent_component_set_ready'] is False
+          assert candidate['blocker']=='NO_DEDICATED_INTEGRATED_SOUND_SYSTEM_EVIDENCE_FOR_EDSOO59_P181_4_1_C'
+
+          assert s['exact_single_current_owner_refs']==0
+          assert s['candidate_component_refs']==2
+          assert s['component_specific_independent_evidence_items']==10
+          assert s['integrated_sound_system_evidence_items']==0
+          assert s['exact_component_set_ready_units']==0
+          assert s['exact_component_set_ready_requirements']==0
+          assert s['semantic_admissions']==0
+          assert s['object_level_closures']==0
+          assert s['exact_mastery_admissions']==0
+          assert s['false_exact_mastery_admissions']==0
+          assert s['current_subject_review_units_remaining']==1274
+          assert s['current_subject_review_requirements_remaining']==1349
+
+          policy=review['policy']
+          assert policy['review_is_acceptance'] is False
+          assert policy['review_can_create_school_identity'] is False
+          assert policy['review_can_create_ru_semantic_identity'] is False
+          assert policy['review_can_reduce_object_counts'] is False
+          assert policy['two_component_titles_can_auto_create_sound_system_owner'] is False
+          assert policy['component_presence_can_auto_close_parent'] is False
+          assert policy['generic_ru01_attempt_can_emit_exact_sound_system_mastery'] is False
+          assert policy['anonymous_or_device_only_evidence_can_be_canonical'] is False
+          assert policy['registered_user_identity_ref_required_for_future_canonical_evidence'] is True
+          assert policy['server_owned_received_at_required_for_future_canonical_evidence'] is True
+          assert policy['durable_evidence_event_required_for_future_canonical_evidence'] is True
+
+          assert len(current['accepted_authorities'])==70
+          assert cs['accepted_bounded_ru_subject_semantics']==74
+          assert cs['accepted_bounded_ru_semantics_total']==83
+          assert cs['subject_review_units_remaining']==1274
+          assert cs['subject_review_requirements_remaining']==1349
+          assert cs['false_exact_mastery_admissions']==0
+
+          print('RU01_SOUND_SYSTEM_EXACT_OWNER_REFS=0')
+          print('RU01_SOUND_SYSTEM_CANDIDATE_COMPONENT_REFS=2')
+          print('RU01_SOUND_SYSTEM_COMPONENT_EVIDENCE_ITEMS=10')
+          print('RU01_SOUND_SYSTEM_INTEGRATED_EVIDENCE_ITEMS=0')
+          print('RU01_SOUND_SYSTEM_OBJECT_CLOSURES=0')
+          print('RUSSIAN_CURRENT_V24_AGGREGATE_UNCHANGED=PASS')
+          print('RU01_SOUND_SYSTEM_EXACT_COMPONENT_SET_REVIEW_GATE=PASS')
+          PY
+
+      - name: Upload sound-system owner/component review
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-sound-system-exact-component-set-review
+          path: /tmp/ru01-sound-system-a.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce exact bounded slice
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="f4427e149534983f2d212d2d39d8d1443517bad4"
+          git cat-file -e "${base}^{commit}"
+          git diff --name-only "$base...HEAD" | sort > /tmp/changed.txt
+          cat > /tmp/allowed.txt <<'EOF'
+          .github/workflows/russian-ru01-sound-system-exact-component-set-review.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-SYSTEM-OWNER-RESOLUTION-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_system_exact_component_set_review.py
+          EOF
+          sort -o /tmp/allowed.txt /tmp/allowed.txt
+          diff -u /tmp/allowed.txt /tmp/changed.txt
+
+      - name: Diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check f4427e149534983f2d212d2d39d8d1443517bad4...HEAD
