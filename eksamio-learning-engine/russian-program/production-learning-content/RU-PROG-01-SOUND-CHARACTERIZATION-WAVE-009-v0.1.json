@@ -1,0 +1,252 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CONTENT_AND_EVIDENCE_READY_SEMANTIC_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-01",
+  "module_title_ru": "Фонетика и графика",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9],
+    "routes": ["school", "oge", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "current_v23_owner_resolution",
+      "candidate_semantic_id": "ru-phonetics-sound-characterization",
+      "source_clause_ids": ["EDSOO59-P181-4.1-A"],
+      "ref": "russian-program/subject-admission/build_ru01_phonetics_broad_header_owner_resolution_current_v23.py",
+      "coverage_note": "Current-v23 exact-owner refresh keeps sound characterization unresolved: ru-phonetics-vowel-consonant-features is a narrower partial owner and cannot close the exact source clause without component-specific evidence."
+    },
+    {
+      "kind": "exact_head_prerequisite_gate",
+      "workflow": "Russian RU01 phonetics broad-header owner resolution current-v23",
+      "run_id": 34452615277,
+      "head_sha": "9d517d293f4bba899ab7a268eacde0cc787adcd4",
+      "conclusion": "SUCCESS"
+    },
+    {
+      "kind": "candidate_content_gap_gate",
+      "workflow": "Russian RU01 phonetics broad header candidate content gap review",
+      "run_id": 34311280167,
+      "head_sha": "07a93daf82b66f5357d8b3bac8b03522b8afa135",
+      "conclusion": "SUCCESS",
+      "result_before_this_wave": "NO_DEDICATED_CANDIDATE_CONTENT_FOUND"
+    },
+    {
+      "kind": "official_program",
+      "source_id": "EDSOO-RU-5-9-2025",
+      "document_id": "EDSOO59",
+      "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.181 4.1-A",
+      "official_requirement": "Характеризовать звуки"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "learner_explanations": "ORIGINAL_EKSAMIO",
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "commercial_textbook_bytes_in_git": 0
+  },
+  "identity_boundary": {
+    "proposed_semantic_id": "ru-phonetics-sound-characterization",
+    "source_taxonomy_id": "sound_characterization",
+    "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+    "rule": "This unit teaches how to characterize an explicitly presented speech sound by the phonetic features applicable to that sound. It does not turn a letter into a sound, infer disputed pronunciation, prove the complete vowel or consonant system, or close the broader sound-system clause.",
+    "vowel_consonant_features_partial_owner_may_substitute": false,
+    "vowel_system_semantic_may_substitute": false,
+    "consonant_system_semantic_may_substitute": false,
+    "sound_system_semantic_may_substitute": false,
+    "sound_letter_relation_semantic_may_substitute": false,
+    "normative_pronunciation_semantic_may_substitute": false,
+    "generic_ru01_result_can_emit_exact_component_mastery": false,
+    "object_level_admission_effect": "NONE_UNTIL_SEPARATE_BOUNDED_SEMANTIC_ACCEPTANCE_AND_COMPLETE_PARENT_OBJECT_GATE"
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-phonetics-sound-characterization",
+      "title_ru": "Характеристика звука: только признаки реально заданного звука",
+      "canonical_explanation": {
+        "short": "Характеризовать звук — значит сначала работать со звуком речи, а не с буквой, определить его тип и затем назвать только те фонетические признаки, которые применимы к этому типу звука. Для гласного и согласного набор последующих признаков различается.",
+        "boundaries": [
+          "Если в задании предъявлена буква или слово, сначала должно быть отдельно доказано, какой звук реально рассматривается; буква сама по себе не является фонетической характеристикой.",
+          "Для гласного в конкретном слове характеристика может включать ударность; для согласного — звонкость/глухость и твёрдость/мягкость в данном произношении.",
+          "Характеристика одного предъявленного звука не доказывает владение всей системой гласных, всей системой согласных или всей системой звуков языка.",
+          "Если произношение слова нормативно спорно или не задано, этот компонент не разрешает угадывать звуковую реализацию по написанию.",
+          "Правильная фонетическая характеристика не даёт автоматического права на орфографический, морфемный или орфоэпический вывод."
+        ]
+      },
+      "decision_algorithm": [
+        "Убедись, что объектом является конкретный звук речи; если дано слово, звук должен быть установлен отдельным допустимым шагом.",
+        "Определи, гласный это звук или согласный.",
+        "Для гласного называй только релевантные гласному признаки в данном контексте; для согласного — только релевантные согласному признаки.",
+        "Не подменяй звучащий объект написанной буквой и не достраивай нормативное произношение, которого нет в evidence.",
+        "Не превращай успешную характеристику одного звука в доказательство владения целой фонетической системой."
+      ],
+      "worked_examples": [
+        {
+          "id": "p01-u11-e1",
+          "prompt": "Дан звук [м’]. Какую характеристику можно дать без обращения к написанию слова?",
+          "answer": "Это согласный, звонкий, мягкий звук.",
+          "measures": "characterize_presented_consonant"
+        },
+        {
+          "id": "p01-u11-e2",
+          "prompt": "Дан ударный гласный [а]. Что относится к его фонетической характеристике?",
+          "answer": "Это гласный, ударный звук.",
+          "measures": "characterize_presented_vowel"
+        },
+        {
+          "id": "p01-u11-e3",
+          "prompt": "Ученик видит букву б в незнакомом слове и сразу называет звук звонким. Почему этого недостаточно?",
+          "answer": "Фонетическая характеристика относится к реально произнесённому звуку; одна буква не доказывает его позиционную реализацию.",
+          "measures": "preserve_sound_letter_boundary"
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p01-u11-g1",
+          "prompt": "Какие признаки нужно проверить у явно заданного [т]?",
+          "expected": "Сначала что это согласный; затем звонкость/глухость и твёрдость/мягкость."
+        },
+        {
+          "id": "p01-u11-g2",
+          "prompt": "Почему вопрос о характеристике одного [с] не равен вопросу о всей системе согласных?",
+          "expected": "Потому что один звук проверяет локальную характеристику, а система включает отношения и устройство множества звуков."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p01-u11-i1",
+          "prompt": "Охарактеризуй явно заданный [м’].",
+          "answer": "Согласный, звонкий, мягкий."
+        },
+        {
+          "id": "p01-u11-i2",
+          "prompt": "Охарактеризуй явно заданный [т].",
+          "answer": "Согласный, глухой, твёрдый."
+        },
+        {
+          "id": "p01-u11-i3",
+          "prompt": "Что нужно сделать раньше: назвать признаки или убедиться, какой звук реально рассматривается?",
+          "answer": "Сначала установить сам звук."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p01-u11-t1",
+          "prompt": "Ученик верно охарактеризовал [м’], а затем заявил, что тем самым доказал знание всей системы согласных. Что принять?",
+          "answer": "Принять можно только локальную характеристику данного звука; владение всей системой требует отдельного component-specific evidence."
+        },
+        {
+          "id": "p01-u11-t2",
+          "prompt": "Ученик видит неизвестное слово и без нормативного evidence выводит произношение только по буквам. Можно ли засчитать это как характеристику звука?",
+          "answer": "Нет. Сначала должен быть надёжно установлен звуковой объект; спорное произношение нельзя придумывать из написания."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p01-u11-r1",
+          "delay_hint": "24h",
+          "prompt": "Какое первое действие защищает от подмены звука буквой?",
+          "answer": "Установить, какой конкретный звук речи рассматривается."
+        },
+        {
+          "id": "p01-u11-r2",
+          "delay_hint": "7d",
+          "prompt": "Почему характеристика одного звука не закрывает полный sound-system scope?",
+          "answer": "Она доказывает признаки одного звука, а не устройство и отношения всей системы."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p01-u11-v1",
+          "type": "single_choice",
+          "measures": "characterize_presented_consonant",
+          "prompt": "Какая характеристика верна для явно заданного [м’]?",
+          "options": ["гласный, ударный", "согласный, звонкий, мягкий", "согласный, глухой, твёрдый"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u11-v2",
+          "type": "single_choice",
+          "measures": "characterize_presented_vowel",
+          "prompt": "Какая характеристика верна для явно заданного ударного [а]?",
+          "options": ["гласный, ударный", "согласный, звонкий, мягкий", "буква, обозначающая один звук"],
+          "correct_option_index": 0,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u11-v3",
+          "type": "single_choice",
+          "measures": "preserve_sound_letter_boundary",
+          "prompt": "Что обязательно сделать до фонетической характеристики, если задание показывает только букву внутри неизвестного слова?",
+          "options": ["Считать букву готовым звуком", "Надёжно установить реально рассматриваемый звук", "Сразу выбрать орфограмму"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u11-v4",
+          "type": "single_choice",
+          "measures": "select_type_specific_features",
+          "prompt": "После того как установлено, что звук согласный, какой набор признаков релевантен его школьной фонетической характеристике?",
+          "options": ["ударный/безударный", "звонкий/глухой и твёрдый/мягкий", "корень/суффикс"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u11-v5",
+          "type": "single_choice",
+          "measures": "preserve_characterization_scope_boundary",
+          "prompt": "Ученик верно охарактеризовал один явно заданный [с]. Что это доказывает?",
+          "options": ["Только успешную характеристику данного звука в рамках проверенного задания", "Полное владение системой согласных", "Нормативное произношение всех слов с буквой с"],
+          "correct_option_index": 0,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        }
+      ],
+      "peis_evidence": {
+        "semantic_ref": "ru-phonetics-sound-characterization",
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "user_identity_ref": "REGISTERED_USER_REQUIRED",
+        "item_identity": "EXACT_VERSIONED_ITEM_REQUIRED",
+        "received_at": "SERVER_OWNED_TIMESTAMP_REQUIRED",
+        "today_timezone": "Europe/Moscow",
+        "durable_evidence_event_required": true,
+        "mastery_before_separate_semantic_acceptance": false,
+        "generic_ru01_attempt_can_emit_exact_mastery": false,
+        "anonymous_progress_allowed": false,
+        "device_only_canonical_state_allowed": false
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "characterization of an explicitly presented speech sound",
+          "vowel versus consonant classification",
+          "stress for a presented vowel context",
+          "voicing and hardness features for a presented consonant"
+        ],
+        "forbidden": [
+          "inventing disputed pronunciation",
+          "equating a written letter with a proven sound",
+          "claiming whole-system mastery from one characterized sound"
+        ]
+      }
+    }
+  ],
+  "admission_boundary": {
+    "semantic_admissions": 0,
+    "object_level_closures": 0,
+    "exact_mastery_admissions": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
