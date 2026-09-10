@@ -2,6 +2,13 @@ name: Russian RU01 sound system exact component-set review
 
 on:
   pull_request:
+  push:
+    branches:
+      - "brain/sep1-russian-subject-closure"
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-SYSTEM-OWNER-RESOLUTION-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_system_exact_component_set_review.py"
+      - ".github/workflows/russian-ru01-sound-system-exact-component-set-review.yml"
   workflow_dispatch:
 
 permissions:
