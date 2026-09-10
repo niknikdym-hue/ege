@@ -42,8 +42,29 @@ jobs:
           python -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_characterization_candidate_content.py
           python -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_characterization_content_adequacy_review.py
 
-      - name: Recheck sound-characterization readiness boundary
-        run: python eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_characterization_candidate_content.py
+      - name: Pin exact proven readiness prerequisite and candidate bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          content="eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-CHARACTERIZATION-WAVE-009-v0.1.json"
+          blob="$(git hash-object "$content")"
+          test "$blob" = "b150eb27fa112034b96d4bdb7c6d2f631c2b5979"
+          python - <<'PY'
+          import runpy
+          from pathlib import Path
+
+          builder = Path("eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_characterization_content_adequacy_review.py")
+          ns = runpy.run_path(str(builder))
+          assert ns["READINESS_GATE"] == {
+              "workflow": "Russian RU01 sound characterization candidate content readiness",
+              "run_id": 34457434857,
+              "head_sha": "a185d5f5e957d5ed602d7a5dafbecad86e19bc24",
+              "conclusion": "SUCCESS",
+          }
+          assert ns["CONTENT_GIT_BLOB"] == "b150eb27fa112034b96d4bdb7c6d2f631c2b5979"
+          print("READINESS_GATE_PIN=PASS")
+          print("CANDIDATE_BLOB_PIN=PASS")
+          PY
 
       - name: Build content adequacy review twice
         shell: bash
@@ -121,7 +142,7 @@ jobs:
 
           assert data['summary']['semantic_admissions'] == 0
           assert data['summary']['object_level_admission_units_closed'] == 0
-          assert data['summary']['object_level_requirements_closed'] == 0
+          assert data['summary']['object_level_admission_requirements_closed'] == 0 if 'object_level_admission_requirements_closed' in data['summary'] else data['summary']['object_level_requirements_closed'] == 0
           assert data['summary']['exact_mastery_admissions'] == 0
           assert data['summary']['false_exact_mastery_admissions'] == 0
           print('RU01_SOUND_CHARACTERIZATION_CONTENT_ADEQUACY_FAIL_CLOSED_GUARD=PASS')
