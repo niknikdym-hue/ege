@@ -1,0 +1,163 @@
+name: Russian RU01 EDSOO59 P181 4.1 exact component set
+
+on:
+  push:
+    branches:
+      - brain/sep1-russian-subject-closure
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-EDSOO59-P181-4-1-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v26.py'
+      - '.github/workflows/russian-ru01-edsoo59-p181-4-1-exact-component-set.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-EDSOO59-P181-4-1-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v26.py'
+      - '.github/workflows/russian-ru01-edsoo59-p181-4-1-exact-component-set.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-edsoo59-p181-exact-component-set:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile exact parent-object gate
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v26.py
+
+      - name: Pin exact successful current-v25 prerequisite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('eksamio-learning-engine/russian-program/subject-admission/RU01-EDSOO59-P181-4-1-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json')
+          a=json.loads(p.read_text(encoding='utf-8'))
+          assert a['current_launch_progress_v25_exact_head_gate'] == {
+              'workflow': 'Russian RU01 sound system semantic acceptance',
+              'run_id': 34539055527,
+              'head_sha': '02344a6b8d90b62864fde48de4cf1b0a215a35bb',
+              'conclusion': 'SUCCESS',
+              'normalized_sha256': '0a7bb82219f901ba7c145713122e5b1b57cecc015d6c236f489f7199a8b4034a',
+          }
+          print('CURRENT_V25_EXACT_HEAD_GATE_PIN=PASS')
+          PY
+
+      - name: Build current-v26 A
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v26.py --output /tmp/ru-current-v26-a.json > /tmp/ru-current-v26-a.txt
+
+      - name: Build current-v26 B
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v26.py --output /tmp/ru-current-v26-b.json > /tmp/ru-current-v26-b.txt
+
+      - name: Verify deterministic current-v26
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmp /tmp/ru-current-v26-a.json /tmp/ru-current-v26-b.json
+          diff -u /tmp/ru-current-v26-a.txt /tmp/ru-current-v26-b.txt
+
+      - name: Materialize current-v26
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat /tmp/ru-current-v26-a.txt
+          cp /tmp/ru-current-v26-a.json RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v26.json
+
+      - name: Verify exact parent-object aggregate delta only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v26.json').read_text(encoding='utf-8'))
+          assert data['schema_version']=='0.28.0'
+          summary=data['progress_summary']
+          assert len(data['accepted_authorities'])==72
+          assert summary['semantic_units_with_accepted_component_sets']==42
+          assert summary['semantic_requirements_with_accepted_component_sets']==42
+          assert summary['semantic_units_remaining_without_accepted_component_set']==1274
+          assert summary['semantic_requirements_remaining_without_accepted_component_set']==1349
+          assert summary['subject_disposed_units_total']==43
+          assert summary['subject_disposed_requirements_total']==43
+          assert summary['subject_review_units_remaining']==1273
+          assert summary['subject_review_requirements_remaining']==1348
+          assert summary['canonical_component_refs_reused_unique']==125
+          assert summary['review_groups_with_accepted_component_sets']==14
+          assert summary['accepted_bounded_ru_route_semantics']==9
+          assert summary['accepted_bounded_ru_subject_semantics']==75
+          assert summary['accepted_bounded_ru_semantics_total']==84
+          assert summary['false_exact_mastery_admissions']==0
+          new=data['newly_accepted_exact_object']
+          assert new['admission_unit_id']=='RAU-5a6511267f156745f93c'
+          assert new['requirement_id']=='RSK-EDSOO59-4-1-P181'
+          assert new['accepted_component_refs']==[
+              'ru-phonetics-sound-characterization',
+              'ru-phonetics-sound-letter-relation',
+              'ru-phonetics-sound-system',
+          ]
+          assert new['component_specific_independent_evidence']=={
+              'ru-phonetics-sound-characterization':['p01-u11-v1','p01-u11-v2','p01-u11-v3','p01-u11-v4','p01-u11-v5'],
+              'ru-phonetics-sound-letter-relation':['p01-u1-v1','p01-u1-v2'],
+              'ru-phonetics-sound-system':['p01-u12-v1','p01-u12-v2','p01-u12-v3','p01-u12-v4','p01-u12-v5'],
+          }
+          assert new['independent_evidence_items']==12
+          assert new['source_clause_ids']==['EDSOO59-P181-4.1-A','EDSOO59-P181-4.1-B','EDSOO59-P181-4.1-C']
+          assert new['sibling_source_objects_accepted']==0
+          assert new['exact_mastery_admissions']==0
+          print('RU01_EDSOO59_P181_PARENT_OBJECT_DELTA=PASS')
+          PY
+
+      - name: Protect public and production surfaces in bounded wave
+        shell: bash
+        run: |
+          set -euo pipefail
+          wave_base='02344a6b8d90b62864fde48de4cf1b0a215a35bb'
+          git merge-base --is-ancestor "$wave_base" HEAD
+          recent=$(git diff --name-only "$wave_base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru01-edsoo59-p181-4-1-exact-component-set.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU01-EDSOO59-P181-4-1-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v26.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          if [[ -n "$unexpected" ]]; then
+            echo 'P181 exact-component wave touched files outside the exact bounded allowlist:' >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
+          if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
+            echo 'P181 exact-component wave touched a protected public/production surface.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene for exact bounded wave
+        run: git diff --check 02344a6b8d90b62864fde48de4cf1b0a215a35bb..HEAD
+
+      - name: Upload exact parent-object acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-edsoo59-p181-exact-component-set
+          path: RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v26.json
+          if-no-files-found: error
+          retention-days: 14
