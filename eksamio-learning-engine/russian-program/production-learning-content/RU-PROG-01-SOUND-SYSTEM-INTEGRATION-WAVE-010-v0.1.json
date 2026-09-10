@@ -1,0 +1,271 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CONTENT_AND_EVIDENCE_READY_SEMANTIC_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "module_id": "RU-PROG-01",
+  "module_title_ru": "Фонетика и графика",
+  "scope": {
+    "introduced_grade": 5,
+    "reinforcement_grades": [6, 7, 8, 9],
+    "routes": ["school", "oge", "homework", "diagnostic", "tutor"]
+  },
+  "source_provenance": [
+    {
+      "kind": "exact_sound_system_owner_resolution",
+      "candidate_semantic_id": "ru-phonetics-sound-system",
+      "source_clause_ids": ["EDSOO59-P181-4.1-C"],
+      "admission_unit_id": "RAU-5a6511267f156745f93c",
+      "requirement_id": "RSK-EDSOO59-4-1-P181",
+      "semantic_review_id": "RUS-SEM-REVIEW-048",
+      "ref": "russian-program/subject-admission/RU01-SOUND-SYSTEM-OWNER-RESOLUTION-v0.1.json",
+      "git_blob_sha": "328a291eee7f83e59efb44f6ef9f810f3d6ba150",
+      "coverage_note": "Exact current search found no single canonical whole-sound-system owner. Accepted vowel-system and consonant-system semantics are only a source-backed component candidate and cannot create the parent semantic without new integrated evidence."
+    },
+    {
+      "kind": "exact_head_prerequisite_gate",
+      "workflow": "Russian RU01 sound system exact component-set review",
+      "run_id": 34510774242,
+      "head_sha": "03397a71a723bed3df27aa27a9e60b2b386e120a",
+      "conclusion": "SUCCESS"
+    },
+    {
+      "kind": "accepted_component_semantics",
+      "component_refs": ["ru-phonetics-vowel-system", "ru-phonetics-consonant-system"],
+      "existing_component_evidence_refs": [
+        "p01-u9-v1", "p01-u9-v2", "p01-u9-v3", "p01-u9-v4", "p01-u9-v5",
+        "p01-u10-v1", "p01-u10-v2", "p01-u10-v3", "p01-u10-v4", "p01-u10-v5"
+      ],
+      "parent_evidence_reuse_allowed": false
+    },
+    {
+      "kind": "official_program",
+      "source_id": "EDSOO-RU-5-9-2025",
+      "document_id": "EDSOO59",
+      "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.181 4.1",
+      "official_requirement": "характеризовать систему звуков"
+    }
+  ],
+  "copyright_guard": {
+    "source_passages_copied": 0,
+    "learner_explanations": "ORIGINAL_EKSAMIO",
+    "learner_examples": "ORIGINAL_EKSAMIO",
+    "commercial_textbook_bytes_in_git": 0
+  },
+  "identity_boundary": {
+    "proposed_semantic_id": "ru-phonetics-sound-system",
+    "source_taxonomy_id": "sound_system",
+    "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+    "proposed_item_identity_prefix": "p01-u12",
+    "item_identity_status": "PROPOSED_VERSIONED_CANDIDATE_CONTENT_NOT_CANONICAL_UNTIL_SEPARATE_ACCEPTANCE",
+    "rule": "This unit tests the integrated school-level organization of speech sounds into vowel and consonant subsystems and the different feature systems used inside those subsystems. It does not infer pronunciation from spelling, replace the dedicated vowel/consonant owners, or create whole-system mastery from component evidence alone.",
+    "vowel_system_semantic_may_substitute_parent": false,
+    "consonant_system_semantic_may_substitute_parent": false,
+    "sound_characterization_semantic_may_substitute_parent": false,
+    "sound_letter_relation_semantic_may_substitute_parent": false,
+    "normative_pronunciation_semantic_may_substitute_parent": false,
+    "normative_stress_semantic_may_substitute_parent": false,
+    "existing_p01_u9_or_u10_evidence_may_be_reused_as_parent_evidence": false,
+    "generic_ru01_result_can_emit_exact_sound_system_mastery": false,
+    "object_level_admission_effect": "NONE_UNTIL_SEPARATE_CONTENT_ADEQUACY_SEMANTIC_ACCEPTANCE_AND_PARENT_OBJECT_GATE"
+  },
+  "units": [
+    {
+      "proposed_semantic_id": "ru-phonetics-sound-system",
+      "title_ru": "Система звуков: как связаны гласная и согласная подсистемы",
+      "canonical_explanation": {
+        "short": "Система звуков речи включает две крупные подсистемы — гласные и согласные. Сначала нужно определить, к какой подсистеме относится звук, а затем применять признаки именно этой подсистемы: для гласного важны гласные свойства в данном контексте, для согласного — согласные признаки. Владение всей системой требует уметь связывать обе подсистемы и сохранять границы между ними.",
+        "boundaries": [
+          "Гласные и согласные образуют разные подсистемы: нельзя переносить признак ударности как системный признак согласного или признаки звонкости и твёрдости как системные признаки гласного.",
+          "Система — это не характеристика одного звука. Нужно уметь распределять разные звуки по подсистемам и выбирать для каждой подсистемы релевантные признаки.",
+          "Буква не является элементом доказанной звуковой системы сама по себе: если задание начинается с написания, звуковая реализация должна быть установлена отдельно допустимым способом.",
+          "Знание системы гласных или системы согласных по отдельности не доказывает владение целой системой звуков без нового интегрированного evidence.",
+          "Этот компонент не устанавливает нормативное произношение слов и не решает нормативное ударение: такие выводы требуют отдельных орфоэпических owners и evidence."
+        ]
+      },
+      "decision_algorithm": [
+        "Убедись, что рассматриваются звуки речи, а не только написанные буквы.",
+        "Раздели предъявленные звуки на гласную и согласную подсистемы.",
+        "Для каждой подсистемы выбери только её релевантные фонетические признаки и не переноси признаки другой подсистемы.",
+        "Проверь, что вывод описывает устройство обеих подсистем и их границу, а не только один отдельный звук.",
+        "Не достраивай нормативное произношение или ударение, если отдельного орфоэпического evidence нет."
+      ],
+      "worked_examples": [
+        {
+          "id": "p01-u12-e1",
+          "prompt": "Даны звуки [а], [м’], [т], [у]. Как начать описание их места в системе?",
+          "answer": "Сначала разделить их на гласные [а], [у] и согласные [м’], [т], затем применять признаки соответствующей подсистемы.",
+          "measures": "integrate_vowel_consonant_partition"
+        },
+        {
+          "id": "p01-u12-e2",
+          "prompt": "Почему нельзя описывать [а] как звонкий, а [т] как безударный?",
+          "answer": "Эти признаки принадлежат разным подсистемам: звонкость/глухость относится к согласным, а ударность в таком школьном контексте — к гласным.",
+          "measures": "preserve_subsystem_feature_boundaries"
+        },
+        {
+          "id": "p01-u12-e3",
+          "prompt": "Ученик выполнил пять заданий только по гласным. Можно ли этим закрыть целую систему звуков?",
+          "answer": "Нет. Для whole sound-system scope нужно отдельное интегрированное evidence, охватывающее и гласную, и согласную подсистемы.",
+          "measures": "reject_component_to_parent_auto_admission"
+        }
+      ],
+      "guided_practice": [
+        {
+          "id": "p01-u12-g1",
+          "prompt": "Раздели [о], [с], [л’], [и] на две подсистемы и назови, какие группы признаков дальше применимы.",
+          "expected": "[о], [и] — гласные; [с], [л’] — согласные. Для гласных и согласных далее используются разные наборы признаков."
+        },
+        {
+          "id": "p01-u12-g2",
+          "prompt": "Почему характеристика одного [с] и знание списка гласных ещё не доказывают системное владение?",
+          "expected": "Нужно показать интегрированное понимание обеих подсистем, их классификационной границы и применимых признаков на новых заданиях."
+        }
+      ],
+      "independent_practice": [
+        {
+          "id": "p01-u12-i1",
+          "prompt": "Даны [э], [н], [к’], [ы]. Сначала распредели звуки по подсистемам.",
+          "answer": "Гласные: [э], [ы]. Согласные: [н], [к’]."
+        },
+        {
+          "id": "p01-u12-i2",
+          "prompt": "Какой системный барьер нарушен, если к гласному применяют твёрдость/мягкость?",
+          "answer": "Перенесён согласный признак в гласную подсистему."
+        },
+        {
+          "id": "p01-u12-i3",
+          "prompt": "Можно ли по одной букве без установленного звучания доказать место звука в системе?",
+          "answer": "Нет. Сначала должен быть установлен звуковой объект; написание само по себе не является доказанной звуковой реализацией."
+        }
+      ],
+      "mixed_transfer_practice": [
+        {
+          "id": "p01-u12-t1",
+          "prompt": "Ученик верно знает систему согласных, но в смешанном наборе относит [у] к согласным. Что это показывает?",
+          "answer": "Whole sound-system evidence не доказано: нарушена граница между гласной и согласной подсистемами."
+        },
+        {
+          "id": "p01-u12-t2",
+          "prompt": "В задании неизвестное слово, и ученик по буквам угадывает нормативное произношение, а затем объявляет это знанием системы звуков. Что принять?",
+          "answer": "Такой вывод не принимать: sound-system component не даёт права выводить спорное нормативное произношение из написания."
+        }
+      ],
+      "retention_items": [
+        {
+          "id": "p01-u12-r1",
+          "delay_hint": "24h",
+          "prompt": "Какой минимальный системный шаг нужен перед применением частных признаков?",
+          "answer": "Определить принадлежность звука к гласной или согласной подсистеме."
+        },
+        {
+          "id": "p01-u12-r2",
+          "delay_hint": "7d",
+          "prompt": "Почему evidence по двум отдельным компонентам не становится автоматически evidence целой системы?",
+          "answer": "Потому что whole-system scope требует нового задания, проверяющего интеграцию подсистем и их границы."
+        }
+      ],
+      "independent_verification": [
+        {
+          "id": "p01-u12-v1",
+          "type": "single_choice",
+          "measures": "integrate_vowel_consonant_partition",
+          "prompt": "Как верно разделить [а], [м’], [т], [у] по звуковым подсистемам?",
+          "options": ["гласные [а], [у]; согласные [м’], [т]", "гласные [а], [м’]; согласные [т], [у]", "все четыре относятся к одной подсистеме"],
+          "correct_option_index": 0,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u12-v2",
+          "type": "single_choice",
+          "measures": "preserve_subsystem_feature_boundaries",
+          "prompt": "Какое сопоставление признаков сохраняет границу подсистем?",
+          "options": ["гласный — звонкий/глухой; согласный — ударный/безударный", "гласный — ударный/безударный в заданном контексте; согласный — звонкий/глухой и твёрдый/мягкий", "обеим подсистемам достаточно признака буква/не буква"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u12-v3",
+          "type": "single_choice",
+          "measures": "require_integrated_parent_evidence",
+          "prompt": "Ученик отдельно прошёл задания p01-u9 по гласным и p01-u10 по согласным. Что ещё нужно для parent sound-system evidence?",
+          "options": ["Ничего: два компонента автоматически закрывают parent", "Новое независимое задание, которое проверяет интеграцию обеих подсистем и их границ", "Только повторить один любой старый компонент"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u12-v4",
+          "type": "single_choice",
+          "measures": "preserve_sound_letter_boundary_in_system",
+          "prompt": "Что верно, если предъявлена только буква в слове, а звуковая реализация отдельно не установлена?",
+          "options": ["Букву можно сразу считать доказанным звуком системы", "Нужно сначала надёжно установить рассматриваемый звук; буква сама по себе не доказывает звуковую реализацию", "Можно засчитать whole-system mastery без ответа"],
+          "correct_option_index": 1,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        },
+        {
+          "id": "p01-u12-v5",
+          "type": "single_choice",
+          "measures": "preserve_sound_system_vs_orthoepy_boundary",
+          "prompt": "Какой вывод нельзя делать только из успешного задания по системе звуков?",
+          "options": ["Ученик различил гласную и согласную подсистемы в этом задании", "Ученик применил разные группы признаков к двум подсистемам", "Ученик доказал нормативное произношение и ударение во всех словах"],
+          "correct_option_index": 2,
+          "exact_item_identity_required": true,
+          "registered_user_identity_ref_required": true,
+          "received_at_server_required": true
+        }
+      ],
+      "evidence_lineage": {
+        "new_integrated_verification_refs": ["p01-u12-v1", "p01-u12-v2", "p01-u12-v3", "p01-u12-v4", "p01-u12-v5"],
+        "reused_component_verification_refs": [],
+        "forbidden_parent_substitution_refs": [
+          "p01-u9-v1", "p01-u9-v2", "p01-u9-v3", "p01-u9-v4", "p01-u9-v5",
+          "p01-u10-v1", "p01-u10-v2", "p01-u10-v3", "p01-u10-v4", "p01-u10-v5"
+        ],
+        "lineage_rule": "Parent evidence must arise from the new integrated p01-u12 verification lineage; accepted component evidence remains supporting context only."
+      },
+      "peis_evidence": {
+        "semantic_ref": "ru-phonetics-sound-system",
+        "semantic_ref_status": "PROPOSED_NOT_CANONICAL",
+        "independent_verification_required": true,
+        "assistance_must_be_recorded": true,
+        "user_identity_ref": "REGISTERED_USER_REQUIRED",
+        "item_identity": "EXACT_VERSIONED_ITEM_REQUIRED",
+        "received_at": "SERVER_OWNED_TIMESTAMP_REQUIRED",
+        "today_timezone": "Europe/Moscow",
+        "durable_evidence_event_required": true,
+        "durable_outbox_required": true,
+        "mastery_before_separate_semantic_acceptance": false,
+        "generic_ru01_attempt_can_emit_exact_mastery": false,
+        "anonymous_progress_allowed": false,
+        "device_only_canonical_state_allowed": false
+      },
+      "tutor_grounding": {
+        "allowed": [
+          "integrated distinction between vowel and consonant subsystems",
+          "selection of subsystem-appropriate phonetic features",
+          "explanation of why component evidence does not auto-close the parent sound-system scope",
+          "sound-versus-letter boundary for system reasoning"
+        ],
+        "forbidden": [
+          "inventing disputed pronunciation",
+          "inferring normative stress",
+          "equating written letters with proven sounds",
+          "claiming parent mastery from p01-u9 or p01-u10 evidence alone"
+        ]
+      }
+    }
+  ],
+  "admission_boundary": {
+    "semantic_admissions": 0,
+    "object_level_closures": 0,
+    "exact_mastery_admissions": 0,
+    "false_exact_mastery_admissions": 0
+  }
+}
