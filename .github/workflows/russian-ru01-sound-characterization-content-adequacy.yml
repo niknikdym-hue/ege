@@ -142,7 +142,7 @@ jobs:
 
           assert data['summary']['semantic_admissions'] == 0
           assert data['summary']['object_level_admission_units_closed'] == 0
-          assert data['summary']['object_level_admission_requirements_closed'] == 0 if 'object_level_admission_requirements_closed' in data['summary'] else data['summary']['object_level_requirements_closed'] == 0
+          assert data['summary']['object_level_requirements_closed'] == 0
           assert data['summary']['exact_mastery_admissions'] == 0
           assert data['summary']['false_exact_mastery_admissions'] == 0
           print('RU01_SOUND_CHARACTERIZATION_CONTENT_ADEQUACY_FAIL_CLOSED_GUARD=PASS')
