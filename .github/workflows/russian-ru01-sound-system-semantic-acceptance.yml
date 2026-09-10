@@ -1,0 +1,180 @@
+name: Russian RU01 sound system semantic acceptance
+
+on:
+  push:
+    branches:
+      - brain/sep1-russian-subject-closure
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_system_bounded_subject_semantics.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_system_content_adequacy_review.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v24.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v25.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-SYSTEM-INTEGRATION-WAVE-010-v0.1.json'
+      - '.github/workflows/russian-ru01-sound-system-semantic-acceptance.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_system_bounded_subject_semantics.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru01_sound_system_content_adequacy_review.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v24.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v25.py'
+      - 'eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-SYSTEM-INTEGRATION-WAVE-010-v0.1.json'
+      - '.github/workflows/russian-ru01-sound-system-semantic-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru01-sound-system-semantic-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile exact semantic gate
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_system_bounded_subject_semantics.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v25.py
+
+      - name: Pin exact successful adequacy prerequisite and candidate bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          content='eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-01-SOUND-SYSTEM-INTEGRATION-WAVE-010-v0.1.json'
+          test "$(git hash-object "$content")" = 'aeba08fe00dbe5626748427e2792e196976b8256'
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json')
+          a=json.loads(p.read_text(encoding='utf-8'))
+          assert a['authority']['content_adequacy_exact_head_gate'] == {
+              'workflow': 'Russian RU01 sound system content adequacy',
+              'run_id': 34534813456,
+              'head_sha': 'bfdb31555860858f9bad8f0ad74021637764fbb6',
+              'conclusion': 'SUCCESS',
+          }
+          print('ADEQUACY_GATE_PIN=PASS')
+          print('CANDIDATE_BLOB_PIN=PASS')
+          PY
+
+      - name: Validate bounded sound-system semantic acceptance
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_system_bounded_subject_semantics.py
+
+      - name: Build current-v25 A
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v25.py --output /tmp/ru-current-v25-a.json > /tmp/ru-current-v25-a.txt
+
+      - name: Build current-v25 B
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v25.py --output /tmp/ru-current-v25-b.json > /tmp/ru-current-v25-b.txt
+
+      - name: Verify deterministic current-v25
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmp /tmp/ru-current-v25-a.json /tmp/ru-current-v25-b.json
+          diff -u /tmp/ru-current-v25-a.txt /tmp/ru-current-v25-b.txt
+
+      - name: Materialize current-v25 for downstream checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat /tmp/ru-current-v25-a.txt
+          cp /tmp/ru-current-v25-a.json RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v25.json
+
+      - name: Verify bounded aggregate delta only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v25.json').read_text(encoding='utf-8'))
+          assert data['schema_version']=='0.27.0'
+          summary=data['progress_summary']
+          assert len(data['accepted_authorities'])==71
+          assert summary['accepted_bounded_ru_route_semantics']==9
+          assert summary['accepted_bounded_ru_subject_semantics']==75
+          assert summary['accepted_bounded_ru_semantics_total']==84
+          assert summary['semantic_units_with_accepted_component_sets']==41
+          assert summary['semantic_requirements_with_accepted_component_sets']==41
+          assert summary['semantic_units_remaining_without_accepted_component_set']==1275
+          assert summary['semantic_requirements_remaining_without_accepted_component_set']==1350
+          assert summary['subject_disposed_units_total']==42
+          assert summary['subject_disposed_requirements_total']==42
+          assert summary['subject_review_units_remaining']==1274
+          assert summary['subject_review_requirements_remaining']==1349
+          assert summary['canonical_component_refs_reused_unique']==122
+          assert summary['false_exact_mastery_admissions']==0
+          new=data['newly_accepted_bounded_subject_semantic']
+          assert new['semantic_id']=='ru-phonetics-sound-system'
+          assert new['independent_verification_item_ids']==[
+              'p01-u12-v1','p01-u12-v2','p01-u12-v3','p01-u12-v4','p01-u12-v5'
+          ]
+          assert new['forbidden_reused_component_evidence_item_ids']==[
+              'p01-u9-v1','p01-u9-v2','p01-u9-v3','p01-u9-v4','p01-u9-v5',
+              'p01-u10-v1','p01-u10-v2','p01-u10-v3','p01-u10-v4','p01-u10-v5'
+          ]
+          assert new['source_clause_ids']==['EDSOO59-P181-4.1-C']
+          assert new['parent_object_count_requiring_future_complete_component_set_acceptance']==1
+          assert new['object_acceptance_effect']=='NONE_PENDING_SEPARATE_EXACT_HEAD_PARENT_OBJECT_COMPONENT_SET_GATE'
+          assert new['parent_objects_remain_pending']==[{
+              'admission_unit_id':'RAU-5a6511267f156745f93c',
+              'requirement_id':'RSK-EDSOO59-4-1-P181',
+              'sound_characterization_clause_id':'EDSOO59-P181-4.1-A',
+              'sound_letter_relation_clause_id':'EDSOO59-P181-4.1-B',
+              'sound_system_clause_id':'EDSOO59-P181-4.1-C',
+          }]
+          print('RU01_SOUND_SYSTEM_SEMANTIC_AGGREGATE_DELTA=PASS')
+          PY
+
+      - name: Protect public and production surfaces in bounded wave
+        shell: bash
+        run: |
+          set -euo pipefail
+          wave_base='bfdb31555860858f9bad8f0ad74021637764fbb6'
+          git merge-base --is-ancestor "$wave_base" HEAD
+          recent=$(git diff --name-only "$wave_base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru01-sound-system-semantic-acceptance.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU01-SOUND-SYSTEM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v25.py
+          eksamio-learning-engine/russian-program/subject-admission/validate_ru01_sound_system_bounded_subject_semantics.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          if [[ -n "$unexpected" ]]; then
+            echo 'Sound-system semantic wave touched files outside the exact bounded allowlist:' >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
+          if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
+            echo 'Sound-system semantic wave touched a protected public/production surface.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene for current bounded wave
+        run: git diff --check bfdb31555860858f9bad8f0ad74021637764fbb6..HEAD
+
+      - name: Upload exact semantic acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru01-sound-system-semantic-acceptance
+          path: RUSSIAN-SEMANTIC-ACCEPTANCE-PROGRESS-LAUNCH-CURRENT-v25.json
+          if-no-files-found: error
+          retention-days: 14
