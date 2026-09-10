@@ -12,13 +12,22 @@ jobs:
   build-owner-console:
     if: github.run_attempt == 1
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v5
         with:
           ref: ${{ github.sha }}
           fetch-depth: 2
           persist-credentials: false
+          sparse-checkout: |
+            .github
+            docs/project-control
+            eksamio-learning-engine/AGENTS.md
+            eksamio-learning-engine/00-PRODUCT-MASTERPLAN.md
+            eksamio-learning-engine/00B-PROJECT-PRIORITIES-CURRENT.md
+            eksamio-learning-engine/project-control
+            eksamio-learning-engine/tests
+            eksamio-learning-engine/results
       - name: Verify one-shot trigger
         id: trigger
         run: |
@@ -41,8 +50,8 @@ jobs:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           prompt-file: docs/project-control/tasks/TASK-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md
           output-file: ${{ runner.temp }}/codex-final.txt
-          model: gpt-5.6-terra
-          effort: high
+          model: gpt-5.6-luna
+          effort: low
           sandbox: workspace-write
           codex-args: '["--ephemeral"]'
       - name: Validate bounded result
