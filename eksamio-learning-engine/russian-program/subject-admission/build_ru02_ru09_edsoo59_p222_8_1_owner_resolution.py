@@ -171,9 +171,9 @@ def build_review() -> dict[str, Any]:
     for key, expected in exact_source.items():
         if req.get(key) != expected:
             raise ValueError(f"target source identity drift: {key}")
-    if sorted(req.get("modules") or []) != sorted(TARGET_MODULES):
+    if sorted(group.get("modules") or []) != sorted(TARGET_MODULES):
         raise ValueError("target modules drift")
-    if sorted(req.get("routes") or []) != TARGET_ROUTES:
+    if sorted(group.get("routes") or []) != TARGET_ROUTES:
         raise ValueError("target routes drift")
 
     pron = load(PRON_ACCEPTANCE)
