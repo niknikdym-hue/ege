@@ -13,6 +13,8 @@ jobs:
     if: github.run_attempt == 1
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
     steps:
       - uses: actions/checkout@v5
         with:
@@ -61,6 +63,7 @@ jobs:
           import subprocess
           changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
           changed.update(subprocess.check_output(['git','ls-files','--others','--exclude-standard'],text=True).splitlines())
+          changed={p for p in changed if '/__pycache__/' not in p and not p.endswith('.pyc')}
           exact={'.github/workflows/owner-agent-console-sync.yml','eksamio-learning-engine/tests/test_owner_agent_console.py','eksamio-learning-engine/results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md'}
           bad=sorted(p for p in changed if p not in exact and not p.startswith('eksamio-learning-engine/project-control/'))
           if bad: raise SystemExit('Out of scope: '+', '.join(bad))
