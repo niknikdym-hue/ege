@@ -1,0 +1,179 @@
+name: API Codex Owner Control button panel build
+on:
+  push:
+    branches: [codex/owner-agent-control-page-v1-api]
+    paths: [.github/workflows/api-codex-owner-control-build.yml]
+permissions:
+  contents: write
+jobs:
+  build:
+    if: github.actor == 'niknikdym-hue' && github.event.head_commit.message == 'ci: build simple Owner Control button panel'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/checkout@v5
+        with:
+          repository: niknikdym-hue/ege
+          ref: b1de558461d76440dde3f385c89c8af7d9da0e11
+          path: _orchestrator
+          persist-credentials: false
+          sparse-checkout: agent-orchestration
+      - name: Astra plans the bounded panel
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_ASTRA_MODEL: gpt-6-astra
+        run: |
+          python3 - <<'PY'
+          import json,os,sys,urllib.request
+          from pathlib import Path
+          sys.path.insert(0,str(Path('_orchestrator/agent-orchestration').resolve()))
+          from eksamio_agent_runner import validate_task_plan
+          allowed=[
+           'eksamio-learning-engine/project-control/owner_agent_console.py',
+           'eksamio-learning-engine/project-control/owner-control.html',
+           'eksamio-learning-engine/project-control/owner-control-state.json',
+           'eksamio-learning-engine/tests/test_owner_agent_console.py',
+           'eksamio-learning-engine/results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md',
+           '.github/workflows/owner-agent-console-sync.yml',
+           '.github/workflows/owner-agent-console-control.yml']
+          context={'repository':'niknikdym-hue/ege','base_sha':os.environ['GITHUB_SHA'],'target_branch':'codex/owner-agent-control-page-v1-api','goal':'Build the simplest durable Russian Eksamio Owner Control page with buttons and one GitHub-native controller. Reuse the existing 115-task board and Issue 194. No second truth database.','allowed_scope':allowed,'requirements':['self-contained dependency-free HTML','Russian UI','first viewport has milestone, truth, activity, blockers and start pause resume stop refresh buttons','tabs Critical Path, Whole Project, Russian A+B, Visible Product, Owner Gates, Blockers','all 115 tasks searchable','responsive 1280/390/320','one workflow_dispatch controller','start/resume uses Astra then API-Codex and creates only a Draft PR','pause/stop affect only this controller workflow','no merge deploy production learner payment Yandex or secret action'],'acceptance':['targeted unit tests','HTML control and safety assertions','workflow safety assertions','git diff check']}
+          ins='Return exactly one JSON object with exactly schema_version, repository, base_sha, target_branch, goal, allowed_scope, non_goals, acceptance_checks, requested_actions, stop_conditions. schema_version must be the JSON string 0.1. Copy repository/base_sha/target_branch/allowed_scope exactly. requested_actions must be exactly ["edit","test"]. No markdown.'
+          payload={'model':os.environ['OPENAI_ASTRA_MODEL'],'instructions':ins,'input':json.dumps(context,ensure_ascii=False,sort_keys=True),'reasoning':{'effort':'high'},'text':{'verbosity':'low'},'max_output_tokens':2200,'store':False}
+          req=urllib.request.Request('https://api.openai.com/v1/responses',data=json.dumps(payload).encode(),headers={'Authorization':'Bearer '+os.environ['OPENAI_API_KEY'],'Content-Type':'application/json'},method='POST')
+          with urllib.request.urlopen(req,timeout=180) as r: body=json.loads(r.read().decode())
+          out=''.join(x.get('text','') for i in body.get('output',[]) if i.get('type')=='message' for x in i.get('content',[]) if x.get('type')=='output_text')
+          plan=json.loads(out);validate_task_plan(plan)
+          assert plan['base_sha']==context['base_sha'] and plan['target_branch']==context['target_branch']
+          assert plan['allowed_scope']==allowed and plan['requested_actions']==['edit','test']
+          Path('/tmp/task-plan.json').write_text(json.dumps(plan,ensure_ascii=False,indent=2))
+          print('ASTRA_PLAN=PASS')
+          PY
+      - name: Compose Codex prompt
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          task=r"""
+          Build the authorized Eksamio Owner Control button panel. Read only AGENTS.md mandatory project-control authority, existing project-control files, their targeted test/result, and the Astra plan.
+
+          Keep one source of truth: operational-board-v1.json and the existing GitHub adapter. Extend owner_agent_console.py with a deterministic HTML render command and generate tracked owner-control.html. Add owner-control-state.json with honest IDLE/no-active-task state. No framework, package, network dependency, learner data, analytics fiction, secret or external image.
+
+          Page language is Russian. It must open on the working surface. First viewport: current milestone, SOURCE OF TRUTH state, Astra/API-Codex activity, critical blocker count, and five large controls labelled exactly:
+          Запустить следующую задачу
+          Пауза после текущего шага
+          Продолжить
+          Остановить
+          Обновить статус
+          Each control opens the one native GitHub workflow page and clearly says GitHub will ask for one confirmation; opening the page is not execution. Add tabs with visible labels Critical Path, Whole Project, Russian A+B, Visible Product, Owner Gates, Blockers. Default Critical Path. All 115 tasks remain searchable/filterable. Render repo-derived strings only through textContent/createElement, never innerHTML. Responsive at 1280/390/320 with no page-level horizontal overflow. Use a crisp navy/white/blue operational design, readable type, keyboard focus, no decorative imagery.
+
+          Create one permanent .github/workflows/owner-agent-console-control.yml. workflow_dispatch inputs: action choice start/pause/resume/stop/refresh and optional owner_note. Explicit permissions contents:write, issues:write, pull-requests:write, actions:write; no id-token/deployments.
+          - refresh runs the existing deterministic Issue 194 sync.
+          - pause/stop cancel only older queued/in-progress runs of this exact workflow and post a concise control event to Issue 194. Never cancel Physics or other workflows.
+          - start/resume fetch current main, read the board/GitHub facts, ask gpt-6-astra for a strict bounded plan, invoke openai/codex-action@v1 with gpt-5.6-terra/workspace-write, validate actual paths against the plan, run git diff --check plus safe syntax checks, obtain Astra PASS, then push a new codex/owner-run-<run_id> branch and create a Draft PR. Never merge, deploy, mark Ready or alter public traffic.
+          - Fail closed if scope includes .github, frozen demo/source/Tilda, secrets, deployment, payment or other provider/production actions. If no safe bounded task exists, post BLOCKED/OWNER_ACTION_REQUIRED and exit without branch.
+          - Use no dynamic shell from model output and never echo API keys.
+
+          Expand only test_owner_agent_console.py for exact controls/tabs, 115 tasks, safe DOM, no secret strings, truthful initial state and workflow hard boundaries. Update the existing result honestly: implementation in Draft PR, hosting/live availability pending merge; do not claim direct one-click backend. Generate HTML. No unrelated changes.
+          """
+          Path('/tmp/codex-prompt.txt').write_text(task+'\nASTRA PLAN:\n'+Path('/tmp/task-plan.json').read_text())
+          PY
+      - name: API-Codex builds page and controller
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: /tmp/codex-prompt.txt
+          output-file: /tmp/codex-output.txt
+          model: gpt-5.6-terra
+          effort: high
+          sandbox: workspace-write
+          codex-args: '["--ephemeral"]'
+      - name: Validate bounded result
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import subprocess
+          allowed={
+           'eksamio-learning-engine/project-control/owner_agent_console.py',
+           'eksamio-learning-engine/project-control/owner-control.html',
+           'eksamio-learning-engine/project-control/owner-control-state.json',
+           'eksamio-learning-engine/tests/test_owner_agent_console.py',
+           'eksamio-learning-engine/results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md',
+           '.github/workflows/owner-agent-console-sync.yml',
+           '.github/workflows/owner-agent-console-control.yml'}
+          lines=subprocess.check_output(['git','status','--porcelain'],text=True).splitlines()
+          paths={x[3:] for x in lines if len(x)>3 and not x[3:].startswith('_orchestrator/')}
+          extra=paths-allowed
+          if extra: raise SystemExit('out of scope: '+repr(sorted(extra)))
+          need={'eksamio-learning-engine/project-control/owner-control.html','.github/workflows/owner-agent-console-control.yml'}
+          if not need<=paths: raise SystemExit('missing: '+repr(sorted(need-paths)))
+          print('PATH_SCOPE=PASS')
+          PY
+          python3 -m unittest eksamio-learning-engine/tests/test_owner_agent_console.py
+          python3 -m py_compile eksamio-learning-engine/project-control/owner_agent_console.py
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('eksamio-learning-engine/project-control/owner-control.html').read_text()
+          for x in ['Запустить следующую задачу','Пауза после текущего шага','Продолжить','Остановить','Обновить статус','Critical Path','Whole Project','Russian A+B','Visible Product','Owner Gates','Blockers']: assert x in s,x
+          assert 'OPENAI_API_KEY' not in s and 'GITHUB_TOKEN' not in s and 'innerHTML' not in s
+          assert len(s)>20000
+          print('BUTTON_PANEL=PASS')
+          PY
+          grep -q 'workflow_dispatch:' .github/workflows/owner-agent-console-control.yml
+          grep -q 'openai/codex-action@v1' .github/workflows/owner-agent-console-control.yml
+          grep -q 'gpt-6-astra' .github/workflows/owner-agent-console-control.yml
+          grep -q 'gpt-5.6-terra' .github/workflows/owner-agent-console-control.yml
+          ! grep -Eq 'gh pr merge|deploy-pages|git push.*main' .github/workflows/owner-agent-console-control.yml
+          git diff --check
+          printf '%s\n' PATH_SCOPE=PASS TARGETED_TESTS=PASS BUTTON_PANEL=PASS CONTROL_WORKFLOW=PASS NO_MERGE_DEPLOY=PASS > /tmp/evidence.txt
+      - name: Commit exact result
+        run: |
+          git rm .github/workflows/api-codex-owner-control-build.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add eksamio-learning-engine/project-control/owner_agent_console.py eksamio-learning-engine/project-control/owner-control.html eksamio-learning-engine/project-control/owner-control-state.json eksamio-learning-engine/tests/test_owner_agent_console.py eksamio-learning-engine/results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md .github/workflows/owner-agent-console-sync.yml .github/workflows/owner-agent-console-control.yml
+          git commit -m 'feat: add simple Owner Control button panel'
+          git rev-parse HEAD > /tmp/reviewed.txt
+          git diff-tree --no-commit-id --name-only -r HEAD > /tmp/paths.txt
+      - name: Astra reviews the exact result
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_ASTRA_MODEL: gpt-6-astra
+        run: |
+          python3 - <<'PY'
+          import json,os,sys,urllib.request
+          from pathlib import Path
+          sys.path.insert(0,str(Path('_orchestrator/agent-orchestration').resolve()))
+          from eksamio_agent_runner import validate_review_decision
+          sha=Path('/tmp/reviewed.txt').read_text().strip()
+          ctx={'reviewed_sha':sha,'plan':json.load(open('/tmp/task-plan.json')),'changed_paths':Path('/tmp/paths.txt').read_text().splitlines(),'evidence':Path('/tmp/evidence.txt').read_text(),'codex_report':Path('/tmp/codex-output.txt').read_text()[-10000:],'invariants':{'false_exact_mastery_zero':True,'server_owned_truth_preserved':True,'owner_gates_preserved':True},'forbidden':['merge','deploy','production write','learner data','payment','Yandex','secret exposure']}
+          ins=f'Return exactly one JSON object with exactly schema_version, decision, reviewed_sha, invariants, evidence, reason, next_action. schema_version is the JSON string 0.1. reviewed_sha is {sha}. PASS only if all exact evidence passed, scope is bounded, controls are honest, and every invariant is true. No markdown.'
+          payload={'model':os.environ['OPENAI_ASTRA_MODEL'],'instructions':ins,'input':json.dumps(ctx,ensure_ascii=False,sort_keys=True),'reasoning':{'effort':'high'},'text':{'verbosity':'low'},'max_output_tokens':1800,'store':False}
+          req=urllib.request.Request('https://api.openai.com/v1/responses',data=json.dumps(payload).encode(),headers={'Authorization':'Bearer '+os.environ['OPENAI_API_KEY'],'Content-Type':'application/json'},method='POST')
+          with urllib.request.urlopen(req,timeout=180) as r: body=json.loads(r.read().decode())
+          out=''.join(x.get('text','') for i in body.get('output',[]) if i.get('type')=='message' for x in i.get('content',[]) if x.get('type')=='output_text')
+          d=json.loads(out);validate_review_decision(d)
+          assert d['reviewed_sha']==sha and d['decision']=='PASS' and all(d['invariants'].values()),d
+          Path('/tmp/astra-review.json').write_text(json.dumps(d,ensure_ascii=False,indent=2))
+          print('ASTRA_REVIEW=PASS')
+          PY
+      - name: Push accepted result
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh auth setup-git
+          git push origin HEAD:codex/owner-agent-control-page-v1-api
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: owner-control-button-panel-${{ github.sha }}
+          path: |
+            /tmp/task-plan.json
+            /tmp/codex-output.txt
+            /tmp/evidence.txt
+            /tmp/astra-review.json
+          if-no-files-found: warn
+          retention-days: 14
