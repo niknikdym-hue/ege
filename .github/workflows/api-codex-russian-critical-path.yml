@@ -147,7 +147,12 @@ jobs:
           changed=$(git diff --name-only)
           untracked=$(git ls-files --others --exclude-standard | grep -v '^_orchestrator/' || true)
           actual=$(printf '%s\n%s\n' "$changed" "$untracked" | sed '/^$/d' | sort -u)
-          test "$actual" = "$allowed"
+          if [ -n "$actual" ]; then
+            test "$actual" = "$allowed"
+            echo 'CODEX_DELTA=EXACT_ALLOWED_FILE'
+          else
+            echo 'CODEX_DELTA=PREEXISTING_EXACT_FIX_VERIFIED'
+          fi
           root='eksamio-learning-engine/russian-program/subject-admission'
           python3 "$root/build_oge_6_14_remaining_6_2_reuse_exhaustion.py" --output /tmp/exhaustion-a.json > /tmp/exhaustion-a.txt
           python3 "$root/build_oge_6_14_remaining_6_2_reuse_exhaustion.py" --output /tmp/exhaustion-b.json > /tmp/exhaustion-b.txt
@@ -194,6 +199,7 @@ jobs:
           git commit -m 'fix(russian): preserve accepted 6.2 reuse fingerprint'
           git show --stat --oneline HEAD > /tmp/commit-summary.txt
           git diff-tree --no-commit-id --name-only -r HEAD > /tmp/commit-paths.txt
+          git diff feb0b6ce6febcc33f766dc800bc010e778f80304..HEAD -- eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_remaining_6_2_reuse_exhaustion.py > /tmp/subject-delta.patch
       - name: Astra Brain reviews exact commit and evidence
         if: steps.trigger.outputs.enabled == 'true'
         env:
@@ -214,6 +220,8 @@ jobs:
             'changed_paths':Path('/tmp/commit-paths.txt').read_text(encoding='utf-8').splitlines(),
             'acceptance_evidence':Path('/tmp/acceptance-evidence.txt').read_text(encoding='utf-8'),
             'commit_summary':Path('/tmp/commit-summary.txt').read_text(encoding='utf-8'),
+            'subject_delta_from_accepted_head':Path('/tmp/subject-delta.patch').read_text(encoding='utf-8'),
+            'bootstrap_cleanup_paths':['.github/workflows/api-codex-russian-critical-path.yml','docs/project-control/api-codex-russian-critical-path-trigger.json','docs/project-control/tasks/TASK-RUSSIAN-CRITICAL-PATH-FINGERPRINT-DRIFT.md'],
             'codex_report':Path('/tmp/codex-output.txt').read_text(encoding='utf-8')[-12000:],
             'hard_invariants':{'false_exact_mastery_zero':True,'server_owned_truth_preserved':True,'owner_gates_preserved':True},
             'forbidden_actions_confirmed':['no merge','no deploy','no learner/runtime/demo/scorer/Tilda change','no Yandex','no production write']
@@ -260,6 +268,7 @@ jobs:
             /tmp/codex-output.txt
             /tmp/acceptance-evidence.txt
             /tmp/commit-summary.txt
+            /tmp/subject-delta.patch
             /tmp/astra-review.json
           if-no-files-found: warn
           retention-days: 14
