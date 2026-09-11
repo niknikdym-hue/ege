@@ -68,15 +68,10 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
-          import json, sys
+          import json, os, sys, urllib.error, urllib.request
           from pathlib import Path
           sys.path.insert(0, str(Path('_orchestrator/agent-orchestration').resolve()))
-          from eksamio_agent_runner import AstraResponsesAdapter
-          schema_path=Path('_orchestrator/agent-orchestration/schemas/task-plan-v0.1.schema.json')
-          schema_doc=json.loads(schema_path.read_text(encoding='utf-8'))
-          if 'stop_conditions' not in schema_doc['required']:
-              schema_doc['required'].append('stop_conditions')
-          schema_path.write_text(json.dumps(schema_doc,ensure_ascii=False,indent=2),encoding='utf-8')
+          from eksamio_agent_runner import validate_task_plan
           context={
             'repository':'niknikdym-hue/ege',
             'current_main_sha':'85d2f2b3dd0cf56c428f57c8a5c7d1b636ecebbb',
@@ -95,11 +90,33 @@ jobs:
             'acceptance':['reuse-exhaustion builds twice identically and normalized_sha256 remains 9aae0903...','wave-002 validator passes','6.14 exact acceptance rebuild is deterministic and byte-identical to tracked accepted JSON','false_exact_mastery_admissions remains 0','no learner or production surfaces change'],
             'owner_authorization':'One bounded Critical Path repair on existing draft PR #164; no merge, deploy, public traffic, learner state, Yandex, payment, or messaging.'
           }
-          result=AstraResponsesAdapter().plan(context)
+          instructions="You are Eksamio Senior Brain. Return exactly one JSON object and no markdown. Use only supplied evidence. The object must contain exactly: schema_version, repository, base_sha, target_branch, goal, allowed_scope, non_goals, acceptance_checks, requested_actions, stop_conditions. schema_version must be 0.1; repository must be niknikdym-hue/ege; base_sha must be feb0b6ce6febcc33f766dc800bc010e778f80304; target_branch must be brain/sep1-russian-subject-closure. allowed_scope must contain only the fixed_scope path. requested_actions may contain only edit and test. Preserve false_exact_mastery=0 and all owner gates. No merge, deploy, learner/runtime/demo/scorer/Tilda/Yandex/production changes."
+          payload={'model':os.environ['OPENAI_ASTRA_MODEL'],'instructions':instructions,'input':json.dumps(context,ensure_ascii=False,sort_keys=True),'reasoning':{'effort':'high'},'text':{'verbosity':'low'},'max_output_tokens':2500,'store':False}
+          req=urllib.request.Request('https://api.openai.com/v1/responses',data=json.dumps(payload).encode(),headers={'Authorization':'Bearer '+os.environ['OPENAI_API_KEY'],'Content-Type':'application/json'},method='POST')
+          try:
+              with urllib.request.urlopen(req,timeout=180) as response: body=json.loads(response.read().decode())
+          except urllib.error.HTTPError as exc:
+              raw=exc.read().decode(errors='replace')
+              try:
+                  err=json.loads(raw).get('error',{})
+                  print(json.dumps({'http_status':exc.code,'type':err.get('type'),'code':err.get('code'),'message':err.get('message')},ensure_ascii=False))
+              except Exception: print(json.dumps({'http_status':exc.code,'message':'non-json API error'}))
+              raise
+          chunks=[]
+          for item in body.get('output',[]):
+              if item.get('type')=='message':
+                  chunks.extend(x.get('text','') for x in item.get('content',[]) if x.get('type')=='output_text')
+          output=json.loads(''.join(chunks))
+          validate_task_plan(output)
+          assert output['base_sha']==context['baseline_subject_head']
+          assert output['target_branch']==context['target_branch']
+          assert output['allowed_scope']==context['fixed_scope']
+          assert set(output['requested_actions']) <= {'edit','test'}
+          result={'output':output,'provider_metadata':{'requested_model':payload['model'],'returned_model':body.get('model'),'response_id':body.get('id'),'usage':body.get('usage') or {}}}
           Path('/tmp/astra-plan.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
-          Path('/tmp/task-plan.json').write_text(json.dumps(result['output'],ensure_ascii=False,indent=2),encoding='utf-8')
+          Path('/tmp/task-plan.json').write_text(json.dumps(output,ensure_ascii=False,indent=2),encoding='utf-8')
           print('ASTRA_PLAN=PASS')
-          print('GOAL='+result['output']['goal'])
+          print('GOAL='+output['goal'])
           PY
       - name: Compose fail-closed Codex prompt
         if: steps.trigger.outputs.enabled == 'true'
@@ -186,10 +203,10 @@ jobs:
         run: |
           git archive b1de558461d76440dde3f385c89c8af7d9da0e11 agent-orchestration | tar -x -C /tmp
           python3 - <<'PY'
-          import json, subprocess, sys
+          import json, os, subprocess, sys, urllib.error, urllib.request
           from pathlib import Path
           sys.path.insert(0,'/tmp/agent-orchestration')
-          from eksamio_agent_runner import AstraResponsesAdapter
+          from eksamio_agent_runner import validate_review_decision
           reviewed=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
           context={
             'repository':'niknikdym-hue/ege','pull_request':164,'reviewed_sha':reviewed,
@@ -201,12 +218,28 @@ jobs:
             'hard_invariants':{'false_exact_mastery_zero':True,'server_owned_truth_preserved':True,'owner_gates_preserved':True},
             'forbidden_actions_confirmed':['no merge','no deploy','no learner/runtime/demo/scorer/Tilda change','no Yandex','no production write']
           }
-          result=AstraResponsesAdapter().review(context)
-          Path('/tmp/astra-review.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
-          decision=result['output']
+          instructions=f"You are Eksamio Senior Brain reviewing exact commit {reviewed}. Return exactly one JSON object and no markdown. The object must contain exactly schema_version, decision, reviewed_sha, invariants, evidence, reason, next_action. schema_version must be 0.1. reviewed_sha must equal {reviewed}. decision is PASS, REWORK, or BLOCKED. invariants must contain exactly false_exact_mastery_zero, server_owned_truth_preserved, owner_gates_preserved as booleans. PASS is forbidden unless all supplied exact checks passed, changed paths are bounded, and all invariants are true. No merge or deploy."
+          payload={'model':os.environ['OPENAI_ASTRA_MODEL'],'instructions':instructions,'input':json.dumps(context,ensure_ascii=False,sort_keys=True),'reasoning':{'effort':'high'},'text':{'verbosity':'low'},'max_output_tokens':2000,'store':False}
+          req=urllib.request.Request('https://api.openai.com/v1/responses',data=json.dumps(payload).encode(),headers={'Authorization':'Bearer '+os.environ['OPENAI_API_KEY'],'Content-Type':'application/json'},method='POST')
+          try:
+              with urllib.request.urlopen(req,timeout=180) as response: body=json.loads(response.read().decode())
+          except urllib.error.HTTPError as exc:
+              raw=exc.read().decode(errors='replace')
+              try:
+                  err=json.loads(raw).get('error',{})
+                  print(json.dumps({'http_status':exc.code,'type':err.get('type'),'code':err.get('code'),'message':err.get('message')},ensure_ascii=False))
+              except Exception: print(json.dumps({'http_status':exc.code,'message':'non-json API error'}))
+              raise
+          chunks=[]
+          for item in body.get('output',[]):
+              if item.get('type')=='message': chunks.extend(x.get('text','') for x in item.get('content',[]) if x.get('type')=='output_text')
+          decision=json.loads(''.join(chunks))
+          validate_review_decision(decision)
           assert decision['reviewed_sha']==reviewed
           assert decision['decision']=='PASS', decision
           assert all(decision['invariants'].values()), decision
+          result={'output':decision,'provider_metadata':{'requested_model':payload['model'],'returned_model':body.get('model'),'response_id':body.get('id'),'usage':body.get('usage') or {}}}
+          Path('/tmp/astra-review.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
           print('ASTRA_REVIEW=PASS')
           PY
       - name: Push accepted bounded commit
