@@ -1,0 +1,146 @@
+name: Russian RU02 EDSOO59 p190 5.1 exact object binding review
+
+on:
+  push:
+    branches:
+      - brain/sep1-russian-subject-closure
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p190_5_1_exact_object_binding_review.py'
+      - '.github/workflows/russian-ru02-orthoepy-edsoo59-p190-5-1-exact-object-binding-review.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p190_5_1_exact_object_binding_review.py'
+      - '.github/workflows/russian-ru02-orthoepy-edsoo59-p190-5-1-exact-object-binding-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru02-edsoo59-p190-5-1-exact-object-binding-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile exact review
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p190_5_1_exact_object_binding_review.py
+
+      - name: Build exact review A
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p190_5_1_exact_object_binding_review.py --output /tmp/ru02-p190-review-a.json > /tmp/ru02-p190-review-a.txt
+
+      - name: Build exact review B
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p190_5_1_exact_object_binding_review.py --output /tmp/ru02-p190-review-b.json > /tmp/ru02-p190-review-b.txt
+
+      - name: Verify deterministic exact review
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmp /tmp/ru02-p190-review-a.json /tmp/ru02-p190-review-b.json
+          diff -u /tmp/ru02-p190-review-a.txt /tmp/ru02-p190-review-b.txt
+
+      - name: Verify fail-closed review boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat /tmp/ru02-p190-review-a.txt
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('/tmp/ru02-p190-review-a.json').read_text(encoding='utf-8'))
+          assert data['status']=='CENTRAL_BRAIN_RU02_EDSOO59_P190_5_1_EXACT_OBJECT_BINDING_REVIEW_READY_FOR_SEPARATE_ACCEPTANCE_NOT_ACCEPTED'
+          assert data['current_v27_exact_head_gate']=={
+              'workflow':'Russian RU02 EDSOO59 p187 4.1.6 current exact acceptance',
+              'run_id':34555338230,
+              'head_sha':'bb6e31986c2f7adf07c2d5e46ca4ba71270d33ba',
+              'conclusion':'SUCCESS',
+              'normalized_sha256':'4e5e6018b8fa832a6115074291c722cd7862388aecbd78ef633e0e2b61864b82',
+          }
+          target=data['selected_object']
+          assert target['admission_unit_id']=='RAU-475d1c2a36040b45e190'
+          assert target['requirement_id']=='RSK-EDSOO59-5-1-P190'
+          assert target['source_locator']=='EDSOO-RU-5-9-2025/EDSOO59 p.190 5.1'
+          assert target['normalized_meaning']=='Применять нормативное произношение и ударение.'
+          assert target['modules']==['RU-PROG-02']
+          assert target['routes']==['school']
+          reuse=data['reuse_first_owner_resolution']
+          assert reuse['resolution']=='EXACT_CURRENT_BOUNDED_RU02_COMPONENT_OWNERS_EXIST'
+          assert reuse['canonical_component_refs']==[
+              'ru-orthoepy-normative-pronunciation-selection',
+              'ru-orthoepy-normative-stress-selection',
+          ]
+          assert reuse['independent_evidence_items']==9
+          assert reuse['missing_source_components']==[]
+          assert reuse['overlapping_component_boundaries']==[]
+          sibling=data['sibling_reuse_boundary']
+          assert len(sibling['prior_accepted_siblings'])==2
+          assert sibling['prior_sibling_acceptance_auto_closes_target'] is False
+          assert sibling['separate_exact_object_acceptance_required'] is True
+          readiness=data['acceptance_readiness']
+          assert readiness['target_still_in_current_v27_remainder'] is True
+          assert readiness['object_accepted_by_this_review'] is False
+          policy=data['policy']
+          assert policy['review_is_acceptance'] is False
+          assert policy['shared_sibling_evidence_can_auto_close_target'] is False
+          assert policy['title_route_task_keyword_fuzzy_or_embedding_inference_allowed'] is False
+          assert policy['registered_user_identity_required_for_future_canonical_learner_evidence'] is True
+          assert policy['anonymous_or_device_only_canonical_progress_allowed'] is False
+          summary=data['summary']
+          assert summary['semantic_admissions']==0
+          assert summary['object_level_admission_units_closed']==0
+          assert summary['object_level_requirements_closed']==0
+          assert summary['exact_mastery_admissions']==0
+          assert summary['false_exact_mastery_admissions']==0
+          assert summary['current_subject_review_units_remaining']==1272
+          assert summary['current_subject_review_requirements_remaining']==1347
+          print('RU02_EDSOO59_P190_EXACT_REVIEW_BOUNDARY=PASS')
+          PY
+
+      - name: Protect public and production surfaces in bounded wave
+        shell: bash
+        run: |
+          set -euo pipefail
+          wave_base='bb6e31986c2f7adf07c2d5e46ca4ba71270d33ba'
+          git merge-base --is-ancestor "$wave_base" HEAD
+          recent=$(git diff --name-only "$wave_base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru02-orthoepy-edsoo59-p190-5-1-exact-object-binding-review.yml
+          eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p190_5_1_exact_object_binding_review.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          if [[ -n "$unexpected" ]]; then
+            echo 'RU02 p190 review wave touched files outside exact bounded allowlist:' >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
+          if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
+            echo 'RU02 p190 review wave touched a protected public/production surface.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene for exact bounded wave
+        run: git diff --check bb6e31986c2f7adf07c2d5e46ca4ba71270d33ba..HEAD
+
+      - name: Upload exact review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru02-edsoo59-p190-5-1-exact-object-binding-review
+          path: |
+            /tmp/ru02-p190-review-a.json
+            /tmp/ru02-p190-review-a.txt
