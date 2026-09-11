@@ -76,7 +76,7 @@ jobs:
               'normalized_sha256':'4e5e6018b8fa832a6115074291c722cd7862388aecbd78ef633e0e2b61864b82',
           }
           target=data['selected_object']
-          assert target['admission_unit_id']=='RAU-475d1c2a36040b45e190'
+          assert target['admission_unit_id']=='RAU-f875ecae572d08cef520'
           assert target['requirement_id']=='RSK-EDSOO59-5-1-P190'
           assert target['source_locator']=='EDSOO-RU-5-9-2025/EDSOO59 p.190 5.1'
           assert target['normalized_meaning']=='Применять нормативное произношение и ударение.'
@@ -92,6 +92,8 @@ jobs:
           assert reuse['missing_source_components']==[]
           assert reuse['overlapping_component_boundaries']==[]
           provenance=data['validation_provenance']
+          assert provenance['target_admission_unit_identity_source']=='deterministic_current_object_review_queue'
+          assert provenance['target_admission_unit_id']=='RAU-f875ecae572d08cef520'
           assert provenance['stress_bounded_semantic_artifact_is_component_evidence_registry'] is False
           assert provenance['stress_component_evidence_source']=='accepted_exact_sibling_authority'
           assert provenance['accepted_exact_sibling_requirement_id']=='RSK-EDSOO59-4-1-6-P187'
