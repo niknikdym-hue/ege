@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   astra-final-review:
-    if: ${{ github.actor == 'niknikdym-hue' && github.event.head_commit.message == 'ci: bounded Astra final review PR 193' }}
+    if: "${{ github.actor == 'niknikdym-hue' && github.event.head_commit.message == 'ci: bounded Astra final review PR 193' }}"
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
