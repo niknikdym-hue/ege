@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/_tmp-owner-control-first-run-safety.yml'
-      - 'eksamio-learning-engine/project-control/_tmp_owner_control_first_run_patch.py'
 
 permissions:
   contents: write
@@ -39,17 +38,18 @@ jobs:
           grep -q '/tmp/owner-control-authority' .github/workflows/owner-agent-console-control.yml
           git diff --check -- .github/workflows/owner-agent-console-control.yml eksamio-learning-engine/project-control/owner-control.html eksamio-learning-engine/project-control/operational-board-v1.json eksamio-learning-engine/tests/test_owner_agent_console.py
           echo 'OWNER_CONTROL_FIRST_RUN_SAFETY=PASS'
-      - name: Commit repaired control plane and remove bootstrap
+      - name: Stage validated non-workflow files for connector publish
         shell: bash
         run: |
           set -euo pipefail
+          cp .github/workflows/owner-agent-console-control.yml eksamio-learning-engine/project-control/_owner-agent-console-control.desired.yml
+          git checkout -- .github/workflows/owner-agent-console-control.yml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add .github/workflows/owner-agent-console-control.yml \
+          git add \
             eksamio-learning-engine/project-control/owner-control.html \
             eksamio-learning-engine/project-control/operational-board-v1.json \
+            eksamio-learning-engine/project-control/_owner-agent-console-control.desired.yml \
             eksamio-learning-engine/tests/test_owner_agent_console.py
-          git rm .github/workflows/_tmp-owner-control-first-run-safety.yml \
-            eksamio-learning-engine/project-control/_tmp_owner_control_first_run_patch.py
-          git commit -m 'fix: harden Owner Control first paid run'
+          git commit -m 'fix: stage validated Owner Control first-run safety'
           git push origin HEAD:main
