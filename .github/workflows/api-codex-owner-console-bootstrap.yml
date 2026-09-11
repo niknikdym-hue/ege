@@ -56,6 +56,16 @@ jobs:
           effort: low
           sandbox: workspace-write
           codex-args: '["--ephemeral"]'
+      - name: Normalize bounded generated paths
+        if: steps.trigger.outputs.enabled == 'true'
+        run: |
+          if [ -f results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md ]; then
+            mkdir -p eksamio-learning-engine/results
+            mv results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md eksamio-learning-engine/results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md
+          fi
+          if [ -f eksamio-learning-engine/project-control/github-fixture-v1.json ] && [ ! -f eksamio-learning-engine/project-control/github-fixture.json ]; then
+            mv eksamio-learning-engine/project-control/github-fixture-v1.json eksamio-learning-engine/project-control/github-fixture.json
+          fi
       - name: Validate bounded result
         if: steps.trigger.outputs.enabled == 'true'
         run: |
