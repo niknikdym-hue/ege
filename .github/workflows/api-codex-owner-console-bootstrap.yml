@@ -41,7 +41,7 @@ jobs:
           if p.is_file():
               d=json.loads(p.read_text())
               parent=subprocess.check_output(['git','rev-parse','HEAD^'],text=True).strip()
-              ok=d.get('enabled') is True and d.get('expected_parent_sha')==parent and d.get('task_id')=='OWNER-AGENT-CONSOLE-REMOTE-SLICE-2'
+              ok=d.get('enabled') is True and d.get('expected_parent_sha')==parent and d.get('task_id')=='OWNER-AGENT-CONSOLE-REMOTE-SLICE-3'
           with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write('enabled='+('true' if ok else 'false')+'\n')
           print('API-Codex one-shot:', 'ENABLED' if ok else 'SKIPPED')
           PY
