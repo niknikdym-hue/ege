@@ -9,9 +9,12 @@ on:
   push:
     paths:
       - '.github/workflows/owner-agent-console-sync.yml'
+      - '.github/workflows/owner-agent-console-control.yml'
       - 'docs/project-control/**'
       - 'eksamio-learning-engine/00B-PROJECT-PRIORITIES-CURRENT.md'
       - 'eksamio-learning-engine/project-control/**'
+      - 'eksamio-learning-engine/tests/test_owner_agent_console.py'
+      - 'eksamio-learning-engine/results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md'
 
 permissions:
   contents: read
@@ -22,6 +25,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - name: Targeted Owner Control tests
+        run: |
+          set -euo pipefail
+          python3 -m unittest eksamio-learning-engine/tests/test_owner_agent_console.py
+          python3 -m py_compile eksamio-learning-engine/project-control/owner_agent_console.py
+          git diff --check
       - name: Synchronize Owner Control issue
         env:
           GH_TOKEN: ${{ github.token }}
