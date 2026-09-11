@@ -33,5 +33,28 @@ class OwnerConsoleTest(unittest.TestCase):
         self.assertNotIn('statusCheckRollup',out); self.assertNotIn('__typename',out)
         fixture['facts']['conflict']=True; self.assertIn('STALE/CONFLICT',c.render(ROOT/'project-control/operational-board-v1.json',fixture))
         fixture['unknown_secret']='never-render'; self.assertNotIn('never-render',c.render(ROOT/'project-control/operational-board-v1.json',fixture))
+    def test_owner_control_panel_and_controller_contract(self):
+        repo=ROOT.parent
+        panel=ROOT/'project-control/owner-control.html'
+        workflow=repo/'.github/workflows/owner-agent-console-control.yml'
+        bootstrap=repo/'.github/workflows/api-codex-owner-control-build.yml'
+        self.assertTrue(panel.is_file()); self.assertTrue(workflow.is_file()); self.assertFalse(bootstrap.exists())
+        html=panel.read_text(); yml=workflow.read_text()
+        for x in ['Запустить следующую задачу','Пауза после текущего шага','Продолжить','Остановить','Обновить статус','Critical Path','Whole Project','Russian A+B','Visible Product','Owner Gates','Blockers']:
+            self.assertIn(x,html)
+        self.assertIn('operational-board-v1.json',html); self.assertIn('tasks.length!==115',html)
+        self.assertIn("expected={A:74,B:15,C:11,D:8,E:7}",html)
+        self.assertIn('pulls/${PR_NUMBER}',html); self.assertIn('check-runs?per_page=100',html)
+        self.assertIn('owner-agent-console-control.yml',html); self.assertIn('confirm(',html)
+        self.assertNotIn('OPENAI_API_KEY',html); self.assertNotIn('GITHUB_TOKEN',html); self.assertNotIn('innerHTML',html)
+        for x in ['workflow_dispatch:','gpt-6-astra','gpt-5.6-luna','gpt-5.6-terra','gpt-5.6-sol','openai/codex-action@v1','PAUSE_REQUESTED','STOP_REQUESTED','upload-artifact@v4','--draft']:
+            self.assertIn(x,yml)
+        self.assertNotIn('model: gpt-5.3-codex-spark',yml)
+        for bad in ['gh pr merge','markPullRequestReadyForReview','git push origin HEAD:main','deploy-pages']:
+            self.assertNotIn(bad,yml)
+        self.assertGreaterEqual(yml.count('actions/upload-artifact@v4'),6)
+        self.assertIn('task_id is required for start/resume before any paid API call',yml)
+        self.assertIn('Blocked task',yml); self.assertIn('OWNER_GATE task',yml)
+        self.assertIn("'/__pycache__/' not in x[3:]",yml)
 
 if __name__=='__main__': unittest.main()
