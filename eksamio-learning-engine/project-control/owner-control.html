@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eksamio — Owner Control</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color-scheme:light dark;--bg:#f6f7f9;--panel:#ffffff;--text:#1a1d22;--muted:#68707c;--line:#dde2e8;--accent:#2457d6;--ok:#177245;--warn:#9a6700;--bad:#b42318;--chip:#eef2f7}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1217;--panel:#171b22;--text:#eef1f5;--muted:#a5adba;--line:#303744;--accent:#7aa2ff;--ok:#68d391;--warn:#f5c451;--bad:#ff8a80;--chip:#222834}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}a{color:var(--accent)}button,input,select{font:inherit}.shell{max-width:1500px;margin:0 auto;padding:18px}.top{display:grid;grid-template-columns:1.6fr 1fr;gap:14px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}.title{font-size:26px;font-weight:750;margin:0 0 6px}.subtitle{color:var(--muted);margin:0}.truth{font-weight:750}.truth.ok{color:var(--ok)}.truth.warn{color:var(--warn)}.truth.bad{color:var(--bad)}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}.metric{padding:10px;border:1px solid var(--line);border-radius:12px}.metric b{display:block;font-size:19px}.metric span{font-size:12px;color:var(--muted)}.controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.controls button,.task-select{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:9px 12px;cursor:pointer}.controls button.primary{background:var(--accent);color:white;border-color:var(--accent)}.controls button.danger{border-color:var(--bad);color:var(--bad)}.control-note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.45}.selected{margin-top:12px;padding:10px;border-radius:10px;background:var(--chip);font-size:13px}.rail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:14px 0}.stage{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}.stage h3{font-size:14px;margin:0 0 8px}.stage .count{font-size:18px;font-weight:750}.stage p{font-size:12px;color:var(--muted);margin:4px 0}.tabs{display:flex;gap:6px;overflow:auto;padding-bottom:4px}.tab{white-space:nowrap;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:8px 12px;cursor:pointer}.tab.active{background:var(--accent);color:white;border-color:var(--accent)}.filters{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:8px;margin:12px 0}.filters input,.filters select{width:100%;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text)}.statusline{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:10px 0;color:var(--muted);font-size:13px}.tasks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.task{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;min-width:0}.task-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.task h4{margin:0;font-size:15px}.badge{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 7px;font-size:11px;white-space:nowrap}.task p{margin:7px 0;font-size:13px}.meta{display:flex;flex-wrap:wrap;gap:5px;color:var(--muted);font-size:11px}.task dl{display:grid;grid-template-columns:118px 1fr;gap:4px 8px;margin:9px 0;font-size:12px}.task dt{color:var(--muted)}.task dd{margin:0;overflow-wrap:anywhere}.task-actions{display:flex;gap:8px;align-items:center;margin-top:9px}.task-select:disabled{opacity:.45;cursor:not-allowed}.agent-list{font-size:13px;line-height:1.5}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;overflow-wrap:anywhere}.footer{margin:18px 0;color:var(--muted);font-size:12px}.errorbox{border:1px solid var(--bad);color:var(--bad);border-radius:10px;padding:10px;margin-top:10px}.hidden{display:none!important}
+@media(max-width:900px){.top{grid-template-columns:1fr}.rail{grid-template-columns:1fr 1fr}.tasks{grid-template-columns:1fr}.filters{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:1fr 1fr}}
+@media(max-width:430px){.shell{padding:10px}.title{font-size:22px}.rail,.filters,.metrics{grid-template-columns:1fr}.controls button{width:100%}.panel{padding:12px}.task dl{grid-template-columns:94px 1fr}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <section class="top">
+    <div class="panel">
+      <h1 class="title">Eksamio — Owner Control</h1>
+      <p class="subtitle">GitHub — durable source of truth. Панель ничего не merge/deploy и не хранит ключи.</p>
+      <div class="metrics">
+        <div class="metric"><b id="milestone">—</b><span>текущий этап</span></div>
+        <div class="metric"><b id="progress">—</b><span>задач в target state</span></div>
+        <div class="metric"><b id="blockers">—</b><span>Critical Path blockers</span></div>
+        <div class="metric"><b id="ownerGates">—</b><span>Owner Gates</span></div>
+      </div>
+      <div class="selected"><b>Bounded-задача перед платным запуском:</b> <span id="selectedTask">не выбрана</span><br><span id="selectedTaskDetail">Выберите допустимую задачу в списке. Заблокированные и owner-gated задачи не запускаются.</span></div>
+      <div class="controls" aria-label="Owner controls">
+        <button class="primary" data-command="start">Запустить следующую задачу</button>
+        <button data-command="pause">Пауза после текущего шага</button>
+        <button data-command="resume">Продолжить</button>
+        <button class="danger" data-command="stop">Остановить</button>
+        <button data-command="refresh">Обновить статус</button>
+      </div>
+      <div class="control-note">Start/Resume: ручной <code>workflow_dispatch</code> → Astra <code>gpt-6-astra</code> план → API‑Codex по маршрутизации <code>gpt-5.6-luna/terra/sol</code> → проверки → Astra acceptance → только новый Draft PR. Каждый платный этап сохраняет отдельный GitHub artifact; автоматических повторов нет. Кнопка лишь открывает GitHub: владелец подтверждает команду кнопкой <b>Run workflow</b>.</div>
+    </div>
+    <aside class="panel">
+      <div><b>Repository:</b> <a id="repoLink" target="_blank" rel="noopener">niknikdym-hue/ege</a></div>
+      <div><b>Main:</b> <span class="mono" id="mainSha">загрузка…</span></div>
+      <div><b>PR #193:</b> <span class="mono" id="prSha">загрузка…</span></div>
+      <div><b>Checks:</b> <span id="checks">загрузка…</span></div>
+      <div><b>Sync:</b> <span id="syncTime">—</span></div>
+      <div><b>Truth:</b> <span id="truth" class="truth warn">проверяется</span></div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:12px 0">
+      <div><b>Astra/API‑Codex activity</b></div>
+      <div id="activity" class="agent-list">Последний подтверждённый факт: run 34601121522 завершился до commit/push; новый платный повтор не запускался этой страницей.</div>
+    </aside>
+  </section>
+
+  <section id="stageRail" class="rail" aria-label="Stage rail A-E"></section>
+
+  <section class="panel">
+    <nav id="tabs" class="tabs" aria-label="Owner Control views">
+      <button class="tab active" data-view="Critical Path">Critical Path</button>
+      <button class="tab" data-view="Whole Project">Whole Project</button>
+      <button class="tab" data-view="Russian A+B">Russian A+B</button>
+      <button class="tab" data-view="Visible Product">Visible Product</button>
+      <button class="tab" data-view="Owner Gates">Owner Gates</button>
+      <button class="tab" data-view="Blockers">Blockers</button>
+    </nav>
+    <div class="filters">
+      <input id="search" type="search" placeholder="Поиск по ID, названию, действию…" aria-label="Поиск задач">
+      <select id="stageFilter" aria-label="Фильтр этапа"><option value="">Все этапы</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select>
+      <select id="statusFilter" aria-label="Фильтр статуса"><option value="">Все статусы</option></select>
+      <select id="blockerFilter" aria-label="Фильтр блокера"><option value="">Все блокеры</option><option value="NONE">Без блокера</option></select>
+    </div>
+    <div class="statusline"><span id="viewSummary">Загрузка реестра 115 задач…</span><span id="dataState">—</span></div>
+    <div id="errorBox" class="errorbox hidden"></div>
+    <div id="tasks" class="tasks"></div>
+  </section>
+  <p class="footer">Operational board is authoritative for task semantics. Live GitHub API is authoritative for current main/PR/SHA/checks. Cached browser data is explicitly marked stale and never upgrades project status.</p>
+</main>
+<script>
+'use strict';
+const REPO='niknikdym-hue/ege';
+const PR_NUMBER=193;
+const BRANCH='codex/owner-agent-control-page-v1-api';
+const BOARD_URL=`https://raw.githubusercontent.com/${REPO}/${BRANCH}/eksamio-learning-engine/project-control/operational-board-v1.json`;
+const API=`https://api.github.com/repos/${REPO}`;
+const CONTROL_URL=`https://github.com/${REPO}/actions/workflows/owner-agent-console-control.yml`;
+const CACHE_KEY='eksamio-owner-control-board-v1-nonauthoritative-cache';
+const VISIBLE_MAP=[['public site','A6.1'],['registration/login','A6.2'],['Pro purchase','A8.3'],['entitlement','A8.6'],['Russian navigation','A6.4'],['diagnostics','A7.1'],['work on mistakes','A7.3'],['next action','A7.4'],['Tutor text','A9.1'],['Tutor voice','A9.4'],['progress','A6.6'],['return login','A3.5'],['support/refund','A8.7']];
+const state={board:null,tasks:[],view:'Critical Path',selectedTaskId:null,boardSource:'NONE',mainSha:null,prHead:null,checks:'unavailable'};
+const $=id=>document.getElementById(id);
+function node(tag,text,cls){const e=document.createElement(tag);if(text!==undefined&&text!==null)e.textContent=String(text);if(cls)e.className=cls;return e}
+function link(text,url){const a=node('a',text);a.href=url;a.target='_blank';a.rel='noopener';return a}
+function safe(v,fallback='—'){return v===null||v===undefined||v===''?fallback:String(v)}
+function setTruth(text,kind){const e=$('truth');e.textContent=text;e.className='truth '+kind}
+function stageCounts(tasks,s){return tasks.filter(t=>t.stage===s)}
+function validateBoard(b){if(!b||b.version!=='operational-board-v1'||!Array.isArray(b.tasks))throw new Error('Неверный формат operational-board-v1.json');if(b.tasks.length!==115)throw new Error(`Ожидалось 115 задач, получено ${b.tasks.length}`);const ids=new Set(b.tasks.map(t=>t.task_id));if(ids.size!==115)throw new Error('task_id должны быть уникальны');const expected={A:74,B:15,C:11,D:8,E:7};for(const s of Object.keys(expected)){if(stageCounts(b.tasks,s).length!==expected[s])throw new Error(`Неверное число задач этапа ${s}`)}return b}
+async function fetchJson(url){const r=await fetch(url,{headers:{Accept:'application/vnd.github+json'}});if(!r.ok)throw new Error(`${r.status} ${r.statusText}`);return r.json()}
+async function loadBoard(){try{const b=validateBoard(await fetchJson(BOARD_URL));state.board=b;state.tasks=b.tasks;state.boardSource='LIVE_BRANCH';localStorage.setItem(CACHE_KEY,JSON.stringify(b));$('dataState').textContent='board: LIVE_BRANCH'}catch(err){const cached=localStorage.getItem(CACHE_KEY);if(!cached)throw err;state.board=validateBoard(JSON.parse(cached));state.tasks=state.board.tasks;state.boardSource='CACHED_STALE';$('dataState').textContent='board: CACHED_STALE';setTruth('STALE/CACHED','warn');showError(`GitHub board недоступен; показан только неавторитетный cache. ${err.message}`)}}
+async function loadGithubFacts(){const results=await Promise.allSettled([fetchJson(`${API}/branches/main`),fetchJson(`${API}/pulls/${PR_NUMBER}`)]);if(results[0].status==='fulfilled'){state.mainSha=results[0].value.commit.sha;$('mainSha').textContent=state.mainSha}else $('mainSha').textContent='unavailable';if(results[1].status==='fulfilled'){state.prHead=results[1].value.head.sha;$('prSha').textContent=state.prHead;try{const cr=await fetchJson(`${API}/commits/${state.prHead}/check-runs?per_page=100`);const checks=cr.check_runs||[];const finished=checks.filter(c=>c.status==='completed');const failed=finished.filter(c=>!['success','neutral','skipped'].includes(c.conclusion));state.checks=checks.length===0?'no checks reported':failed.length?`${failed.length} failing / ${checks.length}`:`${finished.length}/${checks.length} complete`;$('checks').textContent=state.checks}catch(err){$('checks').textContent='unavailable'}}else $('prSha').textContent='unavailable';$('syncTime').textContent=new Date().toLocaleString('ru-RU');recomputeTruth();loadActivity()}
+async function loadActivity(){try{const r=await fetchJson(`${API}/actions/workflows/owner-agent-console-control.yml/runs?per_page=5`);const runs=r.workflow_runs||[];if(!runs.length)return;const box=$('activity');box.textContent='';for(const run of runs.slice(0,3)){const p=node('div');p.append(link(`#${run.id}`,run.html_url));p.append(document.createTextNode(` — ${run.status}/${safe(run.conclusion,'—')} — ${safe(run.event)}`));box.append(p)}}catch(_err){/* Workflow may not exist on default branch until accepted/merged. */}}
+function recomputeTruth(){if(!state.board)return;if(state.boardSource!=='LIVE_BRANCH'){setTruth('STALE/CACHED','warn');return}if(!state.mainSha){setTruth('STALE/UNVERIFIED','warn');return}if(state.mainSha!==state.board.baseline_main){setTruth('STALE/CONFLICT','bad');return}setTruth('SOURCE OF TRUTH OK','ok')}
+function showError(msg){const e=$('errorBox');e.textContent=msg;e.classList.remove('hidden')}
+function fillFilters(){const statuses=[...new Set(state.tasks.map(t=>t.status))].sort();for(const s of statuses)$('statusFilter').append(node('option',s));const blockers=[...new Set(state.tasks.map(t=>t.blocker_type).filter(Boolean))].sort();for(const b of blockers){const o=node('option',b);o.value=b;$('blockerFilter').append(o)}}
+function recommendedTask(){if(!state.board)return null;const by=new Map(state.tasks.map(t=>[t.task_id,t]));for(const id of state.board.critical_path||[]){const t=by.get(id);if(!t)continue;if(t.owner_gate_required||t.blocker_type)continue;if(['NOT_STARTED','DESIGNED','INTEGRATION_PENDING'].includes(t.status))return t}return state.tasks.find(t=>!t.owner_gate_required&&!t.blocker_type&&!['DONE','PUBLIC_LAUNCH_PASS','VISIBLE_TO_LEARNER'].includes(t.status))||null}
+function selectTask(t){if(!t||t.owner_gate_required||t.blocker_type){return}state.selectedTaskId=t.task_id;$('selectedTask').textContent=`${t.task_id} — ${t.title}`;$('selectedTaskDetail').textContent=`Статус: ${t.status}. Следующее действие: ${safe(t.next_action)}. Перед Run workflow укажите task_id=${t.task_id}; платный executor выбирается Astra по правилу Luna → Terra → Sol.`;renderTasks()}
+function renderStageRail(){const names={A:'Russian Public Paid Launch',B:'Russian Full Product',C:'Mathematics',D:'Physics',E:'Next Subjects / Platform Scale'};const rail=$('stageRail');rail.textContent='';for(const s of ['A','B','C','D','E']){const rows=stageCounts(state.tasks,s);const target=rows.filter(t=>t.status===t.target_state).length;const blocked=rows.filter(t=>Boolean(t.blocker_type)).length;const vis=rows.some(t=>t.visible_to_learner);const card=node('article',null,'stage');card.append(node('h3',`${s} — ${names[s]}`));card.append(node('div',`${target}/${rows.length}`,'count'));card.append(node('p','rows at target state'));card.append(node('p',`blockers: ${blocked}; learner-visible: ${vis?'YES':'NO'}`));rail.append(card)}}
+function updateHeader(){const target=state.tasks.filter(t=>t.status===t.target_state).length;$('milestone').textContent=safe(state.board.active_milestone).replace('A — ','A');$('progress').textContent=`${target}/115`;const cp=new Set(state.board.critical_path||[]);$('blockers').textContent=String(state.tasks.filter(t=>cp.has(t.task_id)&&t.blocker_type).length);$('ownerGates').textContent=String(state.tasks.filter(t=>t.owner_gate_required).length);const rec=recommendedTask();if(rec)selectTask(rec)}
+function viewRows(){const q=state.tasks;const by=new Map(q.map(t=>[t.task_id,t]));if(state.view==='Critical Path')return (state.board.critical_path||[]).map(id=>by.get(id)).filter(Boolean);if(state.view==='Russian A+B')return q.filter(t=>t.stage==='A'||t.stage==='B');if(state.view==='Visible Product')return VISIBLE_MAP.map(([label,id])=>{const t=by.get(id);return t?Object.assign({},t,{_visibleLabel:label}):null}).filter(Boolean);if(state.view==='Owner Gates')return q.filter(t=>t.owner_gate_required);if(state.view==='Blockers')return q.filter(t=>t.blocker_type);return q}
+function filteredRows(){let rows=viewRows();const term=$('search').value.trim().toLowerCase(),stage=$('stageFilter').value,status=$('statusFilter').value,block=$('blockerFilter').value;if(term)rows=rows.filter(t=>[t.task_id,t.title,t.current_action,t.next_action,t.workstream,t.user_visible_outcome].some(v=>safe(v,'').toLowerCase().includes(term)));if(stage)rows=rows.filter(t=>t.stage===stage);if(status)rows=rows.filter(t=>t.status===status);if(block==='NONE')rows=rows.filter(t=>!t.blocker_type);else if(block)rows=rows.filter(t=>t.blocker_type===block);return rows}
+function appendField(dl,key,value){dl.append(node('dt',key));dl.append(node('dd',safe(value)))}
+function taskCard(t){const card=node('article',null,'task');const head=node('div',null,'task-head');const h=node('h4',`${t.task_id} — ${t.title}`);head.append(h);head.append(node('span',t.status,'badge'));card.append(head);if(t._visibleLabel)card.append(node('p',`Visible Product: ${t._visibleLabel}`));card.append(node('p',safe(t.user_visible_outcome)));const meta=node('div',null,'meta');for(const x of [`Stage ${t.stage}`,t.workstream,t.priority,`executor: ${t.executor}`,t.visible_to_learner?'VISIBLE':'not visible'])meta.append(node('span',x,'badge'));card.append(meta);const dl=node('dl');appendField(dl,'current action',t.current_action);appendField(dl,'next action',t.next_action);appendField(dl,'target',t.target_state);appendField(dl,'blocker',t.blocker_type?`${t.blocker_type}: ${safe(t.blocker_detail)}`:'none');appendField(dl,'owner gate',t.owner_gate_required?'YES':'NO');appendField(dl,'production',t.production_state);appendField(dl,'PR/SHA',t.pr?`#${t.pr} / ${safe(t.head_sha)}`:'not registered');appendField(dl,'checks',t.ci_evidence);card.append(dl);const actions=node('div',null,'task-actions');const choose=node('button',state.selectedTaskId===t.task_id?'Выбрано':'Выбрать','task-select');const runnable=!t.owner_gate_required&&!t.blocker_type&&!['DONE','PUBLIC_LAUNCH_PASS'].includes(t.status);choose.disabled=!runnable;choose.addEventListener('click',()=>selectTask(t));actions.append(choose);if(t.evidence&&t.evidence.length){actions.append(node('span',`evidence: ${t.evidence.length}`,'badge'))}card.append(actions);return card}
+function renderTasks(){if(!state.board)return;const rows=filteredRows();const root=$('tasks');root.textContent='';for(const t of rows)root.append(taskCard(t));$('viewSummary').textContent=`${state.view}: ${rows.length} из 115 задач; source=${state.boardSource}`}
+function switchView(view){state.view=view;for(const b of document.querySelectorAll('.tab'))b.classList.toggle('active',b.dataset.view===view);renderTasks()}
+function commandConfirm(command){const labels={start:'Запустить следующую задачу',pause:'Пауза после текущего шага',resume:'Продолжить',stop:'Остановить',refresh:'Обновить статус'};const paid=command==='start'||command==='resume';if(paid&&!state.selectedTaskId){alert('Сначала выберите конкретную незаблокированную задачу.');return}const task=state.tasks.find(t=>t.task_id===state.selectedTaskId);const lines=[`Команда: ${labels[command]}.`,paid?`Bounded task: ${task.task_id} — ${task.title}.`:'Платный API для этой команды не нужен.',paid?'Маршрут: Astra gpt-6-astra план → Luna/Terra/Sol executor → проверки → Astra acceptance.':'',paid?'Промежуточно сохраняются request, Astra plan, Codex patch/output, test evidence и Astra review artifacts.':'','Сейчас браузер НЕ выполняет команду. Откроется GitHub workflow; действие начнётся только после ручного Run workflow.','Никаких автоматических повторов.'];if(!confirm(lines.filter(Boolean).join('\n\n')))return;if(paid&&navigator.clipboard){navigator.clipboard.writeText(task.task_id).catch(()=>{})}window.open(CONTROL_URL,'_blank','noopener')}
+async function boot(){try{$('repoLink').href=`https://github.com/${REPO}`;await loadBoard();fillFilters();renderStageRail();updateHeader();renderTasks();recomputeTruth();loadGithubFacts()}catch(err){showError(`Панель fail-closed: ${err.message}`);setTruth('SOURCE OF TRUTH ERROR','bad')}}
+for(const b of document.querySelectorAll('.tab'))b.addEventListener('click',()=>switchView(b.dataset.view));for(const id of ['search','stageFilter','statusFilter','blockerFilter'])$(id).addEventListener(id==='search'?'input':'change',renderTasks);for(const b of document.querySelectorAll('[data-command]'))b.addEventListener('click',()=>commandConfirm(b.dataset.command));
+boot();
+</script>
+</body>
+</html>

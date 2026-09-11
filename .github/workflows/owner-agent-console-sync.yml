@@ -1,0 +1,62 @@
+name: owner-agent-console-sync
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [control-plan]
+  schedule:
+    - cron: '17 6 * * *'
+  push:
+    paths:
+      - '.github/workflows/owner-agent-console-sync.yml'
+      - '.github/workflows/owner-agent-console-control.yml'
+      - '.github/workflows/owner-control-pages.yml'
+      - 'docs/project-control/**'
+      - 'eksamio-learning-engine/00B-PROJECT-PRIORITIES-CURRENT.md'
+      - 'eksamio-learning-engine/project-control/**'
+      - 'eksamio-learning-engine/tests/test_owner_agent_console.py'
+      - 'eksamio-learning-engine/results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Targeted Owner Control tests
+        run: |
+          set -euo pipefail
+          python3 -m unittest eksamio-learning-engine/tests/test_owner_agent_console.py
+          python3 -m py_compile \
+            eksamio-learning-engine/project-control/owner_agent_console.py \
+            eksamio-learning-engine/project-control/owner_control_checkpoint.py \
+            eksamio-learning-engine/project-control/owner_control_build.py
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-agent-console-control.yml', aliases: true); puts 'CONTROL_YAML_PARSE=PASS'"
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-control-pages.yml', aliases: true); puts 'PAGES_YAML_PARSE=PASS'"
+          rm -rf /tmp/owner-control-site
+          python3 eksamio-learning-engine/project-control/owner_control_build.py \
+            --source eksamio-learning-engine/project-control/owner-control.html \
+            --destination /tmp/owner-control-site/index.html \
+            --main-sha "$GITHUB_SHA"
+          test -s /tmp/owner-control-site/index.html
+          grep -q "const BRANCH='main';" /tmp/owner-control-site/index.html
+          grep -q "const DEPLOYED_MAIN='$GITHUB_SHA';" /tmp/owner-control-site/index.html
+          ! grep -q 'codex/owner-agent-control-page-v1-api' /tmp/owner-control-site/index.html
+          ! grep -q 'OPENAI_API_KEY\|GITHUB_TOKEN' /tmp/owner-control-site/index.html
+          ! grep -q 'api.openai.com\|codex-action\|OPENAI_API_KEY' .github/workflows/owner-control-pages.yml
+          git diff --check HEAD^ HEAD -- . ':(exclude,glob)**/*.md'
+      - name: Synchronize Owner Control issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python eksamio-learning-engine/project-control/owner_agent_console.py sync
+          --board eksamio-learning-engine/project-control/operational-board-v1.json
+          --github-fixture eksamio-learning-engine/project-control/github-fixture.json
+          --repository niknikdym-hue/ege
+          --issue-title 'Eksamio — Owner Control'
