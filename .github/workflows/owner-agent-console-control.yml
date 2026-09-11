@@ -1,0 +1,407 @@
+name: Eksamio Owner Agent Console Control
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Owner-confirmed command. start/resume are paid; pause/stop/refresh are not.'
+        required: true
+        type: choice
+        options:
+          - refresh
+          - pause
+          - stop
+          - start
+          - resume
+      task_id:
+        description: 'Exact operational-board task_id. Required for start/resume. Copy it from Owner Control.'
+        required: false
+        type: string
+      base_ref:
+        description: 'Existing branch to base a new bounded Draft PR on.'
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+  issues: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  control:
+    if: ${{ inputs.command == 'pause' || inputs.command == 'stop' || inputs.command == 'refresh' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      actions: write
+    steps:
+      - name: Enforce owner confirmation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_ACTOR" = "niknikdym-hue" || { echo 'Only the repository owner may dispatch Owner Control.'; exit 1; }
+      - uses: actions/checkout@v5
+        if: ${{ inputs.command == 'refresh' }}
+        with:
+          ref: ${{ inputs.base_ref }}
+          persist-credentials: false
+      - name: Record pause request after current step
+        if: ${{ inputs.command == 'pause' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-agent-control-state -->\nSTATE: PAUSE_REQUESTED\nSOURCE_RUN: '"$GITHUB_RUN_ID"$'\nACTOR: '"$GITHUB_ACTOR"$'\nSCOPE: owner-agent-console-control only'
+      - name: Record stop request and cancel only this workflow
+        if: ${{ inputs.command == 'stop' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-agent-control-state -->\nSTATE: STOP_REQUESTED\nSOURCE_RUN: '"$GITHUB_RUN_ID"$'\nACTOR: '"$GITHUB_ACTOR"$'\nSCOPE: owner-agent-console-control only'
+          for status in queued in_progress; do
+            gh api --paginate "repos/$GITHUB_REPOSITORY/actions/workflows/owner-agent-console-control.yml/runs?status=$status&per_page=100" --jq '.workflow_runs[].id' |
+            while read -r run_id; do
+              [ -z "$run_id" ] && continue
+              [ "$run_id" = "$GITHUB_RUN_ID" ] && continue
+              gh api -X POST "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/cancel" || true
+            done
+          done
+      - name: Refresh durable Owner Control issue
+        if: ${{ inputs.command == 'refresh' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/project-control/owner_agent_console.py sync \
+            --board eksamio-learning-engine/project-control/operational-board-v1.json \
+            --github-fixture eksamio-learning-engine/project-control/github-fixture.json \
+            --repository "$GITHUB_REPOSITORY" \
+            --issue-title 'Eksamio — Owner Control'
+
+  develop:
+    if: ${{ inputs.command == 'start' || inputs.command == 'resume' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ASTRA_MODEL: gpt-6-astra
+      BOARD: eksamio-learning-engine/project-control/operational-board-v1.json
+    steps:
+      - name: Enforce owner confirmation and exact bounded request
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_ACTOR" = "niknikdym-hue" || { echo 'Only the repository owner may dispatch paid Owner Control work.'; exit 1; }
+          test -n "${{ inputs.task_id }}" || { echo 'task_id is required for start/resume before any paid API call.'; exit 1; }
+          test -n "${OPENAI_API_KEY:-}" || { echo 'OPENAI_API_KEY is not configured.'; exit 1; }
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.base_ref }}
+          fetch-depth: 0
+      - name: Validate task before any paid API call
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re, subprocess
+          from pathlib import Path
+          board=json.loads(Path(os.environ['BOARD']).read_text())
+          task_id='${{ inputs.task_id }}'.strip()
+          rows={x['task_id']:x for x in board['tasks']}
+          if task_id not in rows: raise SystemExit(f'Unknown task_id: {task_id}')
+          task=rows[task_id]
+          if task.get('owner_gate_required'): raise SystemExit('OWNER_GATE task: paid autonomous development is refused before API call')
+          if task.get('blocker_type'): raise SystemExit(f"Blocked task ({task['blocker_type']}): resolve blocker before paid API call")
+          if task.get('status') in {'DONE','PUBLIC_LAUNCH_PASS'}: raise SystemExit('Task is already at a terminal accepted state')
+          base_sha=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          req={'schema_version':'0.1','repository':os.environ['GITHUB_REPOSITORY'],'base_ref':'${{ inputs.base_ref }}','base_sha':base_sha,'task':task,'command':'${{ inputs.command }}','owner':os.environ['GITHUB_ACTOR'],'run_id':os.environ['GITHUB_RUN_ID'],'routing_rule':{'simple':'gpt-5.6-luna','standard':'gpt-5.6-terra','complex':'gpt-5.6-sol','architecture_and_acceptance':'gpt-6-astra','forbidden':'gpt-5.3-codex-spark'}}
+          Path('/tmp/owner-request.json').write_text(json.dumps(req,ensure_ascii=False,indent=2))
+          print(f"BOUNDED_TASK={task_id} — {task['title']}")
+          print('PAID_ROUTE=ASTRA_PLAN -> EXECUTOR(LUNA/TERRA/SOL) -> CHECKS -> ASTRA_ACCEPTANCE')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('task_id='+task_id+'\n')
+              f.write('base_sha='+base_sha+'\n')
+              f.write('slug='+re.sub(r'[^a-z0-9]+','-',task_id.lower()).strip('-')+'\n')
+          PY
+      - name: Persist exact request before paid work
+        uses: actions/upload-artifact@v4
+        with:
+          name: owner-control-${{ github.run_id }}-00-request
+          path: /tmp/owner-request.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Record running state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-agent-control-state -->\nSTATE: RUNNING\nTASK_ID: ${{ steps.request.outputs.task_id }}\nSOURCE_RUN: '"$GITHUB_RUN_ID"$'\nACTOR: '"$GITHUB_ACTOR"$'\nNO_AUTO_RETRY: true'
+      - name: Astra creates bounded plan
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re, subprocess, urllib.request
+          from pathlib import Path
+          req=json.loads(Path('/tmp/owner-request.json').read_text())
+          task=req['task']
+          tracked=subprocess.check_output(['git','ls-files'],text=True).splitlines()
+          words={w.lower() for w in re.findall(r'[A-Za-zА-Яа-я0-9_-]{4,}', task['title']+' '+task.get('workstream',''))}
+          preferred=[]
+          for p in tracked:
+              low=p.lower()
+              if any(w in low for w in words) or 'project-control' in low or p in ('eksamio-learning-engine/00-PRODUCT-MASTERPLAN.md','eksamio-learning-engine/00B-PROJECT-PRIORITIES-CURRENT.md'):
+                  preferred.append(p)
+          context={'request':req,'candidate_paths':preferred[:260],'constraints':['exactly one bounded task','max 12 changed paths','no merge/deploy/Ready','no production/learner-data/payment/refund/Tilda mutation','no secrets','new Draft PR only after PASS','no automatic retry'],'executor_routing':{'simple':'gpt-5.6-luna only if adequate and model endpoint is available','standard':'gpt-5.6-terra','complex_inter_module':'gpt-5.6-sol','forbidden':'gpt-5.3-codex-spark'}}
+          instructions='Return exactly one JSON object with keys schema_version,task_id,goal,executor_model,effort,allowed_scope,acceptance_notes,non_goals,stop_conditions. schema_version must be "0.1". executor_model must be one of gpt-5.6-luna,gpt-5.6-terra,gpt-5.6-sol. effort must be low,medium,high. allowed_scope must contain 1..12 exact repository paths. No markdown.'
+          payload={'model':os.environ['ASTRA_MODEL'],'instructions':instructions,'input':json.dumps(context,ensure_ascii=False,sort_keys=True),'reasoning':{'effort':'high'},'text':{'verbosity':'low'},'max_output_tokens':2400,'store':False}
+          http=urllib.request.Request('https://api.openai.com/v1/responses',data=json.dumps(payload).encode(),headers={'Authorization':'Bearer '+os.environ['OPENAI_API_KEY'],'Content-Type':'application/json'},method='POST')
+          with urllib.request.urlopen(http,timeout=240) as r: body=json.loads(r.read().decode())
+          text=''.join(x.get('text','') for item in body.get('output',[]) if item.get('type')=='message' for x in item.get('content',[]) if x.get('type')=='output_text')
+          plan=json.loads(text)
+          if set(plan)!={'schema_version','task_id','goal','executor_model','effort','allowed_scope','acceptance_notes','non_goals','stop_conditions'}: raise SystemExit('Astra plan schema mismatch')
+          if plan['schema_version']!='0.1' or plan['task_id']!=task['task_id']: raise SystemExit('Astra plan identity mismatch')
+          if plan['executor_model'] not in {'gpt-5.6-luna','gpt-5.6-terra','gpt-5.6-sol'}: raise SystemExit('Forbidden executor model')
+          if plan['effort'] not in {'low','medium','high'}: raise SystemExit('Invalid effort')
+          scope=plan['allowed_scope']
+          if not isinstance(scope,list) or not 1<=len(scope)<=12 or len(set(scope))!=len(scope): raise SystemExit('Invalid allowed_scope')
+          if any((not isinstance(p,str)) or p.startswith('/') or '..' in Path(p).parts or p.startswith('.git/') for p in scope): raise SystemExit('Unsafe allowed_scope')
+          if plan['executor_model']=='gpt-5.6-luna':
+              probe=urllib.request.Request('https://api.openai.com/v1/models/gpt-5.6-luna',headers={'Authorization':'Bearer '+os.environ['OPENAI_API_KEY']})
+              try:
+                  with urllib.request.urlopen(probe,timeout=30) as r: json.loads(r.read().decode())
+              except Exception:
+                  plan['executor_model']='gpt-5.6-terra'
+                  plan['routing_note']='Luna availability check failed; promoted once to Terra before execution; no paid retry occurred.'
+          Path('/tmp/astra-plan.json').write_text(json.dumps(plan,ensure_ascii=False,indent=2))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('executor_model='+plan['executor_model']+'\n')
+              f.write('effort='+plan['effort']+'\n')
+          print('ASTRA_PLAN=PASS')
+          print('EXECUTOR_MODEL='+plan['executor_model'])
+          PY
+      - name: Persist Astra plan immediately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: owner-control-${{ github.run_id }}-01-astra-plan
+          path: /tmp/astra-plan.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Check pause or stop after Astra step
+        id: after_plan_gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          latest="$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/issues/194/comments?per_page=100" --jq 'flatten | map(select(.body | contains("<!-- eksamio-owner-agent-control-state -->"))) | last | .body // ""')"
+          if grep -qE '^STATE: (PAUSE_REQUESTED|STOP_REQUESTED)$' <<<"$latest"; then
+            echo 'continue=false' >> "$GITHUB_OUTPUT"
+            echo 'Owner pause/stop observed after Astra plan; executor will not start.'
+          else
+            echo 'continue=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Compose bounded Codex prompt
+        if: ${{ steps.after_plan_gate.outputs.continue == 'true' }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          req=json.loads(Path('/tmp/owner-request.json').read_text()); plan=json.loads(Path('/tmp/astra-plan.json').read_text())
+          prompt={'task':req['task'],'astra_plan':plan,'rules':['Edit only allowed_scope exactly; do not audit unrelated repository areas.','Do not merge, deploy, mark Ready, write production/learner data, call payment/refund/Yandex, alter Tilda, or expose secrets.','Add/update tests inside allowed_scope when the plan permits them.','Do not invoke paid provider APIs.','Leave a reviewable workspace diff only; workflow will validate and commit after checks.']}
+          Path('/tmp/codex-prompt.txt').write_text(json.dumps(prompt,ensure_ascii=False,indent=2))
+          PY
+      - name: API-Codex executes bounded task
+        if: ${{ steps.after_plan_gate.outputs.continue == 'true' }}
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: /tmp/codex-prompt.txt
+          output-file: /tmp/codex-output.txt
+          model: ${{ steps.plan.outputs.executor_model }}
+          effort: ${{ steps.plan.outputs.effort }}
+          sandbox: workspace-write
+          codex-args: '["--ephemeral"]'
+      - name: Persist Codex output and workspace patch immediately
+        if: always() && steps.after_plan_gate.outputs.continue == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -type d -name __pycache__ -prune -exec rm -rf {} + || true
+          git status --porcelain > /tmp/codex-status.txt
+          git diff --binary > /tmp/codex-workspace.patch
+          test -f /tmp/codex-output.txt || printf 'NOT_PRODUCED\n' > /tmp/codex-output.txt
+      - name: Upload Codex checkpoint
+        if: always() && steps.after_plan_gate.outputs.continue == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: owner-control-${{ github.run_id }}-02-codex-checkpoint
+          path: |
+            /tmp/codex-output.txt
+            /tmp/codex-status.txt
+            /tmp/codex-workspace.patch
+          if-no-files-found: error
+          retention-days: 30
+      - name: Validate bounded paths and run safe targeted checks
+        if: ${{ steps.after_plan_gate.outputs.continue == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          plan=json.loads(Path('/tmp/astra-plan.json').read_text()); allowed=set(plan['allowed_scope'])
+          lines=subprocess.check_output(['git','status','--porcelain'],text=True).splitlines()
+          changed={x[3:] for x in lines if len(x)>3 and '/__pycache__/' not in x[3:]}
+          if not changed: raise SystemExit('Codex produced no bounded change')
+          extra=changed-allowed
+          if extra: raise SystemExit('Out-of-scope changes: '+repr(sorted(extra)))
+          forbidden=[p for p in changed if p.startswith('tilda-ready/') or '/tilda-ready/' in p]
+          if forbidden: raise SystemExit('Tilda paths are forbidden: '+repr(forbidden))
+          Path('/tmp/changed-paths.txt').write_text('\n'.join(sorted(changed))+'\n')
+          PY
+          git diff --check
+          python3 - <<'PY'
+          import json, pathlib, py_compile
+          for raw in pathlib.Path('/tmp/changed-paths.txt').read_text().splitlines():
+              p=pathlib.Path(raw)
+              if not p.exists() or p.is_dir(): continue
+              if p.suffix=='.json': json.loads(p.read_text())
+              elif p.suffix=='.py': py_compile.compile(str(p),doraise=True)
+          print('SAFE_FILE_CHECKS=PASS')
+          PY
+          if [ -d eksamio-learning-engine/tests ]; then
+            python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_*.py'
+          fi
+          printf '%s\n' 'PATH_SCOPE=PASS' 'GIT_DIFF_CHECK=PASS' 'SAFE_FILE_CHECKS=PASS' 'LEARNING_ENGINE_TEST_DISCOVERY=PASS' > /tmp/test-evidence.txt
+      - name: Persist test evidence before acceptance
+        if: always() && steps.after_plan_gate.outputs.continue == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: owner-control-${{ github.run_id }}-03-test-evidence
+          path: |
+            /tmp/changed-paths.txt
+            /tmp/test-evidence.txt
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Check pause or stop after tests
+        if: ${{ steps.after_plan_gate.outputs.continue == 'true' }}
+        id: after_tests_gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          latest="$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/issues/194/comments?per_page=100" --jq 'flatten | map(select(.body | contains("<!-- eksamio-owner-agent-control-state -->"))) | last | .body // ""')"
+          if grep -qE '^STATE: (PAUSE_REQUESTED|STOP_REQUESTED)$' <<<"$latest"; then
+            echo 'continue=false' >> "$GITHUB_OUTPUT"
+            echo 'Owner pause/stop observed after tests; acceptance/push will not run.'
+          else
+            echo 'continue=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Create exact local candidate commit
+        if: ${{ steps.after_tests_gate.outputs.continue == 'true' }}
+        id: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add --all
+          git commit -m "owner-agent: bounded ${{ steps.request.outputs.task_id }}"
+          git rev-parse HEAD > /tmp/candidate-sha.txt
+          git show --stat --patch --no-ext-diff --max-count=1 > /tmp/candidate-review.patch
+          echo "sha=$(cat /tmp/candidate-sha.txt)" >> "$GITHUB_OUTPUT"
+      - name: Persist candidate before final Astra review
+        if: always() && steps.after_tests_gate.outputs.continue == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: owner-control-${{ github.run_id }}-04-candidate
+          path: |
+            /tmp/candidate-sha.txt
+            /tmp/candidate-review.patch
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Astra reviews exact candidate
+        if: ${{ steps.after_tests_gate.outputs.continue == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          from pathlib import Path
+          sha=Path('/tmp/candidate-sha.txt').read_text().strip(); plan=json.loads(Path('/tmp/astra-plan.json').read_text()); req=json.loads(Path('/tmp/owner-request.json').read_text())
+          patch=Path('/tmp/candidate-review.patch').read_text()[-90000:]
+          evidence=Path('/tmp/test-evidence.txt').read_text()
+          context={'task':req['task'],'plan':plan,'reviewed_sha':sha,'evidence':evidence,'patch':patch,'invariants':{'no_merge':True,'no_deploy':True,'no_ready_transition':True,'no_production_write':True,'no_learner_data_write':True,'no_payment_or_refund':True,'no_tilda_change':True,'no_secret_exposure':True}}
+          instructions=f'Return exactly one JSON object with keys schema_version,decision,reviewed_sha,invariants,reason,next_action. schema_version must be "0.1"; decision PASS or FAIL; reviewed_sha must be {sha}. PASS only when the exact bounded task is satisfied, evidence passes, changed scope is justified, and every invariant is true. No markdown.'
+          payload={'model':os.environ['ASTRA_MODEL'],'instructions':instructions,'input':json.dumps(context,ensure_ascii=False,sort_keys=True),'reasoning':{'effort':'high'},'text':{'verbosity':'low'},'max_output_tokens':1800,'store':False}
+          http=urllib.request.Request('https://api.openai.com/v1/responses',data=json.dumps(payload).encode(),headers={'Authorization':'Bearer '+os.environ['OPENAI_API_KEY'],'Content-Type':'application/json'},method='POST')
+          with urllib.request.urlopen(http,timeout=240) as r: body=json.loads(r.read().decode())
+          text=''.join(x.get('text','') for item in body.get('output',[]) if item.get('type')=='message' for x in item.get('content',[]) if x.get('type')=='output_text')
+          review=json.loads(text);Path('/tmp/astra-review.json').write_text(json.dumps(review,ensure_ascii=False,indent=2))
+          print('ASTRA_REVIEW_RECORDED')
+          PY
+      - name: Persist Astra review before PASS assertion
+        if: always() && steps.after_tests_gate.outputs.continue == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: owner-control-${{ github.run_id }}-05-astra-review
+          path: /tmp/astra-review.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Enforce Astra PASS
+        if: ${{ steps.after_tests_gate.outputs.continue == 'true' }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          sha=Path('/tmp/candidate-sha.txt').read_text().strip(); d=json.loads(Path('/tmp/astra-review.json').read_text())
+          required={'schema_version','decision','reviewed_sha','invariants','reason','next_action'}
+          if set(d)!=required or d['schema_version']!='0.1' or d['reviewed_sha']!=sha or d['decision']!='PASS' or not all(d['invariants'].values()): raise SystemExit('ASTRA_REVIEW=FAIL')
+          print('ASTRA_REVIEW=PASS')
+          PY
+      - name: Push only a new bounded branch and create Draft PR
+        if: ${{ steps.after_tests_gate.outputs.continue == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch="codex/owner-run-${{ steps.request.outputs.slug }}-$GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$branch"
+          pr_url="$(gh pr create --repo "$GITHUB_REPOSITORY" --draft --base '${{ inputs.base_ref }}' --head "$branch" --title "[Owner Control] ${{ steps.request.outputs.task_id }} bounded candidate" --body $'Created only after owner-confirmed workflow_dispatch, bounded path validation, tests and exact Astra PASS.\n\nNo merge, deploy, Ready transition, production write, learner-data write, payment/refund action, Tilda change or automatic retry was performed.')"
+          printf '%s\n' "$pr_url" > /tmp/draft-pr-url.txt
+          gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-agent-control-state -->\nSTATE: DRAFT_PR_CREATED\nTASK_ID: ${{ steps.request.outputs.task_id }}\nSOURCE_RUN: '"$GITHUB_RUN_ID"$'\nDRAFT_PR: '"$pr_url"$'\nNEXT: owner/Central Brain review; no automatic merge/deploy'
+      - name: Persist final Draft PR evidence
+        if: always() && steps.after_tests_gate.outputs.continue == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: owner-control-${{ github.run_id }}-06-final
+          path: /tmp/draft-pr-url.txt
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Mark graceful pause
+        if: ${{ steps.after_plan_gate.outputs.continue == 'false' || (steps.after_plan_gate.outputs.continue == 'true' && steps.after_tests_gate.outputs.continue == 'false') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-agent-control-state -->\nSTATE: PAUSED\nTASK_ID: ${{ steps.request.outputs.task_id }}\nSOURCE_RUN: '"$GITHUB_RUN_ID"$'\nCHECKPOINTS: preserved as GitHub artifacts; resume requires a new explicit owner dispatch'
