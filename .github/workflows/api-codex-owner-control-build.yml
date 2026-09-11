@@ -87,6 +87,7 @@ jobs:
            '.github/workflows/owner-agent-console-control.yml'}
           lines=subprocess.check_output(['git','status','--porcelain'],text=True).splitlines()
           paths={x[3:] for x in lines if len(x)>3 and not x[3:].startswith('_orchestrator/')}
+          paths={p for p in paths if '/__pycache__/' not in p}
           extra=paths-allowed
           if extra: raise SystemExit('out of scope: '+repr(sorted(extra)))
           need={'eksamio-learning-engine/project-control/owner-control.html','.github/workflows/owner-agent-console-control.yml'}
