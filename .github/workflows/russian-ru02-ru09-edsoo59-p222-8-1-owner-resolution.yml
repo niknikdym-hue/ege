@@ -6,6 +6,8 @@ on:
       - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_ru09_edsoo59_p222_8_1_source_identity_audit.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_ru09_edsoo59_p222_8_1_owner_resolution.py"
       - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v29.py"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU09-SYNTAX-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
       - ".github/workflows/russian-ru02-ru09-edsoo59-p222-8-1-owner-resolution.yml"
   workflow_dispatch:
 
@@ -41,7 +43,7 @@ jobs:
           cat /tmp/report-a.txt
           cp /tmp/audit-a.json "$OUT"
 
-      - name: Verify official-source mismatch remains fail-closed
+      - name: Verify official-source mismatch and owner search remain fail-closed
         shell: bash
         run: |
           set -euo pipefail
@@ -55,6 +57,7 @@ jobs:
           )
           data = json.loads(path.read_text(encoding="utf-8"))
 
+          assert data["schema_version"] == "0.2.0"
           assert data["status"] == (
               "CENTRAL_BRAIN_EDSOO59_P222_8_1_BLOCKED_OFFICIAL_SOURCE_IDENTITY_MISMATCH"
           )
@@ -85,6 +88,43 @@ jobs:
               "Нормы использования инверсии"
           )
 
+          rederived = data["official_source_rederivation"]
+          assert rederived["status"] == (
+              "SOURCE_BACKED_REDERIVATION_COMPLETE_OWNER_BINDING_BLOCKED"
+          )
+          assert rederived["proposed_exact_source_meaning"] == official["text"]
+          correction = rederived["aggregate_correction_candidate"]
+          assert correction["status"] == "SOURCE_BACKED_CORRECTION_CANDIDATE_NOT_APPLIED"
+          assert correction["aggregate_mutated"] is False
+          assert correction["current_v30_created"] is False
+
+          search = rederived["owner_search"]
+          assert search["method"] == "EXACT_NORMALIZED_TEXT_EQUALITY_ONLY"
+          assert search["keyword_search_used_for_binding"] is False
+          assert search["fuzzy_search_used_for_binding"] is False
+          assert search["route_module_title_task_number_inference_used"] is False
+          assert search["nearby_candidate_selection_used"] is False
+          assert search["exact_current_owner_count_total"] == 0
+          assert len(search["components"]) == 2
+          assert [row["exact_source_text"] for row in search["components"]] == [
+              (
+                  "Средства оформления предложения в устной и письменной речи "
+                  "(интонация, логическое ударение, знаки препинания)"
+              ),
+              "Нормы использования инверсии",
+          ]
+          for row in search["components"]:
+              assert row["exact_current_canonical_school_owner_matches"] == []
+              assert row["exact_current_accepted_ru09_owner_matches"] == []
+              assert row["exact_current_owner_count"] == 0
+              assert row["owner_resolution_status"] == (
+                  "BLOCKED_NO_EXACT_CURRENT_OWNER_BY_EXACT_TEXT_EQUALITY"
+              )
+              assert row["candidate_is_source_backed"] is True
+              assert row["candidate_is_canonical_owner"] is False
+              assert row["candidate_is_accepted_semantic"] is False
+              assert row["selection_or_admission_performed"] is False
+
           resolution = data["source_identity_resolution"]
           assert resolution["same_printed_page"] is True
           assert resolution["same_code"] is True
@@ -92,9 +132,14 @@ jobs:
           assert resolution["repository_object_binding_is_safe_for_semantic_acceptance"] is False
           assert resolution["previous_component_owner_mapping_may_be_reused_for_this_object"] is False
           assert resolution["previous_bounded_candidate_mapping_may_be_selected_for_this_object"] is False
+          assert resolution["official_source_rederived_for_exact_owner_search"] is True
+          assert resolution["exact_current_owner_binding_complete"] is False
 
           blocker = data["blocker"]
           assert blocker["kind"] == "OFFICIAL_SOURCE_IDENTITY_MISMATCH"
+          assert blocker["secondary_kind"] == (
+              "MISSING_EXACT_CURRENT_OWNER_FOR_OFFICIAL_SOURCE_COMPONENTS"
+          )
           assert blocker["severity"] == "FAIL_CLOSED"
           assert blocker["object_remains_subject_review_required"] is True
           assert blocker["current_v30_allowed"] is False
@@ -102,6 +147,7 @@ jobs:
           policy = data["policy"]
           assert policy["official_source_overrides_repository_inferred_binding"] is True
           assert policy["source_identity_must_be_exact_before_owner_resolution"] is True
+          assert policy["exact_current_owner_search_performed_first"] is True
           assert policy["keyword_or_fuzzy_owner_inference_allowed"] is False
           assert policy["module_route_title_or_task_number_inference_allowed"] is False
           assert policy["nearby_semantic_candidate_auto_selection_allowed"] is False
@@ -112,6 +158,10 @@ jobs:
           assert policy["anonymous_or_device_only_canonical_progress_allowed"] is False
 
           summary = data["summary"]
+          assert summary["official_source_components_rederived"] == 2
+          assert summary["exact_current_owner_matches"] == 0
+          assert summary["source_backed_correction_candidates"] == 1
+          assert summary["aggregate_corrections_applied"] == 0
           assert summary["semantic_admissions"] == 0
           assert summary["object_level_closures"] == 0
           assert summary["exact_mastery_admissions"] == 0
