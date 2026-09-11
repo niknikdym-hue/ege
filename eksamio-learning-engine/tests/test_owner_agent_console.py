@@ -89,6 +89,9 @@ class OwnerConsoleTest(unittest.TestCase):
         self.assertIn('NON_CODEX_EXECUTOR task',yml)
         self.assertIn('/tmp/owner-control-authority',yml)
         self.assertIn("t.executor==='Codex'",html)
+        for token in ['Готовность к платному запуску','МОЖНО ЗАПУСКАТЬ','НЕ ЗАПУСКАТЬ','launchReady','startButton','evaluateLaunchReadiness','actions/runs?branch=','selectedBaseRef']:
+            self.assertIn(token,html)
+        self.assertIn('data-command="start" disabled',html)
         self.assertIn("'/__pycache__/' not in x[3:]",yml)
 
     def test_paid_model_calls_are_structured_fail_closed_and_not_high(self):
