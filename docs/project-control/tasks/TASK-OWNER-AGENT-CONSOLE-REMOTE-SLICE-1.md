@@ -1,16 +1,16 @@
-# OWNER-AGENT-CONSOLE-REMOTE-SLICE-1 — SPARSE RETRY
+# OWNER-AGENT-CONSOLE-REMOTE-SLICE-2 — ACCEPTANCE REPAIR
 
-You are API-Codex, the bounded implementation executor for `niknikdym-hue/ege`.
+You are API-Codex repairing the bounded Owner Console implementation already present on the current branch. Do not scan the repository or touch unrelated files.
 
-The checkout is intentionally sparse to protect the hosted runner. Do not scan the repository: no broad `find`, `rg`, `git ls-files`, builds, dependency installs, browser tests, or unrelated test suites.
-
-Read only these tracked inputs:
-- `eksamio-learning-engine/AGENTS.md` and only the instruction files it explicitly requires for this exact path;
+Read only:
+- `eksamio-learning-engine/AGENTS.md` and mandatory exact-path instructions;
 - `docs/project-control/EKSAMIO-OWNER-CONSOLE-REQUIREMENTS-v0.1.md`;
 - `eksamio-learning-engine/00B-PROJECT-PRIORITIES-CURRENT.md`;
+- the existing files under `eksamio-learning-engine/project-control/`;
+- the existing targeted test and result file;
 - this task.
 
-Implement a deterministic GitHub-Issue Owner Control page. It is a project-management surface only and must remain independent of learner production.
+The first implementation passed its targeted test and synchronized Issue #194, but independent review found substantive contract gaps. Fix these gaps; do not merely weaken tests.
 
 Allowed output paths only:
 - `eksamio-learning-engine/project-control/**`
@@ -18,18 +18,17 @@ Allowed output paths only:
 - `eksamio-learning-engine/results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md`
 - `.github/workflows/owner-agent-console-sync.yml`
 
-Required implementation:
-1. `operational-board-v1.json`: a versioned machine-readable projection containing every Stage A-E task row from `00B-PROJECT-PRIORITIES-CURRENT.md` exactly once. Preserve task IDs and factual statuses; never invent percentages.
-2. `owner_agent_console.py`: dependency-free Python CLI with stable commands:
-   - `render --board ... --github-fixture ... --output ...`
-   - `sync --board ... --repository niknikdym-hue/ege --issue-title 'Eksamio — Owner Control'`
-   Offline render uses the tracked fixture. Live sync may use only `gh` and `GH_TOKEN`, updating exactly one issue of that title. Never read/render secrets or learner data.
-3. Render these sections: header truth, stage rail A-E, Whole Project, Critical Path, Russian Product (A+B), Visible Product, Owner Gates, Blockers, History, Astra/API-Codex activity. Show `CODE_READY != VISIBLE_TO_LEARNER` and visible `STALE/CONFLICT` on contradictory facts.
-4. Explain that `CORRECTION:` comments are durable but `NOT_DISPATCHED`; do not auto-execute them or create fake controls.
-5. `.github/workflows/owner-agent-console-sync.yml`: manual, daily and relevant control-plan path triggers; `contents: read`, `issues: write`; no provider/API key.
-6. Deterministic unittest covering A-E, unique task IDs, A+B visibility, code-only not learner-visible, owner-gate filtering, conflict rendering, secret/unknown-field exclusion, correction NOT_DISPATCHED and all required sections.
-7. Result report listing exact files/checks and the remaining audited pause/correct/resume/rework adapter slice.
+Required repairs:
+1. `operational-board-v1.json` must itself contain a `tasks` array with every official operational-board row exactly once: total 115; stage counts A=74, B=15, C=11, D=8, E=7. Each task carries the full task-card contract from the requirements, including the exact raw/source status as `source_status`. Runtime rendering must consume this JSON, not reparse Markdown as its task database.
+2. Preserve truthful semantics. Do not turn `CODE/CONTENT AUTHORITY EXISTS` or `VISIBLE BASE EXISTS` into `NOT_STARTED`, do not label all future D/E work `DESIGNED`, and never make `CODE_READY` learner-visible. Preserve uncertain/compound source states verbatim and map conservatively to the shared vocabulary.
+3. Owner Gates must contain only genuine owner actions. In particular A12.4 post-launch smoke and A12.5 monitoring are not owner gates. Do not mark all A/B tasks as Astra work.
+4. Critical Path must be the ordered 12-step critical path from section 10 of the operational board, not every Stage A row.
+5. Implement live GitHub fact ingestion for sync: refresh current main SHA plus relevant open PR/head/Draft/check facts using read-only `gh` calls before rendering. The offline fixture must cover the same adapter shape. Conflicts between board facts and GitHub facts render `STALE/CONFLICT`. Do not infer learner visibility from CI.
+6. Render all required views with useful task title/status/current action, not only IDs. Keep all stages A-E, A+B together, Visible Product truth, real Owner Gates, grouped blockers, history, Astra/API-Codex activity, and `CORRECTION: ... NOT_DISPATCHED`.
+7. Expand deterministic tests to enforce exact task count/stage counts/unique IDs/required fields, known semantic examples, owner-gate exclusions, ordered critical path, offline GitHub PR/check rendering, conflict behavior, no secret/unknown fields, and all required sections.
+8. Update the durable result with exact checks and remaining audited command-adapter work.
+9. Produce `.github/workflows/owner-agent-console-sync.yml` with manual/daily/control-plan triggers, `contents: read`, `issues: write`, no provider key and no learner/runtime dependency.
 
-Forbidden: learner/runtime/demo/trainer/payment/Tutor edits; Yandex operations; OpenAI calls in the resulting console; secrets; deployment; merge; public hosting; invented progress; edits to PR #190/#191; git commit/push from this step.
+Forbidden: learner/runtime/demo/trainer/payment/Tutor changes; Yandex operations; OpenAI calls in the resulting console; secrets; deployment; merge; public hosting; invented progress; edits to PR #190/#191; broad test suites; git commit/push from your step.
 
-Implement, run only the targeted unittest and CLI render smoke, then stop. The trusted workflow validates, commits and syncs Issue #194.
+Run only the targeted unittest and offline render smoke. Stop after the repaired bounded implementation; the trusted workflow validates, commits and synchronizes Issue #194.

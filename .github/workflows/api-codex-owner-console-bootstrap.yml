@@ -41,7 +41,7 @@ jobs:
           if p.is_file():
               d=json.loads(p.read_text())
               parent=subprocess.check_output(['git','rev-parse','HEAD^'],text=True).strip()
-              ok=d.get('enabled') is True and d.get('expected_parent_sha')==parent and d.get('task_id')=='OWNER-AGENT-CONSOLE-REMOTE-SLICE-1'
+              ok=d.get('enabled') is True and d.get('expected_parent_sha')==parent and d.get('task_id')=='OWNER-AGENT-CONSOLE-REMOTE-SLICE-2'
           with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write('enabled='+('true' if ok else 'false')+'\n')
           print('API-Codex one-shot:', 'ENABLED' if ok else 'SKIPPED')
           PY
@@ -82,6 +82,27 @@ jobs:
           PY
           python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_owner_agent_console.py' -v
           python3 -m json.tool eksamio-learning-engine/project-control/operational-board-v1.json >/dev/null
+          python3 - <<'PY'
+          import json
+          from collections import Counter
+          path='eksamio-learning-engine/project-control/operational-board-v1.json'
+          data=json.load(open(path, encoding='utf-8'))
+          tasks=data.get('tasks')
+          assert isinstance(tasks,list), 'board JSON must contain tasks array'
+          assert len(tasks)==115, f'expected 115 tasks, got {len(tasks)}'
+          assert Counter(t.get('stage') for t in tasks)==Counter({'A':74,'B':15,'C':11,'D':8,'E':7})
+          ids=[t.get('task_id') for t in tasks]
+          assert len(ids)==len(set(ids)), 'duplicate task ids'
+          required={'task_id','title','user_visible_outcome','stage','workstream','priority','status','source_status','target_state','dependencies','blocker_type','blocker_detail','branch','pr','head_sha','ci_evidence','visible_to_learner','production_state','executor','owner_gate_required','current_action','next_action','last_evidence_timestamp','evidence'}
+          assert all(required <= set(t) for t in tasks), 'incomplete task-card fields'
+          by_id={t['task_id']:t for t in tasks}
+          assert by_id['A6.1']['status']=='VISIBLE_TO_LEARNER'
+          assert by_id['A2.1']['status']!='NOT_STARTED'
+          assert not by_id['A12.4']['owner_gate_required'] and not by_id['A12.5']['owner_gate_required']
+          assert all(not t['visible_to_learner'] for t in tasks if t['status']=='CODE_READY')
+          cp=data.get('critical_path')
+          assert isinstance(cp,list) and len(cp)==12, 'critical path must contain ordered 12 steps'
+          PY
           python3 eksamio-learning-engine/project-control/owner_agent_console.py render --board eksamio-learning-engine/project-control/operational-board-v1.json --github-fixture eksamio-learning-engine/project-control/github-fixture.json --output /tmp/owner-console.md
           test -s /tmp/owner-console.md
       - name: Commit bounded implementation
