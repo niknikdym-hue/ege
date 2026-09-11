@@ -72,6 +72,11 @@ jobs:
           from pathlib import Path
           sys.path.insert(0, str(Path('_orchestrator/agent-orchestration').resolve()))
           from eksamio_agent_runner import AstraResponsesAdapter
+          schema_path=Path('_orchestrator/agent-orchestration/schemas/task-plan-v0.1.schema.json')
+          schema_doc=json.loads(schema_path.read_text(encoding='utf-8'))
+          if 'stop_conditions' not in schema_doc['required']:
+              schema_doc['required'].append('stop_conditions')
+          schema_path.write_text(json.dumps(schema_doc,ensure_ascii=False,indent=2),encoding='utf-8')
           context={
             'repository':'niknikdym-hue/ege',
             'current_main_sha':'85d2f2b3dd0cf56c428f57c8a5c7d1b636ecebbb',
