@@ -101,7 +101,7 @@ jobs:
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       ASTRA_MODEL: gpt-6-astra
-      BOARD: eksamio-learning-engine/project-control/operational-board-v1.json
+      BOARD: /tmp/owner-control-authority/operational-board-v1.json
     steps:
       - name: Enforce owner confirmation and exact bounded request
         shell: bash
@@ -116,6 +116,27 @@ jobs:
           else
             test -z '${{ inputs.resume_run_id }}' || { echo 'resume_run_id is only valid with command=resume.'; exit 1; }
           fi
+      - name: Checkout Owner Control authority from main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          path: _owner_control_main
+          persist-credentials: false
+      - name: Snapshot Owner Control authority before target checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/owner-control-authority
+          cp _owner_control_main/eksamio-learning-engine/project-control/operational-board-v1.json /tmp/owner-control-authority/operational-board-v1.json
+          cp _owner_control_main/eksamio-learning-engine/project-control/owner_control_checkpoint.py /tmp/owner-control-authority/owner_control_checkpoint.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          board=json.loads(Path('/tmp/owner-control-authority/operational-board-v1.json').read_text())
+          assert board['version']=='operational-board-v1' and len(board['tasks'])==115
+          print('OWNER_CONTROL_MAIN_AUTHORITY=PASS')
+          PY
+          rm -rf _owner_control_main
       - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.base_ref }}
@@ -134,7 +155,9 @@ jobs:
           if task_id not in rows: raise SystemExit(f'Unknown task_id: {task_id}')
           task=rows[task_id]
           if task.get('owner_gate_required'): raise SystemExit('OWNER_GATE task: paid autonomous development is refused before API call')
-          if task.get('blocker_type'): raise SystemExit(f"Blocked task ({task['blocker_type']}): resolve blocker before paid API call")
+          if task.get('executor')!='Codex': raise SystemExit(f"NON_CODEX_EXECUTOR task ({task.get('executor')}): paid autonomous development is refused before API call")
+          blocker=task.get('blocker_type')
+          if blocker and blocker!='SUBJECT': raise SystemExit(f"Blocked task ({blocker}): resolve external/non-subject blocker before paid API call")
           if task.get('status') in {'DONE','PUBLIC_LAUNCH_PASS'}: raise SystemExit('Task is already at a terminal accepted state')
           base_sha=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
           req={'schema_version':'0.1','repository':os.environ['GITHUB_REPOSITORY'],'base_ref':'${{ inputs.base_ref }}','base_sha':base_sha,'task':task,'command':'${{ inputs.command }}','owner':os.environ['GITHUB_ACTOR'],'run_id':os.environ['GITHUB_RUN_ID'],'routing_rule':{'simple':'gpt-5.6-luna','standard':'gpt-5.6-terra','complex':'gpt-5.6-sol','architecture_and_acceptance':'gpt-6-astra','forbidden':'gpt-5.3-codex-spark'}}
@@ -183,7 +206,7 @@ jobs:
           import json,os
           from pathlib import Path
           import sys
-          sys.path.insert(0,'eksamio-learning-engine/project-control')
+          sys.path.insert(0,'/tmp/owner-control-authority')
           from owner_control_checkpoint import validate_resume_manifest
           manifest=json.loads(Path('/tmp/resume-manifest.json').read_text())
           source_request=json.loads(Path('/tmp/source-owner-request.json').read_text())
@@ -456,7 +479,7 @@ jobs:
           import json,sys
           from pathlib import Path
           import os
-          sys.path.insert(0,'eksamio-learning-engine/project-control')
+          sys.path.insert(0,'/tmp/owner-control-authority')
           from owner_control_checkpoint import build_resume_manifest
           request=json.loads(Path('/tmp/owner-request.json').read_text())
           manifest=build_resume_manifest(request,os.environ['GITHUB_RUN_ID'],sys.argv[1])
