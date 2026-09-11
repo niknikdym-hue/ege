@@ -1,0 +1,148 @@
+name: Russian EDSOO59 p222 8.1 exact owner resolution
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/build_ru02_ru09_edsoo59_p222_8_1_owner_resolution.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v29.py"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-PRONUNCIATION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-STRESS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU09-SYNTAX-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-02-ORTHOEPY-NORMATIVE-STRESS-WAVE-003-v0.1.json"
+      - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+      - ".github/workflows/russian-ru02-ru09-edsoo59-p222-8-1-owner-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-owner-resolution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile exact owner-resolution builder
+        run: python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru02_ru09_edsoo59_p222_8_1_owner_resolution.py
+
+      - name: Build exact owner resolution twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUILDER="eksamio-learning-engine/russian-program/subject-admission/build_ru02_ru09_edsoo59_p222_8_1_owner_resolution.py"
+          OUT="eksamio-learning-engine/russian-program/subject-admission/RU02-RU09-EDSOO59-P222-8-1-OWNER-RESOLUTION.json"
+          python3 "$BUILDER" --output /tmp/review-a.json > /tmp/report-a.txt
+          python3 "$BUILDER" --output /tmp/review-b.json > /tmp/report-b.txt
+          cmp /tmp/review-a.json /tmp/review-b.json
+          diff -u /tmp/report-a.txt /tmp/report-b.txt
+          cat /tmp/report-a.txt
+          cp /tmp/review-a.json "$OUT"
+
+      - name: Verify fail-closed blocker contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("eksamio-learning-engine/russian-program/subject-admission/RU02-RU09-EDSOO59-P222-8-1-OWNER-RESOLUTION.json")
+          data = json.loads(path.read_text(encoding="utf-8"))
+
+          assert data["status"] == "CENTRAL_BRAIN_EDSOO59_P222_8_1_OWNER_RESOLUTION_BLOCKED_MISSING_EXACT_SYNTAX_OWNER"
+          selected = data["selected_object"]
+          assert selected["admission_unit_id"] == "RAU-3ceb45ca22608d520ddf"
+          assert selected["requirement_id"] == "RSK-EDSOO59-8-1-P222"
+          assert selected["source_id"] == "EDSOO-RU-5-9-2025"
+          assert selected["document_id"] == "EDSOO59"
+          assert selected["page"] == 222
+          assert selected["code"] == "8.1"
+
+          ortho = data["component_resolution"]["orthoepy_clause"]
+          assert ortho["status"] == "EXACT_ACCEPTED_COMPONENT_OWNERS_WITH_COMPONENT_SPECIFIC_EVIDENCE_AVAILABLE"
+          assert ortho["canonical_component_refs"] == [
+              "ru-orthoepy-normative-pronunciation-selection",
+              "ru-orthoepy-normative-stress-selection",
+          ]
+          assert ortho["independent_evidence_items"] == 9
+
+          syntax = data["component_resolution"]["syntax_clause"]
+          assert syntax["status"] == "BLOCKED_NO_EXACT_CURRENT_CANONICAL_OWNER"
+          assert syntax["exact_current_canonical_school_owner_count"] == 0
+          assert syntax["exact_current_canonical_school_owner_refs"] == []
+          assert syntax["candidate_selection_allowed"] is False
+          assert len(syntax["source_backed_bounded_candidates"]) == 5
+          assert all(
+              row["selection_status"] == "SOURCE_BACKED_BOUNDED_CANDIDATE_NOT_SELECTED_FOR_THIS_OBJECT"
+              for row in syntax["source_backed_bounded_candidates"]
+          )
+
+          policy = data["policy"]
+          assert policy["exact_current_owner_search_performed_first"] is True
+          assert policy["keyword_or_fuzzy_owner_inference_allowed"] is False
+          assert policy["module_route_title_or_task_number_inference_allowed"] is False
+          assert policy["nearby_semantic_candidate_auto_selection_allowed"] is False
+          assert policy["object_acceptance_allowed_by_this_review"] is False
+          assert policy["semantic_admission_allowed_by_this_review"] is False
+          assert policy["mastery_admission_allowed_by_this_review"] is False
+          assert policy["registered_user_identity_required_for_future_canonical_learner_evidence"] is True
+          assert policy["anonymous_or_device_only_canonical_progress_allowed"] is False
+
+          blocker = data["blocker"]
+          assert blocker["kind"] == "MISSING_EXACT_SYNTAX_OWNER_OR_EXACT_SOURCE_DECOMPOSITION"
+          assert blocker["object_remains_subject_review_required"] is True
+
+          summary = data["summary"]
+          assert summary["semantic_admissions"] == 0
+          assert summary["object_level_closures"] == 0
+          assert summary["exact_mastery_admissions"] == 0
+          assert summary["false_exact_mastery_admissions"] == 0
+          print("RUSSIAN_EDSOO59_P222_8_1_OWNER_RESOLUTION_GUARD=PASS")
+          PY
+
+      - name: Protect bounded wave and production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="cb90377c4ebe00e88e22c39824b7c484651ebcc4"
+          BUILDER="eksamio-learning-engine/russian-program/subject-admission/build_ru02_ru09_edsoo59_p222_8_1_owner_resolution.py"
+          WORKFLOW=".github/workflows/russian-ru02-ru09-edsoo59-p222-8-1-owner-resolution.yml"
+
+          mapfile -t changed < <(git diff --name-only "$BASE...HEAD")
+          if [ "${#changed[@]}" -ne 2 ]; then
+            printf 'Unexpected bounded-wave path count (%s):\n' "${#changed[@]}" >&2
+            printf '  %s\n' "${changed[@]}" >&2
+            exit 1
+          fi
+          for path in "${changed[@]}"; do
+            case "$path" in
+              "$BUILDER"|"$WORKFLOW") ;;
+              *)
+                echo "Unexpected bounded-wave path: $path" >&2
+                exit 1
+                ;;
+            esac
+          done
+
+          if git diff --name-only "$BASE...HEAD" | grep -Ei '(^|/)(russkiy-knigi|tilda|demos?|scor(e|er|ers|ing)?)(/|$|[-_.])'; then
+            echo "Owner-resolution wave changed protected Russian production surfaces." >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene
+        run: git diff --check cb90377c4ebe00e88e22c39824b7c484651ebcc4...HEAD
+
+      - name: Upload exact owner-resolution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-edsoo59-p222-8-1-exact-owner-resolution
+          path: eksamio-learning-engine/russian-program/subject-admission/RU02-RU09-EDSOO59-P222-8-1-OWNER-RESOLUTION.json
+          if-no-files-found: error
+          retention-days: 14
