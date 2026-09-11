@@ -1,6 +1,8 @@
 name: owner-agent-console-sync
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [control-plan]
   schedule:
     - cron: '17 6 * * *'
   push:
