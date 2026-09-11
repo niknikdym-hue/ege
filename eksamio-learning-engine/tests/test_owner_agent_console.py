@@ -35,7 +35,9 @@ class OwnerConsoleTest(unittest.TestCase):
         self.assertFalse(by['D2']['visible_to_learner'])
         self.assertFalse(by['A12.4']['owner_gate_required'])
         self.assertFalse(by['A12.5']['owner_gate_required'])
-        self.assertEqual(self.board['critical_path'],['A2.1','A5.1','A4.1','A6.3','A8.1','A9.2','A10.1','A11.1','A11.2','A6.1','A12.1','B1'])
+        self.assertEqual(self.board['critical_path'],['A2.1','A2.2','A5.1','A4.1','A6.3','A8.1','A9.2','A10.1','A11.1','A11.2','A6.1','A12.1','B1'])
+        self.assertTrue(by['A8.1']['owner_gate_required'])
+        self.assertEqual((by['A2.2']['pr'],by['A2.2']['branch']),(164,'brain/sep1-russian-subject-closure'))
         self.assertLess(sum(r['executor']=='Astra' for r in self.rows),len(self.rows))
         self.assertTrue(all(not r['visible_to_learner'] for r in self.rows if r['status']=='CODE_READY'))
 
@@ -84,6 +86,9 @@ class OwnerConsoleTest(unittest.TestCase):
         self.assertIn('resume requires exact numeric resume_run_id before any paid API call',yml)
         self.assertIn('Blocked task',yml)
         self.assertIn('OWNER_GATE task',yml)
+        self.assertIn('NON_CODEX_EXECUTOR task',yml)
+        self.assertIn('/tmp/owner-control-authority',yml)
+        self.assertIn("t.executor==='Codex'",html)
         self.assertIn("'/__pycache__/' not in x[3:]",yml)
 
     def test_paid_model_calls_are_structured_fail_closed_and_not_high(self):
