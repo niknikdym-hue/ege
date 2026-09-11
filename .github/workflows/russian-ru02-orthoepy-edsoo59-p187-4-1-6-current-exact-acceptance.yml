@@ -1,0 +1,212 @@
+name: Russian RU02 EDSOO59 p187 4.1.6 current exact acceptance
+
+on:
+  push:
+    branches:
+      - brain/sep1-russian-subject-closure
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU02-EDSOO59-P187-4-1-6-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v27.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p187_4_1_6_exact_object_binding_review.py'
+      - '.github/workflows/russian-ru02-orthoepy-edsoo59-p187-4-1-6-current-exact-acceptance.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU02-EDSOO59-P187-4-1-6-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v27.py'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p187_4_1_6_exact_object_binding_review.py'
+      - '.github/workflows/russian-ru02-orthoepy-edsoo59-p187-4-1-6-current-exact-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru02-edsoo59-p187-4-1-6-current-exact-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile exact acceptance chain
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p187_4_1_6_exact_object_binding_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v27.py
+
+      - name: Rebuild prerequisite exact review A
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p187_4_1_6_exact_object_binding_review.py --output /tmp/review-a.json > /tmp/review-a.txt
+
+      - name: Rebuild prerequisite exact review B
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_edsoo59_p187_4_1_6_exact_object_binding_review.py --output /tmp/review-b.json > /tmp/review-b.txt
+
+      - name: Verify exact review provenance and determinism
+        run: |
+          set -euo pipefail
+          cmp /tmp/review-a.json /tmp/review-b.json
+          diff -u /tmp/review-a.txt /tmp/review-b.txt
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/review-a.json',encoding='utf-8'))
+          assert d['normalized_sha256']=='65643b5d97b819ba97f026bf6aac0595b0ac0b4b4d2993623c916aa281013ab3'
+          assert d['status']=='CENTRAL_BRAIN_RU02_EDSOO59_P187_4_1_6_EXACT_OBJECT_BINDING_REVIEW_READY_FOR_SEPARATE_ACCEPTANCE_NOT_ACCEPTED'
+          assert d['current_v26_exact_head_gate']=={
+              'workflow':'Russian RU01 EDSOO59 P181 4.1 exact component set',
+              'run_id':34543590950,
+              'head_sha':'4f43c838e83639827a040f1d8a8d75048e19abf2',
+              'conclusion':'SUCCESS',
+              'normalized_sha256':'2b2ac9e07a98ac6b988e26bacb5b6e1a22394233c4f83a123354f3dcbd9ec402',
+          }
+          target=d['selected_object']
+          assert target['admission_unit_id']=='RAU-da83bb720dea792b3afb'
+          assert target['requirement_id']=='RSK-EDSOO59-4-1-6-P187'
+          assert target['source_locator']=='EDSOO-RU-5-9-2025/EDSOO59 p.187 4.1.6'
+          assert target['normalized_meaning']=='Применять нормативное произношение и ударение.'
+          reuse=d['reuse_first_owner_resolution']
+          assert reuse['resolution']=='EXACT_CURRENT_BOUNDED_RU02_COMPONENT_OWNERS_EXIST'
+          assert reuse['canonical_component_refs']==[
+              'ru-orthoepy-normative-pronunciation-selection',
+              'ru-orthoepy-normative-stress-selection',
+          ]
+          assert reuse['independent_evidence_items']==9
+          assert reuse['missing_source_components']==[]
+          assert reuse['overlapping_component_boundaries']==[]
+          sibling=d['sibling_reuse_boundary']
+          assert sibling['prior_accepted_sibling_admission_unit_id']=='RAU-a8f2ad0b357c9e369c51'
+          assert sibling['prior_sibling_acceptance_auto_closes_target'] is False
+          assert sibling['separate_exact_object_acceptance_required'] is True
+          readiness=d['acceptance_readiness']
+          assert readiness['target_still_in_current_v26_remainder'] is True
+          assert readiness['object_accepted_by_this_review'] is False
+          assert d['summary']['false_exact_mastery_admissions']==0
+          PY
+
+      - name: Build accepted current-v27 A
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v27.py --output /tmp/progress-v27-a.json > /tmp/progress-v27-a.txt
+
+      - name: Build accepted current-v27 B
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v27.py --output /tmp/progress-v27-b.json > /tmp/progress-v27-b.txt
+
+      - name: Verify deterministic current-v27 and exact aggregate delta
+        run: |
+          set -euo pipefail
+          cmp /tmp/progress-v27-a.json /tmp/progress-v27-b.json
+          diff -u /tmp/progress-v27-a.txt /tmp/progress-v27-b.txt
+          cat /tmp/progress-v27-a.txt
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/progress-v27-a.json',encoding='utf-8'))
+          assert d['schema_version']=='0.29.0'
+          assert d['base_current_launch_progress_v26_head_sha']=='4f43c838e83639827a040f1d8a8d75048e19abf2'
+          assert d['base_current_launch_progress_v26_normalized_sha256']=='2b2ac9e07a98ac6b988e26bacb5b6e1a22394233c4f83a123354f3dcbd9ec402'
+          s=d['progress_summary']
+          expected={
+              'semantic_units_with_accepted_component_sets':43,
+              'semantic_requirements_with_accepted_component_sets':43,
+              'semantic_units_remaining_without_accepted_component_set':1273,
+              'semantic_requirements_remaining_without_accepted_component_set':1348,
+              'subject_disposed_units_total':44,
+              'subject_disposed_requirements_total':44,
+              'subject_review_units_remaining':1272,
+              'subject_review_requirements_remaining':1347,
+              'canonical_component_refs_reused_unique':125,
+              'review_groups_with_accepted_component_sets':14,
+              'accepted_bounded_ru_route_semantics':9,
+              'accepted_bounded_ru_subject_semantics':75,
+              'accepted_bounded_ru_semantics_total':84,
+              'false_exact_mastery_admissions':0,
+          }
+          for k,v in expected.items():
+              assert s[k]==v,(k,s[k],v)
+          assert len(d['accepted_authorities'])==73
+          new=d['newly_accepted_exact_object']
+          assert new['admission_unit_id']=='RAU-da83bb720dea792b3afb'
+          assert new['requirement_id']=='RSK-EDSOO59-4-1-6-P187'
+          assert new['accepted_component_refs']==[
+              'ru-orthoepy-normative-pronunciation-selection',
+              'ru-orthoepy-normative-stress-selection',
+          ]
+          assert new['component_specific_independent_evidence']=={
+              'ru-orthoepy-normative-pronunciation-selection':['p02-u4-v1','p02-u4-v2','p02-u4-v3','p02-u4-v4','p02-u4-v5'],
+              'ru-orthoepy-normative-stress-selection':['p02-u3-v1','p02-u3-v2','p02-u3-v3','p02-u3-v4'],
+          }
+          assert new['independent_evidence_items']==9
+          assert new['exact_mastery_admissions']==0
+          groups=[g for g in d['semantic_review_groups'] if g.get('group_id')=='RUS-SEM-REVIEW-047']
+          assert len(groups)==1
+          g=groups[0]
+          assert g['accepted_component_set_count']==2
+          rows=[r for r in g['accepted_component_sets'] if r.get('admission_unit_id')=='RAU-da83bb720dea792b3afb']
+          assert len(rows)==1
+          row=rows[0]
+          assert row['requirement_id']=='RSK-EDSOO59-4-1-6-P187'
+          assert row['canonical_component_refs']==new['accepted_component_refs']
+          assert row['authority']['exact_object_binding_review_run_id']==34551630548
+          m=row['mastery_boundary']
+          assert m['registered_user_identity_required_for_future_canonical_learner_evidence'] is True
+          assert m['exact_versioned_item_and_action_required_for_future_canonical_learner_evidence'] is True
+          assert m['server_owned_received_at_required_for_future_canonical_learner_evidence'] is True
+          assert m['durable_evidence_event_required_for_future_canonical_learner_evidence'] is True
+          assert m['anonymous_or_device_only_canonical_progress_allowed'] is False
+          assert m['object_acceptance_itself_emits_mastery'] is False
+          assert m['generic_orthoepy_attempt_can_emit_exact_component_mastery'] is False
+          assert m['shared_sibling_object_acceptance_can_close_target'] is False
+          sibling=[r for r in g['accepted_component_sets'] if r.get('admission_unit_id')=='RAU-a8f2ad0b357c9e369c51']
+          assert len(sibling)==1
+          assert sibling[0]['requirement_id']=='RSK-EDSOO1011-2-2-4-P074'
+          assert d['policy']['shared_ru02_sibling_acceptance_can_auto_close_target'] is False
+          assert d['policy']['anonymous_or_device_only_progress_can_be_canonical_for_edsoo59_p187_4_1_6'] is False
+          print('RU02_EDSOO59_P187_4_1_6_CURRENT_V27_ACCEPTANCE=PASS')
+          print('NORMALIZED_SHA256='+d['normalized_sha256'])
+          PY
+
+      - name: Protect public and production surfaces in bounded wave
+        shell: bash
+        run: |
+          set -euo pipefail
+          wave_base='e709bcbeec1e65c324ab43bb43f5a1023b2af30b'
+          git merge-base --is-ancestor "$wave_base" HEAD
+          recent=$(git diff --name-only "$wave_base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru02-orthoepy-edsoo59-p187-4-1-6-current-exact-acceptance.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU02-EDSOO59-P187-4-1-6-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v27.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          if [[ -n "$unexpected" ]]; then
+            echo 'RU02 p187 exact-acceptance wave touched files outside bounded allowlist:' >&2
+            printf '%s\n' "$unexpected" >&2
+            exit 1
+          fi
+          if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
+            echo 'RU02 p187 exact-acceptance wave touched a protected public/production surface.' >&2
+            exit 1
+          fi
+
+      - name: Diff hygiene for exact bounded wave
+        run: git diff --check e709bcbeec1e65c324ab43bb43f5a1023b2af30b..HEAD
+
+      - name: Upload exact current-v27 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru02-edsoo59-p187-4-1-6-current-exact-acceptance
+          path: |
+            /tmp/progress-v27-a.json
+            /tmp/progress-v27-a.txt
+          if-no-files-found: error
