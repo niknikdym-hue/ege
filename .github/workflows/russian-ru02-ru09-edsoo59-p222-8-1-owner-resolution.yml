@@ -8,6 +8,8 @@ on:
       - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v29.py"
       - "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
       - "eksamio-learning-engine/russian-program/subject-admission/RU09-SYNTAX-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU09-EDSOO59-P222-8-1-SOURCE-BACKED-OWNER-RESOLUTION-v0.1.json"
+      - "eksamio-learning-engine/russian-program/source-knowledge/RUSSIAN-OFFICIAL-SOURCE-MANIFEST-v1.0.json"
       - ".github/workflows/russian-ru02-ru09-edsoo59-p222-8-1-owner-resolution.yml"
   workflow_dispatch:
 
@@ -172,6 +174,153 @@ jobs:
           print("RUSSIAN_EDSOO59_P222_8_1_SOURCE_IDENTITY_GUARD=PASS")
           PY
 
+      - name: Verify bounded source-backed owner candidates remain no-admission
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy
+          import hashlib
+          import json
+          from pathlib import Path
+
+          engine = Path("eksamio-learning-engine")
+          candidate_path = engine / "russian-program/subject-admission/RU09-EDSOO59-P222-8-1-SOURCE-BACKED-OWNER-RESOLUTION-v0.1.json"
+          inventory_path = engine / "273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json"
+          ru09_path = engine / "russian-program/subject-admission/RU09-SYNTAX-CANDIDATES-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+          manifest_path = engine / "russian-program/source-knowledge/RUSSIAN-OFFICIAL-SOURCE-MANIFEST-v1.0.json"
+
+          data = json.loads(candidate_path.read_text(encoding="utf-8"))
+          inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+          ru09 = json.loads(ru09_path.read_text(encoding="utf-8"))
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+          assert data["schema_version"] == "0.1.0"
+          assert data["status"] == "BOUNDED_SOURCE_BACKED_EDSOO59_P222_8_1_OWNER_RESOLUTION_NO_ADMISSION"
+          target = data["target_object"]
+          assert target["admission_unit_id"] == "RAU-3ceb45ca22608d520ddf"
+          assert target["requirement_id"] == "RSK-EDSOO59-8-1-P222"
+          assert target["review_group_id"] == "RUS-SEM-REVIEW-048"
+          assert target["source_id"] == "EDSOO-RU-5-9-2025"
+          assert target["document_id"] == "EDSOO59"
+          assert target["printed_page"] == 222
+          assert target["code"] == "8.1"
+
+          gate = data["source_identity_audit_gate"]
+          assert gate["workflow"] == "Russian EDSOO59 p222 8.1 official-source identity audit"
+          assert gate["run_id"] == 34650713854
+          assert gate["head_sha"] == "02736ebe36a56de73c17b51dfb303ec1e8fcada7"
+          assert gate["required_conclusion_before_any_semantic_admission"] == "SUCCESS"
+          assert gate["candidate_does_not_treat_in_progress_as_proof"] is True
+
+          docs = [
+              row for row in manifest["documents"]
+              if row.get("canonical_source_id") == "EDSOO-RU-5-9-2025"
+              and row.get("document_id") == "EDSOO59"
+          ]
+          assert len(docs) == 1
+          doc = docs[0]
+          official = data["official_source"]
+          assert doc["final_status"] == "CURRENT_2025_FEDERAL_PROGRAM"
+          assert doc["sha256"] == official["document_sha256"] == (
+              "1d2f68b5e77e7b67fccd52ce0fed36d84141dc719e50db7b225f40b1313eeb0d"
+          )
+          assert doc["public_authority_url"] == official["public_authority_url"]
+
+          def norm(value):
+              return " ".join(str(value or "").strip().split())
+
+          accepted_ru09 = [
+              row for row in ru09.get("decisions", [])
+              if row.get("subject_semantic_status") == "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC"
+          ]
+          current_school = [
+              row for row in inventory.get("objects", [])
+              if row.get("source_system") == "school_canonical"
+              and row.get("authority_status") == "current"
+              and row.get("audit_classification") == "CANONICAL_SCHOOL_IDENTITY"
+          ]
+          all_inventory_ids = set()
+          for row in inventory.get("objects", []):
+              if row.get("source_id"):
+                  all_inventory_ids.add(str(row["source_id"]))
+              if row.get("candidate_canonical_owner"):
+                  all_inventory_ids.add(str(row["candidate_canonical_owner"]))
+              for ref in row.get("current_semantic_refs") or []:
+                  all_inventory_ids.add(str(ref))
+
+          expected = [
+              (
+                  "edsoo59-p222-8-1-sentence-formulation-means",
+                  "Средства оформления предложения в устной и письменной речи (интонация, логическое ударение, знаки препинания)",
+                  "ru-syntax-sentence-formulation-means",
+              ),
+              (
+                  "edsoo59-p222-8-1-inversion-norm",
+                  "Нормы использования инверсии",
+                  "ru-syntax-inversion-norm",
+              ),
+          ]
+          assert data["existing_owner_search"]["method"] == "EXACT_NORMALIZED_TEXT_EQUALITY_ONLY"
+          assert data["existing_owner_search"]["exact_current_owner_count"] == 0
+          assert len(data["proposed_owners"]) == 2
+          for row, (component_id, exact_text, proposed_id) in zip(data["proposed_owners"], expected, strict=True):
+              assert row["source_component_id"] == component_id
+              assert row["exact_source_text"] == exact_text
+              assert row["label_ru"] == exact_text
+              assert row["proposed_semantic_id"] == proposed_id
+              assert row["definition_authority"] == "EXACT_OFFICIAL_SOURCE_TEXT_ONLY"
+              assert row["status"] == "PROPOSED_NOT_CANONICAL"
+              assert row["candidate_is_source_backed"] is True
+              assert row["existing_exact_owner_found"] is False
+              assert row["original_learner_content_status"] == "MISSING_REQUIRED"
+              assert row["independent_component_evidence_status"] == "MISSING_REQUIRED"
+              assert row["semantic_admission_effect"] == "NONE"
+              assert row["object_closure_effect"] == "NONE"
+              assert row["exact_mastery_effect"] == "NONE"
+
+              wanted = norm(exact_text)
+              school_matches = [
+                  r for r in current_school
+                  if norm(r.get("observed_label")) == wanted or norm(r.get("observed_meaning")) == wanted
+              ]
+              ru09_matches = [r for r in accepted_ru09 if norm(r.get("canonical_label_ru")) == wanted]
+              assert school_matches == []
+              assert ru09_matches == []
+              assert proposed_id not in all_inventory_ids
+
+          boundary = data["acceptance_boundary"]
+          assert boundary["candidate_owner_resolution_can_self_admit"] is False
+          assert boundary["source_identity_correction_applied"] is False
+          assert boundary["aggregate_mutated"] is False
+          assert boundary["current_v30_created"] is False
+          assert boundary["component_specific_independent_learner_evidence_required"] is True
+          assert boundary["original_bounded_learner_content_required"] is True
+          assert boundary["registered_user_identity_required_for_future_canonical_learner_evidence"] is True
+          assert boundary["anonymous_or_device_only_canonical_progress_allowed"] is False
+          assert boundary["false_exact_mastery"] == 0
+
+          effect = data["progress_effect"]
+          assert effect["semantic_admissions"] == 0
+          assert effect["object_level_closures"] == 0
+          assert effect["exact_mastery_admissions"] == 0
+          assert effect["current_v29_remainder_units_preserved"] == 1270
+          assert effect["current_v29_remainder_requirements_preserved"] == 1345
+
+          expected_sha = data["normalized_sha256"]
+          unhashed = copy.deepcopy(data)
+          del unhashed["normalized_sha256"]
+          canonical = json.dumps(
+              unhashed,
+              ensure_ascii=False,
+              sort_keys=True,
+              separators=(",", ":"),
+          ).encode("utf-8")
+          assert hashlib.sha256(canonical).hexdigest() == expected_sha
+
+          print("RUSSIAN_EDSOO59_P222_BOUNDED_OWNER_CANDIDATES=PASS")
+          PY
+
       - name: Protect bounded wave and production surfaces
         shell: bash
         run: |
@@ -179,17 +328,18 @@ jobs:
           BASE="cb90377c4ebe00e88e22c39824b7c484651ebcc4"
           OLD_RESOLVER="eksamio-learning-engine/russian-program/subject-admission/build_ru02_ru09_edsoo59_p222_8_1_owner_resolution.py"
           AUDIT="eksamio-learning-engine/russian-program/subject-admission/build_ru02_ru09_edsoo59_p222_8_1_source_identity_audit.py"
+          CANDIDATE="eksamio-learning-engine/russian-program/subject-admission/RU09-EDSOO59-P222-8-1-SOURCE-BACKED-OWNER-RESOLUTION-v0.1.json"
           WORKFLOW=".github/workflows/russian-ru02-ru09-edsoo59-p222-8-1-owner-resolution.yml"
 
           mapfile -t changed < <(git diff --name-only "$BASE...HEAD")
-          if [ "${#changed[@]}" -ne 3 ]; then
+          if [ "${#changed[@]}" -ne 4 ]; then
             printf 'Unexpected bounded-wave path count (%s):\n' "${#changed[@]}" >&2
             printf '  %s\n' "${changed[@]}" >&2
             exit 1
           fi
           for path in "${changed[@]}"; do
             case "$path" in
-              "$OLD_RESOLVER"|"$AUDIT"|"$WORKFLOW") ;;
+              "$OLD_RESOLVER"|"$AUDIT"|"$CANDIDATE"|"$WORKFLOW") ;;
               *)
                 echo "Unexpected bounded-wave path: $path" >&2
                 exit 1
