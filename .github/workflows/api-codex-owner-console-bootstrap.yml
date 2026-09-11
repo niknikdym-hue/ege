@@ -70,7 +70,6 @@ jobs:
           if not changed: raise SystemExit('No implementation produced')
           print('\n'.join(sorted(changed)))
           PY
-          python3 -m py_compile eksamio-learning-engine/project-control/owner_agent_console.py
           python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_owner_agent_console.py' -v
           python3 -m json.tool eksamio-learning-engine/project-control/operational-board-v1.json >/dev/null
           python3 eksamio-learning-engine/project-control/owner_agent_console.py render --board eksamio-learning-engine/project-control/operational-board-v1.json --github-fixture eksamio-learning-engine/project-control/github-fixture.json --output /tmp/owner-console.md
@@ -80,8 +79,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          mv .github/workflows/owner-agent-console-sync.yml eksamio-learning-engine/project-control/owner-agent-console-sync.workflow.yml
           git rm docs/project-control/api-codex-owner-console-trigger.json
-          git add -A eksamio-learning-engine/project-control eksamio-learning-engine/tests/test_owner_agent_console.py eksamio-learning-engine/results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md .github/workflows/owner-agent-console-sync.yml
+          git add -A eksamio-learning-engine/project-control eksamio-learning-engine/tests/test_owner_agent_console.py eksamio-learning-engine/results/RESULT-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'feat: add remote Owner Agent Console page'
