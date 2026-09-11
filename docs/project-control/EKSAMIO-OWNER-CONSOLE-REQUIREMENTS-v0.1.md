@@ -271,3 +271,12 @@ Owner Console v1 is accepted only when:
 6. conflict detection;
 7. automated tests for stage/task completeness and status semantics;
 8. only then optional remote/private hosting if the owner wants it and security review permits it.
+
+## Обязательное правило выбора модели
+
+- Простые задачи — `gpt-5.6-luna`, если модель стабильно доступна и прошла проверку достаточности для задачи.
+- Основная разработка — `gpt-5.6-terra`.
+- Сложная разработка — `gpt-5.6-sol`.
+- Архитектура, постановка bounded-плана и финальная проверка — `gpt-6-astra` (Astra).
+
+Дорогая модель не должна выполнять рутинную задачу, если с ней надёжно справляется более экономичная. Повышение класса модели допускается только при доказанной нехватке возможностей или качества. Платный повтор не запускается автоматически.
