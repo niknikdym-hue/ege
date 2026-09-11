@@ -9,7 +9,7 @@ jobs:
   build:
     if: "${{ github.actor == 'niknikdym-hue' && github.event.head_commit.message == 'ci: build simple Owner Control button panel' }}"
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
         with:
@@ -87,8 +87,8 @@ jobs:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           prompt-file: /tmp/codex-prompt.txt
           output-file: /tmp/codex-output.txt
-          model: gpt-5.6-terra
-          effort: high
+          model: gpt-5.6-luna
+          effort: low
           sandbox: workspace-write
           codex-args: '["--ephemeral"]'
       - name: Validate bounded result
