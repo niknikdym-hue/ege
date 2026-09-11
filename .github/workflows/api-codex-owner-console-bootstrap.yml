@@ -52,8 +52,8 @@ jobs:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           prompt-file: docs/project-control/tasks/TASK-OWNER-AGENT-CONSOLE-REMOTE-SLICE-1.md
           output-file: ${{ runner.temp }}/codex-final.txt
-          model: gpt-5.6-luna
-          effort: low
+          model: gpt-5.6-terra
+          effort: medium
           sandbox: workspace-write
           codex-args: '["--ephemeral"]'
       - name: Normalize bounded generated paths
