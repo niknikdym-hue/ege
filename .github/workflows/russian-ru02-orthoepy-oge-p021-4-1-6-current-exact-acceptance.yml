@@ -1,0 +1,90 @@
+name: Russian RU02 OGE p21 4.1.6 current exact acceptance
+
+on:
+  push:
+    branches: [brain/sep1-russian-subject-closure]
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU02-OGE-P021-4-1-6-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v29.py'
+      - '.github/workflows/russian-ru02-orthoepy-oge-p021-4-1-6-current-exact-acceptance.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU02-OGE-P021-4-1-6-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v29.py'
+      - '.github/workflows/russian-ru02-orthoepy-oge-p021-4-1-6-current-exact-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru02-oge-p021-current-exact-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile exact acceptance chain
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_ru02_orthoepy_oge_p021_4_1_6_exact_object_binding_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v29.py
+      - name: Build accepted current-v29 A
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v29.py --output /tmp/v29-a.json > /tmp/v29-a.txt
+      - name: Build accepted current-v29 B
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v29.py --output /tmp/v29-b.json > /tmp/v29-b.txt
+      - name: Verify deterministic current-v29 and exact delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmp /tmp/v29-a.json /tmp/v29-b.json
+          diff -u /tmp/v29-a.txt /tmp/v29-b.txt
+          cat /tmp/v29-a.txt
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/v29-a.json',encoding='utf-8')); s=d['progress_summary']
+          assert d['schema_version']=='0.31.0'
+          assert d['base_current_launch_progress_v28_head_sha']=='f050dfa7ecf69e371839c6693f68b18928a2fef2'
+          assert d['base_current_launch_progress_v28_normalized_sha256']=='be4b747386c4dadd52b152b65fed60a9a76e585c6501a6080fd214025748eb8a'
+          expected={'semantic_units_with_accepted_component_sets':45,'semantic_requirements_with_accepted_component_sets':45,'semantic_units_remaining_without_accepted_component_set':1271,'semantic_requirements_remaining_without_accepted_component_set':1346,'subject_disposed_units_total':46,'subject_disposed_requirements_total':46,'subject_review_units_remaining':1270,'subject_review_requirements_remaining':1345,'canonical_component_refs_reused_unique':125,'review_groups_with_accepted_component_sets':14,'fully_accepted_semantic_groups':1,'accepted_bounded_ru_route_semantics':9,'accepted_bounded_ru_subject_semantics':75,'accepted_bounded_ru_semantics_total':84,'false_exact_mastery_admissions':0}
+          for k,v in expected.items(): assert s[k]==v,(k,s[k],v)
+          assert len(d['accepted_authorities'])==75
+          n=d['newly_accepted_exact_object']; assert n['admission_unit_id']=='RAU-475d1c2a36040b45e190'; assert n['requirement_id']=='RSK-OGE_COD-4-1-6-P021'; assert n['independent_evidence_items']==9; assert n['exact_mastery_admissions']==0; assert n['completed_review_group']=='RUS-SEM-REVIEW-047'
+          g=[x for x in d['semantic_review_groups'] if x.get('group_id')=='RUS-SEM-REVIEW-047'][0]
+          assert g['accepted_component_set_count']==4==g['admission_unit_count']==g['requirement_count']; assert g['status']=='SUBJECT_ACCEPTED_COMPONENT_SET_COMPLETE'
+          r=[x for x in g['accepted_component_sets'] if x.get('admission_unit_id')=='RAU-475d1c2a36040b45e190']; assert len(r)==1
+          m=r[0]['mastery_boundary']; assert m['registered_user_identity_required_for_future_canonical_learner_evidence'] is True; assert m['durable_evidence_event_required_for_future_canonical_learner_evidence'] is True; assert m['anonymous_or_device_only_canonical_progress_allowed'] is False; assert m['object_acceptance_itself_emits_mastery'] is False
+          print('RU02_OGE_P021_CURRENT_V29_ACCEPTANCE=PASS'); print('NORMALIZED_SHA256='+d['normalized_sha256'])
+          PY
+      - name: Protect bounded acceptance wave
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='cdbb01dfe223e090bbddf1872bb9afd6253d85af'
+          git merge-base --is-ancestor "$base" HEAD
+          recent=$(git diff --name-only "$base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru02-orthoepy-oge-p021-4-1-6-current-exact-acceptance.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU02-OGE-P021-4-1-6-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v29.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent"|sed '/^$/d'|sort -u) <(printf '%s\n' "$allowed"|sed '/^$/d'|sort -u))
+          test -z "$unexpected" || { echo "$unexpected" >&2; exit 1; }
+          ! printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'
+      - name: Diff hygiene
+        run: git diff --check cdbb01dfe223e090bbddf1872bb9afd6253d85af..HEAD
+      - name: Upload exact current-v29 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru02-oge-p021-4-1-6-current-exact-acceptance
+          path: |
+            /tmp/v29-a.json
+            /tmp/v29-a.txt
+          if-no-files-found: error
