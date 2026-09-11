@@ -73,7 +73,7 @@ jobs:
           python3 -m py_compile eksamio-learning-engine/project-control/owner_agent_console.py
           python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_owner_agent_console.py' -v
           python3 -m json.tool eksamio-learning-engine/project-control/operational-board-v1.json >/dev/null
-          python3 eksamio-learning-engine/project-control/owner_agent_console.py render --board eksamio-learning-engine/project-control/operational-board-v1.json --github-fixture eksamio-learning-engine/project-control/github-fixture-v1.json --output /tmp/owner-console.md
+          python3 eksamio-learning-engine/project-control/owner_agent_console.py render --board eksamio-learning-engine/project-control/operational-board-v1.json --github-fixture eksamio-learning-engine/project-control/github-fixture.json --output /tmp/owner-console.md
           test -s /tmp/owner-console.md
       - name: Commit bounded implementation
         if: steps.trigger.outputs.enabled == 'true'
