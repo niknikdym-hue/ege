@@ -9,7 +9,7 @@ jobs:
   build:
     if: "${{ github.actor == 'niknikdym-hue' && github.event.head_commit.message == 'ci: build simple Owner Control button panel' }}"
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v5
         with:
