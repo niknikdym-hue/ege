@@ -138,6 +138,7 @@ jobs:
           git commit -m 'feat: add simple Owner Control button panel'
           git rev-parse HEAD > /tmp/reviewed.txt
           git diff-tree --no-commit-id --name-only -r HEAD > /tmp/paths.txt
+          git format-patch -1 --stdout > /tmp/generated-candidate.patch
       - name: Astra reviews the exact result
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -156,8 +157,8 @@ jobs:
           with urllib.request.urlopen(req,timeout=180) as r: body=json.loads(r.read().decode())
           out=''.join(x.get('text','') for i in body.get('output',[]) if i.get('type')=='message' for x in i.get('content',[]) if x.get('type')=='output_text')
           d=json.loads(out);validate_review_decision(d)
-          assert d['reviewed_sha']==sha and d['decision']=='PASS' and all(d['invariants'].values()),d
           Path('/tmp/astra-review.json').write_text(json.dumps(d,ensure_ascii=False,indent=2))
+          assert d['reviewed_sha']==sha and d['decision']=='PASS' and all(d['invariants'].values()),d
           print('ASTRA_REVIEW=PASS')
           PY
       - name: Push accepted result
@@ -166,14 +167,33 @@ jobs:
         run: |
           gh auth setup-git
           git push origin HEAD:codex/owner-agent-control-page-v1-api
+      - name: Collect bounded run evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          out="$GITHUB_WORKSPACE/.owner-control-run-artifacts"
+          mkdir -p "$out"
+          for name in task-plan.json codex-output.txt evidence.txt astra-review.json reviewed.txt paths.txt generated-candidate.patch; do
+            if [ -f "/tmp/$name" ]; then
+              cp "/tmp/$name" "$out/$name"
+            else
+              printf 'NOT_PRODUCED\n' > "$out/$name"
+            fi
+          done
+          python3 - <<'PY'
+          from hashlib import sha256
+          from pathlib import Path
+          root=Path('.owner-control-run-artifacts')
+          lines=[]
+          for p in sorted(root.iterdir()):
+              b=p.read_bytes()
+              lines.append(f'{p.name}\t{len(b)}\t{sha256(b).hexdigest()}')
+          (root/'SHA256SUMS.tsv').write_text('\n'.join(lines)+'\n')
+          PY
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: owner-control-button-panel-${{ github.sha }}
-          path: |
-            /tmp/task-plan.json
-            /tmp/codex-output.txt
-            /tmp/evidence.txt
-            /tmp/astra-review.json
-          if-no-files-found: warn
+          path: .owner-control-run-artifacts/
+          if-no-files-found: error
           retention-days: 14
