@@ -9,7 +9,7 @@ jobs:
   build:
     if: "${{ github.actor == 'niknikdym-hue' && github.event.head_commit.message == 'ci: build simple Owner Control button panel' }}"
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
         with:
@@ -58,26 +58,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           task=r"""
-          Build the authorized Eksamio Owner Control button panel. Read only AGENTS.md mandatory project-control authority, existing project-control files, their targeted test/result, and the Astra plan.
-
-          Keep one source of truth: operational-board-v1.json and the existing GitHub adapter. Extend owner_agent_console.py with a deterministic HTML render command and generate tracked owner-control.html. Add owner-control-state.json with honest IDLE/no-active-task state. No framework, package, network dependency, learner data, analytics fiction, secret or external image.
-
-          Page language is Russian. It must open on the working surface. First viewport: current milestone, SOURCE OF TRUTH state, Astra/API-Codex activity, critical blocker count, and five large controls labelled exactly:
-          Запустить следующую задачу
-          Пауза после текущего шага
-          Продолжить
-          Остановить
-          Обновить статус
-          Each control opens the one native GitHub workflow page and clearly says GitHub will ask for one confirmation; opening the page is not execution. Add tabs with visible labels Critical Path, Whole Project, Russian A+B, Visible Product, Owner Gates, Blockers. Default Critical Path. All 115 tasks remain searchable/filterable. Render repo-derived strings only through textContent/createElement, never innerHTML. Responsive at 1280/390/320 with no page-level horizontal overflow. Use a crisp navy/white/blue operational design, readable type, keyboard focus, no decorative imagery.
-
-          Create one permanent .github/workflows/owner-agent-console-control.yml. workflow_dispatch inputs: action choice start/pause/resume/stop/refresh and optional owner_note. Explicit permissions contents:write, issues:write, pull-requests:write, actions:write; no id-token/deployments.
-          - refresh runs the existing deterministic Issue 194 sync.
-          - pause/stop cancel only older queued/in-progress runs of this exact workflow and post a concise control event to Issue 194. Never cancel Physics or other workflows.
-          - start/resume fetch current main, read the board/GitHub facts, ask gpt-6-astra for a strict bounded plan, invoke openai/codex-action@v1 with gpt-5.6-terra/workspace-write, validate actual paths against the plan, run git diff --check plus safe syntax checks, obtain Astra PASS, then push a new codex/owner-run-<run_id> branch and create a Draft PR. Never merge, deploy, mark Ready or alter public traffic.
-          - Fail closed if scope includes .github, frozen demo/source/Tilda, secrets, deployment, payment or other provider/production actions. If no safe bounded task exists, post BLOCKED/OWNER_ACTION_REQUIRED and exit without branch.
-          - Use no dynamic shell from model output and never echo API keys.
-
-          Expand only test_owner_agent_console.py for exact controls/tabs, 115 tasks, safe DOM, no secret strings, truthful initial state and workflow hard boundaries. Update the existing result honestly: implementation in Draft PR, hosting/live availability pending merge; do not claim direct one-click backend. Generate HTML. No unrelated changes.
+          Work only on the existing Owner Console files. Do not audit the repository. Read operational-board-v1.json, owner_agent_console.py, its targeted test, and existing result. Create a dependency-free Russian owner-control.html that embeds all 115 board tasks, uses only createElement/textContent, is responsive, and has exact buttons: Запустить следующую задачу; Пауза после текущего шага; Продолжить; Остановить; Обновить статус. Add exact tabs: Critical Path; Whole Project; Russian A+B; Visible Product; Owner Gates; Blockers. Buttons honestly open the native GitHub workflow page for one confirmation. Create owner-control-state.json with truthful IDLE state. Create .github/workflows/owner-agent-console-control.yml with workflow_dispatch start/pause/resume/stop/refresh. Start/resume must use Astra gpt-6-astra, API-Codex gpt-5.6-terra, bounded path validation, tests, Astra final PASS, then push a new codex/owner-run branch and open only a Draft PR. Pause/stop affect only older runs of that exact workflow. Refresh runs existing Issue 194 sync. Never merge, deploy, mark Ready, touch production, learner data, payments, Yandex, secrets, frozen demos/source/Tilda, or other workflows. Update only the targeted test/result if necessary. Generate the HTML.
           """
           Path('/tmp/codex-prompt.txt').write_text(task+'\nASTRA PLAN:\n'+Path('/tmp/task-plan.json').read_text())
           PY
@@ -87,7 +68,7 @@ jobs:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           prompt-file: /tmp/codex-prompt.txt
           output-file: /tmp/codex-output.txt
-          model: gpt-5.6-luna
+          model: gpt-5.3-codex-spark
           effort: low
           sandbox: workspace-write
           codex-args: '["--ephemeral"]'
