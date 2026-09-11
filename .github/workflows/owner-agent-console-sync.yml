@@ -29,7 +29,10 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m unittest eksamio-learning-engine/tests/test_owner_agent_console.py
-          python3 -m py_compile eksamio-learning-engine/project-control/owner_agent_console.py
+          python3 -m py_compile \
+            eksamio-learning-engine/project-control/owner_agent_console.py \
+            eksamio-learning-engine/project-control/owner_control_checkpoint.py
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-agent-console-control.yml', aliases: true); puts 'CONTROL_YAML_PARSE=PASS'"
           git diff --check
       - name: Synchronize Owner Control issue
         env:
