@@ -13,6 +13,8 @@ Read the mandatory `eksamio-learning-engine/AGENTS.md` startup files and only th
 Allowed output path — exactly one file:
 `eksamio-learning-engine/russian-program/subject-admission/build_oge_6_14_remaining_6_2_reuse_exhaustion.py`
 
+Concurrent exact delta note: commit `1bc6efc4a87d2db1c8f24183ec445dfbe3d0e9a5` may already contain the minimal repair. Inspect it first. If the existing code already satisfies every acceptance check, make no redundant edit and report `PREEXISTING_EXACT_FIX_VERIFIED`; do not manufacture a diff.
+
 Required implementation:
 - Identify later production-learning JSON files that are unrelated to the historical OGE 6.14 reuse proof and change only its count denominator.
 - Extend the existing explicit `POST_PROOF_NON_6_14_CONTENT_NOT_COUNTED_IN_HISTORICAL_DENOMINATOR` mechanism for exactly those files.
