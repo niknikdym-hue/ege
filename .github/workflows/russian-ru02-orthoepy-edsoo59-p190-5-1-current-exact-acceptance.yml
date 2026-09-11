@@ -139,22 +139,34 @@ jobs:
         run: |
           set -euo pipefail
           wave_base='78e0806768880875fe323f32993e6eb68b6642c5'
-          git merge-base --is-ancestor "$wave_base" HEAD
-          recent=$(git diff --name-only "$wave_base"..HEAD)
+          wave_tip='feb0b6ce6febcc33f766dc800bc010e778f80304'
+          git merge-base --is-ancestor "$wave_base" "$wave_tip"
+          git merge-base --is-ancestor "$wave_tip" HEAD
+
+          wave_files=$(git diff --name-only "$wave_base".."$wave_tip")
           allowed=$(cat <<'EOF'
           .github/workflows/russian-ru02-orthoepy-edsoo59-p190-5-1-current-exact-acceptance.yml
           eksamio-learning-engine/russian-program/subject-admission/RU02-EDSOO59-P190-5-1-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
           eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v28.py
           EOF
           )
-          unexpected=$(comm -23 <(printf '%s\n' "$recent" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
+          unexpected=$(comm -23 <(printf '%s\n' "$wave_files" | sed '/^$/d' | sort -u) <(printf '%s\n' "$allowed" | sed '/^$/d' | sort -u))
           if [[ -n "$unexpected" ]]; then
-            echo 'RU02 p190 exact-acceptance wave touched files outside bounded allowlist:' >&2
+            echo 'RU02 p190 exact-acceptance commit touched files outside bounded allowlist:' >&2
             printf '%s\n' "$unexpected" >&2
             exit 1
           fi
-          if printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
-            echo 'RU02 p190 exact-acceptance wave touched a protected public/production surface.' >&2
+
+          authority='eksamio-learning-engine/russian-program/subject-admission/RU02-EDSOO59-P190-5-1-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+          builder='eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v28.py'
+          if ! git diff --quiet "$wave_tip"..HEAD -- "$authority" "$builder"; then
+            echo 'RU02 p190 semantic acceptance files changed after the bounded acceptance commit.' >&2
+            exit 1
+          fi
+
+          branch_files=$(git diff --name-only "$wave_base"..HEAD)
+          if printf '%s\n' "$branch_files" | grep -E 'russkiy-knigi|(^|/)tilda|demo|scor'; then
+            echo 'RU02 p190 branch interval touched a protected public/production surface.' >&2
             exit 1
           fi
 
