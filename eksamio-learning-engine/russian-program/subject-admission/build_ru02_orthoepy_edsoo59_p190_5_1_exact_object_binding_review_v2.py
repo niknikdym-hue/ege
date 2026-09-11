@@ -6,9 +6,11 @@ semantic acceptance artifact. That artifact intentionally records semantic
 acceptance but not the later component-specific learner-evidence ids. The exact
 accepted sibling authority for EDSOO59 p.187 4.1.6 is the current durable source
 that pins those ids. This wrapper verifies that authority first, overlays only
-that already-accepted evidence into a temporary in-memory/file view, and then
-runs the original fail-closed review unchanged. No canonical authority file is
-mutated and no sibling acceptance is inherited by the p.190 object.
+that already-accepted evidence into a temporary in-memory/file view, binds the
+target to the deterministic admission-unit identity produced by the current
+object-review queue, and then runs the original fail-closed review unchanged.
+No canonical authority file is mutated and no sibling acceptance is inherited
+by the p.190 object.
 """
 from __future__ import annotations
 
@@ -28,6 +30,7 @@ P187_ACCEPTANCE = HERE / "RU02-EDSOO59-P187-4-1-6-EXACT-CANONICAL-COMPONENT-ACCE
 
 STRESS_REF = "ru-orthoepy-normative-stress-selection"
 EXPECTED_STRESS_EVIDENCE = ["p02-u3-v1", "p02-u3-v2", "p02-u3-v3", "p02-u3-v4"]
+EXPECTED_TARGET_UNIT = "RAU-f875ecae572d08cef520"
 EXPECTED_CORE_STATUS = (
     "CENTRAL_BRAIN_RU02_EDSOO59_P190_5_1_EXACT_OBJECT_BINDING_REVIEW_"
     "READY_FOR_SEPARATE_ACCEPTANCE_NOT_ACCEPTED"
@@ -108,6 +111,7 @@ def build_review() -> dict[str, Any]:
     core_build = core.get("build_review")
     if not callable(core_build):
         raise ValueError("core p190 review build_review missing")
+    core_build.__globals__["TARGET_UNIT"] = EXPECTED_TARGET_UNIT
 
     with tempfile.TemporaryDirectory(prefix="ru02-p190-review-") as tmpdir:
         overlay_path = Path(tmpdir) / STRESS_ACCEPTANCE.name
@@ -120,6 +124,9 @@ def build_review() -> dict[str, Any]:
 
     if result.get("status") != EXPECTED_CORE_STATUS:
         raise ValueError("core p190 review status drift")
+    selected = result.get("selected_object") or {}
+    if selected.get("admission_unit_id") != EXPECTED_TARGET_UNIT:
+        raise ValueError("p190 deterministic admission-unit identity drift")
     reuse = result.get("reuse_first_owner_resolution") or {}
     if reuse.get("canonical_component_refs") != [
         "ru-orthoepy-normative-pronunciation-selection",
@@ -146,6 +153,8 @@ def build_review() -> dict[str, Any]:
             raise ValueError(f"p190 review opened forbidden admission: {key}")
 
     result["validation_provenance"] = {
+        "target_admission_unit_identity_source": "deterministic_current_object_review_queue",
+        "target_admission_unit_id": EXPECTED_TARGET_UNIT,
         "stress_bounded_semantic_artifact_is_component_evidence_registry": False,
         "stress_component_evidence_source": "accepted_exact_sibling_authority",
         "accepted_exact_sibling_requirement_id": "RSK-EDSOO59-4-1-6-P187",
@@ -175,6 +184,7 @@ def main() -> int:
     else:
         summary = result["summary"]
         print("RU02_EDSOO59_P190_5_1_EXACT_OBJECT_BINDING_REVIEW_V2=PASS")
+        print(f"TARGET_UNIT={EXPECTED_TARGET_UNIT}")
         print("STRESS_EVIDENCE_SOURCE=ACCEPTED_EXACT_SIBLING_AUTHORITY")
         print("OBJECT_CLOSURES_BY_REVIEW=0")
         print("FALSE_EXACT_MASTERY_ADMISSIONS=0")
