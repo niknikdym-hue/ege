@@ -1,0 +1,33 @@
+name: owner-agent-console-sync
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [control-plan]
+  schedule:
+    - cron: '17 6 * * *'
+  push:
+    paths:
+      - '.github/workflows/owner-agent-console-sync.yml'
+      - 'docs/project-control/**'
+      - 'eksamio-learning-engine/00B-PROJECT-PRIORITIES-CURRENT.md'
+      - 'eksamio-learning-engine/project-control/**'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Synchronize Owner Control issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python eksamio-learning-engine/project-control/owner_agent_console.py sync
+          --board eksamio-learning-engine/project-control/operational-board-v1.json
+          --github-fixture eksamio-learning-engine/project-control/github-fixture.json
+          --repository niknikdym-hue/ege
+          --issue-title 'Eksamio — Owner Control'
