@@ -5,11 +5,6 @@ on:
     types: [control-plan]
   schedule:
     - cron: '17 6 * * *'
-  push:
-    paths:
-      - 'eksamio-learning-engine/project-control/**'
-      - 'eksamio-learning-engine/00B-PROJECT-PRIORITIES-CURRENT.md'
-      - 'docs/project-control/**'
 permissions:
   contents: read
   issues: write

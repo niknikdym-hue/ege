@@ -6,10 +6,10 @@ Changed only the permitted Owner Console board, adapter, fixture, targeted test,
 
 Checks:
 
-- `python -m unittest eksamio-learning-engine/tests/test_owner_agent_console.py` — 3 tests OK.
-- Offline render smoke using `github-fixture.json` — OK; renders all required sections, task titles/status/actions, offline PR/check facts, and `CORRECTION: ... NOT_DISPATCHED`.
-- Deterministic conflict fixture assertion — OK; conflicting GitHub/board facts render `STALE/CONFLICT`.
+- `python -m unittest eksamio-learning-engine/tests/test_owner_agent_console.py` — 3 targeted deterministic tests passed.
+- Offline render smoke using `github-fixture.json` — passed; renders all 115 rows and required views in 26,690 bytes. The fixture uses the same concise PR adapter shape (number/title/head SHA/draft/check aggregate) as live ingestion.
+- Deterministic checks enforce 115 unique IDs, A=74/B=15/C=11/D=8/E=7, all card fields, source-derived status examples (B1/C11/D6/D8/E1–E7), non-visible code, owner-gate exclusions, ordered 12-step path, conflict state, and no secret/raw GraphQL fields.
 
-Live sync uses read-only `gh api` for current `main` SHA and `gh pr list` for open PR/head/draft/check facts before issue rendering. No learner/runtime dependency, provider key, secret, deployment, merge, push, or external command was performed.
+Live sync uses read-only `gh api` for current `main` SHA and `gh pr list` for open PR/head/draft/check facts before issue rendering. It reduces checks to a concise owner-readable aggregate and never emits raw rollup records. No learner/runtime dependency, provider key, secret, deployment, merge, push, or external command was performed.
 
 Remaining audited command-adapter work: pause/correct/resume/rework integration remains an owner/operator-controlled adapter; no correction is dispatched or auto-executed by this console.
