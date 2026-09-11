@@ -1,4 +1,4 @@
-# OWNER-AGENT-CONSOLE-REMOTE-SLICE-3 — SEMANTIC ACCEPTANCE REPAIR
+# OWNER-AGENT-CONSOLE-REMOTE-SLICE-4 — TRUTHFUL STATUS AND CONCISE GITHUB REPAIR
 
 You are API-Codex repairing the bounded Owner Console implementation already present on the current branch. Do not scan the repository or touch unrelated files.
 
@@ -32,3 +32,11 @@ Required repairs:
 Forbidden: learner/runtime/demo/trainer/payment/Tutor changes; Yandex operations; OpenAI calls in the resulting console; secrets; deployment; merge; public hosting; invented progress; edits to PR #190/#191; broad test suites; git commit/push from your step.
 
 Run only the targeted unittest and offline render smoke. Stop after the repaired bounded implementation; the trusted workflow validates, commits and synchronizes Issue #194.
+
+Independent review of Slice 3 found the remaining concrete defects. Fix all of them:
+- derive normalized status from `source_status`, never from task title or next-action text;
+- B1 must be `BLOCKED_SUBJECT`; C11 and D8 must be `NOT_STARTED`; D6 must be `NOT_STARTED`; E1–E7 `FUTURE` must map conservatively to `NOT_STARTED`, not `DESIGNED`;
+- keep D1/D2 partial accepted work conservative without calling it public/visible;
+- task `title` must not repeat its `task_id` prefix;
+- live GitHub facts must be concise owner-readable summaries of relevant PR number/title/head/Draft/check aggregate. Never dump raw GraphQL/Python objects or `statusCheckRollup` records into the Issue, and never render `__typename`;
+- keep the Issue within a useful human-readable size while still listing all 115 project rows and required views.

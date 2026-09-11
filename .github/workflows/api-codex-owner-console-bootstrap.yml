@@ -41,7 +41,7 @@ jobs:
           if p.is_file():
               d=json.loads(p.read_text())
               parent=subprocess.check_output(['git','rev-parse','HEAD^'],text=True).strip()
-              ok=d.get('enabled') is True and d.get('expected_parent_sha')==parent and d.get('task_id')=='OWNER-AGENT-CONSOLE-REMOTE-SLICE-3'
+              ok=d.get('enabled') is True and d.get('expected_parent_sha')==parent and d.get('task_id')=='OWNER-AGENT-CONSOLE-REMOTE-SLICE-4'
           with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write('enabled='+('true' if ok else 'false')+'\n')
           print('API-Codex one-shot:', 'ENABLED' if ok else 'SKIPPED')
           PY
@@ -98,6 +98,11 @@ jobs:
           by_id={t['task_id']:t for t in tasks}
           assert by_id['A6.1']['status']=='VISIBLE_TO_LEARNER'
           assert by_id['A2.1']['status']!='NOT_STARTED'
+          assert by_id['B1']['status']=='BLOCKED_SUBJECT'
+          assert by_id['C11']['status']=='NOT_STARTED'
+          assert by_id['D6']['status']=='NOT_STARTED' and by_id['D8']['status']=='NOT_STARTED'
+          assert all(by_id[f'E{i}']['status']=='NOT_STARTED' for i in range(1,8))
+          assert all(not t['title'].startswith(t['task_id']) for t in tasks)
           assert not by_id['A12.4']['owner_gate_required'] and not by_id['A12.5']['owner_gate_required']
           assert all(not t['visible_to_learner'] for t in tasks if t['status']=='CODE_READY')
           cp=data.get('critical_path')
@@ -105,6 +110,7 @@ jobs:
           PY
           python3 eksamio-learning-engine/project-control/owner_agent_console.py render --board eksamio-learning-engine/project-control/operational-board-v1.json --github-fixture eksamio-learning-engine/project-control/github-fixture.json --output /tmp/owner-console.md
           test -s /tmp/owner-console.md
+          ! grep -q '__typename' /tmp/owner-console.md
       - name: Commit bounded implementation
         if: steps.trigger.outputs.enabled == 'true'
         env:
