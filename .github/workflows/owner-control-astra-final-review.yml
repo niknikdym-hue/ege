@@ -104,6 +104,7 @@ jobs:
           name: owner-control-astra-final-request-${{ github.sha }}
           path: .astra-final-review/
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 30
 
       - name: One bounded Astra final review
@@ -166,6 +167,7 @@ jobs:
           name: owner-control-astra-final-review-${{ github.sha }}
           path: .astra-final-review/
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 30
 
       - name: Record durable PASS in Issue 194
