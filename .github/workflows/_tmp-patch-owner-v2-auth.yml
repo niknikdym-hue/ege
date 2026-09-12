@@ -1,0 +1,44 @@
+name: Temporary Owner v2 parent-auth patch
+on:
+  push:
+    branches: [brain/owner-control-v2-batch-routing-20260912]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  patch:
+    if: github.actor == 'niknikdym-hue'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: brain/owner-control-v2-batch-routing-20260912
+          fetch-depth: 0
+      - name: Patch child authorization and self-remove
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('.github/workflows/owner-agent-task-v2.yml')
+          text=p.read_text()
+          old='''          test "$GITHUB_ACTOR" = "niknikdym-hue" || { echo 'Only repository owner may dispatch Owner Control v2.'; exit 1; }\n          test -n '${{ inputs.task_id }}'\n          test -n '${{ inputs.package_id }}'\n'''
+          new='''          if [ "$GITHUB_ACTOR" = "niknikdym-hue" ]; then\n            : # direct owner single-task dispatch\n          elif [ "$GITHUB_ACTOR" = "github-actions[bot]" ]; then\n            [[ '${{ inputs.package_id }}' =~ ^owner-[0-9]+$ ]] || { echo 'Bot child missing owner package proof.'; exit 1; }\n            parent_id="${{ inputs.package_id }}"; parent_id="${parent_id#owner-}"\n            parent="$(GH_TOKEN='${{ github.token }}' gh api "repos/$GITHUB_REPOSITORY/actions/runs/$parent_id")"\n            python3 - "$parent" <<'PARENT'\nimport json,sys\nd=json.loads(sys.argv[1])\nassert d['event']=='workflow_dispatch'\nassert d['actor']['login']=='niknikdym-hue'\nassert d['path']=='.github/workflows/owner-agent-batch-v2.yml'\nassert d['status'] in {'queued','in_progress'}\nPARENT\n          else\n            echo 'Untrusted Owner Control v2 actor.'; exit 1\n          fi\n          test -n '${{ inputs.task_id }}'\n          test -n '${{ inputs.package_id }}'\n'''
+          if old not in text: raise SystemExit('auth patch anchor missing')
+          p.write_text(text.replace(old,new,1))
+          Path('.github/workflows/_tmp-patch-owner-v2-auth.yml').unlink()
+          PY
+          python3 - <<'PY'
+          from pathlib import Path
+          t=Path('.github/workflows/owner-agent-task-v2.yml').read_text()
+          assert "github-actions[bot]" in t and "owner-agent-batch-v2.yml" in t
+          assert not Path('.github/workflows/_tmp-patch-owner-v2-auth.yml').exists()
+          PY
+      - name: Commit bounded patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          changed="$(git status --porcelain | awk '{print $2}' | sort)"
+          expected="$(printf '%s\n' '.github/workflows/_tmp-patch-owner-v2-auth.yml' '.github/workflows/owner-agent-task-v2.yml' | sort)"
+          test "$changed" = "$expected"
+          git add -A
+          git commit -m 'owner control v2: authorize proven sequential child runs'
+          git push origin HEAD:brain/owner-control-v2-batch-routing-20260912
