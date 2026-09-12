@@ -1,0 +1,84 @@
+name: Russian RU09 EDSOO59 p222 8.1 exact object binding review
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/subject-admission/RU09-EDSOO59-P222-8-1-EXACT-OBJECT-BINDING-REVIEW-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru09_edsoo59_p222_8_1_exact_object_binding_review.py"
+      - ".github/workflows/russian-ru09-edsoo59-p222-8-1-exact-object-binding-review.yml"
+      - "eksamio-learning-engine/russian-program/subject-admission/RU09-EDSOO59-P222-8-1-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v29.py"
+      - "eksamio-learning-engine/russian-program/source-knowledge/RUSSIAN-OFFICIAL-SOURCE-MANIFEST-v1.0.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-object-binding-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile fail-closed validator
+        run: |
+          python -m py_compile \
+            eksamio-learning-engine/russian-program/subject-admission/validate_ru09_edsoo59_p222_8_1_exact_object_binding_review.py
+
+      - name: Validate exact object binding twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          V="eksamio-learning-engine/russian-program/subject-admission/validate_ru09_edsoo59_p222_8_1_exact_object_binding_review.py"
+          python "$V" > /tmp/object-binding-1.txt
+          python "$V" > /tmp/object-binding-2.txt
+          diff -u /tmp/object-binding-1.txt /tmp/object-binding-2.txt
+          cat /tmp/object-binding-1.txt
+
+      - name: Protect bounded review and production surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="a05cdc663753af46846952d9e05ea82ae0bfed1b"
+          git cat-file -e "${BASE}^{commit}"
+          mapfile -t changed < <(git diff --name-only "${BASE}...HEAD" | sort)
+          printf '%s\n' "${changed[@]}"
+          expected=(
+            ".github/workflows/russian-ru09-edsoo59-p222-8-1-exact-object-binding-review.yml"
+            "eksamio-learning-engine/russian-program/subject-admission/RU09-EDSOO59-P222-8-1-EXACT-OBJECT-BINDING-REVIEW-v0.1.json"
+            "eksamio-learning-engine/russian-program/subject-admission/validate_ru09_edsoo59_p222_8_1_exact_object_binding_review.py"
+          )
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          test "${#changed[@]}" -eq "${#expected_sorted[@]}"
+          diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+          if git diff --name-only "${BASE}...HEAD" | grep -Eq '(^|/)(tilda-ready|production|payments?|yandex|provider|openai|peis)(/|$)'; then
+            echo "forbidden production/provider surface changed"
+            exit 1
+          fi
+
+      - name: Assert no object acceptance or current-v30 in bounded review
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("eksamio-learning-engine/russian-program/subject-admission/RU09-EDSOO59-P222-8-1-EXACT-OBJECT-BINDING-REVIEW-v0.1.json").read_text())
+          assert r["binding_result"]["object_accepted_by_this_review"] is False
+          assert r["progress_effect"]["object_level_closures"] == 0
+          assert r["progress_effect"]["requirement_disposals"] == 0
+          assert r["progress_effect"]["mastery_admissions"] == 0
+          assert r["progress_effect"]["aggregate_mutated"] is False
+          assert r["progress_effect"]["current_v30_created"] is False
+          assert r["progress_effect"]["false_exact_mastery"] == 0
+          PY
