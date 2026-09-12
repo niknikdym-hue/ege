@@ -78,9 +78,10 @@ jobs:
           assert "gh pr create" not in task
           assert ('git push origin "HEAD:refs/heads/'+work_ref_expr+'"') in task
 
-          # No automatic merge/deploy/public Ready action exists in v2.
+          # No executable auto merge/deploy/publication/Ready action exists in v2.
+          # Safety prose may say "do not publish Tilda", so verify actual control-plane markers instead.
           combined=(task+'\n'+batch).lower()
-          forbidden=['gh pr merge','enable-auto-merge','kubectl apply','yc serverless','tilda publish','markpullrequestreadyforreview']
+          forbidden=['gh pr merge','enable-auto-merge','kubectl apply','yc serverless','markpullrequestreadyforreview','api.tilda.cc','tilda_token','tilda_secret']
           for token in forbidden:
               assert token not in combined, token
           print('OWNER_CONTROL_V2_STATIC_ACCEPTANCE=PASS')
