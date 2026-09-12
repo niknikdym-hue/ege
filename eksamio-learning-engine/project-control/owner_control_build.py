@@ -7,6 +7,9 @@ from pathlib import Path
 DRAFT_BRANCH = "const BRANCH='codex/owner-agent-control-page-v1-api';"
 MAIN_BRANCH = "const BRANCH='main';"
 BOOT_MARKER = "async function boot(){"
+LAUNCH_MARKER = '<div id="launchReadiness" class="launch-readiness">'
+DISABLED_START = '<button id="startButton" class="primary" data-command="start" disabled>'
+CLASSIC_START = '<button class="primary" data-command="start">'
 
 OVERRIDE = r"""
 // Deployed Owner Control binding. The static page is built from one exact main SHA.
@@ -45,6 +48,17 @@ recomputeTruth=function(){
 """
 
 
+def restore_classic_ui(html: str) -> str:
+    if html.count(LAUNCH_MARKER) != 1:
+        raise SystemExit('expected exactly one launch-readiness block in source HTML')
+    start = html.index(LAUNCH_MARKER)
+    end = html.index('</div>', start) + len('</div>')
+    html = html[:start] + html[end:]
+    if html.count(DISABLED_START) != 1:
+        raise SystemExit('expected exactly one disabled Start control in source HTML')
+    return html.replace(DISABLED_START, CLASSIC_START, 1)
+
+
 def build(source: Path, destination: Path, deployed_main: str) -> None:
     html = source.read_text()
     if html.count(DRAFT_BRANCH) != 1:
@@ -54,6 +68,10 @@ def build(source: Path, destination: Path, deployed_main: str) -> None:
     if len(deployed_main) != 40 or any(ch not in '0123456789abcdef' for ch in deployed_main.lower()):
         raise SystemExit('deployed main must be an exact 40-character commit SHA')
 
+    # Keep the safer readiness calculation in JavaScript, but render the classic
+    # Owner Control surface that existed before the visible red readiness banner.
+    # Start remains fail-closed in commandConfirm() via state.launchReady.
+    html = restore_classic_ui(html)
     html = html.replace(
         DRAFT_BRANCH,
         MAIN_BRANCH + "\nconst DEPLOYED_MAIN='" + deployed_main + "';",
@@ -77,6 +95,8 @@ def build(source: Path, destination: Path, deployed_main: str) -> None:
         'Owner Gates',
         'Blockers',
         'SOURCE OF TRUTH OK',
+        "if(command==='start'&&!state.launchReady)",
+        'evaluateLaunchReadiness',
     ]
     for token in required:
         if token not in html:
@@ -85,6 +105,8 @@ def build(source: Path, destination: Path, deployed_main: str) -> None:
         'codex/owner-agent-control-page-v1-api',
         'OPENAI_API_KEY',
         'GITHUB_TOKEN',
+        LAUNCH_MARKER,
+        DISABLED_START,
     ]:
         if forbidden in html:
             raise SystemExit(f'forbidden deployed panel token: {forbidden}')
