@@ -1,0 +1,12 @@
+{
+  "schema_version": "0.1",
+  "repository": "niknikdym-hue/ege",
+  "base_sha": "85d2f2b3dd0cf56c428f57c8a5c7d1b636ecebbb",
+  "target_branch": "brain/agent-orchestration-v0-1-20260907",
+  "goal": "Prove the offline orchestration boundary without external mutations",
+  "allowed_scope": ["agent-orchestration/**", ".github/workflows/agent-orchestration-v0-1.yml"],
+  "non_goals": ["merge", "deploy", "live provider calls", "production writes"],
+  "acceptance_checks": ["python3 -m unittest discover -s agent-orchestration/tests -v"],
+  "requested_actions": ["validate", "test", "dry_run"],
+  "stop_conditions": ["task contract invalid", "permission gate rejects requested action"]
+}

@@ -1,0 +1,183 @@
+name: Agent orchestration v0.1
+
+on:
+  pull_request:
+    paths:
+      - 'agent-orchestration/**'
+      - 'docs/agent-orchestration/**'
+      - 'docs/handoffs/EKSAMIO-NEW-CHAT-HANDOFF-2026-09-07.md'
+      - 'docs/handoffs/EKSAMIO-CURRENT.md'
+      - '.github/workflows/agent-orchestration-v0-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-contract-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile orchestration modules
+        run: >-
+          python3 -m py_compile
+          agent-orchestration/eksamio_agent_runner.py
+          agent-orchestration/codex_sdk_executor.py
+          agent-orchestration/live_smoke.py
+      - name: Run network-free unit tests
+        run: python3 -m unittest discover -s agent-orchestration/tests -v
+      - name: Prove safe dry-run contract
+        run: >-
+          python3 agent-orchestration/eksamio_agent_runner.py dry-run
+          agent-orchestration/examples/dry-run-task.json
+          --git-sha "$GITHUB_SHA"
+
+  astra-paid-smoke:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+          sparse-checkout: |
+            agent-orchestration
+          sparse-checkout-cone-mode: true
+      - name: Verify one-shot owner trigger
+        id: trigger
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          trigger_path = Path("agent-orchestration/astra-paid-smoke-trigger.json")
+          enabled = False
+          if trigger_path.is_file():
+              trigger = json.loads(trigger_path.read_text(encoding="utf-8"))
+              parent = subprocess.check_output(["git", "rev-parse", "HEAD^"], text=True).strip()
+              enabled = (
+                  trigger.get("enabled") is True
+                  and trigger.get("expected_parent_sha") == parent
+                  and trigger.get("model") == "gpt-6-astra"
+              )
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"enabled={'true' if enabled else 'false'}\n")
+          print("One-shot Astra smoke trigger:", "ENABLED" if enabled else "SKIPPED")
+          PY
+      - name: Run one bounded paid GPT-6 Astra call
+        if: steps.trigger.outputs.enabled == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_ASTRA_MODEL: gpt-6-astra
+        run: >-
+          python3 agent-orchestration/astra_paid_smoke.py
+          --output "$RUNNER_TEMP/astra-paid-smoke.json"
+      - name: Upload sanitized provider evidence
+        if: steps.trigger.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: astra-paid-smoke-${{ github.sha }}
+          path: ${{ runner.temp }}/astra-paid-smoke.json
+          if-no-files-found: error
+          retention-days: 7
+
+  astra-codex-joint-smoke:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+          sparse-checkout: |
+            agent-orchestration
+          sparse-checkout-cone-mode: true
+      - name: Verify one-shot joint-smoke owner trigger
+        id: trigger
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          trigger_path = Path("agent-orchestration/astra-codex-joint-smoke-trigger.json")
+          enabled = False
+          if trigger_path.is_file():
+              trigger = json.loads(trigger_path.read_text(encoding="utf-8"))
+              parent = subprocess.check_output(["git", "rev-parse", "HEAD^"], text=True).strip()
+              enabled = (
+                  trigger.get("enabled") is True
+                  and trigger.get("expected_parent_sha") == parent
+                  and trigger.get("astra_model") == "gpt-6-astra"
+                  and trigger.get("codex_model") == "gpt-5.6-terra"
+              )
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"enabled={'true' if enabled else 'false'}\n")
+          print("One-shot Astra/Codex joint trigger:", "ENABLED" if enabled else "SKIPPED")
+          PY
+      - name: Reuse the successful Astra Brain task
+        if: steps.trigger.outputs.enabled == 'true'
+        run: >-
+          python3 agent-orchestration/astra_codex_joint_smoke.py resume-plan
+          --plan agent-orchestration/evidence/astra-plan-run-34503072353.json
+          --prompt-out "$RUNNER_TEMP/codex-prompt.txt"
+      - name: Codex executes the Astra task
+        if: steps.trigger.outputs.enabled == 'true'
+        id: codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: ${{ runner.temp }}/codex-prompt.txt
+          output-file: ${{ runner.temp }}/codex-output.txt
+          model: gpt-5.6-terra
+          effort: low
+          sandbox: read-only
+          codex-args: '["--ephemeral"]'
+      - name: Prove Codex kept the checkout read-only
+        if: steps.trigger.outputs.enabled == 'true'
+        run: |
+          test -z "$(git status --short)"
+          echo "true" > "$RUNNER_TEMP/checkout-clean.txt"
+      - name: Astra Brain reviews Codex evidence
+        if: steps.trigger.outputs.enabled == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_ASTRA_MODEL: gpt-6-astra
+        run: >-
+          python3 agent-orchestration/astra_codex_joint_smoke.py review
+          --plan agent-orchestration/evidence/astra-plan-run-34503072353.json
+          --codex-output "$RUNNER_TEMP/codex-output.txt"
+          --checkout-clean "$(cat "$RUNNER_TEMP/checkout-clean.txt")"
+          --result-out "$RUNNER_TEMP/astra-codex-joint-smoke.json"
+      - name: Upload sanitized joint-smoke evidence
+        if: steps.trigger.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: astra-codex-joint-smoke-${{ github.sha }}
+          path: |
+            agent-orchestration/evidence/astra-plan-run-34503072353.json
+            ${{ runner.temp }}/codex-output.txt
+            ${{ runner.temp }}/checkout-clean.txt
+            ${{ runner.temp }}/astra-codex-joint-smoke.json
+          if-no-files-found: warn
+          retention-days: 7
