@@ -78,6 +78,12 @@ jobs:
           assert "gh pr create" not in task
           assert ('git push origin "HEAD:refs/heads/'+work_ref_expr+'"') in task
 
+          # Paginated Actions APIs may emit one jq result per page. Count matching run IDs
+          # across all pages instead of comparing multiline "0\n0" output with scalar zero.
+          assert "gh api --paginate" in batch
+          assert "awk 'NF{n++} END{print n+0}'" in batch
+          assert "--jq '[.workflow_runs[]" not in batch
+
           # No executable auto merge/deploy/publication/Ready action exists in v2.
           # Safety prose may say "do not publish Tilda", so verify actual control-plane markers instead.
           combined=(task+'\n'+batch).lower()
