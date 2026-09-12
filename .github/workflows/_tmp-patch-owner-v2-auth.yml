@@ -14,22 +14,75 @@ jobs:
         with:
           ref: brain/owner-control-v2-batch-routing-20260912
           fetch-depth: 0
-      - name: Patch child authorization and self-remove
+      - name: Patch child authorization, secret scope, and self-remove
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p=Path('.github/workflows/owner-agent-task-v2.yml')
           text=p.read_text()
-          old='''          test "$GITHUB_ACTOR" = "niknikdym-hue" || { echo 'Only repository owner may dispatch Owner Control v2.'; exit 1; }\n          test -n '${{ inputs.task_id }}'\n          test -n '${{ inputs.package_id }}'\n'''
-          new='''          if [ "$GITHUB_ACTOR" = "niknikdym-hue" ]; then\n            : # direct owner single-task dispatch\n          elif [ "$GITHUB_ACTOR" = "github-actions[bot]" ]; then\n            [[ '${{ inputs.package_id }}' =~ ^owner-[0-9]+$ ]] || { echo 'Bot child missing owner package proof.'; exit 1; }\n            parent_id="${{ inputs.package_id }}"; parent_id="${parent_id#owner-}"\n            parent="$(GH_TOKEN='${{ github.token }}' gh api "repos/$GITHUB_REPOSITORY/actions/runs/$parent_id")"\n            python3 - "$parent" <<'PARENT'\nimport json,sys\nd=json.loads(sys.argv[1])\nassert d['event']=='workflow_dispatch'\nassert d['actor']['login']=='niknikdym-hue'\nassert d['path']=='.github/workflows/owner-agent-batch-v2.yml'\nassert d['status'] in {'queued','in_progress'}\nPARENT\n          else\n            echo 'Untrusted Owner Control v2 actor.'; exit 1\n          fi\n          test -n '${{ inputs.task_id }}'\n          test -n '${{ inputs.package_id }}'\n'''
-          if old not in text: raise SystemExit('auth patch anchor missing')
-          p.write_text(text.replace(old,new,1))
+          # Never leave the provider secret in job-level env where the agent process
+          # could inherit it. Scope it only to the preflight/proxy/action steps.
+          text=text.replace('      OPENAI_API_KEY: ' + '$' + '{{ secrets.OPENAI_API_KEY }}\n', '', 1)
+
+          actor_line='''          test "$GITHUB_ACTOR" = "niknikdym-hue" || { echo 'Only repository owner may dispatch Owner Control v2.'; exit 1; }\n'''
+          if actor_line not in text:
+              raise SystemExit('owner actor anchor missing')
+          expr_open='$'+'{{'
+          expr_close='}}'
+          package_expr=expr_open+' inputs.package_id '+expr_close
+          token_expr=expr_open+' github.token '+expr_close
+          auth=(
+              '          if [ "$GITHUB_ACTOR" = "niknikdym-hue" ]; then\n'
+              '            : # direct owner single-task dispatch\n'
+              '          elif [ "$GITHUB_ACTOR" = "github-actions[bot]" ]; then\n'
+              f"            [[ '{package_expr}' =~ ^owner-[0-9]+$ ]] || {{ echo 'Bot child missing owner package proof.'; exit 1; }}\n"
+              f"            parent_id=\"{package_expr}\"; parent_id=\"${{parent_id#owner-}}\"\n"
+              '            parent="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$parent_id")"\n'
+              '            python3 - "$parent" <<\'PARENT\'\n'
+              'import json,sys\n'
+              'd=json.loads(sys.argv[1])\n'
+              "assert d['event']=='workflow_dispatch'\n"
+              "assert d['actor']['login']=='niknikdym-hue'\n"
+              "assert d['path']=='.github/workflows/owner-agent-batch-v2.yml'\n"
+              "assert d['status'] in {'queued','in_progress'}\n"
+              'PARENT\n'
+              '          else\n'
+              "            echo 'Untrusted Owner Control v2 actor.'; exit 1\n"
+              '          fi\n'
+          )
+          text=text.replace(actor_line,auth,1)
+
+          first='''      - name: Enforce owner-dispatched bounded request\n        shell: bash\n        run: |\n'''
+          scoped=(
+              '      - name: Enforce owner-dispatched bounded request\n'
+              '        env:\n'
+              f'          GH_TOKEN: {token_expr}\n'
+              f'          OPENAI_API_KEY: {expr_open} secrets.OPENAI_API_KEY {expr_close}\n'
+              '        shell: bash\n'
+              '        run: |\n'
+          )
+          if first not in text: raise SystemExit('first-step anchor missing')
+          text=text.replace(first,scoped,1)
+
+          proxy='''      - name: Self-test and start root-owned hard budget proxy\n        shell: bash\n        env:\n'''
+          proxy_scoped=(
+              '      - name: Self-test and start root-owned hard budget proxy\n'
+              '        shell: bash\n'
+              '        env:\n'
+              f'          OPENAI_API_KEY: {expr_open} secrets.OPENAI_API_KEY {expr_close}\n'
+          )
+          if proxy not in text: raise SystemExit('proxy-step anchor missing')
+          text=text.replace(proxy,proxy_scoped,1)
+
           Path('.github/workflows/_tmp-patch-owner-v2-auth.yml').unlink()
+          p.write_text(text)
           PY
           python3 - <<'PY'
           from pathlib import Path
           t=Path('.github/workflows/owner-agent-task-v2.yml').read_text()
-          assert "github-actions[bot]" in t and "owner-agent-batch-v2.yml" in t
+          assert 'github-actions[bot]' in t and 'owner-agent-batch-v2.yml' in t
+          assert '    env:\n      OPENAI_API_KEY:' not in t
+          assert t.count('OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}') >= 3
           assert not Path('.github/workflows/_tmp-patch-owner-v2-auth.yml').exists()
           PY
       - name: Commit bounded patch
@@ -40,5 +93,5 @@ jobs:
           expected="$(printf '%s\n' '.github/workflows/_tmp-patch-owner-v2-auth.yml' '.github/workflows/owner-agent-task-v2.yml' | sort)"
           test "$changed" = "$expected"
           git add -A
-          git commit -m 'owner control v2: authorize proven sequential child runs'
+          git commit -m 'owner control v2: prove parent and scope provider secret'
           git push origin HEAD:brain/owner-control-v2-batch-routing-20260912
