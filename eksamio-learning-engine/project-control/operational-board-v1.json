@@ -169,20 +169,22 @@
       "dependencies": [],
       "blocker_type": "SUBJECT",
       "blocker_detail": "BLOCKED_SUBJECT",
-      "branch": "brain/sep1-russian-subject-closure",
-      "pr": 164,
-      "head_sha": "cb90377c4ebe00e88e22c39824b7c484651ebcc4",
-      "ci_evidence": "PR #164 exact HEAD cb90377c: Russian semantic acceptance progress run 34624858717 SUCCESS; bounded exact-acceptance runs continue; russian_content remains BLOCKED_SUBJECT / NO-GO.",
+      "branch": "brain/owner-control-russian-takeover-20260912",
+      "pr": null,
+      "head_sha": "8ac4b15bc7c5989c79cc83a2e6d6afc91f96b192",
+      "ci_evidence": "Owner Control takeover from legacy PR #164 at exact HEAD 8ac4b15b; PR #164 and temporary PR #195 closed without merge; takeover branch preserves inherited state; free CI may still be draining; russian_content remains BLOCKED_SUBJECT / NO-GO.",
       "visible_to_learner": false,
       "production_state": "NOT_PROVEN",
       "executor": "Codex",
       "owner_gate_required": false,
-      "current_action": "Continue from the exact current canonical remainder on PR #164; one bounded object at a time; preserve false_exact_mastery=0.",
-      "next_action": "Use the current exact remainder and existing canonical owners/evidence; never infer from title/route/keyword/fuzzy/embedding.",
-      "last_evidence_timestamp": "2026-09-11",
+      "current_action": "Continue A2.2 only on Owner Control takeover branch; preserve false_exact_mastery=0; legacy branch is archive-only.",
+      "next_action": "Drain and verify free exact-head CI on takeover branch, then continue the current exact object under Owner Control; no paid execution until explicit owner authorization from the green panel.",
+      "last_evidence_timestamp": "2026-09-12",
       "evidence": [
-        "PR #164",
-        "workflow 34624858717 Russian semantic acceptance progress = SUCCESS"
+        "Legacy PR #164 closed without merge at exact HEAD 8ac4b15b",
+        "Temporary takeover PR #195 closed without merge",
+        "Takeover branch brain/owner-control-russian-takeover-20260912 preserves exact HEAD 8ac4b15b",
+        "No paid Owner Control execution authorized or started"
       ]
     },
     {
