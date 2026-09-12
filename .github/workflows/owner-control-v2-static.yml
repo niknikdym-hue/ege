@@ -32,39 +32,47 @@ jobs:
           batch=Path('.github/workflows/owner-agent-batch-v2.yml').read_text()
           proxy=Path('eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs').read_text()
 
-          # Economic routing: Astra is explicit opt-in only, never a heuristic route.
-          assert "astra=bool(task.get('astra_required') or task.get('astra_acceptance_required'))" in task
-          assert "allowed=[model] + (['gpt-6-astra'] if astra else [])" in task
+          # Economic routing: Luna/Terra/Sol are heuristic/explicit executor routes.
+          # Astra is explicit authority opt-in only, with separate plan/accept flags.
+          assert "astra_plan=bool(task.get('astra_plan_required') or task.get('astra_required'))" in task
+          assert "astra_accept=bool(task.get('astra_acceptance_required') or task.get('astra_required'))" in task
           assert "elif any(w in text" in task and "model='gpt-5.6-sol'" in task
-          assert "model='gpt-6-astra'" not in task.split("astra=bool",1)[0]
+          prefix=task.split('astra_plan=bool',1)[0]
+          assert "model='gpt-6-astra'" not in prefix
 
-          # Provider secret is not a job-wide env variable inherited by the agent.
-          job_env=task.split('    env:',1)[1].split('    steps:',1)[0]
-          assert 'OPENAI_API_KEY' not in job_env
-          assert "responses-api-endpoint: http://127.0.0.1:8787/v1/responses" in task
+          # Codex is isolated from trusted validation and protected with OpenAI's recommended safety layer.
           assert "permission-profile: ':workspace'" in task
+          assert "safety-strategy: drop-sudo" in task
+          assert "allow-bots: true" in task
+          assert "responses-api-endpoint: http://127.0.0.1:8787/v1/responses" in task
           assert 'openai-api-key: ${{ secrets.OPENAI_API_KEY }}' in task
+          assert "Apply candidate on clean runner and run trusted checks" in task
+          assert "Commit only independently validated candidate" in task
+          assert "\n    env:\n      OPENAI_API_KEY:" not in task
 
-          # Budget is hard-reserved before each provider request and package sum is capped.
+          # Budget is hard-reserved before each provider request; phase caps sum to <= task cap;
+          # task caps derive from one <=$3 package cap.
           assert "reservation > remainingUsd" in proxy
           assert "hard task budget" in proxy
           assert "totalBudget > 0 && totalBudget <= 3" in proxy
           assert "payload.max_output_tokens = maxOut" in proxy
           assert "payload.store = false" in proxy
+          assert "phases=1+int(astra_plan)+int(astra_accept)" in task
+          assert "phase=(total/Decimal(phases))" in task
           assert "b=Decimal('${{ inputs.package_budget_usd }}')" in batch
-          assert "Decimal('3.00')" in batch
           assert "task_cap=min(Decimal('3.00')" in batch
 
-          # Package is cumulative and sequential: one work ref advances after every child PASS.
+          # Package is cumulative and sequential: one package branch advances after each PASS,
+          # then exactly one Draft PR is created after all tasks pass.
           assert "work_ref='owner/package-${{ github.run_id }}'" in batch
           assert "expected_work_sha" in batch and "expected_work_sha" in task
           assert "Successful child did not advance cumulative branch" in batch
           assert "PACKAGE_STOPPED" in batch and "NO_AUTO_RETRY: true" in batch
           assert "gh pr create" in batch and "--draft" in batch
           assert "gh pr create" not in task
-          assert "Commit PASS task to cumulative package branch" in task
+          assert "git push origin \"HEAD:refs/heads/${{ inputs.work_ref }}\"" in task
 
-          # No automatic merge/deploy/public Ready action exists in the v2 workflows.
+          # No automatic merge/deploy/public Ready action exists in v2.
           combined=(task+'\n'+batch).lower()
           forbidden=['gh pr merge','enable-auto-merge','kubectl apply','yc serverless','tilda publish','markpullrequestreadyforreview']
           for token in forbidden:
