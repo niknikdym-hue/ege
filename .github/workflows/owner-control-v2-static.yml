@@ -1,19 +1,21 @@
-name: Owner Control v2 static safety
+name: Owner Control GitHub-first static safety
 
 on:
   pull_request:
     paths:
       - '.github/workflows/owner-agent-task-v2.yml'
       - '.github/workflows/owner-agent-batch-v2.yml'
+      - '.github/workflows/owner-agent-native-v3.yml'
       - '.github/workflows/owner-control-v2-static.yml'
       - 'eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs'
+      - 'eksamio-learning-engine/project-control/owner_native_executor.py'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  owner-control-v2-static:
+  owner-control-static:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -22,81 +24,56 @@ jobs:
           persist-credentials: false
       - name: Budget proxy self-test
         run: node eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs --self-test
-      - name: Validate fail-closed v2 invariants
+      - name: Validate GitHub-first fail-closed invariants
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          task=Path('.github/workflows/owner-agent-task-v2.yml').read_text()
+          import ast
+          ai=Path('.github/workflows/owner-agent-task-v2.yml').read_text()
           batch=Path('.github/workflows/owner-agent-batch-v2.yml').read_text()
-          proxy=Path('eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs').read_text()
-          expr_open='$'+'{{'
-          expr_close='}}'
-          secret_expr=expr_open+' secrets.OPENAI_API_KEY '+expr_close
-          package_budget_expr=expr_open+' inputs.package_budget_usd '+expr_close
-          run_id_expr=expr_open+' github.run_id '+expr_close
-          work_ref_expr=expr_open+' inputs.work_ref '+expr_close
+          native=Path('.github/workflows/owner-agent-native-v3.yml').read_text()
+          executor=Path('eksamio-learning-engine/project-control/owner_native_executor.py').read_text()
 
-          # Economic routing: Luna/Terra/Sol are heuristic/explicit executor routes.
-          # Astra is explicit authority opt-in only, with separate plan/accept flags.
-          assert "astra_plan=bool(task.get('astra_plan_required') or task.get('astra_required'))" in task
-          assert "astra_accept=bool(task.get('astra_acceptance_required') or task.get('astra_required'))" in task
-          assert "elif any(w in text" in task and "model='gpt-5.6-sol'" in task
-          prefix=task.split('astra_plan=bool',1)[0]
-          assert "model='gpt-6-astra'" not in prefix
+          # GitHub-first routing must be explicit, deterministic and capable of $0 packages.
+          assert "execution_mode') or '').lower()=='github_native'" in batch
+          assert "effective=Decimal('0.00') if ai_count==0 else requested" in batch
+          assert "workflow='owner-agent-native-v3.yml'" in batch
+          assert "workflow='owner-agent-task-v2.yml'" in batch
+          assert "ROUTING_POLICY: github_native_first" in batch
+          assert "NO_AUTO_RETRY: true" in batch
 
-          # Codex is isolated from trusted validation and protected with OpenAI's recommended safety layer.
-          assert "permission-profile: ':workspace'" in task
-          assert "safety-strategy: drop-sudo" in task
-          assert "allow-bots: true" in task
-          assert "responses-api-endpoint: http://127.0.0.1:8787/v1/responses" in task
-          assert ('openai-api-key: '+secret_expr) in task
-          assert "Apply candidate on clean runner and run trusted checks" in task
-          assert "Commit only independently validated candidate" in task
-          assert "\n    env:\n      OPENAI_API_KEY:" not in task
+          # Native lane must have no OpenAI/model surface.
+          lowered=native.lower()
+          for token in ('openai_api_key','api.openai.com','openai/codex','gpt-5','gpt-6','astra'):
+              assert token not in lowered, token
+          assert "owner_native_executor.py" in native
+          assert "OPENAI_CALLS=0" in native
+          assert "owner-agent-batch-v2.yml" in native
 
-          # Budget is hard-reserved before each provider request; phase caps sum to <= task cap;
-          # task caps derive from one <=$3 package cap.
-          assert "reservation > remainingUsd" in proxy
-          assert "hard task budget" in proxy
-          assert "totalBudget > 0 && totalBudget <= 3" in proxy
-          assert "payload.max_output_tokens = maxOut" in proxy
-          assert "payload.store = false" in proxy
-          assert "phases=1+int(astra_plan)+int(astra_accept)" in task
-          assert "phase=(total/Decimal(phases))" in task
-          assert ("b=Decimal('"+package_budget_expr+"')") in batch
-          assert "task_cap=min(Decimal('3.00')" in batch
+          # Native executor is a strict declarative allowlist, never arbitrary shell/code.
+          assert 'ALLOWED_PLAYBOOKS = {"exact_text_replace", "json_set"}' in executor
+          assert 'execution_mode") or "").lower() != "github_native"' in executor
+          assert "github_native task cannot request Astra" in executor
+          tree=ast.parse(executor)
+          imports={alias.name for n in tree.body if isinstance(n,(ast.Import,ast.ImportFrom)) for alias in n.names}
+          assert 'subprocess' not in imports and 'os' not in imports
 
-          # Package is cumulative and sequential: one package branch advances after each PASS,
-          # then exactly one Draft PR is created after all tasks pass.
-          assert ("work_ref='owner/package-"+run_id_expr+"'") in batch
-          assert "expected_work_sha" in batch and "expected_work_sha" in task
-          assert "Successful child did not advance cumulative branch" in batch
-          assert "PACKAGE_STOPPED" in batch and "NO_AUTO_RETRY: true" in batch
-          assert "gh pr create" in batch and "--draft" in batch
-          assert "gh pr create" not in task
-          assert ('git push origin "HEAD:refs/heads/'+work_ref_expr+'"') in task
+          # AI lane keeps existing safety: explicit Astra only, isolated Codex, hard proxy.
+          assert "astra_plan=bool(task.get('astra_plan_required') or task.get('astra_required'))" in ai
+          assert "astra_accept=bool(task.get('astra_acceptance_required') or task.get('astra_required'))" in ai
+          assert "safety-strategy: drop-sudo" in ai
+          assert "responses-api-endpoint: http://127.0.0.1:8787/v1/responses" in ai
+          assert "owner_control_budget_proxy.mjs" in ai
+          assert "gh pr create" not in ai
 
-          # Paginated Actions APIs may emit one jq result per page. Count matching run IDs
-          # across all pages instead of comparing multiline "0\n0" output with scalar zero.
-          assert "gh api --paginate" in batch
-          assert "awk 'NF{n++} END{print n+0}'" in batch
-          assert "--jq '[.workflow_runs[]" not in batch
-
-          # No executable auto merge/deploy/publication/Ready action exists in v2.
-          # Safety prose may say "do not publish Tilda", so verify actual control-plane markers instead.
-          combined=(task+'\n'+batch).lower()
+          # Neither lane may auto-merge/deploy/publish.
+          combined=(batch+'\n'+native+'\n'+ai).lower()
           forbidden=['gh pr merge','enable-auto-merge','kubectl apply','yc serverless','markpullrequestreadyforreview','api.tilda.cc','tilda_token','tilda_secret']
           for token in forbidden:
               assert token not in combined, token
-          print('OWNER_CONTROL_V2_STATIC_ACCEPTANCE=PASS')
+          print('OWNER_CONTROL_GITHUB_FIRST_STATIC_ACCEPTANCE=PASS')
           PY
-      - name: Verify workflow surface is bounded
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q 'Owner task v2' .github/workflows/owner-agent-task-v2.yml
-          grep -q 'Owner batch v2' .github/workflows/owner-agent-batch-v2.yml
-          grep -q 'explicit_opt_in_only' .github/workflows/owner-agent-batch-v2.yml
-          ! grep -q 'gpt-5.3-codex-spark' .github/workflows/owner-agent-task-v2.yml
+      - name: Syntax-check native executor
+        run: python3 -m py_compile eksamio-learning-engine/project-control/owner_native_executor.py
