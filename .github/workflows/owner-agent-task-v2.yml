@@ -5,31 +5,24 @@ on:
   workflow_dispatch:
     inputs:
       task_id:
-        description: Exact operational-board task_id
         required: true
         type: string
       task_budget_usd:
-        description: Hard worst-case paid budget for this task
         required: true
         type: string
       package_id:
-        description: Parent owner package id owner-<run_id>
         required: true
         type: string
       authority_base_ref:
-        description: Canonical task base branch frozen by parent
         required: true
         type: string
       authority_base_sha:
-        description: Exact canonical base SHA frozen by parent
         required: true
         type: string
       work_ref:
-        description: Cumulative isolated package branch
         required: true
         type: string
       expected_work_sha:
-        description: Exact package branch SHA before this task
         required: true
         type: string
 
@@ -42,15 +35,17 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  execute:
+  route:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
-    permissions:
-      contents: write
-      actions: read
-    env:
-      BOARD: _authority/eksamio-learning-engine/project-control/operational-board-v1.json
-      BUDGET_PROXY: eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+    timeout-minutes: 10
+    outputs:
+      model: ${{ steps.resolve.outputs.model }}
+      effort: ${{ steps.resolve.outputs.effort }}
+      astra_plan: ${{ steps.resolve.outputs.astra_plan }}
+      astra_accept: ${{ steps.resolve.outputs.astra_accept }}
+      plan_budget: ${{ steps.resolve.outputs.plan_budget }}
+      exec_budget: ${{ steps.resolve.outputs.exec_budget }}
+      accept_budget: ${{ steps.resolve.outputs.accept_budget }}
     steps:
       - name: Prove owner-controlled parent before any paid call
         env:
@@ -59,250 +54,321 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$GITHUB_ACTOR" = 'github-actions[bot]' || { echo 'Child task accepts only a proven owner batch parent.'; exit 1; }
+          test "$GITHUB_ACTOR" = 'github-actions[bot]' || { echo 'Child accepts only proven owner batch parent.'; exit 1; }
           [[ '${{ inputs.package_id }}' =~ ^owner-[0-9]+$ ]] || { echo 'Invalid package id.'; exit 1; }
           parent_id='${{ inputs.package_id }}'; parent_id="${parent_id#owner-}"
           parent="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$parent_id")"
           python3 - "$parent" <<'PY'
           import json,sys
           d=json.loads(sys.argv[1])
-          assert d['event']=='workflow_dispatch', 'parent is not owner workflow_dispatch'
-          assert d['actor']['login']=='niknikdym-hue', 'parent was not dispatched by owner'
-          assert d['path']=='.github/workflows/owner-agent-batch-v2.yml', 'wrong parent workflow'
-          assert d['status'] in {'queued','in_progress'}, 'parent is not active'
+          assert d['event']=='workflow_dispatch'
+          assert d['actor']['login']=='niknikdym-hue'
+          assert d['path']=='.github/workflows/owner-agent-batch-v2.yml'
+          assert d['status'] in {'queued','in_progress'}
           PY
           test -n "${OPENAI_API_KEY:-}" || { echo 'OPENAI_API_KEY is not configured.'; exit 1; }
-          python3 - <<'PY'
-          from decimal import Decimal
-          b=Decimal('${{ inputs.task_budget_usd }}')
-          assert Decimal('0.05') <= b <= Decimal('3.00'), 'task budget must be $0.05..$3.00'
-          PY
 
-      - name: Checkout main authority snapshot
+      - name: Checkout main authority
         uses: actions/checkout@v5
         with:
           ref: main
-          path: _authority
           persist-credentials: false
 
-      - name: Resolve exact task and economical route
-        id: route
+      - name: Resolve task, route and per-phase hard budgets
+        id: resolve
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, os
+          import json, os, subprocess
+          from decimal import Decimal, ROUND_DOWN
           from pathlib import Path
-          board=json.loads(Path(os.environ['BOARD']).read_text())
+          board=json.loads(Path('eksamio-learning-engine/project-control/operational-board-v1.json').read_text())
           assert board.get('version')=='operational-board-v1' and len(board.get('tasks') or [])==115
-          task_id='${{ inputs.task_id }}'.strip()
-          rows={str(x['task_id']):x for x in board['tasks']}
-          if task_id not in rows: raise SystemExit(f'Unknown task_id: {task_id}')
-          task=rows[task_id]
+          task_id='${{ inputs.task_id }}'.strip(); rows={str(x['task_id']):x for x in board['tasks']}
+          task=rows.get(task_id)
+          if task is None: raise SystemExit(f'Unknown task_id: {task_id}')
           blocker=task.get('blocker_type')
-          if task.get('executor')!='Codex': raise SystemExit('Task is not a Codex task')
-          if task.get('owner_gate_required'): raise SystemExit('Owner-gated task cannot run autonomously')
+          if task.get('executor')!='Codex' or task.get('owner_gate_required'): raise SystemExit('Task is not autonomous Codex work')
           if blocker and blocker!='SUBJECT': raise SystemExit(f'External blocker: {blocker}')
           if task.get('status') in {'DONE','PUBLIC_LAUNCH_PASS'}: raise SystemExit('Task already terminal')
           base_ref=str(task.get('branch') or 'main')
           if base_ref != '${{ inputs.authority_base_ref }}': raise SystemExit('Task base_ref changed after package admission')
+          live=subprocess.check_output(['git','ls-remote','origin',f'refs/heads/{base_ref}'],text=True).strip().split()
+          if not live or live[0] != '${{ inputs.authority_base_sha }}': raise SystemExit('Authority base moved after package admission')
           registered=str(task.get('head_sha') or '')
-          if registered and registered != '${{ inputs.authority_base_sha }}': raise SystemExit('Task registered SHA changed after package admission')
+          if registered and registered != '${{ inputs.authority_base_sha }}': raise SystemExit('Task board SHA changed after package admission')
 
           explicit=str(task.get('model_route') or task.get('ai_route') or '').lower().strip()
           aliases={'luna':'gpt-5.6-luna','terra':'gpt-5.6-terra','sol':'gpt-5.6-sol'}
           text=' '.join(str(task.get(k) or '') for k in ('title','current_action','next_action','workstream')).lower()
           if explicit in aliases: model=aliases[explicit]
           elif explicit in aliases.values(): model=explicit
-          elif any(w in text for w in ('semantic','object closure','exactly-once','idempot','security','payment','refund','rollback','persistence','e2e','cross-module','architecture')):
-              model='gpt-5.6-sol'
-          elif any(w in text for w in ('copy','label','wording','docs','documentation','metadata','rename','small config')):
-              model='gpt-5.6-luna'
-          else:
-              model='gpt-5.6-terra'
-          astra=bool(task.get('astra_required') or task.get('astra_acceptance_required'))
-          allowed=[model] + (['gpt-6-astra'] if astra else [])
-          route={'task':task,'model':model,'effort':'low' if model=='gpt-5.6-luna' else 'medium','astra_required':astra,'allowed_models':allowed}
+          elif any(w in text for w in ('semantic','object closure','exactly-once','idempot','security','payment','refund','rollback','persistence','e2e','cross-module','architecture')): model='gpt-5.6-sol'
+          elif any(w in text for w in ('copy','label','wording','docs','documentation','metadata','rename','small config')): model='gpt-5.6-luna'
+          else: model='gpt-5.6-terra'
+
+          astra_plan=bool(task.get('astra_plan_required') or task.get('astra_required'))
+          astra_accept=bool(task.get('astra_acceptance_required') or task.get('astra_required'))
+          total=Decimal('${{ inputs.task_budget_usd }}')
+          if not Decimal('0.05') <= total <= Decimal('3.00'): raise SystemExit('task budget must be $0.05..$3.00')
+          phases=1+int(astra_plan)+int(astra_accept)
+          phase=(total/Decimal(phases)).quantize(Decimal('0.01'), rounding=ROUND_DOWN)
+          if phase < Decimal('0.05'): raise SystemExit('task budget too small for required paid phases')
+          plan_budget=phase if astra_plan else Decimal('0'); exec_budget=phase; accept_budget=phase if astra_accept else Decimal('0')
+          route={'task':task,'model':model,'effort':'low' if model=='gpt-5.6-luna' else 'medium','astra_plan':astra_plan,'astra_accept':astra_accept,'phase_budgets':{'plan':str(plan_budget),'executor':str(exec_budget),'acceptance':str(accept_budget)}}
           Path('/tmp/owner-v2-route.json').write_text(json.dumps(route,ensure_ascii=False,indent=2))
           with open(os.environ['GITHUB_OUTPUT'],'a') as f:
-              f.write('model='+model+'\n')
-              f.write('effort='+route['effort']+'\n')
-              f.write('astra_required='+('true' if astra else 'false')+'\n')
-              f.write('allowed_models='+','.join(allowed)+'\n')
-          print('OWNER_V2_ROUTE='+model)
-          print('ASTRA_EXPLICIT_OPT_IN='+str(astra).lower())
+              f.write('model='+model+'\n'); f.write('effort='+route['effort']+'\n')
+              f.write('astra_plan='+('true' if astra_plan else 'false')+'\n'); f.write('astra_accept='+('true' if astra_accept else 'false')+'\n')
+              f.write('plan_budget='+str(plan_budget)+'\n'); f.write('exec_budget='+str(exec_budget)+'\n'); f.write('accept_budget='+str(accept_budget)+'\n')
+          print('OWNER_V2_MODEL='+model); print('ASTRA_PLAN='+str(astra_plan).lower()); print('ASTRA_ACCEPT='+str(astra_accept).lower())
           PY
 
-      - name: Checkout cumulative package branch
-        uses: actions/checkout@v5
+      - uses: actions/upload-artifact@v4
         with:
-          ref: ${{ inputs.work_ref }}
-          fetch-depth: 0
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-route
+          path: /tmp/owner-v2-route.json
+          if-no-files-found: error
+          retention-days: 30
 
-      - name: Freeze exact cumulative input before paid work
-        shell: bash
-        run: |
-          set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = '${{ inputs.expected_work_sha }}' || { echo "Package branch moved: expected=${{ inputs.expected_work_sha }} actual=$actual"; exit 1; }
-          git cat-file -e '${{ inputs.authority_base_sha }}^{commit}'
-          git merge-base --is-ancestor '${{ inputs.authority_base_sha }}' HEAD || { echo 'Package branch is not descended from frozen authority base.'; exit 1; }
-          current_base="$(git ls-remote origin 'refs/heads/${{ inputs.authority_base_ref }}' | awk 'NR==1{print $1}')"
-          test "$current_base" = '${{ inputs.authority_base_sha }}' || { echo 'Authority base moved after package admission; stop before paid work.'; exit 1; }
-
-      - name: Self-test and start root-owned hard budget proxy
+  astra-plan:
+    needs: route
+    if: ${{ needs.route.outputs.astra_plan == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/download-artifact@v5
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-route
+          path: /tmp/route
+      - name: Phase-capped Astra plan
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OWNER_TASK_BUDGET_USD: ${{ inputs.task_budget_usd }}
-          OWNER_ALLOWED_MODELS: ${{ steps.route.outputs.allowed_models }}
+          OWNER_TASK_BUDGET_USD: ${{ needs.route.outputs.plan_budget }}
         shell: bash
         run: |
           set -euo pipefail
-          node "$BUDGET_PROXY" --self-test
-          keyfile="$(mktemp)"
-          printf '%s' "$OPENAI_API_KEY" > "$keyfile"
-          chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' OWNER_BUDGET_PROXY_PORT=8787 node '$PWD/$BUDGET_PROXY' >/tmp/owner-budget-proxy.log 2>&1 & echo \$! >/tmp/owner-budget-proxy.pid"
-          rm -f "$keyfile"
-          for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
-          curl -fsS http://127.0.0.1:8787/health
-
-      - name: Compose deterministic bounded task prompt
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json, subprocess
-          from pathlib import Path
-          route=json.loads(Path('/tmp/owner-v2-route.json').read_text())
-          tracked=subprocess.check_output(['git','ls-files'],text=True).splitlines()
-          task=route['task']
-          words={w.lower() for w in (str(task.get('title') or '')+' '+str(task.get('workstream') or '')).replace('/',' ').replace('-',' ').split() if len(w)>=4}
-          candidates=[p for p in tracked if any(w in p.lower() for w in words)][:120]
-          prompt={
-            'task':task,
-            'route':{'executor_model':route['model'],'astra_required':route['astra_required']},
-            'candidate_paths':candidates,
-            'package_context':{'working_branch':'${{ inputs.work_ref }}','this_task_starts_from':'${{ inputs.expected_work_sha }}'},
-            'rules':[
-              'Solve exactly this operational-board task; do not choose or reprioritize tasks.',
-              'The package branch already contains all prior PASS tasks in this package. Preserve them.',
-              'Edit at most 12 paths for this task.',
-              'Do not merge, deploy, mark Ready, publish Tilda, write production/learner data, call payment/refund/Yandex, or expose secrets.',
-              'Do not modify Owner Control workflows, the operational board, or the budget proxy.',
-              'Do not invoke paid provider APIs yourself; only this workflow-controlled model call is allowed.',
-              'Add/update bounded tests when appropriate; leave a reviewable workspace diff only.'
-            ]
-          }
-          Path('/tmp/codex-prompt.txt').write_text(json.dumps(prompt,ensure_ascii=False,indent=2))
-          PY
-
-      - name: Astra plans only when authority explicitly requires it
-        if: ${{ steps.route.outputs.astra_required == 'true' }}
-        shell: bash
-        run: |
-          set -euo pipefail
+          proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
           python3 - <<'PY'
           import json, urllib.request
           from pathlib import Path
-          route=json.loads(Path('/tmp/owner-v2-route.json').read_text())
-          payload={'model':'gpt-6-astra','instructions':'Create a minimal execution note for this already-selected task. Do not choose or reprioritize tasks. Return concise JSON.','input':json.dumps(route['task'],ensure_ascii=False,sort_keys=True),'reasoning':{'effort':'medium'},'text':{'verbosity':'low'},'max_output_tokens':3000,'store':False}
+          route=json.loads(Path('/tmp/route/owner-v2-route.json').read_text())
+          payload={'model':'gpt-6-astra','instructions':'Create a minimal execution note for this already-selected task. Do not choose or reprioritize tasks.','input':json.dumps(route['task'],ensure_ascii=False,sort_keys=True),'reasoning':{'effort':'medium'},'text':{'verbosity':'low'},'max_output_tokens':3000,'store':False}
           req=urllib.request.Request('http://127.0.0.1:8787/v1/responses',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json'},method='POST')
           with urllib.request.urlopen(req,timeout=240) as r: body=json.loads(r.read().decode())
-          if body.get('status')!='completed': raise SystemExit('Astra plan incomplete; no paid retry')
-          Path('/tmp/astra-plan-provider-response.json').write_text(json.dumps(body,ensure_ascii=False,indent=2))
+          if body.get('status')!='completed': raise SystemExit('Astra plan incomplete; no retry')
+          Path('/tmp/astra-plan.json').write_text(json.dumps(body,ensure_ascii=False,indent=2))
           PY
+          curl -fsS http://127.0.0.1:8787/health > /tmp/plan-budget.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-plan
+          path: |
+            /tmp/astra-plan.json
+            /tmp/plan-budget.json
+          if-no-files-found: error
+          retention-days: 30
 
-      - name: API-Codex executes selected task
+  codex:
+    needs: [route, astra-plan]
+    if: ${{ always() && needs.route.result == 'success' && (needs.astra-plan.result == 'success' || needs.astra-plan.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.work_ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v5
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-route
+          path: /tmp/route
+      - name: Freeze cumulative input and start executor proxy
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OWNER_TASK_BUDGET_USD: ${{ needs.route.outputs.exec_budget }}
+          OWNER_ALLOWED_MODELS: ${{ needs.route.outputs.model }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '${{ inputs.expected_work_sha }}' || { echo 'Package branch moved'; exit 1; }
+          current_base="$(git ls-remote origin 'refs/heads/${{ inputs.authority_base_ref }}' | awk 'NR==1{print $1}')"; test "$current_base" = '${{ inputs.authority_base_sha }}' || { echo 'Authority base moved'; exit 1; }
+          proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
+      - name: Compose bounded prompt
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          route=json.loads(Path('/tmp/route/owner-v2-route.json').read_text()); task=route['task']
+          tracked=subprocess.check_output(['git','ls-files'],text=True).splitlines(); words={w.lower() for w in (str(task.get('title') or '')+' '+str(task.get('workstream') or '')).replace('/',' ').replace('-',' ').split() if len(w)>=4}
+          prompt={'task':task,'candidate_paths':[p for p in tracked if any(w in p.lower() for w in words)][:120],'package_context':{'work_ref':'${{ inputs.work_ref }}','start_sha':'${{ inputs.expected_work_sha }}'},'rules':['Solve exactly this task; never choose another task.','Preserve prior PASS changes on this package branch.','Edit at most 12 paths.','Do not merge, deploy, mark Ready, publish Tilda, write production/learner data, call payment/refund/Yandex, expose secrets, modify Owner Control workflows, operational board, or budget proxy.','Do not invoke paid provider APIs yourself.','Leave a reviewable workspace diff only.']}
+          Path('/tmp/codex-prompt.txt').write_text(json.dumps(prompt,ensure_ascii=False,indent=2))
+          PY
+      - name: API-Codex executes bounded task
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           responses-api-endpoint: http://127.0.0.1:8787/v1/responses
           prompt-file: /tmp/codex-prompt.txt
           output-file: /tmp/codex-output.txt
-          model: ${{ steps.route.outputs.model }}
-          effort: ${{ steps.route.outputs.effort }}
+          model: ${{ needs.route.outputs.model }}
+          effort: ${{ needs.route.outputs.effort }}
           permission-profile: ':workspace'
+          safety-strategy: drop-sudo
+          allow-bots: true
           codex-args: '["--ephemeral"]'
-
-      - name: Validate only this task diff and run free checks
+      - name: Extract untrusted candidate patch only
+        if: ${{ always() }}
         shell: bash
         run: |
           set -euo pipefail
-          find . -type d -name __pycache__ -prune -exec rm -rf {} + || true
-          git diff --check
-          git diff --name-only > /tmp/changed-paths.txt
-          count="$(grep -c . /tmp/changed-paths.txt || true)"
-          test "$count" -ge 1 || { echo 'Codex produced no change'; exit 1; }
-          test "$count" -le 12 || { echo "Too many changed paths: $count"; exit 1; }
-          if grep -E '(^|/)(\.git|\.env|secrets?)(/|$)|^\.github/workflows/owner-agent-(task|batch)-v2\.yml$|operational-board-v1\.json$|owner_control_budget_proxy\.mjs$' /tmp/changed-paths.txt; then
-            echo 'Protected control/secrets path changed'; exit 1
-          fi
-          while IFS= read -r p; do
-            case "$p" in
-              *.py) python3 -m py_compile "$p" ;;
-              *.json) python3 -m json.tool "$p" >/dev/null ;;
-            esac
-          done < /tmp/changed-paths.txt
-          if [ -d eksamio-learning-engine/tests ]; then
-            python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_*.py'
-          fi
-          printf '%s\n' 'PATH_SCOPE=PASS' 'GIT_DIFF_CHECK=PASS' 'SAFE_FILE_CHECKS=PASS' > /tmp/test-evidence.txt
+          /usr/bin/git -c core.hooksPath=/dev/null add -N -- . || true
+          /usr/bin/git -c core.hooksPath=/dev/null -c diff.external= --no-pager diff --no-ext-diff --no-textconv --binary > /tmp/candidate.patch
+          test -s /tmp/candidate.patch || { echo 'Codex produced no patch'; exit 1; }
+          curl -fsS http://127.0.0.1:8787/health > /tmp/executor-budget.json || true
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-candidate
+          path: |
+            /tmp/candidate.patch
+            /tmp/codex-output.txt
+            /tmp/executor-budget.json
+          if-no-files-found: error
+          retention-days: 30
 
-      - name: Astra accepts only explicitly Astra-gated tasks
-        if: ${{ steps.route.outputs.astra_required == 'true' }}
+  validate:
+    needs: [route, codex]
+    if: ${{ needs.route.result == 'success' && needs.codex.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.work_ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v5
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-candidate
+          path: /tmp/candidate
+      - name: Apply candidate on clean runner and run trusted checks
         shell: bash
         run: |
           set -euo pipefail
+          test "$(git rev-parse HEAD)" = '${{ inputs.expected_work_sha }}'
+          git apply --check --binary /tmp/candidate/candidate.patch
+          git apply --index --binary /tmp/candidate/candidate.patch
+          git diff --cached --check
+          git diff --cached --name-only > /tmp/changed-paths.txt
+          count="$(grep -c . /tmp/changed-paths.txt || true)"; test "$count" -ge 1 && test "$count" -le 12
+          if grep -E '(^|/)(\.git|\.env|secrets?)(/|$)|^\.github/workflows/owner-agent-(task|batch)-v2\.yml$|operational-board-v1\.json$|owner_control_budget_proxy\.mjs$' /tmp/changed-paths.txt; then echo 'Protected control/secrets path changed'; exit 1; fi
+          while IFS= read -r p; do case "$p" in *.py) python3 -m py_compile "$p" ;; *.json) python3 -m json.tool "$p" >/dev/null ;; esac; done < /tmp/changed-paths.txt
+          if [ -d eksamio-learning-engine/tests ]; then python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_*.py'; fi
+          git diff --cached --binary > /tmp/validated.patch
+          printf '%s\n' 'CLEAN_RUNNER=PASS' 'PATH_SCOPE=PASS' 'GIT_DIFF_CHECK=PASS' 'SAFE_FILE_CHECKS=PASS' > /tmp/test-evidence.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-validated
+          path: |
+            /tmp/validated.patch
+            /tmp/changed-paths.txt
+            /tmp/test-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
+
+  astra-accept:
+    needs: [route, validate]
+    if: ${{ needs.validate.result == 'success' && needs.route.outputs.astra_accept == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.work_ref }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v5
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-route
+          path: /tmp/route
+      - uses: actions/download-artifact@v5
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-validated
+          path: /tmp/validated
+      - name: Astra acceptance on clean validated candidate
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OWNER_TASK_BUDGET_USD: ${{ needs.route.outputs.accept_budget }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git apply --index --binary /tmp/validated/validated.patch
+          proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
           python3 - <<'PY'
           import json, subprocess, urllib.request
           from pathlib import Path
-          route=json.loads(Path('/tmp/owner-v2-route.json').read_text())
-          context={'task':route['task'],'diff':subprocess.check_output(['git','diff','--stat'],text=True),'tests':Path('/tmp/test-evidence.txt').read_text()}
+          route=json.loads(Path('/tmp/route/owner-v2-route.json').read_text()); diff=subprocess.check_output(['git','diff','--cached','--no-ext-diff','--no-textconv'],text=True)
+          if len(diff)>120000: raise SystemExit('Validated diff too large for bounded Astra acceptance')
+          context={'task':route['task'],'diff':diff,'tests':Path('/tmp/validated/test-evidence.txt').read_text()}
           schema={'type':'object','additionalProperties':False,'properties':{'decision':{'type':'string','enum':['PASS','FAIL']},'reason':{'type':'string'}},'required':['decision','reason']}
-          payload={'model':'gpt-6-astra','instructions':'Accept only this selected bounded task. Return PASS only if the diff and free evidence satisfy it.','input':json.dumps(context,ensure_ascii=False),'reasoning':{'effort':'medium'},'text':{'verbosity':'low','format':{'type':'json_schema','name':'owner_v2_acceptance','strict':True,'schema':schema}},'max_output_tokens':3000,'store':False}
+          payload={'model':'gpt-6-astra','instructions':'Accept only this selected bounded task. PASS only if the validated diff and evidence satisfy it.','input':json.dumps(context,ensure_ascii=False),'reasoning':{'effort':'medium'},'text':{'verbosity':'low','format':{'type':'json_schema','name':'owner_v2_acceptance','strict':True,'schema':schema}},'max_output_tokens':3000,'store':False}
           req=urllib.request.Request('http://127.0.0.1:8787/v1/responses',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json'},method='POST')
           with urllib.request.urlopen(req,timeout=240) as r: body=json.loads(r.read().decode())
-          if body.get('status')!='completed': raise SystemExit('Astra acceptance incomplete; no paid retry')
-          text='\n'.join(x.get('text','') for item in body.get('output',[]) for x in item.get('content',[]) if x.get('type')=='output_text')
-          decision=json.loads(text)
+          if body.get('status')!='completed': raise SystemExit('Astra acceptance incomplete; no retry')
+          text='\n'.join(x.get('text','') for item in body.get('output',[]) for x in item.get('content',[]) if x.get('type')=='output_text'); decision=json.loads(text)
           Path('/tmp/astra-acceptance.json').write_text(json.dumps(decision,ensure_ascii=False,indent=2))
           if decision['decision']!='PASS': raise SystemExit('Astra acceptance FAIL; package stops')
           PY
+          curl -fsS http://127.0.0.1:8787/health > /tmp/accept-budget.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-acceptance
+          path: |
+            /tmp/astra-acceptance.json
+            /tmp/accept-budget.json
+          if-no-files-found: error
+          retention-days: 30
 
-      - name: Commit PASS task to cumulative package branch
-        if: ${{ success() }}
+  commit:
+    needs: [route, validate, astra-accept]
+    if: ${{ always() && needs.route.result == 'success' && needs.validate.result == 'success' && (needs.astra-accept.result == 'success' || needs.astra-accept.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.work_ref }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v5
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-validated
+          path: /tmp/validated
+      - name: Commit only independently validated candidate
         shell: bash
         run: |
           set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
+          test "$(git rev-parse HEAD)" = '${{ inputs.expected_work_sha }}'
+          current_base="$(git ls-remote origin 'refs/heads/${{ inputs.authority_base_ref }}' | awk 'NR==1{print $1}')"; test "$current_base" = '${{ inputs.authority_base_sha }}' || { echo 'Authority base moved; stop before commit'; exit 1; }
+          git apply --index --binary /tmp/validated/validated.patch
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m "owner-v2(${{ inputs.task_id }}): bounded PASS candidate"
           git push origin "HEAD:refs/heads/${{ inputs.work_ref }}"
-          git rev-parse HEAD > /tmp/new-work-sha.txt
-
-      - name: Record hard budget evidence
-        if: ${{ always() }}
-        shell: bash
-        run: |
-          curl -fsS http://127.0.0.1:8787/health > /tmp/owner-budget-final.json || true
-          cat /tmp/owner-budget-final.json || true
-          cat /tmp/owner-budget-proxy.log || true
-
-      - name: Persist task evidence
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}
-          path: |
-            /tmp/owner-v2-route.json
-            /tmp/codex-output.txt
-            /tmp/changed-paths.txt
-            /tmp/test-evidence.txt
-            /tmp/owner-budget-final.json
-            /tmp/astra-plan-provider-response.json
-            /tmp/astra-acceptance.json
-            /tmp/new-work-sha.txt
-          if-no-files-found: warn
-          retention-days: 30
