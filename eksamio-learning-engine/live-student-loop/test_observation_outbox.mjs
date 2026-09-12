@@ -1,0 +1,11 @@
+import fs from 'node:fs'; import vm from 'node:vm'; import assert from 'node:assert/strict';
+const file=new URL('../russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-11.txt',import.meta.url);
+const source=fs.readFileSync(file,'utf8').match(/<script>\s*([\s\S]*?)<\/script>/)[1];
+const box={module:{exports:{}},exports:{},setTimeout,clearTimeout,Promise,Date,JSON};vm.createContext(box);vm.runInContext(source,box);
+const api=box.module.exports, data=new Map(),storage={getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)};
+let release; const delivered=[]; const transport=r=>new Promise(resolve=>{delivered.push(r);release=()=>resolve({status:'ACCEPTED',directive:{canonical_state_owner:'shared_peis'}})});
+const out=api.createObservationOutbox({storage,transport});
+const req=id=>({adapter_id:'russian-ege-trainer-task12-v0.1',payload:{card_id:'c',session_started_at_ms:1,session_mode:'practice',answer:['1'],occurred_at_client:'x',client_request_id:id}});
+assert.equal(out.enqueue(req('A')).status,'PENDING'); const inflight=out.flush(); await Promise.resolve(); assert.equal(out.enqueue(req('B')).status,'PENDING'); release(); await inflight;
+assert.deepEqual(out.read().map(x=>x.request.payload.client_request_id),['B']); const exact=JSON.stringify(out.read()[0].request); const p=out.flush(); await Promise.resolve(); release(); await p;
+assert.equal(out.read().length,0); assert.equal(JSON.stringify(delivered[1]),exact); console.log('PASS observation outbox durability and delayed flush race');

@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   title: Eksamio PEIS Staging
-  version: "1.0.0"
+  version: "1.3.0"
 
 paths:
   /healthz:
@@ -18,9 +18,191 @@ paths:
         type: serverless_containers
         container_id: ${YC_CONTAINER_ID}
         service_account_id: ${YC_GATEWAY_SA_ID}
+  /v1/registration/begin:
+    options:
+      operationId: registrationBeginOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    post:
+      operationId: registrationBegin
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /v1/registration/verify:
+    options:
+      operationId: registrationVerifyOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    post:
+      operationId: registrationVerify
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /v1/session:
+    get:
+      operationId: sessionStatus
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
   /v0/checked-card:
+    options:
+      operationId: checkedCardOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
     post:
       operationId: checkedCard
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/identity/session:
+    options:
+      operationId: proIdentitySessionOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    get:
+      operationId: proIdentitySession
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/identity/logout:
+    options:
+      operationId: proIdentityLogoutOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    post:
+      operationId: proIdentityLogout
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/consent/marketing/revoke:
+    options:
+      operationId: marketingRevokeOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    post:
+      operationId: marketingRevoke
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/payments/entitlement:
+    options:
+      operationId: proEntitlementOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    get:
+      operationId: proEntitlement
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/russian/profile:
+    options:
+      operationId: russianProfileOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    get:
+      operationId: russianProfile
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/russian/plan:
+    options:
+      operationId: russianPlanOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    get:
+      operationId: russianPlan
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/russian/history:
+    options:
+      operationId: russianHistoryOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    get:
+      operationId: russianHistory
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/russian/practice/next:
+    options:
+      operationId: russianPracticeNextOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    get:
+      operationId: russianPracticeNext
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/russian/practice/submit:
+    options:
+      operationId: russianPracticeSubmitOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    post:
+      operationId: russianPracticeSubmit
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/russian/program:
+    options:
+      operationId: russianProgramOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    get:
+      operationId: russianProgram
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+  /api/tutor/turn:
+    options:
+      operationId: tutorTurnOptions
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${YC_CONTAINER_ID}
+        service_account_id: ${YC_GATEWAY_SA_ID}
+    post:
+      operationId: tutorTurn
       x-yc-apigateway-integration:
         type: serverless_containers
         container_id: ${YC_CONTAINER_ID}

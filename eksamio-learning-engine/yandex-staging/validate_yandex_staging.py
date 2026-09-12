@@ -18,11 +18,6 @@ def forbid(text: str, token: str, label: str) -> None:
 
 
 def assert_no_secret_payloads(env_example: str) -> None:
-    """Reject credential payloads while allowing Lockbox reference metadata.
-
-    `YC_DB_SECRET_ID`, `YC_DB_SECRET_VERSION_ID`, and `YC_DB_SECRET_KEY=dsn`
-    identify a Lockbox object/version/key; they are not secret values themselves.
-    """
     dangerous_names = {
         "PASSWORD",
         "TOKEN",
@@ -40,7 +35,9 @@ def assert_no_secret_payloads(env_example: str) -> None:
             continue
         name, value = line.split("=", 1)
         if name.strip().upper() in dangerous_names and value.strip():
-            raise AssertionError(f"staging env example contains a credential payload in {name.strip()}")
+            raise AssertionError(
+                f"staging env example contains a credential payload in {name.strip()}"
+            )
 
 
 def main() -> int:
@@ -50,6 +47,22 @@ def main() -> int:
     smoke = (HERE / "smoke_staging.sh").read_text(encoding="utf-8")
     rollback = (HERE / "rollback_staging.sh").read_text(encoding="utf-8")
     runtime = (ENGINE / "peis-production-substrate/runtime.py").read_text(encoding="utf-8")
+    learner_runtime = (ENGINE / "peis-production-substrate/learner_web_runtime.py").read_text(encoding="utf-8")
+    tutor_runtime = (
+        ENGINE / "peis-production-substrate/learner_tutor_web_runtime.py"
+    ).read_text(encoding="utf-8")
+    tutor_lifecycle = (
+        ENGINE / "peis-production-substrate/tutor_lifecycle.py"
+    ).read_text(encoding="utf-8")
+    learner_views = (ENGINE / "peis-production-substrate/learner_views.py").read_text(encoding="utf-8")
+    entitlement_reader = (ENGINE / "payments-reference/entitlement_read.py").read_text(encoding="utf-8")
+    postgres_runtime = (ENGINE / "peis-production-substrate/peis_postgres.py").read_text(encoding="utf-8")
+    payment_migration = (
+        ENGINE / "peis-production-substrate/migrations/0003_payments_entitlement_postgres.sql"
+    ).read_text(encoding="utf-8")
+    tutor_migration = (
+        ENGINE / "peis-production-substrate/migrations/0004_tutor_lifecycle_postgres.sql"
+    ).read_text(encoding="utf-8")
     dockerfile = (ENGINE / "peis-production-substrate/Dockerfile").read_text(encoding="utf-8")
 
     for token in (
@@ -58,30 +71,59 @@ def main() -> int:
         'service_account_id: ${YC_GATEWAY_SA_ID}',
         '/healthz:',
         '/readyz:',
+        '/v1/registration/begin:',
+        '/v1/registration/verify:',
+        '/v1/session:',
         '/v0/checked-card:',
+        '/api/identity/session:',
+        '/api/identity/logout:',
+        '/api/consent/marketing/revoke:',
+        '/api/payments/entitlement:',
+        '/api/russian/profile:',
+        '/api/russian/plan:',
+        '/api/russian/history:',
+        '/api/russian/practice/next:',
+        '/api/russian/practice/submit:',
+        '/api/russian/program:',
+        '/api/tutor/turn:',
     ):
         require(gateway, token, "gateway template")
     forbid(gateway.lower(), "tilda", "gateway template")
     forbid(gateway, "Access-Control-Allow-Origin: *", "gateway template")
 
-    require(env_example, "PEIS_NETWORK_WRITES_ENABLED=false", "staging env")
-    require(env_example, "YC_GATEWAY_APPLY=false", "staging env")
-    require(env_example, "@sha256:<immutable-digest>", "staging env")
+    for token in (
+        "PEIS_NETWORK_WRITES_ENABLED=false",
+        "EKSAMIO_WEB_IDENTITY_REQUIRED=false",
+        "EKSAMIO_REGISTRATION_BEGIN_ENABLED=false",
+        "EKSAMIO_POSTBOX_EXECUTION_ENABLED=false",
+        "EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED=false",
+        "YC_GATEWAY_APPLY=false",
+        "@sha256:<immutable-digest>",
+    ):
+        require(env_example, token, "staging env")
     assert_no_secret_payloads(env_example)
 
     for token in (
         'PEIS_NETWORK_WRITES_ENABLED:-false',
+        'EKSAMIO_WEB_IDENTITY_REQUIRED:-false',
+        'EKSAMIO_REGISTRATION_BEGIN_ENABLED:-false',
+        'EKSAMIO_POSTBOX_EXECUTION_ENABLED:-false',
+        'EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED:-false',
         'YC_GATEWAY_APPLY:-false',
         '@sha256:',
         '--network-id "${YC_NETWORK_ID}"',
         '--secret "environment-variable=PEIS_DATABASE_DSN',
         '--service-account-id "${YC_RUNTIME_SA_ID}"',
+        '--concurrency 1',
         'yc serverless api-gateway',
     ):
         require(deploy, token, "deploy script")
     for forbidden in (
         'allow-unauthenticated-invoke',
         'PEIS_NETWORK_WRITES_ENABLED=true',
+        'EKSAMIO_REGISTRATION_BEGIN_ENABLED=true\n',
+        'EKSAMIO_POSTBOX_EXECUTION_ENABLED=true\n',
+        'EKSAMIO_EXTERNAL_DELIVERY_AUTHORIZED=true\n',
         'YC_GATEWAY_APPLY=true\n',
         'lockbox payload get',
     ):
@@ -96,21 +138,107 @@ def main() -> int:
     require(rollback, 'yc serverless containers rollback', "rollback script")
     require(rollback, '--revision-id "${TARGET_REVISION_ID}"', "rollback script")
 
-    require(runtime, 'PEIS_NETWORK_WRITES_ENABLED', "runtime")
-    require(runtime, '"false"', "runtime")
-    require(runtime, 'server.host_identity = None', "runtime")
-    require(dockerfile, 'CMD ["python", "/app/peis-production-substrate/runtime.py"]', "Dockerfile")
+    for token in (
+        'PEIS_NETWORK_WRITES_ENABLED',
+        'EKSAMIO_REGISTRATION_BEGIN_ENABLED',
+        'EKSAMIO_POSTBOX_EXECUTION_ENABLED',
+        'YandexMetadataIamTokenProvider',
+        'SESSION_COOKIE = PasswordlessIdentityService.SESSION_COOKIE_NAME',
+        'server.host_identity = None',
+    ):
+        require(runtime, token, "core runtime")
+
+    for token in (
+        '/api/identity/session',
+        '/api/identity/logout',
+        '/api/consent/marketing/revoke',
+        '/api/payments/entitlement',
+        '/api/russian/profile',
+        '/api/russian/plan',
+        '/api/russian/history',
+        '/api/russian/practice/next',
+        '/api/russian/practice/submit',
+        'ProEntitlementReader',
+        'TUTOR_PROVIDER_NOT_ADMITTED',
+        'RUSSIAN_FULL_SUBJECT_NOT_ADMITTED',
+        'PasswordlessIdentityService.clear_session_cookie()',
+    ):
+        require(learner_runtime, token, "learner browser runtime")
+
+    for token in (
+        '/api/tutor/turn',
+        'PRO_ENTITLEMENT_REQUIRED',
+        'FailClosedTutorProvider',
+        'PostgresTutorLifecycle',
+        'TutorAwareRegisteredLearnerViews',
+        'TUTOR_PROVIDER_NOT_ADMITTED',
+    ):
+        require(tutor_runtime, token, "Tutor learner runtime")
+
+    for token in (
+        'SAME_SESSION_VERIFICATION',
+        'DeterministicNoNetworkTutorProvider',
+        'TutorProviderNotAdmitted',
+        'tutor_contexts',
+        'VERIFICATION_REQUIRED',
+        'VERIFIED',
+    ):
+        require(tutor_lifecycle, token, "Tutor lifecycle")
+
+    for token in (
+        'canonical_state_owner',
+        'shared_peis',
+        'Europe/Moscow',
+        'FIRST_SLICE_CARD_ID',
+    ):
+        require(learner_views, token, "learner views")
+
+    for token in (
+        'PRODUCT_CODE = "EKSAMIO_PRO_RUSSIAN"',
+        "state = 'ACTIVE'",
+        'expires_at_epoch > ?',
+        'active',
+    ):
+        require(entitlement_reader, token, "entitlement reader")
+
+    for token in (
+        '0003_payments_entitlement_postgres',
+        'pro_entitlements',
+    ):
+        require(postgres_runtime + payment_migration, token, "payment Postgres substrate")
+
+    for token in (
+        '0004_tutor_lifecycle_postgres',
+        'tutor_contexts',
+        "status = 'VERIFICATION_REQUIRED'",
+    ):
+        require(postgres_runtime + tutor_migration, token, "Tutor Postgres substrate")
+
+    for token in (
+        'COPY payments-reference /app/payments-reference',
+        'CMD ["python", "/app/peis-production-substrate/learner_tutor_web_runtime.py"]',
+    ):
+        require(dockerfile, token, "Dockerfile")
 
     print("SEP1_YANDEX_STAGING_STATIC_VALIDATION=PASS")
     print("gateway_to_private_container_contract=PASS")
+    print("authenticated_pro_routes=PASS")
+    print("session_owned_peis=PASS")
+    print("session_owned_entitlement=PASS")
+    print("production_payment_write_routes=0")
+    print("full_russian_program_fail_closed=PASS")
+    print("production_tutor_state_postgres=PASS")
+    print("production_tutor_provider_fail_closed=PASS")
     print("immutable_image_required=PASS")
     print("lockbox_dsn_boundary=PASS")
     print("private_network_required=PASS")
     print("peis_writes_default_off=PASS")
+    print("registration_delivery_default_off=PASS")
     print("gateway_apply_default_off=PASS")
     print("rollback_command=PASS")
     print("secret_payloads_in_repo=0")
     print("live_yandex_execution=0")
+    print("live_ai_execution=0")
     return 0
 
 

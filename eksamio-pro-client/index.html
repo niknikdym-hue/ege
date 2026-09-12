@@ -7,6 +7,7 @@
   <title>Eksamio Pro — Русский</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="live-loop.css">
 </head>
 <body>
   <a class="skip-link" href="#main">К основному содержанию</a>
@@ -18,6 +19,7 @@
     <div class="topbar-actions">
       <span class="status-pill" id="identityStatus">Гостевой режим</span>
       <button class="ghost-button" id="identityButton" type="button">Продолжить</button>
+      <button class="ghost-button" id="logoutButton" type="button" hidden>Выйти</button>
     </div>
   </header>
 
@@ -31,8 +33,9 @@
         <button class="nav-item" type="button" data-view="progress"><span aria-hidden="true">↗</span> Прогресс</button>
       </nav>
       <div class="sidebar-footer">
-        <p>Бесплатные демоверсии остаются анонимными.</p>
-        <a href="/ege/russkiy/demoversiya/">Вернуться к демоверсии</a>
+        <p>Бесплатный тренажёр остаётся доступным без входа.</p>
+        <a id="trainerBacklink" href="/trainer/">Вернуться к тренажёру</a>
+        <a href="/ege/russkiy/demoversiya/">Открыть демоверсию ЕГЭ</a>
         <div class="legal-links" aria-label="Юридическая информация">
           <a href="legal/privacy.html">Конфиденциальность</a>
           <a href="legal/personal-data.html">Персональные данные</a>
@@ -44,11 +47,12 @@
     </aside>
 
     <main id="main" class="main-content">
+      <div class="sync-alert" id="syncAlert" role="alert" hidden></div>
       <section class="view is-active" id="view-plan" data-view-panel="plan">
         <div class="eyebrow">Персональный маршрут</div>
         <div class="hero-row">
           <div>
-            <h1>Добро пожаловать в русский Pro</h1>
+            <h1>Мой Eksamio</h1>
             <p class="lead">Один предметный маршрут: школьная программа 5–11, ОГЭ, ЕГЭ, диагностика, тренажёры, домашняя работа и Tutor.</p>
           </div>
           <div class="goal-controls" aria-label="Учебная цель">
@@ -64,16 +68,22 @@
         <section class="entry-context card" aria-labelledby="entryTitle">
           <div>
             <div class="eyebrow">Вход после диагностики</div>
-            <h2 id="entryTitle">Слабое место уже можно превратить в план</h2>
-            <p id="entryText">Демо-результат можно продолжить в Pro без переноса аккаунтов в Tilda.</p>
+            <h2 id="entryTitle">Попытка из тренажёра становится личным планом</h2>
+            <p id="entryText">После входа сервер связывает анонимную попытку с тестовым профилем. Tilda не хранит канонический прогресс.</p>
           </div>
           <button class="primary-button" id="entryContinue" type="button">Продолжить в Pro</button>
         </section>
 
-        <section class="metrics" aria-label="Сводка прогресса">
-          <article class="metric-card"><span>Готовность</span><strong id="readinessValue">42%</strong><small>по текущей цели</small></article>
-          <article class="metric-card"><span>В фокусе</span><strong id="focusValue">1 тема</strong><small>следующее действие</small></article>
-          <article class="metric-card"><span>Повторить</span><strong id="retentionValue">2</strong><small>до забывания</small></article>
+        <section class="metrics" aria-label="Сегодня">
+          <article class="metric-card"><span>Решено сегодня</span><strong id="todaySolved">—</strong><small>принято сервером</small></article>
+          <article class="metric-card"><span>Верно</span><strong id="todayCorrect">—</strong><small>самостоятельные ответы</small></article>
+          <article class="metric-card"><span>Ошибки</span><strong id="todayErrors">—</strong><small>нужна отработка</small></article>
+          <article class="metric-card"><span>На повторение</span><strong id="todayReview">—</strong><small>по принятому evidence</small></article>
+        </section>
+
+        <section class="content-grid lower-grid">
+          <article class="card"><div class="section-heading"><div><div class="eyebrow">Навыки</div><h2>Что требует внимания</h2></div></div><div id="skillList" class="simple-list"></div></article>
+          <article class="card"><div class="section-heading"><div><div class="eyebrow">Последние изменения</div><h2>Что изменилось</h2></div></div><div id="latestChanges" class="simple-list"></div></article>
         </section>
 
         <section class="content-grid">
@@ -104,7 +114,7 @@
         <h1>Практика по следующему слабому месту</h1>
         <div class="practice-layout">
           <article class="card lesson-card">
-            <span class="badge" id="practiceSemantic">server semantic</span>
+            <span class="badge" id="practiceSemantic">Проверенный навык</span>
             <h2 id="practiceRuleTitle">Правило</h2>
             <p id="practiceExplanation">Загрузка проверенного материала…</p>
             <div class="worked-box" id="practiceWorked"></div>
@@ -126,7 +136,7 @@
         <div class="locked-card card" id="tutorLocked">
           <span class="lock-icon" aria-hidden="true">◇</span>
           <h2>Tutor входит в Pro</h2>
-          <p>Сначала откройте доступ. В launch-срезе платеж проходит только через sandbox adapter.</p>
+          <p>В owner-test доступ выдаётся сервером только тестовому профилю. Реального списания нет.</p>
           <button class="primary-button" id="purchaseButton" type="button">Открыть Pro в sandbox</button>
           <small id="paymentStatus">Реального списания в этом клиентском gate нет.</small>
         </div>
@@ -145,10 +155,12 @@
         <div class="eyebrow">Измеримый прогресс</div>
         <h1>Что изменилось после тренировки</h1>
         <div class="progress-card card">
-          <div class="progress-head"><span>Готовность по текущей цели</span><strong id="progressPercent">42%</strong></div>
-          <div class="progress-track" aria-hidden="true"><span id="progressBar" style="width:42%"></span></div>
+          <div class="progress-head"><span>Состояние текущего навыка</span><strong id="progressPercent">Недостаточно данных</strong></div>
+          <div class="progress-track" aria-hidden="true"><span id="progressBar" style="width:0"></span></div>
           <div class="progress-events" id="progressEvents"></div>
         </div>
+        <article class="card history-card"><div class="section-heading"><div><div class="eyebrow">История</div><h2>Предыдущие занятия</h2></div></div><div id="historyList" class="simple-list"></div></article>
+        <article class="card owner-diagnostics" id="ownerDiagnostics" hidden><div class="section-heading"><div><div class="eyebrow">Owner test</div><h2>Причинная цепочка</h2></div><span class="badge">STAGING</span></div><div id="diagnosticSteps" class="diagnostic-steps"></div><pre id="diagnosticDetail">—</pre></article>
       </section>
     </main>
   </div>

@@ -1,0 +1,28 @@
+name: Live student loop macOS panel (optional)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  panel:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create isolated Python environment
+        run: |
+          python3 -m venv .venv-live-loop
+          .venv-live-loop/bin/python -m pip install --upgrade pip
+          .venv-live-loop/bin/python -m pip install jsonschema
+      - name: Validate gated registered-only learner admission
+        run: .venv-live-loop/bin/python eksamio-learning-engine/live-student-loop/validate_gated_runtime.py
+      - name: Run registered learner loop tests
+        run: .venv-live-loop/bin/python eksamio-learning-engine/live-student-loop/test_live_student_loop.py
+      - run: bash -n eksamio-learning-engine/live-student-loop/macos/install-desktop-app.sh
+      - name: Compile staging desktop panel
+        env:
+          EKSAMIO_PYTHON: ${{ github.workspace }}/.venv-live-loop/bin/python
+        run: eksamio-learning-engine/live-student-loop/macos/install-desktop-app.sh
+      - run: test -x "$HOME/Desktop/Eksamio — Ученик STAGING.app/Contents/MacOS/EksamioStudentStaging"

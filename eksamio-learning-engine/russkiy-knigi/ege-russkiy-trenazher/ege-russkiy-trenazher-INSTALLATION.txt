@@ -16,3 +16,17 @@ HEAD-код берётся из ege-russkiy-trenazher-HEAD.txt.
 SEO-поля вручную переносятся из ege-russkiy-trenazher-SEO.txt.
 Общий CSS проекта подключать по стандартной схеме Эксамио; тренажёр также имеет изолированные критические стили.
 После публикации проверить учебный и контрольный режимы, перезагрузку страницы, мобильную ширину и localStorage.
+
+LIVE STUDENT LOOP — STAGING CANDIDATE 2026-09-02
+
+Добавлен ege-russkiy-trenazher-T123-11.txt. При будущем production-допуске его
+порядок — строго после ege-russkiy-trenazher-T123-10.txt.
+
+СЕЙЧАС НЕ ЗАГРУЖАТЬ T123-11 НА ПУБЛИЧНУЮ TILDA-СТРАНИЦУ: production HTTPS
+backend, CORS/cookie policy, Postbox identity delivery и server-owned Postgres
+ещё не развёрнуты и не допущены. Без явного host config блок инертен; локальный
+owner-test config выдаёт только loopback staging runtime.
+
+HEAD: без изменений. SEO/settings: без изменений. T123-02…08: без изменений.
+T123-01 и T123-10 — ранее подготовленный semantic-state boundary; T123-11 —
+новый staging integration block. Public republish сейчас не нужен.
