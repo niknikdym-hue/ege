@@ -132,7 +132,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  astra-plan:
+  astra_plan:
     needs: route
     if: ${{ needs.route.outputs.astra_plan == 'true' }}
     runs-on: ubuntu-latest
@@ -178,8 +178,8 @@ jobs:
           retention-days: 30
 
   codex:
-    needs: [route, astra-plan]
-    if: ${{ always() && needs.route.result == 'success' && (needs.astra-plan.result == 'success' || needs.astra-plan.result == 'skipped') }}
+    needs: [route, astra_plan]
+    if: ${{ always() && needs.route.result == 'success' && (needs.astra_plan.result == 'success' || needs.astra_plan.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -290,7 +290,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  astra-accept:
+  astra_accept:
     needs: [route, validate]
     if: ${{ needs.validate.result == 'success' && needs.route.outputs.astra_accept == 'true' }}
     runs-on: ubuntu-latest
@@ -346,8 +346,8 @@ jobs:
           retention-days: 30
 
   commit:
-    needs: [route, validate, astra-accept]
-    if: ${{ always() && needs.route.result == 'success' && needs.validate.result == 'success' && (needs.astra-accept.result == 'success' || needs.astra-accept.result == 'skipped') }}
+    needs: [route, validate, astra_accept]
+    if: ${{ always() && needs.route.result == 'success' && needs.validate.result == 'success' && (needs.astra_accept.result == 'success' || needs.astra_accept.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
