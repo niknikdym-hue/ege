@@ -1,0 +1,147 @@
+name: Eksamio Owner Agent Batch v2
+run-name: Owner batch v2 ${{ github.run_id }} · ${{ inputs.task_ids }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      task_ids:
+        description: Ordered comma-separated task IDs, 1 to 5
+        required: true
+        type: string
+      package_budget_usd:
+        description: Hard worst-case total package budget
+        required: true
+        default: '3.00'
+        type: string
+
+permissions:
+  contents: read
+  actions: write
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: owner-batch-v2
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 600
+    steps:
+      - name: Owner gate and package validation
+        id: package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_ACTOR" = "niknikdym-hue" || { echo 'Only repository owner may start a package.'; exit 1; }
+          python3 - <<'PY'
+          from decimal import Decimal
+          b=Decimal('${{ inputs.package_budget_usd }}')
+          assert Decimal('0.10') <= b <= Decimal('3.00'), 'package budget must be between $0.10 and $3.00'
+          PY
+          echo "package_id=owner-$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout main authority only
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Prove selected tasks form one sequential compatible package
+        id: tasks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from decimal import Decimal, ROUND_DOWN
+          from pathlib import Path
+          board=json.loads(Path('eksamio-learning-engine/project-control/operational-board-v1.json').read_text())
+          assert board.get('version')=='operational-board-v1' and len(board.get('tasks') or [])==115
+          ids=[x.strip() for x in '${{ inputs.task_ids }}'.split(',') if x.strip()]
+          if not 1 <= len(ids) <= 5: raise SystemExit('Package must contain 1..5 tasks')
+          if len(ids)!=len(set(ids)): raise SystemExit('Duplicate task ID in package')
+          rows={str(x['task_id']):x for x in board['tasks']}
+          selected=[]
+          for task_id in ids:
+              if task_id not in rows: raise SystemExit(f'Unknown task: {task_id}')
+              t=rows[task_id]; blocker=t.get('blocker_type')
+              if t.get('executor')!='Codex' or t.get('owner_gate_required'):
+                  raise SystemExit(f'{task_id} is not autonomous Codex work')
+              if blocker and blocker!='SUBJECT': raise SystemExit(f'{task_id} has external blocker: {blocker}')
+              if t.get('status') in {'DONE','PUBLIC_LAUNCH_PASS'}: raise SystemExit(f'{task_id} already terminal')
+              selected.append(t)
+          stages={str(t.get('stage') or '') for t in selected}
+          bases={str(t.get('branch') or 'main') for t in selected}
+          if len(stages)!=1: raise SystemExit('All package tasks must belong to one stage/block')
+          if len(bases)!=1: raise SystemExit('All package tasks must use the same base branch')
+          total=Decimal('${{ inputs.package_budget_usd }}')
+          cap=min(Decimal('1.00'), (total/Decimal(len(ids))).quantize(Decimal('0.01'), rounding=ROUND_DOWN))
+          if cap < Decimal('0.05'): raise SystemExit('Package budget is too small for selected task count')
+          Path('/tmp/package-tasks.txt').write_text('\n'.join(ids)+'\n')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('stage='+next(iter(stages))+'\n')
+              f.write('base_ref='+next(iter(bases))+'\n')
+              f.write('task_budget_usd='+format(cap,'f')+'\n')
+              f.write('count='+str(len(ids))+'\n')
+          print('PACKAGE_TASKS='+','.join(ids))
+          print('PACKAGE_TASK_CAP_USD='+format(cap,'f'))
+          PY
+
+      - name: Refuse parallel Owner Control work before first paid child
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for wf in owner-agent-task-v2.yml owner-agent-console-control.yml; do
+            active="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$wf/runs?per_page=100" --jq '[.workflow_runs[] | select(.status != "completed") | .id] | length')"
+            test "$active" = 0 || { echo "$wf already has active work"; exit 1; }
+          done
+
+      - name: Execute package strictly sequentially
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PACKAGE_ID: ${{ steps.package.outputs.package_id }}
+          TASK_CAP: ${{ steps.tasks.outputs.task_budget_usd }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r task_id; do
+            [ -n "$task_id" ] || continue
+            title="Owner task v2 $PACKAGE_ID $task_id"
+            echo "DISPATCH $task_id cap=$TASK_CAP"
+            gh workflow run owner-agent-task-v2.yml --repo "$GITHUB_REPOSITORY" \
+              -f task_id="$task_id" -f task_budget_usd="$TASK_CAP" -f package_id="$PACKAGE_ID"
+            run_id=''
+            for _ in {1..30}; do
+              run_id="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/owner-agent-task-v2.yml/runs?event=workflow_dispatch&per_page=50" --jq '.workflow_runs[] | select(.display_title == "'"$title"'") | .id' | head -n1)"
+              [ -n "$run_id" ] && break
+              sleep 2
+            done
+            test -n "$run_id" || { echo "Could not resolve child run for $task_id"; exit 1; }
+            echo "CHILD_RUN $task_id -> $run_id"
+            while :; do
+              status="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" --jq .status)"
+              [ "$status" = completed ] && break
+              sleep 10
+            done
+            conclusion="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" --jq .conclusion)"
+            if [ "$conclusion" != success ]; then
+              echo "PACKAGE_STOP task=$task_id conclusion=$conclusion"
+              gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-v2 -->\nSTATE: PACKAGE_STOPPED\nPACKAGE: '"$PACKAGE_ID"$'\nFAILED_TASK: '"$task_id"$'\nCHILD_RUN: '"$run_id"$'\nCONCLUSION: '"$conclusion"$'\nNO_AUTO_RETRY: true'
+              exit 1
+            fi
+            echo "PACKAGE_PASS task=$task_id"
+          done < /tmp/package-tasks.txt
+
+      - name: Record package completion
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-v2 -->\nSTATE: PACKAGE_PASS\nPACKAGE: ${{ steps.package.outputs.package_id }}\nTASK_COUNT: ${{ steps.tasks.outputs.count }}\nSTAGE: ${{ steps.tasks.outputs.stage }}\nHARD_PACKAGE_CAP_USD: ${{ inputs.package_budget_usd }}\nHARD_TASK_CAP_USD: ${{ steps.tasks.outputs.task_budget_usd }}\nSEQUENTIAL: true\nNO_AUTO_RETRY: true\nNO_AUTO_MERGE_DEPLOY_READY: true'
