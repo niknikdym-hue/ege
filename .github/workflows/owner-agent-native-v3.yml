@@ -1,0 +1,174 @@
+name: Eksamio Owner GitHub Native Task v3
+run-name: Owner native v3 ${{ inputs.package_id }} ${{ inputs.task_id }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      task_id:
+        required: true
+        type: string
+      package_id:
+        required: true
+        type: string
+      authority_base_ref:
+        required: true
+        type: string
+      authority_base_sha:
+        required: true
+        type: string
+      work_ref:
+        required: true
+        type: string
+      expected_work_sha:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: owner-task-v3-${{ inputs.package_id }}
+  cancel-in-progress: false
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Prove owner-controlled parent
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_ACTOR" = 'github-actions[bot]' || { echo 'Native child accepts only proven owner batch parent.'; exit 1; }
+          [[ '${{ inputs.package_id }}' =~ ^owner-[0-9]+$ ]] || { echo 'Invalid package id.'; exit 1; }
+          parent_id='${{ inputs.package_id }}'; parent_id="${parent_id#owner-}"
+          parent="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$parent_id")"
+          python3 - "$parent" <<'PY'
+          import json,sys
+          d=json.loads(sys.argv[1])
+          assert d['event']=='workflow_dispatch'
+          assert d['actor']['login']=='niknikdym-hue'
+          assert d['path']=='.github/workflows/owner-agent-batch-v2.yml'
+          assert d['status'] in {'queued','in_progress'}
+          PY
+
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.work_ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Freeze cumulative input and load trusted native executor from main
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '${{ inputs.expected_work_sha }}' || { echo 'Package branch moved'; exit 1; }
+          current_base="$(git ls-remote origin 'refs/heads/${{ inputs.authority_base_ref }}' | awk 'NR==1{print $1}')"
+          test "$current_base" = '${{ inputs.authority_base_sha }}' || { echo 'Authority base moved'; exit 1; }
+          git fetch --no-tags origin main
+          git show origin/main:eksamio-learning-engine/project-control/owner_native_executor.py > /tmp/owner_native_executor.py
+          git show origin/main:eksamio-learning-engine/project-control/operational-board-v1.json > /tmp/operational-board-v1.json
+          python3 /tmp/owner_native_executor.py \
+            --repo-root "$GITHUB_WORKSPACE" \
+            --board /tmp/operational-board-v1.json \
+            --task-id '${{ inputs.task_id }}' \
+            --result /tmp/owner-native-result.json
+          git add -N -- . || true
+          git -c diff.external= --no-pager diff --no-ext-diff --no-textconv --binary > /tmp/candidate.patch
+          test -s /tmp/candidate.patch || { echo 'Native playbook produced no patch'; exit 1; }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: owner-v3-${{ inputs.package_id }}-${{ inputs.task_id }}-candidate
+          path: |
+            /tmp/candidate.patch
+            /tmp/owner-native-result.json
+          if-no-files-found: error
+          retention-days: 30
+
+  validate:
+    needs: candidate
+    if: ${{ needs.candidate.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.work_ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v5
+        with:
+          name: owner-v3-${{ inputs.package_id }}-${{ inputs.task_id }}-candidate
+          path: /tmp/candidate
+      - name: Apply native candidate on clean runner and run trusted checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '${{ inputs.expected_work_sha }}'
+          git apply --check --binary /tmp/candidate/candidate.patch
+          git apply --index --binary /tmp/candidate/candidate.patch
+          git diff --cached --check
+          git diff --cached --name-only > /tmp/changed-paths.txt
+          count="$(grep -c . /tmp/changed-paths.txt || true)"; test "$count" -ge 1 && test "$count" -le 8
+          if grep -E '(^|/)(\.git|\.env|secrets?)(/|$)|^\.github/workflows/|operational-board-v1\.json$|owner_control_budget_proxy\.mjs$|owner_native_executor\.py$' /tmp/changed-paths.txt; then
+            echo 'Protected control/secrets path changed'; exit 1
+          fi
+          while IFS= read -r p; do
+            case "$p" in
+              *.py) python3 -m py_compile "$p" ;;
+              *.json) python3 -m json.tool "$p" >/dev/null ;;
+            esac
+          done < /tmp/changed-paths.txt
+          if [ -d eksamio-learning-engine/tests ]; then
+            python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_*.py'
+          fi
+          git diff --cached --binary > /tmp/validated.patch
+          printf '%s\n' \
+            'EXECUTOR=GITHUB_NATIVE' \
+            'OPENAI_CALLS=0' \
+            'CLEAN_RUNNER=PASS' \
+            'PATH_SCOPE=PASS' \
+            'GIT_DIFF_CHECK=PASS' > /tmp/test-evidence.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: owner-v3-${{ inputs.package_id }}-${{ inputs.task_id }}-validated
+          path: |
+            /tmp/validated.patch
+            /tmp/changed-paths.txt
+            /tmp/test-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
+
+  commit:
+    needs: validate
+    if: ${{ needs.validate.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.work_ref }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v5
+        with:
+          name: owner-v3-${{ inputs.package_id }}-${{ inputs.task_id }}-validated
+          path: /tmp/validated
+      - name: Commit only independently validated native candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '${{ inputs.expected_work_sha }}'
+          current_base="$(git ls-remote origin 'refs/heads/${{ inputs.authority_base_ref }}' | awk 'NR==1{print $1}')"
+          test "$current_base" = '${{ inputs.authority_base_sha }}' || { echo 'Authority base moved; stop before commit'; exit 1; }
+          git apply --index --binary /tmp/validated/validated.patch
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "owner-v3(${{ inputs.task_id }}): GitHub-native PASS"
+          git push origin "HEAD:refs/heads/${{ inputs.work_ref }}"
