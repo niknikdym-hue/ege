@@ -1,0 +1,89 @@
+name: Russian RU09 EDSOO59 p222 8.1 candidate content readiness
+
+on:
+  pull_request:
+    paths:
+      - "eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-09-EDSOO59-P222-8-1-WAVE-002-v0.1.json"
+      - "eksamio-learning-engine/russian-program/subject-admission/validate_ru09_edsoo59_p222_8_1_candidate_content.py"
+      - ".github/workflows/russian-ru09-edsoo59-p222-8-1-candidate-content-readiness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  candidate-content-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate bounded learner content and component evidence
+        run: |
+          python eksamio-learning-engine/russian-program/subject-admission/validate_ru09_edsoo59_p222_8_1_candidate_content.py
+
+      - name: Prove no semantic or object self-admission
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("eksamio-learning-engine")
+          owner = json.loads((root / "russian-program/subject-admission/RU09-EDSOO59-P222-8-1-SOURCE-BACKED-OWNER-RESOLUTION-v0.1.json").read_text(encoding="utf-8"))
+          content = json.loads((root / "russian-program/production-learning-content/RU-PROG-09-EDSOO59-P222-8-1-WAVE-002-v0.1.json").read_text(encoding="utf-8"))
+
+          assert owner["progress_effect"]["semantic_admissions"] == 0
+          assert owner["progress_effect"]["object_level_closures"] == 0
+          assert owner["progress_effect"]["exact_mastery_admissions"] == 0
+          assert owner["acceptance_boundary"]["false_exact_mastery"] == 0
+          assert owner["acceptance_boundary"]["current_v30_created"] is False
+          assert content["identity_boundary"]["semantic_ref_status"] == "PROPOSED_NOT_CANONICAL"
+          assert content["identity_boundary"]["object_level_admission_effect"] == "NONE_UNTIL_SEPARATE_EXACT_OBJECT_BINDING"
+          assert content["identity_boundary"]["generic_module_attempt_can_emit_exact_component_mastery"] is False
+
+          for unit in content["units"]:
+              peis = unit["peis_evidence"]
+              assert peis["semantic_ref_status"] == "PROPOSED_NOT_CANONICAL"
+              assert peis["registered_user_identity_ref_required_for_future_canonical_evidence"] is True
+              assert peis["generic_syntax_score_can_emit_exact_mastery"] is False
+
+          current_v30 = list((root / "russian-program/subject-admission").glob("*current*v30*")) + list((root / "russian-program").glob("**/*current*v30*"))
+          assert not current_v30, current_v30
+
+          print("SEMANTIC_ADMISSIONS=0")
+          print("OBJECT_LEVEL_CLOSURES=0")
+          print("EXACT_MASTERY_ADMISSIONS=0")
+          print("FALSE_EXACT_MASTERY=0")
+          print("CURRENT_V30_CREATED=0")
+          PY
+
+      - name: Protect bounded diff and production surfaces
+        env:
+          BASE_EXACT: bbce1d9f40c01ae7aef0c23e13048233ed08765a
+        run: |
+          git diff --name-only "$BASE_EXACT...HEAD" | sort > /tmp/actual.txt
+          cat > /tmp/expected.txt <<'EOF'
+          .github/workflows/russian-ru09-edsoo59-p222-8-1-candidate-content-readiness.yml
+          eksamio-learning-engine/russian-program/production-learning-content/RU-PROG-09-EDSOO59-P222-8-1-WAVE-002-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/validate_ru09_edsoo59_p222_8_1_candidate_content.py
+          EOF
+          sort -o /tmp/expected.txt /tmp/expected.txt
+          diff -u /tmp/expected.txt /tmp/actual.txt
+
+          if grep -E '(^|/)(tilda-ready|site|public|payments|scorer|demo|production-runtime)/' /tmp/actual.txt; then
+            echo "Forbidden production/public surface changed"
+            exit 1
+          fi
+
+      - name: Diff hygiene
+        run: |
+          git diff --check bbce1d9f40c01ae7aef0c23e13048233ed08765a...HEAD
