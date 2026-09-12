@@ -1,0 +1,87 @@
+{
+  "schema_version": "0.1.0",
+  "status": "BOUNDED_SOURCE_BACKED_CANDIDATE_OWNER_RESOLUTION_NO_ADMISSION",
+  "authority_issue": 185,
+  "russian_subject_authority_issue": 161,
+  "russian_closure_commit": "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9",
+  "target_object": {
+    "admission_unit_id": "RAU-a8f2ad0b357c9e369c51",
+    "requirement_id": "RSK-EDSOO1011-2-2-4-P074",
+    "review_group_id": "RUS-SEM-REVIEW-047",
+    "source_locator": "EDSOO1011 2.2.4 p.74",
+    "module_id": "RU-PROG-02",
+    "normalized_meaning": "Применять нормативное произношение и ударение."
+  },
+  "existing_owner_search": {
+    "exact_pronunciation_owner_found": false,
+    "normative_stress_owner": {
+      "candidate_ref": "candidate-018",
+      "source_taxonomy_id": "normative_stress_selection",
+      "semantic_scope": "normative stress selection only",
+      "may_cover_pronunciation_component": false
+    },
+    "source_check_unit": {
+      "semantic_id": "ru-orthoepy-norm-source-check",
+      "adequacy_class": "NORMATIVE_SOURCE_CHECK_META_PROCEDURE_NOT_EXACT_CANDIDATE_CONTENT",
+      "exact_candidate_owner": null,
+      "may_cover_pronunciation_component": false
+    },
+    "stress_family_candidates": [
+      "candidate-018",
+      "candidate-019",
+      "candidate-020",
+      "candidate-021",
+      "candidate-022",
+      "candidate-023",
+      "candidate-024"
+    ],
+    "resolution": "NO_EXACT_CURRENT_PRONUNCIATION_OWNER"
+  },
+  "source_backed_candidate": {
+    "proposed_semantic_id": "ru-orthoepy-normative-pronunciation-selection",
+    "owner_status": "PROPOSED_SOURCE_BACKED_NOT_CANONICAL",
+    "label_ru": "Нормативное литературное произношение",
+    "boundary": {
+      "includes": [
+        "pronunciation of unstressed vowel sounds",
+        "pronunciation of selected consonant sounds",
+        "pronunciation of selected consonant combinations",
+        "pronunciation of selected grammatical forms",
+        "pronunciation features of loanwords"
+      ],
+      "excludes": [
+        "stress-position selection",
+        "spelling",
+        "generic phonetic analysis",
+        "source-verification procedure without pronunciation content"
+      ]
+    },
+    "official_source": {
+      "publisher": "FGBNU FIPI",
+      "document": "Navigator samostoyatelnoy podgotovki k EGE 2026 — Russkiy yazyk — Fonetika i orfoepiya",
+      "url": "https://doc.fipi.ru/navigator-podgotovki/navigator-ege/2026/ru-1-fonetika.pdf",
+      "page": 1,
+      "codifier_position": "3.2.3",
+      "source_scope": "official 2026 codifier guidance explicitly separates literary-pronunciation components from stress norms",
+      "byte_identity_status": "PUBLIC_OFFICIAL_SOURCE_LOCATOR_ONLY_BYTES_NOT_VENDORED"
+    }
+  },
+  "acceptance_boundary": {
+    "semantic_admission_effect": "NONE",
+    "object_closure_effect": "NONE",
+    "exact_mastery_effect": "NONE",
+    "false_exact_mastery": 0,
+    "component_specific_independent_learner_evidence_required": true,
+    "candidate_owner_resolution_alone_can_close_object": false,
+    "route_or_task_name_can_admit_semantics": false,
+    "live_trainer_name_can_admit_semantics": false,
+    "reference_reading_can_create_mastery": false
+  },
+  "next_exact_work": {
+    "pronunciation_owner_search_complete": true,
+    "pronunciation_candidate_owner_resolution_complete": true,
+    "pronunciation_component_specific_independent_evidence_status": "MISSING_BLOCKER",
+    "object_acceptance_status": "BLOCKED",
+    "mastery_status": "INELIGIBLE"
+  }
+}

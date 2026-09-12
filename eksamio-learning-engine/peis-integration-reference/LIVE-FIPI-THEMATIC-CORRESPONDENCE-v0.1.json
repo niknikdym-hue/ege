@@ -1,0 +1,82 @@
+{
+  "schema": "eksamio.live-fipi-thematic-correspondence.snapshot.v0.1",
+  "issue": 185,
+  "authority": "exact remote GitHub Actions read-only probes against live eksamio.ru and official FIPI 2026 Navigator PDFs",
+  "evidence_runs": {
+    "primary_correspondence": {
+      "head_sha": "76c0e75c60a3891f0dbc95b7ae43e4864e97ecfa",
+      "workflow_run_id": 34090084954,
+      "artifact_id": 10006516066,
+      "artifact_digest": "sha256:18cbbbe8a30c13b1e17386da4503f5c14dca6cad3404d725bcd0afd85b69c643"
+    },
+    "dictionary_same_row_family_membership": {
+      "head_sha": "774a3c939f46fd43ef8da46db92e7ee0e93d02b8",
+      "workflow_run_id": 34090230727,
+      "artifact_id": 10006571833,
+      "artifact_digest": "sha256:7986821058040069207c376ea244d2c8889c781600ee50a68cb120f63ce76724"
+    }
+  },
+  "exact_sources": {
+    "dictionary_live": {
+      "url": "https://eksamio.ru/trenazhery/russkiy/slovarnye-slova/",
+      "byte_count": 116022,
+      "sha256": "610e866aad13c901b944c3fac9acfa840a01fecf89091cd0c7fc6e0dbb537d1a"
+    },
+    "phraseology_live": {
+      "url": "https://eksamio.ru/trenazhery/russkiy/frazeologizmy/",
+      "byte_count": 170679,
+      "sha256": "69f69716dbad959b754354a0f3d1523dc4b05ae4732eeb234a68b3a43ebfe68b"
+    },
+    "orthography_fipi_2026": {
+      "url": "https://doc.fipi.ru/navigator-podgotovki/navigator-ege/2026/ru-5-orfografija.pdf",
+      "byte_count": 531807,
+      "sha256": "0a3ee8ce95e76c6f7280bb97a6f6c3e56442ff241b074d93d73642ca5c59b957"
+    },
+    "lexicon_phraseology_fipi_2026": {
+      "url": "https://doc.fipi.ru/navigator-podgotovki/navigator-ege/2026/ru-2-leksika-i-frazeologija.pdf",
+      "byte_count": 513587,
+      "sha256": "28c3dfd5266319e539025f4b25ce71724ec20c83c42820e1abe99f8fdeef66a8"
+    }
+  },
+  "phraseology": {
+    "live_count": 285,
+    "fipi_count": 285,
+    "correspondence_rule": "same indexed FIPI row -> remove parenthetical alternative segment(s); no reordering or fuzzy matching",
+    "exact_primary_match_count": 285,
+    "exact_primary_mismatch_count": 0,
+    "live_ordered_normalized_sha256": "3fd6b8d2b67e086a78228c32e84cd843adc267f96c8743dac4aaa27f54216c88",
+    "source_primary_ordered_normalized_sha256": "3fd6b8d2b67e086a78228c32e84cd843adc267f96c8743dac4aaa27f54216c88",
+    "status": "EXACT_PRIMARY_ROW_CORRESPONDENCE",
+    "canonical_binding_status": "TEXTUAL_PROVENANCE_CORRESPONDENCE_PROVEN_SEMANTIC_ADMISSION_STILL_SEPARATE"
+  },
+  "dictionary_words": {
+    "live_count": 308,
+    "fipi_count": 308,
+    "primary_exact_match_count": 284,
+    "same_row_additional_exact_member_match_count": 23,
+    "exact_same_row_supported_count": 307,
+    "unresolved_count": 1,
+    "correspondence_rule": "same indexed FIPI row only -> remove parenthetical segment(s) -> accept exact normalized live word if it is any comma-separated form in that row; no morphology, fuzzy matching, reordering or route/title inference",
+    "unresolved": [
+      {
+        "index_1based": 237,
+        "live_id": "rovesnik",
+        "live": "ровесник",
+        "fipi_row": "ровесники",
+        "status": "EXACT_TEXT_MEMBERSHIP_NOT_PROVEN_MORPHOLOGY_NOT_INFERRED"
+      }
+    ],
+    "status": "307_OF_308_EXACT_SAME_ROW_SUPPORTED_ONE_BOUNDED_BLOCKER",
+    "canonical_binding_status": "UNKNOWN_BLOCKER_UNTIL_ROVESNIK_SOURCE_FORM_IS_EXACTLY_RESOLVED_AND_SEMANTIC_ADMISSION_IS_SEPARATELY_ACCEPTED"
+  },
+  "semantic_admissions": 0,
+  "object_closures": 0,
+  "mastery_admissions": 0,
+  "false_exact_mastery": 0,
+  "registered_user_identity_required_for_future_canonical_evidence": true,
+  "notes": [
+    "Phraseology textual provenance is exact for all 285 live rows under the deterministic same-index primary-variant projection, but this does not self-admit PEIS semantic ownership or mastery.",
+    "Dictionary provenance is exact same-row supported for 307 of 308 live items. The only unresolved row is live 'ровесник' versus FIPI row 'ровесники'; no morphological equivalence is inferred.",
+    "All learner evidence remains registered user_identity_ref only; anonymous/device-only state is never canonical."
+  ]
+}

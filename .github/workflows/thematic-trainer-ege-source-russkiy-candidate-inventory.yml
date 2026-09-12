@@ -1,0 +1,39 @@
+name: Thematic trainer EGE Russian source candidate inventory
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-integration-reference/THEMATIC-TRAINER-EGE-SOURCE-RUSSKIY-CANDIDATE-INVENTORY-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/validate_thematic_trainer_ege_source_russkiy_candidate_inventory.py'
+      - '.github/workflows/thematic-trainer-ege-source-russkiy-candidate-inventory.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-candidate-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Fetch exact Russian closure source commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin 7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9 --depth=1
+          test "$(git rev-parse FETCH_HEAD)" = "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9"
+      - name: Audit bounded EGE Russian thematic source candidates
+        run: python3 eksamio-learning-engine/peis-integration-reference/validate_thematic_trainer_ege_source_russkiy_candidate_inventory.py
+      - name: Fetch exact PR base for diff hygiene
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.event.pull_request.base.sha }}" --depth=1
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.event.pull_request.base.sha }}"
+      - name: Diff hygiene
+        if: github.event_name == 'pull_request'
+        run: git diff --check "${{ github.event.pull_request.base.sha }}" HEAD

@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.1.0",
+  "status": "EXACT_REMOTE_DEDICATED_BANK_FILENAME_AUDIT_FAIL_CLOSED",
+  "issue": 185,
+  "source_commit": "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9",
+  "search_scope": {
+    "directory": "eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher",
+    "predicate": "basename ends with -TRAINER-BANK.json",
+    "scope_limit": "This proves only dedicated bank filenames in the exact directory; it does not prove absence of live backing bytes, Tilda data, or canonical sources elsewhere."
+  },
+  "observed_dedicated_bank_files": [
+    {
+      "trainer": "orthoepy",
+      "path": "eksamio-learning-engine/russkiy-knigi/ege-russkiy-trenazher/ORTHOEPIC-TRAINER-BANK.json",
+      "git_blob_sha1": "3595d4e36cc2d78596ff05451ce42faadb3b1aed",
+      "byte_count": 7734,
+      "declared_card_count": 36,
+      "actual_unique_entry_ids": 96,
+      "live_bank_identity_proven": false
+    }
+  ],
+  "bounded_negative_findings": [
+    {
+      "trainer": "dictionary_words",
+      "dedicated_bank_filename_in_scope": false
+    },
+    {
+      "trainer": "paronyms",
+      "dedicated_bank_filename_in_scope": false
+    },
+    {
+      "trainer": "phraseology",
+      "dedicated_bank_filename_in_scope": false
+    }
+  ],
+  "reconciliation_effect": {
+    "orthoepy": "UNKNOWN_BLOCKER_LIVE_IDENTITY_AND_36_VS_96_UNRESOLVED",
+    "dictionary_words": "UNKNOWN_BLOCKER_NEEDS_EXACT_LIVE_EXPORT_OR_SEPARATELY_PROVEN_CANONICAL_SOURCE",
+    "paronyms": "UNKNOWN_BLOCKER_NEEDS_EXACT_LIVE_EXPORT_OR_SEPARATELY_PROVEN_CANONICAL_SOURCE",
+    "phraseology": "UNKNOWN_BLOCKER_NEEDS_EXACT_LIVE_EXPORT_OR_SEPARATELY_PROVEN_CANONICAL_SOURCE",
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "mastery_admissions": 0,
+    "false_exact_mastery": 0
+  }
+}

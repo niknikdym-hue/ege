@@ -1,0 +1,31 @@
+name: Live thematic exact identity probe
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-thematic-exact-identity-probe.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_thematic_exact_identity.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Capture exact live thematic identity candidates read-only
+        env:
+          PROBE_OUT: live-thematic-exact-identity-probe.json
+        run: node eksamio-learning-engine/peis-integration-reference/probe_live_thematic_exact_identity.mjs
+      - name: Upload exact live identity probe result
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-thematic-exact-identity-probe
+          path: live-thematic-exact-identity-probe.json
+          if-no-files-found: error

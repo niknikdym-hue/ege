@@ -1,0 +1,34 @@
+name: Thematic trainer action-scoped semantic bindings
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/thematic-trainer-action-scoped-semantic-bindings.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/THEMATIC-TRAINER-ACTION-SCOPED-SEMANTIC-BINDINGS-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/validate_thematic_trainer_action_scoped_semantic_bindings.py'
+      - 'eksamio-learning-engine/peis-integration-reference/THEMATIC-TRAINER-CANONICAL-RECONCILIATION-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-FIPI-ORTHOEPY-STRESS-CORRESPONDENCE-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-FIPI-PARONYM-CORRESPONDENCE-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-PHRASEOLOGY-EXACT-INVENTORY-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-FIPI-THEMATIC-CORRESPONDENCE-v0.1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  action-scoped-semantic-bindings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Fetch exact accepted Russian semantic authority
+        run: git fetch --no-tags --depth=1 origin 7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9
+      - name: Validate exact action-scoped live semantic bindings
+        run: python3 eksamio-learning-engine/peis-integration-reference/validate_thematic_trainer_action_scoped_semantic_bindings.py
+      - name: Diff hygiene against exact PR base
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags --depth=1 origin "${{ github.event.pull_request.base.sha }}"
+          git diff --check "${{ github.event.pull_request.base.sha }}" HEAD
