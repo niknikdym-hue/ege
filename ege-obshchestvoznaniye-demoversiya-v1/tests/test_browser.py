@@ -90,7 +90,7 @@ with sync_playwright() as pw:
     assert not s242.is_disabled()
     s242.select_option('1')
     assert page.locator('#soc-part2-score').inner_text()=='30/30'
-    assert page.locator('#soc-total-score').inner_text()=='—/58'
+    assert page.locator('#soc-total-score').inner_text()=='58/58'
 
     for field in ['q1','q2','q3']:
         page.evaluate(f"window.EKSAMIO_SOC_TEST.setLong(17,'{field}','')")
@@ -113,6 +113,6 @@ with sync_playwright() as pw:
         if evidence and width==320:page.screenshot(path=evidence/'results-320.png',full_page=True)
 
     assert not errors,errors
-    if evidence:(evidence/'browser-evidence.json').write_text(json.dumps({'status':'PASS','part1':'28/28','official_total':'—/58','widths':[1440,768,390,360,320],'typed_part1_tasks':16,'javascript_errors':len(errors)},ensure_ascii=False,indent=2)+'\n','utf-8')
+    if evidence:(evidence/'browser-evidence.json').write_text(json.dumps({'status':'PASS','part1':'28/28','part2_self_assessment':'30/30','orientational_total_after_full_self_assessment':'58/58','widths':[1440,768,390,360,320],'typed_part1_tasks':16,'javascript_errors':len(errors)},ensure_ascii=False,indent=2)+'\n','utf-8')
     browser.close()
 print('BROWSER PASS')
