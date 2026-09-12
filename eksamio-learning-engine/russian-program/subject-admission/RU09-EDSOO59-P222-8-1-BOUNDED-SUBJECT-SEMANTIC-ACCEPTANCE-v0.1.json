@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.1.0",
+  "status": "CENTRAL_BRAIN_ACCEPTED_BOUNDED_SUBJECT_SEMANTICS_OBJECT_BINDING_STILL_REQUIRED",
+  "authority_issue": 164,
+  "authority_id": "RA-RU09-edsoo59-p222-8-1-bounded-subject-semantic-acceptance-v0.1",
+  "scope": "EDSOO59_P222_8_1_TWO_SOURCE_BACKED_COMPONENTS_ONLY_WITHOUT_OBJECT_CLOSURE_OR_MASTERY",
+  "target_object": {
+    "admission_unit_id": "RAU-3ceb45ca22608d520ddf",
+    "requirement_id": "RSK-EDSOO59-8-1-P222",
+    "review_group_id": "RUS-SEM-REVIEW-048",
+    "source_locator": "EDSOO-RU-5-9-2025/EDSOO59 p.222 8.1"
+  },
+  "official_source": {
+    "manifest_path": "russian-program/source-knowledge/RUSSIAN-OFFICIAL-SOURCE-MANIFEST-v1.0.json",
+    "document_sha256": "1d2f68b5e77e7b67fccd52ce0fed36d84141dc719e50db7b225f40b1313eeb0d",
+    "exact_object_text": "Средства оформления предложения в устной и письменной речи (интонация, логическое ударение, знаки препинания). Нормы использования инверсии",
+    "definition_authority": "EXACT_OFFICIAL_SOURCE_TEXT_ONLY"
+  },
+  "upstream_authorities": {
+    "owner_resolution": "russian-program/subject-admission/RU09-EDSOO59-P222-8-1-SOURCE-BACKED-OWNER-RESOLUTION-v0.1.json",
+    "learner_content": "russian-program/production-learning-content/RU-PROG-09-EDSOO59-P222-8-1-WAVE-002-v0.1.json",
+    "source_identity_audit": {
+      "workflow": "Russian EDSOO59 p222 8.1 official-source identity audit",
+      "run_id": 34673330234,
+      "head_sha": "bbce1d9f40c01ae7aef0c23e13048233ed08765a",
+      "conclusion": "SUCCESS"
+    },
+    "candidate_content_readiness": {
+      "workflow": "Russian RU09 EDSOO59 p222 8.1 candidate content readiness",
+      "run_id": 34679263408,
+      "head_sha": "e4085a3f556abb0a077358b2e968b5b4fd320847",
+      "conclusion": "SUCCESS"
+    }
+  },
+  "policy": {
+    "exact_source_wording_controls_semantic_identity": true,
+    "keyword_fuzzy_embedding_inference_allowed": false,
+    "route_module_title_task_number_inference_allowed": false,
+    "original_bounded_learner_content_required": true,
+    "independent_component_specific_evidence_required": true,
+    "generic_ru09_score_can_grant_semantic_admission": false,
+    "generic_ru09_score_can_grant_exact_mastery": false,
+    "registered_user_identity_ref_required_for_future_canonical_learner_evidence": true,
+    "assistance_must_be_recorded_for_future_canonical_learner_evidence": true,
+    "semantic_acceptance_can_close_object": false,
+    "semantic_acceptance_can_create_current_v30": false,
+    "semantic_acceptance_can_mutate_aggregate": false,
+    "fail_closed_if_source_content_or_evidence_identity_changes": true
+  },
+  "accepted_semantics": [
+    {
+      "source_component_id": "edsoo59-p222-8-1-sentence-formulation-means",
+      "semantic_id": "ru-syntax-sentence-formulation-means",
+      "state": "ADMITTED",
+      "exact_source_text": "Средства оформления предложения в устной и письменной речи (интонация, логическое ударение, знаки препинания)",
+      "source_backed": true,
+      "content_backed": true,
+      "evidence_backed": true,
+      "content_ref": "russian-program/production-learning-content/RU-PROG-09-EDSOO59-P222-8-1-WAVE-002-v0.1.json",
+      "independent_component_evidence_ids": [
+        "p09-u6-v1",
+        "p09-u6-v2",
+        "p09-u6-v3",
+        "p09-u6-v4"
+      ],
+      "generic_ru09_fallback": false,
+      "object_closure_effect": "NONE_UNTIL_SEPARATE_EXACT_OBJECT_BINDING_REVIEW",
+      "exact_mastery_effect": "NONE",
+      "registered_user_identity_ref_required_for_future_canonical_evidence": true,
+      "assistance_must_be_recorded": true,
+      "false_exact_mastery": 0
+    },
+    {
+      "source_component_id": "edsoo59-p222-8-1-inversion-norm",
+      "semantic_id": "ru-syntax-inversion-norm",
+      "state": "ADMITTED",
+      "exact_source_text": "Нормы использования инверсии",
+      "source_backed": true,
+      "content_backed": true,
+      "evidence_backed": true,
+      "content_ref": "russian-program/production-learning-content/RU-PROG-09-EDSOO59-P222-8-1-WAVE-002-v0.1.json",
+      "independent_component_evidence_ids": [
+        "p09-u7-v1",
+        "p09-u7-v2",
+        "p09-u7-v3",
+        "p09-u7-v4"
+      ],
+      "generic_ru09_fallback": false,
+      "object_closure_effect": "NONE_UNTIL_SEPARATE_EXACT_OBJECT_BINDING_REVIEW",
+      "exact_mastery_effect": "NONE",
+      "registered_user_identity_ref_required_for_future_canonical_evidence": true,
+      "assistance_must_be_recorded": true,
+      "false_exact_mastery": 0
+    }
+  ],
+  "acceptance_invariants": [
+    "Only the two exact EDSOO59 p.222 8.1 source-backed components listed here are admitted.",
+    "Exact official source wording controls each semantic identity; title, route, module, task number, fuzzy or nearby-candidate inference is forbidden.",
+    "Each admitted semantic requires the original bounded learner content and its four independent component-specific verification items proven by the upstream exact-head content gate.",
+    "Future canonical learner evidence requires registered user_identity_ref and an assistance record; anonymous or device-only evidence is not canonical.",
+    "Generic RU09 or syntax scores cannot grant these semantic admissions or exact mastery.",
+    "This authority performs semantic admission only: object closure, requirement disposal, exact mastery, aggregate mutation and current-v30 creation remain forbidden.",
+    "If official source identity, bounded content identity or configured evidence identity changes, this acceptance fails closed and requires a new exact review."
+  ],
+  "progress_effect": {
+    "semantic_admissions": 2,
+    "object_level_closures": 0,
+    "requirement_disposals": 0,
+    "mastery_admissions": 0,
+    "false_exact_mastery": 0,
+    "aggregate_mutated": false,
+    "current_v30_created": false,
+    "current_v29_remainder_units_preserved": 1270,
+    "current_v29_remainder_requirements_preserved": 1345
+  },
+  "next_required_state": "SEMANTIC_CANDIDATES_ACCEPTED_OBJECT_BINDING_STILL_REQUIRED",
+  "next_required_gate": {
+    "kind": "SEPARATE_EXACT_OBJECT_BINDING_REVIEW",
+    "admission_unit_id": "RAU-3ceb45ca22608d520ddf",
+    "requirement_id": "RSK-EDSOO59-8-1-P222",
+    "must_bind_exact_component_set": [
+      "ru-syntax-sentence-formulation-means",
+      "ru-syntax-inversion-norm"
+    ],
+    "aggregate_or_current_v30_allowed_before_gate_green": false
+  }
+}
