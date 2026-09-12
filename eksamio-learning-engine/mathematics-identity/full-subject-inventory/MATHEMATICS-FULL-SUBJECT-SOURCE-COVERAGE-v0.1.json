@@ -1,0 +1,167 @@
+{
+  "artifact_id": "MATHEMATICS-FULL-SUBJECT-SOURCE-COVERAGE-v0.1",
+  "version": "0.1",
+  "date": "2026-08-23",
+  "scope_statement": "Coverage is a candidate decomposition of the verified repository corpus, not canonical admission.",
+  "source_corpus": {
+    "matrix": {
+      "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+      "locator": "cells: BASE and PROFILE, years 2022-2026",
+      "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+    },
+    "verified_cells": [
+      {
+        "route": "BASE",
+        "years": [
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ]
+      },
+      {
+        "route": "PROFILE",
+        "years": [
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ]
+      }
+    ]
+  },
+  "domain_coverage": [
+    {
+      "domain": "advanced_algebra",
+      "candidate_ids": [
+        "math-candidate-parameter-equations-inequalities-functions",
+        "math-candidate-advanced-algebraic-reasoning"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    },
+    {
+      "domain": "algebraic_expressions",
+      "candidate_ids": [
+        "math-candidate-roots-and-powers",
+        "math-candidate-logarithms",
+        "math-candidate-algebraic-expression-transformations"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    },
+    {
+      "domain": "applied_modeling",
+      "candidate_ids": [
+        "math-candidate-applied-modeling-text-problems",
+        "math-candidate-financial-modeling"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    },
+    {
+      "domain": "arithmetic_numbers",
+      "candidate_ids": [
+        "math-candidate-natural-integers-divisibility",
+        "math-candidate-rational-numbers-percent-proportion",
+        "math-candidate-numerical-estimation-rounding"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    },
+    {
+      "domain": "calculus",
+      "candidate_ids": [
+        "math-candidate-derivatives",
+        "math-candidate-derivative-function-optimization",
+        "math-candidate-antiderivative-integral-area"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    },
+    {
+      "domain": "equations_systems",
+      "candidate_ids": [
+        "math-candidate-rational-equations",
+        "math-candidate-irrational-equations",
+        "math-candidate-exponential-logarithmic-equations",
+        "math-candidate-trigonometric-equations",
+        "math-candidate-systems-equations-inequalities"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    },
+    {
+      "domain": "functions_graphs",
+      "candidate_ids": [
+        "math-candidate-function-representations-properties-graphs",
+        "math-candidate-elementary-function-families",
+        "math-candidate-sequences-progressions-compound-interest"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    },
+    {
+      "domain": "geometry",
+      "candidate_ids": [
+        "math-candidate-plane-geometry-computation",
+        "math-candidate-plane-geometry-proof",
+        "math-candidate-solid-geometry-relations",
+        "math-candidate-solid-geometry-measurements",
+        "math-candidate-solid-geometry-sections",
+        "math-candidate-coordinates-vectors"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    },
+    {
+      "domain": "inequalities_systems",
+      "candidate_ids": [
+        "math-candidate-rational-inequalities",
+        "math-candidate-irrational-exponential-logarithmic-inequalities",
+        "math-candidate-trigonometric-inequalities"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    },
+    {
+      "domain": "logic_sets",
+      "candidate_ids": [
+        "math-candidate-sets-and-logic"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    },
+    {
+      "domain": "probability_statistics",
+      "candidate_ids": [
+        "math-candidate-descriptive-statistics",
+        "math-candidate-probability-classical-equally-likely",
+        "math-candidate-probability-operations-graphs",
+        "math-candidate-combinatorics-counting"
+      ],
+      "status": "REPRESENTED_SOURCE_BACKED"
+    }
+  ],
+  "explicitly_uncovered_or_needs_review": [
+    {
+      "area": "Complex numbers",
+      "reason": "The official 2025 codifier marks it not represented in EGE 2025; no candidate is claimed from exam-route evidence.",
+      "source_ref": {
+        "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+        "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+        "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+      }
+    },
+    {
+      "area": "Matrices and determinants",
+      "reason": "The official 2025 codifier marks it not represented in EGE 2025; no candidate is claimed from exam-route evidence.",
+      "source_ref": {
+        "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+        "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+        "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+      }
+    },
+    {
+      "area": "Function discontinuities and asymptotes",
+      "reason": "The official 2025 codifier marks it not represented in EGE 2025; keep out until a later scope authority requires it.",
+      "source_ref": {
+        "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+        "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+        "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+      }
+    }
+  ]
+}
