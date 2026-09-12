@@ -1,0 +1,50 @@
+name: Temporary Owner Control v2 job-id fix
+on:
+  push:
+    branches: [brain/owner-control-v2-final-20260912]
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: github.actor == 'niknikdym-hue'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: brain/owner-control-v2-final-20260912
+          fetch-depth: 0
+      - name: Rename hyphenated job ids and self-remove
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('.github/workflows/owner-agent-task-v2.yml')
+          t=p.read_text()
+          replacements={
+            '  astra-plan:\n':'  astra_plan:\n',
+            'needs: [route, astra-plan]':'needs: [route, astra_plan]',
+            'needs.astra-plan':'needs.astra_plan',
+            '  astra-accept:\n':'  astra_accept:\n',
+            'needs: [route, validate, astra-accept]':'needs: [route, validate, astra_accept]',
+            'needs.astra-accept':'needs.astra_accept',
+          }
+          for old,new in replacements.items():
+              t=t.replace(old,new)
+          assert 'astra-plan:' not in t
+          assert 'needs.astra-plan' not in t
+          assert 'astra-accept:' not in t
+          assert 'needs.astra-accept' not in t
+          assert '  astra_plan:' in t and '  astra_accept:' in t
+          p.write_text(t)
+          Path('.github/workflows/_tmp-owner-v2-job-id-fix.yml').unlink()
+          PY
+      - name: Commit bounded fix
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          changed="$(git status --porcelain | awk '{print $2}' | sort)"
+          expected="$(printf '%s\n' '.github/workflows/_tmp-owner-v2-job-id-fix.yml' '.github/workflows/owner-agent-task-v2.yml' | sort)"
+          test "$changed" = "$expected"
+          git add -A
+          git commit -m 'owner control v2: use expression-safe job ids'
+          git push origin HEAD:brain/owner-control-v2-final-20260912
