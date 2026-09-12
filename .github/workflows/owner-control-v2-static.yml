@@ -1,0 +1,96 @@
+name: Owner Control v2 static safety
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/owner-agent-task-v2.yml'
+      - '.github/workflows/owner-agent-batch-v2.yml'
+      - '.github/workflows/owner-control-v2-static.yml'
+      - 'eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  owner-control-v2-static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Budget proxy self-test
+        run: node eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs --self-test
+      - name: Validate fail-closed v2 invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          task=Path('.github/workflows/owner-agent-task-v2.yml').read_text()
+          batch=Path('.github/workflows/owner-agent-batch-v2.yml').read_text()
+          proxy=Path('eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs').read_text()
+          expr_open='$'+'{{'
+          expr_close='}}'
+          secret_expr=expr_open+' secrets.OPENAI_API_KEY '+expr_close
+          package_budget_expr=expr_open+' inputs.package_budget_usd '+expr_close
+          run_id_expr=expr_open+' github.run_id '+expr_close
+          work_ref_expr=expr_open+' inputs.work_ref '+expr_close
+
+          # Economic routing: Luna/Terra/Sol are heuristic/explicit executor routes.
+          # Astra is explicit authority opt-in only, with separate plan/accept flags.
+          assert "astra_plan=bool(task.get('astra_plan_required') or task.get('astra_required'))" in task
+          assert "astra_accept=bool(task.get('astra_acceptance_required') or task.get('astra_required'))" in task
+          assert "elif any(w in text" in task and "model='gpt-5.6-sol'" in task
+          prefix=task.split('astra_plan=bool',1)[0]
+          assert "model='gpt-6-astra'" not in prefix
+
+          # Codex is isolated from trusted validation and protected with OpenAI's recommended safety layer.
+          assert "permission-profile: ':workspace'" in task
+          assert "safety-strategy: drop-sudo" in task
+          assert "allow-bots: true" in task
+          assert "responses-api-endpoint: http://127.0.0.1:8787/v1/responses" in task
+          assert ('openai-api-key: '+secret_expr) in task
+          assert "Apply candidate on clean runner and run trusted checks" in task
+          assert "Commit only independently validated candidate" in task
+          assert "\n    env:\n      OPENAI_API_KEY:" not in task
+
+          # Budget is hard-reserved before each provider request; phase caps sum to <= task cap;
+          # task caps derive from one <=$3 package cap.
+          assert "reservation > remainingUsd" in proxy
+          assert "hard task budget" in proxy
+          assert "totalBudget > 0 && totalBudget <= 3" in proxy
+          assert "payload.max_output_tokens = maxOut" in proxy
+          assert "payload.store = false" in proxy
+          assert "phases=1+int(astra_plan)+int(astra_accept)" in task
+          assert "phase=(total/Decimal(phases))" in task
+          assert ("b=Decimal('"+package_budget_expr+"')") in batch
+          assert "task_cap=min(Decimal('3.00')" in batch
+
+          # Package is cumulative and sequential: one package branch advances after each PASS,
+          # then exactly one Draft PR is created after all tasks pass.
+          assert ("work_ref='owner/package-"+run_id_expr+"'") in batch
+          assert "expected_work_sha" in batch and "expected_work_sha" in task
+          assert "Successful child did not advance cumulative branch" in batch
+          assert "PACKAGE_STOPPED" in batch and "NO_AUTO_RETRY: true" in batch
+          assert "gh pr create" in batch and "--draft" in batch
+          assert "gh pr create" not in task
+          assert ('git push origin "HEAD:refs/heads/'+work_ref_expr+'"') in task
+
+          # No executable auto merge/deploy/publication/Ready action exists in v2.
+          # Safety prose may say "do not publish Tilda", so verify actual control-plane markers instead.
+          combined=(task+'\n'+batch).lower()
+          forbidden=['gh pr merge','enable-auto-merge','kubectl apply','yc serverless','markpullrequestreadyforreview','api.tilda.cc','tilda_token','tilda_secret']
+          for token in forbidden:
+              assert token not in combined, token
+          print('OWNER_CONTROL_V2_STATIC_ACCEPTANCE=PASS')
+          PY
+      - name: Verify workflow surface is bounded
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'Owner task v2' .github/workflows/owner-agent-task-v2.yml
+          grep -q 'Owner batch v2' .github/workflows/owner-agent-batch-v2.yml
+          grep -q 'explicit_opt_in_only' .github/workflows/owner-agent-batch-v2.yml
+          ! grep -q 'gpt-5.3-codex-spark' .github/workflows/owner-agent-task-v2.yml
