@@ -9,7 +9,7 @@ on:
         required: true
         type: string
       package_budget_usd:
-        description: Hard worst-case total package budget
+        description: Hard worst-case OpenAI budget; ignored and forced to $0 for all-native packages
         required: true
         default: '3.00'
         type: string
@@ -29,15 +29,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 600
     steps:
-      - name: Enforce owner command before any paid child
+      - name: Enforce owner command
         shell: bash
         run: |
           set -euo pipefail
-          test "$GITHUB_ACTOR" = 'niknikdym-hue' || { echo 'Only repository owner may start Owner Control v2.'; exit 1; }
+          test "$GITHUB_ACTOR" = 'niknikdym-hue' || { echo 'Only repository owner may start Owner Control.'; exit 1; }
           python3 - <<'PY'
           from decimal import Decimal
           b=Decimal('${{ inputs.package_budget_usd }}')
-          assert Decimal('0.10') <= b <= Decimal('3.00'), 'package budget must be $0.10..$3.00'
+          assert Decimal('0.00') <= b <= Decimal('3.00'), 'package OpenAI budget must be $0.00..$3.00'
           PY
 
       - name: Checkout main authority
@@ -47,10 +47,8 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Validate ordered package and freeze authority base
+      - name: Validate package, choose GitHub-first routes and freeze authority
         id: package
-        env:
-          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
@@ -70,7 +68,7 @@ jobs:
               task=rows.get(task_id)
               if task is None: raise SystemExit(f'Unknown task: {task_id}')
               blocker=task.get('blocker_type')
-              if task.get('executor')!='Codex': raise SystemExit(f'{task_id} is not a Codex task')
+              if task.get('executor')!='Codex': raise SystemExit(f'{task_id} is not an autonomous task')
               if task.get('owner_gate_required'): raise SystemExit(f'{task_id} requires owner gate')
               if blocker and blocker!='SUBJECT': raise SystemExit(f'{task_id} has external blocker: {blocker}')
               if task.get('status') in {'DONE','PUBLIC_LAUNCH_PASS'}: raise SystemExit(f'{task_id} already terminal')
@@ -88,29 +86,50 @@ jobs:
               if registered and registered != base_sha:
                   raise SystemExit(f"{task['task_id']} board SHA stale: registered={registered[:12]} live={base_sha[:12]}")
 
-          total=Decimal('${{ inputs.package_budget_usd }}')
-          task_cap=min(Decimal('3.00'), (total/Decimal(len(ids))).quantize(Decimal('0.01'), rounding=ROUND_DOWN))
-          if task_cap < Decimal('0.05'): raise SystemExit('Package budget too small for selected task count')
+          def mode(task):
+              return 'github_native' if str(task.get('execution_mode') or '').lower()=='github_native' else 'ai'
+
+          native=[t for t in selected if mode(t)=='github_native']
+          for task in native:
+              if not task.get('native_playbook') or not isinstance(task.get('native_args'), dict):
+                  raise SystemExit(f"{task['task_id']} declares github_native without a registered playbook contract")
+              if task.get('astra_required') or task.get('astra_plan_required') or task.get('astra_acceptance_required'):
+                  raise SystemExit(f"{task['task_id']} cannot be github_native and require Astra")
+          ai_count=len(selected)-len(native)
+          requested=Decimal('${{ inputs.package_budget_usd }}')
+          effective=Decimal('0.00') if ai_count==0 else requested
+          if ai_count and effective < Decimal('0.10'):
+              raise SystemExit('AI package requires at least $0.10 hard OpenAI budget')
+          ai_cap=Decimal('0.00')
+          if ai_count:
+              ai_cap=min(Decimal('3.00'), (effective/Decimal(ai_count)).quantize(Decimal('0.01'), rounding=ROUND_DOWN))
+              if ai_cap < Decimal('0.05'): raise SystemExit('OpenAI budget too small for AI task count')
+
           package_id='owner-${{ github.run_id }}'
           work_ref='owner/package-${{ github.run_id }}'
           slug='-'.join(re.sub(r'[^a-z0-9]+','-',x.lower()).strip('-') for x in ids)
+          routes=[]
+          for task in selected:
+              m=mode(task)
+              cap='0.00' if m=='github_native' else str(ai_cap)
+              routes.append({'task_id':task['task_id'],'mode':m,'openai_cap_usd':cap})
           manifest={
-              'schema_version':'0.2','package_id':package_id,'task_ids':ids,'stage':next(iter(stages)),
+              'schema_version':'0.3','package_id':package_id,'task_ids':ids,'stage':next(iter(stages)),
               'authority_base_ref':base_ref,'authority_base_sha':base_sha,'work_ref':work_ref,
-              'package_budget_usd':str(total),'task_budget_usd':str(task_cap),
-              'astra_policy':'explicit_opt_in_only','sequential':True,'auto_retry':False,
+              'requested_openai_budget_usd':str(requested),'effective_openai_budget_usd':str(effective),
+              'ai_task_cap_usd':str(ai_cap),'ai_task_count':ai_count,'github_native_task_count':len(native),
+              'routes':routes,'astra_policy':'explicit_opt_in_only','sequential':True,'auto_retry':False,
+              'routing_policy':'github_native_first',
           }
           Path('/tmp/owner-v2-package.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
-          Path('/tmp/package-tasks.txt').write_text('\n'.join(ids)+'\n')
+          Path('/tmp/package-tasks.tsv').write_text('\n'.join(f"{r['task_id']}\t{r['mode']}\t{r['openai_cap_usd']}" for r in routes)+'\n')
           with open(os.environ['GITHUB_OUTPUT'],'a') as f:
-              f.write('package_id='+package_id+'\n')
-              f.write('work_ref='+work_ref+'\n')
-              f.write('base_ref='+base_ref+'\n')
-              f.write('base_sha='+base_sha+'\n')
-              f.write('stage='+next(iter(stages))+'\n')
-              f.write('task_budget_usd='+str(task_cap)+'\n')
-              f.write('count='+str(len(ids))+'\n')
-              f.write('slug='+slug[:100]+'\n')
+              for k,v in {
+                  'package_id':package_id,'work_ref':work_ref,'base_ref':base_ref,'base_sha':base_sha,
+                  'stage':next(iter(stages)),'ai_task_cap_usd':str(ai_cap),'ai_count':str(ai_count),
+                  'native_count':str(len(native)),'effective_budget_usd':str(effective),
+                  'count':str(len(ids)),'slug':slug[:100],
+              }.items(): f.write(f'{k}={v}\n')
           print('PACKAGE='+json.dumps(manifest,ensure_ascii=False,sort_keys=True))
           PY
 
@@ -121,8 +140,8 @@ jobs:
         run: |
           set -euo pipefail
           active="$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs?branch=${{ steps.package.outputs.base_ref }}&per_page=100" --jq '.workflow_runs[] | select(.status != "completed") | select((.head_sha // "") == "${{ steps.package.outputs.base_sha }}") | select(.id != '${GITHUB_RUN_ID}') | .id' | awk 'NF{n++} END{print n+0}')"
-          test "$active" = 0 || { echo "Authority base has $active active current-HEAD GitHub runs; package refused before paid work."; exit 1; }
-          for wf in owner-agent-task-v2.yml owner-agent-console-control.yml; do
+          test "$active" = 0 || { echo "Authority base has $active active current-HEAD GitHub runs; package refused before execution."; exit 1; }
+          for wf in owner-agent-task-v2.yml owner-agent-native-v3.yml owner-agent-console-control.yml; do
             if gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$wf" >/dev/null 2>&1; then
               count="$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/workflows/$wf/runs?per_page=100" --jq '.workflow_runs[] | select(.status != "completed") | .id' | awk 'NF{n++} END{print n+0}')"
               test "$count" = 0 || { echo "$wf already has active work"; exit 1; }
@@ -147,32 +166,45 @@ jobs:
           WORK_REF: ${{ steps.package.outputs.work_ref }}
           AUTHORITY_BASE_REF: ${{ steps.package.outputs.base_ref }}
           AUTHORITY_BASE_SHA: ${{ steps.package.outputs.base_sha }}
-          TASK_BUDGET_USD: ${{ steps.package.outputs.task_budget_usd }}
         shell: bash
         run: |
           set -euo pipefail
-          while IFS= read -r task_id; do
+          while IFS=$'\t' read -r task_id mode openai_cap; do
             [ -n "$task_id" ] || continue
             expected_sha="$(git ls-remote origin "refs/heads/$WORK_REF" | awk 'NR==1{print $1}')"
             test -n "$expected_sha" || { echo 'Cumulative package branch disappeared'; exit 1; }
-            title="Owner task v2 $PACKAGE_ID $task_id"
-            echo "DISPATCH task=$task_id start=$expected_sha cap=$TASK_BUDGET_USD"
-            gh workflow run owner-agent-task-v2.yml --repo "$GITHUB_REPOSITORY" --ref main \
-              -f task_id="$task_id" \
-              -f task_budget_usd="$TASK_BUDGET_USD" \
-              -f package_id="$PACKAGE_ID" \
-              -f authority_base_ref="$AUTHORITY_BASE_REF" \
-              -f authority_base_sha="$AUTHORITY_BASE_SHA" \
-              -f work_ref="$WORK_REF" \
-              -f expected_work_sha="$expected_sha"
+            if [ "$mode" = github_native ]; then
+              workflow='owner-agent-native-v3.yml'
+              title="Owner native v3 $PACKAGE_ID $task_id"
+              echo "DISPATCH task=$task_id executor=GitHub openai_cap=0 start=$expected_sha"
+              gh workflow run "$workflow" --repo "$GITHUB_REPOSITORY" --ref main \
+                -f task_id="$task_id" \
+                -f package_id="$PACKAGE_ID" \
+                -f authority_base_ref="$AUTHORITY_BASE_REF" \
+                -f authority_base_sha="$AUTHORITY_BASE_SHA" \
+                -f work_ref="$WORK_REF" \
+                -f expected_work_sha="$expected_sha"
+            else
+              workflow='owner-agent-task-v2.yml'
+              title="Owner task v2 $PACKAGE_ID $task_id"
+              echo "DISPATCH task=$task_id executor=API-Codex openai_cap=$openai_cap start=$expected_sha"
+              gh workflow run "$workflow" --repo "$GITHUB_REPOSITORY" --ref main \
+                -f task_id="$task_id" \
+                -f task_budget_usd="$openai_cap" \
+                -f package_id="$PACKAGE_ID" \
+                -f authority_base_ref="$AUTHORITY_BASE_REF" \
+                -f authority_base_sha="$AUTHORITY_BASE_SHA" \
+                -f work_ref="$WORK_REF" \
+                -f expected_work_sha="$expected_sha"
+            fi
             run_id=''
             for _ in {1..45}; do
-              run_id="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/owner-agent-task-v2.yml/runs?event=workflow_dispatch&per_page=100" --jq '.workflow_runs[] | select(.display_title == "'"$title"'") | .id' | head -n1)"
+              run_id="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$workflow/runs?event=workflow_dispatch&per_page=100" --jq '.workflow_runs[] | select(.display_title == "'"$title"'") | .id' | head -n1)"
               [ -n "$run_id" ] && break
               sleep 2
             done
             test -n "$run_id" || { echo "Could not resolve child run for $task_id"; exit 1; }
-            echo "CHILD_RUN task=$task_id id=$run_id"
+            echo "CHILD_RUN task=$task_id mode=$mode id=$run_id"
             while :; do
               run="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id")"
               status="$(jq -r .status <<<"$run")"
@@ -181,13 +213,13 @@ jobs:
             done
             conclusion="$(jq -r .conclusion <<<"$run")"
             if [ "$conclusion" != success ]; then
-              gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-v2 -->\nSTATE: PACKAGE_STOPPED\nPACKAGE: '"$PACKAGE_ID"$'\nFAILED_TASK: '"$task_id"$'\nCHILD_RUN: '"$run_id"$'\nCONCLUSION: '"$conclusion"$'\nCHECKPOINT_BRANCH: '"$WORK_REF"$'\nNO_AUTO_RETRY: true\nNO_AUTO_MERGE_DEPLOY_READY: true'
-              echo "PACKAGE_STOP task=$task_id conclusion=$conclusion"; exit 1
+              gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-v2 -->\nSTATE: PACKAGE_STOPPED\nPACKAGE: '"$PACKAGE_ID"$'\nFAILED_TASK: '"$task_id"$'\nROUTE: '"$mode"$'\nCHILD_RUN: '"$run_id"$'\nCONCLUSION: '"$conclusion"$'\nCHECKPOINT_BRANCH: '"$WORK_REF"$'\nNO_AUTO_RETRY: true\nNO_AUTO_MERGE_DEPLOY_READY: true'
+              echo "PACKAGE_STOP task=$task_id route=$mode conclusion=$conclusion"; exit 1
             fi
             new_sha="$(git ls-remote origin "refs/heads/$WORK_REF" | awk 'NR==1{print $1}')"
             test -n "$new_sha" && test "$new_sha" != "$expected_sha" || { echo 'Successful child did not advance cumulative branch'; exit 1; }
-            echo "PACKAGE_PASS task=$task_id new_sha=$new_sha"
-          done < /tmp/package-tasks.txt
+            echo "PACKAGE_PASS task=$task_id route=$mode new_sha=$new_sha"
+          done < /tmp/package-tasks.tsv
 
       - name: Create one Draft PR only after every selected task passed
         if: ${{ success() }}
@@ -200,10 +232,10 @@ jobs:
           test "$current_base" = '${{ steps.package.outputs.base_sha }}' || { echo 'Authority base moved before final PR; leave checkpoint branch only.'; exit 1; }
           final_sha="$(git ls-remote origin 'refs/heads/${{ steps.package.outputs.work_ref }}' | awk 'NR==1{print $1}')"
           test -n "$final_sha" && test "$final_sha" != '${{ steps.package.outputs.base_sha }}'
-          task_line="$(paste -sd' → ' /tmp/package-tasks.txt)"
-          pr_url="$(gh pr create --repo "$GITHUB_REPOSITORY" --draft --base '${{ steps.package.outputs.base_ref }}' --head '${{ steps.package.outputs.work_ref }}' --title "[Owner Control v2] package ${{ steps.package.outputs.slug }}" --body $'Owner Control v2 sequential package.\n\nTasks: '"$task_line"$'\nStage: ${{ steps.package.outputs.stage }}\nFrozen base: ${{ steps.package.outputs.base_ref }} @ ${{ steps.package.outputs.base_sha }}\nFinal package SHA: '"$final_sha"$'\nHard worst-case package cap: $${{ inputs.package_budget_usd }}\nPer-task cap: $${{ steps.package.outputs.task_budget_usd }}\nAstra policy: explicit opt-in only.\n\nEvery task ran strictly after PASS of the previous task on the same cumulative package branch. First FAIL/blocker/budget exhaustion stops the package with no paid retry. No merge, deploy, Ready transition, Tilda publish, production write, learner-data write, payment/refund action, or provider/Yandex mutation was performed.')"
+          task_line="$(cut -f1 /tmp/package-tasks.tsv | paste -sd' → ' -)"
+          pr_url="$(gh pr create --repo "$GITHUB_REPOSITORY" --draft --base '${{ steps.package.outputs.base_ref }}' --head '${{ steps.package.outputs.work_ref }}' --title "[Owner Control] package ${{ steps.package.outputs.slug }}" --body $'GitHub-first sequential Owner Control package.\n\nTasks: '"$task_line"$'\nStage: ${{ steps.package.outputs.stage }}\nFrozen base: ${{ steps.package.outputs.base_ref }} @ ${{ steps.package.outputs.base_sha }}\nFinal package SHA: '"$final_sha"$'\nGitHub-native tasks: ${{ steps.package.outputs.native_count }}\nAI tasks: ${{ steps.package.outputs.ai_count }}\nHard OpenAI package cap: $${{ steps.package.outputs.effective_budget_usd }}\nPer-AI-task cap: $${{ steps.package.outputs.ai_task_cap_usd }}\nAstra policy: explicit opt-in only.\n\nGitHub-native playbooks use no OpenAI API. AI is used only for tasks without an approved deterministic playbook. Every task runs strictly after PASS of the previous task on the same cumulative branch. First FAIL/blocker/budget exhaustion stops the package. No automatic merge, deploy, Ready transition, Tilda publish, production write, learner-data write, payment/refund action, or provider/Yandex mutation is performed.')"
           printf '%s\n' "$pr_url" > /tmp/package-draft-pr-url.txt
-          gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-v2 -->\nSTATE: PACKAGE_PASS\nPACKAGE: ${{ steps.package.outputs.package_id }}\nTASK_COUNT: ${{ steps.package.outputs.count }}\nSTAGE: ${{ steps.package.outputs.stage }}\nHARD_PACKAGE_CAP_USD: ${{ inputs.package_budget_usd }}\nHARD_TASK_CAP_USD: ${{ steps.package.outputs.task_budget_usd }}\nDRAFT_PR: '"$pr_url"$'\nSEQUENTIAL_CUMULATIVE: true\nASTRA_POLICY: explicit_opt_in_only\nNO_AUTO_RETRY: true\nNO_AUTO_MERGE_DEPLOY_READY: true'
+          gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-v2 -->\nSTATE: PACKAGE_PASS\nPACKAGE: ${{ steps.package.outputs.package_id }}\nTASK_COUNT: ${{ steps.package.outputs.count }}\nGITHUB_NATIVE_COUNT: ${{ steps.package.outputs.native_count }}\nAI_TASK_COUNT: ${{ steps.package.outputs.ai_count }}\nHARD_OPENAI_PACKAGE_CAP_USD: ${{ steps.package.outputs.effective_budget_usd }}\nDRAFT_PR: '"$pr_url"$'\nROUTING_POLICY: github_native_first\nASTRA_POLICY: explicit_opt_in_only\nNO_AUTO_RETRY: true\nNO_AUTO_MERGE_DEPLOY_READY: true'
 
       - name: Persist package manifest and result
         if: ${{ always() }}
@@ -212,7 +244,7 @@ jobs:
           name: owner-v2-${{ steps.package.outputs.package_id }}-package
           path: |
             /tmp/owner-v2-package.json
-            /tmp/package-tasks.txt
+            /tmp/package-tasks.tsv
             /tmp/package-draft-pr-url.txt
           if-no-files-found: warn
           retention-days: 30
