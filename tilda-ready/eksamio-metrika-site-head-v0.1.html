@@ -1,0 +1,110 @@
+<!-- Eksamio canonical Metrika browser-event bridge v0.1
+     Install site-wide in Tilda: Site Settings -> More -> HTML code for the head section.
+     Save and republish all pages. Self-contained by design: no GitHub/runtime fetch dependency. -->
+<script>
+(function () {
+  'use strict';
+
+  var COUNTER_ID = 110348386;
+
+  // Browser code may emit only non-authoritative learning/intent signals.
+  // Payment, entitlement, refund and referral-reward truth is server-owned and
+  // deliberately absent from this allowlist.
+  var ALLOWED_GOALS = new Set([
+    'eks_demo_open',
+    'eks_demo_start',
+    'eks_demo_complete',
+    'eks_result_to_practice',
+    'eks_trainer_open',
+    'eks_trainer_start',
+    'eks_trainer_meaningful',
+    'eks_return_learning',
+    'eks_pro_offer_view',
+    'eks_pro_intent',
+    'eks_checkout_start',
+    'eks_referral_visit'
+  ]);
+
+  function cleanString(value, maxLength) {
+    if (typeof value !== 'string') return undefined;
+    var text = value.trim();
+    if (!text) return undefined;
+    return text.slice(0, maxLength || 120);
+  }
+
+  function sanitizeParams(input) {
+    if (!input || typeof input !== 'object' || Array.isArray(input)) return {};
+
+    var allowedKeys = new Set([
+      'subject',
+      'year',
+      'route',
+      'task_family',
+      'surface',
+      'release',
+      'landing_id',
+      'sku',
+      'source_channel',
+      'href',
+      'label'
+    ]);
+
+    var out = {};
+    Object.keys(input).forEach(function (key) {
+      if (!allowedKeys.has(key)) return;
+      var value = cleanString(String(input[key]), key === 'href' ? 300 : 120);
+      if (value !== undefined) out[key] = value;
+    });
+    return out;
+  }
+
+  function reach(goal, params) {
+    if (!ALLOWED_GOALS.has(goal)) return false;
+    if (typeof window.ym !== 'function') return false;
+
+    window.ym(COUNTER_ID, 'reachGoal', goal, sanitizeParams(params));
+    return true;
+  }
+
+  function closestAnchor(target) {
+    if (!target || typeof target.closest !== 'function') return null;
+    return target.closest('a[href]');
+  }
+
+  document.addEventListener('click', function (event) {
+    var anchor = closestAnchor(event.target);
+    if (!anchor) return;
+
+    var href = anchor.getAttribute('href') || '';
+    var label = cleanString(anchor.textContent || '', 120);
+
+    if (/\/demoversiya\//.test(href)) {
+      reach('eks_demo_open', {
+        surface: 'public_site',
+        href: href,
+        label: label
+      });
+      return;
+    }
+
+    if (/\/trenazhery(?:\/|$)/.test(href) || /\/trenazhery-russkiy(?:\/|$)/.test(href)) {
+      reach('eks_trainer_open', {
+        surface: 'public_site',
+        href: href,
+        label: label
+      });
+    }
+  }, true);
+
+  document.addEventListener('eksamio:goal', function (event) {
+    var detail = event && event.detail;
+    if (!detail || typeof detail !== 'object') return;
+    reach(detail.goal, detail.params || {});
+  });
+
+  window.EksamioMetrika = Object.freeze({
+    counterId: COUNTER_ID,
+    reach: reach
+  });
+})();
+</script>
