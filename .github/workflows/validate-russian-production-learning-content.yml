@@ -1,0 +1,44 @@
+name: Validate Russian production learning content
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/russian-program/production-learning-content/**'
+      - 'eksamio-learning-engine/russian-program/oge-local-import/**'
+      - '.github/workflows/validate-russian-production-learning-content.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/production-learning-content/**'
+      - 'eksamio-learning-engine/russian-program/oge-local-import/**'
+      - '.github/workflows/validate-russian-production-learning-content.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-wave-001:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile validator
+        run: python -m py_compile eksamio-learning-engine/russian-program/production-learning-content/validate_ru_full_content_wave_001.py eksamio-learning-engine/russian-program/oge-local-import/validate_oge_local_import.py
+      - name: Validate content wave
+        run: python eksamio-learning-engine/russian-program/production-learning-content/validate_ru_full_content_wave_001.py
+      - name: Validate owner-local OGE import
+        run: python eksamio-learning-engine/russian-program/oge-local-import/validate_oge_local_import.py
+      - name: Reject whitespace errors
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --check "${{ github.event.pull_request.base.sha }}...HEAD"
+          else
+            git diff --check "${{ github.event.before }}...${{ github.sha }}"
+          fi
