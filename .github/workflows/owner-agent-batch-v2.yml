@@ -1,0 +1,218 @@
+name: Eksamio Owner Agent Batch v2
+run-name: Owner batch v2 ${{ github.run_id }} · ${{ inputs.task_ids }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      task_ids:
+        description: Ordered comma-separated task IDs, 1 to 5
+        required: true
+        type: string
+      package_budget_usd:
+        description: Hard worst-case total package budget
+        required: true
+        default: '3.00'
+        type: string
+
+permissions:
+  contents: write
+  actions: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: owner-batch-v2
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 600
+    steps:
+      - name: Enforce owner command before any paid child
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_ACTOR" = 'niknikdym-hue' || { echo 'Only repository owner may start Owner Control v2.'; exit 1; }
+          python3 - <<'PY'
+          from decimal import Decimal
+          b=Decimal('${{ inputs.package_budget_usd }}')
+          assert Decimal('0.10') <= b <= Decimal('3.00'), 'package budget must be $0.10..$3.00'
+          PY
+
+      - name: Checkout main authority
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Validate ordered package and freeze authority base
+        id: package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re, subprocess
+          from decimal import Decimal, ROUND_DOWN
+          from pathlib import Path
+
+          board=json.loads(Path('eksamio-learning-engine/project-control/operational-board-v1.json').read_text())
+          assert board.get('version')=='operational-board-v1' and len(board.get('tasks') or [])==115
+          ids=[x.strip() for x in '${{ inputs.task_ids }}'.split(',') if x.strip()]
+          if not 1 <= len(ids) <= 5: raise SystemExit('Package must contain 1..5 tasks')
+          if len(ids)!=len(set(ids)): raise SystemExit('Duplicate task ID in package')
+          rows={str(x['task_id']):x for x in board['tasks']}
+          selected=[]
+          for task_id in ids:
+              task=rows.get(task_id)
+              if task is None: raise SystemExit(f'Unknown task: {task_id}')
+              blocker=task.get('blocker_type')
+              if task.get('executor')!='Codex': raise SystemExit(f'{task_id} is not a Codex task')
+              if task.get('owner_gate_required'): raise SystemExit(f'{task_id} requires owner gate')
+              if blocker and blocker!='SUBJECT': raise SystemExit(f'{task_id} has external blocker: {blocker}')
+              if task.get('status') in {'DONE','PUBLIC_LAUNCH_PASS'}: raise SystemExit(f'{task_id} already terminal')
+              selected.append(task)
+          stages={str(t.get('stage') or '') for t in selected}
+          bases={str(t.get('branch') or 'main') for t in selected}
+          if len(stages)!=1: raise SystemExit('All package tasks must belong to one stage/block')
+          if len(bases)!=1: raise SystemExit('All package tasks must use one authority base branch')
+          base_ref=next(iter(bases))
+          live=subprocess.check_output(['git','ls-remote','origin',f'refs/heads/{base_ref}'],text=True).strip().split()
+          if not live: raise SystemExit(f'Authority base branch not found: {base_ref}')
+          base_sha=live[0]
+          for task in selected:
+              registered=str(task.get('head_sha') or '')
+              if registered and registered != base_sha:
+                  raise SystemExit(f"{task['task_id']} board SHA stale: registered={registered[:12]} live={base_sha[:12]}")
+
+          total=Decimal('${{ inputs.package_budget_usd }}')
+          task_cap=min(Decimal('3.00'), (total/Decimal(len(ids))).quantize(Decimal('0.01'), rounding=ROUND_DOWN))
+          if task_cap < Decimal('0.05'): raise SystemExit('Package budget too small for selected task count')
+          package_id='owner-${{ github.run_id }}'
+          work_ref='owner/package-${{ github.run_id }}'
+          slug='-'.join(re.sub(r'[^a-z0-9]+','-',x.lower()).strip('-') for x in ids)
+          manifest={
+              'schema_version':'0.2','package_id':package_id,'task_ids':ids,'stage':next(iter(stages)),
+              'authority_base_ref':base_ref,'authority_base_sha':base_sha,'work_ref':work_ref,
+              'package_budget_usd':str(total),'task_budget_usd':str(task_cap),
+              'astra_policy':'explicit_opt_in_only','sequential':True,'auto_retry':False,
+          }
+          Path('/tmp/owner-v2-package.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
+          Path('/tmp/package-tasks.txt').write_text('\n'.join(ids)+'\n')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('package_id='+package_id+'\n')
+              f.write('work_ref='+work_ref+'\n')
+              f.write('base_ref='+base_ref+'\n')
+              f.write('base_sha='+base_sha+'\n')
+              f.write('stage='+next(iter(stages))+'\n')
+              f.write('task_budget_usd='+str(task_cap)+'\n')
+              f.write('count='+str(len(ids))+'\n')
+              f.write('slug='+slug[:100]+'\n')
+          print('PACKAGE='+json.dumps(manifest,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Refuse parallel work on frozen current HEAD
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          active="$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs?branch=${{ steps.package.outputs.base_ref }}&per_page=100" --jq '[.workflow_runs[] | select(.status != "completed") | select((.head_sha // "") == "${{ steps.package.outputs.base_sha }}") | select(.id != '${GITHUB_RUN_ID}') | .id] | length')"
+          test "$active" = 0 || { echo "Authority base has $active active current-HEAD GitHub runs; package refused before paid work."; exit 1; }
+          for wf in owner-agent-task-v2.yml owner-agent-console-control.yml; do
+            if gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$wf" >/dev/null 2>&1; then
+              count="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$wf/runs?per_page=100" --jq '[.workflow_runs[] | select(.status != "completed")] | length')"
+              test "$count" = 0 || { echo "$wf already has active work"; exit 1; }
+            fi
+          done
+
+      - name: Create isolated cumulative package branch at exact frozen SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin '${{ steps.package.outputs.base_ref }}'
+          git cat-file -e '${{ steps.package.outputs.base_sha }}^{commit}'
+          if git ls-remote --exit-code origin 'refs/heads/${{ steps.package.outputs.work_ref }}' >/dev/null 2>&1; then
+            echo 'Package work branch unexpectedly already exists'; exit 1
+          fi
+          git push origin '${{ steps.package.outputs.base_sha }}:refs/heads/${{ steps.package.outputs.work_ref }}'
+
+      - name: Execute selected tasks strictly sequentially on cumulative branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PACKAGE_ID: ${{ steps.package.outputs.package_id }}
+          WORK_REF: ${{ steps.package.outputs.work_ref }}
+          AUTHORITY_BASE_REF: ${{ steps.package.outputs.base_ref }}
+          AUTHORITY_BASE_SHA: ${{ steps.package.outputs.base_sha }}
+          TASK_BUDGET_USD: ${{ steps.package.outputs.task_budget_usd }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r task_id; do
+            [ -n "$task_id" ] || continue
+            expected_sha="$(git ls-remote origin "refs/heads/$WORK_REF" | awk 'NR==1{print $1}')"
+            test -n "$expected_sha" || { echo 'Cumulative package branch disappeared'; exit 1; }
+            title="Owner task v2 $PACKAGE_ID $task_id"
+            echo "DISPATCH task=$task_id start=$expected_sha cap=$TASK_BUDGET_USD"
+            gh workflow run owner-agent-task-v2.yml --repo "$GITHUB_REPOSITORY" --ref main \
+              -f task_id="$task_id" \
+              -f task_budget_usd="$TASK_BUDGET_USD" \
+              -f package_id="$PACKAGE_ID" \
+              -f authority_base_ref="$AUTHORITY_BASE_REF" \
+              -f authority_base_sha="$AUTHORITY_BASE_SHA" \
+              -f work_ref="$WORK_REF" \
+              -f expected_work_sha="$expected_sha"
+            run_id=''
+            for _ in {1..45}; do
+              run_id="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/owner-agent-task-v2.yml/runs?event=workflow_dispatch&per_page=100" --jq '.workflow_runs[] | select(.display_title == "'"$title"'") | .id' | head -n1)"
+              [ -n "$run_id" ] && break
+              sleep 2
+            done
+            test -n "$run_id" || { echo "Could not resolve child run for $task_id"; exit 1; }
+            echo "CHILD_RUN task=$task_id id=$run_id"
+            while :; do
+              run="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id")"
+              status="$(jq -r .status <<<"$run")"
+              [ "$status" = completed ] && break
+              sleep 10
+            done
+            conclusion="$(jq -r .conclusion <<<"$run")"
+            if [ "$conclusion" != success ]; then
+              gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-v2 -->\nSTATE: PACKAGE_STOPPED\nPACKAGE: '"$PACKAGE_ID"$'\nFAILED_TASK: '"$task_id"$'\nCHILD_RUN: '"$run_id"$'\nCONCLUSION: '"$conclusion"$'\nCHECKPOINT_BRANCH: '"$WORK_REF"$'\nNO_AUTO_RETRY: true\nNO_AUTO_MERGE_DEPLOY_READY: true'
+              echo "PACKAGE_STOP task=$task_id conclusion=$conclusion"; exit 1
+            fi
+            new_sha="$(git ls-remote origin "refs/heads/$WORK_REF" | awk 'NR==1{print $1}')"
+            test -n "$new_sha" && test "$new_sha" != "$expected_sha" || { echo 'Successful child did not advance cumulative branch'; exit 1; }
+            echo "PACKAGE_PASS task=$task_id new_sha=$new_sha"
+          done < /tmp/package-tasks.txt
+
+      - name: Create one Draft PR only after every selected task passed
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          current_base="$(git ls-remote origin 'refs/heads/${{ steps.package.outputs.base_ref }}' | awk 'NR==1{print $1}')"
+          test "$current_base" = '${{ steps.package.outputs.base_sha }}' || { echo 'Authority base moved before final PR; leave checkpoint branch only.'; exit 1; }
+          final_sha="$(git ls-remote origin 'refs/heads/${{ steps.package.outputs.work_ref }}' | awk 'NR==1{print $1}')"
+          test -n "$final_sha" && test "$final_sha" != '${{ steps.package.outputs.base_sha }}'
+          task_line="$(paste -sd' → ' /tmp/package-tasks.txt)"
+          pr_url="$(gh pr create --repo "$GITHUB_REPOSITORY" --draft --base '${{ steps.package.outputs.base_ref }}' --head '${{ steps.package.outputs.work_ref }}' --title "[Owner Control v2] package ${{ steps.package.outputs.slug }}" --body $'Owner Control v2 sequential package.\n\nTasks: '"$task_line"$'\nStage: ${{ steps.package.outputs.stage }}\nFrozen base: ${{ steps.package.outputs.base_ref }} @ ${{ steps.package.outputs.base_sha }}\nFinal package SHA: '"$final_sha"$'\nHard worst-case package cap: $${{ inputs.package_budget_usd }}\nPer-task cap: $${{ steps.package.outputs.task_budget_usd }}\nAstra policy: explicit opt-in only.\n\nEvery task ran strictly after PASS of the previous task on the same cumulative package branch. First FAIL/blocker/budget exhaustion stops the package with no paid retry. No merge, deploy, Ready transition, Tilda publish, production write, learner-data write, payment/refund action, or provider/Yandex mutation was performed.')"
+          printf '%s\n' "$pr_url" > /tmp/package-draft-pr-url.txt
+          gh issue comment 194 --repo "$GITHUB_REPOSITORY" --body $'<!-- eksamio-owner-v2 -->\nSTATE: PACKAGE_PASS\nPACKAGE: ${{ steps.package.outputs.package_id }}\nTASK_COUNT: ${{ steps.package.outputs.count }}\nSTAGE: ${{ steps.package.outputs.stage }}\nHARD_PACKAGE_CAP_USD: ${{ inputs.package_budget_usd }}\nHARD_TASK_CAP_USD: ${{ steps.package.outputs.task_budget_usd }}\nDRAFT_PR: '"$pr_url"$'\nSEQUENTIAL_CUMULATIVE: true\nASTRA_POLICY: explicit_opt_in_only\nNO_AUTO_RETRY: true\nNO_AUTO_MERGE_DEPLOY_READY: true'
+
+      - name: Persist package manifest and result
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: owner-v2-${{ steps.package.outputs.package_id }}-package
+          path: |
+            /tmp/owner-v2-package.json
+            /tmp/package-tasks.txt
+            /tmp/package-draft-pr-url.txt
+          if-no-files-found: warn
+          retention-days: 30
