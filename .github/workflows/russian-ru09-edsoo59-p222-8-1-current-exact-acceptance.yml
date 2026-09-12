@@ -1,0 +1,145 @@
+name: Russian RU09 EDSOO59 p222 8.1 current exact acceptance
+
+on:
+  push:
+    branches: [brain/owner-control-russian-takeover-20260912]
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU09-EDSOO59-P222-8-1-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v30.py'
+      - '.github/workflows/russian-ru09-edsoo59-p222-8-1-current-exact-acceptance.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/russian-program/subject-admission/RU09-EDSOO59-P222-8-1-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v30.py'
+      - '.github/workflows/russian-ru09-edsoo59-p222-8-1-current-exact-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ru09-edsoo59-p222-current-exact-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile exact acceptance chain
+        run: |
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/validate_ru09_edsoo59_p222_8_1_exact_object_binding_review.py
+          python3 -m py_compile eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v30.py
+      - name: Build accepted current-v30 A
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v30.py --output /tmp/v30-a.json > /tmp/v30-a.txt
+      - name: Build accepted current-v30 B
+        run: python3 eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v30.py --output /tmp/v30-b.json > /tmp/v30-b.txt
+      - name: Verify deterministic current-v30 and exact delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmp /tmp/v30-a.json /tmp/v30-b.json
+          diff -u /tmp/v30-a.txt /tmp/v30-b.txt
+          cat /tmp/v30-a.txt
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/v30-a.json',encoding='utf-8')); s=d['progress_summary']
+          assert d['schema_version']=='0.32.0'
+          assert d['base_current_launch_progress_v29_head_sha']=='cb90377c4ebe00e88e22c39824b7c484651ebcc4'
+          assert d['base_current_launch_progress_v29_run_id']==34624859121
+          assert d['base_current_launch_progress_v29_normalized_sha256']=='7e7b74ddf4aa4fc9df9744ec74191d8893b6ae251b703c36dcd2ef911273d8e4'
+          expected={
+            'semantic_units_with_accepted_component_sets':46,
+            'semantic_requirements_with_accepted_component_sets':46,
+            'semantic_units_remaining_without_accepted_component_set':1270,
+            'semantic_requirements_remaining_without_accepted_component_set':1345,
+            'subject_disposed_units_total':47,
+            'subject_disposed_requirements_total':47,
+            'subject_review_units_remaining':1269,
+            'subject_review_requirements_remaining':1344,
+            'canonical_component_refs_reused_unique':127,
+            'review_groups_with_accepted_component_sets':15,
+            'fully_accepted_semantic_groups':2,
+            'accepted_bounded_ru_route_semantics':9,
+            'accepted_bounded_ru_subject_semantics':77,
+            'accepted_bounded_ru_semantics_total':86,
+            'false_exact_mastery_admissions':0,
+          }
+          for k,v in expected.items(): assert s[k]==v,(k,s[k],v)
+          assert len(d['accepted_authorities'])==77
+          sem=d['newly_integrated_bounded_subject_semantics']
+          assert sem['semantic_ids']==['ru-syntax-sentence-formulation-means','ru-syntax-inversion-norm']
+          assert sem['semantic_identity_admissions']==2
+          assert sem['object_level_closures_by_semantic_acceptance']==0
+          assert sem['exact_mastery_admissions']==0
+          n=d['newly_accepted_exact_object']
+          assert n['admission_unit_id']=='RAU-3ceb45ca22608d520ddf'
+          assert n['requirement_id']=='RSK-EDSOO59-8-1-P222'
+          assert n['independent_evidence_items']==8
+          assert n['semantic_identity_admissions_by_object_acceptance']==0
+          assert n['exact_mastery_admissions']==0
+          assert n['completed_review_group']=='RUS-SEM-REVIEW-048'
+          assert n['source_correction']['to_official_source_text']=='Средства оформления предложения в устной и письменной речи (интонация, логическое ударение, знаки препинания). Нормы использования инверсии'
+          g=[x for x in d['semantic_review_groups'] if x.get('group_id')=='RUS-SEM-REVIEW-048'][0]
+          assert g['accepted_component_set_count']==1==g['admission_unit_count']==g['requirement_count']
+          assert g['status']=='SUBJECT_ACCEPTED_COMPONENT_SET_COMPLETE'
+          assert g['normalized_meaning']==n['source_correction']['to_official_source_text']
+          r=[x for x in g['accepted_component_sets'] if x.get('admission_unit_id')=='RAU-3ceb45ca22608d520ddf']
+          assert len(r)==1
+          m=r[0]['mastery_boundary']
+          assert m['registered_user_identity_ref_required_for_future_canonical_learner_evidence'] is True
+          assert m['durable_evidence_event_required_for_future_canonical_learner_evidence'] is True
+          assert m['assistance_must_be_recorded_for_future_canonical_learner_evidence'] is True
+          assert m['anonymous_or_device_only_canonical_progress_allowed'] is False
+          assert m['object_acceptance_itself_emits_mastery'] is False
+          print('RU09_EDSOO59_P222_CURRENT_V30_ACCEPTANCE=PASS')
+          print('NORMALIZED_SHA256='+d['normalized_sha256'])
+          PY
+      - name: Protect bounded acceptance wave
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='8ac4b15bc7c5989c79cc83a2e6d6afc91f96b192'
+          git merge-base --is-ancestor "$base" HEAD
+          recent=$(git diff --name-only "$base"..HEAD)
+          allowed=$(cat <<'EOF'
+          .github/workflows/russian-ru09-edsoo59-p222-8-1-current-exact-acceptance.yml
+          eksamio-learning-engine/russian-program/subject-admission/RU09-EDSOO59-P222-8-1-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json
+          eksamio-learning-engine/russian-program/subject-admission/build_russian_semantic_acceptance_progress_launch_current_v30.py
+          EOF
+          )
+          unexpected=$(comm -23 <(printf '%s\n' "$recent"|sed '/^$/d'|sort -u) <(printf '%s\n' "$allowed"|sed '/^$/d'|sort -u))
+          test -z "$unexpected" || { echo "$unexpected" >&2; exit 1; }
+          ! printf '%s\n' "$recent" | grep -E 'russkiy-knigi|(^|/)tilda|production-learning-content|registration|payments|peis'
+      - name: Assert source-corrected acceptance does not emit mastery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='eksamio-learning-engine/russian-program/subject-admission/RU09-EDSOO59-P222-8-1-EXACT-CANONICAL-COMPONENT-ACCEPTANCE-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['summary']['accepted_admission_units']==1
+          assert d['summary']['accepted_requirements']==1
+          assert d['summary']['semantic_admissions_previously_ci_proven']==2
+          assert d['summary']['semantic_identity_admissions_by_object_acceptance']==0
+          assert d['summary']['exact_mastery_admissions']==0
+          assert d['summary']['false_exact_mastery_admissions']==0
+          assert d['decision']['source_correction']['kind']=='EXACT_OFFICIAL_SOURCE_TEXT_CORRECTION'
+          assert d['decision']['mastery_boundary']['object_acceptance_itself_emits_mastery'] is False
+          PY
+      - name: Diff hygiene
+        run: git diff --check 8ac4b15bc7c5989c79cc83a2e6d6afc91f96b192..HEAD
+      - name: Upload exact current-v30 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: russian-ru09-edsoo59-p222-8-1-current-exact-acceptance
+          path: |
+            /tmp/v30-a.json
+            /tmp/v30-a.txt
+          if-no-files-found: error
