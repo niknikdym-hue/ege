@@ -120,11 +120,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          active="$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs?branch=${{ steps.package.outputs.base_ref }}&per_page=100" --jq '[.workflow_runs[] | select(.status != "completed") | select((.head_sha // "") == "${{ steps.package.outputs.base_sha }}") | select(.id != '${GITHUB_RUN_ID}') | .id] | length')"
+          active="$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs?branch=${{ steps.package.outputs.base_ref }}&per_page=100" --jq '.workflow_runs[] | select(.status != "completed") | select((.head_sha // "") == "${{ steps.package.outputs.base_sha }}") | select(.id != '${GITHUB_RUN_ID}') | .id' | awk 'NF{n++} END{print n+0}')"
           test "$active" = 0 || { echo "Authority base has $active active current-HEAD GitHub runs; package refused before paid work."; exit 1; }
           for wf in owner-agent-task-v2.yml owner-agent-console-control.yml; do
             if gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$wf" >/dev/null 2>&1; then
-              count="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$wf/runs?per_page=100" --jq '[.workflow_runs[] | select(.status != "completed")] | length')"
+              count="$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/workflows/$wf/runs?per_page=100" --jq '.workflow_runs[] | select(.status != "completed") | .id' | awk 'NF{n++} END{print n+0}')"
               test "$count" = 0 || { echo "$wf already has active work"; exit 1; }
             fi
           done
