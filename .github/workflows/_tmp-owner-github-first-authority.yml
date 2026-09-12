@@ -1,0 +1,64 @@
+name: Temporary Owner Control GitHub-first authority
+on:
+  push:
+    branches: [brain/owner-control-github-first-authority-20260912]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor == 'niknikdym-hue'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: brain/owner-control-github-first-authority-20260912
+          fetch-depth: 0
+      - name: Record GitHub-first authority and explicit A2.2 route
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('eksamio-learning-engine/project-control/operational-board-v1.json')
+          board=json.loads(p.read_text())
+          assert board.get('version')=='operational-board-v1'
+          assert len(board.get('tasks') or [])==115
+          board['owner_control_policy']={
+            'routing_policy':'github_native_first',
+            'github_native_requires':['execution_mode=github_native','registered native_playbook','bounded native_args'],
+            'github_native_playbooks':['exact_text_replace','json_set'],
+            'ai_fallback_models':['gpt-5.6-luna','gpt-5.6-terra','gpt-5.6-sol'],
+            'astra_policy':'explicit_opt_in_only',
+            'package_max_tasks':5,
+            'hard_openai_package_cap_usd':3.0,
+            'auto_retry':False,
+            'auto_merge':False,
+            'auto_deploy':False,
+            'auto_ready':False,
+          }
+          rows={str(t['task_id']):t for t in board['tasks']}
+          a22=rows['A2.2']
+          a22['execution_mode']='ai'
+          a22['model_route']='sol'
+          a22['astra_plan_required']=False
+          a22['astra_acceptance_required']=False
+          a22['routing_reason']='Semantic/object closure requires reasoning; use Sol. Astra is not justified for this task.'
+          p.write_text(json.dumps(board,ensure_ascii=False,indent=2)+'\n')
+          # Fail closed on invariants.
+          check=json.loads(p.read_text())
+          assert len(check['tasks'])==115
+          assert check['owner_control_policy']['routing_policy']=='github_native_first'
+          a22=next(t for t in check['tasks'] if t['task_id']=='A2.2')
+          assert a22['execution_mode']=='ai' and a22['model_route']=='sol'
+          assert a22['astra_plan_required'] is False and a22['astra_acceptance_required'] is False
+          PY
+          python3 -m json.tool eksamio-learning-engine/project-control/operational-board-v1.json >/dev/null
+      - name: Commit authority file only
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add eksamio-learning-engine/project-control/operational-board-v1.json
+          git commit -m 'owner control: record GitHub-first routing authority'
+          git push origin HEAD:brain/owner-control-github-first-authority-20260912
