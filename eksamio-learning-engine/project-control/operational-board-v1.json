@@ -185,7 +185,12 @@
         "Temporary takeover PR #195 closed without merge",
         "Takeover branch brain/owner-control-russian-takeover-20260912 preserves exact HEAD 8ac4b15b",
         "No paid Owner Control execution authorized or started"
-      ]
+      ],
+      "execution_mode": "ai",
+      "model_route": "sol",
+      "astra_plan_required": false,
+      "astra_acceptance_required": false,
+      "routing_reason": "Semantic/object closure requires reasoning; use Sol. Astra is not justified for this task."
     },
     {
       "task_id": "A2.3",
@@ -3022,5 +3027,29 @@
       "evidence": []
     }
   ],
-  "normalization": "status is derived only from source_status; source text is retained verbatim."
+  "normalization": "status is derived only from source_status; source text is retained verbatim.",
+  "owner_control_policy": {
+    "routing_policy": "github_native_first",
+    "github_native_requires": [
+      "execution_mode=github_native",
+      "registered native_playbook",
+      "bounded native_args"
+    ],
+    "github_native_playbooks": [
+      "exact_text_replace",
+      "json_set"
+    ],
+    "ai_fallback_models": [
+      "gpt-5.6-luna",
+      "gpt-5.6-terra",
+      "gpt-5.6-sol"
+    ],
+    "astra_policy": "explicit_opt_in_only",
+    "package_max_tasks": 5,
+    "hard_openai_package_cap_usd": 3.0,
+    "auto_retry": false,
+    "auto_merge": false,
+    "auto_deploy": false,
+    "auto_ready": false
+  }
 }
