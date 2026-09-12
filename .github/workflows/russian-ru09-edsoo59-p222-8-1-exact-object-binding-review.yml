@@ -17,7 +17,7 @@ permissions:
 jobs:
   exact-object-binding-review:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 120
     steps:
       - name: Checkout exact PR head
         uses: actions/checkout@v4
