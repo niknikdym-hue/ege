@@ -348,18 +348,19 @@ jobs:
           set -euo pipefail
           git apply --index --binary /tmp/validated/validated.patch
           proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          client_token="$(openssl rand -hex 32)"; export OWNER_PROXY_CLIENT_TOKEN="$client_token"; echo "::add-mask::$client_token"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
           rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
           python3 - <<'PY'
-          import json, subprocess, urllib.request
+          import json, os, subprocess, urllib.request
           from pathlib import Path
           route=json.loads(Path('/tmp/route/owner-v2-route.json').read_text()); diff=subprocess.check_output(['git','diff','--cached','--no-ext-diff','--no-textconv'],text=True)
           if len(diff)>120000: raise SystemExit('Validated diff too large for bounded Astra acceptance')
           context={'task':route['task'],'diff':diff,'tests':Path('/tmp/validated/test-evidence.txt').read_text()}
           schema={'type':'object','additionalProperties':False,'properties':{'decision':{'type':'string','enum':['PASS','FAIL']},'reason':{'type':'string'}},'required':['decision','reason']}
           payload={'model':'gpt-6-astra','instructions':'Accept only this selected bounded task. PASS only if the validated diff and evidence satisfy it.','input':json.dumps(context,ensure_ascii=False),'reasoning':{'effort':'medium'},'text':{'verbosity':'low','format':{'type':'json_schema','name':'owner_v2_acceptance','strict':True,'schema':schema}},'max_output_tokens':3000,'store':False}
-          req=urllib.request.Request('http://127.0.0.1:8787/v1/responses',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json'},method='POST')
+          req=urllib.request.Request('http://127.0.0.1:8787/v1/responses',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json','Authorization':'Bearer '+os.environ['OWNER_PROXY_CLIENT_TOKEN']},method='POST')
           with urllib.request.urlopen(req,timeout=240) as r: body=json.loads(r.read().decode())
           if body.get('status')!='completed': raise SystemExit('Astra acceptance incomplete; no retry')
           text='\n'.join(x.get('text','') for item in body.get('output',[]) for x in item.get('content',[]) if x.get('type')=='output_text'); decision=json.loads(text)
