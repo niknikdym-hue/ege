@@ -61,7 +61,7 @@ jobs:
           python3 - "$parent" <<'PY'
           import json,sys
           d=json.loads(sys.argv[1])
-          assert d['event']=='workflow_dispatch'
+          assert d['event'] in {'workflow_dispatch','repository_dispatch'}
           assert d['actor']['login']=='niknikdym-hue'
           assert d['path']=='.github/workflows/owner-agent-batch-v2.yml'
           assert d['status'] in {'queued','in_progress'}
