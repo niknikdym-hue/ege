@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import http from 'node:http';
+import crypto from 'node:crypto';
 import {Readable} from 'node:stream';
 
 const PRICES = {
@@ -40,6 +41,15 @@ export function capOutputTokens({model, payloadBytes, requested, remainingUsd, r
   return Math.max(0, Math.min(Number(requested || routeCap), routeCap, Math.floor(room * 1_000_000 / outputRate)));
 }
 
+export function clientAuthorized(header, expected) {
+  const prefix = 'Bearer ';
+  if (!expected || typeof header !== 'string' || !header.startsWith(prefix)) return false;
+  const got = header.slice(prefix.length);
+  const a = Buffer.from(got, 'utf8');
+  const b = Buffer.from(expected, 'utf8');
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
 function selfTest() {
   const terra = conservativeReservationUsd({model:'gpt-5.6-terra', payloadBytes:100000, maxOutputTokens:2000});
   if (!(terra > 0.27 && terra < 0.29)) throw new Error(`unexpected Terra reservation ${terra}`);
@@ -47,6 +57,9 @@ function selfTest() {
   if (!(capped > 0 && capped <= 3000)) throw new Error(`unexpected Astra cap ${capped}`);
   const blocked = capOutputTokens({model:'gpt-6-astra', payloadBytes:200000, requested:12000, remainingUsd:0.1, routeCap:3000});
   if (blocked !== 0) throw new Error(`expected blocked request, got ${blocked}`);
+  if (!clientAuthorized('Bearer local-client-token', 'local-client-token')) throw new Error('client auth true case failed');
+  if (clientAuthorized('Bearer wrong', 'local-client-token')) throw new Error('client auth false case failed');
+  if (clientAuthorized('', 'local-client-token')) throw new Error('missing client auth must fail');
   console.log('OWNER_CONTROL_BUDGET_PROXY_SELFTEST=PASS');
 }
 
@@ -57,9 +70,20 @@ if (process.argv.includes('--self-test')) {
 
 const listenPort = Number(process.env.OWNER_BUDGET_PROXY_PORT || 8787);
 const totalBudget = Number(process.env.OWNER_TASK_BUDGET_USD || '0');
+const clientToken = String(process.env.OWNER_PROXY_CLIENT_TOKEN || '');
 const allowedModels = new Set((process.env.OWNER_ALLOWED_MODELS || '').split(',').map(x => x.trim()).filter(Boolean));
 if (!(totalBudget > 0 && totalBudget <= 3)) throw new Error('OWNER_TASK_BUDGET_USD must be >0 and <=3');
 if (!allowedModels.size) throw new Error('OWNER_ALLOWED_MODELS is required');
+if (!clientToken) throw new Error('OWNER_PROXY_CLIENT_TOKEN is required');
+const testMode = process.env.OWNER_PROXY_TEST_MODE === '1';
+const configuredUpstream = String(process.env.OWNER_PROXY_UPSTREAM_URL || '');
+let upstreamUrl = 'https://api.openai.com/v1/responses';
+if (configuredUpstream) {
+  if (!testMode || !/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/v1\/responses$/.test(configuredUpstream)) {
+    throw new Error('OWNER_PROXY_UPSTREAM_URL is allowed only in loopback test mode');
+  }
+  upstreamUrl = configuredUpstream;
+}
 
 let apiKey = '';
 for await (const chunk of process.stdin) apiKey += chunk.toString('utf8');
@@ -91,6 +115,9 @@ const server = http.createServer(async (req, res) => {
     jsonError(res, 404, 'only POST /v1/responses is allowed'); return;
   }
   try {
+    if (!clientAuthorized(req.headers.authorization, clientToken)) {
+      jsonError(res, 401, 'owner-control proxy client authentication failed'); return;
+    }
     const chunks = [];
     for await (const chunk of req) chunks.push(chunk);
     const raw = Buffer.concat(chunks);
@@ -118,7 +145,7 @@ const server = http.createServer(async (req, res) => {
     requestCount += 1;
     console.log(`OWNER_BUDGET_RESERVE request=${requestCount} model=${model} reserve=${reservation.toFixed(6)} remaining=${remainingUsd.toFixed(6)} max_output_tokens=${maxOut}`);
 
-    const upstream = await fetch('https://api.openai.com/v1/responses', {
+    const upstream = await fetch(upstreamUrl, {
       method:'POST',
       headers:{'authorization':`Bearer ${apiKey}`,'content-type':'application/json'},
       body:encoded,
