@@ -346,7 +346,20 @@ jobs:
           git diff --cached --check
           git diff --cached --name-only > /tmp/changed-paths.txt
           count="$(grep -c . /tmp/changed-paths.txt || true)"; test "$count" -ge 1 && test "$count" -le 12
-          if grep -E '(^|/)(\.git|\.env|secrets?)(/|$)|^\.github/workflows/owner-agent-(task|batch)-v2\.yml$|operational-board-v1\.json$|owner_control_budget_proxy\.mjs          if [ -d eksamio-learning-engine/tests ]; then python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_*.py'; fi
+          if grep -E '(^|/)(\.git|\.env|secrets?)(/|$)|^\.github/workflows/owner-agent-(task|batch)-v2\.yml$|operational-board-v1\.json$|owner_control_budget_proxy\.mjs$' /tmp/changed-paths.txt; then echo 'Protected control/secrets path changed'; exit 1; fi
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          route=json.loads(Path('/tmp/route/owner-v2-route.json').read_text())
+          allowed={str(p) for p in (route['task'].get('allowed_paths') or [])}
+          changed={p.strip() for p in Path('/tmp/changed-paths.txt').read_text().splitlines() if p.strip()}
+          if allowed and not changed <= allowed:
+              raise SystemExit('Candidate escaped registered allowed_paths: '+','.join(sorted(changed-allowed)))
+          if allowed:
+              print('REGISTERED_ALLOWED_PATHS=PASS')
+          PY
+          while IFS= read -r p; do case "$p" in *.py) python3 -m py_compile "$p" ;; *.json) python3 -m json.tool "$p" >/dev/null ;; esac; done < /tmp/changed-paths.txt
+          if [ -d eksamio-learning-engine/tests ]; then python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_*.py'; fi
           git diff --cached --binary > /tmp/validated.patch
           printf '%s\n' 'CLEAN_RUNNER=PASS' 'PATH_SCOPE=PASS' 'GIT_DIFF_CHECK=PASS' 'SAFE_FILE_CHECKS=PASS' > /tmp/test-evidence.txt
       - uses: actions/upload-artifact@v4
