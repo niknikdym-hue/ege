@@ -25,6 +25,17 @@ on:
       expected_work_sha:
         required: true
         type: string
+      approved_main_sha:
+        required: true
+        type: string
+      bridge_command_id:
+        required: false
+        default: ''
+        type: string
+      bridge_command_commit:
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -47,32 +58,69 @@ jobs:
       exec_budget: ${{ steps.resolve.outputs.exec_budget }}
       accept_budget: ${{ steps.resolve.outputs.accept_budget }}
     steps:
-      - name: Prove owner-controlled parent before any paid call
+      - name: Checkout exact approved main authority before paid access
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.approved_main_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove direct-owner or signed-bridge parent before any paid call
         env:
           GH_TOKEN: ${{ github.token }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          BRIDGE_COMMAND_ID: ${{ inputs.bridge_command_id }}
+          BRIDGE_COMMAND_COMMIT: ${{ inputs.bridge_command_commit }}
         shell: bash
         run: |
           set -euo pipefail
           test "$GITHUB_ACTOR" = 'github-actions[bot]' || { echo 'Child accepts only proven owner batch parent.'; exit 1; }
+          test "$GITHUB_SHA" = '${{ inputs.approved_main_sha }}' || { echo 'Child workflow SHA differs from approved main'; exit 1; }
+          current_main="$(git ls-remote origin refs/heads/main | awk 'NR==1{print $1}')"
+          test "$current_main" = '${{ inputs.approved_main_sha }}' || { echo 'Main moved before child admission'; exit 1; }
           [[ '${{ inputs.package_id }}' =~ ^owner-[0-9]+$ ]] || { echo 'Invalid package id.'; exit 1; }
           parent_id='${{ inputs.package_id }}'; parent_id="${parent_id#owner-}"
           parent="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$parent_id")"
           python3 - "$parent" <<'PY'
-          import json,sys
+          import json,os,sys
           d=json.loads(sys.argv[1])
           assert d['event']=='workflow_dispatch'
-          assert d['actor']['login']=='niknikdym-hue'
           assert d['path']=='.github/workflows/owner-agent-batch-v2.yml'
           assert d['status'] in {'queued','in_progress'}
+          if os.environ.get('BRIDGE_COMMAND_ID'):
+              assert d['actor']['login']=='github-actions[bot]'
+          else:
+              assert d['actor']['login']=='niknikdym-hue'
           PY
+          if [ -n "$BRIDGE_COMMAND_ID" ]; then
+            [[ "$BRIDGE_COMMAND_ID" =~ ^[0-9a-f]{32}$ ]]
+            [[ "$BRIDGE_COMMAND_COMMIT" =~ ^[0-9a-f]{40}$ ]]
+            claim="owner-control-claim-$BRIDGE_COMMAND_ID"
+            binding="owner-control-batch-$BRIDGE_COMMAND_ID"
+            git fetch --force origin "refs/tags/$claim:refs/tags/$claim" "refs/tags/$binding:refs/tags/$binding"
+            test "$(git rev-list -n1 "$claim")" = "$BRIDGE_COMMAND_COMMIT"
+            bind="$(git for-each-ref --format='%(contents)' "refs/tags/$binding")"
+            python3 - "$bind" "$parent_id" <<'PY'
+          import json,os,sys
+          d=json.loads(sys.argv[1])
+          assert d['command_id']==os.environ['BRIDGE_COMMAND_ID']
+          assert d['command_commit']==os.environ['BRIDGE_COMMAND_COMMIT']
+          assert d['batch_run_id']==sys.argv[2]
+          assert d['batch_run_attempt']=='1'
+          PY
+            git fetch --no-tags origin "$BRIDGE_COMMAND_COMMIT"
+            git show "$BRIDGE_COMMAND_COMMIT:ops/owner-control-command/command.json" > /tmp/owner-command.json
+            python3 eksamio-learning-engine/project-control/owner_control_command_verify.py /tmp/owner-command.json > /tmp/verified-command.json
+            python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          d=json.loads(Path('/tmp/verified-command.json').read_text())
+          assert d['command_id']==os.environ['BRIDGE_COMMAND_ID']
+          assert d['approved_main_sha']==os.environ['GITHUB_SHA']
+          assert '${{ inputs.task_id }}' in d['task_ids']
+          PY
+          fi
           test -n "${OPENAI_API_KEY:-}" || { echo 'OPENAI_API_KEY is not configured.'; exit 1; }
-
-      - name: Checkout main authority
-        uses: actions/checkout@v5
-        with:
-          ref: main
-          persist-credentials: false
 
       - name: Resolve task, route and per-phase hard budgets
         id: resolve
