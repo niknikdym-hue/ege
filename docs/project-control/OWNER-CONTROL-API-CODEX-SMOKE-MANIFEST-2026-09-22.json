@@ -1,0 +1,43 @@
+{
+  "schema_version": "owner-control-api-codex-smoke-v1",
+  "date": "2026-09-22",
+  "purpose": "One bounded paid API-Codex smoke before normal Eksamio development through Owner Control",
+  "repository": "niknikdym-hue/ege",
+  "authority_base_ref": "owner/api-codex-smoke-base-20260922",
+  "authority_sha_binding": "The exact branch head must equal A1.4.head_sha in operational-board-v1.json immediately before dispatch.",
+  "task_id": "A1.4",
+  "executor": "API-Codex",
+  "model_route": "gpt-5.6-luna",
+  "reasoning_effort": "low",
+  "astra_plan_required": false,
+  "astra_acceptance_required": false,
+  "openai_hard_cap_usd": 0.10,
+  "provider_request_limit": 1,
+  "request_max_retries": 0,
+  "stream_max_retries": 0,
+  "allowed_paths": [
+    "docs/project-control/OWNER-CONTROL-API-CODEX-SMOKE-TARGET-2026-09-22.md"
+  ],
+  "required_change": "Append exactly one final line: API_CODEX_SMOKE_2026_09_22=PASS_CANDIDATE",
+  "forbidden": [
+    "any other changed path",
+    "Astra call",
+    "automatic retry or rerun",
+    "merge",
+    "deploy",
+    "Ready transition",
+    "production or learner-data write",
+    "payment or refund",
+    "Tilda change",
+    "public traffic change"
+  ],
+  "acceptance": [
+    "Codex provider requests = 1",
+    "request_max_retries = 0",
+    "stream_max_retries = 0",
+    "changed paths exactly equal allowed_paths",
+    "git diff --check PASS",
+    "draft PR only",
+    "no merge/deploy/production mutation"
+  ]
+}
