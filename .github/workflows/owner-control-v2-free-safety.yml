@@ -26,6 +26,8 @@ jobs:
         run: |
           python3 -m unittest eksamio-learning-engine/tests/test_owner_control_v2_safety.py
           node eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs --self-test
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-agent-task-v2.yml', aliases: true); puts 'OWNER_TASK_YAML_PARSE=PASS'"
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-agent-batch-v2.yml', aliases: true); puts 'OWNER_BATCH_YAML_PARSE=PASS'"
           git diff --check
 
   retry-zero-mock:
@@ -120,3 +122,52 @@ jobs:
           print('STREAM_MAX_RETRIES=0')
           print('REAL_OPENAI_CALLS=0')
           PY
+
+  budget-proxy-mock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Start fake upstream and authenticated budget proxy
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat >/tmp/fake_upstream.py <<'PY'
+          from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+          from pathlib import Path
+          import json
+          COUNT=Path('/tmp/fake-upstream-count'); COUNT.write_text('0')
+          class H(BaseHTTPRequestHandler):
+              def log_message(self,*_): pass
+              def do_POST(self):
+                  COUNT.write_text(str(int(COUNT.read_text())+1))
+                  n=int(self.headers.get('content-length') or 0)
+                  if n: self.rfile.read(n)
+                  b=json.dumps({'error':{'message':'fake upstream','type':'mock'}}).encode()
+                  self.send_response(500); self.send_header('content-type','application/json'); self.send_header('content-length',str(len(b))); self.end_headers(); self.wfile.write(b)
+          ThreadingHTTPServer(('127.0.0.1',8890),H).serve_forever()
+          PY
+          python3 /tmp/fake_upstream.py >/tmp/fake-upstream.log 2>&1 &
+          proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          printf '%s' 'fake-provider-key' | env \
+            OWNER_TASK_BUDGET_USD=0.0001 \
+            OWNER_ALLOWED_MODELS=gpt-5.6-luna \
+            OWNER_PROXY_CLIENT_TOKEN=local-client-token \
+            OWNER_PROXY_TEST_MODE=1 \
+            OWNER_PROXY_UPSTREAM_URL=http://127.0.0.1:8890/v1/responses \
+            OWNER_BUDGET_PROXY_PORT=8789 \
+            node "$proxy" >/tmp/budget-proxy.log 2>&1 &
+          for _ in {1..20}; do curl -fsS http://127.0.0.1:8789/health >/dev/null && break; sleep 1; done
+
+      - name: Prove auth and budget fail before upstream
+        shell: bash
+        run: |
+          set -euo pipefail
+          payload='{"model":"gpt-5.6-luna","input":"x","max_output_tokens":1800}'
+          wrong="$(curl -sS -o /tmp/wrong.json -w '%{http_code}' -X POST -H 'content-type: application/json' --data "$payload" http://127.0.0.1:8789/v1/responses)"
+          test "$wrong" = 401
+          exhausted="$(curl -sS -o /tmp/exhausted.json -w '%{http_code}' -X POST -H 'content-type: application/json' -H 'authorization: Bearer local-client-token' --data "$payload" http://127.0.0.1:8789/v1/responses)"
+          test "$exhausted" = 402
+          test "$(cat /tmp/fake-upstream-count)" = 0
+          echo "UNAUTHORIZED_PROXY_FORWARD_COUNT=0"
+          echo "BUDGET_EXHAUSTED_PROXY_FORWARD_COUNT=0"
+          echo "REAL_OPENAI_CALLS=0"
