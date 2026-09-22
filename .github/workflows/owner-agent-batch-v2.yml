@@ -274,6 +274,9 @@ jobs:
           WORK_REF: ${{ steps.package.outputs.work_ref }}
           AUTHORITY_BASE_REF: ${{ steps.package.outputs.base_ref }}
           AUTHORITY_BASE_SHA: ${{ steps.package.outputs.base_sha }}
+          APPROVED_MAIN_SHA: ${{ github.sha }}
+          BRIDGE_COMMAND_ID: ${{ inputs.bridge_command_id }}
+          BRIDGE_COMMAND_COMMIT: ${{ inputs.bridge_command_commit }}
         shell: bash
         run: |
           set -euo pipefail
@@ -291,7 +294,10 @@ jobs:
                 -f authority_base_ref="$AUTHORITY_BASE_REF" \
                 -f authority_base_sha="$AUTHORITY_BASE_SHA" \
                 -f work_ref="$WORK_REF" \
-                -f expected_work_sha="$expected_sha"
+                -f expected_work_sha="$expected_sha" \
+                -f approved_main_sha="$APPROVED_MAIN_SHA" \
+                -f bridge_command_id="$BRIDGE_COMMAND_ID" \
+                -f bridge_command_commit="$BRIDGE_COMMAND_COMMIT"
             else
               workflow='owner-agent-task-v2.yml'
               title="Owner task v2 $PACKAGE_ID $task_id"
@@ -303,7 +309,10 @@ jobs:
                 -f authority_base_ref="$AUTHORITY_BASE_REF" \
                 -f authority_base_sha="$AUTHORITY_BASE_SHA" \
                 -f work_ref="$WORK_REF" \
-                -f expected_work_sha="$expected_sha"
+                -f expected_work_sha="$expected_sha" \
+                -f approved_main_sha="$APPROVED_MAIN_SHA" \
+                -f bridge_command_id="$BRIDGE_COMMAND_ID" \
+                -f bridge_command_commit="$BRIDGE_COMMAND_COMMIT"
             fi
             run_id=''
             for _ in {1..45}; do
