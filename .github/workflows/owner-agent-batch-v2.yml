@@ -222,6 +222,12 @@ jobs:
               'ai_task_cap_usd':str(ai_cap),'ai_task_count':ai_count,'github_native_task_count':len(native),
               'routes':routes,'astra_policy':'explicit_opt_in_only','sequential':True,'auto_retry':False,
               'routing_policy':'github_native_first',
+              'bridge': {
+                  'command_id': '${{ inputs.bridge_command_id }}' or None,
+                  'command_commit': '${{ inputs.bridge_command_commit }}' or None,
+                  'claim_tag': '${{ inputs.bridge_claim_tag }}' or None,
+                  'bridge_run_id': '${{ inputs.bridge_run_id }}' or None,
+              },
           }
           Path('/tmp/owner-v2-package.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
           Path('/tmp/package-tasks.tsv').write_text('\n'.join(f"{r['task_id']}\t{r['mode']}\t{r['openai_cap_usd']}" for r in routes)+'\n')
