@@ -25,14 +25,17 @@ class OwnerControlV2SafetyTest(unittest.TestCase):
 
     def test_codex_never_receives_real_openai_provider_key(self):
         yml = TASK.read_text()
-        start = yml.index("- name: API-Codex executes bounded task")
-        end = yml.index("- name: Verify effective Codex retry policy", start)
+        start = yml.index("- name: Install pinned Codex CLI with retry-zero budget-proxy provider")
+        end = yml.index("- name: Extract untrusted candidate patch only", start)
         codex = yml[start:end]
         self.assertNotIn("secrets.OPENAI_API_KEY", codex)
         self.assertIn("steps.executor_proxy.outputs.client_token", codex)
-        self.assertIn("responses-api-endpoint: http://127.0.0.1:8787/v1/responses", codex)
-        self.assertIn("openai/codex-action@86365089eb2b84e0a8fb0717b304f8bdcb13b20e", codex)
-        self.assertIn("codex-version: '0.154.0'", codex)
+        self.assertIn("base_url = \"http://127.0.0.1:8787/v1\"", codex)
+        self.assertIn("npm install -g @openai/codex@0.154.0", codex)
+        self.assertIn("codex exec", codex)
+        self.assertIn("--no-new-privs", codex)
+        self.assertIn("--bounding-set=-all", codex)
+        self.assertIn("API_CODEX_PROVIDER_REQUESTS=1", codex)
 
     def test_codex_retry_policy_is_explicitly_zero(self):
         yml = TASK.read_text()
