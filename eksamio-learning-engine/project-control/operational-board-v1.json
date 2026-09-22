@@ -127,23 +127,35 @@
       "dependencies": [],
       "blocker_type": null,
       "blocker_detail": null,
-      "branch": null,
+      "branch": "owner/api-codex-smoke-base-20260922",
       "pr": null,
-      "head_sha": null,
-      "ci_evidence": "Brain owner_control.py re-reads board, PR/branch/SHA and active workflow state before dispatch; Brain CI 34706765662 = SUCCESS.",
+      "head_sha": "d8ebb5f73b43990dbe3b7c6bf685772cb3a48df4",
+      "ci_evidence": "Free Astra-REWORK closure is merged. Brain CI 35691397540 = SUCCESS on 4922932278bb897f8912bddfe5f9346e88d1173c. EGE free safety proof runs 35691044228, 35690989938, 35690791151, 35690633167 = SUCCESS. Smoke base d8ebb5f73b43990dbe3b7c6bf685772cb3a48df4 is isolated and docs-only.",
       "visible_to_learner": false,
       "production_state": "PRIVATE_CONTROL_PLANE_DEPLOYED",
       "executor": "Codex",
       "owner_gate_required": false,
-      "current_action": "Prove stale SHA, parallel/duplicate dispatch and exact-run evidence with free tests",
-      "next_action": "Keep live GitHub checks fail-closed and attach exact smoke evidence after one bounded run",
+      "current_action": "One bounded API-Codex smoke only: append exactly API_CODEX_SMOKE_2026_09_22=PASS_CANDIDATE to the authorized smoke target; change no other path.",
+      "next_action": "If the one bounded smoke passes, record exact evidence, restore A1.4 to ordinary live-ingestion work, and route subsequent Eksamio development through Owner Control.",
       "last_evidence_timestamp": "2026-09-22",
       "evidence": [
-        "Server-side readiness resolves live PR/branch SHA before dispatch",
-        "Stale registered SHA fails closed",
-        "Current-head active workflow fails closed",
-        "Brain CI run 34706765662 SUCCESS"
-      ]
+        "Server-side readiness resolves live branch SHA and blocks stale/parallel/duplicate dispatch",
+        "Brain CI run 35691397540 SUCCESS on 4922932278bb897f8912bddfe5f9346e88d1173c",
+        "EGE free safety proof 35691044228 SUCCESS",
+        "Budget proxy auth/exhaustion proof 35690989938 SUCCESS",
+        "Retry-zero proof 35690791151 SUCCESS: one mock provider request, zero real OpenAI calls",
+        "Owner Control board/sync proof 35690633167 SUCCESS",
+        "Smoke base owner/api-codex-smoke-base-20260922 pinned at d8ebb5f73b43990dbe3b7c6bf685772cb3a48df4",
+        "Smoke manifest docs/project-control/OWNER-CONTROL-API-CODEX-SMOKE-MANIFEST-2026-09-22.json"
+      ],
+      "execution_mode": "ai",
+      "model_route": "luna",
+      "astra_plan_required": false,
+      "astra_acceptance_required": false,
+      "allowed_paths": [
+        "docs/project-control/OWNER-CONTROL-API-CODEX-SMOKE-TARGET-2026-09-22.md"
+      ],
+      "smoke_manifest": "docs/project-control/OWNER-CONTROL-API-CODEX-SMOKE-MANIFEST-2026-09-22.json"
     },
     {
       "task_id": "A2.1",
