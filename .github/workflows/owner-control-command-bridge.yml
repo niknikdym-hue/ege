@@ -1,0 +1,209 @@
+name: Owner Control signed command bridge
+
+on:
+  pull_request_target:
+    types: [synchronize]
+    branches: [main]
+    paths:
+      - 'ops/owner-control-command/command.json'
+
+permissions:
+  contents: write
+  actions: write
+  pull-requests: read
+
+concurrency:
+  group: owner-control-command-bridge
+  cancel-in-progress: false
+
+env:
+  COMMAND_PR: "205"
+  COMMAND_HEAD_REF: "owner-control/commands"
+  COMMAND_PATH: "ops/owner-control-command/command.json"
+  BRIDGE_WORKFLOW: ".github/workflows/owner-control-command-bridge.yml"
+  BATCH_WORKFLOW: "owner-agent-batch-v2.yml"
+
+jobs:
+  verify-claim-dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted base main only
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Verify fixed command PR and trusted executable SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$PR_NUMBER" = "$COMMAND_PR"
+          test "$HEAD_REF" = "$COMMAND_HEAD_REF"
+          test "$HEAD_REPO" = "$GITHUB_REPOSITORY"
+          test "$BASE_REF" = "main"
+          [[ "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$BASE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          current_main="$(git ls-remote origin refs/heads/main | awk 'NR==1{print $1}')"
+          test "$current_main" = "$BASE_SHA" || { echo "Main moved before bridge verification"; exit 1; }
+          test "$(git rev-parse HEAD)" = "$BASE_SHA"
+          files="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100" --paginate --jq '.[].filename')"
+          test "$files" = "$COMMAND_PATH" || { echo "Command PR contains unauthorized path(s):"; printf '%s\n' "$files"; exit 1; }
+          echo "TRUSTED_BRIDGE_BASE=PASS"
+
+      - name: Load command from immutable triggering head commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/contents/$COMMAND_PATH?ref=$HEAD_SHA" --jq '.content' | tr -d '\n' | base64 -d > /tmp/owner-command.json
+          python3 -m json.tool /tmp/owner-command.json >/dev/null
+          sha256sum /tmp/owner-command.json | awk '{print $1}' > /tmp/command-digest
+          echo "COMMAND_DIGEST=$(cat /tmp/command-digest)"
+
+      - name: Verify signature and strict command schema
+        id: command
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 eksamio-learning-engine/project-control/owner_control_command_verify.py /tmp/owner-command.json > /tmp/verified-command.json
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=json.loads(Path('/tmp/verified-command.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('command_id='+p['command_id']+'\n')
+              f.write('approved_main_sha='+p['approved_main_sha']+'\n')
+              f.write('target_base_ref='+p['target_base_ref']+'\n')
+              f.write('target_base_sha='+p['target_base_sha']+'\n')
+              f.write('task_ids='+','.join(p['task_ids'])+'\n')
+              f.write('package_budget_usd='+p['package_budget_usd']+'\n')
+          PY
+          echo "SIGNED_COMMAND=PASS"
+
+      - name: Revalidate board, live SHAs and route contract
+        env:
+          APPROVED_MAIN_SHA: ${{ steps.command.outputs.approved_main_sha }}
+          TARGET_BASE_REF: ${{ steps.command.outputs.target_base_ref }}
+          TARGET_BASE_SHA: ${{ steps.command.outputs.target_base_sha }}
+          TASK_IDS: ${{ steps.command.outputs.task_ids }}
+          PACKAGE_BUDGET_USD: ${{ steps.command.outputs.package_budget_usd }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$APPROVED_MAIN_SHA" = "$(git rev-parse HEAD)" || { echo 'Command approved main does not match trusted bridge main'; exit 1; }
+          live_target="$(git ls-remote origin "refs/heads/$TARGET_BASE_REF" | awk 'NR==1{print $1}')"
+          test "$live_target" = "$TARGET_BASE_SHA" || { echo 'Target base SHA moved'; exit 1; }
+          python3 - <<'PY'
+          import json, os
+          from decimal import Decimal
+          from pathlib import Path
+
+          command=json.loads(Path('/tmp/verified-command.json').read_text())
+          board=json.loads(Path('eksamio-learning-engine/project-control/operational-board-v1.json').read_text())
+          assert board.get('version')=='operational-board-v1' and len(board.get('tasks') or [])==115
+          rows={str(x['task_id']):x for x in board['tasks']}
+          ids=command['task_ids']
+          selected=[]
+          for task_id in ids:
+              t=rows.get(task_id)
+              assert t is not None, f'unknown task {task_id}'
+              blocker=t.get('blocker_type')
+              assert t.get('executor')=='Codex' and not t.get('owner_gate_required'), f'{task_id} not autonomous'
+              assert not blocker or blocker=='SUBJECT', f'{task_id} external blocker {blocker}'
+              assert t.get('status') not in {'DONE','PUBLIC_LAUNCH_PASS'}, f'{task_id} terminal'
+              selected.append(t)
+          assert len({str(t.get('stage') or '') for t in selected})==1
+          assert len({str(t.get('branch') or 'main') for t in selected})==1
+          assert str(selected[0].get('branch') or 'main')==command['target_base_ref']
+          for t in selected:
+              registered=str(t.get('head_sha') or '')
+              if registered:
+                  assert registered==command['target_base_sha'], f"{t['task_id']} registered SHA mismatch"
+
+          def expected_route(task):
+              if str(task.get('execution_mode') or '').lower()=='github_native':
+                  return ('github_native', None)
+              explicit=str(task.get('model_route') or task.get('ai_route') or '').lower().strip()
+              aliases={'luna':'gpt-5.6-luna','terra':'gpt-5.6-terra','sol':'gpt-5.6-sol'}
+              text=' '.join(str(task.get(k) or '') for k in ('title','current_action','next_action','workstream')).lower()
+              if explicit in aliases: model=aliases[explicit]
+              elif explicit in aliases.values(): model=explicit
+              elif any(w in text for w in ('semantic','object closure','exactly-once','idempot','security','payment','refund','rollback','persistence','e2e','cross-module','architecture')): model='gpt-5.6-sol'
+              elif any(w in text for w in ('copy','label','wording','docs','documentation','metadata','rename','small config')): model='gpt-5.6-luna'
+              else: model='gpt-5.6-terra'
+              return ('ai', model)
+
+          for route, task in zip(command['tasks'], selected):
+              mode, model=expected_route(task)
+              assert route['task_id']==task['task_id']
+              assert route['execution_mode']==mode
+              assert route['route_model']==model
+              assert route['astra_plan_required']==bool(task.get('astra_plan_required') or task.get('astra_required'))
+              assert route['astra_acceptance_required']==bool(task.get('astra_acceptance_required') or task.get('astra_required'))
+              assert route['allowed_paths']==list(task.get('allowed_paths') or [])
+
+          ai=sum(1 for route in command['tasks'] if route['execution_mode']=='ai')
+          budget=Decimal(command['package_budget_usd'])
+          assert (ai==0 and budget==0) or (ai>0 and Decimal('0.10') <= budget <= Decimal('3.00'))
+          print('BOARD_ROUTE_REVALIDATION=PASS')
+          PY
+
+      - name: Reject conflicting Owner Control work
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for workflow in owner-agent-batch-v2.yml owner-agent-task-v2.yml owner-agent-native-v3.yml owner-agent-console-control.yml; do
+            active="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$workflow/runs?per_page=50" --jq '[.workflow_runs[] | select(.status != "completed")] | length' 2>/dev/null || echo 0)"
+            test "$active" = "0" || { echo "Owner Control busy: $workflow"; exit 1; }
+          done
+          echo "OWNER_CONTROL_IDLE=PASS"
+
+      - name: Atomically claim one-use command
+        env:
+          COMMAND_ID: ${{ steps.command.outputs.command_id }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="owner-control-claim-$COMMAND_ID"
+          if git ls-remote --exit-code origin "refs/tags/$tag" >/dev/null 2>&1; then
+            echo 'Command already claimed'; exit 1
+          fi
+          git fetch --no-tags origin "$HEAD_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          digest="$(cat /tmp/command-digest)"
+          claim="$(jq -nc             --arg command_id "$COMMAND_ID"             --arg command_commit "$HEAD_SHA"             --arg command_digest "$digest"             --arg bridge_run_id "$GITHUB_RUN_ID"             --arg bridge_run_attempt "$GITHUB_RUN_ATTEMPT"             --arg bridge_workflow "$BRIDGE_WORKFLOW"             --arg approved_main_sha '${{ steps.command.outputs.approved_main_sha }}'             --arg target_base_sha '${{ steps.command.outputs.target_base_sha }}'             '{command_id:$command_id,command_commit:$command_commit,command_digest:$command_digest,bridge_run_id:$bridge_run_id,bridge_run_attempt:$bridge_run_attempt,bridge_workflow:$bridge_workflow,approved_main_sha:$approved_main_sha,target_base_sha:$target_base_sha}')"
+          git tag -a "$tag" "$HEAD_SHA" -m "$claim"
+          git push origin "refs/tags/$tag:refs/tags/$tag"
+          printf '%s\n' "$tag" > /tmp/claim-tag
+          echo "COMMAND_CLAIM=PASS tag=$tag"
+
+      - name: Dispatch fixed Owner Control batch once
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMAND_ID: ${{ steps.command.outputs.command_id }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TASK_IDS: ${{ steps.command.outputs.task_ids }}
+          BUDGET: ${{ steps.command.outputs.package_budget_usd }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          claim_tag="$(cat /tmp/claim-tag)"
+          gh workflow run "$BATCH_WORKFLOW" --repo "$GITHUB_REPOSITORY" --ref main             -f task_ids="$TASK_IDS"             -f package_budget_usd="$BUDGET"             -f bridge_command_id="$COMMAND_ID"             -f bridge_command_commit="$HEAD_SHA"             -f bridge_claim_tag="$claim_tag"             -f bridge_run_id="$GITHUB_RUN_ID"             -f bridge_run_attempt="$GITHUB_RUN_ATTEMPT"
+          echo "BRIDGE_DISPATCH_SUBMITTED=PASS"
+          echo "NO_AUTO_RETRY=true"
