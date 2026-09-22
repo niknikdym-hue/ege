@@ -42,6 +42,12 @@ class OwnerConsoleTest(unittest.TestCase):
         self.assertEqual(by['A1.2']['status'],'CODE_READY')
         self.assertEqual(by['A1.3']['status'],'INTEGRATION_PENDING')
         self.assertEqual(by['A1.4']['status'],'INTEGRATION_PENDING')
+        self.assertEqual(by['A1.4']['branch'],'owner/api-codex-smoke-base-20260922')
+        self.assertEqual(by['A1.4']['head_sha'],'d8ebb5f73b43990dbe3b7c6bf685772cb3a48df4')
+        self.assertEqual(by['A1.4']['model_route'],'luna')
+        self.assertFalse(by['A1.4']['astra_plan_required'])
+        self.assertFalse(by['A1.4']['astra_acceptance_required'])
+        self.assertEqual(by['A1.4']['allowed_paths'],['docs/project-control/OWNER-CONTROL-API-CODEX-SMOKE-TARGET-2026-09-22.md'])
         self.assertLess(sum(r['executor']=='Astra' for r in self.rows),len(self.rows))
         self.assertTrue(all(not r['visible_to_learner'] for r in self.rows if r['status']=='CODE_READY'))
 
