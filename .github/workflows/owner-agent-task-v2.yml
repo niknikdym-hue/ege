@@ -218,8 +218,16 @@ jobs:
           import json, subprocess
           from pathlib import Path
           route=json.loads(Path('/tmp/route/owner-v2-route.json').read_text()); task=route['task']
-          tracked=subprocess.check_output(['git','ls-files'],text=True).splitlines(); words={w.lower() for w in (str(task.get('title') or '')+' '+str(task.get('workstream') or '')).replace('/',' ').replace('-',' ').split() if len(w)>=4}
-          prompt={'task':task,'candidate_paths':[p for p in tracked if any(w in p.lower() for w in words)][:120],'package_context':{'work_ref':'${{ inputs.work_ref }}','start_sha':'${{ inputs.expected_work_sha }}'},'rules':['Solve exactly this task; never choose another task.','Preserve prior PASS changes on this package branch.','Edit at most 12 paths.','Do not merge, deploy, mark Ready, publish Tilda, write production/learner data, call payment/refund/Yandex, expose secrets, modify Owner Control workflows, operational board, or budget proxy.','Do not invoke paid provider APIs yourself.','Leave a reviewable workspace diff only.']}
+          tracked=subprocess.check_output(['git','ls-files'],text=True).splitlines()
+          allowed=[str(p) for p in (task.get('allowed_paths') or [])]
+          if allowed:
+              unknown=[p for p in allowed if p not in tracked]
+              if unknown: raise SystemExit('Registered allowed_paths missing from frozen worktree: '+','.join(unknown))
+              candidate_paths=allowed
+          else:
+              words={w.lower() for w in (str(task.get('title') or '')+' '+str(task.get('workstream') or '')).replace('/',' ').replace('-',' ').split() if len(w)>=4}
+              candidate_paths=[p for p in tracked if any(w in p.lower() for w in words)][:120]
+          prompt={'task':task,'candidate_paths':candidate_paths,'package_context':{'work_ref':'${{ inputs.work_ref }}','start_sha':'${{ inputs.expected_work_sha }}'},'rules':['Solve exactly this task; never choose another task.','Preserve prior PASS changes on this package branch.','Edit at most 12 paths.','If task.allowed_paths is non-empty, change only those exact paths.','Do not merge, deploy, mark Ready, publish Tilda, write production/learner data, call payment/refund/Yandex, expose secrets, modify Owner Control workflows, operational board, or budget proxy.','Do not invoke paid provider APIs yourself.','Leave a reviewable workspace diff only.']}
           Path('/tmp/codex-prompt.txt').write_text(json.dumps(prompt,ensure_ascii=False,indent=2))
           PY
       - name: Install pinned Codex CLI with retry-zero budget-proxy provider
@@ -324,6 +332,10 @@ jobs:
         with:
           name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-candidate
           path: /tmp/candidate
+      - uses: actions/download-artifact@v5
+        with:
+          name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-route
+          path: /tmp/route
       - name: Apply candidate on clean runner and run trusted checks
         shell: bash
         run: |
@@ -335,6 +347,17 @@ jobs:
           git diff --cached --name-only > /tmp/changed-paths.txt
           count="$(grep -c . /tmp/changed-paths.txt || true)"; test "$count" -ge 1 && test "$count" -le 12
           if grep -E '(^|/)(\.git|\.env|secrets?)(/|$)|^\.github/workflows/owner-agent-(task|batch)-v2\.yml$|operational-board-v1\.json$|owner_control_budget_proxy\.mjs$' /tmp/changed-paths.txt; then echo 'Protected control/secrets path changed'; exit 1; fi
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          route=json.loads(Path('/tmp/route/owner-v2-route.json').read_text())
+          allowed={str(p) for p in (route['task'].get('allowed_paths') or [])}
+          changed={p.strip() for p in Path('/tmp/changed-paths.txt').read_text().splitlines() if p.strip()}
+          if allowed and not changed <= allowed:
+              raise SystemExit('Candidate escaped registered allowed_paths: '+','.join(sorted(changed-allowed)))
+          if allowed:
+              print('REGISTERED_ALLOWED_PATHS=PASS')
+          PY
           while IFS= read -r p; do case "$p" in *.py) python3 -m py_compile "$p" ;; *.json) python3 -m json.tool "$p" >/dev/null ;; esac; done < /tmp/changed-paths.txt
           if [ -d eksamio-learning-engine/tests ]; then python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_*.py'; fi
           git diff --cached --binary > /tmp/validated.patch
