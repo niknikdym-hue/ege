@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 
-PINNED_PUBLIC_KEY_B64 = "__PENDING__"
+PINNED_PUBLIC_KEY_B64 = "OMzLDqpkbW75xQIzUy_-7vVenvAIxs4l3F_knEkMpPg"
 SCHEMA_VERSION = "owner-control-command-v1"
 REPOSITORY = "niknikdym-hue/ege"
 PAYLOAD_KEYS = {
