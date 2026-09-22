@@ -154,15 +154,16 @@ jobs:
         run: |
           set -euo pipefail
           proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          client_token="$(openssl rand -hex 32)"; export OWNER_PROXY_CLIENT_TOKEN="$client_token"; echo "::add-mask::$client_token"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
           rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
           python3 - <<'PY'
-          import json, urllib.request
+          import json, os, urllib.request
           from pathlib import Path
           route=json.loads(Path('/tmp/route/owner-v2-route.json').read_text())
           payload={'model':'gpt-6-astra','instructions':'Create a minimal execution note for this already-selected task. Do not choose or reprioritize tasks.','input':json.dumps(route['task'],ensure_ascii=False,sort_keys=True),'reasoning':{'effort':'medium'},'text':{'verbosity':'low'},'max_output_tokens':3000,'store':False}
-          req=urllib.request.Request('http://127.0.0.1:8787/v1/responses',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json'},method='POST')
+          req=urllib.request.Request('http://127.0.0.1:8787/v1/responses',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json','Authorization':'Bearer '+os.environ['OWNER_PROXY_CLIENT_TOKEN']},method='POST')
           with urllib.request.urlopen(req,timeout=240) as r: body=json.loads(r.read().decode())
           if body.get('status')!='completed': raise SystemExit('Astra plan incomplete; no retry')
           Path('/tmp/astra-plan.json').write_text(json.dumps(body,ensure_ascii=False,indent=2))
