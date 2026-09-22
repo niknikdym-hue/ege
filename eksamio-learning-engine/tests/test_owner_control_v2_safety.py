@@ -72,6 +72,14 @@ class OwnerControlV2SafetyTest(unittest.TestCase):
         self.assertIn("package OpenAI budget must be $0.00..$3.00", batch)
         self.assertIn("AI package requires at least $0.10 hard OpenAI budget", batch)
 
+    def test_registered_allowed_paths_are_hard_enforced(self):
+        yml = TASK.read_text()
+        self.assertIn("If task.allowed_paths is non-empty, change only those exact paths.", yml)
+        self.assertIn("Registered allowed_paths missing from frozen worktree", yml)
+        self.assertIn("Candidate escaped registered allowed_paths", yml)
+        self.assertIn("REGISTERED_ALLOWED_PATHS=PASS", yml)
+        self.assertGreaterEqual(yml.count("owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-route"), 4)
+
 
 if __name__ == "__main__":
     unittest.main()
