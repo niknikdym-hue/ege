@@ -1,0 +1,43 @@
+name: Owner Control command bridge probe
+
+on:
+  push:
+    branches:
+      - owner-control/command-bridge-probe-20260922
+    paths:
+      - 'ops/owner-control-command/command.json'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Verify exact probe surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "owner-control/command-bridge-probe-20260922"
+          parent="$(git rev-parse HEAD^)"
+          changed="$(git diff --name-only "$parent" HEAD)"
+          test "$changed" = "ops/owner-control-command/command.json"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('ops/owner-control-command/command.json').read_text())
+          assert d['schema_version']=='probe-v1'
+          assert d['purpose']=='verify-protected-pat-contents-write-and-push-trigger'
+          assert d['paid_calls']==0
+          assert d['codex_calls']==0
+          assert d['astra_calls']==0
+          assert isinstance(d['probe_id'],str) and d['probe_id']
+          print('COMMAND_BRIDGE_PROBE=PASS')
+          print('PAID_CALLS=0')
+          PY
