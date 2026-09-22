@@ -90,6 +90,65 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - name: Verify signed bridge provenance and atomically bind first batch
+        if: ${{ inputs.bridge_command_id != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRIDGE_COMMAND_ID: ${{ inputs.bridge_command_id }}
+          BRIDGE_COMMAND_COMMIT: ${{ inputs.bridge_command_commit }}
+          BRIDGE_CLAIM_TAG: ${{ inputs.bridge_claim_tag }}
+          BRIDGE_RUN_ID: ${{ inputs.bridge_run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          bridge="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$BRIDGE_RUN_ID")"
+          python3 - "$bridge" <<'PY'
+          import json,sys
+          d=json.loads(sys.argv[1])
+          assert d['event']=='pull_request_target'
+          assert d['path']=='.github/workflows/owner-control-command-bridge.yml'
+          assert int(d.get('run_attempt') or 0)==1
+          assert d['actor']['login']=='niknikdym-hue'
+          assert d['status'] in {'queued','in_progress','completed'}
+          PY
+
+          git fetch --force origin "refs/tags/$BRIDGE_CLAIM_TAG:refs/tags/$BRIDGE_CLAIM_TAG"
+          test "$(git rev-list -n1 "$BRIDGE_CLAIM_TAG")" = "$BRIDGE_COMMAND_COMMIT"
+          claim="$(git for-each-ref --format='%(contents)' "refs/tags/$BRIDGE_CLAIM_TAG")"
+          python3 - "$claim" <<'PY'
+          import json,os,sys
+          d=json.loads(sys.argv[1])
+          assert d['command_id']==os.environ['BRIDGE_COMMAND_ID']
+          assert d['command_commit']==os.environ['BRIDGE_COMMAND_COMMIT']
+          assert d['bridge_run_id']==os.environ['BRIDGE_RUN_ID']
+          assert d['bridge_run_attempt']=='1'
+          assert d['bridge_workflow']=='.github/workflows/owner-control-command-bridge.yml'
+          PY
+
+          git fetch --no-tags origin "$BRIDGE_COMMAND_COMMIT"
+          git show "$BRIDGE_COMMAND_COMMIT:ops/owner-control-command/command.json" > /tmp/owner-command.json
+          python3 eksamio-learning-engine/project-control/owner_control_command_verify.py /tmp/owner-command.json > /tmp/verified-command.json
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          d=json.loads(Path('/tmp/verified-command.json').read_text())
+          assert d['command_id']==os.environ['BRIDGE_COMMAND_ID']
+          assert d['approved_main_sha']==os.environ['GITHUB_SHA']
+          assert ','.join(d['task_ids'])=='${{ inputs.task_ids }}'
+          assert d['package_budget_usd']=='${{ inputs.package_budget_usd }}'
+          PY
+
+          binding="owner-control-batch-$BRIDGE_COMMAND_ID"
+          if git ls-remote --exit-code origin "refs/tags/$binding" >/dev/null 2>&1; then
+            echo 'Bridge command already bound to a batch'; exit 1
+          fi
+          bind_json="$(jq -nc --arg command_id "$BRIDGE_COMMAND_ID" --arg command_commit "$BRIDGE_COMMAND_COMMIT" --arg bridge_run_id "$BRIDGE_RUN_ID" --arg batch_run_id "$GITHUB_RUN_ID" --arg batch_run_attempt "$GITHUB_RUN_ATTEMPT" '{command_id:$command_id,command_commit:$command_commit,bridge_run_id:$bridge_run_id,batch_run_id:$batch_run_id,batch_run_attempt:$batch_run_attempt}')"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag -a "$binding" "$GITHUB_SHA" -m "$bind_json"
+          git push origin "refs/tags/$binding:refs/tags/$binding"
+          echo "BRIDGE_BATCH_BINDING=PASS tag=$binding"
+
       - name: Validate package, choose GitHub-first routes and freeze authority
         id: package
         shell: bash
