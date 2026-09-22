@@ -25,9 +25,12 @@ jobs:
       - name: Owner Control v2 safety tests
         run: |
           python3 -m unittest eksamio-learning-engine/tests/test_owner_control_v2_safety.py
+          PYTHONPATH=eksamio-learning-engine/tests python3 -m unittest eksamio-learning-engine/tests/test_owner_control_command_bridge.py
           node eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs --self-test
           ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-agent-task-v2.yml', aliases: true); puts 'OWNER_TASK_YAML_PARSE=PASS'"
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-agent-native-v3.yml', aliases: true); puts 'OWNER_NATIVE_YAML_PARSE=PASS'"
           ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-agent-batch-v2.yml', aliases: true); puts 'OWNER_BATCH_YAML_PARSE=PASS'"
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-control-command-bridge.yml', aliases: true); puts 'OWNER_BRIDGE_YAML_PARSE=PASS'"
           git diff --check
 
   retry-zero-mock:
