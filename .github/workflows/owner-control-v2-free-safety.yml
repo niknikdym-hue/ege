@@ -58,33 +58,60 @@ jobs:
           PY
           python3 /tmp/failing_responses.py >/tmp/failing_responses.log 2>&1 &
           for _ in {1..20}; do curl -fsS http://127.0.0.1:8877/v1/models >/dev/null && break; sleep 1; done
+
+      - name: Install pinned Codex CLI and retry-zero provider
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install -g @openai/codex@0.154.0
           install -d -m 700 /tmp/free-codex-home
-      - name: Codex must fail once without provider retries
+          cat >/tmp/free-codex-home/config.toml <<'EOF'
+          model_provider = "owner-control-mock"
+          approval_policy = "never"
+          sandbox_mode = "workspace-write"
+
+          [model_providers.owner-control-mock]
+          name = "Owner Control zero-cost mock"
+          base_url = "http://127.0.0.1:8877/v1"
+          env_key = "OWNER_PROXY_CLIENT_TOKEN"
+          wire_api = "responses"
+          request_max_retries = 0
+          stream_max_retries = 0
+          EOF
+          codex --version
+
+      - name: Codex must issue exactly one provider request
         id: codex
         continue-on-error: true
-        uses: openai/codex-action@86365089eb2b84e0a8fb0717b304f8bdcb13b20e
-        with:
-          openai-api-key: zero-cost-local-token
-          responses-api-endpoint: http://127.0.0.1:8877/v1/responses
-          prompt: 'Read README.md if present and return one sentence. Do not edit files.'
-          model: gpt-5.6-luna
-          effort: low
-          codex-home: /tmp/free-codex-home
-          codex-version: '0.154.0'
-          permission-profile: ':workspace'
-          safety-strategy: drop-sudo
-          codex-args: '["--ephemeral","--config","model_providers.codex-action-responses-proxy.request_max_retries=0","--config","model_providers.codex-action-responses-proxy.stream_max_retries=0"]'
+        shell: bash
+        env:
+          CODEX_HOME: /tmp/free-codex-home
+          OWNER_PROXY_CLIENT_TOKEN: zero-cost-local-token
+        run: |
+          set -euo pipefail
+          uid="$(id -u)"
+          nobody_gid="$(id -g nobody)"
+          sudo rm -f /etc/sudoers.d/runner
+          if sudo -n true 2>/dev/null; then
+            echo "sudo still available"; exit 1
+          fi
+          set +e
+          /usr/bin/setpriv             --reuid="$uid"             --regid="$nobody_gid"             --clear-groups             --no-new-privs             --bounding-set=-all             --inh-caps=-all             --ambient-caps=-all             -- env CODEX_HOME="$CODEX_HOME" OWNER_PROXY_CLIENT_TOKEN="$OWNER_PROXY_CLIENT_TOKEN" PATH="$PATH" HOME="$HOME"             codex exec --skip-git-repo-check --cd "$GITHUB_WORKSPACE" --model gpt-5.6-luna               --output-last-message /tmp/free-codex-output.txt --ephemeral               'Read README.md if present and return one sentence. Do not edit files.'
+          rc=$?
+          set -e
+          test "$rc" -ne 0
+
       - name: Prove effective retry policy
         if: always()
         shell: bash
-        env:
-          CODEX_OUTCOME: ${{ steps.codex.outcome }}
         run: |
-          test "$CODEX_OUTCOME" = failure
           python3 - <<'PY'
           from pathlib import Path
           count=int(Path('/tmp/mock-post-count').read_text())
           assert count == 1, f'expected exactly one provider request, got {count}'
+          cfg=Path('/tmp/free-codex-home/config.toml').read_text()
+          assert 'request_max_retries = 0' in cfg
+          assert 'stream_max_retries = 0' in cfg
           print('FREE_CODEX_PROVIDER_REQUESTS=1')
           print('REQUEST_MAX_RETRIES=0')
           print('STREAM_MAX_RETRIES=0')
