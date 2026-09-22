@@ -36,6 +36,9 @@ class OwnerControlV2SafetyTest(unittest.TestCase):
         self.assertIn("--no-new-privs", codex)
         self.assertIn("--bounding-set=-all", codex)
         self.assertIn("API_CODEX_PROVIDER_REQUESTS=1", codex)
+        self.assertIn("--ephemeral -", codex)
+        self.assertIn("< /tmp/codex-prompt.txt", codex)
+        self.assertNotIn('prompt="$(cat /tmp/codex-prompt.txt)"', codex)
 
     def test_codex_retry_policy_is_explicitly_zero(self):
         yml = TASK.read_text()
