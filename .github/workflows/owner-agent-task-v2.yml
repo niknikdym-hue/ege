@@ -193,6 +193,7 @@ jobs:
           name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-route
           path: /tmp/route
       - name: Freeze cumulative input and start executor proxy
+        id: executor_proxy
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OWNER_TASK_BUDGET_USD: ${{ needs.route.outputs.exec_budget }}
@@ -203,8 +204,11 @@ jobs:
           test "$(git rev-parse HEAD)" = '${{ inputs.expected_work_sha }}' || { echo 'Package branch moved'; exit 1; }
           current_base="$(git ls-remote origin 'refs/heads/${{ inputs.authority_base_ref }}' | awk 'NR==1{print $1}')"; test "$current_base" = '${{ inputs.authority_base_sha }}' || { echo 'Authority base moved'; exit 1; }
           proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          client_token="$(openssl rand -hex 32)"
+          echo "::add-mask::$client_token"
+          echo "client_token=$client_token" >> "$GITHUB_OUTPUT"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
           rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
       - name: Compose bounded prompt
         shell: bash
@@ -217,19 +221,45 @@ jobs:
           prompt={'task':task,'candidate_paths':[p for p in tracked if any(w in p.lower() for w in words)][:120],'package_context':{'work_ref':'${{ inputs.work_ref }}','start_sha':'${{ inputs.expected_work_sha }}'},'rules':['Solve exactly this task; never choose another task.','Preserve prior PASS changes on this package branch.','Edit at most 12 paths.','Do not merge, deploy, mark Ready, publish Tilda, write production/learner data, call payment/refund/Yandex, expose secrets, modify Owner Control workflows, operational board, or budget proxy.','Do not invoke paid provider APIs yourself.','Leave a reviewable workspace diff only.']}
           Path('/tmp/codex-prompt.txt').write_text(json.dumps(prompt,ensure_ascii=False,indent=2))
           PY
+      - name: Prepare retry-zero Codex home
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -d -m 700 /tmp/owner-codex-home
+          cat > /tmp/owner-codex-home/config.toml <<'EOF'
+          [model_providers.codex-action-responses-proxy]
+          request_max_retries = 0
+          stream_max_retries = 0
+          EOF
       - name: API-Codex executes bounded task
-        uses: openai/codex-action@v1
+        uses: openai/codex-action@86365089eb2b84e0a8fb0717b304f8bdcb13b20e
         with:
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          openai-api-key: ${{ steps.executor_proxy.outputs.client_token }}
           responses-api-endpoint: http://127.0.0.1:8787/v1/responses
           prompt-file: /tmp/codex-prompt.txt
           output-file: /tmp/codex-output.txt
           model: ${{ needs.route.outputs.model }}
           effort: ${{ needs.route.outputs.effort }}
+          codex-home: /tmp/owner-codex-home
+          codex-version: '0.154.0'
           permission-profile: ':workspace'
           safety-strategy: drop-sudo
           allow-bots: true
           codex-args: '["--ephemeral"]'
+      - name: Verify effective Codex retry policy
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import tomllib
+          from pathlib import Path
+          cfg=tomllib.loads(Path('/tmp/owner-codex-home/config.toml').read_text())
+          provider=cfg['model_providers']['codex-action-responses-proxy']
+          assert provider.get('request_max_retries') == 0
+          assert provider.get('stream_max_retries') == 0
+          print('CODEX_REQUEST_MAX_RETRIES=0')
+          print('CODEX_STREAM_MAX_RETRIES=0')
+          PY
       - name: Extract untrusted candidate patch only
         if: ${{ always() }}
         shell: bash
