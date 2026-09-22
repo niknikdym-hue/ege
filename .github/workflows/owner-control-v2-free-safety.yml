@@ -1,0 +1,173 @@
+name: Owner Control v2 free safety proof
+
+on:
+  push:
+    branches:
+      - brain/owner-control-astra-rework-20260922
+  pull_request:
+    paths:
+      - '.github/workflows/owner-agent-task-v2.yml'
+      - '.github/workflows/owner-agent-batch-v2.yml'
+      - 'eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs'
+      - 'eksamio-learning-engine/tests/test_owner_control_v2_safety.py'
+
+permissions:
+  contents: read
+
+jobs:
+  static-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Owner Control v2 safety tests
+        run: |
+          python3 -m unittest eksamio-learning-engine/tests/test_owner_control_v2_safety.py
+          node eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs --self-test
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-agent-task-v2.yml', aliases: true); puts 'OWNER_TASK_YAML_PARSE=PASS'"
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/owner-agent-batch-v2.yml', aliases: true); puts 'OWNER_BATCH_YAML_PARSE=PASS'"
+          git diff --check
+
+  retry-zero-mock:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Start zero-cost failing Responses mock
+        shell: bash
+        run: |
+          cat >/tmp/failing_responses.py <<'PY'
+          from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+          from pathlib import Path
+          import json
+          COUNT=Path('/tmp/mock-post-count')
+          COUNT.write_text('0')
+          class H(BaseHTTPRequestHandler):
+              def log_message(self, *_): pass
+              def do_GET(self):
+                  if self.path.endswith('/models'):
+                      b=json.dumps({'object':'list','data':[{'id':'gpt-5.6-luna','object':'model','created':0,'owned_by':'mock'}]}).encode()
+                      self.send_response(200); self.send_header('content-type','application/json'); self.send_header('content-length',str(len(b))); self.end_headers(); self.wfile.write(b); return
+                  self.send_response(404); self.end_headers()
+              def do_POST(self):
+                  n=int(COUNT.read_text())+1; COUNT.write_text(str(n))
+                  length=int(self.headers.get('content-length') or 0)
+                  if length: self.rfile.read(length)
+                  b=json.dumps({'error':{'message':'intentional zero-cost retry proof','type':'mock_failure'}}).encode()
+                  self.send_response(500); self.send_header('content-type','application/json'); self.send_header('content-length',str(len(b))); self.end_headers(); self.wfile.write(b)
+          ThreadingHTTPServer(('127.0.0.1',8877),H).serve_forever()
+          PY
+          python3 /tmp/failing_responses.py >/tmp/failing_responses.log 2>&1 &
+          for _ in {1..20}; do curl -fsS http://127.0.0.1:8877/v1/models >/dev/null && break; sleep 1; done
+
+      - name: Install pinned Codex CLI and retry-zero provider
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install -g @openai/codex@0.154.0
+          install -d -m 700 /tmp/free-codex-home
+          cat >/tmp/free-codex-home/config.toml <<'EOF'
+          model_provider = "owner-control-mock"
+          approval_policy = "never"
+          sandbox_mode = "workspace-write"
+
+          [model_providers.owner-control-mock]
+          name = "Owner Control zero-cost mock"
+          base_url = "http://127.0.0.1:8877/v1"
+          env_key = "OWNER_PROXY_CLIENT_TOKEN"
+          wire_api = "responses"
+          request_max_retries = 0
+          stream_max_retries = 0
+          EOF
+          codex --version
+
+      - name: Codex must issue exactly one provider request
+        id: codex
+        continue-on-error: true
+        shell: bash
+        env:
+          CODEX_HOME: /tmp/free-codex-home
+          OWNER_PROXY_CLIENT_TOKEN: zero-cost-local-token
+        run: |
+          set -euo pipefail
+          uid="$(id -u)"
+          nobody_gid="$(id -g nobody)"
+          set +e
+          sudo -n -E /bin/bash -c '
+            set -euo pipefail
+            rm -f /etc/sudoers.d/runner
+            exec /usr/bin/setpriv --reuid="'"$uid"'" --regid="'"$nobody_gid"'" --clear-groups --no-new-privs --bounding-set=-all --inh-caps=-all --ambient-caps=-all -- env CODEX_HOME="'"$CODEX_HOME"'" OWNER_PROXY_CLIENT_TOKEN="'"$OWNER_PROXY_CLIENT_TOKEN"'" PATH="'"$PATH"'" HOME="'"$HOME"'" codex exec --skip-git-repo-check --cd "'"$GITHUB_WORKSPACE"'" --model gpt-5.6-luna --output-last-message /tmp/free-codex-output.txt --ephemeral "Read README.md if present and return one sentence. Do not edit files."
+          '
+          rc=$?
+          set -e
+          test "$rc" -ne 0
+          if sudo -n true 2>/dev/null; then
+            echo "sudo unexpectedly remained available"; exit 1
+          fi
+
+      - name: Prove effective retry policy
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          count=int(Path('/tmp/mock-post-count').read_text())
+          assert count == 1, f'expected exactly one provider request, got {count}'
+          cfg=Path('/tmp/free-codex-home/config.toml').read_text()
+          assert 'request_max_retries = 0' in cfg
+          assert 'stream_max_retries = 0' in cfg
+          print('FREE_CODEX_PROVIDER_REQUESTS=1')
+          print('REQUEST_MAX_RETRIES=0')
+          print('STREAM_MAX_RETRIES=0')
+          print('REAL_OPENAI_CALLS=0')
+          PY
+
+  budget-proxy-mock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Start fake upstream and authenticated budget proxy
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat >/tmp/fake_upstream.py <<'PY'
+          from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+          from pathlib import Path
+          import json
+          COUNT=Path('/tmp/fake-upstream-count'); COUNT.write_text('0')
+          class H(BaseHTTPRequestHandler):
+              def log_message(self,*_): pass
+              def do_POST(self):
+                  COUNT.write_text(str(int(COUNT.read_text())+1))
+                  n=int(self.headers.get('content-length') or 0)
+                  if n: self.rfile.read(n)
+                  b=json.dumps({'error':{'message':'fake upstream','type':'mock'}}).encode()
+                  self.send_response(500); self.send_header('content-type','application/json'); self.send_header('content-length',str(len(b))); self.end_headers(); self.wfile.write(b)
+          ThreadingHTTPServer(('127.0.0.1',8890),H).serve_forever()
+          PY
+          python3 /tmp/fake_upstream.py >/tmp/fake-upstream.log 2>&1 &
+          proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          printf '%s' 'fake-provider-key' | env \
+            OWNER_TASK_BUDGET_USD=0.0001 \
+            OWNER_ALLOWED_MODELS=gpt-5.6-luna \
+            OWNER_PROXY_CLIENT_TOKEN=local-client-token \
+            OWNER_PROXY_TEST_MODE=1 \
+            OWNER_PROXY_UPSTREAM_URL=http://127.0.0.1:8890/v1/responses \
+            OWNER_BUDGET_PROXY_PORT=8789 \
+            node "$proxy" >/tmp/budget-proxy.log 2>&1 &
+          for _ in {1..20}; do curl -fsS http://127.0.0.1:8789/health >/dev/null && break; sleep 1; done
+
+      - name: Prove auth and budget fail before upstream
+        shell: bash
+        run: |
+          set -euo pipefail
+          payload='{"model":"gpt-5.6-luna","input":"x","max_output_tokens":1800}'
+          wrong="$(curl -sS -o /tmp/wrong.json -w '%{http_code}' -X POST -H 'content-type: application/json' --data "$payload" http://127.0.0.1:8789/v1/responses)"
+          test "$wrong" = 401
+          exhausted="$(curl -sS -o /tmp/exhausted.json -w '%{http_code}' -X POST -H 'content-type: application/json' -H 'authorization: Bearer local-client-token' --data "$payload" http://127.0.0.1:8789/v1/responses)"
+          test "$exhausted" = 402
+          test "$(cat /tmp/fake-upstream-count)" = 0
+          echo "UNAUTHORIZED_PROXY_FORWARD_COUNT=0"
+          echo "BUDGET_EXHAUSTED_PROXY_FORWARD_COUNT=0"
+          echo "REAL_OPENAI_CALLS=0"

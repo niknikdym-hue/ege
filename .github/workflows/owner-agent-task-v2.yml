@@ -154,15 +154,16 @@ jobs:
         run: |
           set -euo pipefail
           proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          client_token="$(openssl rand -hex 32)"; export OWNER_PROXY_CLIENT_TOKEN="$client_token"; echo "::add-mask::$client_token"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
           rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
           python3 - <<'PY'
-          import json, urllib.request
+          import json, os, urllib.request
           from pathlib import Path
           route=json.loads(Path('/tmp/route/owner-v2-route.json').read_text())
           payload={'model':'gpt-6-astra','instructions':'Create a minimal execution note for this already-selected task. Do not choose or reprioritize tasks.','input':json.dumps(route['task'],ensure_ascii=False,sort_keys=True),'reasoning':{'effort':'medium'},'text':{'verbosity':'low'},'max_output_tokens':3000,'store':False}
-          req=urllib.request.Request('http://127.0.0.1:8787/v1/responses',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json'},method='POST')
+          req=urllib.request.Request('http://127.0.0.1:8787/v1/responses',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json','Authorization':'Bearer '+os.environ['OWNER_PROXY_CLIENT_TOKEN']},method='POST')
           with urllib.request.urlopen(req,timeout=240) as r: body=json.loads(r.read().decode())
           if body.get('status')!='completed': raise SystemExit('Astra plan incomplete; no retry')
           Path('/tmp/astra-plan.json').write_text(json.dumps(body,ensure_ascii=False,indent=2))
@@ -193,6 +194,7 @@ jobs:
           name: owner-v2-${{ inputs.package_id }}-${{ inputs.task_id }}-route
           path: /tmp/route
       - name: Freeze cumulative input and start executor proxy
+        id: executor_proxy
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OWNER_TASK_BUDGET_USD: ${{ needs.route.outputs.exec_budget }}
@@ -203,8 +205,11 @@ jobs:
           test "$(git rev-parse HEAD)" = '${{ inputs.expected_work_sha }}' || { echo 'Package branch moved'; exit 1; }
           current_base="$(git ls-remote origin 'refs/heads/${{ inputs.authority_base_ref }}' | awk 'NR==1{print $1}')"; test "$current_base" = '${{ inputs.authority_base_sha }}' || { echo 'Authority base moved'; exit 1; }
           proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          client_token="$(openssl rand -hex 32)"
+          echo "::add-mask::$client_token"
+          echo "client_token=$client_token" >> "$GITHUB_OUTPUT"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
           rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
       - name: Compose bounded prompt
         shell: bash
@@ -217,19 +222,73 @@ jobs:
           prompt={'task':task,'candidate_paths':[p for p in tracked if any(w in p.lower() for w in words)][:120],'package_context':{'work_ref':'${{ inputs.work_ref }}','start_sha':'${{ inputs.expected_work_sha }}'},'rules':['Solve exactly this task; never choose another task.','Preserve prior PASS changes on this package branch.','Edit at most 12 paths.','Do not merge, deploy, mark Ready, publish Tilda, write production/learner data, call payment/refund/Yandex, expose secrets, modify Owner Control workflows, operational board, or budget proxy.','Do not invoke paid provider APIs yourself.','Leave a reviewable workspace diff only.']}
           Path('/tmp/codex-prompt.txt').write_text(json.dumps(prompt,ensure_ascii=False,indent=2))
           PY
-      - name: API-Codex executes bounded task
-        uses: openai/codex-action@v1
-        with:
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          responses-api-endpoint: http://127.0.0.1:8787/v1/responses
-          prompt-file: /tmp/codex-prompt.txt
-          output-file: /tmp/codex-output.txt
-          model: ${{ needs.route.outputs.model }}
-          effort: ${{ needs.route.outputs.effort }}
-          permission-profile: ':workspace'
-          safety-strategy: drop-sudo
-          allow-bots: true
-          codex-args: '["--ephemeral"]'
+      - name: Install pinned Codex CLI with retry-zero budget-proxy provider
+        shell: bash
+        env:
+          CODEX_EFFORT: ${{ needs.route.outputs.effort }}
+        run: |
+          set -euo pipefail
+          npm install -g @openai/codex@0.154.0
+          install -d -m 700 /tmp/owner-codex-home
+          cat > /tmp/owner-codex-home/config.toml <<EOF
+          model_provider = "owner-control-proxy"
+          model_reasoning_effort = "$CODEX_EFFORT"
+          approval_policy = "never"
+          sandbox_mode = "workspace-write"
+
+          [model_providers.owner-control-proxy]
+          name = "Eksamio Owner Control budget proxy"
+          base_url = "http://127.0.0.1:8787/v1"
+          env_key = "OWNER_PROXY_CLIENT_TOKEN"
+          wire_api = "responses"
+          request_max_retries = 0
+          stream_max_retries = 0
+          EOF
+          codex --version
+          grep -q 'request_max_retries = 0' /tmp/owner-codex-home/config.toml
+          grep -q 'stream_max_retries = 0' /tmp/owner-codex-home/config.toml
+
+      - name: API-Codex executes bounded task once
+        shell: bash
+        env:
+          CODEX_HOME: /tmp/owner-codex-home
+          OWNER_PROXY_CLIENT_TOKEN: ${{ steps.executor_proxy.outputs.client_token }}
+          CODEX_MODEL: ${{ needs.route.outputs.model }}
+          CODEX_EFFORT: ${{ needs.route.outputs.effort }}
+        run: |
+          set -euo pipefail
+
+          current_userns="$(sysctl -n kernel.unprivileged_userns_clone 2>/dev/null || true)"
+          if [ -n "$current_userns" ] && [ "$current_userns" != "1" ]; then
+            sudo sysctl -w kernel.unprivileged_userns_clone=1
+          fi
+          current_apparmor="$(sysctl -n kernel.apparmor_restrict_unprivileged_userns 2>/dev/null || true)"
+          if [ -n "$current_apparmor" ] && [ "$current_apparmor" != "0" ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+
+          uid="$(id -u)"
+          nobody_gid="$(id -g nobody)"
+
+          sudo -n -E /bin/bash -c '
+            set -euo pipefail
+            rm -f /etc/sudoers.d/runner
+            exec /usr/bin/setpriv --reuid="'"$uid"'" --regid="'"$nobody_gid"'" --clear-groups --no-new-privs --bounding-set=-all --inh-caps=-all --ambient-caps=-all -- env CODEX_HOME="'"$CODEX_HOME"'" OWNER_PROXY_CLIENT_TOKEN="'"$OWNER_PROXY_CLIENT_TOKEN"'" PATH="'"$PATH"'" HOME="'"$HOME"'" codex exec --skip-git-repo-check --cd "'"$GITHUB_WORKSPACE"'" --model "'"$CODEX_MODEL"'" --output-last-message /tmp/codex-output.txt --ephemeral -
+          ' < /tmp/codex-prompt.txt
+
+          test -s /tmp/codex-output.txt
+          if sudo -n true 2>/dev/null; then
+            echo "sudo unexpectedly remained available after Codex"; exit 1
+          fi
+          health="$(curl -fsS http://127.0.0.1:8787/health)"
+          python3 - "$health" <<'PY'
+          import json,sys
+          d=json.loads(sys.argv[1])
+          assert d['requests'] == 1, d
+          print('API_CODEX_PROVIDER_REQUESTS=1')
+          print('CODEX_REQUEST_MAX_RETRIES=0')
+          print('CODEX_STREAM_MAX_RETRIES=0')
+          PY
       - name: Extract untrusted candidate patch only
         if: ${{ always() }}
         shell: bash
@@ -317,18 +376,19 @@ jobs:
           set -euo pipefail
           git apply --index --binary /tmp/validated/validated.patch
           proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          client_token="$(openssl rand -hex 32)"; export OWNER_PROXY_CLIENT_TOKEN="$client_token"; echo "::add-mask::$client_token"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
           rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
           python3 - <<'PY'
-          import json, subprocess, urllib.request
+          import json, os, subprocess, urllib.request
           from pathlib import Path
           route=json.loads(Path('/tmp/route/owner-v2-route.json').read_text()); diff=subprocess.check_output(['git','diff','--cached','--no-ext-diff','--no-textconv'],text=True)
           if len(diff)>120000: raise SystemExit('Validated diff too large for bounded Astra acceptance')
           context={'task':route['task'],'diff':diff,'tests':Path('/tmp/validated/test-evidence.txt').read_text()}
           schema={'type':'object','additionalProperties':False,'properties':{'decision':{'type':'string','enum':['PASS','FAIL']},'reason':{'type':'string'}},'required':['decision','reason']}
           payload={'model':'gpt-6-astra','instructions':'Accept only this selected bounded task. PASS only if the validated diff and evidence satisfy it.','input':json.dumps(context,ensure_ascii=False),'reasoning':{'effort':'medium'},'text':{'verbosity':'low','format':{'type':'json_schema','name':'owner_v2_acceptance','strict':True,'schema':schema}},'max_output_tokens':3000,'store':False}
-          req=urllib.request.Request('http://127.0.0.1:8787/v1/responses',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json'},method='POST')
+          req=urllib.request.Request('http://127.0.0.1:8787/v1/responses',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json','Authorization':'Bearer '+os.environ['OWNER_PROXY_CLIENT_TOKEN']},method='POST')
           with urllib.request.urlopen(req,timeout=240) as r: body=json.loads(r.read().decode())
           if body.get('status')!='completed': raise SystemExit('Astra acceptance incomplete; no retry')
           text='\n'.join(x.get('text','') for item in body.get('output',[]) for x in item.get('content',[]) if x.get('type')=='output_text'); decision=json.loads(text)

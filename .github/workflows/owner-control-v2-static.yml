@@ -60,12 +60,20 @@ jobs:
           imports={alias.name for n in tree.body if isinstance(n,(ast.Import,ast.ImportFrom)) for alias in n.names}
           assert 'subprocess' not in imports and 'os' not in imports
 
-          # AI lane keeps existing safety: explicit Astra only, isolated Codex, hard proxy.
+          # AI lane keeps existing safety: explicit Astra only, one-shot isolated Codex, hard proxy.
           assert "astra_plan=bool(task.get('astra_plan_required') or task.get('astra_required'))" in ai
           assert "astra_accept=bool(task.get('astra_acceptance_required') or task.get('astra_required'))" in ai
-          assert "safety-strategy: drop-sudo" in ai
-          assert "responses-api-endpoint: http://127.0.0.1:8787/v1/responses" in ai
+          assert "npm install -g @openai/codex@0.154.0" in ai
+          assert 'base_url = "http://127.0.0.1:8787/v1"' in ai
+          assert "request_max_retries = 0" in ai
+          assert "stream_max_retries = 0" in ai
+          assert "--no-new-privs" in ai and "--bounding-set=-all" in ai
+          assert "OWNER_PROXY_CLIENT_TOKEN" in ai
+          assert "API_CODEX_PROVIDER_REQUESTS=1" in ai
           assert "owner_control_budget_proxy.mjs" in ai
+          codex_start=ai.index("- name: Install pinned Codex CLI with retry-zero budget-proxy provider")
+          codex_end=ai.index("- name: Extract untrusted candidate patch only", codex_start)
+          assert "secrets.OPENAI_API_KEY" not in ai[codex_start:codex_end]
           assert "gh pr create" not in ai
 
           # Neither lane may auto-merge/deploy/publish.

@@ -37,7 +37,11 @@ class OwnerConsoleTest(unittest.TestCase):
         self.assertFalse(by['A12.5']['owner_gate_required'])
         self.assertEqual(self.board['critical_path'],['A2.1','A2.2','A5.1','A4.1','A6.3','A8.1','A9.2','A10.1','A11.1','A11.2','A6.1','A12.1','B1'])
         self.assertTrue(by['A8.1']['owner_gate_required'])
-        self.assertEqual((by['A2.2']['pr'],by['A2.2']['branch']),(164,'brain/sep1-russian-subject-closure'))
+        self.assertEqual((by['A2.2']['pr'],by['A2.2']['branch']),(None,'brain/owner-control-russian-takeover-20260912'))
+        self.assertEqual(by['A2.2']['head_sha'],'8ac4b15bc7c5989c79cc83a2e6d6afc91f96b192')
+        self.assertEqual(by['A1.2']['status'],'CODE_READY')
+        self.assertEqual(by['A1.3']['status'],'INTEGRATION_PENDING')
+        self.assertEqual(by['A1.4']['status'],'INTEGRATION_PENDING')
         self.assertLess(sum(r['executor']=='Astra' for r in self.rows),len(self.rows))
         self.assertTrue(all(not r['visible_to_learner'] for r in self.rows if r['status']=='CODE_READY'))
 
