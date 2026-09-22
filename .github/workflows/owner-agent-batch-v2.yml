@@ -1,7 +1,10 @@
 name: Eksamio Owner Agent Batch v2
-run-name: Owner batch v2 ${{ github.run_id }} · ${{ inputs.task_ids }}
+run-name: Owner batch v2 ${{ github.run_id }} · ${{ inputs.task_ids || github.event.client_payload.task_ids }}
 
 on:
+  repository_dispatch:
+    types:
+      - owner-control-v2
   workflow_dispatch:
     inputs:
       task_ids:
@@ -28,6 +31,9 @@ jobs:
   package:
     runs-on: ubuntu-latest
     timeout-minutes: 600
+    env:
+      OWNER_REQUEST_TASK_IDS: ${{ inputs.task_ids || github.event.client_payload.task_ids }}
+      OWNER_REQUEST_BUDGET_USD: ${{ inputs.package_budget_usd || github.event.client_payload.package_budget_usd }}
     steps:
       - name: Enforce owner command
         shell: bash
@@ -35,8 +41,16 @@ jobs:
           set -euo pipefail
           test "$GITHUB_ACTOR" = 'niknikdym-hue' || { echo 'Only repository owner may start Owner Control.'; exit 1; }
           python3 - <<'PY'
+          import json, os
           from decimal import Decimal
-          b=Decimal('${{ inputs.package_budget_usd }}')
+          event=json.load(open(os.environ['GITHUB_EVENT_PATH']))
+          if os.environ.get('GITHUB_EVENT_NAME')=='repository_dispatch':
+              assert event.get('action')=='owner-control-v2'
+              payload=event.get('client_payload') or {}
+              assert set(payload) <= {'task_ids','package_budget_usd'}
+              assert payload.get('task_ids')==os.environ['OWNER_REQUEST_TASK_IDS']
+              assert str(payload.get('package_budget_usd'))==os.environ['OWNER_REQUEST_BUDGET_USD']
+          b=Decimal(os.environ['OWNER_REQUEST_BUDGET_USD'])
           assert Decimal('0.00') <= b <= Decimal('3.00'), 'package OpenAI budget must be $0.00..$3.00'
           PY
 
@@ -59,7 +73,7 @@ jobs:
 
           board=json.loads(Path('eksamio-learning-engine/project-control/operational-board-v1.json').read_text())
           assert board.get('version')=='operational-board-v1' and len(board.get('tasks') or [])==115
-          ids=[x.strip() for x in '${{ inputs.task_ids }}'.split(',') if x.strip()]
+          ids=[x.strip() for x in os.environ['OWNER_REQUEST_TASK_IDS'].split(',') if x.strip()]
           if not 1 <= len(ids) <= 5: raise SystemExit('Package must contain 1..5 tasks')
           if len(ids)!=len(set(ids)): raise SystemExit('Duplicate task ID in package')
           rows={str(x['task_id']):x for x in board['tasks']}
@@ -96,7 +110,7 @@ jobs:
               if task.get('astra_required') or task.get('astra_plan_required') or task.get('astra_acceptance_required'):
                   raise SystemExit(f"{task['task_id']} cannot be github_native and require Astra")
           ai_count=len(selected)-len(native)
-          requested=Decimal('${{ inputs.package_budget_usd }}')
+          requested=Decimal(os.environ['OWNER_REQUEST_BUDGET_USD'])
           effective=Decimal('0.00') if ai_count==0 else requested
           if ai_count and effective < Decimal('0.10'):
               raise SystemExit('AI package requires at least $0.10 hard OpenAI budget')
