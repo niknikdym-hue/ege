@@ -81,5 +81,18 @@ class OwnerControlV2SafetyTest(unittest.TestCase):
         self.assertIn("REGISTERED_ALLOWED_PATHS=PASS", yml)
         self.assertIn("path: /tmp/route", yml)
 
+    def test_repository_dispatch_transport_preserves_owner_and_budget_gates(self):
+        batch = BATCH.read_text()
+        task = TASK.read_text()
+        native = (ROOT / '.github/workflows/owner-agent-native-v3.yml').read_text()
+        self.assertIn('repository_dispatch:', batch)
+        self.assertIn('owner-control-v2', batch)
+        self.assertIn('OWNER_REQUEST_TASK_IDS', batch)
+        self.assertIn('OWNER_REQUEST_BUDGET_USD', batch)
+        self.assertIn("event.get('action')=='owner-control-v2'", batch)
+        self.assertIn("Only repository owner may start Owner Control.", batch)
+        self.assertIn("{'workflow_dispatch','repository_dispatch'}", task)
+        self.assertIn("{'workflow_dispatch','repository_dispatch'}", native)
+
 if __name__ == "__main__":
     unittest.main()
