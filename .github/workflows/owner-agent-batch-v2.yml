@@ -1,5 +1,5 @@
 name: Eksamio Owner Agent Batch v2
-run-name: Owner batch v2 ${{ github.run_id }} · ${{ inputs.task_ids }}
+run-name: Owner batch v2 ${{ github.run_id }} · ${{ inputs.task_ids }} · ${{ inputs.bridge_command_id || 'direct' }}
 
 on:
   workflow_dispatch:
@@ -12,6 +12,31 @@ on:
         description: Hard worst-case OpenAI budget; ignored and forced to $0 for all-native packages
         required: true
         default: '3.00'
+        type: string
+      bridge_command_id:
+        description: Signed Owner Control bridge command id; empty for direct owner launch
+        required: false
+        default: ''
+        type: string
+      bridge_command_commit:
+        description: Exact immutable command commit
+        required: false
+        default: ''
+        type: string
+      bridge_claim_tag:
+        description: Permanent one-use command claim tag
+        required: false
+        default: ''
+        type: string
+      bridge_run_id:
+        description: Trusted command bridge workflow run id
+        required: false
+        default: ''
+        type: string
+      bridge_run_attempt:
+        description: Command bridge run attempt; must be 1
+        required: false
+        default: ''
         type: string
 
 permissions:
@@ -29,21 +54,39 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 600
     steps:
-      - name: Enforce owner command
+      - name: Preflight direct owner or signed bridge caller
+        env:
+          BRIDGE_COMMAND_ID: ${{ inputs.bridge_command_id }}
+          BRIDGE_COMMAND_COMMIT: ${{ inputs.bridge_command_commit }}
+          BRIDGE_CLAIM_TAG: ${{ inputs.bridge_claim_tag }}
+          BRIDGE_RUN_ID: ${{ inputs.bridge_run_id }}
+          BRIDGE_RUN_ATTEMPT: ${{ inputs.bridge_run_attempt }}
         shell: bash
         run: |
           set -euo pipefail
-          test "$GITHUB_ACTOR" = 'niknikdym-hue' || { echo 'Only repository owner may start Owner Control.'; exit 1; }
           python3 - <<'PY'
           from decimal import Decimal
           b=Decimal('${{ inputs.package_budget_usd }}')
           assert Decimal('0.00') <= b <= Decimal('3.00'), 'package OpenAI budget must be $0.00..$3.00'
           PY
+          if [ -z "$BRIDGE_COMMAND_ID" ]; then
+            test "$GITHUB_ACTOR" = 'niknikdym-hue' || { echo 'Direct Owner Control launch requires repository owner.'; exit 1; }
+            test -z "$BRIDGE_COMMAND_COMMIT$BRIDGE_CLAIM_TAG$BRIDGE_RUN_ID$BRIDGE_RUN_ATTEMPT" || { echo 'Partial bridge inputs forbidden'; exit 1; }
+            echo "OWNER_CONTROL_CALLER=DIRECT_OWNER"
+          else
+            test "$GITHUB_ACTOR" = 'github-actions[bot]' || { echo "Bridge launch requires GitHub Actions caller, got $GITHUB_ACTOR"; exit 1; }
+            [[ "$BRIDGE_COMMAND_ID" =~ ^[0-9a-f]{32}$ ]]
+            [[ "$BRIDGE_COMMAND_COMMIT" =~ ^[0-9a-f]{40}$ ]]
+            [[ "$BRIDGE_CLAIM_TAG" == "owner-control-claim-$BRIDGE_COMMAND_ID" ]]
+            [[ "$BRIDGE_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+            test "$BRIDGE_RUN_ATTEMPT" = "1"
+            echo "OWNER_CONTROL_CALLER=SIGNED_BRIDGE"
+          fi
 
-      - name: Checkout main authority
+      - name: Checkout exact workflow authority
         uses: actions/checkout@v5
         with:
-          ref: main
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: true
 
