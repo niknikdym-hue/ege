@@ -59,11 +59,6 @@ jobs:
           python3 /tmp/failing_responses.py >/tmp/failing_responses.log 2>&1 &
           for _ in {1..20}; do curl -fsS http://127.0.0.1:8877/v1/models >/dev/null && break; sleep 1; done
           install -d -m 700 /tmp/free-codex-home
-          cat >/tmp/free-codex-home/config.toml <<'EOF'
-          [model_providers.codex-action-responses-proxy]
-          request_max_retries = 0
-          stream_max_retries = 0
-          EOF
       - name: Codex must fail once without provider retries
         id: codex
         continue-on-error: true
@@ -78,7 +73,7 @@ jobs:
           codex-version: '0.154.0'
           permission-profile: ':workspace'
           safety-strategy: drop-sudo
-          codex-args: '["--ephemeral"]'
+          codex-args: '["--ephemeral","--config","model_providers.codex-action-responses-proxy.request_max_retries=0","--config","model_providers.codex-action-responses-proxy.stream_max_retries=0"]'
       - name: Prove effective retry policy
         if: always()
         shell: bash
@@ -87,12 +82,7 @@ jobs:
         run: |
           test "$CODEX_OUTCOME" = failure
           python3 - <<'PY'
-          import tomllib
           from pathlib import Path
-          cfg=tomllib.loads(Path('/tmp/free-codex-home/config.toml').read_text())
-          p=cfg['model_providers']['codex-action-responses-proxy']
-          assert p['request_max_retries'] == 0, p
-          assert p['stream_max_retries'] == 0, p
           count=int(Path('/tmp/mock-post-count').read_text())
           assert count == 1, f'expected exactly one provider request, got {count}'
           print('FREE_CODEX_PROVIDER_REQUESTS=1')
