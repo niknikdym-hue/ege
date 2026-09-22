@@ -222,42 +222,68 @@ jobs:
           prompt={'task':task,'candidate_paths':[p for p in tracked if any(w in p.lower() for w in words)][:120],'package_context':{'work_ref':'${{ inputs.work_ref }}','start_sha':'${{ inputs.expected_work_sha }}'},'rules':['Solve exactly this task; never choose another task.','Preserve prior PASS changes on this package branch.','Edit at most 12 paths.','Do not merge, deploy, mark Ready, publish Tilda, write production/learner data, call payment/refund/Yandex, expose secrets, modify Owner Control workflows, operational board, or budget proxy.','Do not invoke paid provider APIs yourself.','Leave a reviewable workspace diff only.']}
           Path('/tmp/codex-prompt.txt').write_text(json.dumps(prompt,ensure_ascii=False,indent=2))
           PY
-      - name: Prepare retry-zero Codex home
+      - name: Install pinned Codex CLI with retry-zero budget-proxy provider
         shell: bash
         run: |
           set -euo pipefail
+          npm install -g @openai/codex@0.154.0
           install -d -m 700 /tmp/owner-codex-home
           cat > /tmp/owner-codex-home/config.toml <<'EOF'
-          [model_providers.codex-action-responses-proxy]
+          model_provider = "owner-control-proxy"
+          approval_policy = "never"
+          sandbox_mode = "workspace-write"
+
+          [model_providers.owner-control-proxy]
+          name = "Eksamio Owner Control budget proxy"
+          base_url = "http://127.0.0.1:8787/v1"
+          env_key = "OWNER_PROXY_CLIENT_TOKEN"
+          wire_api = "responses"
           request_max_retries = 0
           stream_max_retries = 0
           EOF
-      - name: API-Codex executes bounded task
-        uses: openai/codex-action@86365089eb2b84e0a8fb0717b304f8bdcb13b20e
-        with:
-          openai-api-key: ${{ steps.executor_proxy.outputs.client_token }}
-          responses-api-endpoint: http://127.0.0.1:8787/v1/responses
-          prompt-file: /tmp/codex-prompt.txt
-          output-file: /tmp/codex-output.txt
-          model: ${{ needs.route.outputs.model }}
-          effort: ${{ needs.route.outputs.effort }}
-          codex-home: /tmp/owner-codex-home
-          codex-version: '0.154.0'
-          permission-profile: ':workspace'
-          safety-strategy: drop-sudo
-          allow-bots: true
-          codex-args: '["--ephemeral"]'
-      - name: Verify effective Codex retry policy
-        if: ${{ always() }}
+          codex --version
+          grep -q 'request_max_retries = 0' /tmp/owner-codex-home/config.toml
+          grep -q 'stream_max_retries = 0' /tmp/owner-codex-home/config.toml
+
+      - name: API-Codex executes bounded task once
         shell: bash
+        env:
+          CODEX_HOME: /tmp/owner-codex-home
+          OWNER_PROXY_CLIENT_TOKEN: ${{ steps.executor_proxy.outputs.client_token }}
+          CODEX_MODEL: ${{ needs.route.outputs.model }}
+          CODEX_EFFORT: ${{ needs.route.outputs.effort }}
         run: |
-          python3 - <<'PY'
-          import tomllib
-          from pathlib import Path
-          cfg=tomllib.loads(Path('/tmp/owner-codex-home/config.toml').read_text())
-          provider=cfg['model_providers']['codex-action-responses-proxy']
-          assert provider.get('request_max_retries') == 0
-          assert provider.get('stream_max_retries') == 0
+          set -euo pipefail
+
+          current_userns="$(sysctl -n kernel.unprivileged_userns_clone 2>/dev/null || true)"
+          if [ -n "$current_userns" ] && [ "$current_userns" != "1" ]; then
+            sudo sysctl -w kernel.unprivileged_userns_clone=1
+          fi
+          current_apparmor="$(sysctl -n kernel.apparmor_restrict_unprivileged_userns 2>/dev/null || true)"
+          if [ -n "$current_apparmor" ] && [ "$current_apparmor" != "0" ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+
+          uid="$(id -u)"
+          nobody_gid="$(id -g nobody)"
+          prompt="$(cat /tmp/codex-prompt.txt)"
+
+          sudo -n -E /bin/bash -c '
+            set -euo pipefail
+            rm -f /etc/sudoers.d/runner
+            exec /usr/bin/setpriv --reuid="'"$uid"'" --regid="'"$nobody_gid"'" --clear-groups --no-new-privs --bounding-set=-all --inh-caps=-all --ambient-caps=-all -- env CODEX_HOME="'"$CODEX_HOME"'" OWNER_PROXY_CLIENT_TOKEN="'"$OWNER_PROXY_CLIENT_TOKEN"'" PATH="'"$PATH"'" HOME="'"$HOME"'" codex exec --skip-git-repo-check --cd "'"$GITHUB_WORKSPACE"'" --model "'"$CODEX_MODEL"'" --config "model_reasoning_effort=\"'"$CODEX_EFFORT"'\"" --output-last-message /tmp/codex-output.txt --ephemeral "'"$(printf '%s' "$prompt" | sed "s/'/'\\''/g")"'"
+          '
+
+          test -s /tmp/codex-output.txt
+          if sudo -n true 2>/dev/null; then
+            echo "sudo unexpectedly remained available after Codex"; exit 1
+          fi
+          health="$(curl -fsS http://127.0.0.1:8787/health)"
+          python3 - "$health" <<'PY'
+          import json,sys
+          d=json.loads(sys.argv[1])
+          assert d['requests'] == 1, d
+          print('API_CODEX_PROVIDER_REQUESTS=1')
           print('CODEX_REQUEST_MAX_RETRIES=0')
           print('CODEX_STREAM_MAX_RETRIES=0')
           PY
