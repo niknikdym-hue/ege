@@ -224,12 +224,15 @@ jobs:
           PY
       - name: Install pinned Codex CLI with retry-zero budget-proxy provider
         shell: bash
+        env:
+          CODEX_EFFORT: ${{ needs.route.outputs.effort }}
         run: |
           set -euo pipefail
           npm install -g @openai/codex@0.154.0
           install -d -m 700 /tmp/owner-codex-home
-          cat > /tmp/owner-codex-home/config.toml <<'EOF'
+          cat > /tmp/owner-codex-home/config.toml <<EOF
           model_provider = "owner-control-proxy"
+          model_reasoning_effort = "$CODEX_EFFORT"
           approval_policy = "never"
           sandbox_mode = "workspace-write"
 
@@ -270,7 +273,7 @@ jobs:
           sudo -n -E /bin/bash -c '
             set -euo pipefail
             rm -f /etc/sudoers.d/runner
-            exec /usr/bin/setpriv --reuid="'"$uid"'" --regid="'"$nobody_gid"'" --clear-groups --no-new-privs --bounding-set=-all --inh-caps=-all --ambient-caps=-all -- env CODEX_HOME="'"$CODEX_HOME"'" OWNER_PROXY_CLIENT_TOKEN="'"$OWNER_PROXY_CLIENT_TOKEN"'" PATH="'"$PATH"'" HOME="'"$HOME"'" codex exec --skip-git-repo-check --cd "'"$GITHUB_WORKSPACE"'" --model "'"$CODEX_MODEL"'" --config "model_reasoning_effort=\"'"$CODEX_EFFORT"'\"" --output-last-message /tmp/codex-output.txt --ephemeral -
+            exec /usr/bin/setpriv --reuid="'"$uid"'" --regid="'"$nobody_gid"'" --clear-groups --no-new-privs --bounding-set=-all --inh-caps=-all --ambient-caps=-all -- env CODEX_HOME="'"$CODEX_HOME"'" OWNER_PROXY_CLIENT_TOKEN="'"$OWNER_PROXY_CLIENT_TOKEN"'" PATH="'"$PATH"'" HOME="'"$HOME"'" codex exec --skip-git-repo-check --cd "'"$GITHUB_WORKSPACE"'" --model "'"$CODEX_MODEL"'" --output-last-message /tmp/codex-output.txt --ephemeral -
           ' < /tmp/codex-prompt.txt
 
           test -s /tmp/codex-output.txt
