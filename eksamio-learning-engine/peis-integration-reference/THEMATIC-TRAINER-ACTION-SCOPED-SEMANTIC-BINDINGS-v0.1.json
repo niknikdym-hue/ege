@@ -1,0 +1,137 @@
+{
+  "schema": "eksamio.thematic-trainer-action-scoped-semantic-bindings.v0.1",
+  "issue": 185,
+  "status": "BOUNDED_ACTION_SCOPED_BINDING_ACCEPTED_NO_MASTERY_ADMISSION",
+  "authority": {
+    "russian_subject_head_sha": "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9",
+    "semantic_inventory_path": "eksamio-learning-engine/273-RUSSIAN-SEMANTIC-IDENTITY-INVENTORY-v0.1.json",
+    "orthoepy_stress_acceptance_path": "eksamio-learning-engine/russian-program/subject-admission/RU02-NORMATIVE-STRESS-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
+    "paronym_acceptance_path": "eksamio-learning-engine/russian-program/subject-admission/RU03-PARONYM-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
+    "phraseology_acceptance_path": "eksamio-learning-engine/russian-program/subject-admission/RU03-PHRASEOLOGISM-IDENTIFICATION-BOUNDED-SUBJECT-SEMANTIC-ACCEPTANCE-v0.1.json",
+    "live_orthoepy_stress_provenance": "LIVE-FIPI-ORTHOEPY-STRESS-CORRESPONDENCE-v0.1.json",
+    "live_paronym_provenance": "LIVE-FIPI-PARONYM-CORRESPONDENCE-v0.1.json",
+    "live_phraseology_identity": "LIVE-PHRASEOLOGY-EXACT-INVENTORY-v0.1.json",
+    "live_thematic_provenance": "LIVE-FIPI-THEMATIC-CORRESPONDENCE-v0.1.json"
+  },
+  "bindings": {
+    "orthoepy": {
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/orfoepiya/",
+      "content_identity": {
+        "row_count": 291,
+        "unique_id_count": 291,
+        "first_id": "w001",
+        "last_id": "w291",
+        "ordered_id_sha256": "73a3c847ec79a9a1f98f4703aacadd81561d05f74bf3b12293fd60a27fe4f583",
+        "ordered_stressed_sha256": "1155c0810d2dda933ab8e71a04dc11b5d85d28a0b46667bee252eb7fc29effde",
+        "fipi_2026_exact_stressed_token_correspondence": "291/291"
+      },
+      "accepted_action_component": {
+        "live_action_marker_ru": "Поставьте ударение",
+        "live_source_scope_marker_ru": "В активный банк включены слова и формы из официального орфоэпического списка ФИПИ",
+        "accepted_semantic_id": "ru-orthoepy-normative-stress-selection",
+        "semantic_label_ru": "Определение нормативной позиции ударения",
+        "binding_relation": "LIVE_EXACT_STRESS_ACTION_ROUTES_TO_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+        "binding_status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY"
+      },
+      "aggregate_modes_not_admitted_as_exact_mastery": [
+        "Проверка в формате ЕГЭ",
+        "Слово считается освоенным только после нескольких успешных повторений"
+      ],
+      "future_mastery_event_requirement": "registered server-owned event must carry exact w001..w291 item identity plus exact stress-selection action evidence; browser-local word status and aggregate EGE-mode completion cannot emit exact mastery",
+      "broader_nonstress_pronunciation_boundary": "separate RU02 subject-closure blocker; the live asset is a stress trainer and its accepted semantic explicitly excludes non-stress pronunciation rules"
+    },
+    "dictionary_words": {
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/slovarnye-slova/",
+      "content_identity": {
+        "row_count": 308,
+        "unique_id_count": 308,
+        "ordered_id_sha256": "989ff8c27d3017bd3c5d3b7cb3a4a47979d7354a18daa0318589a6a01a116ea2",
+        "source_backed_textual_provenance": "308/308"
+      },
+      "accepted_content_owner": {
+        "skill_graph_source_id": "unchecked_root_vowels",
+        "canonical_owner_id": "school-root-vowel-dictionary-unverifiable",
+        "canonical_label_ru": "Непроверяемая безударная гласная в корне: словарная проверка",
+        "binding_relation": "SAME_MEANING_AS_EXISTING_CANONICAL_SCHOOL_IDENTITY",
+        "binding_status": "ACCEPTED_EXISTING_CANONICAL_CONTENT_OWNER"
+      },
+      "accepted_action_component": {
+        "live_action_marker_ru": "сначала нужно вставить букву",
+        "live_scope_marker_ru": "только слова с непроверяемыми безударными гласными в корне",
+        "accepted_semantic_id": "school-root-vowel-dictionary-unverifiable",
+        "binding_status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY"
+      },
+      "event_modes_not_admitted_yet": [
+        "выбрать или написать слово целиком",
+        "пять рядов слов: найдите варианты с одной и той же пропущенной буквой"
+      ],
+      "future_mastery_event_requirement": "registered server-owned event must carry exact 308-ID item identity plus exact missing-root-vowel action identity; browser word status, whole-word recall and generic exam completion cannot emit mastery"
+    },
+    "paronyms": {
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/paronimy/",
+      "live_html_sha256_snapshot": "63ac66e839505930b2a9a2f3b5243d60e422226ec90890553aac5abc52b7cbda",
+      "content_identity": {
+        "group_count": 144,
+        "entry_count": 334,
+        "ordered_group_id_sha256": "81c91d069a28cd9a2c1c7547c9fc92cb9df92c6cde38f3100750e2585c113813",
+        "ordered_entry_id_sha256": "48eedc3e5f3751cec57152671456d314b7bcb6b13f2ee5002f35ec6660482c99",
+        "fipi_2026_exact_group_correspondence": "144/144"
+      },
+      "accepted_action_component": {
+        "live_action_marker_ru": "выбор слова по смыслу предложения",
+        "supporting_live_boundary_marker_ru": "лексическая сочетаемость",
+        "accepted_semantic_id": "ru-lexis-paronym-collocation-choice",
+        "semantic_label_ru": "Выбор паронима по значению и лексической сочетаемости",
+        "binding_relation": "LIVE_ACTION_OPERAND_ROUTES_TO_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+        "binding_status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY"
+      },
+      "explicitly_unbound_live_actions": [
+        "соотнесение слова и значения",
+        "самостоятельное воспроизведение паронима",
+        "исправление единственной лексической ошибки в проверке"
+      ],
+      "asset_wide_semantic_status": "BLOCKED_MULTI_ACTION_ASSET_NOT_ONE_SKILL",
+      "future_mastery_event_requirement": "registered server-owned event must carry exact live item identity plus exact action identity for the accepted component; generic trainer completion or word status is insufficient"
+    },
+    "phraseology": {
+      "live_url": "https://eksamio.ru/trenazhery/russkiy/frazeologizmy/",
+      "live_html_sha256_snapshot": "69f69716dbad959b754354a0f3d1523dc4b05ae4732eeb234a68b3a43ebfe68b",
+      "content_identity": {
+        "row_count": 285,
+        "unique_id_count": 285,
+        "ordered_id_sha256": "22b33854b09b4b212310169f48c69237d4a4c8ee1ed0b5aed95b50f9ec63b534",
+        "fipi_2026_exact_primary_correspondence": "285/285"
+      },
+      "accepted_action_component": {
+        "live_action_marker_ru": "поиск фразеологизма в небольшом тексте",
+        "accepted_semantic_id": "ru-lexis-phraseologism-fragment-identification",
+        "semantic_label_ru": "Поиск фразеологизма в заданном фрагменте текста",
+        "binding_relation": "LIVE_ACTION_OPERAND_ROUTES_TO_ACCEPTED_BOUNDED_SUBJECT_SEMANTIC",
+        "binding_status": "ACCEPTED_ACTION_SCOPED_COMPONENT_ONLY"
+      },
+      "explicitly_unbound_live_actions": [
+        "выбор значения и выражения",
+        "восстановление пропущенного компонента",
+        "точная запись выражения по смыслу"
+      ],
+      "asset_wide_semantic_status": "BLOCKED_MULTI_ACTION_ASSET_NOT_ONE_SKILL",
+      "future_mastery_event_requirement": "registered server-owned event must carry exact phraseology item identity plus exact fragment-identification action identity; meaning/recall/completion status cannot emit this mastery"
+    }
+  },
+  "still_blocked": {
+    "production_event_admission_all_assets": "registered exact-item plus exact-action server evidence is not yet emitted by the current live browser-local trainers; no current local progress is canonical mastery",
+    "broader_ru02_nonstress_pronunciation": "remains a separate Russian subject-closure blocker and is not a blocker for semantic reconciliation of the stress-only live trainer"
+  },
+  "admission_boundary": {
+    "accepted_action_scoped_authority_reuses": 4,
+    "accepted_existing_canonical_content_owner_bindings": 1,
+    "asset_wide_semantic_admissions": 0,
+    "production_event_semantic_admissions": 0,
+    "object_closures": 0,
+    "mastery_admissions": 0,
+    "false_exact_mastery": 0,
+    "registered_user_identity_ref_required_for_future_canonical_evidence": true,
+    "browser_local_progress_can_emit_mastery": false,
+    "generic_trainer_completion_can_emit_mastery": false
+  }
+}

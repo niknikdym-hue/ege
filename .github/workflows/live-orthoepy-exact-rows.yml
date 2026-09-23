@@ -1,0 +1,53 @@
+name: Live orthoepy exact rows
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_orthoepy_exact_rows.mjs'
+      - '.github/workflows/live-orthoepy-exact-rows.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Capture exact live orthoepy rows read-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          node eksamio-learning-engine/peis-integration-reference/probe_live_orthoepy_exact_rows.mjs
+          python - <<'PY'
+          import json
+          path='live-orthoepy-exact-rows.json'
+          observed=json.load(open(path, encoding='utf-8'))
+          assert observed['row_count'] == 291
+          assert observed['unique_id_count'] == 291
+          assert observed['common_keys'] == ['g','i','p','s']
+          boundary=observed['admission_boundary']
+          assert boundary['identity_capture_only'] is True
+          assert boundary['source_provenance_admission'] == 0
+          assert boundary['semantic_admissions'] == 0
+          assert boundary['object_closures'] == 0
+          assert boundary['mastery_admissions'] == 0
+          assert boundary['false_exact_mastery'] == 0
+          assert boundary['registered_user_identity_ref_required_for_future_canonical_evidence'] is True
+          assert boundary['browser_local_progress_can_emit_mastery'] is False
+          print('LIVE ORTHOEPY EXACT ROWS fail-closed gate PASS')
+          PY
+      - name: Exact-base diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check "${{ github.event.pull_request.base.sha }}"...HEAD
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-orthoepy-exact-rows
+          path: live-orthoepy-exact-rows.json
+          if-no-files-found: warn

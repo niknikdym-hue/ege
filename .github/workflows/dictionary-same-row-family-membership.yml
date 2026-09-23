@@ -1,0 +1,52 @@
+name: Dictionary same-row FIPI family membership probe
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_fipi_primary_correspondence.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_dictionary_same_row_family_membership.mjs'
+      - '.github/workflows/dictionary-same-row-family-membership.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Probe exact same-row dictionary family membership
+        shell: bash
+        run: |
+          set -euo pipefail
+          node eksamio-learning-engine/peis-integration-reference/probe_dictionary_same_row_family_membership.mjs
+          python - <<'PY'
+          import json
+          p=json.load(open('dictionary-same-row-family-membership.json', encoding='utf-8'))
+          assert p['dictionary_total'] == 308
+          assert p['primary_exact_count'] + p['primary_mismatch_count'] == 308
+          assert p['exact_same_row_supported_count'] + p['unresolved_count'] == 308
+          assert p['status'] in {'EXACT_SAME_ROW_FIPI_FAMILY_MEMBERSHIP_ALL','BOUNDED_UNRESOLVED_BLOCKER'}
+          assert p['semantic_admissions'] == 0
+          assert p['object_closures'] == 0
+          assert p['mastery_admissions'] == 0
+          assert p['false_exact_mastery'] == 0
+          assert p['registered_user_identity_required_for_future_canonical_evidence'] is True
+          print('Dictionary exact same-row family-membership fail-closed probe PASS')
+          print('supported', p['exact_same_row_supported_count'], '/', p['dictionary_total'], 'unresolved', p['unresolved_count'])
+          for row in p['unresolved']:
+              print('unresolved', row['index_1based'], row['live_id'], row['live'], '<>', row['source_full_row'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dictionary-same-row-family-membership
+          path: |
+            dictionary-same-row-family-membership.json
+            dictionary-same-row-family-membership-primary.json
+          if-no-files-found: warn

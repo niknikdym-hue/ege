@@ -1,0 +1,40 @@
+{
+  "schema": "eksamio.live-fipi-orthoepy-correspondence-probe.v0.1",
+  "authority": {
+    "live": "live eksamio.ru public orthoepy trainer HTML; read-only GET",
+    "source": "official FIPI 2026 Navigator PDF ru-1-fonetika.pdf; read-only GET"
+  },
+  "live": {
+    "url": "https://eksamio.ru/trenazhery/russkiy/orfoepiya/",
+    "html_byte_count": 99731,
+    "html_sha256": "be5aa80192b357ba4f53c1664ed17bde145221c34d7f6101ba381e84ce616d05",
+    "raw_literal_sha256": "a97a0be6e8a491d421fca19741a8172550f5c0c81092c99959858b810a85fb8c",
+    "row_count": 291,
+    "unique_id_count": 291,
+    "ordered_stressed_sha256": "1155c0810d2dda933ab8e71a04dc11b5d85d28a0b46667bee252eb7fc29effde"
+  },
+  "fipi": {
+    "url": "https://doc.fipi.ru/navigator-podgotovki/navigator-ege/2026/ru-1-fonetika.pdf",
+    "pdf_byte_count": 324009,
+    "pdf_sha256": "6e1b6dcaf835f6b7294c9426de406dea3614bb81d9d28e25fc423c9c8036f389",
+    "bounded_list_span_sha256": "3bd60e916ae6acfdf6c94547e6a43bef421292c73a8614cdb59a503f34b69e39",
+    "extracted_stress_token_occurrences": 307,
+    "extracted_unique_stress_tokens": 295
+  },
+  "correspondence": {
+    "exact_live_stressed_token_match_count": 291,
+    "exact_live_stressed_token_mismatch_count": 0,
+    "exact_match_ids_sha256": "73a3c847ec79a9a1f98f4703aacadd81561d05f74bf3b12293fd60a27fe4f583",
+    "mismatches": []
+  },
+  "admission_boundary": {
+    "forensic_provenance_probe_only": true,
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "mastery_admissions": 0,
+    "false_exact_mastery": 0,
+    "normative_pronunciation_evidence_status": "MISSING_BLOCKER",
+    "stress_correspondence_alone_can_close_pronunciation_component": false,
+    "registered_user_identity_ref_required_for_future_canonical_evidence": true
+  }
+}

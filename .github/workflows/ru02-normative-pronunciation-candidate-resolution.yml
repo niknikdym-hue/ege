@@ -1,0 +1,47 @@
+name: RU02 normative pronunciation candidate resolution
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-integration-reference/RU02-NORMATIVE-PRONUNCIATION-SOURCE-BACKED-CANDIDATE-RESOLUTION-v0.1.json'
+      - 'eksamio-learning-engine/peis-integration-reference/validate_ru02_normative_pronunciation_candidate_resolution.py'
+      - '.github/workflows/ru02-normative-pronunciation-candidate-resolution.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pronunciation-candidate-resolution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Fetch exact Russian closure authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin 7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9 --depth=1
+          test "$(git rev-parse FETCH_HEAD)" = "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9"
+          git worktree add --detach /tmp/eksamio-ru164 7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9
+      - name: Validate bounded source-backed pronunciation candidate resolution
+        run: >-
+          python3
+          eksamio-learning-engine/peis-integration-reference/validate_ru02_normative_pronunciation_candidate_resolution.py
+          --ru164-root /tmp/eksamio-ru164
+      - name: Remove temporary authority worktree
+        if: always()
+        shell: bash
+        run: git worktree remove --force /tmp/eksamio-ru164 || true
+      - name: Fetch exact PR base for diff hygiene
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.event.pull_request.base.sha }}" --depth=1
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.event.pull_request.base.sha }}"
+      - name: Diff hygiene
+        if: github.event_name == 'pull_request'
+        run: git diff --check "${{ github.event.pull_request.base.sha }}" HEAD

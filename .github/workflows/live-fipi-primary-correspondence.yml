@@ -1,0 +1,50 @@
+name: Live FIPI primary-row correspondence probe
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_fipi_primary_correspondence.mjs'
+      - '.github/workflows/live-fipi-primary-correspondence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Probe deterministic same-index primary-row correspondence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node eksamio-learning-engine/peis-integration-reference/probe_live_fipi_primary_correspondence.mjs
+          python - <<'PY'
+          import json
+          p=json.load(open('live-fipi-primary-correspondence.json', encoding='utf-8'))
+          assert p['dictionary_words']['live_count'] == 308
+          assert p['dictionary_words']['source_count'] == 308
+          assert p['phraseology']['live_count'] == 285
+          assert p['phraseology']['source_count'] == 285
+          assert p['dictionary_words']['status'] in {'EXACT_PRIMARY_ROW_CORRESPONDENCE','PRIMARY_PROJECTION_MISMATCH_BLOCKER'}
+          assert p['phraseology']['status'] in {'EXACT_PRIMARY_ROW_CORRESPONDENCE','PRIMARY_PROJECTION_MISMATCH_BLOCKER'}
+          assert p['semantic_admissions'] == 0
+          assert p['object_closures'] == 0
+          assert p['mastery_admissions'] == 0
+          assert p['false_exact_mastery'] == 0
+          assert p['registered_user_identity_required_for_future_canonical_evidence'] is True
+          print('Live/FIPI deterministic primary-row probe PASS')
+          print('dictionary', p['dictionary_words']['status'], p['dictionary_words']['exact_primary_match_count'], '/', p['dictionary_words']['live_count'])
+          print('phraseology', p['phraseology']['status'], p['phraseology']['exact_primary_match_count'], '/', p['phraseology']['live_count'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-fipi-primary-correspondence
+          path: live-fipi-primary-correspondence.json
+          if-no-files-found: warn

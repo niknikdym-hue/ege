@@ -1,0 +1,91 @@
+name: Live FIPI paronym correspondence probe
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-fipi-paronym-correspondence.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_fipi_paronym_correspondence.py'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_paronyms_full_inventory.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/LIVE-FIPI-PARONYM-CORRESPONDENCE-v0.1.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Reconstruct exact full live paronym inventory
+        env:
+          PROBE_OUT: live-paronyms-full-inventory-for-correspondence.json
+        run: node eksamio-learning-engine/peis-integration-reference/probe_live_paronyms_full_inventory.mjs
+      - name: Probe exact full live-to-FIPI paronym correspondence
+        run: python eksamio-learning-engine/peis-integration-reference/probe_live_fipi_paronym_correspondence.py
+      - name: Fail closed on drift from pinned exact correspondence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('eksamio-learning-engine/peis-integration-reference')
+          snap = json.loads((root / 'LIVE-FIPI-PARONYM-CORRESPONDENCE-v0.1.json').read_text(encoding='utf-8'))
+          corr = json.loads(Path('live-fipi-paronym-correspondence.json').read_text(encoding='utf-8'))
+          inv = json.loads(Path('live-paronyms-full-inventory-for-correspondence.json').read_text(encoding='utf-8'))
+
+          assert corr['live_source']['url'] == snap['live_source']['url']
+          assert corr['live_source']['byte_count'] == snap['live_source']['byte_count']
+          assert corr['live_source']['sha256'] == snap['live_source']['sha256']
+          assert corr['live_source']['prefix_literal_byte_count'] == snap['live_source']['prefix_literal_byte_count']
+          assert corr['live_source']['prefix_literal_sha256'] == snap['live_source']['prefix_literal_sha256']
+          assert corr['live_source']['suffix_literal_byte_count'] == snap['live_source']['suffix_literal_byte_count']
+          assert corr['live_source']['suffix_literal_sha256'] == snap['live_source']['suffix_literal_sha256']
+
+          assert corr['fipi_source']['url'] == snap['fipi_source']['url']
+          assert corr['fipi_source']['byte_count'] == snap['fipi_source']['byte_count']
+          assert corr['fipi_source']['sha256'] == snap['fipi_source']['sha256']
+
+          si = snap['inventory']
+          assert inv['prefix_group_count'] == si['prefix_group_count'] == corr['live_prefix_group_count'] == 76
+          assert inv['suffix_group_count'] == si['suffix_group_count'] == corr['live_suffix_group_count'] == 68
+          assert inv['full_live_group_count'] == si['full_live_group_count'] == corr['live_full_group_count'] == 144
+          assert corr['fipi_group_count'] == si['fipi_group_count'] == 144
+          assert inv['unique_group_id_count'] == si['unique_live_group_id_count'] == corr['unique_live_group_id_count'] == 144
+          assert inv['full_live_entry_count'] == si['live_entry_count'] == corr['live_entry_count'] == 334
+          assert inv['unique_entry_id_count'] == si['unique_live_entry_id_count'] == corr['unique_live_entry_id_count'] == 334
+          assert corr['live_group_id_sequence_p001_through_p144_exact'] is si['live_group_id_sequence_p001_through_p144_exact'] is True
+          assert inv['ordered_group_id_sha256'] == si['ordered_group_id_sha256']
+          assert inv['ordered_entry_id_sha256'] == si['ordered_entry_id_sha256']
+          assert inv['first_group_id'] == si['first_group_id']
+          assert inv['last_group_id'] == si['last_group_id']
+
+          st = snap['textual_provenance_correspondence']
+          assert corr['correspondence_rule'] == st['rule']
+          assert corr['exact_same_index_normalized_match_count'] == st['exact_match_count'] == 144
+          assert corr['exact_same_index_normalized_mismatch_count'] == st['mismatch_count'] == 0
+          assert corr['mismatches'] == []
+          assert corr['ordered_live_group_normalized_sha256'] == st['ordered_live_group_normalized_sha256']
+          assert corr['ordered_fipi_group_normalized_sha256'] == st['ordered_fipi_group_normalized_sha256']
+          assert corr['ordered_live_group_normalized_sha256'] == corr['ordered_fipi_group_normalized_sha256']
+
+          assert corr['provenance_binding_status'] == snap['provenance_binding_status'] == 'EXACT_FULL_GROUP_TEXTUAL_CORRESPONDENCE'
+          assert corr['canonical_item_identity_status'] == snap['canonical_item_identity_status']
+          for key in ('semantic_admissions', 'object_closures', 'mastery_admissions', 'false_exact_mastery'):
+              assert corr[key] == snap[key] == 0
+          assert corr['registered_user_identity_required_for_future_canonical_evidence'] is snap['registered_user_identity_required_for_future_canonical_evidence'] is True
+          print('Full live paronym inventory + FIPI textual provenance exact-drift gate PASS')
+          PY
+      - name: Upload exact correspondence result
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-fipi-paronym-correspondence
+          path: |
+            live-fipi-paronym-correspondence.json
+            live-paronyms-full-inventory-for-correspondence.json
+          if-no-files-found: error
