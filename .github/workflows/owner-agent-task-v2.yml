@@ -204,7 +204,7 @@ jobs:
           proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
           client_token="$(openssl rand -hex 32)"; export OWNER_PROXY_CLIENT_TOKEN="$client_token"; echo "::add-mask::$client_token"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' OWNER_MAX_PROVIDER_REQUESTS='1' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
           rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
           python3 - <<'PY'
           import json, os, urllib.request
@@ -257,7 +257,7 @@ jobs:
           echo "::add-mask::$client_token"
           echo "client_token=$client_token" >> "$GITHUB_OUTPUT"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' OWNER_MAX_PROVIDER_REQUESTS='6' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
           rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
       - name: Compose bounded prompt
         shell: bash
@@ -340,8 +340,10 @@ jobs:
           python3 - "$health" <<'PY'
           import json,sys
           d=json.loads(sys.argv[1])
-          assert d['requests'] == 1, d
-          print('API_CODEX_PROVIDER_REQUESTS=1')
+          assert d['max_requests'] == 6, d
+          assert 1 <= d['requests'] <= 6, d
+          print('API_CODEX_PROVIDER_REQUESTS='+str(d['requests']))
+          print('API_CODEX_PROVIDER_REQUEST_CAP=6')
           print('CODEX_REQUEST_MAX_RETRIES=0')
           print('CODEX_STREAM_MAX_RETRIES=0')
           PY
