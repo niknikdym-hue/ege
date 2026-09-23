@@ -451,7 +451,7 @@ jobs:
           proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
           client_token="$(openssl rand -hex 32)"; export OWNER_PROXY_CLIENT_TOKEN="$client_token"; echo "::add-mask::$client_token"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='gpt-6-astra' OWNER_MAX_PROVIDER_REQUESTS='1' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
           rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
           python3 - <<'PY'
           import json, os, subprocess, urllib.request
