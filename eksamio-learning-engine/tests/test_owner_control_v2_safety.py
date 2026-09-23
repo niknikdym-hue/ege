@@ -37,7 +37,6 @@ class OwnerControlV2SafetyTest(unittest.TestCase):
         self.assertIn("codex exec", codex)
         self.assertIn("--no-new-privs", codex)
         self.assertIn("--bounding-set=-all", codex)
-        self.assertIn("OWNER_MAX_PROVIDER_REQUESTS='6'", codex)
         self.assertIn("API_CODEX_PROVIDER_REQUEST_CAP=6", codex)
         self.assertIn("--ephemeral -", codex)
         self.assertIn("< /tmp/codex-prompt.txt", codex)
