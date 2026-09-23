@@ -1,0 +1,98 @@
+name: Authenticated web runtime Postgres
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/identity-reference/**'
+      - 'eksamio-learning-engine/payments-reference/**'
+      - 'eksamio-learning-engine/peis-production-substrate/**'
+      - 'eksamio-learning-engine/peis-trusted-host-reference/**'
+      - 'eksamio-learning-engine/peis-service-bridge-reference/**'
+      - 'eksamio-learning-engine/live-student-loop/**'
+      - 'eksamio-learning-engine/yandex-staging/**'
+      - '.github/workflows/authenticated-web-runtime-postgres.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authenticated-web-runtime:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: eksamio
+          POSTGRES_PASSWORD: eksamio-ci-only
+          POSTGRES_DB: eksamio
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U eksamio -d eksamio"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      EKSAMIO_TEST_POSTGRES_DSN: postgresql://eksamio:eksamio-ci-only@127.0.0.1:5432/eksamio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install declared Postgres runtime dependencies
+        run: python3 -m pip install -r eksamio-learning-engine/peis-production-substrate/requirements.txt
+      - name: Compile private web runtimes
+        run: >-
+          python3 -m py_compile
+          eksamio-learning-engine/peis-production-substrate/runtime.py
+          eksamio-learning-engine/peis-production-substrate/learner_views.py
+          eksamio-learning-engine/peis-production-substrate/learner_web_runtime.py
+          eksamio-learning-engine/peis-production-substrate/tutor_lifecycle.py
+          eksamio-learning-engine/peis-production-substrate/learner_tutor_web_runtime.py
+          eksamio-learning-engine/peis-production-substrate/validate_learner_web_runtime_postgres.py
+          eksamio-learning-engine/peis-production-substrate/validate_browser_security_postgres.py
+          eksamio-learning-engine/peis-production-substrate/validate_tutor_lifecycle_postgres.py
+          eksamio-learning-engine/payments-reference/entitlement_read.py
+      - name: Validate registered-only learner admission on Ubuntu
+        run: python3 eksamio-learning-engine/live-student-loop/validate_gated_runtime.py
+      - name: Run registered learner loop regressions on Ubuntu
+        run: python3 eksamio-learning-engine/live-student-loop/test_live_student_loop.py
+      - name: Validate registration session to authenticated PEIS on real PostgreSQL
+        run: python3 eksamio-learning-engine/peis-production-substrate/validate_authenticated_web_runtime_postgres.py
+      - name: Reset PostgreSQL learner-browser fixture
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate authenticated Pro browser routes and entitlement on real PostgreSQL
+        run: python3 eksamio-learning-engine/peis-production-substrate/validate_learner_web_runtime_postgres.py
+      - name: Reset PostgreSQL browser-security fixture
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate exact-origin CSRF and secure-cookie boundary on real PostgreSQL
+        run: python3 eksamio-learning-engine/peis-production-substrate/validate_browser_security_postgres.py
+      - name: Reset PostgreSQL Tutor fixture
+        run: |
+          python3 - <<'PY'
+          import os
+          import psycopg
+          with psycopg.connect(os.environ["EKSAMIO_TEST_POSTGRES_DSN"], autocommit=True) as connection:
+              connection.execute("DROP SCHEMA public CASCADE")
+              connection.execute("CREATE SCHEMA public")
+          PY
+      - name: Validate durable Tutor lifecycle on real PostgreSQL
+        run: python3 eksamio-learning-engine/peis-production-substrate/validate_tutor_lifecycle_postgres.py
+      - name: Validate Yandex fail-closed static contract
+        run: python3 eksamio-learning-engine/yandex-staging/validate_yandex_staging.py
+      - name: Validate staging deploy shell
+        run: bash -n eksamio-learning-engine/yandex-staging/deploy_staging.sh
+      - name: Docker build production-shaped runtime
+        run: docker build -f eksamio-learning-engine/peis-production-substrate/Dockerfile eksamio-learning-engine

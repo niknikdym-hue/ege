@@ -1,0 +1,14 @@
+.sync-alert{max-width:1180px;margin:0 auto 18px;padding:13px 15px;border:1px solid #fda29b;border-radius:12px;background:#fff1f0;color:#8a1c13;font-weight:650}
+.metrics{grid-template-columns:repeat(4,1fr)}
+.lower-grid{margin-top:18px}
+.simple-list{display:grid;gap:10px}
+.list-row,.history-row{display:grid;gap:4px;padding:11px 0;border-top:1px solid #edf0f4}
+.list-row span,.list-row small,.history-row span,.history-row small,.empty-state{color:#758093;font-size:13px}
+.history-card,.owner-diagnostics{margin-top:18px}
+.diagnostic-steps{display:grid;gap:7px;margin-top:14px}
+.diagnostic-step{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid #edf0f4}
+.diagnostic-step strong{color:#64748b}
+.diagnostic-step strong[data-status="PASS"]{color:#18794e}
+.owner-diagnostics pre{overflow:auto;padding:12px;border-radius:10px;background:#111827;color:#e5e7eb;font-size:12px}
+@media(max-width:880px){.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.topbar-actions{gap:5px}.ghost-button{padding:9px 11px}.metrics{grid-template-columns:1fr 1fr}}

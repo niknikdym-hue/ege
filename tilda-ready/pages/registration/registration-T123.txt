@@ -1,0 +1,196 @@
+<div id="eksamio-registration">
+<style>
+#eksamio-registration{--p:#2F80FF;--ph:#166AE0;--ps:#DDEBFF;--t:#19324A;--m:#5A7691;--b:#D9E7F5;--bs:#C5D9EC;--ok:#15805F;--bad:#B42318;color:var(--t);font-family:Arial,sans-serif;padding:28px 0 70px;overflow-x:hidden}#eksamio-registration,#eksamio-registration *{box-sizing:border-box}#eksamio-registration .er-page{width:min(760px,calc(100% - 40px));margin:0 auto}#eksamio-registration .er-card{padding:clamp(24px,5vw,42px);border:1px solid var(--b);border-radius:24px;background:radial-gradient(circle at 92% 7%,rgba(47,128,255,.12),transparent 28%),linear-gradient(135deg,#fff,#F8FBFF);box-shadow:0 18px 46px rgba(58,103,152,.08)}#eksamio-registration .er-kicker{display:inline-flex;margin:0 0 13px;padding:7px 11px;border-radius:999px;background:var(--ps);color:var(--ph);font-size:13px;font-weight:900}#eksamio-registration h1{margin:0;font-size:clamp(32px,5vw,48px);line-height:1.06;letter-spacing:-.04em}#eksamio-registration .er-lead{margin:15px 0 0;color:var(--m);font-size:17px;line-height:1.6}#eksamio-registration .er-form{display:grid;gap:18px;margin-top:28px}#eksamio-registration .er-field{display:grid;gap:8px}#eksamio-registration .er-field>label{font-size:14px;font-weight:900}#eksamio-registration input[type="email"],#eksamio-registration input[type="text"]{width:100%;min-height:50px;padding:12px 14px;border:1px solid var(--bs);border-radius:12px;background:#fff;color:var(--t);font:inherit;font-size:16px;outline:none}#eksamio-registration input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(47,128,255,.12)}#eksamio-registration .er-consents{display:grid;gap:11px;padding:17px;border:1px solid var(--b);border-radius:16px;background:#fff}#eksamio-registration .er-consent{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;color:var(--t);font-size:14px;line-height:1.5}#eksamio-registration .er-consent input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--p)}#eksamio-registration .er-consent a{color:var(--ph);font-weight:800;text-decoration:underline;text-underline-offset:2px}#eksamio-registration .er-note{margin:0;color:var(--m);font-size:13px;line-height:1.5}#eksamio-registration .er-btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:13px 18px;border:1px solid var(--p);border-radius:12px;background:var(--p);color:#fff;font:inherit;font-size:15px;font-weight:900;cursor:pointer;transition:.16s ease}#eksamio-registration .er-btn:hover:not(:disabled){background:var(--ph);border-color:var(--ph);transform:translateY(-1px)}#eksamio-registration .er-btn:disabled{cursor:not-allowed;opacity:.5}#eksamio-registration .er-code{display:none;gap:16px;padding-top:4px}#eksamio-registration .er-code[data-open="true"]{display:grid}#eksamio-registration .er-code-head{padding:15px;border:1px solid var(--b);border-radius:14px;background:#fff}#eksamio-registration .er-code-head strong{display:block;font-size:16px}#eksamio-registration .er-code-head p{margin:5px 0 0;color:var(--m);font-size:13px;line-height:1.5}#eksamio-registration .er-status{display:none;padding:13px 14px;border-radius:12px;font-size:14px;line-height:1.5}#eksamio-registration .er-status[data-open="true"]{display:block}#eksamio-registration .er-status[data-kind="error"]{background:#FFF1F0;color:var(--bad);border:1px solid #FFD1CC}#eksamio-registration .er-status[data-kind="success"]{background:#F0FDF7;color:var(--ok);border:1px solid #B7E9D6}#eksamio-registration .er-status[data-kind="info"]{background:#F3F7FC;color:var(--t);border:1px solid var(--b)}#eksamio-registration .er-config{margin-top:16px;padding:12px 14px;border:1px dashed var(--bs);border-radius:12px;background:#fff;color:var(--m);font-size:12px;line-height:1.5}#eksamio-registration .er-config[hidden]{display:none}@media(max-width:620px){#eksamio-registration{padding-top:18px;padding-bottom:48px}#eksamio-registration .er-page{width:calc(100% - 32px)}#eksamio-registration .er-card{padding:22px 18px;border-radius:20px}}
+</style>
+<div class="er-page">
+<section class="er-card" aria-labelledby="er-title">
+<p class="er-kicker">Аккаунт ученика</p>
+<h1 id="er-title">Вход и регистрация по email</h1>
+<p class="er-lead">Один аккаунт хранит единый учебный профиль: прогресс, PEIS, план и историю работы. Пароль не нужен — подтвердите email кодом.</p>
+<form class="er-form" id="er-begin-form" novalidate>
+<div class="er-field"><label for="er-email">Email</label><input id="er-email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="name@example.com"></div>
+<div class="er-consents" aria-label="Согласия при регистрации">
+<label class="er-consent"><input id="er-pd" name="personal_data_consent" type="checkbox" required><span><span id="er-pd-text">Текст обязательного согласия не настроен.</span> <a id="er-pd-link" href="#" target="_blank" rel="noopener noreferrer">Открыть текст</a></span></label>
+<label class="er-consent"><input id="er-marketing" name="marketing_consent" type="checkbox"><span><span id="er-marketing-text">Текст необязательного маркетингового согласия не настроен.</span> <a id="er-marketing-link" href="#" target="_blank" rel="noopener noreferrer">Открыть текст</a></span></label>
+</div>
+<p class="er-note">Маркетинговое согласие необязательно и по умолчанию выключено. Сервисные сообщения для входа и безопасности не являются маркетинговой рассылкой.</p>
+<button class="er-btn" id="er-begin" type="submit" disabled>Получить код</button>
+</form>
+<div class="er-code" id="er-code-step" data-open="false">
+<div class="er-code-head"><strong>Проверьте почту</strong><p>Введите код из сервисного сообщения Eksamio. Код используется только для подтверждения входа.</p></div>
+<form class="er-form" id="er-verify-form" novalidate>
+<div class="er-field"><label for="er-code">Код подтверждения</label><input id="er-code" name="code" type="text" autocomplete="one-time-code" inputmode="numeric" required maxlength="32"></div>
+<button class="er-btn" id="er-verify" type="submit">Подтвердить и войти</button>
+</form>
+</div>
+<div class="er-status" id="er-status" role="status" aria-live="polite" data-open="false" data-kind="info"></div>
+<div class="er-config" id="er-config-warning">Форма заблокирована: перед установкой нужно задать утверждённые URL/версии/тексты согласий и HTTPS API endpoint.</div>
+</section>
+</div>
+<script>
+(function(){
+'use strict';
+const root=document.getElementById('eksamio-registration');
+if(!root)return;
+
+/* DEPLOYMENT CONFIGURATION: keep empty until values are explicitly approved. */
+const defaults=Object.freeze({
+  apiBaseUrl:'',
+  personalDataConsentUrl:'',
+  personalDataCheckboxText:'',
+  personalDataDocumentVersion:'',
+  personalDataTextVersion:'',
+  marketingConsentUrl:'',
+  marketingCheckboxText:'',
+  marketingDocumentVersion:'',
+  marketingTextVersion:'',
+  authenticatedRedirectUrl:''
+});
+const supplied=(window.EKSAMIO_REGISTRATION_CONFIG&&typeof window.EKSAMIO_REGISTRATION_CONFIG==='object')?window.EKSAMIO_REGISTRATION_CONFIG:{};
+const config=Object.freeze(Object.assign({},defaults,supplied));
+const el=id=>root.querySelector('#'+id);
+const email=el('er-email');
+const pd=el('er-pd');
+const marketing=el('er-marketing');
+const beginForm=el('er-begin-form');
+const verifyForm=el('er-verify-form');
+const beginButton=el('er-begin');
+const verifyButton=el('er-verify');
+const codeStep=el('er-code-step');
+const codeInput=el('er-code');
+const statusBox=el('er-status');
+const configWarning=el('er-config-warning');
+let challengeId='';
+let clientRequestId='';
+let beginLocked=false;
+
+function isVersion(value){return /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(String(value||''));}
+function isLegalUrl(value){
+  const raw=String(value||'').trim();
+  if(raw.startsWith('/')&&!raw.startsWith('//'))return true;
+  try{return new URL(raw).protocol==='https:';}catch(_){return false;}
+}
+function apiBase(value){
+  try{const url=new URL(String(value||'').trim());if(url.protocol!=='https:')return '';return url.href.replace(/\/$/,'');}catch(_){return '';}
+}
+function redirectTarget(value){
+  const raw=String(value||'').trim();
+  if(!raw)return '';
+  if(raw.startsWith('/')&&!raw.startsWith('//'))return raw;
+  try{const url=new URL(raw);return url.protocol==='https:'?url.href:'';}catch(_){return '';}
+}
+function validConfig(){
+  return Boolean(
+    apiBase(config.apiBaseUrl)&&
+    isLegalUrl(config.personalDataConsentUrl)&&
+    String(config.personalDataCheckboxText||'').trim()&&
+    isVersion(config.personalDataDocumentVersion)&&
+    isVersion(config.personalDataTextVersion)&&
+    isLegalUrl(config.marketingConsentUrl)&&
+    String(config.marketingCheckboxText||'').trim()&&
+    isVersion(config.marketingDocumentVersion)&&
+    isVersion(config.marketingTextVersion)
+  );
+}
+function showStatus(kind,text){statusBox.dataset.kind=kind;statusBox.textContent=text;statusBox.dataset.open='true';}
+function clearStatus(){statusBox.textContent='';statusBox.dataset.open='false';}
+function setBusy(button,busy){button.disabled=busy||!validConfig();button.setAttribute('aria-busy',busy?'true':'false');}
+function newRequestId(){
+  const raw=(window.crypto&&typeof window.crypto.randomUUID==='function')?window.crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(36).slice(2,12);
+  return 'registration:'+raw.replace(/[^A-Za-z0-9._:-]/g,'').slice(0,145);
+}
+function resetIdempotency(){if(!beginLocked)clientRequestId='';}
+function publicError(payload,fallback){
+  if(payload&&typeof payload==='object'&&typeof payload.error==='string')return payload.error;
+  return fallback;
+}
+async function post(path,payload){
+  const base=apiBase(config.apiBaseUrl);
+  if(!base)throw new Error('CONFIGURATION_REQUIRED');
+  const response=await fetch(base+path,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});
+  let data=null;
+  try{data=await response.json();}catch(_){data=null;}
+  return {response,data};
+}
+
+function applyConfig(){
+  const configured=validConfig();
+  if(config.personalDataCheckboxText)el('er-pd-text').textContent=String(config.personalDataCheckboxText);
+  if(config.marketingCheckboxText)el('er-marketing-text').textContent=String(config.marketingCheckboxText);
+  if(isLegalUrl(config.personalDataConsentUrl))el('er-pd-link').href=String(config.personalDataConsentUrl);
+  if(isLegalUrl(config.marketingConsentUrl))el('er-marketing-link').href=String(config.marketingConsentUrl);
+  beginButton.disabled=!configured;
+  configWarning.hidden=configured;
+  if(!configured){pd.disabled=true;marketing.disabled=true;email.disabled=true;}
+}
+
+[email,pd,marketing].forEach(node=>node.addEventListener('input',resetIdempotency));
+[pd,marketing].forEach(node=>node.addEventListener('change',resetIdempotency));
+
+beginForm.addEventListener('submit',async function(event){
+  event.preventDefault();
+  clearStatus();
+  if(!validConfig()){showStatus('error','Регистрация пока не настроена.');return;}
+  if(!email.checkValidity()){showStatus('error','Укажите корректный email.');email.focus();return;}
+  if(!pd.checked){showStatus('error','Для регистрации требуется отдельное согласие на обработку персональных данных.');pd.focus();return;}
+  if(!clientRequestId)clientRequestId=newRequestId();
+  const payload={
+    email:email.value.trim(),
+    personal_data_consent:true,
+    marketing_consent:Boolean(marketing.checked),
+    personal_data_document_version:String(config.personalDataDocumentVersion),
+    personal_data_text_version:String(config.personalDataTextVersion),
+    marketing_document_version:String(config.marketingDocumentVersion),
+    marketing_text_version:String(config.marketingTextVersion),
+    client_request_id:clientRequestId
+  };
+  setBusy(beginButton,true);
+  try{
+    const result=await post('/v1/registration/begin',payload);
+    if(result.response.status!==202||!result.data||result.data.status!=='CHALLENGE_SENT'||typeof result.data.challenge_id!=='string'){
+      showStatus('error',publicError(result.data,'Не удалось отправить код. Повторите попытку.'));
+      return;
+    }
+    challengeId=result.data.challenge_id;
+    beginLocked=true;
+    email.readOnly=true;pd.disabled=true;marketing.disabled=true;
+    codeStep.dataset.open='true';
+    showStatus('info','Код отправлен. Завершите подтверждение email.');
+    codeInput.focus();
+  }catch(error){
+    showStatus('error',error&&error.message==='CONFIGURATION_REQUIRED'?'Регистрация пока не настроена.':'Сервис регистрации временно недоступен. Повторите попытку.');
+  }finally{
+    beginButton.disabled=beginLocked||!validConfig();
+    beginButton.setAttribute('aria-busy','false');
+  }
+});
+
+verifyForm.addEventListener('submit',async function(event){
+  event.preventDefault();
+  clearStatus();
+  if(!validConfig()||!challengeId){showStatus('error','Сначала запросите код подтверждения.');return;}
+  const code=codeInput.value.trim();
+  if(!code){showStatus('error','Введите код подтверждения.');codeInput.focus();return;}
+  setBusy(verifyButton,true);
+  try{
+    const result=await post('/v1/registration/verify',{challenge_id:challengeId,code:code});
+    if(result.response.status!==200||!result.data||result.data.status!=='AUTHENTICATED'){
+      showStatus('error',publicError(result.data,'Код не подтверждён. Проверьте его и попробуйте ещё раз.'));
+      return;
+    }
+    verifyButton.disabled=true;codeInput.disabled=true;
+    showStatus('success','Email подтверждён. Вы вошли в аккаунт ученика.');
+    window.dispatchEvent(new CustomEvent('eksamio:authenticated',{detail:{status:'AUTHENTICATED'}}));
+    const target=redirectTarget(config.authenticatedRedirectUrl);
+    if(target)window.location.assign(target);
+  }catch(_){
+    showStatus('error','Сервис подтверждения временно недоступен. Повторите попытку.');
+  }finally{
+    if(!codeInput.disabled)setBusy(verifyButton,false);
+  }
+});
+
+applyConfig();
+})();
+</script>
+</div>

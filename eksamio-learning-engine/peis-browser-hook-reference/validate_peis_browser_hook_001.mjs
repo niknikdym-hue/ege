@@ -64,13 +64,10 @@ assert(!hookSource.includes('fetch('), 'generic browser hook requires host-injec
 
 const anchor = integrationMap.runtime.anchor;
 const snippet = integrationMap.reference_projection.snippet;
-const projectedRuntime = runtimeText.replace(anchor, anchor + snippet);
-assert(projectedRuntime !== runtimeText, 'reference runtime projection inserts one browser-hook observation call');
-assert(projectedRuntime.replace(snippet, '') === runtimeText, 'reference projection changes nothing except the guarded hook snippet');
-assert(countOf(projectedRuntime, snippet) === 1, 'reference projection inserts the hook exactly once');
+assert(countOf(runtimeText, snippet) === 1, 'staging runtime contains exactly one canonical learner-state observation call');
 assert(!snippet.includes('await'), 'runtime projection is fire-and-forget and introduces no await');
-assert(snippet.includes('try{') && snippet.includes('catch(e){}'), 'runtime projection protects current trainer from synchronous hook failure');
-assert(projectedRuntime.indexOf(snippet) > projectedRuntime.indexOf(anchor), 'hook projection occurs after existing recordCard/saveSession path');
+assert(runtimeText.includes('try{var hook=window.__EKSAMIO_PEIS_HOOK__') && runtimeText.includes('catch(e){return"FAILED_OPEN";}'), 'runtime adapter protects current trainer from synchronous hook failure');
+assert(runtimeText.indexOf(snippet) > runtimeText.indexOf('trainerEvent("trainer_answer"'), 'hook observation occurs after existing local attempt recording');
 
 const card = { id: 'fixture-card-12' };
 const answer = ['2', '5'];
@@ -194,8 +191,9 @@ const summary = {
   result: 'PASS',
   current_runtime: {
     blob_sha: integrationMap.runtime.git_blob_sha,
-    mutated: false,
-    projection_only: true
+    mutated: true,
+    staging_wired: true,
+    public_config_enabled: false
   },
   browser_hook: {
     default_enabled: false,
@@ -211,7 +209,7 @@ const summary = {
     transport_timeout: 'FAILED_OPEN',
     callback_error: 'FAILED_OPEN',
     invalid_directive: 'FAILED_OPEN',
-    runtime_projection_fire_and_forget: true
+    runtime_observation_fire_and_forget: true
   },
   request: {
     allowed_payload_fields: contract.client_request.payload_allowed,
@@ -223,7 +221,7 @@ const summary = {
     canonical_state_owner: 'shared_peis',
     allowlist_enforced: true
   },
-  implementation_status: 'REFERENCE_BROWSER_HOOK_VALIDATED_NOT_WIRED_TO_PRODUCTION'
+  implementation_status: 'STAGING_BROWSER_HOOK_WIRED_PUBLIC_CONFIG_DISABLED'
 };
 console.log(JSON.stringify(summary, null, 2));
 console.log('PEIS-BROWSER-HOOK-001 VALIDATION PASS');
