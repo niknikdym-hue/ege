@@ -154,6 +154,7 @@ jobs:
           printf '%s' 'fake-provider-key' | env \
             OWNER_TASK_BUDGET_USD=0.0001 \
             OWNER_ALLOWED_MODELS=gpt-5.6-luna \
+            OWNER_MAX_PROVIDER_REQUESTS=1 \
             OWNER_PROXY_CLIENT_TOKEN=local-client-token \
             OWNER_PROXY_TEST_MODE=1 \
             OWNER_PROXY_UPSTREAM_URL=http://127.0.0.1:8890/v1/responses \
@@ -173,4 +174,100 @@ jobs:
           test "$(cat /tmp/fake-upstream-count)" = 0
           echo "UNAUTHORIZED_PROXY_FORWARD_COUNT=0"
           echo "BUDGET_EXHAUSTED_PROXY_FORWARD_COUNT=0"
+          echo "REAL_OPENAI_CALLS=0"
+
+
+  provider-request-cap-mock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Start failing fake upstream and six-turn proxy
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat >/tmp/six_turn_upstream.py <<'PY'
+          from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+          from pathlib import Path
+          import json, threading
+          COUNT=Path('/tmp/six-turn-upstream-count')
+          COUNT.write_text('0')
+          LOCK=threading.Lock()
+          class H(BaseHTTPRequestHandler):
+              def log_message(self,*_): pass
+              def do_POST(self):
+                  with LOCK:
+                      n=int(COUNT.read_text())+1
+                      COUNT.write_text(str(n))
+                  length=int(self.headers.get('content-length') or 0)
+                  if length: self.rfile.read(length)
+                  body=json.dumps({'error':{'message':'intentional failed provider turn','type':'mock_failure'}}).encode()
+                  self.send_response(500)
+                  self.send_header('content-type','application/json')
+                  self.send_header('content-length',str(len(body)))
+                  self.end_headers()
+                  self.wfile.write(body)
+          ThreadingHTTPServer(('127.0.0.1',8891),H).serve_forever()
+          PY
+          python3 /tmp/six_turn_upstream.py >/tmp/six-turn-upstream.log 2>&1 &
+
+          proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          printf '%s' 'fake-provider-key' | env \
+            OWNER_TASK_BUDGET_USD=0.10 \
+            OWNER_ALLOWED_MODELS=gpt-5.6-luna \
+            OWNER_MAX_PROVIDER_REQUESTS=6 \
+            OWNER_PROXY_CLIENT_TOKEN=six-turn-client-token \
+            OWNER_PROXY_TEST_MODE=1 \
+            OWNER_PROXY_UPSTREAM_URL=http://127.0.0.1:8891/v1/responses \
+            OWNER_BUDGET_PROXY_PORT=8790 \
+            node "$proxy" >/tmp/six-turn-proxy.log 2>&1 &
+          for _ in {1..20}; do curl -fsS http://127.0.0.1:8790/health >/dev/null && break; sleep 1; done
+
+      - name: Prove request seven is never forwarded including concurrency
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import concurrent.futures, json, urllib.error, urllib.request
+
+          url='http://127.0.0.1:8790/v1/responses'
+          payload=json.dumps({'model':'gpt-5.6-luna','input':'x','max_output_tokens':256}).encode()
+          headers={'content-type':'application/json','authorization':'Bearer six-turn-client-token'}
+
+          def one(_):
+              req=urllib.request.Request(url,data=payload,headers=headers,method='POST')
+              try:
+                  with urllib.request.urlopen(req,timeout=10) as response:
+                      return response.status
+              except urllib.error.HTTPError as exc:
+                  return exc.code
+
+          with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+              statuses=list(pool.map(one, range(8)))
+
+          assert statuses.count(500)==6, statuses
+          assert statuses.count(429)==2, statuses
+          print('CONCURRENT_PROVIDER_STATUSES='+','.join(map(str,sorted(statuses))))
+          PY
+
+          test "$(cat /tmp/six-turn-upstream-count)" = 6
+          health="$(curl -fsS http://127.0.0.1:8790/health)"
+          python3 - "$health" <<'PY'
+          import json,sys
+          d=json.loads(sys.argv[1])
+          assert d['requests']==6, d
+          assert d['max_requests']==6, d
+          print('PROXY_PROVIDER_REQUESTS=6')
+          print('PROXY_PROVIDER_REQUEST_CAP=6')
+          PY
+
+          payload='{"model":"gpt-5.6-luna","input":"x","max_output_tokens":256}'
+          seventh="$(curl -sS -o /tmp/seventh.json -w '%{http_code}' -X POST \
+            -H 'content-type: application/json' \
+            -H 'authorization: Bearer six-turn-client-token' \
+            --data "$payload" http://127.0.0.1:8790/v1/responses)"
+          test "$seventh" = 429
+          test "$(cat /tmp/six-turn-upstream-count)" = 6
+          grep -q 'hard provider request cap exhausted before provider call' /tmp/seventh.json
+          echo "REQUEST_7_FORWARD_COUNT=0"
+          echo "FAILED_PROVIDER_CALLS_DO_NOT_RELEASE_SLOTS=PASS"
           echo "REAL_OPENAI_CALLS=0"
