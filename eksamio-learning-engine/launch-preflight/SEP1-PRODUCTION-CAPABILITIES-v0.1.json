@@ -1,9 +1,9 @@
 {
-  "schema_version": "0.4.0",
-  "as_of": "2026-08-28",
+  "schema_version": "0.5.0",
+  "as_of": "2026-08-29",
   "deadline": "2026-09-01",
   "product": "Eksamio Pro — Русский",
-  "baseline_main": "d0da4c9947b381d529cde65634a60147265ebd04",
+  "baseline_main": "0e7cb3cd05cd999ea97606d65cf5aef5625fcb3f",
   "launch_status": "NOT_READY",
   "gates": [
     {
@@ -87,9 +87,14 @@
     },
     {
       "id": "production_e2e",
-      "status": "BLOCKED_DEPENDENCY",
-      "evidence": [],
-      "blocker": "Final anonymous-demo -> identity -> payment -> entitlement -> learning -> PEIS -> Tutor -> refund/revoke production-candidate E2E cannot run until upstream subject/legal/live-provider gates close."
+      "status": "READY",
+      "evidence": [
+        "PR #163 implements a server-owned production-shaped payment -> durable entitlement -> provider-neutral receipt -> provider-neutral refund -> durable revoke/access-denied boundary",
+        "PR #163 full deterministic candidate harness composes merged passwordless identity, Russian shared PEIS/NBA, grounded Tutor text + same-session provider-neutral voice and payment/refund boundaries under one learner identity",
+        "CI evidence is explicitly CI_SIMULATED_CONTRACT_EVIDENCE with provider requests/real charges/real refunds/real delivery/real production PEIS writes = 0 and learner audio persisted bytes = 0",
+        "final preflight requires exact PRIVATE_STAGING_LIVE_EVIDENCE bound to candidate SHA, current preflight fingerprint, exact legal hashes and READY Russian content-authority fingerprint; manual FINAL_* booleans cannot substitute"
+      ],
+      "blocker": "Code/evidence-generation gate is ready for CI acceptance; final launch remains externally blocked until one exact private-staging live candidate evidence artifact exists after Russian subject, legal, provider and backend acceptance."
     }
   ],
   "activation_invariants": {

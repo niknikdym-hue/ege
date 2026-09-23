@@ -7,7 +7,7 @@ import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Mapping
+from typing import Any, Mapping
 
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parents[1]
@@ -93,6 +93,9 @@ EXTERNAL_REQUIREMENTS: dict[str, tuple[Requirement, ...]] = {
         Requirement("FINAL_LEARNING_PEIS_TUTOR_ACCEPTED", kind="true"),
         Requirement("FINAL_REFUND_REVOKE_ACCEPTED", kind="true"),
         Requirement("FINAL_PRODUCTION_CANDIDATE_E2E_ACCEPTED", kind="true"),
+        Requirement("FINAL_PRODUCTION_E2E_EVIDENCE_PATH", kind="path"),
+        Requirement("FINAL_PRODUCTION_E2E_EVIDENCE_SHA256", kind="sha256"),
+        Requirement("FINAL_PRODUCTION_CANDIDATE_SHA", kind="sha40"),
     ),
 }
 
@@ -107,6 +110,23 @@ PLACEHOLDERS = {"changeme", "placeholder", "secret", "test", "todo", "xxx", "<se
 IMAGE_RE = re.compile(r"^cr\.yandex/[^\s]+@sha256:[0-9a-f]{64}$")
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+SHA40_RE = re.compile(r"^[0-9a-f]{40}$")
+FINAL_E2E_SCHEMA = "eksamio.sep1.production-e2e.v1"
+FINAL_E2E_CLASS = "PRIVATE_STAGING_LIVE_EVIDENCE"
+FINAL_E2E_REQUIRED_RESULTS = (
+    "anonymous_to_account_continuity",
+    "server_owned_session_resolved",
+    "payment_to_entitlement",
+    "provider_neutral_receipt_registered",
+    "learning_to_shared_peis",
+    "shared_peis_nba_persisted",
+    "grounded_tutor_text",
+    "same_session_voice",
+    "refund_to_durable_revoke",
+    "same_client_access_denied_after_refund",
+    "full_simulated_chain",
+    "private_staging_live_evidence",
+)
 
 
 def _truth(value: str | None) -> bool | None:
@@ -138,6 +158,12 @@ def _valid(requirement: Requirement, env: Mapping[str, str]) -> bool:
         return stripped.startswith("gpt://") and " " not in stripped
     if requirement.kind == "email":
         return bool(EMAIL_RE.fullmatch(stripped))
+    if requirement.kind == "sha256":
+        return bool(SHA256_RE.fullmatch(stripped.casefold()))
+    if requirement.kind == "sha40":
+        return bool(SHA40_RE.fullmatch(stripped.casefold()))
+    if requirement.kind == "path":
+        return "\x00" not in stripped
     return len(stripped) >= requirement.min_length
 
 
@@ -185,6 +211,91 @@ def _legal_missing(env: Mapping[str, str]) -> list[str]:
     return list(dict.fromkeys(missing))
 
 
+def _normalized_legal_authority(rows: list[dict[str, str | bool]]) -> list[tuple[str, str, str]]:
+    return sorted(
+        (str(row["id"]), str(row["version"]), str(row["sha256"]))
+        for row in rows
+    )
+
+
+def _production_e2e_missing(env: Mapping[str, str]) -> list[str]:
+    path_text = env.get("FINAL_PRODUCTION_E2E_EVIDENCE_PATH", "").strip()
+    supplied_sha = env.get("FINAL_PRODUCTION_E2E_EVIDENCE_SHA256", "").strip().casefold()
+    candidate_sha = env.get("FINAL_PRODUCTION_CANDIDATE_SHA", "").strip().casefold()
+    if not path_text or not SHA256_RE.fullmatch(supplied_sha) or not SHA40_RE.fullmatch(candidate_sha):
+        return []
+
+    try:
+        path = Path(path_text)
+        raw = path.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != supplied_sha:
+            return ["FINAL_PRODUCTION_E2E_EVIDENCE_HASH_MISMATCH"]
+        evidence = json.loads(raw.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return ["FINAL_PRODUCTION_E2E_EVIDENCE_INVALID"]
+    if not isinstance(evidence, dict):
+        return ["FINAL_PRODUCTION_E2E_EVIDENCE_INVALID"]
+
+    missing: list[str] = []
+    if evidence.get("schema") != FINAL_E2E_SCHEMA:
+        missing.append("FINAL_PRODUCTION_E2E_SCHEMA_MISMATCH")
+    if evidence.get("evidence_class") != FINAL_E2E_CLASS:
+        missing.append("FINAL_PRODUCTION_E2E_LIVE_EVIDENCE_REQUIRED")
+
+    candidate = evidence.get("candidate")
+    if not isinstance(candidate, dict):
+        return list(dict.fromkeys(missing + ["FINAL_PRODUCTION_E2E_CANDIDATE_BINDING_INVALID"]))
+    if str(candidate.get("git_sha", "")).casefold() != candidate_sha:
+        missing.append("FINAL_PRODUCTION_E2E_CANDIDATE_SHA_MISMATCH")
+
+    expected_preflight = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    if candidate.get("preflight_fingerprint") != expected_preflight:
+        missing.append("FINAL_PRODUCTION_E2E_PREFLIGHT_FINGERPRINT_MISMATCH")
+
+    try:
+        expected_legal = _normalized_legal_authority(legal_artifact_fingerprints())
+    except (OSError, KeyError, ValueError, UnicodeDecodeError, json.JSONDecodeError):
+        expected_legal = []
+        missing.append("FINAL_PRODUCTION_E2E_LEGAL_AUTHORITY_INVALID")
+    supplied_legal_raw = candidate.get("legal_artifacts")
+    supplied_legal: list[tuple[str, str, str]] = []
+    if isinstance(supplied_legal_raw, list):
+        for row in supplied_legal_raw:
+            if not isinstance(row, dict):
+                supplied_legal = []
+                break
+            supplied_legal.append(
+                (str(row.get("id", "")), str(row.get("version", "")), str(row.get("sha256", "")))
+            )
+        supplied_legal.sort()
+    if supplied_legal != expected_legal:
+        missing.append("FINAL_PRODUCTION_E2E_LEGAL_FINGERPRINT_MISMATCH")
+
+    russian_authority = candidate.get("russian_content_authority")
+    if not isinstance(russian_authority, dict):
+        missing.append("FINAL_PRODUCTION_E2E_RUSSIAN_AUTHORITY_REQUIRED")
+    else:
+        russian_fp = str(russian_authority.get("fingerprint", "")).casefold()
+        if russian_authority.get("status") != "READY" or not SHA256_RE.fullmatch(russian_fp):
+            missing.append("FINAL_PRODUCTION_E2E_RUSSIAN_AUTHORITY_REQUIRED")
+
+    results = evidence.get("results")
+    if not isinstance(results, dict):
+        missing.append("FINAL_PRODUCTION_E2E_RESULTS_INVALID")
+    else:
+        for key in FINAL_E2E_REQUIRED_RESULTS:
+            if results.get(key) is not True:
+                missing.append(f"FINAL_PRODUCTION_E2E_RESULT_REQUIRED:{key}")
+
+    safety = evidence.get("safety")
+    if not isinstance(safety, dict) or safety.get("learner_audio_persisted_bytes") != 0:
+        missing.append("FINAL_PRODUCTION_E2E_AUDIO_NONSTORAGE_REQUIRED")
+    if isinstance(safety, dict) and safety.get("public_traffic_enabled") is not False:
+        missing.append("FINAL_PRODUCTION_E2E_PRIVATE_STAGING_REQUIRED")
+
+    return list(dict.fromkeys(missing))
+
+
 def evaluate(env: Mapping[str, str] | None = None) -> dict[str, object]:
     env = dict(os.environ if env is None else env)
     capabilities = json.loads(CAPABILITIES_PATH.read_text(encoding="utf-8"))
@@ -208,7 +319,9 @@ def evaluate(env: Mapping[str, str] | None = None) -> dict[str, object]:
         ]
         if gate_id == "legal_privacy_operational":
             missing.extend(_legal_missing(env))
-            missing = list(dict.fromkeys(missing))
+        if gate_id == "production_e2e":
+            missing.extend(_production_e2e_missing(env))
+        missing = list(dict.fromkeys(missing))
         if code_status != "READY":
             status = code_status
         elif missing:
