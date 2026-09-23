@@ -22,6 +22,8 @@ class OwnerControlV2SafetyTest(unittest.TestCase):
         self.assertIn("clientAuthorized(req.headers.authorization, clientToken)", text)
         self.assertIn("hard task budget exhausted before provider call", text)
         self.assertIn("OWNER_PROXY_UPSTREAM_URL is allowed only in loopback test mode", text)
+        self.assertIn("OWNER_MAX_PROVIDER_REQUESTS must be an integer 1..6", text)
+        self.assertIn("hard provider request cap exhausted before provider call", text)
 
     def test_codex_never_receives_real_openai_provider_key(self):
         yml = TASK.read_text()
@@ -35,7 +37,8 @@ class OwnerControlV2SafetyTest(unittest.TestCase):
         self.assertIn("codex exec", codex)
         self.assertIn("--no-new-privs", codex)
         self.assertIn("--bounding-set=-all", codex)
-        self.assertIn("API_CODEX_PROVIDER_REQUESTS=1", codex)
+        self.assertIn("OWNER_MAX_PROVIDER_REQUESTS='6'", codex)
+        self.assertIn("API_CODEX_PROVIDER_REQUEST_CAP=6", codex)
         self.assertIn("--ephemeral -", codex)
         self.assertIn("< /tmp/codex-prompt.txt", codex)
         self.assertNotIn('prompt="$(cat /tmp/codex-prompt.txt)"', codex)
@@ -46,6 +49,8 @@ class OwnerControlV2SafetyTest(unittest.TestCase):
         self.assertIn("stream_max_retries = 0", yml)
         self.assertIn("CODEX_REQUEST_MAX_RETRIES=0", yml)
         self.assertIn("CODEX_STREAM_MAX_RETRIES=0", yml)
+        self.assertIn("OWNER_MAX_PROVIDER_REQUESTS='6'", yml)
+        self.assertGreaterEqual(yml.count("OWNER_MAX_PROVIDER_REQUESTS='1'"), 2)
 
     def test_owner_v2_isolated_from_merge_deploy_and_production_commands(self):
         task = TASK.read_text()
