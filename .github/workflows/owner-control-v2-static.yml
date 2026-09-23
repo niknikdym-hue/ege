@@ -69,7 +69,9 @@ jobs:
           assert "stream_max_retries = 0" in ai
           assert "--no-new-privs" in ai and "--bounding-set=-all" in ai
           assert "OWNER_PROXY_CLIENT_TOKEN" in ai
-          assert "API_CODEX_PROVIDER_REQUESTS=1" in ai
+          assert "OWNER_MAX_PROVIDER_REQUESTS='6'" in ai
+          assert "API_CODEX_PROVIDER_REQUEST_CAP=6" in ai
+          assert ai.count("OWNER_MAX_PROVIDER_REQUESTS='1'") >= 2
           assert "owner_control_budget_proxy.mjs" in ai
           codex_start=ai.index("- name: Install pinned Codex CLI with retry-zero budget-proxy provider")
           codex_end=ai.index("- name: Extract untrusted candidate patch only", codex_start)

@@ -71,10 +71,12 @@ if (process.argv.includes('--self-test')) {
 const listenPort = Number(process.env.OWNER_BUDGET_PROXY_PORT || 8787);
 const totalBudget = Number(process.env.OWNER_TASK_BUDGET_USD || '0');
 const clientToken = String(process.env.OWNER_PROXY_CLIENT_TOKEN || '');
+const maxProviderRequests = Number(process.env.OWNER_MAX_PROVIDER_REQUESTS || '0');
 const allowedModels = new Set((process.env.OWNER_ALLOWED_MODELS || '').split(',').map(x => x.trim()).filter(Boolean));
 if (!(totalBudget > 0 && totalBudget <= 3)) throw new Error('OWNER_TASK_BUDGET_USD must be >0 and <=3');
 if (!allowedModels.size) throw new Error('OWNER_ALLOWED_MODELS is required');
 if (!clientToken) throw new Error('OWNER_PROXY_CLIENT_TOKEN is required');
+if (!Number.isInteger(maxProviderRequests) || maxProviderRequests < 1 || maxProviderRequests > 6) throw new Error('OWNER_MAX_PROVIDER_REQUESTS must be an integer 1..6');
 const testMode = process.env.OWNER_PROXY_TEST_MODE === '1';
 const configuredUpstream = String(process.env.OWNER_PROXY_UPSTREAM_URL || '');
 let upstreamUrl = 'https://api.openai.com/v1/responses';
@@ -108,7 +110,7 @@ function jsonError(res, status, message) {
 
 const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && req.url === '/health') {
-    const body = JSON.stringify({status:'ok', remaining_usd:Number(remainingUsd.toFixed(6)), reserved_usd:Number(reservedUsd.toFixed(6)), requests:requestCount});
+    const body = JSON.stringify({status:'ok', remaining_usd:Number(remainingUsd.toFixed(6)), reserved_usd:Number(reservedUsd.toFixed(6)), requests:requestCount, max_requests:maxProviderRequests});
     res.writeHead(200, {'content-type':'application/json'}); res.end(body); return;
   }
   if (req.method !== 'POST' || !req.url?.endsWith('/v1/responses')) {
@@ -140,10 +142,15 @@ const server = http.createServer(async (req, res) => {
     if (reservation > remainingUsd + 1e-9) {
       jsonError(res, 402, 'hard task budget reservation refused'); return;
     }
+    if (requestCount >= maxProviderRequests) {
+      jsonError(res, 429, `hard provider request cap exhausted before provider call; requests=${requestCount} max=${maxProviderRequests}`); return;
+    }
+    // The slot claim and budget reservation are synchronous and occur before
+    // the first await, so concurrent requests cannot cross the hard boundary.
+    requestCount += 1;
     remainingUsd -= reservation;
     reservedUsd += reservation;
-    requestCount += 1;
-    console.log(`OWNER_BUDGET_RESERVE request=${requestCount} model=${model} reserve=${reservation.toFixed(6)} remaining=${remainingUsd.toFixed(6)} max_output_tokens=${maxOut}`);
+    console.log(`OWNER_BUDGET_RESERVE request=${requestCount} max_requests=${maxProviderRequests} model=${model} reserve=${reservation.toFixed(6)} remaining=${remainingUsd.toFixed(6)} max_output_tokens=${maxOut}`);
 
     const upstream = await fetch(upstreamUrl, {
       method:'POST',
@@ -163,5 +170,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(listenPort, '127.0.0.1', () => {
-  console.log(`OWNER_CONTROL_BUDGET_PROXY_READY port=${listenPort} budget=${totalBudget.toFixed(4)} allowed=${[...allowedModels].join(',')}`);
+  console.log(`OWNER_CONTROL_BUDGET_PROXY_READY port=${listenPort} budget=${totalBudget.toFixed(4)} max_requests=${maxProviderRequests} allowed=${[...allowedModels].join(',')}`);
 });
