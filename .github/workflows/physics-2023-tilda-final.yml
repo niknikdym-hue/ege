@@ -1,0 +1,48 @@
+name: Physics 2023 final Tilda build
+
+on:
+  push:
+    branches:
+      - codex/physics-2023-tilda-final
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source rendering and browser dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install --upgrade pip
+          pip install pillow playwright
+          python -m playwright install --with-deps chromium
+      - name: Build source-faithful Tilda archive
+        run: python physics-2023-final-build/build_physics_2023_compact.py
+      - name: Browser, scorer, responsive and package verification
+        run: python physics-2023-final-build/verify_physics_2023_v1_0.py
+      - name: Show final hashes
+        run: |
+          cat physics-2023-final-build/dist/SHA256.txt
+          cat physics-2023-final-build/dist/VERIFICATION.json
+      - name: Upload final Tilda archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: physics-2023-tilda-final
+          path: |
+            physics-2023-final-build/dist/ege-fizika-demoversiya-2023-v1.0-TILDA-HQ-SOURCE.zip
+            physics-2023-final-build/dist/SHA256.txt
+            physics-2023-final-build/dist/VERIFICATION.json
+          if-no-files-found: error
+          retention-days: 30

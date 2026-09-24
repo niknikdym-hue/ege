@@ -1,0 +1,598 @@
+{
+  "schema": "physics-2023-answer-scorer-spec-v1",
+  "authority": {
+    "source_pdf": "ege-source-fizika/source-fizika-2023/ege-2023-fizika-demoversiya.pdf",
+    "source_sha256": "a5174740e49cb3626f371ed7b2addc0d078fe6630f98bf7133540f3329bce485",
+    "answers_physical_page": 10,
+    "answers_logical_page": 20,
+    "specification_pdf": "ege-source-fizika/source-fizika-2023/ege-2023-fizika-specifikatsiya.pdf"
+  },
+  "short_max_points": 34,
+  "extended_max_points": 20,
+  "official_max_points": 54,
+  "short_scoring_rules": {
+    "exact_one_point_tasks": [
+      1,
+      2,
+      3,
+      7,
+      8,
+      9,
+      12,
+      13,
+      14,
+      18,
+      22
+    ],
+    "positional_two_point_tasks": [
+      5,
+      6,
+      11,
+      16,
+      17,
+      19,
+      21
+    ],
+    "unordered_selection_two_point_tasks": [
+      4,
+      10,
+      15,
+      20
+    ],
+    "task_23_order_irrelevant": true,
+    "positional_partial_credit": "2 exact; 1 for exactly one wrong position; 0 otherwise; extra symbols force 0",
+    "unordered_selection_partial_credit": "2 exact set; 1 for exactly one extra wrong symbol or exactly one missing symbol; 0 otherwise"
+  },
+  "short_tasks": [
+    {
+      "task_number": 1,
+      "official_answer": "-8",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 2,
+      "official_answer": "2",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 3,
+      "official_answer": "0,875",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": true,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 4,
+      "official_answer": "25",
+      "max_points": 2,
+      "compare_mode": "unordered_selection",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": false,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 5,
+      "official_answer": "32",
+      "max_points": 2,
+      "compare_mode": "positional_sequence",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 6,
+      "official_answer": "24",
+      "max_points": 2,
+      "compare_mode": "positional_sequence",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 7,
+      "official_answer": "1",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 8,
+      "official_answer": "1,5",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": true,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 9,
+      "official_answer": "400",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 10,
+      "official_answer": "24",
+      "max_points": 2,
+      "compare_mode": "unordered_selection",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": false,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 11,
+      "official_answer": "13",
+      "max_points": 2,
+      "compare_mode": "positional_sequence",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 12,
+      "official_answer": "5,25",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": true,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 13,
+      "official_answer": "1",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 14,
+      "official_answer": "1",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 15,
+      "official_answer": "45",
+      "max_points": 2,
+      "compare_mode": "unordered_selection",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": false,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 16,
+      "official_answer": "32",
+      "max_points": 2,
+      "compare_mode": "positional_sequence",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 17,
+      "official_answer": "42",
+      "max_points": 2,
+      "compare_mode": "positional_sequence",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 18,
+      "official_answer": "76",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 19,
+      "official_answer": "13",
+      "max_points": 2,
+      "compare_mode": "positional_sequence",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 20,
+      "official_answer": "235",
+      "max_points": 2,
+      "compare_mode": "unordered_selection",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": false,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 21,
+      "official_answer": "135",
+      "max_points": 2,
+      "compare_mode": "positional_sequence",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 22,
+      "official_answer": "3,40,2",
+      "max_points": 1,
+      "compare_mode": "exact",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": true,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    },
+    {
+      "task_number": 23,
+      "official_answer": "15",
+      "max_points": 1,
+      "compare_mode": "unordered_selection",
+      "normalization": {
+        "trim_outer_whitespace": true,
+        "normalize_unicode_minus_to_ascii": true,
+        "decimal_comma_is_canonical": false,
+        "order_significant": false,
+        "invented_numeric_or_algebraic_equivalents": false
+      }
+    }
+  ],
+  "extended_tasks": [
+    {
+      "task_number": 24,
+      "max_points": 3,
+      "manual_subject_committee_scoring": true,
+      "criteria_regions": [
+        {
+          "logical_page": 21,
+          "physical_page": 11,
+          "slot": "left",
+          "source_region_200dpi_pixels": [
+            0,
+            0,
+            1169,
+            1654
+          ]
+        },
+        {
+          "logical_page": 22,
+          "physical_page": 11,
+          "slot": "right",
+          "source_region_200dpi_pixels": [
+            1169,
+            0,
+            2339,
+            1654
+          ]
+        },
+        {
+          "logical_page": 23,
+          "physical_page": 12,
+          "slot": "left",
+          "source_region_200dpi_pixels": [
+            0,
+            0,
+            1169,
+            235
+          ]
+        }
+      ]
+    },
+    {
+      "task_number": 25,
+      "max_points": 2,
+      "manual_subject_committee_scoring": true,
+      "criteria_regions": [
+        {
+          "logical_page": 23,
+          "physical_page": 12,
+          "slot": "left",
+          "source_region_200dpi_pixels": [
+            0,
+            225,
+            1169,
+            1654
+          ]
+        },
+        {
+          "logical_page": 24,
+          "physical_page": 12,
+          "slot": "right",
+          "source_region_200dpi_pixels": [
+            1169,
+            0,
+            2339,
+            800
+          ]
+        }
+      ]
+    },
+    {
+      "task_number": 26,
+      "max_points": 2,
+      "manual_subject_committee_scoring": true,
+      "criteria_regions": [
+        {
+          "logical_page": 25,
+          "physical_page": 13,
+          "slot": "left",
+          "source_region_200dpi_pixels": [
+            0,
+            0,
+            1169,
+            1654
+          ]
+        },
+        {
+          "logical_page": 26,
+          "physical_page": 13,
+          "slot": "right",
+          "source_region_200dpi_pixels": [
+            1169,
+            0,
+            2339,
+            900
+          ]
+        }
+      ]
+    },
+    {
+      "task_number": 27,
+      "max_points": 3,
+      "manual_subject_committee_scoring": true,
+      "criteria_regions": [
+        {
+          "logical_page": 27,
+          "physical_page": 14,
+          "slot": "left",
+          "source_region_200dpi_pixels": [
+            0,
+            0,
+            1169,
+            1654
+          ]
+        },
+        {
+          "logical_page": 28,
+          "physical_page": 14,
+          "slot": "right",
+          "source_region_200dpi_pixels": [
+            1169,
+            0,
+            2339,
+            900
+          ]
+        },
+        {
+          "logical_page": 29,
+          "physical_page": 15,
+          "slot": "left",
+          "source_region_200dpi_pixels": [
+            0,
+            0,
+            1169,
+            1654
+          ]
+        }
+      ]
+    },
+    {
+      "task_number": 28,
+      "max_points": 3,
+      "manual_subject_committee_scoring": true,
+      "criteria_regions": [
+        {
+          "logical_page": 30,
+          "physical_page": 15,
+          "slot": "right",
+          "source_region_200dpi_pixels": [
+            1169,
+            0,
+            2339,
+            1654
+          ]
+        },
+        {
+          "logical_page": 31,
+          "physical_page": 16,
+          "slot": "left",
+          "source_region_200dpi_pixels": [
+            0,
+            0,
+            1169,
+            1654
+          ]
+        },
+        {
+          "logical_page": 32,
+          "physical_page": 16,
+          "slot": "right",
+          "source_region_200dpi_pixels": [
+            1169,
+            0,
+            2339,
+            1000
+          ]
+        }
+      ]
+    },
+    {
+      "task_number": 29,
+      "max_points": 3,
+      "manual_subject_committee_scoring": true,
+      "criteria_regions": [
+        {
+          "logical_page": 33,
+          "physical_page": 17,
+          "slot": "left",
+          "source_region_200dpi_pixels": [
+            0,
+            0,
+            1169,
+            1654
+          ]
+        },
+        {
+          "logical_page": 34,
+          "physical_page": 17,
+          "slot": "right",
+          "source_region_200dpi_pixels": [
+            1169,
+            0,
+            2339,
+            1654
+          ]
+        }
+      ]
+    },
+    {
+      "task_number": 30,
+      "max_points": 4,
+      "available_official_alternative_examples": 2,
+      "selected_official_example": 1,
+      "manual_subject_committee_scoring": true,
+      "criteria_regions": [
+        {
+          "logical_page": 35,
+          "physical_page": 18,
+          "slot": "left",
+          "source_region_200dpi_pixels": [
+            0,
+            0,
+            1169,
+            1654
+          ]
+        },
+        {
+          "logical_page": 36,
+          "physical_page": 18,
+          "slot": "right",
+          "source_region_200dpi_pixels": [
+            1169,
+            0,
+            2339,
+            1654
+          ]
+        },
+        {
+          "logical_page": 37,
+          "physical_page": 19,
+          "slot": "left",
+          "source_region_200dpi_pixels": [
+            0,
+            0,
+            1169,
+            1654
+          ]
+        }
+      ]
+    }
+  ]
+}
