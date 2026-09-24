@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "exam": "OGE",
+  "task_number": 5,
+  "variant": 2,
+  "item_id": "oge-ru-05-regular-002-workshop",
+  "semantic_identity": {
+    "id": "oge-ru-05-regular-002-workshop",
+    "status": "PROPOSED_NOT_CANONICAL"
+  },
+  "ru_prog_mapping": [
+    "RU-PROG-10"
+  ],
+  "scoring": {
+    "type": "exact_match"
+  },
+  "answer": {
+    "type": "exact",
+    "value": [
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ]
+  },
+  "content": {
+    "id": "oge-ru-05-regular-002-workshop",
+    "instruction": "Расставьте знаки препинания. Укажите все цифры, на месте которых должны стоять запятые.",
+    "targetMark": "comma",
+    "targetLabel": "запятые",
+    "targetSymbol": ",",
+    "text": "Мастер (1) сказал: «Если краска высохнет (2) мы начнём сборку». Ученики (3) конечно (4) подготовили и кисти (5) и инструменты. Закончив работу (6) они убрали всё: банки (7) тряпки (8) перчатки.",
+    "gaps": [
+      {
+        "id": "1",
+        "expectedPunctuation": "none",
+        "isTarget": false,
+        "explanation": "Между подлежащим «мастер» и сказуемым «сказал» запятая не ставится."
+      },
+      {
+        "id": "2",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Внутри прямой речи запятая отделяет придаточную часть условия «если краска высохнет» от главной."
+      },
+      {
+        "id": "3",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Вводное слово «конечно» выражает уверенность говорящего и открывается запятой."
+      },
+      {
+        "id": "4",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Здесь заканчивается обособленное вводное слово «конечно»."
+      },
+      {
+        "id": "5",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Однородные дополнения «кисти» и «инструменты» соединены повторяющимся союзом «и… и»; перед второй частью ставится запятая."
+      },
+      {
+        "id": "6",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Деепричастный оборот «закончив работу» обозначает добавочное действие и обособляется."
+      },
+      {
+        "id": "7",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Запятая разделяет однородные члены перечисления «банки, тряпки, перчатки»."
+      },
+      {
+        "id": "8",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Запятая разделяет второй и третий однородные члены перечисления."
+      }
+    ],
+    "answer": [
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ]
+  },
+  "assets": [],
+  "provenance": {
+    "authorship": "OWNER_AUTHORED_LOCAL_MATERIAL",
+    "source": "exam-platform-tilda/tilda-ready/pages/oge-russkiy-zadanie-5/oge-russkiy-zadanie-5-T123.txt",
+    "adaptation": "mechanical extraction only; wording unchanged"
+  }
+}

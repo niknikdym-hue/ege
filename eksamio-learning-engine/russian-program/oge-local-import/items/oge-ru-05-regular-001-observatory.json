@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "exam": "OGE",
+  "task_number": 5,
+  "variant": 1,
+  "item_id": "oge-ru-05-regular-001-observatory",
+  "semantic_identity": {
+    "id": "oge-ru-05-regular-001-observatory",
+    "status": "PROPOSED_NOT_CANONICAL"
+  },
+  "ru_prog_mapping": [
+    "RU-PROG-10"
+  ],
+  "scoring": {
+    "type": "exact_match"
+  },
+  "answer": {
+    "type": "exact",
+    "value": [
+      "1",
+      "2",
+      "3",
+      "5",
+      "6",
+      "7"
+    ]
+  },
+  "content": {
+    "id": "oge-ru-05-regular-001-observatory",
+    "instruction": "Расставьте знаки препинания. Укажите все цифры, на месте которых должны стоять запятые.",
+    "targetMark": "comma",
+    "targetLabel": "запятые",
+    "targetSymbol": ",",
+    "text": "Старая обсерватория (1) построенная на высоком холме (2) была видна издалека. Когда солнце скрылось за лесом (3) мы поднялись к башне (4) и сторож открыл тяжёлую дверь. Внутри (5) точнее у самого входа (6) стоял стол (7) покрытый картами звёздного неба.",
+    "gaps": [
+      {
+        "id": "1",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Причастный оборот «построенная на высоком холме» стоит после определяемого слова «обсерватория» и открывается запятой."
+      },
+      {
+        "id": "2",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Здесь заканчивается обособленный причастный оборот «построенная на высоком холме»."
+      },
+      {
+        "id": "3",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Запятая отделяет придаточную часть времени «когда солнце скрылось за лесом» от главной части."
+      },
+      {
+        "id": "4",
+        "expectedPunctuation": "none",
+        "isTarget": false,
+        "explanation": "Перед одиночным союзом «и» запятая не ставится: придаточная часть времени является общей для частей «мы поднялись» и «сторож открыл»."
+      },
+      {
+        "id": "5",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Слово «точнее» вводит уточняющее обстоятельство места «у самого входа», поэтому перед уточнением ставится запятая."
+      },
+      {
+        "id": "6",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Здесь заканчивается уточняющее обстоятельство места «точнее у самого входа», поэтому ставится закрывающая запятая."
+      },
+      {
+        "id": "7",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Причастный оборот «покрытый картами звёздного неба» стоит после определяемого слова «стол» и отделяется запятой."
+      }
+    ],
+    "answer": [
+      "1",
+      "2",
+      "3",
+      "5",
+      "6",
+      "7"
+    ]
+  },
+  "assets": [],
+  "provenance": {
+    "authorship": "OWNER_AUTHORED_LOCAL_MATERIAL",
+    "source": "exam-platform-tilda/tilda-ready/pages/oge-russkiy-zadanie-5/oge-russkiy-zadanie-5-T123.txt",
+    "adaptation": "mechanical extraction only; wording unchanged"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "exam": "OGE",
+  "task_number": 5,
+  "variant": 4,
+  "item_id": "oge-ru-05-regular-004-reading-colons",
+  "semantic_identity": {
+    "id": "oge-ru-05-regular-004-reading-colons",
+    "status": "PROPOSED_NOT_CANONICAL"
+  },
+  "ru_prog_mapping": [
+    "RU-PROG-10"
+  ],
+  "scoring": {
+    "type": "exact_match"
+  },
+  "answer": {
+    "type": "exact",
+    "value": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  "content": {
+    "id": "oge-ru-05-regular-004-reading-colons",
+    "instruction": "Расставьте знаки препинания. Укажите все цифры, на месте которых должно стоять двоеточие.",
+    "targetMark": "colon",
+    "targetLabel": "двоеточия",
+    "targetSymbol": ":",
+    "text": "В комнате было всё необходимое (1) стол, лампа, книжный шкаф. Я сразу понял (2) хозяин любит читать. В шкафу хранились три вида изданий (3) романы, повести, сборники стихов. Наступил вечер (4) и мы зажгли лампу. Чтение (5) его любимое занятие.",
+    "gaps": [
+      {
+        "id": "1",
+        "expectedPunctuation": "colon",
+        "isTarget": true,
+        "explanation": "После обобщающего сочетания «всё необходимое» перед перечислением однородных членов ставится двоеточие."
+      },
+      {
+        "id": "2",
+        "expectedPunctuation": "colon",
+        "isTarget": true,
+        "explanation": "Вторая часть БСП раскрывает содержание сказуемого «понял»; можно вставить союз «что», поэтому ставится двоеточие."
+      },
+      {
+        "id": "3",
+        "expectedPunctuation": "colon",
+        "isTarget": true,
+        "explanation": "После сочетания с обобщающим значением «три вида изданий» начинается перечисление, поэтому ставится двоеточие."
+      },
+      {
+        "id": "4",
+        "expectedPunctuation": "comma",
+        "isTarget": false,
+        "explanation": "Здесь нужна запятая между частями ССП «вечер наступил» и «мы зажгли», а не двоеточие."
+      },
+      {
+        "id": "5",
+        "expectedPunctuation": "dash",
+        "isTarget": false,
+        "explanation": "Между подлежащим «чтение» и составным именным сказуемым «любимое занятие» при отсутствии связки ставится тире, а не двоеточие."
+      }
+    ],
+    "answer": [
+      "1",
+      "2",
+      "3"
+    ]
+  },
+  "assets": [],
+  "provenance": {
+    "authorship": "OWNER_AUTHORED_LOCAL_MATERIAL",
+    "source": "exam-platform-tilda/tilda-ready/pages/oge-russkiy-zadanie-5/oge-russkiy-zadanie-5-T123.txt",
+    "adaptation": "mechanical extraction only; wording unchanged"
+  }
+}

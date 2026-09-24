@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "exam": "OGE",
+  "task_number": 5,
+  "variant": 3,
+  "item_id": "oge-ru-05-regular-003-city-dashes",
+  "semantic_identity": {
+    "id": "oge-ru-05-regular-003-city-dashes",
+    "status": "PROPOSED_NOT_CANONICAL"
+  },
+  "ru_prog_mapping": [
+    "RU-PROG-10"
+  ],
+  "scoring": {
+    "type": "exact_match"
+  },
+  "answer": {
+    "type": "exact",
+    "value": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ]
+  },
+  "content": {
+    "id": "oge-ru-05-regular-003-city-dashes",
+    "instruction": "Расставьте знаки препинания. Укажите все цифры, на месте которых должно стоять тире.",
+    "targetMark": "dash",
+    "targetLabel": "тире",
+    "targetSymbol": "—",
+    "text": "Москва (1) столица России. Увидеть её старые улицы (2) значит прикоснуться к истории. Первая остановка экскурсии (3) старинный особняк. Следующий объект (4) современное здание. Мы подошли к воротам (5) и экскурсовод начал рассказ.",
+    "gaps": [
+      {
+        "id": "1",
+        "expectedPunctuation": "dash",
+        "isTarget": true,
+        "explanation": "Подлежащее «Москва» и сказуемое «столица» выражены существительными в именительном падеже; связки нет, поэтому ставится тире."
+      },
+      {
+        "id": "2",
+        "expectedPunctuation": "dash",
+        "isTarget": true,
+        "explanation": "Подлежащее и сказуемое выражены неопределёнными формами глагола: «увидеть — значит прикоснуться»; между ними ставится тире."
+      },
+      {
+        "id": "3",
+        "expectedPunctuation": "dash",
+        "isTarget": true,
+        "explanation": "Подлежащее «остановка» и сказуемое «особняк» выражены существительными в именительном падеже; связки нет, поэтому ставится тире."
+      },
+      {
+        "id": "4",
+        "expectedPunctuation": "dash",
+        "isTarget": true,
+        "explanation": "Подлежащее «объект» и сказуемое «здание» выражены существительными в именительном падеже; связки нет, поэтому ставится тире."
+      },
+      {
+        "id": "5",
+        "expectedPunctuation": "comma",
+        "isTarget": false,
+        "explanation": "Здесь нужна запятая, а не тире: союз «и» соединяет части ССП с основами «мы подошли» и «экскурсовод начал»."
+      }
+    ],
+    "answer": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ]
+  },
+  "assets": [],
+  "provenance": {
+    "authorship": "OWNER_AUTHORED_LOCAL_MATERIAL",
+    "source": "exam-platform-tilda/tilda-ready/pages/oge-russkiy-zadanie-5/oge-russkiy-zadanie-5-T123.txt",
+    "adaptation": "mechanical extraction only; wording unchanged"
+  }
+}
