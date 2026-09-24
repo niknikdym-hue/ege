@@ -1,0 +1,2459 @@
+{
+  "artifact_id": "MATHEMATICS-FULL-SUBJECT-CANDIDATE-INVENTORY-v0.1",
+  "version": "0.1",
+  "date": "2026-08-23",
+  "status": "REVIEW_ONLY_CANDIDATE_INVENTORY",
+  "baseline": {
+    "current_main_sha": "64af38ffd5958bdb7b1067324cabcf616256590c",
+    "ref": "origin/main"
+  },
+  "identity_model_id": "mathematics-identity-v0.1",
+  "subject_id": "mathematics",
+  "route_model": {
+    "BASE_and_PROFILE": "ROUTE_OVERLAYS_OF_ONE_MATHEMATICS_IDENTITY_MODEL",
+    "task_number_role": "MAPPING_METADATA_NEVER_SEMANTIC_IDENTITY"
+  },
+  "canonical_admission": {
+    "performed": false,
+    "rule": "Every record remains CANDIDATE_NOT_CANONICAL pending subject/Brain acceptance."
+  },
+  "source_basis": [
+    {
+      "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+      "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+      "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+    },
+    {
+      "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+      "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+      "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+    },
+    {
+      "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+      "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+      "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+    },
+    {
+      "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+      "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+      "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+    },
+    {
+      "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+      "locator": "cells: BASE and PROFILE, years 2022-2026",
+      "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+    }
+  ],
+  "candidates": [
+    {
+      "candidate_id": "math-candidate-natural-integers-divisibility",
+      "label_ru": "Натуральные и целые числа: делимость",
+      "capability": "Применять признаки делимости и свойства целых чисел при решении задач.",
+      "domain": "arithmetic_numbers",
+      "subdomain": "integers",
+      "scope_includes": [
+        "признаки делимости",
+        "НОД и НОК в задачах"
+      ],
+      "scope_excludes": [
+        "доказательства высокой сложности по теории чисел"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            1,
+            4,
+            14,
+            16
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            19
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-rational-numbers-percent-proportion",
+      "label_ru": "Рациональные числа, проценты и пропорции",
+      "capability": "Выполнять вычисления с дробями, процентами и пропорциональными величинами.",
+      "domain": "arithmetic_numbers",
+      "subdomain": "rational_numbers",
+      "scope_includes": [
+        "обыкновенные и десятичные дроби",
+        "проценты",
+        "пропорции"
+      ],
+      "scope_excludes": [
+        "сложные финансовые модели с несколькими условиями"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            1,
+            2,
+            4,
+            15,
+            19,
+            21
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            9,
+            10,
+            16
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-roots-and-powers",
+      "label_ru": "Корни и степени",
+      "capability": "Вычислять и преобразовывать выражения с корнями и степенями.",
+      "domain": "algebraic_expressions",
+      "subdomain": "powers_roots",
+      "scope_includes": [
+        "арифметические корни",
+        "степени с целым и рациональным показателем"
+      ],
+      "scope_excludes": [
+        "уравнения с корнями и степенями"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            1,
+            14,
+            16
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            7
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-logarithms",
+      "label_ru": "Логарифмы",
+      "capability": "Вычислять и преобразовывать логарифмические выражения.",
+      "domain": "algebraic_expressions",
+      "subdomain": "logarithms",
+      "scope_includes": [
+        "десятичные и натуральные логарифмы",
+        "свойства логарифмов"
+      ],
+      "scope_excludes": [
+        "логарифмические уравнения и неравенства"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            17,
+            18
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            7,
+            13,
+            15
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-numerical-estimation-rounding",
+      "label_ru": "Приближённые вычисления, оценка и округление",
+      "capability": "Оценивать результат вычисления и применять правила округления.",
+      "domain": "arithmetic_numbers",
+      "subdomain": "estimation",
+      "scope_includes": [
+        "приближённые вычисления",
+        "прикидка",
+        "округление"
+      ],
+      "scope_excludes": [
+        "статистические оценки"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BASE",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            2,
+            19,
+            21
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-algebraic-expression-transformations",
+      "label_ru": "Тождественные преобразования алгебраических выражений",
+      "capability": "Выполнять тождественные преобразования числовых и алгебраических выражений.",
+      "domain": "algebraic_expressions",
+      "subdomain": "transformations",
+      "scope_includes": [
+        "рациональные выражения",
+        "эквивалентные преобразования"
+      ],
+      "scope_excludes": [
+        "решение уравнений и неравенств как отдельная способность"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            1,
+            4,
+            14,
+            16,
+            18
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            7,
+            13,
+            15,
+            18
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-rational-equations",
+      "label_ru": "Рациональные уравнения",
+      "capability": "Решать целые и дробно-рациональные уравнения с проверкой допустимости.",
+      "domain": "equations_systems",
+      "subdomain": "rational_equations",
+      "scope_includes": [
+        "целые уравнения",
+        "дробно-рациональные уравнения"
+      ],
+      "scope_excludes": [
+        "параметры",
+        "системы как отдельная способность"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            17,
+            20
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            6,
+            13,
+            15
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-irrational-equations",
+      "label_ru": "Иррациональные уравнения",
+      "capability": "Решать иррациональные уравнения и проверять полученные корни.",
+      "domain": "equations_systems",
+      "subdomain": "irrational_equations",
+      "scope_includes": [
+        "уравнения с корнями",
+        "проверка корней"
+      ],
+      "scope_excludes": [
+        "иррациональные неравенства"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            17
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            6,
+            13,
+            15
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-exponential-logarithmic-equations",
+      "label_ru": "Показательные и логарифмические уравнения",
+      "capability": "Решать показательные и логарифмические уравнения.",
+      "domain": "equations_systems",
+      "subdomain": "transcendental_equations",
+      "scope_includes": [
+        "показательные уравнения",
+        "логарифмические уравнения"
+      ],
+      "scope_excludes": [
+        "неравенства",
+        "тригонометрические уравнения"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            17
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            6,
+            13,
+            15
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-trigonometric-equations",
+      "label_ru": "Тригонометрические уравнения",
+      "capability": "Решать тригонометрические уравнения на допустимом экзаменационном материале.",
+      "domain": "equations_systems",
+      "subdomain": "trigonometric_equations",
+      "scope_includes": [
+        "основные тригонометрические уравнения"
+      ],
+      "scope_excludes": [
+        "тригонометрические неравенства"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            17
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            6,
+            13,
+            15
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-rational-inequalities",
+      "label_ru": "Рациональные неравенства",
+      "capability": "Решать целые и дробно-рациональные неравенства.",
+      "domain": "inequalities_systems",
+      "subdomain": "rational_inequalities",
+      "scope_includes": [
+        "целые неравенства",
+        "дробно-рациональные неравенства"
+      ],
+      "scope_excludes": [
+        "неравенства с параметром"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            18
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            6,
+            13,
+            15
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-irrational-exponential-logarithmic-inequalities",
+      "label_ru": "Иррациональные, показательные и логарифмические неравенства",
+      "capability": "Решать иррациональные, показательные и логарифмические неравенства.",
+      "domain": "inequalities_systems",
+      "subdomain": "special_inequalities",
+      "scope_includes": [
+        "три класса неравенств из кодификатора"
+      ],
+      "scope_excludes": [
+        "тригонометрические неравенства",
+        "параметры"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            18
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            6,
+            13,
+            15
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "NEEDS_SUBJECT_REVIEW",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-trigonometric-inequalities",
+      "label_ru": "Тригонометрические неравенства",
+      "capability": "Решать тригонометрические неравенства.",
+      "domain": "inequalities_systems",
+      "subdomain": "trigonometric_inequalities",
+      "scope_includes": [
+        "тригонометрические неравенства"
+      ],
+      "scope_excludes": [
+        "тригонометрические уравнения"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "PROFILE",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            13,
+            15,
+            18
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-systems-equations-inequalities",
+      "label_ru": "Системы и совокупности уравнений и неравенств",
+      "capability": "Решать системы и совокупности уравнений и неравенств.",
+      "domain": "equations_systems",
+      "subdomain": "systems",
+      "scope_includes": [
+        "системы уравнений",
+        "системы неравенств",
+        "совокупности"
+      ],
+      "scope_excludes": [
+        "задачи с параметром"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            20
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            6,
+            13,
+            15
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-function-representations-properties-graphs",
+      "label_ru": "Функции, свойства и графики",
+      "capability": "Исследовать заданную функцию и извлекать по графику область определения, значения, нули, знаки, монотонность и экстремумы.",
+      "domain": "functions_graphs",
+      "subdomain": "function_analysis",
+      "scope_includes": [
+        "способы задания",
+        "график",
+        "область определения",
+        "нули",
+        "знакопостоянство",
+        "монотонность",
+        "экстремумы"
+      ],
+      "scope_excludes": [
+        "производная как метод исследования"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            3,
+            6,
+            7
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            8,
+            11,
+            12,
+            18
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-elementary-function-families",
+      "label_ru": "Семейства элементарных функций",
+      "capability": "Использовать свойства и графики степенной, корневой, тригонометрической, показательной и логарифмической функций.",
+      "domain": "functions_graphs",
+      "subdomain": "elementary_functions",
+      "scope_includes": [
+        "степенная",
+        "корневая",
+        "тригонометрическая",
+        "показательная",
+        "логарифмическая функции"
+      ],
+      "scope_excludes": [
+        "обратные функции как отдельное углубление"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            7,
+            17,
+            18
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            7,
+            8,
+            11,
+            18
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "NEEDS_SUBJECT_REVIEW",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-sequences-progressions-compound-interest",
+      "label_ru": "Последовательности, прогрессии и сложные проценты",
+      "capability": "Работать с последовательностями, арифметической и геометрической прогрессиями и формулой сложных процентов.",
+      "domain": "functions_graphs",
+      "subdomain": "sequences",
+      "scope_includes": [
+        "способы задания последовательностей",
+        "арифметическая прогрессия",
+        "геометрическая прогрессия",
+        "сложные проценты"
+      ],
+      "scope_excludes": [
+        "общие финансовые модели с несколькими независимыми условиями"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            2,
+            15,
+            19,
+            21
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            9,
+            10,
+            16
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-derivatives",
+      "label_ru": "Производная элементарной функции",
+      "capability": "Находить производные элементарных функций.",
+      "domain": "calculus",
+      "subdomain": "derivative",
+      "scope_includes": [
+        "производная",
+        "производные элементарных функций"
+      ],
+      "scope_excludes": [
+        "исследование функции",
+        "интеграл"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            7
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            8,
+            12
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-derivative-function-optimization",
+      "label_ru": "Исследование функции с производной и оптимизация",
+      "capability": "Использовать производную для исследования монотонности, экстремумов и наибольшего/наименьшего значения.",
+      "domain": "calculus",
+      "subdomain": "derivative_applications",
+      "scope_includes": [
+        "монотонность",
+        "экстремумы",
+        "наибольшее и наименьшее значения"
+      ],
+      "scope_excludes": [
+        "касательная",
+        "интеграл"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            7
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            8,
+            12
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-antiderivative-integral-area",
+      "label_ru": "Первообразная, интеграл и площадь",
+      "capability": "Использовать первообразную и интеграл, включая нахождение площади фигур.",
+      "domain": "calculus",
+      "subdomain": "integral",
+      "scope_includes": [
+        "первообразная",
+        "определённый интеграл",
+        "площадь с помощью интеграла"
+      ],
+      "scope_excludes": [
+        "несобственные интегралы"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "PROFILE",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            8
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-sets-and-logic",
+      "label_ru": "Множества и логика",
+      "capability": "Оперировать множествами и выполнять логические рассуждения.",
+      "domain": "logic_sets",
+      "subdomain": "sets_logic",
+      "scope_includes": [
+        "операции над множествами",
+        "диаграммы Эйлера-Венна",
+        "логика"
+      ],
+      "scope_excludes": [
+        "комбинаторика"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            8
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            19
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "NEEDS_SUBJECT_REVIEW",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-descriptive-statistics",
+      "label_ru": "Описательная статистика",
+      "capability": "Извлекать, представлять и интерпретировать статистическую информацию.",
+      "domain": "probability_statistics",
+      "subdomain": "statistics",
+      "scope_includes": [
+        "описательная статистика",
+        "таблицы",
+        "диаграммы",
+        "графики"
+      ],
+      "scope_excludes": [
+        "вероятность событий"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            3,
+            6
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            4,
+            5
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-probability-classical-equally-likely",
+      "label_ru": "Классическая вероятность равновозможных исходов",
+      "capability": "Вычислять вероятность простого события в конечной равновозможной модели.",
+      "domain": "probability_statistics",
+      "subdomain": "classical_probability",
+      "scope_includes": [
+        "благоприятные и все равновозможные исходы"
+      ],
+      "scope_excludes": [
+        "условная вероятность",
+        "комбинаторная модель как отдельная способность"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            5
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            4
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [
+        "math-probability-classical-equally-likely"
+      ],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-probability-operations-graphs",
+      "label_ru": "Операции с вероятностями и графические методы",
+      "capability": "Применять графические методы, сложение, умножение и полную вероятность.",
+      "domain": "probability_statistics",
+      "subdomain": "probability_operations",
+      "scope_includes": [
+        "графические методы",
+        "сложение",
+        "умножение",
+        "полная вероятность"
+      ],
+      "scope_excludes": [
+        "классическая вероятность равновозможных исходов"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "PROFILE",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            5
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-combinatorics-counting",
+      "label_ru": "Комбинаторика и подсчёт исходов",
+      "capability": "Применять комбинаторные факты и формулы для подсчёта исходов.",
+      "domain": "probability_statistics",
+      "subdomain": "combinatorics",
+      "scope_includes": [
+        "комбинаторные факты",
+        "комбинаторные формулы"
+      ],
+      "scope_excludes": [
+        "вероятностные операции"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "PROFILE",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            5
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-plane-geometry-computation",
+      "label_ru": "Планиметрия: вычисление величин",
+      "capability": "Использовать факты и теоремы планиметрии для вычисления длин, углов и площадей.",
+      "domain": "geometry",
+      "subdomain": "plane_geometry",
+      "scope_includes": [
+        "плоские фигуры",
+        "длина",
+        "угол",
+        "площадь",
+        "подобие"
+      ],
+      "scope_excludes": [
+        "доказательство геометрических утверждений"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            9,
+            10,
+            12
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            1,
+            17
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-plane-geometry-proof",
+      "label_ru": "Планиметрия: доказательное рассуждение",
+      "capability": "Строить и проверять доказательные рассуждения с фактами и теоремами планиметрии.",
+      "domain": "geometry",
+      "subdomain": "plane_geometry_proof",
+      "scope_includes": [
+        "доказательство",
+        "обоснование геометрического решения"
+      ],
+      "scope_excludes": [
+        "вычисление по готовой формуле"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            8,
+            9,
+            10,
+            12
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            17
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "NEEDS_SUBJECT_REVIEW",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-solid-geometry-relations",
+      "label_ru": "Стереометрия: взаимное расположение и углы",
+      "capability": "Работать с прямыми и плоскостями в пространстве, углами и расстояниями.",
+      "domain": "geometry",
+      "subdomain": "solid_geometry_relations",
+      "scope_includes": [
+        "параллельность",
+        "перпендикулярность",
+        "углы",
+        "расстояния"
+      ],
+      "scope_excludes": [
+        "объёмы и площади поверхностей"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            11,
+            13
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            3,
+            14
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-solid-geometry-measurements",
+      "label_ru": "Стереометрия: многогранники и тела вращения",
+      "capability": "Вычислять объёмы и площади поверхностей многогранников и тел вращения.",
+      "domain": "geometry",
+      "subdomain": "solid_geometry_measurements",
+      "scope_includes": [
+        "многогранники",
+        "тела вращения",
+        "объём",
+        "площадь поверхности"
+      ],
+      "scope_excludes": [
+        "построение сечений"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            11,
+            13
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            3,
+            14
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-solid-geometry-sections",
+      "label_ru": "Стереометрия: построение сечений",
+      "capability": "Строить сечения многогранников и использовать их в решении пространственных задач.",
+      "domain": "geometry",
+      "subdomain": "solid_geometry_sections",
+      "scope_includes": [
+        "построение сечения",
+        "изображение многогранников"
+      ],
+      "scope_excludes": [
+        "простые вычисления объёма без сечения"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "PROFILE",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            14
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-coordinates-vectors",
+      "label_ru": "Координаты и векторы",
+      "capability": "Оперировать координатами и векторами, включая скалярное произведение и угол между векторами.",
+      "domain": "geometry",
+      "subdomain": "coordinates_vectors",
+      "scope_includes": [
+        "координаты вектора",
+        "сумма",
+        "умножение на число",
+        "скалярное произведение"
+      ],
+      "scope_excludes": [
+        "координатный метод в параметрических задачах"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "PROFILE",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            2
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-applied-modeling-text-problems",
+      "label_ru": "Математическое моделирование текстовых задач",
+      "capability": "Строить выражение, уравнение, неравенство или систему по условию, исследовать модель и интерпретировать результат.",
+      "domain": "applied_modeling",
+      "subdomain": "word_problems",
+      "scope_includes": [
+        "текстовые задачи",
+        "модель",
+        "оценка правдоподобия"
+      ],
+      "scope_excludes": [
+        "абстрактные уравнения без контекста"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            2,
+            4,
+            15,
+            19,
+            20,
+            21
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            9,
+            10,
+            16
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "CLEAR",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-financial-modeling",
+      "label_ru": "Финансовое моделирование",
+      "capability": "Решать текстовые задачи с финансовым контекстом, включая личные и семейные финансы.",
+      "domain": "applied_modeling",
+      "subdomain": "financial_math",
+      "scope_includes": [
+        "финансовые зависимости",
+        "интерпретация результата"
+      ],
+      "scope_excludes": [
+        "сложные проценты как отдельная формульная способность"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+          "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+          "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "BOTH",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "BASE",
+          "task_numbers": [
+            2,
+            15,
+            19,
+            21
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-baza-specifikatsiya.pdf",
+            "locator": "PDF pages 8-10 (printed); appendix, tasks 1-21",
+            "authority_role": "OFFICIAL_FIPI_BASE_ROUTE_OVERLAY"
+          }
+        },
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            16
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "NEEDS_SUBJECT_REVIEW",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-parameter-equations-inequalities-functions",
+      "label_ru": "Уравнения, неравенства и функции с параметрами",
+      "capability": "Решать уравнения, неравенства и задачи на свойства функций с параметрами.",
+      "domain": "advanced_algebra",
+      "subdomain": "parameters",
+      "scope_includes": [
+        "параметр в уравнениях",
+        "параметр в неравенствах",
+        "функциональные задачи с параметром"
+      ],
+      "scope_excludes": [
+        "обычные уравнения без параметра"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "PROFILE",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            18
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "NEEDS_SUBJECT_REVIEW",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    },
+    {
+      "candidate_id": "math-candidate-advanced-algebraic-reasoning",
+      "label_ru": "Высокоуровневое алгебраическое рассуждение",
+      "capability": "Выбирать метод и проводить доказательное рассуждение в задачах высокой сложности по числам, уравнениям и неравенствам.",
+      "domain": "advanced_algebra",
+      "subdomain": "high_complexity_reasoning",
+      "scope_includes": [
+        "метод доказательства",
+        "примеры и контрпримеры",
+        "задачи высокой сложности"
+      ],
+      "scope_excludes": [
+        "конкретный раздел без явного метода"
+      ],
+      "source_refs": [
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 13-15 (printed); table 3, sections 1-4",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-kodifikator.pdf",
+          "locator": "PDF pages 15-16 (printed); table 3, sections 5-7",
+          "authority_role": "OFFICIAL_FIPI_CAPABILITY_SCOPE"
+        },
+        {
+          "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+          "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+          "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+        },
+        {
+          "repository_path": "eksamio-learning-engine/mathematics-identity/MATHEMATICS-SOURCE-MATRIX-2022-2026-v0.2.json",
+          "locator": "cells: BASE and PROFILE, years 2022-2026",
+          "authority_role": "VERIFIED_REPOSITORY_2022_2026_SOURCE_CORPUS"
+        }
+      ],
+      "route_applicability": "PROFILE",
+      "year_task_mappings": [
+        {
+          "year": 2025,
+          "route": "PROFILE",
+          "task_numbers": [
+            18,
+            19
+          ],
+          "mapping_role": "ROUTE_METADATA_NOT_SEMANTIC_IDENTITY",
+          "source_ref": {
+            "repository_path": "matematika-source-2025/ege-2025-matematika-profil-specifikatsiya.pdf",
+            "locator": "PDF pages 9-16 (printed); appendix, tasks 1-19",
+            "authority_role": "OFFICIAL_FIPI_PROFILE_ROUTE_OVERLAY"
+          }
+        }
+      ],
+      "overlap_with_existing_canonical_ids": [],
+      "possible_duplicate_candidate_ids": [],
+      "granularity_status": "NEEDS_SUBJECT_REVIEW",
+      "source_status": "SOURCE_BACKED",
+      "admission_status": "CANDIDATE_NOT_CANONICAL"
+    }
+  ]
+}
