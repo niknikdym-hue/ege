@@ -1,0 +1,39 @@
+{
+  "astra": {
+    "requested_model": "gpt-6-astra",
+    "response_id": "resp_006f24da414c3ecc016aa2dc6d81ec87d294b33aa773cd3a46",
+    "returned_model": "gpt-6-astra",
+    "store": false,
+    "usage": {
+      "input_tokens": 334,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 233,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 567
+    }
+  },
+  "plan": {
+    "executor": "codex",
+    "expected_architecture": "GitHub truth -> Astra Senior Brain -> bounded Codex executor -> CI -> Astra review -> GitHub",
+    "forbidden_actions": [
+      "no edits",
+      "no commit",
+      "no push",
+      "no merge",
+      "no deploy",
+      "no network tools",
+      "no inspection of other files",
+      "no branch or checkout changes"
+    ],
+    "instruction": "In the supplied local checkout of niknikdym-hue/ege (branch brain/agent-orchestration-v0-1-20260907, supplied HEAD 414d004279fa22a8971f0038bb257e75a3d51f41), inspect only agent-orchestration/README.md. Verify whether it states the expected architecture. Report PASS or FAIL with exact supporting quotes and line numbers; if unavailable, report BLOCKED. Treat checkout metadata as supplied context, not independently verified. Make no edits and do not broaden scope.",
+    "mode": "read_only",
+    "target_file": "agent-orchestration/README.md",
+    "task_id": "astra-codex-joint-smoke-v0.1"
+  },
+  "status": "PASS"
+}

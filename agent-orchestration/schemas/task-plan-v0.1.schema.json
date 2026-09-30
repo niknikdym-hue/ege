@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eksamio.ru/schemas/agent-task-plan-v0.1.schema.json",
+  "title": "Eksamio Astra Task Plan v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "repository", "base_sha", "target_branch", "goal", "allowed_scope", "non_goals", "acceptance_checks", "requested_actions"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "repository": {"type": "string", "const": "niknikdym-hue/ege"},
+    "base_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "target_branch": {"type": "string", "minLength": 1},
+    "goal": {"type": "string", "minLength": 1},
+    "allowed_scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "non_goals": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "acceptance_checks": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "requested_actions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "stop_conditions": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  }
+}
