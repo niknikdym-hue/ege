@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0.0",
+  "status": "SUBJECT_ACCEPTANCE_REQUIRED",
+  "subject": "russian",
+  "exam": "OGE",
+  "task_number": 5,
+  "variant": 5,
+  "item_id": "oge-ru-05-regular-005-old-square",
+  "semantic_identity": {
+    "id": "oge-ru-05-regular-005-old-square",
+    "status": "PROPOSED_NOT_CANONICAL"
+  },
+  "ru_prog_mapping": [
+    "RU-PROG-10"
+  ],
+  "scoring": {
+    "type": "exact_match"
+  },
+  "answer": {
+    "type": "exact",
+    "value": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "8",
+      "9"
+    ]
+  },
+  "content": {
+    "id": "oge-ru-05-regular-005-old-square",
+    "instruction": "Расставьте знаки препинания. Укажите все цифры, на месте которых должны стоять запятые.",
+    "targetMark": "comma",
+    "targetLabel": "запятые",
+    "targetSymbol": ",",
+    "text": "Площадь (1) сердце старого города (2) рано утром была почти пуста. Лишь у фонтана (3) созданного по проекту местного архитектора (4) остановились туристы. Они рассматривали всё вокруг: резные ограды (5) каменные лестницы (6) башню с часами. Гид улыбнулся (7) и (8) указав на высокий дом (9) начал рассказ.",
+    "gaps": [
+      {
+        "id": "1",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Приложение «сердце старого города» стоит после определяемого слова «площадь» и открывается запятой."
+      },
+      {
+        "id": "2",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Здесь заканчивается обособленное распространённое приложение «сердце старого города»."
+      },
+      {
+        "id": "3",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Причастный оборот «созданного по проекту местного архитектора» стоит после слова «фонтана» и обособляется."
+      },
+      {
+        "id": "4",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Здесь заканчивается обособленный причастный оборот."
+      },
+      {
+        "id": "5",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Запятая разделяет однородные дополнения перечисления «ограды, лестницы, башню»."
+      },
+      {
+        "id": "6",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Запятая разделяет второй и третий однородные члены перечисления."
+      },
+      {
+        "id": "7",
+        "expectedPunctuation": "none",
+        "isTarget": false,
+        "explanation": "Союз «и» соединяет однородные сказуемые «улыбнулся» и «начал»; перед ним запятая не ставится."
+      },
+      {
+        "id": "8",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "После союза «и» начинается деепричастный оборот «указав на высокий дом», поэтому ставится открывающая запятая."
+      },
+      {
+        "id": "9",
+        "expectedPunctuation": "comma",
+        "isTarget": true,
+        "explanation": "Здесь заканчивается деепричастный оборот «указав на высокий дом»."
+      }
+    ],
+    "answer": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "8",
+      "9"
+    ]
+  },
+  "assets": [],
+  "provenance": {
+    "authorship": "OWNER_AUTHORED_LOCAL_MATERIAL",
+    "source": "exam-platform-tilda/tilda-ready/pages/oge-russkiy-zadanie-5/oge-russkiy-zadanie-5-T123.txt",
+    "adaptation": "mechanical extraction only; wording unchanged"
+  }
+}
