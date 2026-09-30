@@ -1,0 +1,55 @@
+{
+  "schema": "eksamio.live-fipi-paronym-correspondence.snapshot.v0.1",
+  "authority": "exact live eksamio.ru split paronym thematic backing plus official FIPI 2026 Navigator source; read-only evidence",
+  "live_source": {
+    "url": "https://eksamio.ru/trenazhery/russkiy/paronimy/",
+    "byte_count": 177332,
+    "sha256": "63ac66e839505930b2a9a2f3b5243d60e422226ec90890553aac5abc52b7cbda",
+    "prefix_literal_byte_count": 55243,
+    "prefix_literal_sha256": "308553146eda50ce0c96af3aa51c5b47e37448c7fc76ba546b873c6648175275",
+    "suffix_literal_byte_count": 43143,
+    "suffix_literal_sha256": "0ca49ae9b0ed56029da506c9e9edaefa4aefaa11b0e2d5be36a254c783c8ccc8"
+  },
+  "fipi_source": {
+    "url": "https://doc.fipi.ru/navigator-podgotovki/navigator-ege/2026/ru-2-leksika-i-frazeologija.pdf",
+    "byte_count": 513587,
+    "sha256": "28c3dfd5266319e539025f4b25ce71724ec20c83c42820e1abe99f8fdeef66a8"
+  },
+  "inventory": {
+    "prefix_group_count": 76,
+    "suffix_group_count": 68,
+    "full_live_group_count": 144,
+    "fipi_group_count": 144,
+    "unique_live_group_id_count": 144,
+    "live_entry_count": 334,
+    "unique_live_entry_id_count": 334,
+    "live_group_id_sequence_p001_through_p144_exact": true,
+    "ordered_group_id_sha256": "81c91d069a28cd9a2c1c7547c9fc92cb9df92c6cde38f3100750e2585c113813",
+    "ordered_entry_id_sha256": "48eedc3e5f3751cec57152671456d314b7bcb6b13f2ee5002f35ec6660482c99",
+    "first_group_id": "p001-abonement-abonent",
+    "last_group_id": "p144-yablochnyy-yablonevyy"
+  },
+  "textual_provenance_correspondence": {
+    "rule": "same index only; Unicode NFKC + casefold + whitespace/dash normalization; remove only exact FIPI-explicit optional segment (-ся); no fuzzy matching, morphology, reordering, route/title/task inference",
+    "exact_match_count": 144,
+    "mismatch_count": 0,
+    "ordered_live_group_normalized_sha256": "4315528d9d6e76b8362c2a9869392a943dee854e2d911dad92d1c7f08c93a9bb",
+    "ordered_fipi_group_normalized_sha256": "4315528d9d6e76b8362c2a9869392a943dee854e2d911dad92d1c7f08c93a9bb",
+    "bounded_source_explicit_projection": {
+      "index_1based": 97,
+      "live_group_id": "p097-otlichat-razlichat",
+      "live_primary_forms": ["отличать", "различать"],
+      "fipi_row": "Отличать(-ся) – различать(-ся)",
+      "projection": "remove exactly the parenthetical optional suffix (-ся) printed by FIPI; do not infer morphology"
+    }
+  },
+  "exam_bank_status": "SEPARATE_30_ROW_EXAM_CHECK_SUB_BANK_NOT_USED_AS_FULL_THEMATIC_DENOMINATOR",
+  "canonical_item_identity_status": "TEXTUAL_PROVENANCE_CORRESPONDENCE_PROVEN_SEMANTIC_ACCEPTANCE_STILL_SEPARATE",
+  "provenance_binding_status": "EXACT_FULL_GROUP_TEXTUAL_CORRESPONDENCE",
+  "admission_effect": "NONE",
+  "semantic_admissions": 0,
+  "object_closures": 0,
+  "mastery_admissions": 0,
+  "false_exact_mastery": 0,
+  "registered_user_identity_required_for_future_canonical_evidence": true
+}

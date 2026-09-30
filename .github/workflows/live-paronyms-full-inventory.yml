@@ -1,0 +1,28 @@
+name: Live paronyms full inventory
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-paronyms-full-inventory.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_paronyms_full_inventory.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reconstruct exact split live paronym thematic inventory
+        env:
+          PROBE_OUT: live-paronyms-full-inventory.json
+        run: node eksamio-learning-engine/peis-integration-reference/probe_live_paronyms_full_inventory.mjs
+      - name: Upload exact full live inventory result
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-paronyms-full-inventory
+          path: live-paronyms-full-inventory.json
+          if-no-files-found: error

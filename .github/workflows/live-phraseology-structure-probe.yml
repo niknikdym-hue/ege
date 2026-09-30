@@ -1,0 +1,66 @@
+name: Live phraseology structure probe
+
+on:
+  push:
+    branches:
+      - 'brain/issue-185-live-asset-reconciliation'
+    paths:
+      - '.github/workflows/live-phraseology-structure-probe.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_structure.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_exact_inventory.mjs'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-phraseology-structure-probe.yml'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_structure.mjs'
+      - 'eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_exact_inventory.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Capture phraseology live backing structure read-only
+        env:
+          PROBE_OUT: live-phraseology-structure-probe.json
+        run: node eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_structure.mjs
+      - name: Upload phraseology structure result
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-phraseology-structure-probe
+          path: live-phraseology-structure-probe.json
+          if-no-files-found: error
+      - name: Extract phraseology exact live inventory read-only
+        env:
+          PROBE_OUT: live-phraseology-exact-inventory.json
+        run: node eksamio-learning-engine/peis-integration-reference/probe_live_phraseology_exact_inventory.mjs
+      - name: Assert fail-closed acceptance boundary
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const structure = JSON.parse(fs.readFileSync('live-phraseology-structure-probe.json', 'utf8'));
+          const inventory = JSON.parse(fs.readFileSync('live-phraseology-exact-inventory.json', 'utf8'));
+          if (structure.canonical_item_identity_status !== 'UNKNOWN_BLOCKER') throw new Error('unexpected structure identity admission');
+          if (inventory.live_item_identity_discovery_status !== 'COMPLETE_EXPLICIT_UNIQUE_ID_CANDIDATES') throw new Error('live phraseology identity discovery incomplete');
+          if (!(inventory.live_row_count > 0 && inventory.live_row_count === inventory.explicit_id_count && inventory.explicit_id_count === inventory.unique_explicit_id_count)) throw new Error('phraseology ids must be complete and unique');
+          if (inventory.canonical_item_identity_status !== 'UNKNOWN_BLOCKER' || inventory.provenance_binding_status !== 'UNKNOWN_BLOCKER') throw new Error('canonical/provenance admission must remain blocked');
+          for (const x of [structure, inventory]) {
+            for (const key of ['semantic_admissions','object_closures','mastery_admissions','false_exact_mastery']) {
+              if (x[key] !== 0) throw new Error(`${key} must stay 0`);
+            }
+            if (x.registered_user_identity_required_for_future_canonical_evidence !== true) throw new Error('registered identity invariant lost');
+          }
+          NODE
+      - name: Upload exact phraseology inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-phraseology-exact-inventory
+          path: live-phraseology-exact-inventory.json
+          if-no-files-found: error

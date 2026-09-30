@@ -31,7 +31,7 @@ PREQ = "school-verb-personal-ending-conjugation-base"
 TARGET = "school-participle-vowel-suffix-conjugation-base"
 GOAL_CONTEXT = "present-tense participle suffix selection"
 LEARNER = "learner-peis-integration-001"
-IDENTITY = {"anonymous_identity_ref": "anon:peis-integration-001"}
+IDENTITY = {"user_identity_ref": "user:peis-integration-001"}
 
 
 def load_json(path: Path) -> dict[str, Any]:
