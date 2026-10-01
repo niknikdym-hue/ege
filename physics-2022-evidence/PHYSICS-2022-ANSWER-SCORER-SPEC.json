@@ -1,0 +1,73 @@
+{
+  "schema": "physics-2022-answer-scorer-spec-v1",
+  "authority": {
+    "source_pdf": "ege-source-fizika/source-fizika-2022/ege-2022-fizika-demoversiya.pdf",
+    "source_sha256": "7131c2b9185c018fe30459da8abf54fa613c47b247be583acc62e0e4ecf4f7d8",
+    "answers_physical_page": 10,
+    "answers_logical_page": 19,
+    "specification_pdf": "ege-source-fizika/source-fizika-2022/ege-2022-fizika-specifikatsiya.pdf"
+  },
+  "short_max_points": 34,
+  "extended_max_points": 20,
+  "official_max_points": 54,
+  "short_scoring_rules": {
+    "exact_one_point_tasks": [3,4,5,9,10,11,14,15,16,20,22],
+    "unordered_exact_one_point_tasks": [23],
+    "positional_two_point_tasks": [2,7,8,13,18,19,21],
+    "unordered_selection_two_point_tasks": [1,6,12,17],
+    "positional_partial_credit": "2 exact; 1 for exactly one wrong position; 0 otherwise; extra symbols force 0",
+    "unordered_selection_partial_credit": "2 exact set; 1 for exactly one extra wrong symbol or exactly one missing symbol; 0 otherwise",
+    "task_23_order_irrelevant": true
+  },
+  "short_tasks": [
+    {"task_number":1,"official_answer":"35","max_points":2,"compare_mode":"unordered_selection","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":2,"official_answer":"325","max_points":2,"compare_mode":"positional_sequence","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":3,"official_answer":"3","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":4,"official_answer":"2","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":5,"official_answer":"100","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":6,"official_answer":"134","max_points":2,"compare_mode":"unordered_selection","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":7,"official_answer":"33","max_points":2,"compare_mode":"positional_sequence","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":8,"official_answer":"23","max_points":2,"compare_mode":"positional_sequence","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":9,"official_answer":"200","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":10,"official_answer":"2","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":11,"official_answer":"600","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":12,"official_answer":"12","max_points":2,"compare_mode":"unordered_selection","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":13,"official_answer":"22","max_points":2,"compare_mode":"positional_sequence","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":14,"official_answer":"0,4","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":true}},
+    {"task_number":15,"official_answer":"8","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":16,"official_answer":"40","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":17,"official_answer":"124","max_points":2,"compare_mode":"unordered_selection","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":18,"official_answer":"23","max_points":2,"compare_mode":"positional_sequence","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":19,"official_answer":"41","max_points":2,"compare_mode":"positional_sequence","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":20,"official_answer":"0,025","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":true}},
+    {"task_number":21,"official_answer":"23","max_points":2,"compare_mode":"positional_sequence","normalization":{"decimal_comma_is_canonical":false}},
+    {"task_number":22,"official_answer":"0,60,1","max_points":1,"compare_mode":"exact","normalization":{"decimal_comma_is_canonical":true}},
+    {"task_number":23,"official_answer":"12","max_points":1,"compare_mode":"unordered_selection","normalization":{"decimal_comma_is_canonical":false}}
+  ],
+  "extended_tasks": [
+    {"task_number":24,"max_points":3,"criteria_regions":[
+      {"physical_page":10,"logical_page":20,"source_region_200dpi_pixels":[1210,350,2290,1515]},
+      {"physical_page":11,"logical_page":21,"source_region_200dpi_pixels":[45,120,1135,1515]},
+      {"physical_page":11,"logical_page":22,"source_region_200dpi_pixels":[1210,120,2290,1515]}]},
+    {"task_number":25,"max_points":2,"criteria_regions":[
+      {"physical_page":12,"logical_page":23,"source_region_200dpi_pixels":[45,120,1135,1515]},
+      {"physical_page":12,"logical_page":24,"source_region_200dpi_pixels":[1210,120,2290,1515]}]},
+    {"task_number":26,"max_points":2,"criteria_regions":[
+      {"physical_page":13,"logical_page":25,"source_region_200dpi_pixels":[45,120,1135,1515]},
+      {"physical_page":13,"logical_page":26,"source_region_200dpi_pixels":[1210,120,2290,1515]}]},
+    {"task_number":27,"max_points":3,"criteria_regions":[
+      {"physical_page":14,"logical_page":27,"source_region_200dpi_pixels":[45,120,1135,1515]},
+      {"physical_page":14,"logical_page":28,"source_region_200dpi_pixels":[1210,120,2290,1515]}]},
+    {"task_number":28,"max_points":3,"criteria_regions":[
+      {"physical_page":15,"logical_page":29,"source_region_200dpi_pixels":[45,120,1135,1515]},
+      {"physical_page":15,"logical_page":30,"source_region_200dpi_pixels":[1210,120,2290,1515]}]},
+    {"task_number":29,"max_points":3,"criteria_regions":[
+      {"physical_page":16,"logical_page":31,"source_region_200dpi_pixels":[45,120,1135,1515]},
+      {"physical_page":16,"logical_page":32,"source_region_200dpi_pixels":[1210,120,2290,1515]},
+      {"physical_page":17,"logical_page":33,"source_region_200dpi_pixels":[45,120,1135,1515]}]},
+    {"task_number":30,"max_points":4,"available_official_alternative_examples":2,"selected_official_example":1,"criteria_regions":[
+      {"physical_page":17,"logical_page":34,"source_region_200dpi_pixels":[1210,120,2290,1515]},
+      {"physical_page":18,"logical_page":35,"source_region_200dpi_pixels":[45,120,1135,1515]},
+      {"physical_page":18,"logical_page":36,"source_region_200dpi_pixels":[1210,120,2290,1515]}]}
+  ]
+}
