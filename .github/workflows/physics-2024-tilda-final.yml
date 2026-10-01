@@ -29,7 +29,7 @@ jobs:
       - name: Build source-faithful Tilda archive
         run: python physics-2024-final-build/build_physics_2024_compact.py
       - name: Browser and scorer verification
-        run: python physics-2024-final-build/verify_physics_2024.py
+        run: python physics-2024-final-build/verify_physics_2024_v1_1.py
       - name: Show final hashes
         run: |
           cat physics-2024-final-build/dist/SHA256.txt
@@ -39,7 +39,7 @@ jobs:
         with:
           name: physics-2024-tilda-final
           path: |
-            physics-2024-final-build/dist/ege-fizika-demoversiya-2024-v1.0-TILDA-HQ-SOURCE.zip
+            physics-2024-final-build/dist/ege-fizika-demoversiya-2024-v1.1-TILDA-HQ-SOURCE.zip
             physics-2024-final-build/dist/SHA256.txt
             physics-2024-final-build/dist/VERIFICATION.json
           if-no-files-found: error

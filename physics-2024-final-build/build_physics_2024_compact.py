@@ -17,15 +17,15 @@ SPEC.loader.exec_module(builder)
 
 def compact_webp_bytes(image: Image.Image, max_width: int = 1000):
     output = image.convert("L")
-    max_width = min(max_width, 700)
+    max_width = min(max_width, 680)
     if output.width > max_width:
         height = round(output.height * max_width / output.width)
         output = output.resize((max_width, height), Image.Resampling.LANCZOS)
     buf = io.BytesIO()
-    output.save(buf, format="WEBP", quality=65, method=6)
+    output.save(buf, format="WEBP", quality=55, method=6)
     return buf.getvalue(), output
 
 
 builder.webp_bytes = compact_webp_bytes
-builder.MAX_T123_COUNT = 80
+builder.MAX_T123_COUNT = 48
 builder.main()
