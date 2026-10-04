@@ -1,0 +1,85 @@
+name: Owner Control optional-needs runtime fixture
+
+# Echo-only Actions scheduler probe. The offline test enforces exact production
+# needs/if equality; this fixture never invokes the paid workflow or its steps.
+on:
+  workflow_call:
+    inputs:
+      astra_accept:
+        required: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      astra_plan: 'false'
+      astra_accept: ${{ inputs.astra_accept }}
+    steps:
+      - run: echo 'No provider calls; plan OFF; acceptance is a boolean fixture input.'
+
+  astra_plan:
+    needs: route
+    if: ${{ needs.route.outputs.astra_plan == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: echo 'Optional plan placeholder; expected to be skipped.'
+
+  codex:
+    needs: [route, astra_plan]
+    if: ${{ always() && needs.route.result == 'success' && (needs.astra_plan.result == 'success' || needs.astra_plan.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: echo 'Executor success placeholder; no CLI or provider.'
+
+  validate:
+    needs: [route, codex]
+    if: ${{ !cancelled() && needs.route.result == 'success' && needs.codex.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: echo 'Trusted validation must run despite skipped optional ancestor.'
+
+  astra_accept:
+    needs: [route, validate]
+    if: ${{ !cancelled() && needs.validate.result == 'success' && needs.route.outputs.astra_accept == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: echo 'Acceptance success placeholder; no provider.'
+
+  commit:
+    needs: [route, validate, astra_accept]
+    if: ${{ !cancelled() && needs.route.result == 'success' && needs.validate.result == 'success' && (needs.astra_accept.result == 'success' || (needs.route.outputs.astra_accept == 'false' && needs.astra_accept.result == 'skipped')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: echo 'Commit gate placeholder; no checkout, git mutation or write permission.'
+
+  verdict:
+    needs: [route, astra_plan, codex, validate, astra_accept, commit]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Assert actual Actions job results
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+          ACCEPTANCE: ${{ inputs.astra_accept }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          actual = {name: job['result'] for name, job in json.loads(os.environ['RESULTS']).items()}
+          expected = dict.fromkeys(('route', 'codex', 'validate', 'commit'), 'success')
+          expected['astra_plan'] = 'skipped'
+          expected['astra_accept'] = 'success' if os.environ['ACCEPTANCE'] == 'true' else 'skipped'
+          assert actual == expected, (actual, expected)
+          print('OPTIONAL_NEEDS_RUNTIME=PASS ' + json.dumps(actual, sort_keys=True))
+          print('REAL_PROVIDER_CALLS=0')
+          PY
