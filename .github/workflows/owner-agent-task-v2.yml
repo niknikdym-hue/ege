@@ -394,7 +394,7 @@ jobs:
 
   validate:
     needs: [route, codex]
-    if: ${{ needs.route.result == 'success' && needs.codex.result == 'success' }}
+    if: ${{ !cancelled() && needs.route.result == 'success' && needs.codex.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -449,7 +449,7 @@ jobs:
 
   astra_accept:
     needs: [route, validate]
-    if: ${{ needs.validate.result == 'success' && needs.route.outputs.astra_accept == 'true' }}
+    if: ${{ !cancelled() && needs.validate.result == 'success' && needs.route.outputs.astra_accept == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -505,7 +505,7 @@ jobs:
 
   commit:
     needs: [route, validate, astra_accept]
-    if: ${{ always() && needs.route.result == 'success' && needs.validate.result == 'success' && (needs.astra_accept.result == 'success' || needs.astra_accept.result == 'skipped') }}
+    if: ${{ !cancelled() && needs.route.result == 'success' && needs.validate.result == 'success' && (needs.astra_accept.result == 'success' || (needs.route.outputs.astra_accept == 'false' && needs.astra_accept.result == 'skipped')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
