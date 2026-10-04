@@ -232,6 +232,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
+      - name: Checkout exact approved main for executor control
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.approved_main_sha }}
+          persist-credentials: false
+      - name: Preserve trusted executor proxy outside the worktree
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '${{ inputs.approved_main_sha }}' || { echo 'Executor control SHA differs from approved main'; exit 1; }
+          sudo install -d -o root -g root -m 0755 "$RUNNER_TEMP/owner-control-authority"
+          sudo install -o root -g root -m 0444 eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs "$RUNNER_TEMP/owner-control-authority/owner_control_budget_proxy.mjs"
       - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.work_ref }}
@@ -252,13 +264,26 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = '${{ inputs.expected_work_sha }}' || { echo 'Package branch moved'; exit 1; }
           current_base="$(git ls-remote origin 'refs/heads/${{ inputs.authority_base_ref }}' | awk 'NR==1{print $1}')"; test "$current_base" = '${{ inputs.authority_base_sha }}' || { echo 'Authority base moved'; exit 1; }
-          proxy=eksamio-learning-engine/project-control/owner_control_budget_proxy.mjs
+          proxy="$RUNNER_TEMP/owner-control-authority/owner_control_budget_proxy.mjs"
           client_token="$(openssl rand -hex 32)"
           echo "::add-mask::$client_token"
           echo "client_token=$client_token" >> "$GITHUB_OUTPUT"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' OWNER_MAX_PROVIDER_REQUESTS='6' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$PWD/$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
-          rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health && break; sleep 1; done
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' OWNER_MAX_PROVIDER_REQUESTS='6' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health >/dev/null && break; sleep 1; done
+          health="$(curl -fsS http://127.0.0.1:8787/health)"
+          python3 - "$health" <<'PY'
+          import json, os, sys
+          from decimal import Decimal
+          d=json.loads(sys.argv[1])
+          assert d['status'] == 'ok', d
+          assert d['max_requests'] == 6, d
+          assert d['requests'] == 0, d
+          assert Decimal(str(d['reserved_usd'])) == 0, d
+          assert Decimal(str(d['remaining_usd'])) == Decimal(os.environ['OWNER_TASK_BUDGET_USD']), d
+          print('EXECUTOR_PROXY_PREFLIGHT=PASS')
+          print('API_CODEX_PROVIDER_REQUEST_CAP=6')
+          PY
       - name: Compose bounded prompt
         shell: bash
         run: |
