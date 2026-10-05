@@ -1,0 +1,218 @@
+<!--
+EKSAMIO /platform/ — PAGE HEAD ONLY. Two installation files:
+1) platform-page-HEAD.txt: paste this ENTIRE file into /platform/ page HEAD.
+2) platform-page-T123.txt: replace the old page-content T123 block with that file.
+The complete isolated CSS is already included here. Do not add it a second time.
+Do not replace project-wide HEAD/CSS. Preserve the existing shared header/footer once.
+Replace an older AboutPage JSON-LD on this page; do not duplicate it.
+This file has no analytics counter, click handler, external library or font request.
+
+Set metadata in the STANDARD Tilda settings for /platform/:
+TITLE: О проекте Эксамио — обучение, методика и развитие
+DESCRIPTION: Демоверсии ЕГЭ, тренажёры и разработка персонального обучения. Методическая основа проекта, готовые инструменты и исследовательские задачи
+URL: /platform/
+Keep the existing social image and favicon. Do not change other pages' metadata.
+Publishing requires the owner's separate authorization.
+-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "@id": "https://eksamio.ru/platform/#webpage",
+  "url": "https://eksamio.ru/platform/",
+  "name": "О проекте Эксамио — обучение, методика и развитие",
+  "description": "Демоверсии ЕГЭ, тренажёры и разработка персонального обучения. Методическая основа проекта, готовые инструменты и исследовательские задачи",
+  "inLanguage": "ru-RU",
+  "isPartOf": {
+    "@type": "WebSite",
+    "@id": "https://eksamio.ru/#website",
+    "url": "https://eksamio.ru/",
+    "name": "Эксамио"
+  }
+}
+</script>
+
+<style id="eksamio-about-page-styles">
+#eksamio-about-page {
+  --epa-ink: #111827;
+  --epa-muted: #475569;
+  --epa-blue: #2563eb;
+  --epa-deep: #312e81;
+  --epa-line: #e2e8f0;
+  --epa-soft: #f8fafc;
+  --epa-white: #fff;
+  font-family: var(--ep-font, "Manrope", "Inter", "Golos Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif);
+  color: var(--epa-ink);
+  background: var(--epa-white);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+  overflow-wrap: anywhere;
+}
+#eksamio-about-page, #eksamio-about-page * { box-sizing: border-box; }
+#eksamio-about-page .epa-wrap { width: min(100%, 1240px); margin: 0 auto; padding: 24px 28px 64px; }
+#eksamio-about-page h1, #eksamio-about-page h2, #eksamio-about-page h3, #eksamio-about-page p { margin: 0; }
+#eksamio-about-page h1, #eksamio-about-page h2, #eksamio-about-page h3 { color: var(--epa-ink); font-weight: 800; text-wrap: balance; }
+#eksamio-about-page h1 { font-size: clamp(34px, 4vw, 56px); line-height: 1.12; letter-spacing: -.035em; }
+#eksamio-about-page h2 { font-size: clamp(28px, 3vw, 39px); line-height: 1.2; letter-spacing: -.025em; }
+#eksamio-about-page h3 { font-size: 21px; line-height: 1.3; letter-spacing: -.015em; }
+#eksamio-about-page p { color: var(--epa-muted); }
+#eksamio-about-page p + p { margin-top: 15px; }
+#eksamio-about-page a { color: #1d4ed8; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+#eksamio-about-page a:hover { text-decoration-thickness: 2px; }
+#eksamio-about-page a:focus-visible { outline: 3px solid #2563eb; outline-offset: 5px; border-radius: 4px; }
+#eksamio-about-page [id] { scroll-margin-top: 32px; }
+#eksamio-about-page .epa-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 14px; margin: 0 0 22px; color: var(--epa-muted); }
+#eksamio-about-page .epa-breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; font-weight: 700; }
+#eksamio-about-page .epa-hero { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(280px, .8fr); gap: 44px; align-items: center; padding: 46px; border: 1px solid #dce8f7; border-radius: 28px; background: linear-gradient(125deg, #f8fbff, #eff6ff 70%, #f0fdfa); }
+#eksamio-about-page .epa-eyebrow { color: #1e40af; font-size: 12px; letter-spacing: .08em; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; line-height: 1.5; }
+#eksamio-about-page .epa-lead { font-size: 18px; margin-top: 23px; max-width: 62ch; line-height: 1.7; }
+#eksamio-about-page .epa-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+#eksamio-about-page .epa-button { display: inline-flex; align-items: center; justify-content: center; gap: 14px; min-height: 50px; padding: 14px 20px; border: 1px solid #1d4ed8; border-radius: 12px; color: #fff !important; background: #1d4ed8; text-decoration: none !important; font-weight: 750; font-size: 15px; line-height: 1.4; text-align: center; transition: background .16s ease, border-color .16s ease; }
+#eksamio-about-page .epa-button:hover { background: #1e40af; border-color: #1e40af; }
+#eksamio-about-page .epa-button-secondary { color: #1e40af !important; background: #fff; border-color: #bfcee9; }
+#eksamio-about-page .epa-button-secondary:hover { background: #eff6ff; border-color: #93add7; }
+#eksamio-about-page .epa-hero-note { font-size: 13px; line-height: 1.6; margin-top: 19px; max-width: 60ch; }
+#eksamio-about-page .epa-principle { min-width: 0; padding: 30px; border-radius: 22px; background: #fff; border: 1px solid #dce5f3; box-shadow: 0 18px 44px rgba(15, 23, 42, .07); }
+#eksamio-about-page .epa-principle-label { color: #475569; font-size: 13px; font-weight: 700; }
+#eksamio-about-page .epa-principle .epa-principle-title { color: #111827; font-size: clamp(27px, 2.5vw, 34px); font-weight: 800; line-height: 1.22; letter-spacing: -.025em; margin-top: 18px; }
+#eksamio-about-page .epa-principle-title span { color: #1d4ed8; }
+#eksamio-about-page .epa-principle-rule { width: 42px; height: 4px; background: #06b6d4; margin: 24px 0; border-radius: 4px; }
+#eksamio-about-page .epa-principle > p:not(.epa-principle-title):not(.epa-principle-label) { font-size: 15px; line-height: 1.7; }
+#eksamio-about-page .epa-principle-caption { display: block; margin-top: 22px; font-size: 12px; line-height: 1.5; color: #64748b; }
+#eksamio-about-page .epa-sections-nav { display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 20px 2px 19px; border-bottom: 1px solid var(--epa-line); }
+#eksamio-about-page .epa-sections-nav a { display: flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 650; text-decoration: none; }
+#eksamio-about-page .epa-sections-nav a:hover { text-decoration: underline; }
+#eksamio-about-page .epa-section { margin-top: 72px; }
+#eksamio-about-page .epa-section-heading { max-width: 860px; margin-bottom: 29px; }
+#eksamio-about-page .epa-intro { margin-top: 18px; max-width: 78ch; }
+#eksamio-about-page .epa-grid { display: grid; gap: 18px; }
+#eksamio-about-page .epa-grid-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#eksamio-about-page .epa-grid-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+#eksamio-about-page .epa-card { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding: 27px; border: 1px solid var(--epa-line); border-radius: 18px; background: #fff; min-width: 0; }
+#eksamio-about-page .epa-card > p { font-size: 15px; line-height: 1.7; }
+#eksamio-about-page .epa-card > p + p { margin: 0; }
+#eksamio-about-page .epa-link { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; font-size: 14px; font-weight: 750; text-decoration: none; margin-top: auto; padding-top: 8px; }
+#eksamio-about-page .epa-link:hover { text-decoration: underline; }
+#eksamio-about-page .epa-label { display: inline-block; border-radius: 7px; padding: 5px 9px; font-size: 11px; font-weight: 750; line-height: 1.5; letter-spacing: .01em; }
+#eksamio-about-page .epa-label-live { background: #ecfdf5; color: #166534; }
+#eksamio-about-page .epa-label-development { background: #eff6ff; color: #1e40af; }
+#eksamio-about-page .epa-label-planned { background: #f5f3ff; color: #5b21b6; }
+#eksamio-about-page .epa-afterword { font-size: 14px; line-height: 1.75; margin-top: 22px; }
+#eksamio-about-page .epa-surface { background: #f8fafc; border: 1px solid var(--epa-line); border-radius: 24px; padding: 38px; }
+#eksamio-about-page .epa-features { gap: 30px; margin-top: 32px; }
+#eksamio-about-page .epa-feature { min-width: 0; }
+#eksamio-about-page .epa-feature-number { display: block; font-size: 13px; font-weight: 750; color: #1d4ed8; margin-bottom: 14px; }
+#eksamio-about-page .epa-feature h3 { font-size: 20px; }
+#eksamio-about-page .epa-feature p { font-size: 15px; margin-top: 11px; }
+#eksamio-about-page .epa-loop-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-top: 1px solid #dbe4f0; padding-top: 29px; margin-top: 34px; }
+#eksamio-about-page .epa-loop-head h3 { font-size: 18px; }
+#eksamio-about-page .epa-loop { list-style: none; padding: 0; margin: 23px 0 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+#eksamio-about-page .epa-loop li { min-width: 0; border-left: 1px solid #cbd5e1; padding: 0 0 0 15px; }
+#eksamio-about-page .epa-loop-number { display: block; color: #1d4ed8; font-size: 13px; font-weight: 800; margin-bottom: 11px; }
+#eksamio-about-page .epa-loop strong { display: block; font-size: 14px; line-height: 1.5; }
+#eksamio-about-page .epa-loop li > span:last-child { display: block; font-size: 12px; line-height: 1.65; color: #475569; margin-top: 5px; }
+#eksamio-about-page .epa-card-kicker { font-size: 12px !important; font-weight: 750; letter-spacing: .04em; color: #1e40af; }
+#eksamio-about-page .epa-method-card { background: #fbfdff; }
+#eksamio-about-page .epa-small { font-size: 13px !important; }
+#eksamio-about-page .epa-disclaimer { padding: 18px 22px; border-left: 3px solid #93a8c6; background: #f8fafc; font-size: 13px; margin-top: 22px; border-radius: 0 10px 10px 0; line-height: 1.7; }
+#eksamio-about-page .epa-status-card { padding-top: 26px; }
+#eksamio-about-page .epa-status-card ul { margin: 0; padding-left: 18px; color: #475569; font-size: 14px; line-height: 1.75; }
+#eksamio-about-page .epa-status-card li + li { margin-top: 10px; }
+#eksamio-about-page .epa-status-card .epa-status-bottom { margin-top: auto; padding-top: 20px; font-size: 12px; border-top: 1px solid #e2e8f0; width: 100%; color: #475569; }
+#eksamio-about-page .epa-research { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, .8fr); gap: 52px; padding: 43px; border: 1px solid #dce3f5; border-radius: 24px; background: linear-gradient(130deg, #f6f8ff, #eef6ff); }
+#eksamio-about-page .epa-research-copy > p:not(.epa-eyebrow) { font-size: 16px; margin-top: 19px; }
+#eksamio-about-page .epa-research-note { font-size: 13px !important; color: #334155; border-left: 3px solid #2563eb; padding-left: 14px; }
+#eksamio-about-page .epa-research-measures { align-self: center; }
+#eksamio-about-page .epa-research-measures > div { display: grid; grid-template-columns: 24px minmax(0,1fr); gap: 5px 14px; padding: 21px 0; border-top: 1px solid #cddbf0; }
+#eksamio-about-page .epa-research-measures > div:first-child { border: 0; }
+#eksamio-about-page .epa-research-measures > div > span { color: #1d4ed8; font-size: 12px; font-weight: 800; padding-top: 3px; }
+#eksamio-about-page .epa-research-measures h3 { font-size: 18px; }
+#eksamio-about-page .epa-research-measures p { grid-column: 2; font-size: 14px; }
+#eksamio-about-page .epa-value { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.1fr); gap: 55px; align-items: start; }
+#eksamio-about-page .epa-value > div > p:not(.epa-eyebrow) { font-size: 16px; }
+#eksamio-about-page .epa-cta { margin-top: 64px; border: 1px solid #dce8f7; border-radius: 22px; background: #f8fbff; padding: 36px; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(235px,.8fr); gap: 34px; align-items: center; }
+#eksamio-about-page .epa-cta h2 { font-size: 29px; }
+#eksamio-about-page .epa-cta p:not(.epa-eyebrow) { font-size: 15px; margin-top: 15px; }
+#eksamio-about-page .epa-cta .epa-actions { flex-direction: column; align-items: stretch; margin: 0; }
+#eksamio-about-page .epa-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@media (max-width: 1050px) {
+  #eksamio-about-page .epa-hero { gap: 28px; padding: 32px; grid-template-columns: minmax(0,1.25fr) minmax(250px,.8fr); }
+  #eksamio-about-page .epa-principle { padding: 24px; }
+  #eksamio-about-page .epa-card { padding: 22px; }
+  #eksamio-about-page .epa-grid { gap: 15px; }
+  #eksamio-about-page .epa-research { padding: 32px; gap: 30px; }
+  #eksamio-about-page .epa-surface { padding: 28px; }
+}
+@media (max-width: 800px) {
+  #eksamio-about-page .epa-wrap { padding: 18px 22px 42px; }
+  #eksamio-about-page .epa-hero { grid-template-columns: 1fr; }
+  #eksamio-about-page .epa-principle { box-shadow: none; }
+  #eksamio-about-page .epa-principle .epa-principle-title { font-size: 28px; }
+  #eksamio-about-page .epa-grid-three { grid-template-columns: 1fr; }
+  #eksamio-about-page .epa-features { grid-template-columns: 1fr; gap: 26px; }
+  #eksamio-about-page .epa-feature { display: grid; grid-template-columns: 28px minmax(0,1fr); gap: 0 12px; }
+  #eksamio-about-page .epa-feature-number { grid-row: 1 / span 2; margin: 0; padding-top: 5px; }
+  #eksamio-about-page .epa-feature p { grid-column: 2; }
+  #eksamio-about-page .epa-loop { grid-template-columns: 1fr; gap: 0; }
+  #eksamio-about-page .epa-loop li { display: grid; grid-template-columns: 24px minmax(0,1fr); column-gap: 10px; padding: 0 0 22px 16px; }
+  #eksamio-about-page .epa-loop li:last-child { padding-bottom: 0; }
+  #eksamio-about-page .epa-loop-number { grid-row: 1 / span 2; margin: 0; padding-top: 1px; }
+  #eksamio-about-page .epa-loop li > span:last-child { grid-column: 2; }
+  #eksamio-about-page .epa-research, #eksamio-about-page .epa-value, #eksamio-about-page .epa-cta { grid-template-columns: 1fr; gap: 28px; }
+  #eksamio-about-page .epa-research-measures > div:first-child { border-top: 1px solid #cddbf0; }
+  #eksamio-about-page .epa-section { margin-top: 52px; }
+  #eksamio-about-page .epa-cta { margin-top: 48px; }
+  #eksamio-about-page .epa-card .epa-link { margin-top: 0; }
+  #eksamio-about-page .epa-status-card .epa-status-bottom { margin-top: 4px; }
+}
+@media (max-width: 560px) {
+  #eksamio-about-page { font-size: 16px; }
+  #eksamio-about-page .epa-wrap { padding: 12px 16px 32px; }
+  #eksamio-about-page .epa-breadcrumb { margin-bottom: 14px; }
+  #eksamio-about-page .epa-hero { padding: 25px 21px; border-radius: 20px; gap: 26px; }
+  #eksamio-about-page h1 { font-size: clamp(30px, 8vw, 38px); }
+  #eksamio-about-page h2 { font-size: 28px; }
+  #eksamio-about-page h3 { font-size: 21px; }
+  #eksamio-about-page .epa-hero h1 br { display: none; }
+  #eksamio-about-page .epa-lead { font-size: 16px; margin-top: 20px; }
+  #eksamio-about-page .epa-actions { flex-direction: column; align-items: stretch; margin-top: 22px; }
+  #eksamio-about-page .epa-button { font-size: 14px; padding: 13px 14px; }
+  #eksamio-about-page .epa-principle { padding: 23px; border-radius: 16px; }
+  #eksamio-about-page .epa-principle .epa-principle-title { font-size: 27px; }
+  #eksamio-about-page .epa-sections-nav { gap: 3px 20px; padding: 14px 0; }
+  #eksamio-about-page .epa-sections-nav a { font-size: 13px; }
+  #eksamio-about-page .epa-grid-two { grid-template-columns: 1fr; }
+  #eksamio-about-page .epa-card { padding: 23px; border-radius: 16px; }
+  #eksamio-about-page .epa-surface, #eksamio-about-page .epa-research { padding: 26px 21px; border-radius: 20px; }
+  #eksamio-about-page .epa-section { margin-top: 44px; }
+  #eksamio-about-page .epa-section-heading { margin-bottom: 24px; }
+  #eksamio-about-page .epa-intro { font-size: 16px; }
+  #eksamio-about-page .epa-research-copy h2 br { display: none; }
+  #eksamio-about-page .epa-cta { padding: 27px 22px; border-radius: 20px; }
+  #eksamio-about-page .epa-cta h2 { font-size: 27px; }
+  #eksamio-about-page .epa-eyebrow { font-size: 11px; }
+}
+@media (max-width: 360px) {
+  #eksamio-about-page h1 { font-size: 27px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #eksamio-about-page *, #eksamio-about-page *::before, #eksamio-about-page *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+  /* Existing shared CSS hides ALL .t-rec in print. Reveal only the record with this page. */
+  .t-rec:has(#eksamio-about-page) { display: block !important; }
+  #eksamio-about-page { background: #fff !important; color: #000; font-size: 11pt; }
+  #eksamio-about-page .epa-wrap { width: auto; padding: 0; }
+  #eksamio-about-page .epa-breadcrumb, #eksamio-about-page .epa-sections-nav, #eksamio-about-page .epa-actions, #eksamio-about-page .epa-cta { display: none; }
+  #eksamio-about-page .epa-hero, #eksamio-about-page .epa-research, #eksamio-about-page .epa-value { display: block; background: #fff; padding: 18px; }
+  #eksamio-about-page .epa-grid, #eksamio-about-page .epa-loop { display: block; }
+  #eksamio-about-page .epa-section { margin-top: 28px; }
+  #eksamio-about-page .epa-section-heading { break-after: avoid; }
+  #eksamio-about-page h1, #eksamio-about-page h2, #eksamio-about-page h3 { break-after: avoid; }
+  #eksamio-about-page .epa-card, #eksamio-about-page .epa-feature, #eksamio-about-page .epa-principle { break-inside: avoid; margin-top: 16px; box-shadow: none; }
+  #eksamio-about-page .epa-surface { background: #fff; padding: 18px; }
+  #eksamio-about-page .epa-loop li { margin-top: 10px; }
+  #eksamio-about-page .epa-link { color: #000 !important; }
+}
+</style>
