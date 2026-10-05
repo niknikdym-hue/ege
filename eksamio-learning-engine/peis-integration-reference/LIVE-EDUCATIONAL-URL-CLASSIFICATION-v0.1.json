@@ -1,0 +1,69 @@
+{
+  "schema": "eksamio.live-educational-url-classification.v0.1",
+  "issue": 185,
+  "authority_checked_at": "2026-09-07",
+  "status": "BOUNDED_OWNER_PRIORITY_LIVE_EDUCATIONAL_URLS_CLASSIFIED",
+  "scope": "owner-priority educational navigation plus every verified interactive trainer/demo route already reconciled in LIVE-EDUCATIONAL-ASSET-RECONCILIATION-v0.1.json; marketing/legal/non-educational URLs are out of scope",
+  "classification_vocabulary": ["VITRINE_ONLY", "INTERACTIVE_LEARNING", "REFERENCE_KNOWLEDGE", "LEGACY_ROUTE"],
+  "classifications": {
+    "VITRINE_ONLY": [
+      "https://eksamio.ru/",
+      "https://eksamio.ru/ege/",
+      "https://eksamio.ru/ege/demoversii/",
+      "https://eksamio.ru/trenazhery/",
+      "https://eksamio.ru/ege/russkiy/"
+    ],
+    "INTERACTIVE_LEARNING": [
+      "https://eksamio.ru/ege/russkiy/trenazher/",
+      "https://eksamio.ru/trenazhery/russkiy/orfoepiya/",
+      "https://eksamio.ru/trenazhery/russkiy/slovarnye-slova/",
+      "https://eksamio.ru/trenazhery/russkiy/paronimy/",
+      "https://eksamio.ru/trenazhery/russkiy/frazeologizmy/",
+      "https://eksamio.ru/ege/russkiy/demoversiya/",
+      "https://eksamio.ru/ege/russkiy/demoversiya/2025/",
+      "https://eksamio.ru/ege/russkiy/demoversiya/2024/",
+      "https://eksamio.ru/ege/russkiy/demoversiya/2023/",
+      "https://eksamio.ru/ege/russkiy/demoversiya/2022/",
+      "https://eksamio.ru/ege/matematika-baza/demoversiya/",
+      "https://eksamio.ru/ege/matematika-baza/demoversiya/2025/",
+      "https://eksamio.ru/ege/matematika-baza/demoversiya/2024/",
+      "https://eksamio.ru/ege/matematika-baza/demoversiya/2023/",
+      "https://eksamio.ru/ege/matematika-baza/demoversiya/2022/",
+      "https://eksamio.ru/ege/matematika-profil/demoversiya/",
+      "https://eksamio.ru/ege/matematika-profil/demoversiya/2025/",
+      "https://eksamio.ru/ege/matematika-profil/demoversiya/2024/",
+      "https://eksamio.ru/ege/matematika-profil/demoversiya/2023/",
+      "https://eksamio.ru/ege/matematika-profil/demoversiya/2022/",
+      "https://eksamio.ru/ege/fizika/demoversiya/",
+      "https://eksamio.ru/ege/fizika/demoversiya/2025/",
+      "https://eksamio.ru/ege/fizika/demoversiya/2024/",
+      "https://eksamio.ru/ege/fizika/demoversiya/2023/",
+      "https://eksamio.ru/ege/fizika/demoversiya/2022/",
+      "https://eksamio.ru/ege/khimiya/demoversiya/",
+      "https://eksamio.ru/ege/biologiya/demoversiya/",
+      "https://eksamio.ru/ege/istoriya/demoversiya/",
+      "https://eksamio.ru/ege/obshchestvoznaniye/demoversiya/"
+    ],
+    "REFERENCE_KNOWLEDGE": [],
+    "LEGACY_ROUTE": []
+  },
+  "embedded_reference_knowledge": {
+    "status": "PRESENT_INSIDE_INTERACTIVE_DEMO_ROUTES_NOT_STANDALONE_URL_ASSET",
+    "examples": ["FIPI reference materials", "official solutions and scoring criteria"],
+    "reading_or_opening_creates_mastery": false,
+    "tutor_admission_requires_source_provenance": true
+  },
+  "counts": {
+    "VITRINE_ONLY": 5,
+    "INTERACTIVE_LEARNING": 29,
+    "REFERENCE_KNOWLEDGE": 0,
+    "LEGACY_ROUTE": 0
+  },
+  "learner_state_boundary": {
+    "interactive_routes_may_use_current_browser_local_state_until_replacement": true,
+    "browser_local_state_is_future_canonical": false,
+    "future_canonical_learning_event_requires_registered_user_identity_ref": true,
+    "url_classification_alone_can_emit_mastery": false
+  },
+  "false_exact_mastery": 0
+}

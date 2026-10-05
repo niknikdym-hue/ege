@@ -1,0 +1,86 @@
+{
+  "schema_version": "0.1.0",
+  "status": "BOUNDED_ROUTE_SURFACE_SOURCE_AUDIT_FAIL_CLOSED",
+  "issue": 185,
+  "source_commit": "7edddb9f9764b5e8cdf7e2653c425e5f90c4ffe9",
+  "purpose": "Close the exact #164 repository search branch for public trainer-index source directories without inferring thematic backing identity.",
+  "root_discovery": {
+    "trenazhery-russkiy": {
+      "git_tree_sha1": "b2efaaa7946744d7da5229ab08a14f95710ce543"
+    },
+    "trenazhery": {
+      "git_tree_sha1": "a126043f565fb2249da758c577f2c97a01ab4405"
+    }
+  },
+  "directories": [
+    {
+      "path": "trenazhery-russkiy",
+      "role": "RUSSIAN_TRAINER_INDEX_SURFACE_SOURCE",
+      "files": [
+        {
+          "path": "trenazhery-russkiy/trenazhery-russkiy-HEAD.txt",
+          "git_blob_sha1": "7e3e14112bb69a6135e386e208c9d52f2b9863a6",
+          "byte_count": 3187
+        },
+        {
+          "path": "trenazhery-russkiy/trenazhery-russkiy-SEO.txt",
+          "git_blob_sha1": "f445d4b11d0795701456b5ba5b0d9bf4f2d4d0a0",
+          "byte_count": 894
+        },
+        {
+          "path": "trenazhery-russkiy/trenazhery-russkiy-T123.txt",
+          "git_blob_sha1": "512c01d4b902e59d8a3b516d835613b9e1b13e08",
+          "byte_count": 7083
+        }
+      ]
+    },
+    {
+      "path": "trenazhery",
+      "role": "GENERAL_TRAINER_INDEX_SURFACE_SOURCE",
+      "files": [
+        {
+          "path": "trenazhery/trenazhery-HEAD.txt",
+          "git_blob_sha1": "d544e47cacdb403d02d46d53f277a6fc5dbd1ad8",
+          "byte_count": 2350
+        },
+        {
+          "path": "trenazhery/trenazhery-SEO.txt",
+          "git_blob_sha1": "87d1ff247399d0dc2b5608a695f25119ead49950",
+          "byte_count": 824
+        },
+        {
+          "path": "trenazhery/trenazhery-T123.txt",
+          "git_blob_sha1": "cf003b344ad2b2af33311f7969285ab1324e1378",
+          "byte_count": 6765
+        }
+      ]
+    }
+  ],
+  "russian_index_exact_routes": [
+    "/trenazhery/russkiy/orfoepiya/",
+    "/trenazhery/russkiy/slovarnye-slova/",
+    "/trenazhery/russkiy/paronimy/",
+    "/trenazhery/russkiy/frazeologizmy/"
+  ],
+  "bounded_findings": {
+    "russian_index_source_proves_exact_four_route_links": true,
+    "these_two_directories_contain_per_theme_backing_payload": false,
+    "absence_of_backing_payload_elsewhere_in_repository_or_live_site_proven": false,
+    "live_to_canonical_item_identity_proven": false
+  },
+  "reconciliation_effect": {
+    "orthoepy": "UNKNOWN_BLOCKER_LIVE_BACKING_IDENTITY_UNPROVEN",
+    "dictionary_words": "UNKNOWN_BLOCKER_LIVE_BACKING_IDENTITY_UNPROVEN",
+    "paronyms": "UNKNOWN_BLOCKER_LIVE_BACKING_IDENTITY_UNPROVEN",
+    "phraseology": "UNKNOWN_BLOCKER_LIVE_BACKING_IDENTITY_UNPROVEN",
+    "semantic_admissions": 0,
+    "object_closures": 0,
+    "mastery_admissions": 0,
+    "false_exact_mastery": 0
+  },
+  "next_search_boundary": [
+    "Do not search trenazhery-russkiy or trenazhery for per-theme backing data again unless those exact source bytes change.",
+    "Obtain exact live backing bytes/deterministic exports or prove another exact canonical source for each thematic trainer.",
+    "For orthoepy additionally resolve the separate canonical candidate inconsistency cardCount=36 versus 96 unique entries before any identity binding."
+  ]
+}
