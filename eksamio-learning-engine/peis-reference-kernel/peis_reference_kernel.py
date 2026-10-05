@@ -153,13 +153,28 @@ def _summary(views: list[EventView]) -> dict[str, Any]:
 
 
 def _resolved_contradiction(independent: list[EventView]) -> bool:
-    if not independent:
-        return False
-    latest = independent[-1]
-    return latest.correct and (
-        latest.transfer_kind == SAME_SESSION_VERIFICATION
-        or latest.retention_kind == DELAYED_RETENTION
-    )
+    # Later ordinary successes do not resurrect a previously resolved error.
+    # Only a successful qualifying check can resolve a newer failure.
+    for view in reversed(independent):
+        if view.incorrect:
+            return False
+        if view.correct and (
+            view.transfer_kind == SAME_SESSION_VERIFICATION
+            or view.retention_kind == DELAYED_RETENTION
+        ):
+            return True
+    return False
+
+
+def _has_current_retained_success(independent: list[EventView]) -> bool:
+    # A later independent failure invalidates the current retained claim, not
+    # the historical delayed check. Same-session recovery cannot renew it.
+    for view in reversed(independent):
+        if view.incorrect:
+            return False
+        if view.retention_kind == DELAYED_RETENTION:
+            return view.correct
+    return False
 
 
 def infer_mastery(events: Iterable[dict[str, Any]], semantic_id: str) -> dict[str, Any]:
@@ -200,14 +215,14 @@ def infer_mastery(events: Iterable[dict[str, Any]], semantic_id: str) -> dict[st
     if not reason_codes:
         reason_codes.append("INDEPENDENT_VERIFICATION_REQUIRED")
 
-    if retention and retention[-1].correct:
-        band = "STRONG"
-        status = "INFERRED"
-        confidence_band = "HIGH"
-    elif contradiction:
+    if contradiction:
         band = "DEVELOPING"
         status = "INFERRED"
         confidence_band = "LOW"
+    elif _has_current_retained_success(independent):
+        band = "STRONG"
+        status = "INFERRED"
+        confidence_band = "HIGH"
     elif latest_independent is not None and latest_independent.incorrect:
         band = "EMERGING"
         status = "INFERRED"
@@ -278,7 +293,7 @@ def _evidence_summary_for_state(views: list[EventView]) -> dict[str, Any]:
 
 def infer_retention(events: Iterable[dict[str, Any]], semantic_id: str) -> dict[str, Any]:
     mapped = mapped_views(events, semantic_id)
-    independent = independent_exact_views(events, semantic_id)
+    independent = [view for view in mapped if view.exact and view.unassisted]
     delayed = [view for view in independent if view.retention_kind == DELAYED_RETENTION]
     latest_delayed = delayed[-1] if delayed else None
     latest_independent_success = next((view for view in reversed(independent) if view.correct), None)
@@ -286,7 +301,7 @@ def infer_retention(events: Iterable[dict[str, Any]], semantic_id: str) -> dict[
     if latest_delayed is not None and latest_delayed.incorrect:
         current_state = "RETENTION_FAILURE_RESTABILIZATION_NEEDED"
         reason = "RETENTION_FAILURE_RESTABILIZE"
-    elif latest_delayed is not None and latest_delayed.correct:
+    elif _has_current_retained_success(independent):
         current_state = "RETAINED_AFTER_DELAYED_CHECK"
         reason = "RETAINED_AND_RESCHEDULED"
     elif latest_independent_success is not None:
@@ -429,10 +444,10 @@ def assess_readiness(
     else:
         target_mastery = infer_mastery(event_list, target_semantic_id)
         target_retention = infer_retention(event_list, target_semantic_id)
-        if target_mastery["mastery"]["band"] == "STRONG" and target_retention["current_state"] == "RETAINED_AFTER_DELAYED_CHECK":
-            status = "ALREADY_STRONG_NOT_CURRENT_PRIORITY"
-        elif target_mastery["evidence_summaries"]["contradictory"]["observed"]:
+        if target_mastery["evidence_summaries"]["contradictory"]["observed"]:
             status = "NEEDS_VERIFICATION"
+        elif target_mastery["mastery"]["band"] == "STRONG" and target_retention["current_state"] == "RETAINED_AFTER_DELAYED_CHECK":
+            status = "ALREADY_STRONG_NOT_CURRENT_PRIORITY"
         else:
             status = "READY_TO_LEARN_OR_PRACTICE"
 
