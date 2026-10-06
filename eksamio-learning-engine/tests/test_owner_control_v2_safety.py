@@ -1,6 +1,9 @@
+import ast
 import concurrent.futures
+from contextlib import contextmanager
 import hashlib
 import json
+import math
 import os
 import re
 import socket
@@ -28,12 +31,12 @@ def workflow_script(name):
     return "\n".join(line[10:] for line in block.splitlines()) + "\n"
 
 
-def proxy_preflight(health):
+def proxy_preflight(health, *, output_cap="", budget="0.10"):
     script = workflow_script("Freeze cumulative input and start executor proxy")
     check = script.split('python3 - "$health" <<\'PY\'\n', 1)[1].split("\nPY", 1)[0]
     return subprocess.run(
         ["python3", "-c", check, json.dumps(health)],
-        env={**os.environ, "OWNER_TASK_BUDGET_USD": "0.10"},
+        env={**os.environ, "OWNER_TASK_BUDGET_USD": budget, "OWNER_EXECUTOR_MAX_OUTPUT_TOKENS": output_cap},
         capture_output=True, text=True, timeout=10,
     )
 
@@ -399,6 +402,272 @@ class OwnerBudgetArtifactTest(unittest.TestCase):
         self.assertIn("Codex produced no patch'; exit 1", script)
         self.assertNotIn("POST", script)
         self.assertNotIn("secrets.", script)
+
+class OwnerTaskOutputCapTest(unittest.TestCase):
+    BASE = "c8781be94f7ff6091db42370477aee03d8d58bca"
+    REF = "owner/a92-luna-foundation-base-20261005"
+
+    def _route_cap(self, task, model="gpt-5.6-luna", ref=None, sha=None):
+        script = workflow_script("Resolve task, route and per-phase hard budgets")
+        source = script.split("python3 - <<'PY'\n", 1)[1].split("\nPY", 1)[0]
+        tree = ast.parse(source)
+        fn = next(n for n in tree.body if isinstance(n, ast.FunctionDef)
+                  and n.name == "resolve_executor_output_cap")
+        scope = {}
+        exec(compile(ast.Module(body=[fn], type_ignores=[]), "<trusted route>", "exec"), scope)
+        return scope[fn.name](task, model, self.REF if ref is None else ref,
+                              self.BASE if sha is None else sha)
+
+    def test_only_exact_task_model_ref_sha_and_integer_cap_are_admitted(self):
+        good = {"task_id": "A9.2", "executor_max_output_tokens": 4800}
+        self.assertEqual(self._route_cap(good), 4800)
+        for value in (None, True, "4800", 4800.0, 1800, 4801, 0, -1):
+            with self.subTest(value=value):
+                with self.assertRaises(SystemExit):
+                    self._route_cap({**good, "executor_max_output_tokens": value})
+        for changed, kwargs in [
+            ({**good, "task_id": "A9.3"}, {}),
+            ({**good, "astra_required": True}, {}),
+            ({**good, "astra_plan_required": True}, {}),
+            ({**good, "astra_acceptance_required": True}, {}),
+            (good, {"model": "gpt-5.6-sol"}),
+            (good, {"ref": "main"}),
+            (good, {"sha": "0" * 40}),
+        ]:
+            with self.subTest(changed=changed, kwargs=kwargs):
+                with self.assertRaises(SystemExit):
+                    self._route_cap(changed, **kwargs)
+
+    def test_absent_override_keeps_every_route_default(self):
+        for model in ("gpt-5.6-luna", "gpt-5.6-terra", "gpt-5.6-sol", "gpt-6-astra"):
+            self.assertIsNone(self._route_cap({"task_id": "A1.4"}, model=model, ref="main", sha="other"))
+
+    def test_override_cannot_expand_the_approved_cash_cap(self):
+        from decimal import Decimal
+        script = workflow_script("Resolve task, route and per-phase hard budgets")
+        source = script.split("python3 - <<'PY'\n", 1)[1].split("\nPY", 1)[0]
+        tree = ast.parse(source)
+        guard = next(n for n in tree.body if isinstance(n, ast.If)
+                     and "executor_output_cap" in ast.unparse(n.test)
+                     and "total" in ast.unparse(n.test))
+        code = compile(ast.Module(body=[guard], type_ignores=[]), "<override cash gate>", "exec")
+        for value in ("0.05", "0.10", "0.35"):
+            exec(code, {"Decimal": Decimal, "executor_output_cap": 4800, "total": Decimal(value)})
+        for value in ("0.350001", "0.36", "3.00"):
+            with self.assertRaises(SystemExit):
+                exec(code, {"Decimal": Decimal, "executor_output_cap": 4800, "total": Decimal(value)})
+        exec(code, {"Decimal": Decimal, "executor_output_cap": None, "total": Decimal("3.00")})
+
+    def test_only_a92_board_row_has_override(self):
+        board = json.loads((ROOT / "eksamio-learning-engine/project-control/operational-board-v1.json").read_text())
+        rows = [t for t in board["tasks"] if "executor_max_output_tokens" in t]
+        self.assertEqual(len(board["tasks"]), 115)
+        self.assertEqual(len(rows), 1)
+        t = rows[0]
+        self.assertEqual((t["task_id"], t["model_route"], t["head_sha"], t["executor_max_output_tokens"]),
+                         ("A9.2", "luna", self.BASE, 4800))
+        self.assertEqual(t["status"], "INTEGRATION_PENDING")
+        self.assertFalse(t["visible_to_learner"])
+
+    def test_proxy_override_is_bound_to_trusted_route_output(self):
+        yml = TASK.read_text()
+        self.assertIn("executor_max_output_tokens: ${{ steps.resolve.outputs.executor_max_output_tokens }}", yml)
+        self.assertIn("OWNER_EXECUTOR_MAX_OUTPUT_TOKENS: ${{ needs.route.outputs.executor_max_output_tokens }}", yml)
+        self.assertNotIn("inputs.executor_max_output_tokens", yml)
+        self.assertIn("OWNER_EXECUTOR_MAX_OUTPUT_TOKENS='$OWNER_EXECUTOR_MAX_OUTPUT_TOKENS'", yml)
+        good = {"status": "ok", "max_requests": 6, "requests": 0,
+                "reserved_usd": 0, "remaining_usd": 0.35, "executor_max_output_tokens": 4800}
+        self.assertEqual(proxy_preflight(good, output_cap="4800", budget="0.35").returncode, 0)
+        for health in ({k: v for k, v in good.items() if k != "executor_max_output_tokens"},
+                       {**good, "executor_max_output_tokens": 1800}):
+            self.assertNotEqual(proxy_preflight(health, output_cap="4800", budget="0.35").returncode, 0)
+
+    @contextmanager
+    def _proxy(self, model="gpt-5.6-luna", override=None, budget="0.35", source_path=None):
+        calls = []
+        class Fake(BaseHTTPRequestHandler):
+            def log_message(self, *_):
+                pass
+            def do_POST(self):
+                calls.append(json.loads(self.rfile.read(int(self.headers["Content-Length"]))))
+                body = b'{"error":{"message":"offline failure"}}'
+                self.send_response(500)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+        upstream = ThreadingHTTPServer(("127.0.0.1", 0), Fake)
+        thread = threading.Thread(target=upstream.serve_forever, daemon=True)
+        thread.start()
+        proxy = None
+        try:
+            with socket.socket() as sock:
+                sock.bind(("127.0.0.1", 0))
+                port = sock.getsockname()[1]
+            env = {**os.environ, "OWNER_TASK_BUDGET_USD": budget,
+                   "OWNER_ALLOWED_MODELS": model, "OWNER_MAX_PROVIDER_REQUESTS": "6",
+                   "OWNER_PROXY_CLIENT_TOKEN": "offline-client", "OWNER_PROXY_TEST_MODE": "1",
+                   "OWNER_BUDGET_PROXY_PORT": str(port),
+                   "OWNER_PROXY_UPSTREAM_URL": f"http://127.0.0.1:{upstream.server_port}/v1/responses"}
+            env.pop("OPENAI_API_KEY", None)
+            env.pop("OWNER_EXECUTOR_MAX_OUTPUT_TOKENS", None)
+            if override is not None:
+                env["OWNER_EXECUTOR_MAX_OUTPUT_TOKENS"] = override
+            proxy = subprocess.Popen(["node", str(source_path or PROXY)], env=env, stdin=subprocess.PIPE,
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+            proxy.stdin.write("offline-fake-key")
+            proxy.stdin.close()
+            url = f"http://127.0.0.1:{port}"
+            def health():
+                with urllib.request.urlopen(url + "/health", timeout=2) as response:
+                    return json.load(response)
+            for _ in range(100):
+                if proxy.poll() is not None:
+                    self.fail(proxy.stderr.read())
+                try:
+                    health()
+                    break
+                except (urllib.error.URLError, TimeoutError):
+                    time.sleep(0.02)
+            else:
+                self.fail("offline proxy did not start")
+            def post(requested=None, token="offline-client", request_model=None, text="x", include_requested=False, raw_body=None):
+                payload = {"model": request_model or model, "input": text, "store": False}
+                if requested is not None or include_requested:
+                    payload["max_output_tokens"] = requested
+                data = json.dumps(payload).encode() if raw_body is None else raw_body
+                request = urllib.request.Request(url + "/v1/responses", data=data,
+                    headers={"Content-Type": "application/json", "Authorization": "Bearer " + token})
+                try:
+                    with urllib.request.urlopen(request, timeout=5) as response:
+                        return response.status
+                except urllib.error.HTTPError as error:
+                    error.close()
+                    return error.code
+            yield calls, post, health
+        finally:
+            if proxy is not None:
+                proxy.terminate()
+                proxy.wait(timeout=5)
+                proxy.stderr.close()
+            upstream.shutdown()
+            upstream.server_close()
+            thread.join(timeout=2)
+
+    def test_all_default_model_ceilings_remain_unchanged(self):
+        for model, expected in (("gpt-5.6-luna", 1800), ("gpt-5.6-terra", 2200),
+                                ("gpt-5.6-sol", 2400), ("gpt-6-astra", 3000)):
+            with self.subTest(model=model), self._proxy(model=model) as (calls, post, health):
+                self.assertIsNone(health()["executor_max_output_tokens"])
+                self.assertEqual(post(), 500)
+                self.assertEqual(calls[0]["max_output_tokens"], expected)
+
+    def test_override_4800_smaller_requests_and_auth_are_preserved(self):
+        with self._proxy(override="4800") as (calls, post, health):
+            self.assertEqual(health()["executor_max_output_tokens"], 4800)
+            self.assertEqual(post(token="wrong"), 401)
+            self.assertEqual(post(request_model="gpt-5.6-sol"), 403)
+            self.assertEqual(calls, [])
+            for requested, expected in ((None, 4800), (99999, 4800), (700, 700)):
+                self.assertEqual(post(requested), 500)
+                self.assertEqual(calls[-1]["max_output_tokens"], expected)
+                self.assertFalse(calls[-1]["store"])
+            self.assertEqual(health()["requests"], 3)
+            self.assertLessEqual(health()["reserved_usd"], 0.35)
+
+    def test_override_still_respects_affordable_budget_before_forwarding(self):
+        with self._proxy(override="4800", budget="0.001") as (calls, post, health):
+            self.assertEqual(post(4800), 500)
+            self.assertGreaterEqual(calls[0]["max_output_tokens"], 256)
+            self.assertLess(calls[0]["max_output_tokens"], 4800)
+            self.assertLessEqual(health()["reserved_usd"], 0.001)
+            self.assertGreaterEqual(health()["remaining_usd"], 0)
+            self.assertEqual(post(4800), 402)
+            self.assertEqual(len(calls), 1)
+        with self._proxy(override="4800") as (calls, post, _):
+            self.assertEqual(post(4800, text="x" * 2000000), 402)
+            self.assertEqual(calls, [])
+
+    def test_override_preserves_six_slots_under_concurrent_failures(self):
+        with self._proxy(override="4800") as (calls, post, health):
+            with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+                statuses = list(pool.map(lambda _: post(), range(8)))
+            self.assertEqual(statuses.count(500), 6, statuses)
+            self.assertEqual(statuses.count(429), 2, statuses)
+            self.assertEqual(len(calls), 6)
+            self.assertEqual(post(), 429)
+            self.assertEqual(health()["requests"], 6)
+            self.assertLessEqual(health()["reserved_usd"], 0.35)
+
+    def test_invalid_process_overrides_fail_before_proxy_start(self):
+        cases = [(value, "gpt-5.6-luna") for value in ("0", "-1", "1800", "4801", "4800.0", "NaN", "Infinity")]
+        cases += [("4800", "gpt-5.6-sol"), ("4800", "gpt-5.6-luna,gpt-6-astra")]
+        for value, models in cases:
+            with self.subTest(value=value, models=models):
+                env = {**os.environ, "OWNER_TASK_BUDGET_USD": "0.35",
+                       "OWNER_ALLOWED_MODELS": models, "OWNER_MAX_PROVIDER_REQUESTS": "6",
+                       "OWNER_PROXY_CLIENT_TOKEN": "offline-client",
+                       "OWNER_EXECUTOR_MAX_OUTPUT_TOKENS": value}
+                env.pop("OPENAI_API_KEY", None)
+                env.pop("OWNER_PROXY_UPSTREAM_URL", None)
+                result = subprocess.run(["node", str(PROXY)], env=env, input="offline-fake-key",
+                                        capture_output=True, text=True, timeout=5)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("Executor output override requires exactly 4800", result.stderr)
+
+
+    def test_invalid_requested_caps_do_not_poison_accounting(self):
+        invalid = ("invalid-number", "700", True, False, 0, -1, 0.5, [], {},
+                   2**53, float("nan"), float("inf"), float("-inf"))
+        for override in (None, "4800"):
+            with self.subTest(override=override), self._proxy(override=override) as (calls, post, health):
+                initial = health()
+                for value in invalid:
+                    with self.subTest(value=value):
+                        self.assertEqual(post(value), 400)
+                        self.assertEqual(calls, [])
+                        self.assertEqual(health(), initial)
+                raw = b'{"model":"gpt-5.6-luna","input":"x","max_output_tokens":1e309}'
+                self.assertEqual(post(raw_body=raw), 400)
+                self.assertEqual(calls, [])
+                self.assertEqual(health(), initial)
+                self.assertEqual(post(700), 500)
+                self.assertEqual(calls[0]["max_output_tokens"], 700)
+                observed = health()
+                self.assertEqual(observed["requests"], 1)
+                self.assertTrue(math.isfinite(observed["reserved_usd"]))
+                self.assertTrue(math.isfinite(observed["remaining_usd"]))
+                # Health rounds each amount independently to six decimal places.
+                self.assertAlmostEqual(observed["reserved_usd"] + observed["remaining_usd"], 0.35, delta=0.00000101)
+
+    def test_null_and_absent_output_limits_keep_route_defaults(self):
+        for override, expected in ((None, 1800), ("4800", 4800)):
+            with self.subTest(override=override), self._proxy(override=override) as (calls, post, health):
+                self.assertEqual(post(), 500)
+                self.assertEqual(post(None, include_requested=True), 500)
+                self.assertEqual([p["max_output_tokens"] for p in calls], [expected, expected])
+                self.assertEqual(health()["requests"], 2)
+
+    def test_nonfinite_computed_caps_reservations_and_state_fail_closed(self):
+        source = PROXY.read_text()
+        replacements = []
+        max_line = next(l for l in source.splitlines() if l.strip().startswith("const maxOut = capOutputTokens"))
+        reserve_line = next(l for l in source.splitlines() if l.strip().startswith("const reservation = conservativeReservationUsd"))
+        for value in ("Number.NaN", "Number.POSITIVE_INFINITY"):
+            replacements.append((max_line, "    const maxOut = " + value + ";"))
+            replacements.append((reserve_line, "    const reservation = " + value + ";"))
+            replacements.append(("let remainingUsd = totalBudget;", "let remainingUsd = " + value + ";"))
+            replacements.append(("let reservedUsd = 0;", "let reservedUsd = " + value + ";"))
+        replacements.append((reserve_line, "    const reservation = -1;"))
+        with tempfile.TemporaryDirectory() as tmp:
+            mutated = Path(tmp) / "numeric-fault.mjs"
+            for old, new in replacements:
+                with self.subTest(fault=new):
+                    self.assertEqual(source.count(old), 1)
+                    mutated.write_text(source.replace(old, new, 1))
+                    with self._proxy(override="4800", source_path=mutated) as (calls, post, health):
+                        self.assertEqual(post(700), 402)
+                        self.assertEqual(calls, [])
+                        self.assertEqual(health()["requests"], 0)
 
 if __name__ == "__main__":
     unittest.main()

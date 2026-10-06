@@ -77,6 +77,11 @@ if (!(totalBudget > 0 && totalBudget <= 3)) throw new Error('OWNER_TASK_BUDGET_U
 if (!allowedModels.size) throw new Error('OWNER_ALLOWED_MODELS is required');
 if (!clientToken) throw new Error('OWNER_PROXY_CLIENT_TOKEN is required');
 if (!Number.isInteger(maxProviderRequests) || maxProviderRequests < 1 || maxProviderRequests > 6) throw new Error('OWNER_MAX_PROVIDER_REQUESTS must be an integer 1..6');
+const outputOverride = String(process.env.OWNER_EXECUTOR_MAX_OUTPUT_TOKENS || '');
+if (outputOverride && (outputOverride !== '4800' || allowedModels.size !== 1 || !allowedModels.has('gpt-5.6-luna'))) {
+  throw new Error('Executor output override requires exactly 4800 and only gpt-5.6-luna');
+}
+const executorMaxOutputTokens = outputOverride ? 4800 : null;
 const testMode = process.env.OWNER_PROXY_TEST_MODE === '1';
 const configuredUpstream = String(process.env.OWNER_PROXY_UPSTREAM_URL || '');
 let upstreamUrl = 'https://api.openai.com/v1/responses';
@@ -110,7 +115,7 @@ function jsonError(res, status, message) {
 
 const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && req.url === '/health') {
-    const body = JSON.stringify({status:'ok', remaining_usd:Number(remainingUsd.toFixed(6)), reserved_usd:Number(reservedUsd.toFixed(6)), requests:requestCount, max_requests:maxProviderRequests});
+    const body = JSON.stringify({status:'ok', remaining_usd:Number(remainingUsd.toFixed(6)), reserved_usd:Number(reservedUsd.toFixed(6)), requests:requestCount, max_requests:maxProviderRequests, executor_max_output_tokens:executorMaxOutputTokens});
     res.writeHead(200, {'content-type':'application/json'}); res.end(body); return;
   }
   if (req.method !== 'POST' || !req.url?.endsWith('/v1/responses')) {
@@ -130,8 +135,15 @@ const server = http.createServer(async (req, res) => {
     if (!allowedModels.has(model) || !PRICES[model]) {
       jsonError(res, 403, `model ${model || '<empty>'} is not allowed for this task`); return;
     }
+    const requestedOutput = payload.max_output_tokens;
+    if (requestedOutput != null && (typeof requestedOutput !== 'number' || !Number.isSafeInteger(requestedOutput) || requestedOutput <= 0)) {
+      jsonError(res, 400, 'max_output_tokens must be a positive integer or null'); return;
+    }
     const provisional = Buffer.byteLength(JSON.stringify(payload), 'utf8');
-    const maxOut = capOutputTokens({model, payloadBytes: provisional, requested: payload.max_output_tokens, remainingUsd, routeCap: routeCaps[model]});
+    const maxOut = capOutputTokens({model, payloadBytes: provisional, requested: payload.max_output_tokens, remainingUsd, routeCap: executorMaxOutputTokens ?? routeCaps[model]});
+    if (!Number.isSafeInteger(maxOut)) {
+      jsonError(res, 402, 'invalid output cap; budget remains closed'); return;
+    }
     if (maxOut < 256) {
       jsonError(res, 402, `hard task budget exhausted before provider call; remaining=$${remainingUsd.toFixed(4)}`); return;
     }
@@ -139,6 +151,9 @@ const server = http.createServer(async (req, res) => {
     payload.store = false;
     const encoded = Buffer.from(JSON.stringify(payload), 'utf8');
     const reservation = conservativeReservationUsd({model, payloadBytes:encoded.length, maxOutputTokens:maxOut});
+    if (!Number.isFinite(reservation) || reservation < 0 || !Number.isFinite(remainingUsd) || remainingUsd < 0 || !Number.isFinite(reservedUsd) || reservedUsd < 0) {
+      jsonError(res, 402, 'invalid budget accounting; task remains closed'); return;
+    }
     if (reservation > remainingUsd + 1e-9) {
       jsonError(res, 402, 'hard task budget reservation refused'); return;
     }

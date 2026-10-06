@@ -51,6 +51,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       model: ${{ steps.resolve.outputs.model }}
+      executor_max_output_tokens: ${{ steps.resolve.outputs.executor_max_output_tokens }}
       effort: ${{ steps.resolve.outputs.effort }}
       astra_plan: ${{ steps.resolve.outputs.astra_plan }}
       astra_accept: ${{ steps.resolve.outputs.astra_accept }}
@@ -156,18 +157,34 @@ jobs:
           elif any(w in text for w in ('copy','label','wording','docs','documentation','metadata','rename','small config')): model='gpt-5.6-luna'
           else: model='gpt-5.6-terra'
 
+          def resolve_executor_output_cap(task, model, base_ref, registered):
+              if 'executor_max_output_tokens' not in task:
+                  return None
+              cap=task['executor_max_output_tokens']
+              if (type(cap) is not int or cap != 4800
+                      or task.get('task_id') != 'A9.2'
+                      or model != 'gpt-5.6-luna'
+                      or any(task.get(k) for k in ('astra_required', 'astra_plan_required', 'astra_acceptance_required'))
+                      or base_ref != 'owner/a92-luna-foundation-base-20261005'
+                      or registered != 'c8781be94f7ff6091db42370477aee03d8d58bca'):
+                  raise SystemExit('Executor output override is not the approved A9.2 Luna foundation')
+              return cap
+          executor_output_cap=resolve_executor_output_cap(task, model, base_ref, registered)
           astra_plan=bool(task.get('astra_plan_required') or task.get('astra_required'))
           astra_accept=bool(task.get('astra_acceptance_required') or task.get('astra_required'))
           total=Decimal('${{ inputs.task_budget_usd }}')
           if not Decimal('0.05') <= total <= Decimal('3.00'): raise SystemExit('task budget must be $0.05..$3.00')
+          if executor_output_cap is not None and total > Decimal('0.35'):
+              raise SystemExit('Approved A9.2 output override requires task budget at most $0.35')
           phases=1+int(astra_plan)+int(astra_accept)
           phase=(total/Decimal(phases)).quantize(Decimal('0.01'), rounding=ROUND_DOWN)
           if phase < Decimal('0.05'): raise SystemExit('task budget too small for required paid phases')
           plan_budget=phase if astra_plan else Decimal('0'); exec_budget=phase; accept_budget=phase if astra_accept else Decimal('0')
-          route={'task':task,'model':model,'effort':'low' if model=='gpt-5.6-luna' else 'medium','astra_plan':astra_plan,'astra_accept':astra_accept,'phase_budgets':{'plan':str(plan_budget),'executor':str(exec_budget),'acceptance':str(accept_budget)}}
+          route={'task':task,'model':model,'executor_max_output_tokens':executor_output_cap,'effort':'low' if model=='gpt-5.6-luna' else 'medium','astra_plan':astra_plan,'astra_accept':astra_accept,'phase_budgets':{'plan':str(plan_budget),'executor':str(exec_budget),'acceptance':str(accept_budget)}}
           Path('/tmp/owner-v2-route.json').write_text(json.dumps(route,ensure_ascii=False,indent=2))
           with open(os.environ['GITHUB_OUTPUT'],'a') as f:
               f.write('model='+model+'\n'); f.write('effort='+route['effort']+'\n')
+              f.write('executor_max_output_tokens='+(str(executor_output_cap) if executor_output_cap is not None else '')+'\n')
               f.write('astra_plan='+('true' if astra_plan else 'false')+'\n'); f.write('astra_accept='+('true' if astra_accept else 'false')+'\n')
               f.write('plan_budget='+str(plan_budget)+'\n'); f.write('exec_budget='+str(exec_budget)+'\n'); f.write('accept_budget='+str(accept_budget)+'\n')
           print('OWNER_V2_MODEL='+model); print('ASTRA_PLAN='+str(astra_plan).lower()); print('ASTRA_ACCEPT='+str(astra_accept).lower())
@@ -259,6 +276,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OWNER_TASK_BUDGET_USD: ${{ needs.route.outputs.exec_budget }}
           OWNER_ALLOWED_MODELS: ${{ needs.route.outputs.model }}
+          OWNER_EXECUTOR_MAX_OUTPUT_TOKENS: ${{ needs.route.outputs.executor_max_output_tokens }}
         shell: bash
         run: |
           set -euo pipefail
@@ -269,7 +287,7 @@ jobs:
           echo "::add-mask::$client_token"
           echo "client_token=$client_token" >> "$GITHUB_OUTPUT"
           keyfile="$(mktemp)"; printf '%s' "$OPENAI_API_KEY" > "$keyfile"; chmod 600 "$keyfile"
-          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' OWNER_MAX_PROVIDER_REQUESTS='6' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
+          sudo bash -c "cat '$keyfile' | env -u OPENAI_API_KEY OWNER_TASK_BUDGET_USD='$OWNER_TASK_BUDGET_USD' OWNER_ALLOWED_MODELS='$OWNER_ALLOWED_MODELS' OWNER_MAX_PROVIDER_REQUESTS='6' OWNER_EXECUTOR_MAX_OUTPUT_TOKENS='$OWNER_EXECUTOR_MAX_OUTPUT_TOKENS' OWNER_PROXY_CLIENT_TOKEN='$client_token' node '$proxy' >/tmp/owner-budget-proxy.log 2>&1 &"
           rm -f "$keyfile"; for _ in {1..20}; do curl -fsS http://127.0.0.1:8787/health >/dev/null && break; sleep 1; done
           health="$(curl -fsS http://127.0.0.1:8787/health)"
           python3 - "$health" <<'PY'
@@ -281,6 +299,10 @@ jobs:
           assert d['requests'] == 0, d
           assert Decimal(str(d['reserved_usd'])) == 0, d
           assert Decimal(str(d['remaining_usd'])) == Decimal(os.environ['OWNER_TASK_BUDGET_USD']), d
+          output_cap=os.environ.get('OWNER_EXECUTOR_MAX_OUTPUT_TOKENS','')
+          if output_cap:
+              assert output_cap == '4800' and d.get('executor_max_output_tokens') == 4800, d
+              print('API_CODEX_OUTPUT_TOKEN_CAP=4800')
           print('EXECUTOR_PROXY_PREFLIGHT=PASS')
           print('API_CODEX_PROVIDER_REQUEST_CAP=6')
           PY
