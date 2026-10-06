@@ -131,21 +131,21 @@ jobs:
           for name in [f'{prefix}-EXAM-DATA.json',f'{prefix}-INPUT-CONTRACT.json',f'{prefix}-EXAM-MAP.json',f'{prefix}-BUILD-EVIDENCE.json']:
               p=root/name; d=json.loads(p.read_text()); d['status']='READY_FOR_TILDA'; d['browser_audit']='tests/evidence/profile-2022-browser-evidence.json'; d['clean_zip_regression']='PASS'; d['ui_parity_gate']='PASS'; d['all_variant_asset_reliability_gate']='PASS'; p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
           status=f'''SOURCE_GATE: PASS — exact FIPI 2022 SOURCE/EXAM/ANSWER/CRITERIA locks
-VISUAL_SOURCE_GATE: PASS — 47/47 direct exact-source crops; reconstructed 0
-UI_PARITY_GATE: PASS — ФИПИ 2022 · официальный пример N for every forced variant and after reload
-ALL_VARIANT_ASSET_RELIABILITY_GATE: PASS — 35/35 first render + away/back + reload + rerender + delayed T123
-INTERACTION_GATE: PASS — 35/35 official examples real DOM
-SCORER_GATE: PASS — 28/28 correct+wrong
-STATE_RESTORE_GATE: PASS
-EXTENDED_UX_GATE: PASS — toolbar + own answer + exact FIPI solution/criteria + self-evaluation 7/7
-TILDA_ATOMIC_GATE: PASS — {len(blocks)} T123, max {mx} bytes < 42500
-RESPONSIVE_GATE: PASS — 1280/768/390/360/320
-INDEPENDENT_AUDIT_GATE: PASS
-CLEAN_ZIP_REGRESSION_GATE: PASS
-FINAL_STATUS: READY_FOR_TILDA
-READY_FOR_TILDA: YES
-LIVE_GO: NO
-'''
+          VISUAL_SOURCE_GATE: PASS — 47/47 direct exact-source crops; reconstructed 0
+          UI_PARITY_GATE: PASS — ФИПИ 2022 · официальный пример N for every forced variant and after reload
+          ALL_VARIANT_ASSET_RELIABILITY_GATE: PASS — 35/35 first render + away/back + reload + rerender + delayed T123
+          INTERACTION_GATE: PASS — 35/35 official examples real DOM
+          SCORER_GATE: PASS — 28/28 correct+wrong
+          STATE_RESTORE_GATE: PASS
+          EXTENDED_UX_GATE: PASS — toolbar + own answer + exact FIPI solution/criteria + self-evaluation 7/7
+          TILDA_ATOMIC_GATE: PASS — {len(blocks)} T123, max {mx} bytes < 42500
+          RESPONSIVE_GATE: PASS — 1280/768/390/360/320
+          INDEPENDENT_AUDIT_GATE: PASS
+          CLEAN_ZIP_REGRESSION_GATE: PASS
+          FINAL_STATUS: READY_FOR_TILDA
+          READY_FOR_TILDA: YES
+          LIVE_GO: NO
+          '''
           (root/f'{prefix}-PAGE-STATUS.txt').write_text(status,encoding='utf-8')
           PY
           python ege-matematika-profil-demoversiya-2022/scripts/build_profile_2022.py --repack

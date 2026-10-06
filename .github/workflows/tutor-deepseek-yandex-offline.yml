@@ -1,0 +1,47 @@
+name: Tutor DeepSeek Yandex offline
+
+on:
+  pull_request:
+    paths:
+      - 'eksamio-learning-engine/ai-tutor-reference/**'
+      - 'eksamio-learning-engine/92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/RUSSIAN-EXCEPTIONS-121-SEMANTIC-MAPPING-v1.0.json'
+      - 'eksamio-learning-engine/tests/test_private_deepseek_yandex_tutor.py'
+      - '.github/workflows/tutor-deepseek-yandex-offline.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'eksamio-learning-engine/ai-tutor-reference/**'
+      - 'eksamio-learning-engine/92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json'
+      - 'eksamio-learning-engine/russian-program/RUSSIAN-EXCEPTIONS-121-SEMANTIC-MAPPING-v1.0.json'
+      - 'eksamio-learning-engine/tests/test_private_deepseek_yandex_tutor.py'
+      - '.github/workflows/tutor-deepseek-yandex-offline.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  offline-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      EKSAMIO_LIVE_PROVIDER_EXECUTION: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile offline adapters
+        run: python -m py_compile eksamio-learning-engine/ai-tutor-reference/*.py
+      - name: Validate DeepSeek candidate with fake transports only
+        run: python eksamio-learning-engine/ai-tutor-reference/validate_deepseek_yandex_adapter.py
+      - name: Test deterministic foundation offline
+        run: python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_private_deepseek_yandex_tutor.py' -v
+      - name: Preserve existing Tutor contracts
+        run: |
+          python eksamio-learning-engine/ai-tutor-reference/validate_ai_tutor_provider_neutral_boundary_001.py
+          python eksamio-learning-engine/ai-tutor-reference/validate_ai_tutor_reliability_gateway_001.py
+          python eksamio-learning-engine/ai-tutor-reference/validate_ai_tutor_reliability_circuit_repair_001.py
+          python eksamio-learning-engine/ai-tutor-reference/validate_yandex_live_adapters.py
