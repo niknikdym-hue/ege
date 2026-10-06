@@ -6,6 +6,7 @@ on:
       - 'eksamio-learning-engine/ai-tutor-reference/**'
       - 'eksamio-learning-engine/92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json'
       - 'eksamio-learning-engine/russian-program/RUSSIAN-EXCEPTIONS-121-SEMANTIC-MAPPING-v1.0.json'
+      - 'eksamio-learning-engine/tests/test_private_deepseek_yandex_tutor.py'
       - '.github/workflows/tutor-deepseek-yandex-offline.yml'
   push:
     branches: [main]
@@ -13,6 +14,7 @@ on:
       - 'eksamio-learning-engine/ai-tutor-reference/**'
       - 'eksamio-learning-engine/92-RUSSIAN-EXCEPTIONS-PRACTICE-PILOT-v0.1.json'
       - 'eksamio-learning-engine/russian-program/RUSSIAN-EXCEPTIONS-121-SEMANTIC-MAPPING-v1.0.json'
+      - 'eksamio-learning-engine/tests/test_private_deepseek_yandex_tutor.py'
       - '.github/workflows/tutor-deepseek-yandex-offline.yml'
 
 permissions:
@@ -35,6 +37,8 @@ jobs:
         run: python -m py_compile eksamio-learning-engine/ai-tutor-reference/*.py
       - name: Validate DeepSeek candidate with fake transports only
         run: python eksamio-learning-engine/ai-tutor-reference/validate_deepseek_yandex_adapter.py
+      - name: Test deterministic foundation offline
+        run: python3 -m unittest discover -s eksamio-learning-engine/tests -p 'test_private_deepseek_yandex_tutor.py' -v
       - name: Preserve existing Tutor contracts
         run: |
           python eksamio-learning-engine/ai-tutor-reference/validate_ai_tutor_provider_neutral_boundary_001.py
