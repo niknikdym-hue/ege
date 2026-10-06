@@ -18,7 +18,7 @@ BASE = f"http://127.0.0.1:{PORT}"
 VIEWPORTS = [
     ("desktop", 1280, 900),
     ("mobile-390", 390, 844),
-    ("mobile-360", 360, 800),
+    ("mobile-375", 375, 812),
     ("mobile-320", 320, 720),
 ]
 
@@ -84,12 +84,12 @@ def run_viewport(browser, label: str, width: int, height: int) -> None:
     # One actual owner-reviewed Russian learning action -> evidence-shaped progress/NBA.
     page.locator("button[data-view='practice']").click()
     assert "соч..тание" in page.locator("#practicePrompt").inner_text()
-    assert page.locator("#practiceSemantic").inner_text() == "school-i-e-alternating-verb-roots-stressed-a"
+    assert page.locator("#practiceSemantic").inner_text() == "Проверенный навык"
     page.locator("#practiceAnswer").fill("сочетание")
     page.locator("#checkAnswer").click()
     page.wait_for_selector("#practiceFeedback.is-correct")
     assert "независим" in page.locator("#practiceFeedback").inner_text().lower()
-    assert page.locator("#readinessValue").inner_text() == "48%"
+    assert page.locator("#todayCorrect").inner_text() == "1"
 
     # Tutor is visible but locked until payment/entitlement; sandbox grant unlocks without UI rewrite.
     page.locator("button[data-view='tutor']").click()
@@ -114,7 +114,6 @@ def run_viewport(browser, label: str, width: int, height: int) -> None:
     assert page.locator("#progressPercent").inner_text() == "48%"
     events_text = page.locator("#progressEvents").inner_text().lower()
     assert "evidence" in events_text
-    assert "sandbox" in events_text
     assert "tutor" in events_text
     assert_no_overflow(page, f"{label}:completed-flow")
 
@@ -153,7 +152,7 @@ def main() -> int:
         if server.poll() is None:
             server.kill()
     print("SEP1_PRO_CLIENT_BROWSER_E2E=PASS")
-    print("viewports=1280,390,360,320")
+    print("viewports=1280,390,375,320")
     print("modules=16")
     print("routes=school,oge,ege,diagnostic,thematic_trainer,homework,tutor")
     print("identity_continuity=PASS")

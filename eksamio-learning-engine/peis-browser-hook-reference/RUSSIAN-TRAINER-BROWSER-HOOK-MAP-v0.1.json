@@ -1,20 +1,20 @@
 {
   "schema_version": "0.1.0",
   "task": "PEIS-BROWSER-HOOK-001",
-  "status": "REFERENCE_INTEGRATION_MAP",
+  "status": "STAGING_INTEGRATION_WIRED",
   "runtime": {
     "path": "../russkiy-knigi/ege-russkiy-trenazher/ege-russkiy-trenazher-T123-10.txt",
-    "git_blob_sha": "97143363a5adfaef5609bc28fe823c31a2c1fc4d",
+    "git_blob_sha": "9cb45489c0e0d6de3a41b6b56aad1f52609537a9",
     "function": "checkCurrent(card)",
-    "anchor": "session.checked[card.id]=checked;recordCard(card,checked);saveSession();",
+    "anchor": "stateAdapter.canonicalLearnerState.observeCheckedCard(card,session,bindingFor(card,semanticPolicy));",
     "anchor_expected_count": 1
   },
   "reference_projection": {
-    "insertion_position": "IMMEDIATELY_AFTER_ANCHOR",
-    "snippet": "try{if(window.__EKSAMIO_PEIS_HOOK__)void window.__EKSAMIO_PEIS_HOOK__.observeCheckedCard(card,session);}catch(e){}",
+    "insertion_position": "AFTER_LOCAL_ATTEMPT_RECORDING",
+    "snippet": "stateAdapter.canonicalLearnerState.observeCheckedCard(card,session,bindingFor(card,semanticPolicy));",
     "fire_and_forget": true,
     "await_allowed": false,
-    "production_runtime_mutation": false
+    "production_runtime_mutation": true
   },
   "hook_configuration": {
     "adapter_id": "russian-ege-trainer-task12-v0.1",
@@ -35,5 +35,5 @@
     "checked.max",
     "checked.correctness"
   ],
-  "completion_status": "REFERENCE_BROWSER_HOOK_VALIDATED_NOT_WIRED_TO_PRODUCTION"
+  "completion_status": "STAGING_BROWSER_HOOK_WIRED_PUBLIC_CONFIG_DISABLED"
 }
