@@ -282,5 +282,123 @@ class OwnerControlV2SafetyTest(unittest.TestCase):
         self.assertIn("REGISTERED_ALLOWED_PATHS=PASS", yml)
         self.assertIn("path: /tmp/route", yml)
 
+class OwnerBudgetArtifactTest(unittest.TestCase):
+    def _extract(self, payload, *, http_status=200, with_patch=False, shadow_imports=False):
+        calls = []
+        class Health(BaseHTTPRequestHandler):
+            def log_message(self, *_):
+                pass
+            def do_GET(self):
+                calls.append((self.command, self.path))
+                self.send_response(http_status)
+                self.send_header("Content-Length", str(len(payload)))
+                self.end_headers()
+                self.wfile.write(payload)
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Health)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                work = root / "work"
+                work.mkdir()
+                subprocess.run(["git", "init", "-q", str(work)], check=True)
+                target = work / "tracked.txt"
+                target.write_text("before\\n")
+                subprocess.run(["git", "add", "tracked.txt"], cwd=work, check=True)
+                if with_patch:
+                    target.write_text("after\\n")
+                env = os.environ.copy()
+                marker = root / "candidate-imported.marker"
+                if shadow_imports:
+                    injected = root / "injected"
+                    injected.mkdir()
+                    shadow = "from pathlib import Path\nPath(" + repr(str(marker)) + ").write_text('candidate executed')\nraise SystemExit(23)\n"
+                    (work / "json.py").write_text(shadow)
+                    (injected / "json.py").write_text(shadow)
+                    env["PYTHONPATH"] = str(injected)
+                script = workflow_script("Extract untrusted candidate patch only")
+                script = script.replace("http://127.0.0.1:8787/health",
+                                        f"http://127.0.0.1:{server.server_port}/health")
+                budget = root / "executor-budget.json"
+                patch = root / "candidate.patch"
+                script = script.replace("/tmp/executor-budget.json", str(budget))
+                script = script.replace("/tmp/candidate.patch", str(patch))
+                result = subprocess.run(["bash", "-c", script], cwd=work,
+                                        env=env, capture_output=True, text=True, timeout=10)
+                self.assertFalse(marker.exists(), "Untrusted worktree/PYTHONPATH module executed")
+                self.assertTrue(budget.is_file(), result.stderr)
+                return result, json.loads(budget.read_text()), patch.read_bytes(), calls
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
+
+    @staticmethod
+    def _health(**updates):
+        data = {"status": "ok", "remaining_usd": 0.1665,
+                "reserved_usd": 0.5835, "requests": 2, "max_requests": 6}
+        data.update(updates)
+        return json.dumps(data).encode()
+
+    def test_empty_patch_failure_still_preserves_budget_snapshot(self):
+        result, data, patch, calls = self._extract(self._health(unexpected_secret="never-save"))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Codex produced no patch", result.stdout)
+        self.assertEqual(patch, b"")
+        self.assertEqual(data, json.loads(self._health()))
+        self.assertEqual(calls, [("GET", "/health")])
+        self.assertNotIn("never-save", json.dumps(data))
+
+    def test_nonempty_patch_keeps_success_and_budget_snapshot(self):
+        result, data, patch, calls = self._extract(self._health(), with_patch=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(b"tracked.txt", patch)
+        self.assertEqual(data["requests"], 2)
+        self.assertEqual(calls, [("GET", "/health")])
+
+    def test_candidate_module_and_pythonpath_cannot_execute(self):
+        result, data, patch, calls = self._extract(self._health(), with_patch=True, shadow_imports=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(data, json.loads(self._health()))
+        self.assertIn(b"json.py", patch)
+        self.assertEqual(calls, [("GET", "/health")])
+
+    def test_health_failure_is_unknown_not_zero(self):
+        result, data, patch, calls = self._extract(b"unavailable", http_status=503)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(data["status"], "unavailable")
+        self.assertTrue(all(data[k] is None for k in ("remaining_usd", "reserved_usd", "requests", "max_requests")))
+        self.assertEqual(patch, b"")
+        self.assertEqual(calls, [("GET", "/health")])
+
+    def test_malformed_and_oversized_health_are_unknown(self):
+        for payload in (b"not json", b"x" * 16385):
+            with self.subTest(size=len(payload)):
+                result, data, _, _ = self._extract(payload)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(data["status"], "unavailable")
+                self.assertIsNone(data["reserved_usd"])
+
+    def test_invalid_health_values_are_unknown(self):
+        for changes in ({"requests": True}, {"requests": 7}, {"max_requests": 7},
+                        {"remaining_usd": -1}, {"reserved_usd": float("nan")},
+                        {"status": "starting"}):
+            with self.subTest(changes=changes):
+                result, data, _, _ = self._extract(self._health(**changes))
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(data["status"], "unavailable")
+                self.assertIsNone(data["requests"])
+
+    def test_budget_capture_precedes_every_candidate_failure_point(self):
+        script = workflow_script("Extract untrusted candidate patch only")
+        self.assertIn("/usr/bin/python3 -I - <<'PY'", script)
+        capture = script.index("Path('/tmp/executor-budget.json').write_text")
+        self.assertLess(capture, script.index("/usr/bin/git"))
+        self.assertLess(capture, script.index("test -s /tmp/candidate.patch"))
+        self.assertIn("Codex produced no patch'; exit 1", script)
+        self.assertNotIn("POST", script)
+        self.assertNotIn("secrets.", script)
+
 if __name__ == "__main__":
     unittest.main()

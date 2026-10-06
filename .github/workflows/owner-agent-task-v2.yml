@@ -377,10 +377,35 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          /usr/bin/python3 -I - <<'PY'
+          import json, math, urllib.request
+          from pathlib import Path
+          snapshot = {'status': 'unavailable', 'remaining_usd': None, 'reserved_usd': None, 'requests': None, 'max_requests': None}
+          try:
+              with urllib.request.urlopen('http://127.0.0.1:8787/health', timeout=3) as response:
+                  raw = response.read(16385)
+              if len(raw) > 16384:
+                  raise ValueError('oversized budget snapshot')
+              health = json.loads(raw)
+              if health.get('status') != 'ok':
+                  raise ValueError('budget snapshot is not ready')
+              for field in ('remaining_usd', 'reserved_usd'):
+                  value = health.get(field)
+                  if type(value) not in (int, float) or not math.isfinite(value) or value < 0:
+                      raise ValueError('invalid budget amount')
+              if type(health.get('max_requests')) is not int or health['max_requests'] != 6:
+                  raise ValueError('invalid request cap')
+              if type(health.get('requests')) is not int or not 0 <= health['requests'] <= health['max_requests']:
+                  raise ValueError('invalid request count')
+              snapshot = {key: health[key] for key in snapshot}
+          except Exception:
+              pass
+          Path('/tmp/executor-budget.json').write_text(json.dumps(snapshot, sort_keys=True))
+          print('EXECUTOR_BUDGET_SNAPSHOT=' + snapshot['status'])
+          PY
           /usr/bin/git -c core.hooksPath=/dev/null add -N -- . || true
           /usr/bin/git -c core.hooksPath=/dev/null -c diff.external= --no-pager diff --no-ext-diff --no-textconv --binary > /tmp/candidate.patch
           test -s /tmp/candidate.patch || { echo 'Codex produced no patch'; exit 1; }
-          curl -fsS http://127.0.0.1:8787/health > /tmp/executor-budget.json || true
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
