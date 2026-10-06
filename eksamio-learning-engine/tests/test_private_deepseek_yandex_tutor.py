@@ -1,14 +1,60 @@
 import copy
+from contextlib import ExitStack, contextmanager
+import hashlib
 import importlib.util
+import io
+import json
 import math
+import os
 import pathlib
+import socket
+import subprocess
+import types
 import unittest
+from unittest import mock
 
 ROOT = pathlib.Path(__file__).parents[2]
 PATH = ROOT / "eksamio-learning-engine/ai-tutor-reference/private_deepseek_yandex_tutor.py"
 SPEC = importlib.util.spec_from_file_location("partial_private_tutor", PATH)
 MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
+
+
+@contextmanager
+def forbid_external_operations(test_case):
+    """Fail on attempted I/O even if candidate code catches the exception."""
+    calls = []
+
+    def deny(operation):
+        def blocked(*args, **kwargs):
+            calls.append(operation)
+            raise AssertionError("forbidden external operation: " + operation)
+        return blocked
+
+    class ForbiddenEnvironment:
+        __getitem__ = get = __contains__ = __iter__ = __len__ = deny("environment read")
+        keys = items = values = copy = deny("environment read")
+        __setitem__ = __delitem__ = deny("environment write")
+
+    allowed_imports = {"hashlib": hashlib, "json": json, "math": math}
+
+    def import_pure_module(name, globals=None, locals=None, fromlist=(), level=0):
+        if level or name not in allowed_imports:
+            return deny("unexpected import: " + name)()
+        return allowed_imports[name]
+
+    with ExitStack() as stack:
+        for target in ("builtins.open", "io.open", "os.open", "pathlib.Path.open",
+                       "socket.socket", "socket.create_connection", "socket.getaddrinfo",
+                       "os.getenv", "os.system", "subprocess.Popen"):
+            stack.enter_context(mock.patch(target, side_effect=deny(target)))
+        stack.enter_context(mock.patch.object(os, "environ", ForbiddenEnvironment()))
+        if hasattr(os, "environb"):
+            stack.enter_context(mock.patch.object(os, "environb", ForbiddenEnvironment()))
+            stack.enter_context(mock.patch.object(os, "getenvb", side_effect=deny("os.getenvb")))
+        stack.enter_context(mock.patch("builtins.__import__", side_effect=import_pure_module))
+        yield
+    test_case.assertEqual(calls, [], "candidate attempted an external operation")
 
 
 class DeterministicFoundationTests(unittest.TestCase):
@@ -50,6 +96,25 @@ class DeterministicFoundationTests(unittest.TestCase):
     def test_nonfinite_latency_dropped(self):
         self.assertEqual(MODULE.safe_usage_metadata({"latency_ms": float("nan"), "call_count": math.inf}), {})
 
+    def test_huge_integer_latency_preserved_exactly(self):
+        values = {"latency_ms": 10 ** 309, "input_tokens": 1}
+        result = MODULE.safe_usage_metadata(values)
+        self.assertEqual(result, values)
+        self.assertIs(type(result["latency_ms"]), int)
+        self.assertIsNot(result, values)
+
+    def test_huge_negative_integer_latency_dropped(self):
+        values = {"latency_ms": -(10 ** 309), "input_tokens": 1}
+        self.assertEqual(MODULE.safe_usage_metadata(values), {"input_tokens": 1})
+
+    def test_latency_numeric_boundaries(self):
+        for value in (0, 0.0, -0.0, 1.5, 1e308):
+            with self.subTest(value=value):
+                self.assertEqual(MODULE.safe_usage_metadata({"latency_ms": value}), {"latency_ms": value})
+        for value in (True, False, -1, -1.5, math.nan, math.inf, -math.inf, None, "1"):
+            with self.subTest(value=value):
+                self.assertEqual(MODULE.safe_usage_metadata({"latency_ms": value, "call_count": 2}), {"call_count": 2})
+
     def test_nested_and_text_values_dropped(self):
         self.assertEqual(MODULE.safe_usage_metadata({"input_tokens": {"secret": 1}, "latency_ms": "fast"}), {})
 
@@ -69,9 +134,30 @@ class DeterministicFoundationTests(unittest.TestCase):
         digest = MODULE.fingerprint_request("r", "s", {})
         self.assertEqual(len(digest), 64); int(digest, 16)
 
-    def test_module_is_partial_and_import_safe(self):
+    def test_module_remains_partial(self):
         self.assertIn("PARTIAL", MODULE.__doc__)
-        self.assertFalse(hasattr(MODULE, "requests"))
+
+    def test_import_performs_no_external_operations(self):
+        source = compile(PATH.read_bytes(), str(PATH), "exec")
+        module = types.ModuleType("isolated_private_tutor")
+        with forbid_external_operations(self):
+            exec(source, module.__dict__)
+        self.assertTrue(callable(module.fingerprint_request))
+        self.assertTrue(callable(module.safe_usage_metadata))
+
+    def test_helpers_perform_no_external_operations(self):
+        payload = {"text": " ё ", "nested": [{"b": 2, "a": 1}]}
+        envelope = {"domain": "eksamio.private-deepseek.request.v1", "request_id": "r", "session_ref": "s", "payload": payload}
+        expected = hashlib.sha256(json.dumps(envelope, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")).hexdigest()
+        with forbid_external_operations(self):
+            actual = MODULE.fingerprint_request("r", "s", payload)
+            usage = MODULE.safe_usage_metadata({"latency_ms": 10 ** 309, "input_tokens": 0, "api_key": "fake-secret"})
+            with self.assertRaises(ValueError):
+                MODULE.fingerprint_request("", "s", payload)
+            with self.assertRaises(TypeError):
+                MODULE.safe_usage_metadata(None)
+        self.assertEqual(actual, expected)
+        self.assertEqual(usage, {"latency_ms": 10 ** 309, "input_tokens": 0})
 
 
 if __name__ == "__main__":

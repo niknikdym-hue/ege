@@ -52,7 +52,9 @@ def safe_usage_metadata(metadata):
             continue
         value = metadata[name]
         if name == "latency_ms":
-            valid = type(value) in (int, float) and math.isfinite(value) and value >= 0
+            valid = (type(value) is int and value >= 0) or (
+                type(value) is float and math.isfinite(value) and value >= 0
+            )
         else:
             valid = type(value) is int and value >= 0
         if valid:
