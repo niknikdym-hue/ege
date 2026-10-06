@@ -3,6 +3,7 @@ import concurrent.futures
 from contextlib import contextmanager
 import hashlib
 import json
+import math
 import os
 import re
 import socket
@@ -482,7 +483,7 @@ class OwnerTaskOutputCapTest(unittest.TestCase):
             self.assertNotEqual(proxy_preflight(health, output_cap="4800", budget="0.35").returncode, 0)
 
     @contextmanager
-    def _proxy(self, model="gpt-5.6-luna", override=None, budget="0.35"):
+    def _proxy(self, model="gpt-5.6-luna", override=None, budget="0.35", source_path=None):
         calls = []
         class Fake(BaseHTTPRequestHandler):
             def log_message(self, *_):
@@ -511,7 +512,7 @@ class OwnerTaskOutputCapTest(unittest.TestCase):
             env.pop("OWNER_EXECUTOR_MAX_OUTPUT_TOKENS", None)
             if override is not None:
                 env["OWNER_EXECUTOR_MAX_OUTPUT_TOKENS"] = override
-            proxy = subprocess.Popen(["node", str(PROXY)], env=env, stdin=subprocess.PIPE,
+            proxy = subprocess.Popen(["node", str(source_path or PROXY)], env=env, stdin=subprocess.PIPE,
                                      stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
             proxy.stdin.write("offline-fake-key")
             proxy.stdin.close()
@@ -529,11 +530,12 @@ class OwnerTaskOutputCapTest(unittest.TestCase):
                     time.sleep(0.02)
             else:
                 self.fail("offline proxy did not start")
-            def post(requested=None, token="offline-client", request_model=None, text="x"):
+            def post(requested=None, token="offline-client", request_model=None, text="x", include_requested=False, raw_body=None):
                 payload = {"model": request_model or model, "input": text, "store": False}
-                if requested is not None:
+                if requested is not None or include_requested:
                     payload["max_output_tokens"] = requested
-                request = urllib.request.Request(url + "/v1/responses", data=json.dumps(payload).encode(),
+                data = json.dumps(payload).encode() if raw_body is None else raw_body
+                request = urllib.request.Request(url + "/v1/responses", data=data,
                     headers={"Content-Type": "application/json", "Authorization": "Bearer " + token})
                 try:
                     with urllib.request.urlopen(request, timeout=5) as response:
@@ -611,6 +613,61 @@ class OwnerTaskOutputCapTest(unittest.TestCase):
                                         capture_output=True, text=True, timeout=5)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("Executor output override requires exactly 4800", result.stderr)
+
+
+    def test_invalid_requested_caps_do_not_poison_accounting(self):
+        invalid = ("invalid-number", "700", True, False, 0, -1, 0.5, [], {},
+                   2**53, float("nan"), float("inf"), float("-inf"))
+        for override in (None, "4800"):
+            with self.subTest(override=override), self._proxy(override=override) as (calls, post, health):
+                initial = health()
+                for value in invalid:
+                    with self.subTest(value=value):
+                        self.assertEqual(post(value), 400)
+                        self.assertEqual(calls, [])
+                        self.assertEqual(health(), initial)
+                raw = b'{"model":"gpt-5.6-luna","input":"x","max_output_tokens":1e309}'
+                self.assertEqual(post(raw_body=raw), 400)
+                self.assertEqual(calls, [])
+                self.assertEqual(health(), initial)
+                self.assertEqual(post(700), 500)
+                self.assertEqual(calls[0]["max_output_tokens"], 700)
+                observed = health()
+                self.assertEqual(observed["requests"], 1)
+                self.assertTrue(math.isfinite(observed["reserved_usd"]))
+                self.assertTrue(math.isfinite(observed["remaining_usd"]))
+                # Health rounds each amount independently to six decimal places.
+                self.assertAlmostEqual(observed["reserved_usd"] + observed["remaining_usd"], 0.35, delta=0.00000101)
+
+    def test_null_and_absent_output_limits_keep_route_defaults(self):
+        for override, expected in ((None, 1800), ("4800", 4800)):
+            with self.subTest(override=override), self._proxy(override=override) as (calls, post, health):
+                self.assertEqual(post(), 500)
+                self.assertEqual(post(None, include_requested=True), 500)
+                self.assertEqual([p["max_output_tokens"] for p in calls], [expected, expected])
+                self.assertEqual(health()["requests"], 2)
+
+    def test_nonfinite_computed_caps_reservations_and_state_fail_closed(self):
+        source = PROXY.read_text()
+        replacements = []
+        max_line = next(l for l in source.splitlines() if l.strip().startswith("const maxOut = capOutputTokens"))
+        reserve_line = next(l for l in source.splitlines() if l.strip().startswith("const reservation = conservativeReservationUsd"))
+        for value in ("Number.NaN", "Number.POSITIVE_INFINITY"):
+            replacements.append((max_line, "    const maxOut = " + value + ";"))
+            replacements.append((reserve_line, "    const reservation = " + value + ";"))
+            replacements.append(("let remainingUsd = totalBudget;", "let remainingUsd = " + value + ";"))
+            replacements.append(("let reservedUsd = 0;", "let reservedUsd = " + value + ";"))
+        replacements.append((reserve_line, "    const reservation = -1;"))
+        with tempfile.TemporaryDirectory() as tmp:
+            mutated = Path(tmp) / "numeric-fault.mjs"
+            for old, new in replacements:
+                with self.subTest(fault=new):
+                    self.assertEqual(source.count(old), 1)
+                    mutated.write_text(source.replace(old, new, 1))
+                    with self._proxy(override="4800", source_path=mutated) as (calls, post, health):
+                        self.assertEqual(post(700), 402)
+                        self.assertEqual(calls, [])
+                        self.assertEqual(health()["requests"], 0)
 
 if __name__ == "__main__":
     unittest.main()

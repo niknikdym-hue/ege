@@ -135,8 +135,15 @@ const server = http.createServer(async (req, res) => {
     if (!allowedModels.has(model) || !PRICES[model]) {
       jsonError(res, 403, `model ${model || '<empty>'} is not allowed for this task`); return;
     }
+    const requestedOutput = payload.max_output_tokens;
+    if (requestedOutput != null && (typeof requestedOutput !== 'number' || !Number.isSafeInteger(requestedOutput) || requestedOutput <= 0)) {
+      jsonError(res, 400, 'max_output_tokens must be a positive integer or null'); return;
+    }
     const provisional = Buffer.byteLength(JSON.stringify(payload), 'utf8');
     const maxOut = capOutputTokens({model, payloadBytes: provisional, requested: payload.max_output_tokens, remainingUsd, routeCap: executorMaxOutputTokens ?? routeCaps[model]});
+    if (!Number.isSafeInteger(maxOut)) {
+      jsonError(res, 402, 'invalid output cap; budget remains closed'); return;
+    }
     if (maxOut < 256) {
       jsonError(res, 402, `hard task budget exhausted before provider call; remaining=$${remainingUsd.toFixed(4)}`); return;
     }
@@ -144,6 +151,9 @@ const server = http.createServer(async (req, res) => {
     payload.store = false;
     const encoded = Buffer.from(JSON.stringify(payload), 'utf8');
     const reservation = conservativeReservationUsd({model, payloadBytes:encoded.length, maxOutputTokens:maxOut});
+    if (!Number.isFinite(reservation) || reservation < 0 || !Number.isFinite(remainingUsd) || remainingUsd < 0 || !Number.isFinite(reservedUsd) || reservedUsd < 0) {
+      jsonError(res, 402, 'invalid budget accounting; task remains closed'); return;
+    }
     if (reservation > remainingUsd + 1e-9) {
       jsonError(res, 402, 'hard task budget reservation refused'); return;
     }
